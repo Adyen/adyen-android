@@ -282,6 +282,7 @@ internal class CardView @JvmOverloads constructor(
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
+            val firtDetectedCardType = detectedCardTypes.first()
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
             imageLoader?.load(
                 detectedCardTypes[0].cardType.txVariant,
@@ -294,6 +295,17 @@ internal class CardView @JvmOverloads constructor(
             // TODO: 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
+
+            if (detectedCardTypes.size == 1 &&
+                firtDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
+            ) {
+                val cardNumberValidation = cardOutputData.cardNumberState.validation
+                if (cardNumberValidation is Validation.Invalid) {
+                    setCardNumberError(cardNumberValidation.reason)
+                } else {
+                    goToNextInputIfFocus(binding.editTextCardNumber)
+                }
+            }
         }
     }
 
@@ -335,8 +347,8 @@ internal class CardView @JvmOverloads constructor(
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
             setCardErrorState(true)
+            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             setCardErrorState(hasFocus)

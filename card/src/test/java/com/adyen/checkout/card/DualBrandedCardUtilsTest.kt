@@ -24,7 +24,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
         assertEquals(detectedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -39,7 +40,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.VISA,
@@ -47,7 +49,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -58,7 +61,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.CARTEBANCAIRE,
@@ -66,7 +70,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -82,7 +87,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.CARTEBANCAIRE,
@@ -90,7 +96,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -101,7 +108,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.CARTEBANCAIRE,
@@ -109,7 +117,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -125,7 +134,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.UNKNOWN.apply { txVariant = "plcc_mastercard" },
@@ -133,7 +143,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -144,7 +155,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.MASTERCARD,
@@ -152,7 +164,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -168,7 +181,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.MASTERCARD,
@@ -176,7 +190,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 
@@ -187,7 +202,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             ),
             DetectedCardType(
                 cardType = CardType.MASTERCARD,
@@ -195,7 +211,8 @@ internal class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true
+                isSupported = true,
+                panLength = null,
             )
         )
 

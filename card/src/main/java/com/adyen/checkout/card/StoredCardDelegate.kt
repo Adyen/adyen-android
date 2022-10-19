@@ -81,7 +81,8 @@ internal class StoredCardDelegate(
                 else -> Brand.FieldPolicy.REQUIRED
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = true
+            isSupported = true,
+            panLength = null,
         )
     }
 
