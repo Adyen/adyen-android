@@ -33,6 +33,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -51,7 +52,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
 
-    private val binder = DropInBinder()
+    @Suppress("LeakingThis")
+    private val binder = DropInBinder(this)
 
     private val resultChannel = Channel<BaseDropInServiceResult>(Channel.BUFFERED)
     private val resultFlow = resultChannel.receiveAsFlow()
@@ -475,8 +477,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         return additionalData
     }
 
-    internal inner class DropInBinder : Binder() {
-        fun getService(): DropInServiceInterface = this@DropInService
+    internal class DropInBinder(service: DropInService) : Binder() {
+
+        private val serviceRef: WeakReference<DropInService> = WeakReference(service)
+
+        fun getService(): DropInServiceInterface? = serviceRef.get()
     }
 
     companion object {
