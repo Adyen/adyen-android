@@ -45,8 +45,8 @@ internal class DefaultGiftCardDelegate(
 
     override val outputData get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<GiftCardComponentState?>(null)
-    override val componentStateFlow: Flow<GiftCardComponentState?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<GiftCardComponentState> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -65,7 +65,7 @@ internal class DefaultGiftCardDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    createComponentState(outputData)
+                    updateComponentState(outputData)
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
@@ -88,22 +88,43 @@ internal class DefaultGiftCardDelegate(
 
         _outputDataFlow.tryEmit(outputData)
 
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
 
-    @Suppress("ReturnCount")
     @VisibleForTesting
-    internal fun createComponentState(outputData: GiftCardOutputData) {
+    internal fun updateComponentState(outputData: GiftCardOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    @Suppress("ReturnCount")
+    private fun createComponentState(
+        outputData: GiftCardOutputData = this.outputData
+    ): GiftCardComponentState {
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
 
-        val publicKey = validatePublicKey(outputData, paymentComponentData) ?: return
+        val publicKey = publicKey ?: return GiftCardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = false,
+            lastFourDigits = null,
+        )
 
-        // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (isComponentStateInvalid(outputData, paymentComponentData)) return
+        if (!outputData.isValid) return GiftCardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = false,
+            isReady = true,
+            lastFourDigits = null,
+        )
 
-        val encryptedCard = encryptCard(outputData, paymentComponentData, publicKey) ?: return
+        val encryptedCard = encryptCard(outputData, publicKey) ?: return GiftCardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = false,
+            isReady = true,
+            lastFourDigits = null,
+        )
 
         val giftCardPaymentMethod = GiftCardPaymentMethod(
             type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE,
@@ -112,58 +133,20 @@ internal class DefaultGiftCardDelegate(
             brand = paymentMethod.brand,
         )
 
-        paymentComponentData.paymentMethod = giftCardPaymentMethod
         val lastDigits = outputData.giftcardNumberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
-        _componentStateFlow.tryEmit(
-            GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = true,
-                isReady = true,
-                lastFourDigits = lastDigits,
-            )
+
+        paymentComponentData.paymentMethod = giftCardPaymentMethod
+
+        return GiftCardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = true,
+            isReady = true,
+            lastFourDigits = lastDigits,
         )
-    }
-
-    private fun validatePublicKey(
-        outputData: GiftCardOutputData,
-        paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
-    ): String? {
-        val publicKey = publicKey
-        if (publicKey == null) {
-            val state = GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = outputData.isValid,
-                isReady = false,
-                lastFourDigits = null,
-            )
-
-            _componentStateFlow.tryEmit(state)
-        }
-        return publicKey
-    }
-
-    private fun isComponentStateInvalid(
-        outputData: GiftCardOutputData,
-        paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
-    ): Boolean {
-        if (!outputData.isValid) {
-            val state = GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = false,
-                isReady = true,
-                lastFourDigits = null,
-            )
-
-            _componentStateFlow.tryEmit(state)
-
-            return true
-        }
-        return false
     }
 
     private fun encryptCard(
         outputData: GiftCardOutputData,
-        paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
         publicKey: String,
     ): EncryptedCard? = try {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
@@ -173,16 +156,6 @@ internal class DefaultGiftCardDelegate(
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         _exceptionFlow.tryEmit(e)
-
-        _componentStateFlow.tryEmit(
-            GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = false,
-                isReady = true,
-                lastFourDigits = null,
-            )
-        )
-
         null
     }
 

@@ -190,7 +190,7 @@ internal class StoredCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateInputData { /* Empty to trigger an update */ }
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertFalse(componentState.isReady)
                 assertNull(componentState.lastFourDigits)
@@ -206,7 +206,7 @@ internal class StoredCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateInputData { /* Empty to trigger an update */ }
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -219,7 +219,7 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         securityCodeState = FieldState(
                             "12",
@@ -228,7 +228,7 @@ internal class StoredCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -241,9 +241,9 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 with(componentState) {
                     assertTrue(isValid)

@@ -34,13 +34,13 @@ internal class DefaultBlikDelegate(
     override val outputData: BlikOutputData
         get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
 
     init {
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     override fun getPaymentMethodType(): String {
@@ -56,7 +56,7 @@ internal class DefaultBlikDelegate(
         Logger.v(TAG, "onInputDataChanged")
         val outputData = createOutputData()
         outputDataChanged(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = BlikOutputData(inputData.blikCode)
@@ -66,7 +66,14 @@ internal class DefaultBlikDelegate(
     }
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: BlikOutputData) {
+    internal fun updateComponentState(outputData: BlikOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: BlikOutputData = this.outputData
+    ): PaymentComponentState<BlikPaymentMethod> {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             blikCode = outputData.blikCodeField.value
@@ -76,17 +83,11 @@ internal class DefaultBlikDelegate(
             paymentMethod = paymentMethod
         )
 
-        val paymentComponentState = PaymentComponentState(
+        return PaymentComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true
         )
-
-        componentStateChanged(paymentComponentState)
-    }
-
-    private fun componentStateChanged(componentState: PaymentComponentState<BlikPaymentMethod>) {
-        _componentStateFlow.tryEmit(componentState)
     }
 
     override fun requiresInput(): Boolean = true

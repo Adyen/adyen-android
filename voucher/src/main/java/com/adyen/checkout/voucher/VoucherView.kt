@@ -25,7 +25,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -81,7 +80,6 @@ internal class VoucherView @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: VoucherDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
-            .filterNotNull()
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
     }

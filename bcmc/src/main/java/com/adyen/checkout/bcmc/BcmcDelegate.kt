@@ -26,7 +26,7 @@ interface BcmcDelegate :
 
     val outputDataFlow: Flow<BcmcOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?>
+    val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>>
 
     val exceptionFlow: Flow<CheckoutException>
 

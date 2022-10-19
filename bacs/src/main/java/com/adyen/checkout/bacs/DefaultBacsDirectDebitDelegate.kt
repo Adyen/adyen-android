@@ -32,12 +32,8 @@ internal class DefaultBacsDirectDebitDelegate(
 
     override val outputData get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<BacsDirectDebitComponentState?>(null)
-    override val componentStateFlow: Flow<BacsDirectDebitComponentState?> = _componentStateFlow
-
-    init {
-        createComponentState(outputData)
-    }
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
@@ -75,7 +71,7 @@ internal class DefaultBacsDirectDebitDelegate(
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun updateViewType(mode: BacsDirectDebitMode) {
@@ -101,7 +97,14 @@ internal class DefaultBacsDirectDebitDelegate(
     )
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: BacsDirectDebitOutputData) {
+    internal fun updateComponentState(outputData: BacsDirectDebitOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: BacsDirectDebitOutputData = this.outputData
+    ): BacsDirectDebitComponentState {
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod(
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
             holderName = outputData.holderNameState.value,
@@ -114,14 +117,12 @@ internal class DefaultBacsDirectDebitDelegate(
             paymentMethod = bacsDirectDebitPaymentMethod,
         )
 
-        val componentState = BacsDirectDebitComponentState(
+        return BacsDirectDebitComponentState(
             paymentComponentData = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true,
             mode = outputData.mode
         )
-
-        _componentStateFlow.tryEmit(componentState)
     }
 
     override fun getViewProvider(): ViewProvider = BacsViewProvider

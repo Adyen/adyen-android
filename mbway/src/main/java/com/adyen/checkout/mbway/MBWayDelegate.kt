@@ -23,7 +23,7 @@ interface MBWayDelegate :
 
     val outputDataFlow: Flow<MBWayOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>?>
+    val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>>
 
     fun getSupportedCountries(): List<CountryInfo>
 

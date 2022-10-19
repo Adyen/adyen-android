@@ -33,16 +33,15 @@ internal class DefaultMBWayDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<MBWayPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = _componentStateFlow
 
-    override val outputData: MBWayOutputData
-        get() = _outputDataFlow.value
+    override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
 
     init {
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     override fun getPaymentMethodType(): String {
@@ -58,7 +57,7 @@ internal class DefaultMBWayDelegate(
         Logger.v(TAG, "onInputDataChanged")
         val outputData = createOutputData()
         outputDataChanged(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData(): MBWayOutputData {
@@ -71,7 +70,14 @@ internal class DefaultMBWayDelegate(
     }
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: MBWayOutputData) {
+    internal fun updateComponentState(outputData: MBWayOutputData) {
+        val componentState = createComponentState(outputData)
+        componentStateChanged(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: MBWayOutputData = this.outputData
+    ): PaymentComponentState<MBWayPaymentMethod> {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value
@@ -81,13 +87,11 @@ internal class DefaultMBWayDelegate(
             paymentMethod = paymentMethod
         )
 
-        val paymentComponentState = PaymentComponentState(
+        return PaymentComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true
         )
-
-        componentStateChanged(paymentComponentState)
     }
 
     override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)

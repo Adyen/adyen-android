@@ -56,8 +56,8 @@ internal class StoredCardDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
-    private val _componentStateFlow = MutableStateFlow<CardComponentState?>(null)
-    override val componentStateFlow: Flow<CardComponentState?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -99,7 +99,7 @@ internal class StoredCardDelegate(
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
-                    createComponentState(outputData)
+                    updateComponentState(outputData)
                 },
                 onFailure = { e ->
                     _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
@@ -118,7 +118,7 @@ internal class StoredCardDelegate(
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = with(inputData) {
@@ -152,9 +152,16 @@ internal class StoredCardDelegate(
     }
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "createComponentState")
+    internal fun updateComponentState(outputData: CardOutputData) {
+        Logger.v(TAG, "updateComponentState")
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
 
+    @Suppress("ReturnCount")
+    private fun createComponentState(
+        outputData: CardOutputData = this.outputData
+    ): CardComponentState {
         val cardNumber = outputData.cardNumberState.value
 
         val firstCardType = outputData.detectedCardTypes.firstOrNull()?.cardType
@@ -163,17 +170,14 @@ internal class StoredCardDelegate(
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
-            _componentStateFlow.tryEmit(
-                CardComponentState(
-                    paymentComponentData = PaymentComponentData(),
-                    isInputValid = outputData.isValid,
-                    isReady = publicKey != null,
-                    cardType = firstCardType,
-                    binValue = "",
-                    lastFourDigits = null
-                )
+            return CardComponentState(
+                paymentComponentData = PaymentComponentData(),
+                isInputValid = outputData.isValid,
+                isReady = publicKey != null,
+                cardType = firstCardType,
+                binValue = "",
+                lastFourDigits = null
             )
-            return
         }
 
         val unencryptedCardBuilder = UnencryptedCard.Builder()
@@ -192,25 +196,20 @@ internal class StoredCardDelegate(
             cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             _exceptionFlow.tryEmit(e)
-            _componentStateFlow.tryEmit(
-                CardComponentState(
-                    paymentComponentData = PaymentComponentData(),
-                    isInputValid = false,
-                    isReady = true,
-                    cardType = firstCardType,
-                    binValue = "",
-                    lastFourDigits = null
-                )
+            return CardComponentState(
+                paymentComponentData = PaymentComponentData(),
+                isInputValid = false,
+                isReady = true,
+                cardType = firstCardType,
+                binValue = "",
+                lastFourDigits = null
             )
-            return
         }
 
-        _componentStateFlow.tryEmit(
-            mapComponentState(
-                encryptedCard,
-                cardNumber,
-                firstCardType,
-            )
+        return mapComponentState(
+            encryptedCard,
+            cardNumber,
+            firstCardType,
         )
     }
 

@@ -22,7 +22,7 @@ interface GiftCardDelegate :
 
     val outputDataFlow: Flow<GiftCardOutputData>
 
-    val componentStateFlow: Flow<GiftCardComponentState?>
+    val componentStateFlow: Flow<GiftCardComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
 

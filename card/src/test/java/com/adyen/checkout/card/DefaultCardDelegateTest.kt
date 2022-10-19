@@ -470,9 +470,9 @@ internal class DefaultCardDelegateTest {
         @Test
         fun `component is not initialized, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertFalse(componentState.isReady)
                 assertNull(componentState.lastFourDigits)
@@ -486,9 +486,9 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -501,7 +501,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumberState = FieldState(
                             "12345678",
@@ -510,7 +510,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -523,7 +523,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         expiryDateState = FieldState(
                             ExpiryDate(10, 2020),
@@ -532,7 +532,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -545,9 +545,9 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
@@ -622,7 +622,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         holderNameState = FieldState("S. Hopper", Validation.Valid),
                         socialSecurityNumberState = FieldState("0108", Validation.Valid),
@@ -648,7 +648,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 val expectedAddress = AddressFormUtils.makeAddressData(addressOutputData, addressUIState)
                 val expectedInstallments = InstallmentUtils.makeInstallmentModelObject(installmentModel)

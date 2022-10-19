@@ -34,8 +34,8 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     override val outputData: IssuerListOutputData get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
 
@@ -59,13 +59,20 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
         _outputDataFlow.tryEmit(outputData)
 
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = IssuerListOutputData(inputData.selectedIssuer)
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: IssuerListOutputData) {
+    internal fun updateComponentState(outputData: IssuerListOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: IssuerListOutputData = this.outputData
+    ): PaymentComponentState<IssuerListPaymentMethodT> {
         val issuerListPaymentMethod = typedPaymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id ?: ""
@@ -73,8 +80,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
         val paymentComponentData = PaymentComponentData<IssuerListPaymentMethodT>()
         paymentComponentData.paymentMethod = issuerListPaymentMethod
 
-        val state = PaymentComponentState(paymentComponentData, outputData.isValid, true)
-        _componentStateFlow.tryEmit(state)
+        return PaymentComponentState(paymentComponentData, outputData.isValid, true)
     }
 
     override fun getPaymentMethodType(): String {

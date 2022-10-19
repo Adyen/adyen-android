@@ -22,7 +22,7 @@ interface CardDelegate :
 
     val outputDataFlow: Flow<CardOutputData>
 
-    val componentStateFlow: Flow<CardComponentState?>
+    val componentStateFlow: Flow<CardComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
 

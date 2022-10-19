@@ -55,8 +55,8 @@ internal class DefaultBcmcDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BcmcOutputData> = _outputDataFlow
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<CardPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -81,7 +81,7 @@ internal class DefaultBcmcDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    createComponentState(outputData)
+                    updateComponentState(outputData)
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
@@ -101,7 +101,7 @@ internal class DefaultBcmcDelegate(
 
         _outputDataFlow.tryEmit(outputData)
 
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = BcmcOutputData(
@@ -131,17 +131,35 @@ internal class DefaultBcmcDelegate(
         }
     }
 
-    @Suppress("ReturnCount")
     @VisibleForTesting
-    internal fun createComponentState(outputData: BcmcOutputData) {
+    internal fun updateComponentState(outputData: BcmcOutputData) {
+        Logger.v(TAG, "updateComponentState")
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    @Suppress("ReturnCount")
+    private fun createComponentState(
+        outputData: BcmcOutputData = this.outputData
+    ): PaymentComponentState<CardPaymentMethod> {
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
-        val publicKey = validatePublicKey(outputData, paymentComponentData) ?: return
+        val publicKey = publicKey
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (isComponentStateInvalid(outputData, paymentComponentData)) return
+        if (!outputData.isValid || publicKey == null) {
+            return PaymentComponentState(
+                data = PaymentComponentData(),
+                isInputValid = outputData.isValid,
+                isReady = publicKey != null,
+            )
+        }
 
-        val encryptedCard = encryptCardData(outputData, paymentComponentData, publicKey) ?: return
+        val encryptedCard = encryptCardData(outputData, publicKey) ?: return PaymentComponentState(
+            data = PaymentComponentData(),
+            isInputValid = false,
+            isReady = true,
+        )
 
         // BCMC payment method is scheme type.
         val cardPaymentMethod = CardPaymentMethod(
@@ -161,47 +179,11 @@ internal class DefaultBcmcDelegate(
             shopperReference = configuration.shopperReference
         }
 
-        _componentStateFlow.tryEmit(PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true))
-    }
-
-    private fun validatePublicKey(
-        outputData: BcmcOutputData,
-        paymentComponentData: PaymentComponentData<CardPaymentMethod>,
-    ): String? {
-        val publicKey = publicKey
-        if (publicKey == null) {
-            val state = PaymentComponentState(
-                data = paymentComponentData,
-                isInputValid = outputData.isValid,
-                isReady = false,
-            )
-
-            _componentStateFlow.tryEmit(state)
-        }
-        return publicKey
-    }
-
-    private fun isComponentStateInvalid(
-        outputData: BcmcOutputData,
-        paymentComponentData: PaymentComponentData<CardPaymentMethod>,
-    ): Boolean {
-        if (!outputData.isValid) {
-            val state = PaymentComponentState(
-                data = paymentComponentData,
-                isInputValid = false,
-                isReady = true
-            )
-
-            _componentStateFlow.tryEmit(state)
-
-            return true
-        }
-        return false
+        return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 
     private fun encryptCardData(
         outputData: BcmcOutputData,
-        paymentComponentData: PaymentComponentData<CardPaymentMethod>,
         publicKey: String,
     ): EncryptedCard? = try {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
@@ -216,15 +198,6 @@ internal class DefaultBcmcDelegate(
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         _exceptionFlow.tryEmit(e)
-
-        _componentStateFlow.tryEmit(
-            PaymentComponentState(
-                data = paymentComponentData,
-                isInputValid = false,
-                isReady = true
-            )
-        )
-
         null
     }
 

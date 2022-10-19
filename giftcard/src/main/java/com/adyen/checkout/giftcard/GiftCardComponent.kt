@@ -16,7 +16,6 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -38,7 +37,6 @@ class GiftCardComponent(
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 

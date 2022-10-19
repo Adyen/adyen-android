@@ -25,7 +25,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.databinding.QrcodeViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
@@ -73,7 +72,6 @@ internal class QrCodeView @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: QRCodeDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
-            .filterNotNull()
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
 
