@@ -38,7 +38,6 @@ android {
 
 dependencies {
     // Checkout
-    api project(':components-core')
     api project(':ui-core')
 
     // Dependencies

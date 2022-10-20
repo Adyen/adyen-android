@@ -34,10 +34,10 @@ android {
 
 dependencies {
     // Checkout
-    api project(":3ds2")
-    api project(":await")
+    api project(':3ds2')
+    api project(':await')
     api project(':qr-code')
-    api project(":redirect")
+    api project(':redirect')
     api project(':wechatpay')
     api project(':voucher')
 
