@@ -14,9 +14,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
@@ -48,13 +50,17 @@ class GenericActionComponent(
 
     init {
         genericActionDelegate.initialize(viewModelScope)
+    }
 
+    fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
         genericActionDelegate.detailsFlow
-            .onEach { notifyDetails(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.ActionDetails(it)) }
             .launchIn(viewModelScope)
 
         genericActionDelegate.exceptionFlow
-            .onEach { notifyException(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
     }
 
@@ -106,4 +112,9 @@ class GenericActionComponent(
             GenericActionDelegate
             > = GenericActionComponentProvider()
     }
+}
+
+sealed class ComponentResult {
+    class ActionDetails(val data: ActionComponentData) : ComponentResult()
+    class Error(val error: ComponentError) : ComponentResult()
 }

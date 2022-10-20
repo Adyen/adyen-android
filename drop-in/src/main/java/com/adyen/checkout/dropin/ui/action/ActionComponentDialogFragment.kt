@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.action.ComponentResult
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
@@ -75,12 +76,18 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
                 }
             }
 
-            actionComponent.observe(viewLifecycleOwner, ::onActionComponentDataChanged)
-            actionComponent.observeErrors(viewLifecycleOwner, ::onError)
+            actionComponent.observe(viewLifecycleOwner, ::collect)
 
             binding.componentView.attach(actionComponent, viewLifecycleOwner)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
+        }
+    }
+
+    private fun collect(result: ComponentResult) {
+        when (result) {
+            is ComponentResult.ActionDetails -> onActionComponentDataChanged(result.data)
+            is ComponentResult.Error -> onError(result.error)
         }
     }
 
