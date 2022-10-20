@@ -70,7 +70,8 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardType)
+                isSupported = supportedCardTypes.contains(cardType),
+                panLength = null,
             )
         )
     }
@@ -84,7 +85,8 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardType)
+                isSupported = supportedCardTypes.contains(cardType),
+                panLength = 16,
             )
         )
     }
@@ -99,7 +101,8 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.HIDDEN,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardTypeFirst)
+                isSupported = supportedCardTypes.contains(cardTypeFirst),
+                panLength = 16,
             ),
             DetectedCardType(
                 cardType = cardTypeSecond,
@@ -107,7 +110,8 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.OPTIONAL,
                 expiryDatePolicy = Brand.FieldPolicy.HIDDEN,
-                isSupported = supportedCardTypes.contains(cardTypeSecond)
+                isSupported = supportedCardTypes.contains(cardTypeSecond),
+                panLength = 16,
             )
         )
     }

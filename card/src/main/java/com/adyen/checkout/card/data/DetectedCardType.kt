@@ -17,5 +17,6 @@ data class DetectedCardType(
     val cvcPolicy: Brand.FieldPolicy,
     val expiryDatePolicy: Brand.FieldPolicy,
     val isSupported: Boolean,
-    val isSelected: Boolean = false
+    val panLength: Int?,
+    val isSelected: Boolean = false,
 )

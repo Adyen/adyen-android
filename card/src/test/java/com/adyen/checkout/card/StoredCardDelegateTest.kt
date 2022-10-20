@@ -401,6 +401,7 @@ internal class StoredCardDelegateTest {
         cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         isSupported: Boolean = true,
+        panLength: Int? = null,
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
@@ -410,6 +411,7 @@ internal class StoredCardDelegateTest {
             cvcPolicy = cvcPolicy,
             expiryDatePolicy = expiryDatePolicy,
             isSupported = isSupported,
+            panLength = panLength,
             isSelected = isSelected,
         )
     }
