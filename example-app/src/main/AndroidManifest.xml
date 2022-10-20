@@ -22,8 +22,6 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
-        <activity android:name=".ResultActivity" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
