@@ -154,18 +154,4 @@ object DropIn {
     }
 
     private fun getComponentName(context: Context, serviceClass: Class<*>) = ComponentName(context, serviceClass)
-
-    /**
-     * Helper method to fetch the Drop-in result string from the result intent provided to
-     * [startPayment].
-     *
-     * Returns the value of [DropInServiceResult.Finished.result] or [null] if the intent does
-     * not correspond to the Drop-in.
-     *
-     * @return the result of a finished Drop-in
-     */
-    @JvmStatic
-    fun getDropInResultFromIntent(intent: Intent): String? {
-        return intent.getStringExtra(RESULT_KEY)
-    }
 }

@@ -66,11 +66,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         )
         binding.componentList.adapter = componentItemAdapter
 
-        val result = DropIn.getDropInResultFromIntent(intent)
-        if (result != null) {
-            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.viewState.collect(::onViewState) }
@@ -92,14 +87,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        Logger.d(TAG, "onNewIntent")
-        if (intent == null) return
-        val result = DropIn.getDropInResultFromIntent(intent) ?: return
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDropInResult(dropInResult: DropInResult?) {
