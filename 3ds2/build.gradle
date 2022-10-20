@@ -40,7 +40,6 @@ android {
 dependencies {
     // Checkout
     api project(':ui-core')
-    api project(':redirect')
 
     // Dependencies
     api libraries.adyen3ds2

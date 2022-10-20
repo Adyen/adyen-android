@@ -5,7 +5,7 @@
  *
  * Created by caiof on 1/4/2019.
  */
-package com.adyen.checkout.redirect.handler
+package com.adyen.checkout.components.handler
 
 import android.content.ActivityNotFoundException
 import android.content.Context

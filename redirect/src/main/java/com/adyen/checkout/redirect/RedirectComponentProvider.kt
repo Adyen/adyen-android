@@ -19,7 +19,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 
 class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
     override fun <T> get(

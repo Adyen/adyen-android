@@ -45,7 +45,10 @@ dependencies {
     api libraries.androidx.constraintlayout
     implementation libraries.androidx.recyclerview
     implementation libraries.material
+    implementation libraries.androidx.browser
 
     //Tests
+    testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.robolectric
 }

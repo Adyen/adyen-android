@@ -6,11 +6,10 @@
  * Created by josephj on 22/4/2021.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.components.handler
 
 import android.net.Uri
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 import com.google.common.collect.Iterators
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals

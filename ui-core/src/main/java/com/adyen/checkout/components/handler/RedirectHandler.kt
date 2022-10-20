@@ -5,7 +5,7 @@
  *
  * Created by josephj on 18/8/2022.
  */
-package com.adyen.checkout.redirect.handler
+package com.adyen.checkout.components.handler
 
 import android.content.Context
 import android.net.Uri

@@ -44,13 +44,8 @@ dependencies {
     // Checkout
     api project(':ui-core')
 
-    // Dependencies
-    implementation libraries.androidx.browser
-
     //Tests
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
-    testImplementation testLibraries.robolectric
-    testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines
 }

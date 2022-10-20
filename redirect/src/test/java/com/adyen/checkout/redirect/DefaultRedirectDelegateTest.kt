@@ -16,7 +16,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.redirect.test.TestRedirectHandler
+import com.adyen.checkout.components.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
