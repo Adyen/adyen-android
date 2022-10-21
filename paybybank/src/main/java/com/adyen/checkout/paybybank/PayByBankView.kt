@@ -56,7 +56,7 @@ class PayByBankView @JvmOverloads constructor(
     }
 
     private fun onItemClicked(issuerModel: IssuerModel) {
-        Logger.d(TAG, "onItemClicker - ${issuerModel.name}")
+        Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
         delegate.updateInputData { selectedIssuer = issuerModel }
     }
 
@@ -76,7 +76,7 @@ class PayByBankView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired: Boolean = true
+    override val isConfirmationRequired: Boolean = false
 
     override fun highlightValidationErrors() {
         // no validation
