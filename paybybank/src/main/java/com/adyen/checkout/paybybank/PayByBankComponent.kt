@@ -9,6 +9,7 @@
 package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -18,6 +19,7 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class PayByBankComponent(
@@ -34,10 +36,8 @@ class PayByBankComponent(
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
-            .onEach {
-                notifyStateChanged(it)
-            }
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

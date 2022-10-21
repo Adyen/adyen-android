@@ -34,8 +34,8 @@ class DefaultPayByBankDelegate(
 
     override val outputData: PayByBankOutputData = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<PayByBankPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(PayByBankComponentViewType)
 
@@ -49,33 +49,30 @@ class DefaultPayByBankDelegate(
     }
 
     private fun onInputDataChanged() {
-        // TODO create output data
         val outputData = createOutputData()
 
         _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
-    // TODO
     private fun createOutputData() = PayByBankOutputData(inputData.selectedIssuer)
 
-    private fun createComponentState(outputData: PayByBankOutputData) {
-        // TODO create component state
+    private fun updateComponentState(outputData: PayByBankOutputData) {
+        _componentStateFlow.tryEmit(createComponentState(outputData))
+    }
+
+    private fun createComponentState(outputData: PayByBankOutputData = this.outputData): PaymentComponentState<PayByBankPaymentMethod> {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
-            type = "type",
-            issuer = "issuer"
+            type = getPaymentMethodType(), issuer = outputData.selectedIssuer?.id ?: ""
         )
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = payByBankPaymentMethod
         )
-        val componentState = PaymentComponentState(
-            data = paymentComponentData,
-            isInputValid = outputData.isValid,
-            isReady = true
-        )
 
-        _componentStateFlow.tryEmit(componentState)
+        return PaymentComponentState(
+            data = paymentComponentData, isInputValid = outputData.isValid, isReady = true
+        )
     }
 
     override fun getIssuers(): List<IssuerModel> {

@@ -21,7 +21,7 @@ interface PayByBankDelegate : PaymentMethodDelegate, ViewProvidingDelegate {
 
     val outputDataFlow: Flow<PayByBankOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>?>
+    val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>>
 
     fun getIssuers(): List<IssuerModel>
 
