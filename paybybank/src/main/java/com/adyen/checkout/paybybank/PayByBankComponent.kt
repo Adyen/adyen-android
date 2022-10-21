@@ -13,33 +13,30 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
+import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.issuerlist.IssuerListDelegate
-import com.adyen.checkout.issuerlist.IssuerListOutputData
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 
 class PayByBankComponent(
     savedStateHandle: SavedStateHandle,
     override val delegate: PayByBankDelegate,
-    private val issuerListDelegate: IssuerListDelegate<PayByBankPaymentMethod>,
     configuration: PayByBankConfiguration
 ) : BasePaymentComponent<PayByBankConfiguration, PaymentComponentState<PayByBankPaymentMethod>>(
     savedStateHandle,
     delegate,
     configuration
-) {
+), ViewableComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        // FIXME temp
-        delegate.outputDataFlow
+        delegate.componentStateFlow
             .filterNotNull()
-            .combine(issuerListDelegate.outputDataFlow.filterNotNull()) { a: PayByBankOutputData, b: IssuerListOutputData ->
-                a to b
-            }
             .onEach {
-
+                notifyStateChanged(it)
             }
     }
 

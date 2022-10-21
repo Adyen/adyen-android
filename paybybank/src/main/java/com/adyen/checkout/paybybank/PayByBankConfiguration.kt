@@ -9,44 +9,29 @@
 package com.adyen.checkout.paybybank
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.issuerlist.IssuerListConfiguration
-import com.adyen.checkout.issuerlist.IssuerListViewType
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class PayByBankConfiguration : IssuerListConfiguration {
+@Parcelize
+class PayByBankConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<PayByBankConfiguration?> = object : Parcelable.Creator<PayByBankConfiguration?> {
-            override fun createFromParcel(source: Parcel?): PayByBankConfiguration? {
-                if (source == null) return null
-                return PayByBankConfiguration(source)
-            }
-
-            override fun newArray(size: Int): Array<PayByBankConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
-
-    internal constructor(parcel: Parcel) : super(parcel)
+    private constructor(builder: Builder) : this(
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey
+    )
 
     /**
      * Builder to create a [PayByBankConfiguration].
      */
-    class Builder : IssuerListBuilder<PayByBankConfiguration> {
+    class Builder : BaseConfigurationBuilder<PayByBankConfiguration> {
         /**
          * Constructor for Builder with default values.
          *
@@ -80,22 +65,16 @@ class PayByBankConfiguration : IssuerListConfiguration {
          */
         constructor(configuration: PayByBankConfiguration) : super(configuration)
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         override fun buildInternal(): PayByBankConfiguration {
-            return PayByBankConfiguration(
-                shopperLocale = shopperLocale,
-                environment = environment,
-                clientKey = clientKey,
-                viewType = viewType,
-                hideIssuerLogos = hideIssuerLogos
-            )
+            return PayByBankConfiguration(this)
         }
     }
 }

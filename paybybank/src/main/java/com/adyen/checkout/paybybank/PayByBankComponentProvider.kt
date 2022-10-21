@@ -15,8 +15,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
-import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration> {
     override fun get(
@@ -31,7 +29,6 @@ class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, 
                 PayByBankComponent(
                     savedStateHandle,
                     DefaultPayByBankDelegate(paymentMethod, configuration),
-                    DefaultIssuerListDelegate(configuration, paymentMethod) { PayByBankPaymentMethod() },
                     configuration
                 )
             }

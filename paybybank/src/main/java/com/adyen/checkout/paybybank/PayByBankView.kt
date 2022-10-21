@@ -10,11 +10,13 @@ package com.adyen.checkout.paybybank
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
 import kotlinx.coroutines.CoroutineScope
 
 private val TAG = LogUtil.getTag()
@@ -24,6 +26,8 @@ class PayByBankView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr), ComponentView {
+
+    private val binding: PayByBankViewBinding = PayByBankViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var delegate: PayByBankDelegate
 
