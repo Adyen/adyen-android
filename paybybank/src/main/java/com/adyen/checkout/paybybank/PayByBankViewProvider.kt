@@ -22,7 +22,10 @@ object PayByBankViewProvider: ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentView {
-        TODO("Not yet implemented")
+        return when (viewType) {
+            PayByBankComponentViewType -> PayByBankView(context, attrs, defStyleAttr)
+            else -> throw IllegalArgumentException("Unsupported view type")
+        }
     }
 }
 

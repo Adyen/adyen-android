@@ -57,7 +57,7 @@ class DefaultPayByBankDelegate(
     }
 
     // TODO
-    private fun createOutputData() = PayByBankOutputData()
+    private fun createOutputData() = PayByBankOutputData(inputData.selectedIssuer)
 
     private fun createComponentState(outputData: PayByBankOutputData) {
         // TODO create component state

@@ -9,6 +9,9 @@
 package com.adyen.checkout.paybybank
 
 import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.issuerlist.IssuerModel
 
-class PayByBankInputData: InputData {
-}
+class PayByBankInputData(
+    var query: String? = null,
+    var selectedIssuer: IssuerModel? = null
+): InputData
