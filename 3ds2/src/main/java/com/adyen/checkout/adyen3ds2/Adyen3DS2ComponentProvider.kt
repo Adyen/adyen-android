@@ -24,7 +24,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers

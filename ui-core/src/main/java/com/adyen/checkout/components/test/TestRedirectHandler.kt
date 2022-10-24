@@ -6,13 +6,13 @@
  * Created by josephj on 18/8/2022.
  */
 
-package com.adyen.checkout.redirect.test
+package com.adyen.checkout.components.test
 
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.redirect.handler.RedirectHandler
+import com.adyen.checkout.components.handler.RedirectHandler
 import org.json.JSONObject
 
 /**

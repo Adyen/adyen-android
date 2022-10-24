@@ -22,7 +22,7 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 
 private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 

@@ -24,9 +24,9 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.components.test.TestRedirectHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.redirect.test.TestRedirectHandler
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeStatusReceiver
