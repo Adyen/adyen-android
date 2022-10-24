@@ -21,6 +21,9 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.IssuerModel
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class PayByBankView @JvmOverloads constructor(
     context: Context,
@@ -33,6 +36,8 @@ class PayByBankView @JvmOverloads constructor(
     private lateinit var localizedContext: Context
 
     private lateinit var delegate: PayByBankDelegate
+
+    private var payByBankRecyclerAdapter: PayByBankRecyclerAdapter? = null
 
     init {
         orientation = VERTICAL
@@ -47,8 +52,20 @@ class PayByBankView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
+        observeDelegate(delegate, coroutineScope)
+
         initSearchQueryInput()
         initIssuersRecyclerView()
+    }
+
+    private fun observeDelegate(delegate: PayByBankDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { onOutputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun onOutputDataChanged(outputData: PayByBankOutputData) {
+        payByBankRecyclerAdapter?.submitList(outputData.issuers)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -67,13 +84,14 @@ class PayByBankView @JvmOverloads constructor(
     }
 
     private fun initIssuersRecyclerView() {
-        binding.recyclerIssuers.adapter = PayByBankRecyclerAdapter(
+        payByBankRecyclerAdapter = PayByBankRecyclerAdapter(
             imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             onItemClicked = ::onItemClicked
         ).apply {
             submitList(delegate.getIssuers())
         }
+        binding.recyclerIssuers.adapter = payByBankRecyclerAdapter
     }
 
     override val isConfirmationRequired: Boolean = false

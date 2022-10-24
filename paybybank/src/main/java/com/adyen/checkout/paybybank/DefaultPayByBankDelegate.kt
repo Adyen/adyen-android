@@ -55,7 +55,16 @@ class DefaultPayByBankDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData() = PayByBankOutputData(inputData.selectedIssuer)
+    private fun createOutputData() = PayByBankOutputData(
+        selectedIssuer = inputData.selectedIssuer,
+        issuers = filterByQuery()
+    )
+
+    private fun filterByQuery(): List<IssuerModel> = inputData.query?.let { query ->
+        getIssuers().filter { issuerModel ->
+            issuerModel.name.contains(query, ignoreCase = true)
+        }
+    } ?: getIssuers()
 
     private fun updateComponentState(outputData: PayByBankOutputData) {
         _componentStateFlow.tryEmit(createComponentState(outputData))
