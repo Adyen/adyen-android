@@ -15,6 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
@@ -28,12 +31,18 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.ui.arguments
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentEvent
+import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     private var _binding: FragmentGenericActionComponentBinding? = null
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
+
+    private val actionComponentViewModel: ActionComponentViewModel by viewModels()
 
     private val action: Action by arguments(ACTION)
     private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
@@ -52,6 +61,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
+        initObservers()
         binding.header.isVisible = false
 
         try {
@@ -65,8 +75,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
                 }
             }
 
-            actionComponent.handleAction(requireActivity(), action)
-
             actionComponent.observe(viewLifecycleOwner, ::onActionComponentDataChanged)
             actionComponent.observeErrors(viewLifecycleOwner, ::onError)
 
@@ -74,6 +82,19 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    private fun initObservers() {
+        actionComponentViewModel.eventsFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach {
+                when (it) {
+                    ActionComponentEvent.HANDLE_ACTION -> {
+                        actionComponent.handleAction(requireActivity(), action)
+                    }
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onBackPressed(): Boolean {
