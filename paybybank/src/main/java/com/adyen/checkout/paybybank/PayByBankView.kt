@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.ComponentView
@@ -66,6 +67,7 @@ class PayByBankView @JvmOverloads constructor(
 
     private fun onOutputDataChanged(outputData: PayByBankOutputData) {
         payByBankRecyclerAdapter?.submitList(outputData.issuers)
+        binding.textViewNoMatchingIssuers.isVisible = outputData.issuers.isEmpty()
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
