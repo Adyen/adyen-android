@@ -18,7 +18,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
-import com.adyen.checkout.dropin.ui.stored.makeStoredModel
+import com.adyen.checkout.dropin.ui.stored.mapStoredModel
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.Idle
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
@@ -28,7 +28,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredP
 class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
     private val componentRequiresInput: Boolean,
-    private val isRemovingEnabled: Boolean
+    isRemovingEnabled: Boolean
 ) : ViewModel() {
 
     companion object {
@@ -45,7 +45,7 @@ class PreselectedStoredPaymentViewModel(
     private var lastComponentError: ComponentError? = null
 
     init {
-        storedPaymentMethodMutableLiveData.value = makeStoredModel(storedPaymentMethod, isRemovingEnabled)
+        storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(isRemovingEnabled)
     }
 
     fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {

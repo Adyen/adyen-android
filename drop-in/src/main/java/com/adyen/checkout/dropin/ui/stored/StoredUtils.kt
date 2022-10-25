@@ -14,26 +14,27 @@ import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 
-internal fun makeStoredModel(
-    storedPaymentMethod: StoredPaymentMethod,
+internal fun StoredPaymentMethod.mapStoredModel(
     isRemovingEnabled: Boolean
 ): StoredPaymentMethodModel {
-    return when (storedPaymentMethod.type) {
-        PaymentMethodTypes.SCHEME -> {
+    return when (this.type) {
+        PaymentMethodTypes.SCHEME -> with(this) {
             StoredCardModel(
-                storedPaymentMethod.id.orEmpty(),
-                storedPaymentMethod.brand.orEmpty(),
+                id.orEmpty(),
+                brand.orEmpty(),
                 isRemovingEnabled,
-                storedPaymentMethod.lastFour.orEmpty(),
-                storedPaymentMethod.expiryMonth.orEmpty(),
-                storedPaymentMethod.expiryYear.orEmpty()
+                lastFour.orEmpty(),
+                expiryMonth.orEmpty(),
+                expiryYear.orEmpty()
             )
         }
-        else -> GenericStoredModel(
-            storedPaymentMethod.id.orEmpty(),
-            storedPaymentMethod.type.orEmpty(),
-            isRemovingEnabled,
-            storedPaymentMethod.name.orEmpty()
-        )
+        else -> with(this) {
+            GenericStoredModel(
+                id.orEmpty(),
+                type.orEmpty(),
+                isRemovingEnabled,
+                name.orEmpty()
+            )
+        }
     }
 }
