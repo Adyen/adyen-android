@@ -225,7 +225,8 @@ class NewCardDelegate(
                 else -> Brand.FieldPolicy.REQUIRED
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardTypes.contains(cardType)
+            panLength = null,
+            isSupported = supportedCardTypes.contains(cardType),
         )
     }
 }

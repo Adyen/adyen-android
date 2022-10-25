@@ -24,6 +24,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -39,6 +40,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -47,6 +49,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -58,6 +61,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -66,6 +70,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -82,6 +87,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -90,6 +96,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -101,6 +108,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -109,6 +117,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -125,6 +134,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -133,6 +143,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -144,6 +155,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -152,6 +164,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -168,6 +181,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -176,6 +190,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
@@ -187,6 +202,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             ),
             DetectedCardType(
@@ -195,6 +211,7 @@ class DualBrandedCardUtilsTest {
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                panLength = 16,
                 isSupported = true
             )
         )
