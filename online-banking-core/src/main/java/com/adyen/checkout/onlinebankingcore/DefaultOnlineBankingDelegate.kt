@@ -45,8 +45,8 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(OnlineBankingComponentViewType)
 
@@ -100,7 +100,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         try {
             pdfOpener.open(context, termsAndConditionsUrl)
         } catch (e: IllegalStateException) {
-            _exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
         }
     }
 

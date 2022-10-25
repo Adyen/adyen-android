@@ -59,8 +59,8 @@ internal class DefaultBcmcDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>> = _componentStateFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val outputData get() = _outputDataFlow.value
 
@@ -86,7 +86,7 @@ internal class DefaultBcmcDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                    _exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
+                    exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
         }
@@ -198,7 +198,7 @@ internal class DefaultBcmcDelegate(
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
-        _exceptionChannel.trySend(e)
+        exceptionChannel.trySend(e)
         null
     }
 

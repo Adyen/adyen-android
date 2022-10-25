@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class ActionComponentViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    private val _eventsChannel: Channel<ActionComponentEvent> = bufferedChannel()
-    val eventsFlow: Flow<ActionComponentEvent> = _eventsChannel.receiveAsFlow()
+    private val eventsChannel: Channel<ActionComponentEvent> = bufferedChannel()
+    val eventsFlow: Flow<ActionComponentEvent> = eventsChannel.receiveAsFlow()
 
     private var isInitialized: Boolean
         get() = savedStateHandle[IS_INITIALIZED] ?: false
@@ -33,7 +33,7 @@ internal class ActionComponentViewModel(private val savedStateHandle: SavedState
     private fun launchAction() {
         if (isInitialized) return
         isInitialized = true
-        _eventsChannel.trySend(ActionComponentEvent.HANDLE_ACTION)
+        eventsChannel.trySend(ActionComponentEvent.HANDLE_ACTION)
     }
 
     companion object {

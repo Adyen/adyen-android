@@ -34,11 +34,11 @@ internal class DefaultRedirectDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {
 
-    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(RedirectComponentViewType)
 
@@ -55,16 +55,16 @@ internal class DefaultRedirectDelegate(
             //  PaymentComponentState for actions.
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
-            _exceptionChannel.trySend(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
     override fun handleIntent(intent: Intent) {
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsChannel.trySend(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } catch (ex: CheckoutException) {
-            _exceptionChannel.trySend(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -76,7 +76,7 @@ internal class DefaultRedirectDelegate(
     }
 
     override fun onError(e: CheckoutException) {
-        _exceptionChannel.trySend(e)
+        exceptionChannel.trySend(e)
     }
 
     override fun getViewProvider(): ViewProvider = RedirectViewProvider

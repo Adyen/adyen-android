@@ -49,11 +49,11 @@ internal class DefaultAwaitDelegate(
 
     override val outputData: AwaitOutputData get() = _outputDataFlow.value
 
-    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(AwaitComponentViewType)
 
@@ -74,7 +74,7 @@ internal class DefaultAwaitDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionChannel.trySend(ComponentException("Payment data is null"))
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
         createOutputData(null, action)
@@ -99,7 +99,7 @@ internal class DefaultAwaitDelegate(
             },
             onFailure = {
                 Logger.e(TAG, "Error while polling status", it)
-                _exceptionChannel.trySend(ComponentException("Error while polling status", it))
+                exceptionChannel.trySend(ComponentException("Error while polling status", it))
             }
         )
     }
@@ -120,9 +120,9 @@ internal class DefaultAwaitDelegate(
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
             val details = createDetails(payload)
-            _detailsChannel.trySend(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } else {
-            _exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -138,7 +138,7 @@ internal class DefaultAwaitDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            _exceptionChannel.trySend(ComponentException("Failed to create details.", e))
+            exceptionChannel.trySend(ComponentException("Failed to create details.", e))
         }
         return jsonObject
     }

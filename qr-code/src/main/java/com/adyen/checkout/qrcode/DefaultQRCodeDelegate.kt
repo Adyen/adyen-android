@@ -52,11 +52,11 @@ internal class DefaultQRCodeDelegate(
 
     override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
@@ -91,7 +91,7 @@ internal class DefaultQRCodeDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionChannel.trySend(ComponentException("Payment data is null"))
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
@@ -114,7 +114,7 @@ internal class DefaultQRCodeDelegate(
             Logger.d(TAG, "makeRedirect - $url")
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
-            _exceptionChannel.trySend(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -136,7 +136,7 @@ internal class DefaultQRCodeDelegate(
             },
             onFailure = {
                 Logger.e(TAG, "Error while polling status", it)
-                _exceptionChannel.trySend(ComponentException("Error while polling status", it))
+                exceptionChannel.trySend(ComponentException("Error while polling status", it))
             }
         )
     }
@@ -152,9 +152,9 @@ internal class DefaultQRCodeDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
             val details = createDetails(payload)
-            _detailsChannel.trySend(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } else {
-            _exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -170,9 +170,9 @@ internal class DefaultQRCodeDelegate(
     override fun handleIntent(intent: Intent) {
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsChannel.trySend(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } catch (ex: CheckoutException) {
-            _exceptionChannel.trySend(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -188,7 +188,7 @@ internal class DefaultQRCodeDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            _exceptionChannel.trySend(ComponentException("Failed to create details.", e))
+            exceptionChannel.trySend(ComponentException("Failed to create details.", e))
         }
         return jsonObject
     }

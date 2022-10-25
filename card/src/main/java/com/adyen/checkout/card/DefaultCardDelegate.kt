@@ -80,8 +80,8 @@ internal class DefaultCardDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -115,7 +115,7 @@ internal class DefaultCardDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                    _exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
+                    exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
         }
@@ -310,7 +310,7 @@ internal class DefaultCardDelegate(
 
             cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
-            _exceptionChannel.trySend(e)
+            exceptionChannel.trySend(e)
 
             return CardComponentState(
                 paymentComponentData = PaymentComponentData(),

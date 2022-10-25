@@ -37,8 +37,8 @@ internal class DefaultGooglePayDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<GooglePayComponentState> = _componentStateFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     @VisibleForTesting
     internal fun updateComponentState(paymentData: PaymentData?) {
@@ -83,19 +83,19 @@ internal class DefaultGooglePayDelegate(
         when (resultCode) {
             Activity.RESULT_OK -> {
                 if (data == null) {
-                    _exceptionChannel.trySend(ComponentException("Result data is null"))
+                    exceptionChannel.trySend(ComponentException("Result data is null"))
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
                 updateComponentState(paymentData)
             }
             Activity.RESULT_CANCELED -> {
-                _exceptionChannel.trySend(ComponentException("Payment canceled."))
+                exceptionChannel.trySend(ComponentException("Payment canceled."))
             }
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = AutoResolveHelper.getStatusFromIntent(data)
                 val statusMessage: String = status?.let { ": ${it.statusMessage}" }.orEmpty()
-                _exceptionChannel.trySend(ComponentException("GooglePay returned an error$statusMessage"))
+                exceptionChannel.trySend(ComponentException("GooglePay returned an error$statusMessage"))
             }
             else -> Unit
         }

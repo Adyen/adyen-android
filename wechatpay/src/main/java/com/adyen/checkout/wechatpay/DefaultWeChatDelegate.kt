@@ -40,11 +40,11 @@ internal class DefaultWeChatDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : WeChatDelegate {
 
-    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
 
@@ -59,7 +59,7 @@ internal class DefaultWeChatDelegate(
     @VisibleForTesting
     internal fun onResponse(baseResponse: BaseResp) {
         parseResult(baseResponse)?.let { response ->
-            _detailsChannel.trySend(createActionComponentData(response))
+            detailsChannel.trySend(createActionComponentData(response))
         }
     }
 
@@ -68,7 +68,7 @@ internal class DefaultWeChatDelegate(
         try {
             result.put(RESULT_CODE, baseResp.errCode)
         } catch (e: JSONException) {
-            _exceptionChannel.trySend(CheckoutException("Error parsing result.", e))
+            exceptionChannel.trySend(CheckoutException("Error parsing result.", e))
             return null
         }
         return result
@@ -87,20 +87,20 @@ internal class DefaultWeChatDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionChannel.trySend(ComponentException("Payment data is null"))
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
         val sdkData = action.sdkData
         if (sdkData == null) {
-            _exceptionChannel.trySend(ComponentException("SDK Data is null"))
+            exceptionChannel.trySend(ComponentException("SDK Data is null"))
             return
         }
 
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
 
         if (isWeChatNotInitiated) {
-            _exceptionChannel.trySend(ComponentException("Failed to initialize WeChat app"))
+            exceptionChannel.trySend(ComponentException("Failed to initialize WeChat app"))
             return
         }
     }

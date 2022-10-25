@@ -27,8 +27,8 @@ internal class DefaultVoucherDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<VoucherOutputData> = _outputDataFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 

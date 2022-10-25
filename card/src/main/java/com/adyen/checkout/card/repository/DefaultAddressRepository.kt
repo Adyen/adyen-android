@@ -27,11 +27,11 @@ import java.util.Locale
 
 internal class DefaultAddressRepository : AddressRepository {
 
-    private val _statesChannel: Channel<List<AddressItem>> = bufferedChannel()
-    override val statesFlow: Flow<List<AddressItem>> = _statesChannel.receiveAsFlow()
+    private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()
+    override val statesFlow: Flow<List<AddressItem>> = statesChannel.receiveAsFlow()
 
-    private val _countriesChannel: Channel<List<AddressItem>> = bufferedChannel()
-    override val countriesFlow: Flow<List<AddressItem>> = _countriesChannel.receiveAsFlow()
+    private val countriesChannel: Channel<List<AddressItem>> = bufferedChannel()
+    override val countriesFlow: Flow<List<AddressItem>> = countriesChannel.receiveAsFlow()
 
     private val cache: HashMap<String, List<AddressItem>> = hashMapOf()
 
@@ -44,7 +44,7 @@ internal class DefaultAddressRepository : AddressRepository {
         val needsStates = COUNTRIES_WITH_STATES.contains(addressSpecification)
         if (!countryCode.isNullOrEmpty() && needsStates) {
             cache[countryCode]?.let {
-                _statesChannel.trySend(it)
+                statesChannel.trySend(it)
             } ?: run {
                 fetchStateList(
                     configuration.environment,
@@ -54,7 +54,7 @@ internal class DefaultAddressRepository : AddressRepository {
                 )
             }
         } else {
-            _statesChannel.trySend(emptyList())
+            statesChannel.trySend(emptyList())
         }
     }
 
@@ -78,13 +78,13 @@ internal class DefaultAddressRepository : AddressRepository {
                 },
                 onFailure = { emptyList() }
             )
-            _statesChannel.trySend(states)
+            statesChannel.trySend(states)
         }
     }
 
     override fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope) {
         cache[COUNTRIES_CACHE_KEY]?.let {
-            _countriesChannel.trySend(it)
+            countriesChannel.trySend(it)
         } ?: run {
             fetchCountryList(
                 configuration.environment,
@@ -110,7 +110,7 @@ internal class DefaultAddressRepository : AddressRepository {
                     emptyList()
                 }
             )
-            _countriesChannel.trySend(countries)
+            countriesChannel.trySend(countries)
         }
     }
 

@@ -49,8 +49,8 @@ internal class DefaultGiftCardDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<GiftCardComponentState> = _componentStateFlow
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
 
@@ -70,7 +70,7 @@ internal class DefaultGiftCardDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                    _exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
+                    exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
         }
@@ -152,7 +152,7 @@ internal class DefaultGiftCardDelegate(
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
-        _exceptionChannel.trySend(e)
+        exceptionChannel.trySend(e)
         null
     }
 

@@ -51,11 +51,11 @@ internal class DefaultGenericActionDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
     private var uiCustomization: UiCustomization? = null
 
@@ -91,7 +91,7 @@ internal class DefaultGenericActionDelegate(
     private fun observeExceptions(delegate: ActionDelegate<Action>) {
         Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
-            .onEach { _exceptionChannel.trySend(it) }
+            .onEach { exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
@@ -99,7 +99,7 @@ internal class DefaultGenericActionDelegate(
         if (delegate !is DetailsEmittingDelegate) return
         Logger.d(TAG, "Observing details")
         delegate.detailsFlow
-            .onEach { _detailsChannel.trySend(it) }
+            .onEach { detailsChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
@@ -127,10 +127,10 @@ internal class DefaultGenericActionDelegate(
     override fun handleIntent(intent: Intent) {
         when (val delegate = _delegate) {
             null -> {
-                _exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
+                exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
             }
             !is IntentHandlingDelegate -> {
-                _exceptionChannel.trySend(ComponentException("Cannot handle intent with the current component"))
+                exceptionChannel.trySend(ComponentException("Cannot handle intent with the current component"))
             }
             else -> {
                 Logger.d(TAG, "Handling intent")
