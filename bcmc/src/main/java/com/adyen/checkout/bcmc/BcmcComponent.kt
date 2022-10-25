@@ -22,6 +22,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -46,7 +47,7 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
 class BcmcComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: BcmcConfiguration,
+    private val configuration: BcmcConfiguration,
     private val publicKeyRepository: PublicKeyRepository,
     private val cardValidationMapper: CardValidationMapper
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
@@ -85,6 +86,7 @@ class BcmcComponent(
         return BcmcOutputData(
             validateCardNumber(inputData.cardNumber),
             validateExpiryDate(inputData.expiryDate),
+            validateHolderName(inputData.cardHolderName),
             inputData.isStorePaymentSelected
         )
     }
@@ -135,6 +137,10 @@ class BcmcComponent(
             } catch (e: NoClassDefFoundError) {
                 Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
             }
+
+            if (configuration.isHolderNameRequired) {
+                holderName = outputData.cardHolderNameField.value
+            }
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnabled)
@@ -154,5 +160,19 @@ class BcmcComponent(
 
     private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return CardValidationUtils.validateExpiryDate(expiryDate, Brand.FieldPolicy.REQUIRED)
+    }
+
+    private fun validateHolderName(holderName: String): FieldState<String> {
+        return if (configuration.isHolderNameRequired && holderName.isBlank()) {
+            FieldState(
+                holderName,
+                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+            )
+        } else {
+            FieldState(
+                holderName,
+                Validation.Valid
+            )
+        }
     }
 }

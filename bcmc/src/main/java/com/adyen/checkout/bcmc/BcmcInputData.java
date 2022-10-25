@@ -10,12 +10,13 @@ package com.adyen.checkout.bcmc;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.components.base.InputData;
 import com.adyen.checkout.card.data.ExpiryDate;
+import com.adyen.checkout.components.base.InputData;
 
 public final class BcmcInputData implements InputData {
     private String mCardNumber = "";
     private ExpiryDate mExpiryDate = ExpiryDate.EMPTY_DATE;
+    private String mCardHolderName = "";
     private boolean mIsStorePaymentSelected = false;
 
     @NonNull
@@ -34,6 +35,15 @@ public final class BcmcInputData implements InputData {
 
     public void setExpiryDate(@NonNull ExpiryDate expiryDate) {
         mExpiryDate = expiryDate;
+    }
+
+    @NonNull
+    public String getCardHolderName() {
+        return mCardHolderName;
+    }
+
+    public void setCardHolderName(@NonNull String cardHolderName) {
+        mCardHolderName = cardHolderName;
     }
 
     public boolean isStorePaymentSelected() {
