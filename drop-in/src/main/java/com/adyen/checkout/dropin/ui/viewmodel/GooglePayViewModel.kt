@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +24,7 @@ class GooglePayViewModel(private val savedStateHandle: SavedStateHandle) : ViewM
         private const val IS_GOOGLE_PAY_STARTED = "IS_GOOGLE_PAY_STARTED"
     }
 
-    private val eventChannel = Channel<GooglePayFragmentEvent>(Channel.BUFFERED)
+    private val eventChannel: Channel<GooglePayFragmentEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
     private var isGooglePayStarted: Boolean

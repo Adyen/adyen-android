@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -55,7 +56,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     @Suppress("LeakingThis")
     private val binder = DropInBinder(this)
 
-    private val resultChannel = Channel<BaseDropInServiceResult>(Channel.BUFFERED)
+    private val resultChannel: Channel<BaseDropInServiceResult> = bufferedChannel()
     private val resultFlow = resultChannel.receiveAsFlow()
 
     private var additionalData: Bundle? = null

@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.ui.ViewProvider
@@ -29,11 +29,12 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
@@ -50,11 +51,11 @@ internal class DefaultGenericActionDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
 
-    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
+    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
 
     private var uiCustomization: UiCustomization? = null
 
@@ -90,7 +91,7 @@ internal class DefaultGenericActionDelegate(
     private fun observeExceptions(delegate: ActionDelegate<Action>) {
         Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
-            .onEach { _exceptionFlow.tryEmit(it) }
+            .onEach { _exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
@@ -98,7 +99,7 @@ internal class DefaultGenericActionDelegate(
         if (delegate !is DetailsEmittingDelegate) return
         Logger.d(TAG, "Observing details")
         delegate.detailsFlow
-            .onEach { _detailsFlow.tryEmit(it) }
+            .onEach { _detailsChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
@@ -126,10 +127,10 @@ internal class DefaultGenericActionDelegate(
     override fun handleIntent(intent: Intent) {
         when (val delegate = _delegate) {
             null -> {
-                _exceptionFlow.tryEmit(ComponentException("handleIntent should not be called before handleAction"))
+                _exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
             }
             !is IntentHandlingDelegate -> {
-                _exceptionFlow.tryEmit(ComponentException("Cannot handle intent with the current component"))
+                _exceptionChannel.trySend(ComponentException("Cannot handle intent with the current component"))
             }
             else -> {
                 Logger.d(TAG, "Handling intent")

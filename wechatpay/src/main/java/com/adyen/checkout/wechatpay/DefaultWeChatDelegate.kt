@@ -12,7 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -26,9 +26,10 @@ import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -39,11 +40,11 @@ internal class DefaultWeChatDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : WeChatDelegate {
 
-    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
+    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
 
@@ -58,7 +59,7 @@ internal class DefaultWeChatDelegate(
     @VisibleForTesting
     internal fun onResponse(baseResponse: BaseResp) {
         parseResult(baseResponse)?.let { response ->
-            _detailsFlow.tryEmit(createActionComponentData(response))
+            _detailsChannel.trySend(createActionComponentData(response))
         }
     }
 
@@ -67,7 +68,7 @@ internal class DefaultWeChatDelegate(
         try {
             result.put(RESULT_CODE, baseResp.errCode)
         } catch (e: JSONException) {
-            _exceptionFlow.tryEmit(CheckoutException("Error parsing result.", e))
+            _exceptionChannel.trySend(CheckoutException("Error parsing result.", e))
             return null
         }
         return result
@@ -86,20 +87,20 @@ internal class DefaultWeChatDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            _exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
         val sdkData = action.sdkData
         if (sdkData == null) {
-            _exceptionFlow.tryEmit(ComponentException("SDK Data is null"))
+            _exceptionChannel.trySend(ComponentException("SDK Data is null"))
             return
         }
 
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
 
         if (isWeChatNotInitiated) {
-            _exceptionFlow.tryEmit(ComponentException("Failed to initialize WeChat app"))
+            _exceptionChannel.trySend(ComponentException("Failed to initialize WeChat app"))
             return
         }
     }

@@ -11,7 +11,7 @@ package com.adyen.checkout.await
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -27,12 +27,13 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -48,11 +49,11 @@ internal class DefaultAwaitDelegate(
 
     override val outputData: AwaitOutputData get() = _outputDataFlow.value
 
-    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
+    private val _detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsChannel.receiveAsFlow()
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val _exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = _exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(AwaitComponentViewType)
 
@@ -73,7 +74,7 @@ internal class DefaultAwaitDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            _exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
         createOutputData(null, action)
@@ -98,7 +99,7 @@ internal class DefaultAwaitDelegate(
             },
             onFailure = {
                 Logger.e(TAG, "Error while polling status", it)
-                _exceptionFlow.tryEmit(ComponentException("Error while polling status", it))
+                _exceptionChannel.trySend(ComponentException("Error while polling status", it))
             }
         )
     }
@@ -119,9 +120,9 @@ internal class DefaultAwaitDelegate(
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
             val details = createDetails(payload)
-            _detailsFlow.tryEmit(createActionComponentData(details))
+            _detailsChannel.trySend(createActionComponentData(details))
         } else {
-            _exceptionFlow.tryEmit(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            _exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -137,7 +138,7 @@ internal class DefaultAwaitDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            _exceptionFlow.tryEmit(ComponentException("Failed to create details.", e))
+            _exceptionChannel.trySend(ComponentException("Failed to create details.", e))
         }
         return jsonObject
     }

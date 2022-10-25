@@ -10,13 +10,14 @@ package com.adyen.checkout.dropin.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.channel.bufferedChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class ActionComponentViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    private val _eventsChannel: Channel<ActionComponentEvent> = Channel(Channel.BUFFERED)
+    private val _eventsChannel: Channel<ActionComponentEvent> = bufferedChannel()
     val eventsFlow: Flow<ActionComponentEvent> = _eventsChannel.receiveAsFlow()
 
     private var isInitialized: Boolean

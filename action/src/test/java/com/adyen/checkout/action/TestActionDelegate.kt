@@ -21,7 +21,6 @@ import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.status.model.TimerData
@@ -56,9 +55,9 @@ internal class TestActionDelegate :
 
     override val outputData: QRCodeOutputData get() = outputDataFlow.value
 
-    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
+    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSharedFlow(replay = 1)
 
-    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(replay = 1)
 
     override val timerFlow: MutableStateFlow<TimerData> = MutableStateFlow(TimerData(0, 0))
 
@@ -113,11 +112,11 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
 
-    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(replay = 1)
 
-    override val exceptionFlow: Flow<CheckoutException> = MutableSingleEventSharedFlow()
+    override val exceptionFlow: Flow<CheckoutException> = MutableSharedFlow(replay = 1)
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableSingleEventSharedFlow()
+    override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(replay = 1)
 
     var uiCustomization: UiCustomization? = null
 
