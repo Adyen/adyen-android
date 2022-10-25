@@ -25,7 +25,7 @@ object CardValidationUtils {
     private const val FIVE_DIGIT = 5
 
     // Card Number
-    private const val MINIMUM_CARD_NUMBER_LENGTH = 8
+    private const val MINIMUM_CARD_NUMBER_LENGTH = 12
     const val MAXIMUM_CARD_NUMBER_LENGTH = 19
 
     // Security Code
