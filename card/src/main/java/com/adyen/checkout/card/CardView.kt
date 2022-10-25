@@ -266,13 +266,26 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
+            val firstDetectedCardType = detectedCardTypes.first()
+
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+            mImageLoader?.load(firstDetectedCardType.cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
             // TODO: 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
+
+            if (detectedCardTypes.size == 1 &&
+                firstDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
+            ) {
+                val cardNumberValidation = cardOutputData.cardNumberState.validation
+                if (cardNumberValidation is Validation.Invalid) {
+                    setCardNumberError(cardNumberValidation.reason)
+                } else {
+                    goToNextInputIfFocus(binding.editTextCardNumber)
+                }
+            }
         }
     }
 
@@ -310,8 +323,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
             component.inputData.cardNumber = binding.editTextCardNumber.rawValue
-            notifyInputDataChanged()
             setCardErrorState(true)
+            notifyInputDataChanged()
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             setCardErrorState(hasFocus)

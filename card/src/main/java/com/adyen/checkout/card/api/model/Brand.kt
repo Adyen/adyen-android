@@ -14,6 +14,7 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getBooleanOrNull
+import com.adyen.checkout.core.model.getIntOrNull
 import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
@@ -23,7 +24,8 @@ data class Brand(
     val enableLuhnCheck: Boolean? = null,
     val supported: Boolean? = null,
     val cvcPolicy: String? = null,
-    val expiryDatePolicy: String? = null
+    val expiryDatePolicy: String? = null,
+    val panLength: Int? = null,
 ) : ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -37,6 +39,7 @@ data class Brand(
         private const val SUPPORTED = "supported"
         private const val CVC_POLICY = "cvcPolicy"
         private const val EXPIRY_DATE_POLICY = "expiryDatePolicy"
+        private const val PAN_LENGTH = "panLength"
 
         @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
@@ -51,6 +54,7 @@ data class Brand(
                     jsonObject.putOpt(SUPPORTED, modelObject.supported)
                     jsonObject.putOpt(CVC_POLICY, modelObject.cvcPolicy)
                     jsonObject.putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
+                    jsonObject.putOpt(PAN_LENGTH, modelObject.panLength)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)
                 }
@@ -64,7 +68,8 @@ data class Brand(
                         enableLuhnCheck = jsonObject.getBooleanOrNull(ENABLE_LUHN_CHECK),
                         supported = jsonObject.getBooleanOrNull(SUPPORTED),
                         cvcPolicy = jsonObject.getStringOrNull(CVC_POLICY),
-                        expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY)
+                        expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY),
+                        panLength = jsonObject.getIntOrNull(PAN_LENGTH),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)

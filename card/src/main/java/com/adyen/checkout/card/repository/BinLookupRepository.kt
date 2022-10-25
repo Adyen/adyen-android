@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import java.io.IOException
-import java.util.UUID
+import java.util.*
 
 private val TAG = LogUtil.getTag()
 
@@ -51,7 +51,8 @@ class BinLookupRepository {
 
     fun get(cardNumber: String): List<DetectedCardType> {
         if (isRequiredSize(cardNumber)) {
-            return cachedBinLookup[hashBin(cardNumber)] ?: throw IllegalArgumentException("BinLookupRepository does not contain card number")
+            return cachedBinLookup[hashBin(cardNumber)]
+                ?: throw IllegalArgumentException("BinLookupRepository does not contain card number")
         } else {
             throw IllegalArgumentException("Card number too small card number")
         }
@@ -80,7 +81,11 @@ class BinLookupRepository {
             val encryptedBin = deferredEncryption.await()
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
-            BinLookupConnection(request, cardConfiguration.environment, cardConfiguration.clientKey).suspendedCall()
+            BinLookupConnection(
+                request,
+                cardConfiguration.environment,
+                cardConfiguration.clientKey
+            ).suspendedCall()
         } catch (e: EncryptionException) {
             Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
             null
@@ -97,14 +102,21 @@ class BinLookupRepository {
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse?.brands.orEmpty().mapNotNull { brandResponse ->
             if (brandResponse.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply { txVariant = brandResponse.brand }
+            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply {
+                txVariant = brandResponse.brand
+            }
             DetectedCardType(
                 cardType,
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
-                cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
-                expiryDatePolicy = Brand.FieldPolicy.parse(brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value),
-                isSupported = brandResponse.supported != false
+                cvcPolicy = Brand.FieldPolicy.parse(
+                    brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value
+                ),
+                expiryDatePolicy = Brand.FieldPolicy.parse(
+                    brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value
+                ),
+                panLength = brandResponse.panLength,
+                isSupported = brandResponse.supported != false,
             )
         }
     }
