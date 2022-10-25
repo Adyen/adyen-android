@@ -37,7 +37,17 @@ class DefaultPayByBankDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = _componentStateFlow
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(PayByBankComponentViewType)
+    private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    init {
+        val hasIssuers = paymentMethod.issuers?.isNotEmpty() == true
+        if (!hasIssuers) {
+            _componentStateFlow.tryEmit(createValidComponentState())
+        } else {
+            _viewFlow.tryEmit(PayByBankComponentViewType)
+        }
+    }
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
@@ -81,6 +91,19 @@ class DefaultPayByBankDelegate(
 
         return PaymentComponentState(
             data = paymentComponentData, isInputValid = outputData.isValid, isReady = true
+        )
+    }
+
+    private fun createValidComponentState(): PaymentComponentState<PayByBankPaymentMethod> {
+        val payByBankPaymentMethod = PayByBankPaymentMethod(
+            type = getPaymentMethodType()
+        )
+
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = payByBankPaymentMethod
+        )
+        return PaymentComponentState(
+            data = paymentComponentData, isInputValid = true, isReady = true
         )
     }
 
