@@ -30,6 +30,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.ui.FieldState;
 import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,9 +45,11 @@ public final class BcmcView
 
     private CardNumberInput mCardNumberEditText;
     private ExpiryDateInput mExpiryDateEditText;
+    private AdyenTextInputEditText mCardHolderNameEditText;
 
     private TextInputLayout mExpiryDateInput;
     private TextInputLayout mCardNumberInput;
+    private TextInputLayout mCardHolderNameInput;
 
     private SwitchCompat mSwitchStorePaymentMethod;
 
@@ -89,6 +92,11 @@ public final class BcmcView
         mExpiryDateInput.setHint(typedArray.getString(0));
         typedArray.recycle();
 
+        // Card Number
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_HolderNameInput, myAttrs);
+        mCardHolderNameInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
         // Store Switch
         myAttrs = new int[] {android.R.attr.text};
         typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
@@ -102,6 +110,7 @@ public final class BcmcView
 
         initCardNumberInput();
         initExpiryDateInput();
+        initCardHolderNameInput();
         initStorePaymentMethodSwitch();
     }
 
@@ -154,6 +163,15 @@ public final class BcmcView
             final int errorReasonResId = ((Validation.Invalid) expiryFieldValidation).getReason();
             mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
+
+        final Validation cardHolderNameValidation = outputData.getCardHolderNameField().getValidation();
+        if (!cardHolderNameValidation.isValid()) {
+            if (!isErrorFocused) {
+                mCardHolderNameInput.requestFocus();
+            }
+            final int errorReasonResId = ((Validation.Invalid) cardHolderNameValidation).getReason();
+            mCardHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
+        }
     }
 
     private void notifyInputDataChanged() {
@@ -189,6 +207,33 @@ public final class BcmcView
             } else if (cardNumberValidation != null && !cardNumberValidation.isValid()) {
                 final int errorReasonResId = ((Validation.Invalid) cardNumberValidation).getReason();
                 setCardNumberError(errorReasonResId);
+            }
+        });
+    }
+
+    private void initCardHolderNameInput() {
+        mCardHolderNameInput = findViewById(R.id.textInputLayout_cardHolder);
+        mCardHolderNameEditText = findViewById(R.id.editText_cardHolder);
+
+        final boolean isHolderNameRequired = getComponent().getConfiguration().isHolderNameRequired();
+        mCardHolderNameInput.setVisibility(isHolderNameRequired ? View.VISIBLE : View.GONE);
+
+        mCardHolderNameEditText.setOnChangeListener(editable -> {
+            mCardInputData.setCardHolderName(mCardHolderNameEditText.getRawValue());
+            notifyInputDataChanged();
+            mCardHolderNameInput.setError(null);
+        });
+
+        mCardHolderNameEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final BcmcOutputData outputData = getComponent().getOutputData();
+            final Validation cardHolderValidation = outputData != null
+                    ? outputData.getCardHolderNameField().getValidation()
+                    : null;
+            if (hasFocus) {
+                setCardNumberError(null);
+            } else if (cardHolderValidation != null && !cardHolderValidation.isValid()) {
+                final int errorReasonResId = ((Validation.Invalid) cardHolderValidation).getReason();
+                mCardHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }

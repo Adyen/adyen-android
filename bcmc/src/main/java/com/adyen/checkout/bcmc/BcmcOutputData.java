@@ -10,23 +10,26 @@ package com.adyen.checkout.bcmc;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.components.base.OutputData;
 import com.adyen.checkout.components.ui.FieldState;
-import com.adyen.checkout.card.data.ExpiryDate;
 
 public final class BcmcOutputData implements OutputData {
 
     private final FieldState<String> mCardNumberField;
     private final FieldState<ExpiryDate> mExpiryDateField;
+    private final FieldState<String> mCardHolderNameField;
     private final boolean mIsStoredPaymentMethodEnabled;
 
     BcmcOutputData(
             @NonNull FieldState<String> cardNumberField,
             @NonNull FieldState<ExpiryDate> expiryDateField,
+            @NonNull FieldState<String> cardHolderNameField,
             boolean isStoredPaymentMethodEnabled
     ) {
         mCardNumberField = cardNumberField;
         mExpiryDateField = expiryDateField;
+        mCardHolderNameField = cardHolderNameField;
         mIsStoredPaymentMethodEnabled = isStoredPaymentMethodEnabled;
     }
 
@@ -40,6 +43,11 @@ public final class BcmcOutputData implements OutputData {
         return mExpiryDateField;
     }
 
+    @NonNull
+    public FieldState<String> getCardHolderNameField() {
+        return mCardHolderNameField;
+    }
+
     public boolean isStoredPaymentMethodEnabled() {
         return mIsStoredPaymentMethodEnabled;
     }
@@ -47,6 +55,7 @@ public final class BcmcOutputData implements OutputData {
     @Override
     public boolean isValid() {
         return mCardNumberField.getValidation().isValid()
-                && mExpiryDateField.getValidation().isValid();
+                && mExpiryDateField.getValidation().isValid()
+                && mCardHolderNameField.getValidation().isValid();
     }
 }

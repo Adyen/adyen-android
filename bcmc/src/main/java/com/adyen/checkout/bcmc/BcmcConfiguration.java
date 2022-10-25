@@ -27,6 +27,7 @@ import java.util.Locale;
  */
 public class BcmcConfiguration extends Configuration {
 
+    private final boolean mIsHolderNameRequired;
     private final String mShopperReference;
     private final boolean mShowStorePaymentField;
 
@@ -43,12 +44,14 @@ public class BcmcConfiguration extends Configuration {
     BcmcConfiguration(@NonNull Builder builder) {
         super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
 
+        mIsHolderNameRequired = builder.mIsHolderNameRequired;
         mShopperReference = builder.mShopperReference;
         mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
     }
 
     BcmcConfiguration(@NonNull Parcel in) {
         super(in);
+        mIsHolderNameRequired = ParcelUtils.readBoolean(in);
         mShopperReference = in.readString();
         mShowStorePaymentField = ParcelUtils.readBoolean(in);
     }
@@ -56,6 +59,7 @@ public class BcmcConfiguration extends Configuration {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        ParcelUtils.writeBoolean(dest, mIsHolderNameRequired);
         dest.writeString(mShopperReference);
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
     }
@@ -63,6 +67,10 @@ public class BcmcConfiguration extends Configuration {
     @Nullable
     public String getShopperReference() {
         return mShopperReference;
+    }
+
+    public boolean isHolderNameRequired() {
+        return mIsHolderNameRequired;
     }
 
     public boolean isStorePaymentFieldVisible() {
@@ -74,6 +82,7 @@ public class BcmcConfiguration extends Configuration {
      */
     public static final class Builder extends BaseConfigurationBuilder<BcmcConfiguration> {
 
+        private boolean mIsHolderNameRequired = false;
         private boolean mBuilderShowStorePaymentField = false;
         private String mShopperReference;
 
@@ -92,7 +101,7 @@ public class BcmcConfiguration extends Configuration {
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
         public Builder(
                 @NonNull Locale shopperLocale,
@@ -123,6 +132,18 @@ public class BcmcConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
+        /**
+         * Set if the holder name is required and should be shown as an input field.
+         *
+         * @param holderNameRequired {@link Boolean}
+         * @return {@link BcmcConfiguration.Builder}
+         */
+        @NonNull
+        public BcmcConfiguration.Builder setHolderNameRequired(boolean holderNameRequired) {
+            mIsHolderNameRequired = holderNameRequired;
+            return this;
         }
 
         /**
