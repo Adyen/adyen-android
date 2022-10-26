@@ -12,7 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,10 +26,10 @@ class TestAddressRepository : AddressRepository {
     // will emit an empty list
     var shouldReturnError = false
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
     override val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
+    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     override fun getStateList(configuration: Configuration, countryCode: String?, coroutineScope: CoroutineScope) {

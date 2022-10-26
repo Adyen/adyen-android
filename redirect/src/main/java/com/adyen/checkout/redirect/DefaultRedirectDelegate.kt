@@ -11,7 +11,8 @@ package com.adyen.checkout.redirect
 import android.app.Activity
 import android.content.Intent
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
@@ -19,10 +20,10 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.components.handler.RedirectHandler
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -33,11 +34,11 @@ internal class DefaultRedirectDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {
 
-    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(RedirectComponentViewType)
 
@@ -54,16 +55,16 @@ internal class DefaultRedirectDelegate(
             //  PaymentComponentState for actions.
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
-            _exceptionFlow.tryEmit(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
     override fun handleIntent(intent: Intent) {
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsFlow.tryEmit(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } catch (ex: CheckoutException) {
-            _exceptionFlow.tryEmit(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -75,7 +76,7 @@ internal class DefaultRedirectDelegate(
     }
 
     override fun onError(e: CheckoutException) {
-        _exceptionFlow.tryEmit(e)
+        exceptionChannel.trySend(e)
     }
 
     override fun getViewProvider(): ViewProvider = RedirectViewProvider

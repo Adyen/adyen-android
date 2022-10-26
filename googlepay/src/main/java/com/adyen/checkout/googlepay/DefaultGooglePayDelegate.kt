@@ -11,7 +11,7 @@ package com.adyen.checkout.googlepay
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -24,9 +24,10 @@ import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultGooglePayDelegate(
     private val paymentMethod: PaymentMethod,
@@ -36,8 +37,8 @@ internal class DefaultGooglePayDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<GooglePayComponentState> = _componentStateFlow
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     @VisibleForTesting
     internal fun updateComponentState(paymentData: PaymentData?) {
@@ -82,19 +83,19 @@ internal class DefaultGooglePayDelegate(
         when (resultCode) {
             Activity.RESULT_OK -> {
                 if (data == null) {
-                    _exceptionFlow.tryEmit(ComponentException("Result data is null"))
+                    exceptionChannel.trySend(ComponentException("Result data is null"))
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
                 updateComponentState(paymentData)
             }
             Activity.RESULT_CANCELED -> {
-                _exceptionFlow.tryEmit(ComponentException("Payment canceled."))
+                exceptionChannel.trySend(ComponentException("Payment canceled."))
             }
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = AutoResolveHelper.getStatusFromIntent(data)
                 val statusMessage: String = status?.let { ": ${it.statusMessage}" }.orEmpty()
-                _exceptionFlow.tryEmit(ComponentException("GooglePay returned an error$statusMessage"))
+                exceptionChannel.trySend(ComponentException("GooglePay returned an error$statusMessage"))
             }
             else -> Unit
         }

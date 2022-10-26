@@ -12,25 +12,26 @@ import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 internal class DefaultAddressRepository : AddressRepository {
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
-    override val statesFlow: Flow<List<AddressItem>> = _statesFlow
+    private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()
+    override val statesFlow: Flow<List<AddressItem>> = statesChannel.receiveAsFlow()
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
-    override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
+    private val countriesChannel: Channel<List<AddressItem>> = bufferedChannel()
+    override val countriesFlow: Flow<List<AddressItem>> = countriesChannel.receiveAsFlow()
 
     private val cache: HashMap<String, List<AddressItem>> = hashMapOf()
 
@@ -43,7 +44,7 @@ internal class DefaultAddressRepository : AddressRepository {
         val needsStates = COUNTRIES_WITH_STATES.contains(addressSpecification)
         if (!countryCode.isNullOrEmpty() && needsStates) {
             cache[countryCode]?.let {
-                _statesFlow.tryEmit(it)
+                statesChannel.trySend(it)
             } ?: run {
                 fetchStateList(
                     configuration.environment,
@@ -53,7 +54,7 @@ internal class DefaultAddressRepository : AddressRepository {
                 )
             }
         } else {
-            _statesFlow.tryEmit(emptyList())
+            statesChannel.trySend(emptyList())
         }
     }
 
@@ -77,13 +78,13 @@ internal class DefaultAddressRepository : AddressRepository {
                 },
                 onFailure = { emptyList() }
             )
-            _statesFlow.tryEmit(states)
+            statesChannel.trySend(states)
         }
     }
 
     override fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope) {
         cache[COUNTRIES_CACHE_KEY]?.let {
-            _countriesFlow.tryEmit(it)
+            countriesChannel.trySend(it)
         } ?: run {
             fetchCountryList(
                 configuration.environment,
@@ -109,7 +110,7 @@ internal class DefaultAddressRepository : AddressRepository {
                     emptyList()
                 }
             )
-            _countriesFlow.tryEmit(countries)
+            countriesChannel.trySend(countries)
         }
     }
 

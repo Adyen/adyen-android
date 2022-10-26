@@ -12,7 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
@@ -28,11 +28,12 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.components.handler.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -51,11 +52,11 @@ internal class DefaultQRCodeDelegate(
 
     override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
@@ -90,7 +91,7 @@ internal class DefaultQRCodeDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             Logger.e(TAG, "Payment data is null")
-            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
@@ -113,7 +114,7 @@ internal class DefaultQRCodeDelegate(
             Logger.d(TAG, "makeRedirect - $url")
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
-            _exceptionFlow.tryEmit(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -135,7 +136,7 @@ internal class DefaultQRCodeDelegate(
             },
             onFailure = {
                 Logger.e(TAG, "Error while polling status", it)
-                _exceptionFlow.tryEmit(ComponentException("Error while polling status", it))
+                exceptionChannel.trySend(ComponentException("Error while polling status", it))
             }
         )
     }
@@ -151,9 +152,9 @@ internal class DefaultQRCodeDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
             val details = createDetails(payload)
-            _detailsFlow.tryEmit(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } else {
-            _exceptionFlow.tryEmit(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -169,9 +170,9 @@ internal class DefaultQRCodeDelegate(
     override fun handleIntent(intent: Intent) {
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsFlow.tryEmit(createActionComponentData(details))
+            detailsChannel.trySend(createActionComponentData(details))
         } catch (ex: CheckoutException) {
-            _exceptionFlow.tryEmit(ex)
+            exceptionChannel.trySend(ex)
         }
     }
 
@@ -187,7 +188,7 @@ internal class DefaultQRCodeDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            _exceptionFlow.tryEmit(ComponentException("Failed to create details.", e))
+            exceptionChannel.trySend(ComponentException("Failed to create details.", e))
         }
         return jsonObject
     }

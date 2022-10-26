@@ -14,6 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -48,7 +49,7 @@ class DropInViewModel(
     private val orderStatusRepository: OrderStatusRepository = OrderStatusRepository()
 ) : ViewModel() {
 
-    private val eventChannel = Channel<DropInActivityEvent>(Channel.BUFFERED)
+    private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)

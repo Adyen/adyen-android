@@ -16,7 +16,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -36,9 +36,10 @@ import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -58,8 +59,8 @@ internal class DefaultBcmcDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>> = _componentStateFlow
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val outputData get() = _outputDataFlow.value
 
@@ -85,7 +86,7 @@ internal class DefaultBcmcDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                    _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
+                    exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
         }
@@ -197,7 +198,7 @@ internal class DefaultBcmcDelegate(
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
-        _exceptionFlow.tryEmit(e)
+        exceptionChannel.trySend(e)
         null
     }
 

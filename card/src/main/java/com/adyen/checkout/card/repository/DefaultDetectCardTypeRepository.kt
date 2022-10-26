@@ -14,7 +14,7 @@ import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.encryption.Sha256
 import com.adyen.checkout.core.log.LogUtil
@@ -22,8 +22,9 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.cse.CardEncrypter
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -31,8 +32,8 @@ internal class DefaultDetectCardTypeRepository(
     private val cardEncrypter: CardEncrypter,
 ) : DetectCardTypeRepository {
 
-    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSingleEventSharedFlow()
-    override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
+    private val _detectedCardTypesFlow: Channel<List<DetectedCardType>> = bufferedChannel()
+    override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow.receiveAsFlow()
 
     private val cachedBinLookup = HashMap<String, BinLookupResult>()
 
@@ -50,7 +51,7 @@ internal class DefaultDetectCardTypeRepository(
             when (val cachedResult = getFromCache(cardNumber)) {
                 is BinLookupResult.Available -> {
                     Logger.d(TAG, "Retrieving from cache.")
-                    _detectedCardTypesFlow.tryEmit(cachedResult.detectedCardTypes)
+                    _detectedCardTypesFlow.trySend(cachedResult.detectedCardTypes)
                     return
                 }
                 is BinLookupResult.Loading -> {
@@ -69,7 +70,7 @@ internal class DefaultDetectCardTypeRepository(
                 }
             }
         }
-        _detectedCardTypesFlow.tryEmit(detectCardLocally(cardNumber, supportedCardTypes))
+        _detectedCardTypesFlow.trySend(detectCardLocally(cardNumber, supportedCardTypes))
     }
 
     @Suppress("LongParameterList")
@@ -93,7 +94,7 @@ internal class DefaultDetectCardTypeRepository(
                     environment,
                     clientKey
                 )?.let {
-                    _detectedCardTypesFlow.emit(it)
+                    _detectedCardTypesFlow.send(it)
                 }
             }
         }

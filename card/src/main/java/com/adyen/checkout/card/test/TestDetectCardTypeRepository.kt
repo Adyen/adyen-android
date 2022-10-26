@@ -17,7 +17,6 @@ import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCar
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DUAL_BRANDED
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.ERROR
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.FETCHED_FROM_NETWORK
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +29,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 @RestrictTo(RestrictTo.Scope.TESTS)
 internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
 
-    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSingleEventSharedFlow()
+    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
 
     var detectionResult: TestDetectedCardType = DETECTED_LOCALLY

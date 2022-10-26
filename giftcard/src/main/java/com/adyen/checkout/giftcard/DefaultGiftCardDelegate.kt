@@ -9,7 +9,7 @@
 package com.adyen.checkout.giftcard
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -26,9 +26,10 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class DefaultGiftCardDelegate(
@@ -48,8 +49,8 @@ internal class DefaultGiftCardDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<GiftCardComponentState> = _componentStateFlow
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
 
@@ -69,10 +70,7 @@ internal class DefaultGiftCardDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                    val item = _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
-                    if (!item) {
-                        Logger.d(TAG, "not emitted")
-                    }
+                    exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
         }
@@ -149,13 +147,12 @@ internal class DefaultGiftCardDelegate(
         outputData: GiftCardOutputData,
         publicKey: String,
     ): EncryptedCard? = try {
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-            .setNumber(outputData.giftcardNumberFieldState.value)
+        val unencryptedCardBuilder = UnencryptedCard.Builder().setNumber(outputData.giftcardNumberFieldState.value)
             .setCvc(outputData.giftcardPinFieldState.value)
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
-        _exceptionFlow.tryEmit(e)
+        exceptionChannel.trySend(e)
         null
     }
 

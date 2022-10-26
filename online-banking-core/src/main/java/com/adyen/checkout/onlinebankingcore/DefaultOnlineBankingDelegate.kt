@@ -13,7 +13,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -21,9 +21,10 @@ import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
@@ -44,8 +45,8 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
-    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(OnlineBankingComponentViewType)
 
@@ -99,7 +100,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         try {
             pdfOpener.open(context, termsAndConditionsUrl)
         } catch (e: IllegalStateException) {
-            _exceptionFlow.tryEmit(CheckoutException(e.message ?: "", e.cause))
+            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
         }
     }
 
