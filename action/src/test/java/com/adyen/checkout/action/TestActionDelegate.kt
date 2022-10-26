@@ -55,9 +55,9 @@ internal class TestActionDelegate :
 
     override val outputData: QRCodeOutputData get() = outputDataFlow.value
 
-    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSharedFlow(replay = 1)
+    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSharedFlow(extraBufferCapacity = 1)
 
-    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(replay = 1)
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 
     override val timerFlow: MutableStateFlow<TimerData> = MutableStateFlow(TimerData(0, 0))
 
@@ -112,11 +112,11 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
 
-    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(replay = 1)
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 
-    override val exceptionFlow: Flow<CheckoutException> = MutableSharedFlow(replay = 1)
+    override val exceptionFlow: Flow<CheckoutException> = MutableSharedFlow(extraBufferCapacity = 1)
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(replay = 1)
+    override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(extraBufferCapacity = 1)
 
     var uiCustomization: UiCustomization? = null
 

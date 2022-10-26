@@ -26,10 +26,10 @@ class TestAddressRepository : AddressRepository {
     // will emit an empty list
     var shouldReturnError = false
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(replay = 1)
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
     override val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(replay = 1)
+    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     override fun getStateList(configuration: Configuration, countryCode: String?, coroutineScope: CoroutineScope) {

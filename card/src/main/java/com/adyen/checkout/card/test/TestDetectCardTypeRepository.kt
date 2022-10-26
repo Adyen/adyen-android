@@ -29,7 +29,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 @RestrictTo(RestrictTo.Scope.TESTS)
 internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
 
-    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(replay = 1)
+    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
 
     var detectionResult: TestDetectedCardType = DETECTED_LOCALLY

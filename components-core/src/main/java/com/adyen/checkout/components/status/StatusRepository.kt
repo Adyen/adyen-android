@@ -15,7 +15,6 @@ import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -43,10 +42,7 @@ class DefaultStatusRepository constructor(
 
     private var delay: Long = 0
 
-    private val refreshFlow: MutableSharedFlow<String> = MutableSharedFlow(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
+    private val refreshFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
 
     override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
         val startTime = System.currentTimeMillis()
@@ -106,8 +102,8 @@ class DefaultStatusRepository constructor(
 
     companion object {
         private val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
-        private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
-        private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
-        private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
+        private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(60)
+        private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(60)
+        private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(120)
     }
 }
