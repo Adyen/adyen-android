@@ -48,7 +48,7 @@ internal class PaymentMethodsListViewModel constructor(
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
     internal val paymentMethodsFlow: StateFlow<List<PaymentMethodListItem>> = _paymentMethodsFlow
 
-    private var storedPaymentMethodsList: MutableList<StoredPaymentMethodModel>? = mutableListOf()
+    private var storedPaymentMethodsList: MutableList<StoredPaymentMethodModel>? = null
     private var paymentMethodsAvailabilityMap: HashMap<PaymentMethod, Boolean> = hashMapOf()
 
     init {
