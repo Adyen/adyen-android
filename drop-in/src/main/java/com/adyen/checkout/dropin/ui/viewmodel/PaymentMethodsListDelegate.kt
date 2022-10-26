@@ -47,7 +47,7 @@ internal class PaymentMethodsListDelegate constructor(
     internal val paymentMethodsFlow: StateFlow<List<PaymentMethodListItem>> = _paymentMethodsFlow
 
     private lateinit var storedPaymentMethodsList: MutableList<StoredPaymentMethodModel>
-    private var checkPaymentMethodsMap: HashMap<PaymentMethod, Boolean> = hashMapOf()
+    private var paymentMethodsAvailabilityMap: HashMap<PaymentMethod, Boolean> = hashMapOf()
 
     init {
         setupPaymentMethods(paymentMethods)
@@ -68,11 +68,11 @@ internal class PaymentMethodsListDelegate constructor(
                 }
                 PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) -> {
                     Logger.e(TAG, "PaymentMethod not yet supported - $type")
-                    checkPaymentMethodsMap[paymentMethod] = false
+                    paymentMethodsAvailabilityMap[paymentMethod] = false
                 }
                 else -> {
                     Logger.d(TAG, "No availability check required - $type")
-                    checkPaymentMethodsMap[paymentMethod] = true
+                    paymentMethodsAvailabilityMap[paymentMethod] = true
                 }
             }
         }
@@ -81,12 +81,12 @@ internal class PaymentMethodsListDelegate constructor(
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
         Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type}: $isAvailable")
-        checkPaymentMethodsMap[paymentMethod] = isAvailable
+        paymentMethodsAvailabilityMap[paymentMethod] = isAvailable
         checkIfListReady()
     }
 
     private fun checkIfListReady() {
-        if (paymentMethods.size == checkPaymentMethodsMap.size) {
+        if (paymentMethods.size == paymentMethodsAvailabilityMap.size) {
             populatePaymentMethods()
         }
     }
@@ -138,7 +138,7 @@ internal class PaymentMethodsListDelegate constructor(
 
     private fun List<PaymentMethod>.setupPaymentMethodsList(): List<PaymentMethodModel> =
         this.mapIndexedNotNull { index, paymentMethod ->
-            val isAvailable = checkPaymentMethodsMap[paymentMethod]
+            val isAvailable = paymentMethodsAvailabilityMap[paymentMethod]
                 ?: throw IllegalStateException("payment method not found in map")
             if (isAvailable) {
                 paymentMethod.mapToModel(index)
