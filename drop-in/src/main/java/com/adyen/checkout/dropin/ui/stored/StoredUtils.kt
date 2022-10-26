@@ -38,8 +38,8 @@ internal fun StoredPaymentMethod.mapStoredModel(
 }
 
 internal fun StoredPaymentMethod.isStoredPaymentSupported(): Boolean {
-    return !this.type.isNullOrEmpty() &&
-        !this.id.isNullOrEmpty() &&
-        PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(this.type) &&
-        this.isEcommerce
+    return !type.isNullOrEmpty() &&
+        !id.isNullOrEmpty() &&
+        PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) &&
+        isEcommerce
 }
