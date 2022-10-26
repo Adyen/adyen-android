@@ -1,8 +1,8 @@
 ![Checkout Android Logo](https://user-images.githubusercontent.com/6615094/140908736-7573739a-0ab9-4fd1-b6d8-b2e780b6e3c8.png)
 
-# Adyen Components for Android
+# Adyen Android
 
-Adyen Components for Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
+Adyen Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
 
 For an overview of how you can integrate with Adyen on Android check out the [Documentation Website][docs.android]
 
