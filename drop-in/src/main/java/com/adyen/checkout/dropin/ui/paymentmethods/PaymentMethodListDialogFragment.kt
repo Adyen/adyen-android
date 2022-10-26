@@ -16,9 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
@@ -36,8 +35,8 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.viewModelsFactory
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListDelegate
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 private val TAG = LogUtil.getTag()
 
@@ -97,14 +96,13 @@ class PaymentMethodListDialogFragment :
     }
 
     private fun initObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                paymentMethodsListViewModel.paymentMethodsFlow.collectLatest { paymentMethods ->
-                    Logger.d(TAG, "paymentMethods changed")
-                    paymentMethodAdapter?.submitList(paymentMethods)
-                }
-            }
-        }
+        paymentMethodsListViewModel
+            .paymentMethodsFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { paymentMethods ->
+                Logger.d(TAG, "paymentMethods changed")
+                paymentMethodAdapter?.submitList(paymentMethods)
+            }.launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {
