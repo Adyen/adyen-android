@@ -143,7 +143,7 @@ class PaymentMethodListDialogFragment :
             }
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
-                protocol.showComponentDialog(dropInViewModel.getPaymentMethods()[paymentMethod.index])
+                protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
             }
             else -> {
                 Logger.d(

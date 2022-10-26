@@ -55,6 +55,10 @@ internal class PaymentMethodsListViewModel constructor(
         setupPaymentMethods(paymentMethods)
     }
 
+    internal fun getPaymentMethod(paymentMethodModel: PaymentMethodModel): PaymentMethod {
+        return paymentMethods[paymentMethodModel.index]
+    }
+
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
         paymentMethods.forEach { paymentMethod ->
             val type = paymentMethod.type ?: throw IllegalStateException("PaymentMethod type is null")
