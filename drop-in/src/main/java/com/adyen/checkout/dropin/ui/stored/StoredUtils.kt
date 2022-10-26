@@ -28,13 +28,11 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 expiryYear.orEmpty()
             )
         }
-        else -> with(this) {
-            GenericStoredModel(
-                id.orEmpty(),
-                type.orEmpty(),
-                isRemovingEnabled,
-                name.orEmpty()
-            )
-        }
+        else -> GenericStoredModel(
+            id.orEmpty(),
+            type.orEmpty(),
+            isRemovingEnabled,
+            name.orEmpty()
+        )
     }
 }
