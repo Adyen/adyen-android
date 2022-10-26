@@ -32,8 +32,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import com.adyen.checkout.dropin.ui.viewModelsFactory
-import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListDelegate
+import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -49,17 +48,7 @@ class PaymentMethodListDialogFragment :
     private var _binding: FragmentPaymentMethodsListBinding? = null
     private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
 
-    private val paymentMethodsListViewModel: PaymentMethodsListViewModel by viewModelsFactory {
-        val delegate = PaymentMethodsListDelegate(
-            requireActivity().application,
-            dropInViewModel.getPaymentMethods(),
-            dropInViewModel.getStoredPaymentMethods(),
-            dropInViewModel.currentOrder,
-            dropInViewModel.dropInConfiguration,
-            dropInViewModel.amount
-        )
-        PaymentMethodsListViewModel(delegate)
-    }
+    private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
 
     private var paymentMethodAdapter: PaymentMethodAdapter? = null
 
@@ -70,6 +59,16 @@ class PaymentMethodListDialogFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Logger.d(TAG, "onCreateView")
+        paymentMethodsListViewModel = getViewModel {
+            PaymentMethodsListViewModel(
+                requireActivity().application,
+                dropInViewModel.getPaymentMethods(),
+                dropInViewModel.getStoredPaymentMethods(),
+                dropInViewModel.currentOrder,
+                dropInViewModel.dropInConfiguration,
+                dropInViewModel.amount
+            )
+        }
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -144,7 +143,7 @@ class PaymentMethodListDialogFragment :
             }
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
-                protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod.index))
+                protocol.showComponentDialog(dropInViewModel.getPaymentMethods()[paymentMethod.index])
             }
             else -> {
                 Logger.d(
@@ -190,7 +189,7 @@ class PaymentMethodListDialogFragment :
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = PaymentComponentState(paymentComponentData, true, true)
+        val paymentComponentState = PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
         protocol.requestPaymentsCall(paymentComponentState)
     }
 
