@@ -13,6 +13,8 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.handler.RedirectHandler
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
@@ -25,7 +27,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.components.handler.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -86,7 +87,13 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: QrCodeAction, activity: Activity) {
+    @Suppress("ReturnCount")
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is QrCodeAction) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {

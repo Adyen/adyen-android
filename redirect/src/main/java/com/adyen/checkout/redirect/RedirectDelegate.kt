@@ -11,11 +11,10 @@ package com.adyen.checkout.redirect
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 
 interface RedirectDelegate :
-    ActionDelegate<RedirectAction>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
     ViewProvidingDelegate

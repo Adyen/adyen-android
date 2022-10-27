@@ -21,10 +21,8 @@ import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -56,11 +54,7 @@ class RedirectComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity) {
-        if (action !is RedirectAction) {
-            notifyException(ComponentException("Unsupported action"))
-            return
-        }
+    override fun handleAction(action: Action, activity: Activity) {
         delegate.handleAction(action, activity)
     }
 

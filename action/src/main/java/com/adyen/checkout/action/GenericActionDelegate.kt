@@ -11,17 +11,16 @@ package com.adyen.checkout.action
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.threeds2.customization.UiCustomization
 
 interface GenericActionDelegate :
-    ActionDelegate<Action>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
     ViewProvidingDelegate {
 
-    val delegate: ActionDelegate<Action>
+    val delegate: ActionDelegate
 
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 

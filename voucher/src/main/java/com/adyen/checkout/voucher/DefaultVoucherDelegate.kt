@@ -10,10 +10,12 @@ package com.adyen.checkout.voucher
 
 import android.app.Activity
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +38,12 @@ internal class DefaultVoucherDelegate(
 
     override fun getViewProvider(): ViewProvider = VoucherViewProvider
 
-    override fun handleAction(action: VoucherAction, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is VoucherAction) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         _outputDataFlow.tryEmit(
             VoucherOutputData(
                 isValid = true,

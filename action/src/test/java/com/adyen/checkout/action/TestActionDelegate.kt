@@ -22,7 +22,6 @@ import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
@@ -35,10 +34,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.Locale
+import java.util.*
 
 internal class TestActionDelegate :
-    ActionDelegate<Action>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     ViewableDelegate<OutputData>,
     IntentHandlingDelegate,
@@ -126,7 +125,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
         this.uiCustomization = uiCustomization
     }
 
-    override fun handleAction(action: BaseThreeds2Action, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
         handleActionCalled = true
     }
 

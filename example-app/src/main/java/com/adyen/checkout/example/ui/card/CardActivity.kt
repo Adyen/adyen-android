@@ -132,7 +132,7 @@ class CardActivity : AppCompatActivity() {
         redirectComponent?.observe(this, cardViewModel::onActionComponentData)
         redirectComponent?.observeErrors(this, cardViewModel::onComponentError)
 
-        redirectComponent?.handleAction(this, action)
+        redirectComponent?.handleAction(action, this)
     }
 
     private fun setupThreeDS2Component(action: Action) {
@@ -145,7 +145,7 @@ class CardActivity : AppCompatActivity() {
         threeDS2Component?.observe(this, cardViewModel::onActionComponentData)
         threeDS2Component?.observeErrors(this, cardViewModel::onComponentError)
 
-        threeDS2Component?.handleAction(this, action)
+        threeDS2Component?.handleAction(action, this)
     }
 
     override fun onDestroy() {

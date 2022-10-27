@@ -20,8 +20,10 @@ import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.encoding.Base64Encoder
+import com.adyen.checkout.components.handler.RedirectHandler
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -34,7 +36,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeStatusReceiver
 import com.adyen.threeds2.CompletionEvent
@@ -101,7 +102,12 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     @Suppress("ReturnCount")
-    override fun handleAction(action: BaseThreeds2Action, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is BaseThreeds2Action) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         when (action) {

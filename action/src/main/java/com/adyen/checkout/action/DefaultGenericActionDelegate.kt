@@ -42,8 +42,9 @@ internal class DefaultGenericActionDelegate(
     override val configuration: GenericActionConfiguration,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
-    private var _delegate: ActionDelegate<Action>? = null
-    override val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
+
+    private var _delegate: ActionDelegate? = null
+    override val delegate: ActionDelegate get() = requireNotNull(_delegate)
 
     private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
@@ -88,14 +89,14 @@ internal class DefaultGenericActionDelegate(
         delegate.handleAction(action, activity)
     }
 
-    private fun observeExceptions(delegate: ActionDelegate<Action>) {
+    private fun observeExceptions(delegate: ActionDelegate) {
         Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
             .onEach { exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
-    private fun observeDetails(delegate: ActionDelegate<Action>) {
+    private fun observeDetails(delegate: ActionDelegate) {
         if (delegate !is DetailsEmittingDelegate) return
         Logger.d(TAG, "Observing details")
         delegate.detailsFlow
@@ -103,7 +104,7 @@ internal class DefaultGenericActionDelegate(
             .launchIn(coroutineScope)
     }
 
-    private fun observeViewFlow(delegate: ActionDelegate<Action>) {
+    private fun observeViewFlow(delegate: ActionDelegate) {
         if (delegate !is ViewProvidingDelegate) return
         Logger.d(TAG, "Observing view flow")
         delegate.viewFlow
@@ -116,7 +117,7 @@ internal class DefaultGenericActionDelegate(
         set3DS2UICustomizationInDelegate(_delegate)
     }
 
-    private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate<Action>?) {
+    private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate?) {
         if (delegate !is Adyen3DS2Delegate) return
         if (uiCustomization != null) {
             Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")

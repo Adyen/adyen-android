@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -79,7 +80,14 @@ internal class DefaultWeChatDelegate(
     }
 
     @SuppressWarnings("ReturnCount")
-    override fun handleAction(action: SdkAction<WeChatPaySdkData>, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
+        @Suppress("UNCHECKED_CAST")
+        val sdkAction = (action as? SdkAction<WeChatPaySdkData>)
+        if (sdkAction == null) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val activityName = activity.javaClass.name
         Logger.d(TAG, "handleAction: activity - $activityName")
 

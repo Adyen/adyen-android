@@ -15,7 +15,6 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.ActionDelegate
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
@@ -206,7 +205,7 @@ internal class DefaultGenericActionDelegateTest(
             @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.get(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
+            ) doReturn adyen3DS2Delegate as ActionDelegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -227,7 +226,7 @@ internal class DefaultGenericActionDelegateTest(
             @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.get(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
+            ) doReturn adyen3DS2Delegate as ActionDelegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -245,10 +244,7 @@ internal class DefaultGenericActionDelegateTest(
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
         @Suppress("UNCHECKED_CAST")
-        whenever(
-            actionDelegateProvider.get(any(), any(), any(), any())
-
-        ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
+        whenever(actionDelegateProvider.get(any(), any(), any(), any())) doReturn adyen3DS2Delegate as ActionDelegate
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 

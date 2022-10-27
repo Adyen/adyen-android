@@ -29,10 +29,10 @@ interface ActionComponent<ConfigurationT : Configuration> : Component<ActionComp
     /**
      * Provide the action from the API response that needs to be handled.
      *
-     * @param activity The Activity starting the action.
      * @param action The parsed object from the API of the action to be taken.
+     * @param activity The Activity starting the action.
      */
-    fun handleAction(activity: Activity, action: Action)
+    fun handleAction(action: Action, activity: Activity)
 
     /**
      * Checks if this component can handle the specific action type.

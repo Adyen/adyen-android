@@ -19,10 +19,8 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -48,11 +46,7 @@ class VoucherComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity) {
-        if (action !is VoucherAction) {
-            notifyException(ComponentException("Unsupported action"))
-            return
-        }
+    override fun handleAction(action: Action, activity: Activity) {
         delegate.handleAction(action, activity)
     }
 

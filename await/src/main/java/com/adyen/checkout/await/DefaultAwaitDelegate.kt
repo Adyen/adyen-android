@@ -69,7 +69,12 @@ internal class DefaultAwaitDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: AwaitAction, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is AwaitAction) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {

@@ -14,11 +14,11 @@ import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-interface ActionDelegate<ActionT : Action> : ComponentDelegate {
+interface ActionDelegate : ComponentDelegate {
 
     val exceptionFlow: Flow<CheckoutException>
 
-    fun handleAction(action: ActionT, activity: Activity)
+    fun handleAction(action: Action, activity: Activity)
 
     /**
      * Override this method if you need to initialize your delegate and use a [CoroutineScope] inside it.

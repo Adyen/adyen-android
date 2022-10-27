@@ -97,7 +97,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
             .onEach {
                 when (it) {
                     ActionComponentEvent.HANDLE_ACTION -> {
-                        actionComponent.handleAction(requireActivity(), action)
+                        actionComponent.handleAction(action, requireActivity())
                     }
                 }
             }

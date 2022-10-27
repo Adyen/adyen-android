@@ -13,11 +13,10 @@ import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
-import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 
 interface QRCodeDelegate :
-    ActionDelegate<QrCodeAction>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     ViewableDelegate<QRCodeOutputData>,
     IntentHandlingDelegate,
