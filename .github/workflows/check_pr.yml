@@ -4,7 +4,7 @@ name: Check PR
 on:
   pull_request:
     branches-ignore:
-      - 'master'
+      - 'main'
     types: [ opened, synchronize, reopened ]
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # https://github.com/marketplace/actions/checkout
       - uses: actions/checkout@v2
-        
+
       # Setup Java 11
       # https://github.com/marketplace/actions/setup-java-jdk
       - name: Set up JDK 11
@@ -32,3 +32,22 @@ jobs:
       # Run gradlew check
       - name: Gradle check
         run: ./gradlew check --no-daemon
+
+      # Run SonarCloud
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build sonarqube --info
