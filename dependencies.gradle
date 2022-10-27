@@ -25,6 +25,7 @@ ext {
     spotbugs_gradle_plugin_version = "4.5.1"
     dokka_version = "1.6.21"
     hilt_version = "2.43.2"
+    sonarqube_version = "3.4.0.2513"
 
     // Code quality
     detekt_version = "1.17.1"

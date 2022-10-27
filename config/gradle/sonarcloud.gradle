@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 27/10/2022.
+ */
+
+apply plugin: "org.sonarqube"
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "Adyen_adyen-android"
+        property "sonar.organization", "adyen"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}

@@ -24,10 +24,12 @@ buildscript {
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:$spotbugs_gradle_plugin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:$sonarqube_version"
     }
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"
+apply from: "config/gradle/sonarcloud.gradle"
 
 allprojects {
     repositories {
