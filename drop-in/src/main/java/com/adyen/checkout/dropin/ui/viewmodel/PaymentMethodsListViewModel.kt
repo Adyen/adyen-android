@@ -117,11 +117,10 @@ class PaymentMethodsListViewModel(
                         Logger.d(TAG, "No details required - $type")
                         paymentMethodsList.add(paymentMethod.mapToModel(index))
                     }
-                    // If last payment method is redirect list might be ready now
-                    checkIfListIsReady()
                 }
             }
         }
+        checkIfListIsReady()
     }
 
     private fun PaymentMethod.mapToModel(index: Int): PaymentMethodModel {
