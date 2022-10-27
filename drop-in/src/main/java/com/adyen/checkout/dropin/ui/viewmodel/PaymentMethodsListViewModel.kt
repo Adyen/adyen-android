@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Suppress("TooManyFunctions")
-internal class PaymentMethodsListViewModel constructor(
+internal class PaymentMethodsListViewModel(
     private val application: Application,
     private val paymentMethods: List<PaymentMethod>,
     private val storedPaymentMethods: List<StoredPaymentMethod>,
@@ -149,7 +149,7 @@ internal class PaymentMethodsListViewModel constructor(
         }
 
     private fun List<StoredPaymentMethod>.mapToStoredPaymentMethodsModelList(): List<StoredPaymentMethodModel> =
-        this.mapNotNull { storedPaymentMethod ->
+        mapNotNull { storedPaymentMethod ->
             if (storedPaymentMethod.isStoredPaymentSupported())
                 storedPaymentMethod.mapStoredModel(dropInConfiguration.isRemovingStoredPaymentMethodsEnabled)
             else
@@ -174,7 +174,7 @@ internal class PaymentMethodsListViewModel constructor(
     }
 
     private fun List<OrderPaymentMethod>.mapToGiftCardPaymentMethodModel(): List<GiftCardPaymentMethodModel> =
-        this.map {
+        map {
             GiftCardPaymentMethodModel(
                 imageId = it.type,
                 lastFour = it.lastFour,
