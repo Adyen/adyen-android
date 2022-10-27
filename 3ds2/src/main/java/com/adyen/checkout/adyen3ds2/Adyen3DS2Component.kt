@@ -10,9 +10,13 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
@@ -40,13 +44,17 @@ class Adyen3DS2Component(
 
     init {
         delegate.initialize(viewModelScope)
+    }
 
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
         delegate.detailsFlow
-            .onEach { notifyDetails(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.ActionDetails(it)) }
             .launchIn(viewModelScope)
 
         delegate.exceptionFlow
-            .onEach { notifyException(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
     }
 

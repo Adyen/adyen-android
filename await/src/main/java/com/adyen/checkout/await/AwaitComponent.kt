@@ -11,11 +11,12 @@ import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -41,14 +42,25 @@ class AwaitComponent(
 
     init {
         delegate.initialize(viewModelScope)
+    }
 
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
         delegate.detailsFlow
-            .onEach { notifyDetails(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.ActionDetails(it)) }
             .launchIn(viewModelScope)
 
         delegate.exceptionFlow
-            .onEach { notifyException(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
+                delegate.refreshStatus()
+            }
+        })
     }
 
     override fun canHandleAction(action: Action): Boolean {
@@ -61,17 +73,6 @@ class AwaitComponent(
             return
         }
         delegate.handleAction(action, activity)
-    }
-
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        super.observe(lifecycleOwner, observer)
-
-        // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                delegate.refreshStatus()
-            }
-        })
     }
 
     override fun onCleared() {

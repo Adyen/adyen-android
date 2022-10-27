@@ -9,11 +9,8 @@ package com.adyen.checkout.components.base
 
 import android.app.Activity
 import android.app.Application
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel
 import com.adyen.checkout.components.model.payments.response.Action
@@ -28,7 +25,6 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
     configuration: ConfigurationT
 ) : ActionComponentViewModel<ConfigurationT>(savedStateHandle, application, configuration) {
 
-    private val resultLiveData = MutableLiveData<ActionComponentData>()
     private val errorMutableLiveData = MutableLiveData<ComponentError>()
 
     override fun handleAction(activity: Activity, action: Action) {
@@ -43,37 +39,8 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
         }
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        resultLiveData.observe(lifecycleOwner, observer)
-    }
-
-    override fun removeObservers(lifecycleOwner: LifecycleOwner) {
-        resultLiveData.removeObservers(lifecycleOwner)
-    }
-
-    override fun removeObserver(observer: Observer<ActionComponentData>) {
-        resultLiveData.removeObserver(observer)
-    }
-
-    override fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>) {
-        errorMutableLiveData.observe(lifecycleOwner, observer)
-    }
-
-    override fun removeErrorObservers(lifecycleOwner: LifecycleOwner) {
-        errorMutableLiveData.removeObservers(lifecycleOwner)
-    }
-
-    override fun removeErrorObserver(observer: Observer<ComponentError>) {
-        errorMutableLiveData.removeObserver(observer)
-    }
-
     @Throws(ComponentException::class)
     protected abstract fun handleActionInternal(action: Action, activity: Activity)
-
-    @Throws(ComponentException::class)
-    protected fun notifyDetails(actionComponentData: ActionComponentData) {
-        resultLiveData.postValue(actionComponentData)
-    }
 
     protected fun notifyException(e: CheckoutException) {
         errorMutableLiveData.postValue(ComponentError(e))

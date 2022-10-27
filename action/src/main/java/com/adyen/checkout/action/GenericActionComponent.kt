@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
@@ -52,7 +53,7 @@ class GenericActionComponent(
         genericActionDelegate.initialize(viewModelScope)
     }
 
-    fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
         genericActionDelegate.detailsFlow
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .onEach { callback(ComponentResult.ActionDetails(it)) }
@@ -62,6 +63,13 @@ class GenericActionComponent(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .onEach { callback(ComponentResult.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
+                genericActionDelegate.refreshStatus()
+            }
+        })
     }
 
     override fun canHandleAction(action: Action): Boolean {
@@ -112,9 +120,4 @@ class GenericActionComponent(
             GenericActionDelegate
             > = GenericActionComponentProvider()
     }
-}
-
-sealed class ComponentResult {
-    class ActionDetails(val data: ActionComponentData) : ComponentResult()
-    class Error(val error: ComponentError) : ComponentResult()
 }

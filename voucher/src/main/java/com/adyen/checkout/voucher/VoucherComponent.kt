@@ -10,8 +10,13 @@ package com.adyen.checkout.voucher
 
 import android.app.Activity
 import android.app.Application
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
@@ -19,6 +24,8 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class VoucherComponent(
     savedStateHandle: SavedStateHandle,
@@ -29,6 +36,13 @@ class VoucherComponent(
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
+        delegate.exceptionFlow
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(ComponentResult.Error(ComponentError(it))) }
+            .launchIn(viewModelScope)
+    }
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
