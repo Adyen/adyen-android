@@ -51,8 +51,6 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 awaitDelegate,
             )

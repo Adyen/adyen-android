@@ -8,17 +8,16 @@
 package com.adyen.checkout.qrcode
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.ComponentResult
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -30,12 +29,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class QRCodeComponent(
-    savedStateHandle: SavedStateHandle,
-    application: Application,
-    configuration: QRCodeConfiguration,
+    override val configuration: QRCodeConfiguration,
     override val delegate: QRCodeDelegate,
-) :
-    BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
+) : ViewModel(),
+    ActionComponent<QRCodeConfiguration>,
     IntentHandlingComponent,
     ViewableComponent {
 

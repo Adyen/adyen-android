@@ -11,9 +11,9 @@ package com.adyen.checkout.action
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.await.AwaitComponent
+import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionDelegate
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.qrcode.QRCodeComponent
@@ -29,7 +29,7 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun getActionProviderFor(
     action: Action
-): ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration, out ActionDelegate>? {
+): ActionComponentProvider<out ActionComponent<out Configuration>, out Configuration, out ActionDelegate>? {
     val allActionProviders = listOf(
         RedirectComponent.PROVIDER,
         Adyen3DS2Component.PROVIDER,

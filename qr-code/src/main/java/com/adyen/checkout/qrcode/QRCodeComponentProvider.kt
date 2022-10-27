@@ -17,13 +17,13 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.handler.DefaultRedirectHandler
 
 private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
@@ -49,8 +49,6 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
-                savedStateHandle = savedStateHandle,
-                application = application,
                 configuration = configuration,
                 delegate = qrCodeDelegate,
             )

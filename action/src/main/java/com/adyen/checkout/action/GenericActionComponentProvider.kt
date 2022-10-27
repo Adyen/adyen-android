@@ -50,8 +50,6 @@ class GenericActionComponentProvider :
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
             GenericActionComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 genericActionDelegate
             )

@@ -54,8 +54,6 @@ class Adyen3DS2ComponentProvider :
             val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
 
             Adyen3DS2Component(
-                savedStateHandle = savedStateHandle,
-                application = application,
                 configuration = configuration,
                 delegate = adyen3DS2Delegate,
             )

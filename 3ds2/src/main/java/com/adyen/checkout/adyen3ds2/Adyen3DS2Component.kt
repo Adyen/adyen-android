@@ -8,16 +8,15 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.ComponentResult
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -30,11 +29,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class Adyen3DS2Component(
-    savedStateHandle: SavedStateHandle,
-    application: Application,
-    configuration: Adyen3DS2Configuration,
+    override val configuration: Adyen3DS2Configuration,
     override val delegate: Adyen3DS2Delegate,
-) : BaseActionComponent<Adyen3DS2Configuration>(savedStateHandle, application, configuration),
+) : ViewModel(),
+    ActionComponent<Adyen3DS2Configuration>,
     IntentHandlingComponent,
     ViewableComponent {
 

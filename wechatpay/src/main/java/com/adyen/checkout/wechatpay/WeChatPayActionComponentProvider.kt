@@ -49,8 +49,6 @@ class WeChatPayActionComponentProvider :
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val weChatDelegate = getDelegate(configuration, savedStateHandle, application)
             WeChatPayActionComponent(
-                savedStateHandle = savedStateHandle,
-                application = application,
                 configuration = configuration,
                 delegate = weChatDelegate,
             )
