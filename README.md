@@ -1,14 +1,14 @@
-![Checkout Android Logo](https://user-images.githubusercontent.com/6615094/140908736-7573739a-0ab9-4fd1-b6d8-b2e780b6e3c8.png)
+![Checkout Android Logo][header.image]
 
-# Adyen Components for Android
+# Adyen Android
 
-Adyen Components for Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
+Adyen Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
 
 For an overview of how you can integrate with Adyen on Android check out the [Documentation Website][docs.android]
 
 <br/>
 
-![DropIn Preview](config/docs/dropin-android.jpg)
+![DropIn Preview][header.preview]
 
 <br/>
 
@@ -194,12 +194,14 @@ Please let us know if you find any issues.
 
 * [Adyen Checkout Documentation][docs.checkout]
 
-* [API Reference](https://docs.adyen.com/online-payments/api-only/)
+* [API Reference][docs.apiReference]
 
 ## License
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
+[header.image]: https://user-images.githubusercontent.com/9079915/198013698-139bf6f1-a15a-447d-8eed-97ce1354b43f.png
+[header.preview]: config/docs/dropin-android.jpg
 [docs.checkout]: https://docs.adyen.com/online-payments/
 [docs.android]: https://docs.adyen.com/online-payments/android/
 [dl]: https://repo1.maven.org/maven2/com/adyen/checkout/
@@ -210,3 +212,4 @@ This repository is open source and available under the MIT license. For more inf
 [docs.cardConfiguration]: https://docs.adyen.com/online-payments/android/components#step-1-set-up-components
 [client.key]: https://docs.adyen.com/online-payments/android/drop-in#client-key
 [migration.guide]: https://docs.adyen.com/online-payments/android/migrate-to-android-4-0-0
+[docs.apiReference]: https://docs.adyen.com/online-payments/api-only/
