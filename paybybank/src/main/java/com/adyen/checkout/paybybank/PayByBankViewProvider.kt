@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-object PayByBankViewProvider: ViewProvider {
+internal object PayByBankViewProvider: ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,

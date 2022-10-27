@@ -22,7 +22,7 @@ import com.adyen.checkout.issuerlist.IssuerModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DefaultPayByBankDelegate(
+internal class DefaultPayByBankDelegate(
     val paymentMethod: PaymentMethod,
     override val configuration: Configuration
 ) : PayByBankDelegate {
@@ -112,8 +112,7 @@ class DefaultPayByBankDelegate(
     }
 
     private fun List<Issuer>.mapToModel(): List<IssuerModel> =
-        this.mapNotNull { issuer ->
-            val (id, name, isDisabled) = issuer
+        this.mapNotNull { (id, name, isDisabled) ->
             if (!isDisabled && id != null && name != null) {
                 IssuerModel(id, name)
             } else {
@@ -124,8 +123,7 @@ class DefaultPayByBankDelegate(
     private fun List<InputDetail>?.getLegacyIssuers(): List<IssuerModel> =
         this.orEmpty()
             .flatMap { it.items.orEmpty() }
-            .mapNotNull { item ->
-                val (id, name) = item
+            .mapNotNull { (id, name) ->
                 if (id != null && name != null) {
                     IssuerModel(id, name)
                 } else {

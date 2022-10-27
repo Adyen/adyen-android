@@ -18,7 +18,7 @@ import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerModel
 import com.adyen.checkout.issuerlist.R
 
-class PayByBankRecyclerAdapter(
+internal class PayByBankRecyclerAdapter(
     private val imageLoader: ImageLoader,
     private val paymentMethod: String,
     private val onItemClicked: (IssuerModel) -> Unit,
