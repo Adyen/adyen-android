@@ -37,12 +37,6 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    val issuers: List<IssuerModel>
-        get() = delegate.getIssuers()
-
-    val paymentMethodType: String
-        get() = delegate.getPaymentMethodType()
-
     init {
         delegate.componentStateFlow
             .onEach { notifyStateChanged(it) }
