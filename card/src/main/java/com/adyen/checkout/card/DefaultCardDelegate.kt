@@ -234,7 +234,7 @@ internal class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(inputData.address, addressFormUIState),
+            addressState = validateAddress(inputData.address, addressFormUIState, selectedOrFirstCardType),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
@@ -402,9 +402,11 @@ internal class DefaultCardDelegate(
 
     private fun validateAddress(
         addressInputModel: AddressInputModel,
-        addressFormUIState: AddressFormUIState
+        addressFormUIState: AddressFormUIState,
+        detectedCardType: DetectedCardType?
     ): AddressOutputData {
-        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
+        val isOptional = AddressValidationUtils.isOptional(configuration.addressConfiguration, detectedCardType)
+        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState, isOptional)
     }
 
     private fun isCvcHidden(): Boolean {

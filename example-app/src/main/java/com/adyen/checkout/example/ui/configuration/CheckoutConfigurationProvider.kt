@@ -64,7 +64,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
         0 -> AddressConfiguration.None
-        1 -> AddressConfiguration.PostalCode
+        1 -> AddressConfiguration.PostalCode()
         else -> AddressConfiguration.FullAddress(
             defaultCountryCode = "NL",
             supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
