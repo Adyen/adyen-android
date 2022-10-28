@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.StateFlow
 internal class PaymentMethodsListViewModel(
     private val application: Application,
     private val paymentMethods: List<PaymentMethod>,
-    private val storedPaymentMethods: List<StoredPaymentMethod>,
+    storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
     private val dropInConfiguration: DropInConfiguration,
     private val amount: Amount
@@ -52,6 +52,7 @@ internal class PaymentMethodsListViewModel(
     private var paymentMethodsAvailabilityMap: HashMap<PaymentMethod, Boolean> = hashMapOf()
 
     init {
+        storedPaymentMethodsList = storedPaymentMethods.mapToStoredPaymentMethodsModelList().toMutableList()
         setupPaymentMethods(paymentMethods)
     }
 
@@ -110,7 +111,6 @@ internal class PaymentMethodsListViewModel(
                 )
             }
             // stored payment methods
-            storedPaymentMethodsList = storedPaymentMethods.mapToStoredPaymentMethodsModelList().toMutableList()
             val hasStoredPaymentMethods = storedPaymentMethodsList?.isNotEmpty() ?: false
             if (hasStoredPaymentMethods) {
                 storedPaymentMethodsList?.let {
@@ -133,8 +133,7 @@ internal class PaymentMethodsListViewModel(
     }
 
     internal fun removePaymentMethodWithId(id: String) {
-        val item = storedPaymentMethodsList?.first { item -> item.id == id }
-        storedPaymentMethodsList?.remove(item)
+        storedPaymentMethodsList?.removeAll { it.id == id }
         populatePaymentMethods()
     }
 
