@@ -30,16 +30,20 @@ sealed class AddressConfiguration : Parcelable {
     data class PostalCode(
         val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
     ) : AddressConfiguration() {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<PostalCode> {
-            override fun createFromParcel(source: Parcel) = PostalCode(
-                addressFieldPolicy = source.readParcelable(AddressFieldPolicy::class.java.classLoader)!!
-            )
-            override fun newArray(size: Int) = arrayOfNulls<PostalCode>(size)
+        companion object {
+            @JvmField
+            val CREATOR = object : Parcelable.Creator<PostalCode> {
+                override fun createFromParcel(source: Parcel) = PostalCode(
+                    addressFieldPolicy = source.readParcelable(AddressFieldPolicy::class.java.classLoader)!!
+                )
+
+                override fun newArray(size: Int) = arrayOfNulls<PostalCode>(size)
+            }
         }
+
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
-            // no ops
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            dest.writeParcelable(addressFieldPolicy, flags)
         }
     }
 
@@ -72,6 +76,7 @@ sealed class AddressConfiguration : Parcelable {
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeString(defaultCountryCode)
             dest.writeList(supportedCountryCodes)
+            dest.writeParcelable(addressFieldPolicy, flags)
         }
     }
 
@@ -129,8 +134,8 @@ sealed class AddressConfiguration : Parcelable {
             }
 
             override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
-                // no ops
+            override fun writeToParcel(dest: Parcel, flags: Int) {
+                dest.writeList(brands)
             }
         }
     }

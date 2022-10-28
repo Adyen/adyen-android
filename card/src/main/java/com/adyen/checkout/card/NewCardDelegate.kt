@@ -117,8 +117,13 @@ class NewCardDelegate(
         }
     }
 
-    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
-        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
+    override fun validateAddress(
+        addressInputModel: AddressInputModel,
+        addressFormUIState: AddressFormUIState,
+        detectedCardType: DetectedCardType?
+    ): AddressOutputData {
+        val isOptional = AddressValidationUtils.isOptional(cardConfiguration.addressConfiguration, detectedCardType)
+        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState, isOptional)
     }
 
     override fun isCvcHidden(): Boolean {

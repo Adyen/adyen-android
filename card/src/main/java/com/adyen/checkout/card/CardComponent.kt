@@ -213,7 +213,7 @@ class CardComponent private constructor(
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
-            cardDelegate.validateAddress(addressInputModel, addressFormUIState),
+            cardDelegate.validateAddress(addressInputModel, addressFormUIState, selectedOrFirstCardType),
             makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
             makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),

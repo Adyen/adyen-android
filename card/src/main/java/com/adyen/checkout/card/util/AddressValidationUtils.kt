@@ -1,9 +1,11 @@
 package com.adyen.checkout.card.util
 
+import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -13,11 +15,15 @@ object AddressValidationUtils {
     /**
      * Validate address input.
      */
-    fun validateAddressInput(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
-        return when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> validateAddressInput(addressInputModel)
-            AddressFormUIState.POSTAL_CODE -> validatePostalCode(addressInputModel)
-            else -> makeValidEmptyAddressOutput(addressInputModel)
+    fun validateAddressInput(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState, isOptional: Boolean): AddressOutputData {
+        return if (!isOptional) {
+            when (addressFormUIState) {
+                AddressFormUIState.FULL_ADDRESS -> validateAddressInput(addressInputModel)
+                AddressFormUIState.POSTAL_CODE -> validatePostalCode(addressInputModel)
+                else -> makeValidEmptyAddressOutput(addressInputModel)
+            }
+        } else {
+            makeValidEmptyAddressOutput(addressInputModel)
         }
     }
 
@@ -72,6 +78,29 @@ object AddressValidationUtils {
             FieldState(input, Validation.Valid)
         } else {
             FieldState(input, Validation.Invalid(R.string.checkout_address_form_field_not_valid))
+        }
+    }
+
+    fun isOptional(addressConfiguration: AddressConfiguration?, detectedCardType: DetectedCardType?): Boolean {
+        return when (addressConfiguration) {
+            AddressConfiguration.None -> true
+            is AddressConfiguration.PostalCode -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
+            is AddressConfiguration.FullAddress -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
+            else -> true
+        }
+    }
+
+    private fun isOptional(policy: AddressConfiguration.AddressFieldPolicy, detectedCardType: DetectedCardType?): Boolean {
+        return when (policy) {
+            AddressConfiguration.AddressFieldPolicy.Required -> false
+            AddressConfiguration.AddressFieldPolicy.Optional -> true
+            is AddressConfiguration.AddressFieldPolicy.OptionalForCardTypes -> {
+                if (detectedCardType == null) {
+                    false
+                } else {
+                    policy.brands.contains(detectedCardType.cardType.txVariant)
+                }
+            }
         }
     }
 }
