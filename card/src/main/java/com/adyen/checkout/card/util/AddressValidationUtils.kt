@@ -97,8 +97,8 @@ object AddressValidationUtils {
 
     private fun isOptional(policy: AddressConfiguration.AddressFieldPolicy, detectedCardType: DetectedCardType?): Boolean {
         return when (policy) {
-            AddressConfiguration.AddressFieldPolicy.Required -> false
-            AddressConfiguration.AddressFieldPolicy.Optional -> true
+            is AddressConfiguration.AddressFieldPolicy.Required -> false
+            is AddressConfiguration.AddressFieldPolicy.Optional -> true
             is AddressConfiguration.AddressFieldPolicy.OptionalForCardTypes -> {
                 if (detectedCardType == null) {
                     false

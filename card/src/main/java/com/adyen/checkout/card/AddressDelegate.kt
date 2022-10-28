@@ -12,7 +12,6 @@ import android.util.LruCache
 import com.adyen.checkout.card.api.AddressDataType
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
-import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.components.base.Configuration
 import kotlinx.coroutines.CoroutineScope

@@ -28,7 +28,7 @@ sealed class AddressConfiguration : Parcelable {
      * Only postal code will be shown as part of the card component.
      */
     data class PostalCode(
-        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required()
     ) : AddressConfiguration() {
         companion object {
             @JvmField
@@ -57,7 +57,7 @@ sealed class AddressConfiguration : Parcelable {
     data class FullAddress(
         val defaultCountryCode: String? = null,
         val supportedCountryCodes: List<String> = emptyList(),
-        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required()
     ) : AddressConfiguration() {
         companion object {
             @JvmField
@@ -88,11 +88,13 @@ sealed class AddressConfiguration : Parcelable {
         /**
          * Address form fields will be required.
          */
-        object Required : AddressFieldPolicy() {
-            @JvmField
-            val CREATOR = object : Parcelable.Creator<Required> {
-                override fun createFromParcel(source: Parcel?) = Required
-                override fun newArray(size: Int) = arrayOfNulls<Required>(size)
+        class Required : AddressFieldPolicy() {
+            companion object {
+                @JvmField
+                val CREATOR = object : Parcelable.Creator<Required> {
+                    override fun createFromParcel(source: Parcel?) = Required()
+                    override fun newArray(size: Int) = arrayOfNulls<Required>(size)
+                }
             }
 
             override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
@@ -104,11 +106,13 @@ sealed class AddressConfiguration : Parcelable {
         /**
          * Address form fields will be optional.
          */
-        object Optional : AddressFieldPolicy() {
-            @JvmField
-            val CREATOR = object : Parcelable.Creator<Optional> {
-                override fun createFromParcel(source: Parcel?) = Optional
-                override fun newArray(size: Int) = arrayOfNulls<Optional>(size)
+        class Optional : AddressFieldPolicy() {
+            companion object {
+                @JvmField
+                val CREATOR = object : Parcelable.Creator<Optional> {
+                    override fun createFromParcel(source: Parcel?) = Optional()
+                    override fun newArray(size: Int) = arrayOfNulls<Optional>(size)
+                }
             }
 
             override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
