@@ -20,7 +20,7 @@ sealed class AddressConfiguration : Parcelable {
      */
     @Parcelize
     data class PostalCode(
-        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required()
     ) : AddressConfiguration()
 
     /**
@@ -34,7 +34,7 @@ sealed class AddressConfiguration : Parcelable {
     data class FullAddress(
         val defaultCountryCode: String? = null,
         val supportedCountryCodes: List<String> = emptyList(),
-        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required()
     ) : AddressConfiguration()
 
     /**
@@ -46,13 +46,13 @@ sealed class AddressConfiguration : Parcelable {
          * Address form fields will be required.
          */
         @Parcelize
-        object Required : AddressFieldPolicy()
+        class Required : AddressFieldPolicy()
 
         /**
          * Address form fields will be optional.
          */
         @Parcelize
-        object Optional : AddressFieldPolicy()
+        class Optional : AddressFieldPolicy()
 
         /**
          * Address form fields will be optional for given [brands] and required for the other brands.
