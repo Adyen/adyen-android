@@ -11,6 +11,7 @@ package com.adyen.checkout.card.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View.OnFocusChangeListener
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
@@ -392,78 +393,35 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
+    fun updateAddressHint(isOptional: Boolean) {
+        val spec = AddressSpecification.fromString(component.inputData.address.country)
+
+        val countryStyleResId = if (isOptional) spec.country.optionalStyleResId else spec.country.styleResId
+        textInputLayoutCountry?.setLocalizedHintFromStyle(countryStyleResId, localizedContext)
+
+        val streetStyleResId = if (isOptional) spec.street.optionalStyleResId else spec.street.styleResId
+        textInputLayoutStreet?.setLocalizedHintFromStyle(streetStyleResId, localizedContext)
+
+        val houseNumberStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
+        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(houseNumberStyleResId, localizedContext)
+
+        val apartmentSuiteStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
+        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(apartmentSuiteStyleResId, localizedContext)
+
+        val postalCodeStyleResId = if (isOptional) spec.postalCode.optionalStyleResId else spec.postalCode.styleResId
+        textInputLayoutPostalCode?.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
+
+        val cityStyleResId = if (isOptional) spec.city.optionalStyleResId else spec.city.optionalStyleResId
+        textInputLayoutCity?.setLocalizedHintFromStyle(cityStyleResId, localizedContext)
+
+        val provinceTerritoryStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
+        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(provinceTerritoryStyleResId, localizedContext)
+
+        val statesStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
+        textInputLayoutState?.setLocalizedHintFromStyle(statesStyleResId, localizedContext)
+    }
+
     private fun notifyInputDataChanged() {
         component.inputDataChanged(component.inputData)
     }
-
-    /**
-     * Specification for address form alternatives depending on the country.
-     */
-    @Suppress("LongParameterList")
-    enum class AddressSpecification(
-        internal val street: AddressFieldSpec,
-        internal val houseNumber: AddressFieldSpec,
-        internal val apartmentSuite: AddressFieldSpec,
-        internal val postalCode: AddressFieldSpec,
-        internal val city: AddressFieldSpec,
-        internal val stateProvince: AddressFieldSpec,
-        internal val country: AddressFieldSpec
-    ) {
-        BR(
-            street = AddressFieldSpec(true, R.style.AdyenCheckout_Card_StreetInput),
-            houseNumber = AddressFieldSpec(true, R.style.AdyenCheckout_Card_HouseNumberInput),
-            apartmentSuite = AddressFieldSpec(false, R.style.AdyenCheckout_Card_ApartmentSuiteInput),
-            postalCode = AddressFieldSpec(true, R.style.AdyenCheckout_Card_PostalCodeInput),
-            city = AddressFieldSpec(true, R.style.AdyenCheckout_Card_CityInput),
-            stateProvince = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput),
-            country = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput)
-        ),
-        CA(
-            street = AddressFieldSpec(true, R.style.AdyenCheckout_Card_AddressInput),
-            houseNumber = AddressFieldSpec(false, 0),
-            apartmentSuite = AddressFieldSpec(false, R.style.AdyenCheckout_Card_ApartmentSuiteInput),
-            postalCode = AddressFieldSpec(true, R.style.AdyenCheckout_Card_PostalCodeInput),
-            city = AddressFieldSpec(true, R.style.AdyenCheckout_Card_CityInput),
-            stateProvince = AddressFieldSpec(true, R.style.AdyenCheckout_Card_ProvinceTerritoryInput),
-            country = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput)
-        ),
-        GB(
-            street = AddressFieldSpec(true, R.style.AdyenCheckout_Card_StreetInput),
-            houseNumber = AddressFieldSpec(true, R.style.AdyenCheckout_Card_HouseNumberInput),
-            apartmentSuite = AddressFieldSpec(false, 0),
-            postalCode = AddressFieldSpec(true, R.style.AdyenCheckout_Card_PostalCodeInput),
-            city = AddressFieldSpec(true, R.style.AdyenCheckout_Card_CityTownInput),
-            stateProvince = AddressFieldSpec(false, 0),
-            country = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput)
-        ),
-        US(
-            street = AddressFieldSpec(true, R.style.AdyenCheckout_Card_AddressInput),
-            houseNumber = AddressFieldSpec(false, 0),
-            apartmentSuite = AddressFieldSpec(false, R.style.AdyenCheckout_Card_ApartmentSuiteInput),
-            postalCode = AddressFieldSpec(true, R.style.AdyenCheckout_Card_ZipCodeInput),
-            city = AddressFieldSpec(true, R.style.AdyenCheckout_Card_CityInput),
-            stateProvince = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput),
-            country = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput)
-        ),
-        DEFAULT(
-            street = AddressFieldSpec(true, R.style.AdyenCheckout_Card_StreetInput),
-            houseNumber = AddressFieldSpec(true, R.style.AdyenCheckout_Card_HouseNumberInput),
-            apartmentSuite = AddressFieldSpec(false, R.style.AdyenCheckout_Card_ApartmentSuiteInput),
-            postalCode = AddressFieldSpec(true, R.style.AdyenCheckout_Card_PostalCodeInput),
-            city = AddressFieldSpec(true, R.style.AdyenCheckout_Card_CityInput),
-            stateProvince = AddressFieldSpec(true, R.style.AdyenCheckout_Card_ProvinceTerritoryInput),
-            country = AddressFieldSpec(true, R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput)
-        );
-
-        companion object {
-            fun fromString(countryCode: String?): AddressSpecification {
-                return values().firstOrNull { it.name == countryCode } ?: DEFAULT
-            }
-        }
-    }
-
-    internal data class AddressFieldSpec(
-        val isRequired: Boolean,
-        val styleResId: Int
-    )
 }

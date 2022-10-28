@@ -164,6 +164,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             updateInstallments(cardOutputData)
             updateCountries(cardOutputData.countryOptions)
             updateStates(cardOutputData.stateOptions)
+            updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -641,6 +642,23 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             AddressFormUIState.NONE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
+            }
+        }
+    }
+
+    private fun updateAddressHint(addressFormUIState: AddressFormUIState, isOptional: Boolean) {
+        when (addressFormUIState) {
+            AddressFormUIState.FULL_ADDRESS -> binding.addressFormInput.updateAddressHint(isOptional)
+            AddressFormUIState.POSTAL_CODE -> {
+                val postalCodeStyleResId = if (isOptional) {
+                    R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+                } else {
+                    R.style.AdyenCheckout_Card_PostalCodeInput
+                }
+                binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
+            }
+            else -> {
+                // no ops
             }
         }
     }
