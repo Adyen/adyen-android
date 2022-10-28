@@ -60,6 +60,7 @@ dependencies {
     api project(':online-banking-pl')
     api project(':online-banking-sk')
     api project(':openbanking')
+    api project(':paybybank')
     api project(':sepa')
     api project(':sessions-core')
 

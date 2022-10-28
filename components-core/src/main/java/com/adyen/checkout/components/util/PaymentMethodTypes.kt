@@ -38,6 +38,7 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_CZ = "onlineBanking_CZ"
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
+    const val PAY_BY_BANK = "paybybank"
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
@@ -97,6 +98,7 @@ object PaymentMethodTypes {
             MOLPAY_THAILAND,
             MOLPAY_VIETNAM,
             OPEN_BANKING,
+            PAY_BY_BANK,
             SEPA,
             BACS,
             SCHEME,

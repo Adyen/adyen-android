@@ -12,8 +12,7 @@ import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 
 internal fun List<Issuer>.mapToModel(): List<IssuerModel> =
-    this.mapNotNull { issuer ->
-        val (id, name, isDisabled) = issuer
+    this.mapNotNull { (id, name, isDisabled) ->
         if (!isDisabled && id != null && name != null) {
             IssuerModel(id, name)
         } else {
@@ -24,8 +23,7 @@ internal fun List<Issuer>.mapToModel(): List<IssuerModel> =
 internal fun List<InputDetail>?.getLegacyIssuers(): List<IssuerModel> =
     this.orEmpty()
         .flatMap { it.items.orEmpty() }
-        .mapNotNull { item ->
-            val (id, name) = item
+        .mapNotNull { (id, name) ->
             if (id != null && name != null) {
                 IssuerModel(id, name)
             } else {
