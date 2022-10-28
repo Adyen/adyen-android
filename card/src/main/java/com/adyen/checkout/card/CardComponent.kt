@@ -194,6 +194,8 @@ class CardComponent private constructor(
 
         val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
 
+        val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
+
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
 
@@ -213,7 +215,7 @@ class CardComponent private constructor(
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
-            cardDelegate.validateAddress(addressInputModel, addressFormUIState, selectedOrFirstCardType),
+            cardDelegate.validateAddress(addressInputModel, addressFormUIState, reliableSelectedCard),
             makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
             makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
