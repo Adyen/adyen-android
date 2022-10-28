@@ -19,7 +19,9 @@ sealed class AddressConfiguration : Parcelable {
      * Only postal code will be shown as part of the card component.
      */
     @Parcelize
-    object PostalCode : AddressConfiguration()
+    data class PostalCode(
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+    ) : AddressConfiguration()
 
     /**
      * Full Address Form will be shown as part of the card component.
@@ -31,6 +33,31 @@ sealed class AddressConfiguration : Parcelable {
     @Parcelize
     data class FullAddress(
         val defaultCountryCode: String? = null,
-        val supportedCountryCodes: List<String> = emptyList()
+        val supportedCountryCodes: List<String> = emptyList(),
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
     ) : AddressConfiguration()
+
+    /**
+     * Configuration for requirement of the address fields.
+     */
+    sealed class AddressFieldPolicy : Parcelable {
+
+        /**
+         * Address form fields will be required.
+         */
+        @Parcelize
+        object Required : AddressFieldPolicy()
+
+        /**
+         * Address form fields will be optional.
+         */
+        @Parcelize
+        object Optional : AddressFieldPolicy()
+
+        /**
+         * Address form fields will be optional for given [brands] and required for the other brands.
+         */
+        @Parcelize
+        data class OptionalForCardTypes(val brands: List<String>) : AddressFieldPolicy()
+    }
 }
