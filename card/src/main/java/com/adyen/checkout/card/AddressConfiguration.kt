@@ -27,10 +27,14 @@ sealed class AddressConfiguration : Parcelable {
     /**
      * Only postal code will be shown as part of the card component.
      */
-    object PostalCode : AddressConfiguration() {
+    data class PostalCode(
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
+    ) : AddressConfiguration() {
         @JvmField
         val CREATOR = object : Parcelable.Creator<PostalCode> {
-            override fun createFromParcel(source: Parcel?) = PostalCode
+            override fun createFromParcel(source: Parcel) = PostalCode(
+                addressFieldPolicy = source.readParcelable(AddressFieldPolicy::class.java.classLoader)!!
+            )
             override fun newArray(size: Int) = arrayOfNulls<PostalCode>(size)
         }
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
@@ -48,7 +52,8 @@ sealed class AddressConfiguration : Parcelable {
      */
     data class FullAddress(
         val defaultCountryCode: String? = null,
-        val supportedCountryCodes: List<String> = emptyList()
+        val supportedCountryCodes: List<String> = emptyList(),
+        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required
     ) : AddressConfiguration() {
         companion object {
             @JvmField
@@ -56,7 +61,8 @@ sealed class AddressConfiguration : Parcelable {
                 @Suppress("UNCHECKED_CAST")
                 override fun createFromParcel(source: Parcel) = FullAddress(
                     defaultCountryCode = source.readString(),
-                    supportedCountryCodes = source.readArrayList(String::class.java.classLoader) as List<String>
+                    supportedCountryCodes = source.readArrayList(String::class.java.classLoader) as List<String>,
+                    addressFieldPolicy = source.readParcelable(AddressFieldPolicy::class.java.classLoader)!!
                 )
                 override fun newArray(size: Int) = arrayOfNulls<FullAddress>(size)
             }
@@ -66,6 +72,66 @@ sealed class AddressConfiguration : Parcelable {
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeString(defaultCountryCode)
             dest.writeList(supportedCountryCodes)
+        }
+    }
+
+    /**
+     * Configuration for requirement of the address fields.
+     */
+    sealed class AddressFieldPolicy : Parcelable {
+
+        /**
+         * Address form fields will be required.
+         */
+        object Required : AddressFieldPolicy() {
+            @JvmField
+            val CREATOR = object : Parcelable.Creator<Required> {
+                override fun createFromParcel(source: Parcel?) = Required
+                override fun newArray(size: Int) = arrayOfNulls<Required>(size)
+            }
+
+            override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
+            override fun writeToParcel(dest: Parcel?, flags: Int) {
+                // no ops
+            }
+        }
+
+        /**
+         * Address form fields will be optional.
+         */
+        object Optional : AddressFieldPolicy() {
+            @JvmField
+            val CREATOR = object : Parcelable.Creator<Optional> {
+                override fun createFromParcel(source: Parcel?) = Optional
+                override fun newArray(size: Int) = arrayOfNulls<Optional>(size)
+            }
+
+            override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
+            override fun writeToParcel(dest: Parcel?, flags: Int) {
+                // no ops
+            }
+        }
+
+        /**
+         * Address form fields will be optional for given [brands] and required for the other brands.
+         */
+        data class OptionalForCardTypes(val brands: List<String>) : AddressFieldPolicy() {
+            companion object {
+                @JvmField
+                val CREATOR = object : Parcelable.Creator<OptionalForCardTypes> {
+                    @Suppress("UNCHECKED_CAST")
+                    override fun createFromParcel(source: Parcel) = OptionalForCardTypes(
+                        brands = source.readArrayList(String::class.java.classLoader) as List<String>
+                    )
+
+                    override fun newArray(size: Int) = arrayOfNulls<OptionalForCardTypes>(size)
+                }
+            }
+
+            override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
+            override fun writeToParcel(dest: Parcel?, flags: Int) {
+                // no ops
+            }
         }
     }
 }
