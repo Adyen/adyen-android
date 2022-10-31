@@ -405,7 +405,7 @@ class AddressFormInput @JvmOverloads constructor(
         val houseNumberStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
         textInputLayoutHouseNumber?.setLocalizedHintFromStyle(houseNumberStyleResId, localizedContext)
 
-        val apartmentSuiteStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
+        val apartmentSuiteStyleResId = if (isOptional) spec.apartmentSuite.optionalStyleResId else spec.apartmentSuite.styleResId
         textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(apartmentSuiteStyleResId, localizedContext)
 
         val postalCodeStyleResId = if (isOptional) spec.postalCode.optionalStyleResId else spec.postalCode.styleResId
