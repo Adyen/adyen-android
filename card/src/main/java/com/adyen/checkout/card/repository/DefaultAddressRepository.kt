@@ -10,7 +10,6 @@ package com.adyen.checkout.card.repository
 
 import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.channel.bufferedChannel

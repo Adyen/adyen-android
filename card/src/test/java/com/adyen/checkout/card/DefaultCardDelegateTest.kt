@@ -112,7 +112,7 @@ internal class DefaultCardDelegateTest {
             val statesFlow = addressRepository.statesFlow.testIn(this)
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(AddressConfiguration.PostalCode)
+                    .setAddressConfiguration(AddressConfiguration.PostalCode())
                     .build()
             )
 
@@ -409,6 +409,7 @@ internal class DefaultCardDelegateTest {
                     apartmentSuite = FieldState("apt", Validation.Valid),
                     city = FieldState("Amsterdam", Validation.Valid),
                     country = FieldState("Netherlands", Validation.Valid),
+                    isOptional = false
                 )
 
                 val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
@@ -605,6 +606,7 @@ internal class DefaultCardDelegateTest {
                     apartmentSuite = FieldState("apt", Validation.Valid),
                     city = FieldState("Amsterdam", Validation.Valid),
                     country = FieldState("Netherlands", Validation.Valid),
+                    isOptional = false
                 )
 
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
@@ -826,6 +828,7 @@ internal class DefaultCardDelegateTest {
         apartmentSuite: FieldState<String> = FieldState("", Validation.Valid),
         city: FieldState<String> = FieldState("", Validation.Valid),
         country: FieldState<String> = FieldState("", Validation.Valid),
+        isOptional: Boolean = true
     ): AddressOutputData {
         return AddressOutputData(
             postalCode = postalCode,
@@ -835,6 +838,7 @@ internal class DefaultCardDelegateTest {
             apartmentSuite = apartmentSuite,
             city = city,
             country = country,
+            isOptional = isOptional
         )
     }
 

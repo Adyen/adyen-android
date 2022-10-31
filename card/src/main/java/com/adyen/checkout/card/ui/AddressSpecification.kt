@@ -62,6 +62,7 @@ enum class AddressSpecification(
             optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
         )
     ),
+
     // Canada
     CA(
         street = AddressFieldSpec(
@@ -100,6 +101,7 @@ enum class AddressSpecification(
             optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
         )
     ),
+
     // Great Britain
     GB(
         street = AddressFieldSpec(
@@ -138,6 +140,7 @@ enum class AddressSpecification(
             optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
         )
     ),
+
     // United States
     US(
         street = AddressFieldSpec(
@@ -176,6 +179,7 @@ enum class AddressSpecification(
             optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
         )
     ),
+
     // Default
     DEFAULT(
         street = AddressFieldSpec(

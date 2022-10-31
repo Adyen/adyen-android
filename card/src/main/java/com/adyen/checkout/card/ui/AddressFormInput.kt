@@ -394,28 +394,60 @@ class AddressFormInput @JvmOverloads constructor(
     fun updateAddressHint(isOptional: Boolean) {
         val spec = AddressSpecification.fromString(delegate.outputData.addressState.country.value)
 
-        val countryStyleResId = if (isOptional) spec.country.optionalStyleResId else spec.country.styleResId
+        val countryStyleResId = if (isOptional) {
+            spec.country.optionalStyleResId
+        } else {
+            spec.country.styleResId
+        }
         textInputLayoutCountry?.setLocalizedHintFromStyle(countryStyleResId, localizedContext)
 
-        val streetStyleResId = if (isOptional) spec.street.optionalStyleResId else spec.street.styleResId
+        val streetStyleResId = if (isOptional) {
+            spec.street.optionalStyleResId
+        } else {
+            spec.street.styleResId
+        }
         textInputLayoutStreet?.setLocalizedHintFromStyle(streetStyleResId, localizedContext)
 
-        val houseNumberStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
+        val houseNumberStyleResId = if (isOptional) {
+            spec.houseNumber.optionalStyleResId
+        } else {
+            spec.houseNumber.styleResId
+        }
         textInputLayoutHouseNumber?.setLocalizedHintFromStyle(houseNumberStyleResId, localizedContext)
 
-        val apartmentSuiteStyleResId = if (isOptional) spec.apartmentSuite.optionalStyleResId else spec.apartmentSuite.styleResId
+        val apartmentSuiteStyleResId = if (isOptional) {
+            spec.apartmentSuite.optionalStyleResId
+        } else {
+            spec.apartmentSuite.styleResId
+        }
         textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(apartmentSuiteStyleResId, localizedContext)
 
-        val postalCodeStyleResId = if (isOptional) spec.postalCode.optionalStyleResId else spec.postalCode.styleResId
+        val postalCodeStyleResId = if (isOptional) {
+            spec.postalCode.optionalStyleResId
+        } else {
+            spec.postalCode.styleResId
+        }
         textInputLayoutPostalCode?.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
 
-        val cityStyleResId = if (isOptional) spec.city.optionalStyleResId else spec.city.optionalStyleResId
+        val cityStyleResId = if (isOptional) {
+            spec.city.optionalStyleResId
+        } else {
+            spec.city.optionalStyleResId
+        }
         textInputLayoutCity?.setLocalizedHintFromStyle(cityStyleResId, localizedContext)
 
-        val provinceTerritoryStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
+        val provinceTerritoryStyleResId = if (isOptional) {
+            spec.stateProvince.optionalStyleResId
+        } else {
+            spec.stateProvince.styleResId
+        }
         textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(provinceTerritoryStyleResId, localizedContext)
 
-        val statesStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
+        val statesStyleResId = if (isOptional) {
+            spec.stateProvince.optionalStyleResId
+        } else {
+            spec.stateProvince.styleResId
+        }
         textInputLayoutState?.setLocalizedHintFromStyle(statesStyleResId, localizedContext)
     }
 }
