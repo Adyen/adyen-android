@@ -24,7 +24,7 @@ interface ActionComponent<ConfigurationT : Configuration> : Component<ActionComp
 
     // TODO documentation
     // TODO move to [Component]
-    fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit)
+    fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit)
 
     /**
      * Provide the action from the API response that needs to be handled.

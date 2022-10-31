@@ -8,7 +8,8 @@
 
 package com.adyen.checkout.components
 
-sealed class ComponentResult {
-    class ActionDetails(val data: ActionComponentData) : ComponentResult()
-    class Error(val error: ComponentError) : ComponentResult()
+// TODO add docs
+sealed class ActionComponentEvent {
+    class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()
+    class Error(val error: ComponentError) : ActionComponentEvent()
 }

@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.ComponentResult
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
@@ -48,15 +48,15 @@ class GenericActionComponent(
         genericActionDelegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ComponentResult) -> Unit) {
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         genericActionDelegate.detailsFlow
             .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(ComponentResult.ActionDetails(it)) }
+            .onEach { callback(ActionComponentEvent.ActionDetails(it)) }
             .launchIn(viewModelScope)
 
         genericActionDelegate.exceptionFlow
             .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(ComponentResult.Error(ComponentError(it))) }
+            .onEach { callback(ActionComponentEvent.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
 
         // Immediately request a new status if the user resumes the app

@@ -18,10 +18,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.components.ComponentResult
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CancellationException
@@ -32,7 +32,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.ui.arguments
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentEvent
+import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentFragmentEvent
 import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -76,7 +76,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
                 }
             }
 
-            actionComponent.observe(viewLifecycleOwner, ::collect)
+            actionComponent.observe(viewLifecycleOwner, ::onActionComponentEvent)
 
             binding.componentView.attach(actionComponent, viewLifecycleOwner)
         } catch (e: CheckoutException) {
@@ -84,10 +84,10 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
         }
     }
 
-    private fun collect(result: ComponentResult) {
-        when (result) {
-            is ComponentResult.ActionDetails -> onActionComponentDataChanged(result.data)
-            is ComponentResult.Error -> onError(result.error)
+    private fun onActionComponentEvent(event: ActionComponentEvent) {
+        when (event) {
+            is ActionComponentEvent.ActionDetails -> onActionComponentDataChanged(event.data)
+            is ActionComponentEvent.Error -> onError(event.error)
         }
     }
 
@@ -96,7 +96,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach {
                 when (it) {
-                    ActionComponentEvent.HANDLE_ACTION -> {
+                    ActionComponentFragmentEvent.HANDLE_ACTION -> {
                         actionComponent.handleAction(action, requireActivity())
                     }
                 }
