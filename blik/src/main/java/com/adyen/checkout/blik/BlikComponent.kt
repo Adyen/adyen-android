@@ -9,21 +9,19 @@ package com.adyen.checkout.blik
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -43,10 +41,9 @@ class BlikComponent(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
     ) {
-        delegate.componentStateFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
-            .launchIn(viewModelScope)
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(PaymentComponentEvent.StateChanged(it))
+        }
     }
 
     override fun requiresInput(): Boolean {

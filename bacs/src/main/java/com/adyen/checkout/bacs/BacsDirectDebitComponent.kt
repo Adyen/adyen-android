@@ -10,18 +10,16 @@ package com.adyen.checkout.bacs
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -41,10 +39,9 @@ class BacsDirectDebitComponent(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
     ) {
-        delegate.componentStateFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
-            .launchIn(viewModelScope)
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(PaymentComponentEvent.StateChanged(it))
+        }
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

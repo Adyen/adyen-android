@@ -11,13 +11,13 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.IntentHandlingComponent
+import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -25,8 +25,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class Adyen3DS2Component(
     override val configuration: Adyen3DS2Configuration,
@@ -43,15 +41,13 @@ class Adyen3DS2Component(
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
-        delegate.detailsFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(ActionComponentEvent.ActionDetails(it)) }
-            .launchIn(viewModelScope)
+        delegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(ActionComponentEvent.ActionDetails(it))
+        }
 
-        delegate.exceptionFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(ActionComponentEvent.Error(ComponentError(it))) }
-            .launchIn(viewModelScope)
+        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(ActionComponentEvent.Error(ComponentError(it)))
+        }
     }
 
     /**

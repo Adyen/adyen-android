@@ -10,19 +10,17 @@ package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class PayByBankComponent(
     savedStateHandle: SavedStateHandle,
@@ -40,10 +38,9 @@ class PayByBankComponent(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
     ) {
-        delegate.componentStateFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
-            .launchIn(viewModelScope)
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(PaymentComponentEvent.StateChanged(it))
+        }
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

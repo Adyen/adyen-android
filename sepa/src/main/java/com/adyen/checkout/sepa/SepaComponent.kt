@@ -9,12 +9,12 @@ package com.adyen.checkout.sepa
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -22,8 +22,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -45,10 +43,9 @@ class SepaComponent(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit
     ) {
-        delegate.componentStateFlow
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
-            .launchIn(viewModelScope)
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+            callback(PaymentComponentEvent.StateChanged(it))
+        }
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
