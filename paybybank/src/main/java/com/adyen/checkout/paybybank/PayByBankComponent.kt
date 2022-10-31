@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.paybybank
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -18,7 +21,6 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -34,9 +36,13 @@ class PayByBankComponent(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
+    ) {
         delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
             .launchIn(viewModelScope)
     }
 

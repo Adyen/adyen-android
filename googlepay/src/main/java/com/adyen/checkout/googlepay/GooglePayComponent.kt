@@ -9,8 +9,12 @@ package com.adyen.checkout.googlepay
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -35,13 +39,18 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
-    init {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
+    ) {
         delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
             .launchIn(viewModelScope)
 
         delegate.exceptionFlow
-            .onEach { notifyException(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
     }
 

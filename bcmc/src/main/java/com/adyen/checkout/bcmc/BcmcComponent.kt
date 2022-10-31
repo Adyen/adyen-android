@@ -7,10 +7,14 @@
  */
 package com.adyen.checkout.bcmc
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -36,15 +40,22 @@ class BcmcComponent(
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
+        delegate.initialize(viewModelScope)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
+    ) {
         delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
             .launchIn(viewModelScope)
 
         delegate.exceptionFlow
-            .onEach { notifyException(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.Error(ComponentError(it))) }
             .launchIn(viewModelScope)
-
-        delegate.initialize(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

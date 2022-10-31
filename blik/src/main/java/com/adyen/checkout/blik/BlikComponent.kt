@@ -7,9 +7,12 @@
  */
 package com.adyen.checkout.blik
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -36,18 +39,18 @@ class BlikComponent(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
-        observeComponentState()
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+    ) {
+        delegate.componentStateFlow
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
+            .launchIn(viewModelScope)
     }
 
     override fun requiresInput(): Boolean {
         return delegate.requiresInput()
-    }
-
-    private fun observeComponentState() {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

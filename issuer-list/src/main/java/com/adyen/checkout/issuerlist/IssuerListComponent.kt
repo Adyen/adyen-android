@@ -7,8 +7,11 @@
  */
 package com.adyen.checkout.issuerlist
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -37,9 +40,13 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+    ) {
         delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
             .launchIn(viewModelScope)
     }
 }

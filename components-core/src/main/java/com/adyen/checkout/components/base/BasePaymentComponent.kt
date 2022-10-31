@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent.Companion.create
 import com.adyen.checkout.components.analytics.AnalyticEvent.Flavor
@@ -46,6 +47,8 @@ abstract class BasePaymentComponent<
         // By default all components require user input.
         return true
     }
+
+    abstract fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentStateT>) {
         paymentComponentStateLiveData.observe(lifecycleOwner, observer)

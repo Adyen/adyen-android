@@ -7,8 +7,11 @@
  */
 package com.adyen.checkout.mbway
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -35,17 +38,17 @@ class MBWayComponent(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
-        observeComponentState()
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
+    ) {
+        delegate.componentStateFlow
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
+            .launchIn(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    private fun observeComponentState() {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-    }
 
     companion object {
         @JvmField

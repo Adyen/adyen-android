@@ -8,9 +8,12 @@
 
 package com.adyen.checkout.bacs
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -34,9 +37,13 @@ class BacsDirectDebitComponent(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
+    ) {
         delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .onEach { callback(PaymentComponentEvent.StateChanged(it)) }
             .launchIn(viewModelScope)
     }
 
