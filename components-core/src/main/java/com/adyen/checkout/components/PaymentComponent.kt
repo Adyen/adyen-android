@@ -33,11 +33,6 @@ interface PaymentComponent<
     fun getSupportedPaymentMethodTypes(): Array<String>
 
     /**
-     * @return The last [PaymentComponentState] of this Component.
-     */
-    val state: PaymentComponentState<out PaymentMethodDetails>?
-
-    /**
      * Checks if the component in its current configuration needs any input from the user to make the /payments call.
      *
      * @return If there is required user input or not.

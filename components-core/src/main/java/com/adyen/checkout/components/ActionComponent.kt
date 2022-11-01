@@ -9,7 +9,6 @@ package com.adyen.checkout.components
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 
@@ -40,17 +39,4 @@ interface ActionComponent<ConfigurationT : Configuration> : Component<ActionComp
      * @return If the action can be handled by this component.
      */
     fun canHandleAction(action: Action): Boolean
-
-    // TODO following methods should be removed when all components implement the new way of observing
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) = Unit
-
-    override fun removeObservers(lifecycleOwner: LifecycleOwner) = Unit
-
-    override fun removeObserver(observer: Observer<ActionComponentData>) = Unit
-
-    override fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>) = Unit
-
-    override fun removeErrorObserver(observer: Observer<ComponentError>) = Unit
-
-    override fun removeErrorObservers(lifecycleOwner: LifecycleOwner) = Unit
 }
