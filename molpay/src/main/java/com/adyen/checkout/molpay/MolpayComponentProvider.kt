@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
@@ -25,13 +26,14 @@ class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, Molpay
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: MolpayConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): MolpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { MolpayPaymentMethod() }
                 MolpayComponent(savedStateHandle, delegate, configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MolpayComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MolpayComponent::class.java]
     }
 }

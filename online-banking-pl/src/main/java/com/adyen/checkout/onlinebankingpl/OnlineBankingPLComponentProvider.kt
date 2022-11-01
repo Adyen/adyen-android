@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
@@ -20,12 +21,14 @@ import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class OnlineBankingPLComponentProvider :
     PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: OnlineBankingPLConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): OnlineBankingPLComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -39,6 +42,6 @@ class OnlineBankingPLComponentProvider :
                     configuration
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OnlineBankingPLComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OnlineBankingPLComponent::class.java]
     }
 }

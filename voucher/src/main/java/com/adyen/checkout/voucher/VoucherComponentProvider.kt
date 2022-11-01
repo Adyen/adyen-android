@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
@@ -27,9 +28,10 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: VoucherConfiguration
+        configuration: VoucherConfiguration,
+        key: String?,
     ): VoucherComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -37,7 +39,8 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: VoucherConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): VoucherComponent {
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -48,7 +51,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
                 voucherDelegate,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, voucherFactory).get(VoucherComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, voucherFactory)[key, VoucherComponent::class.java]
     }
 
     override fun getDelegate(

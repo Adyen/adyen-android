@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
@@ -25,7 +26,8 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: OpenBankingConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): OpenBankingComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -36,6 +38,6 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
                     configuration
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OpenBankingComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OpenBankingComponent::class.java]
     }
 }

@@ -13,18 +13,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, EntercashConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: EntercashConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): EntercashComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -35,6 +38,6 @@ class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, 
                     configuration
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EntercashComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EntercashComponent::class.java]
     }
 }

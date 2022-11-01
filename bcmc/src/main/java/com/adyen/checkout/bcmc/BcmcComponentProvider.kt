@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
@@ -26,7 +27,8 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: BcmcConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): BcmcComponent {
         val publicKeyRepository = DefaultPublicKeyRepository()
         val cardValidationMapper = CardValidationMapper()
@@ -45,6 +47,6 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
                 configuration = configuration,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, bcmcFactory).get(BcmcComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]
     }
 }

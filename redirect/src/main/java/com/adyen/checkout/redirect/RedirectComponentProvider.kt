@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
@@ -25,9 +26,10 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: RedirectConfiguration
+        configuration: RedirectConfiguration,
+        key: String?,
     ): RedirectComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -35,7 +37,8 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: RedirectConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): RedirectComponent {
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -46,7 +49,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
                 redirectDelegate
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, redirectFactory).get(RedirectComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, redirectFactory)[key, RedirectComponent::class.java]
     }
 
     override fun getDelegate(
