@@ -9,7 +9,7 @@
 package com.adyen.checkout.components
 
 // TODO add docs
-sealed class ActionComponentEvent {
+sealed class ActionComponentEvent : ComponentEvent {
     class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()
     class Error(val error: ComponentError) : ActionComponentEvent()
 }

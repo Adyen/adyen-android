@@ -11,7 +11,7 @@ package com.adyen.checkout.components
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 // TODO add docs
-sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> {
+sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> : ComponentEvent {
     class StateChanged<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()

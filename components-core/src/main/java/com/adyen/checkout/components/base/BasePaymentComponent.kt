@@ -48,8 +48,6 @@ abstract class BasePaymentComponent<
         return true
     }
 
-    abstract fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
-
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentStateT>) {
         paymentComponentStateLiveData.observe(lifecycleOwner, observer)
     }

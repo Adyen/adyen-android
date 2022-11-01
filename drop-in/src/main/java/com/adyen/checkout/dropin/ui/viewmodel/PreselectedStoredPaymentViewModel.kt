@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -48,7 +49,14 @@ class PreselectedStoredPaymentViewModel(
         storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(isRemovingEnabled)
     }
 
-    fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
+            is PaymentComponentEvent.Error -> componentErrorOccurred(event.error)
+        }
+    }
+
+    private fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {
         val fragmentState = componentFragmentStateMutable.value
         Logger.v(
             TAG,
@@ -83,7 +91,7 @@ class PreselectedStoredPaymentViewModel(
         componentFragmentStateMutable.value = state
     }
 
-    fun componentErrorOccurred(componentError: ComponentError) {
+    private fun componentErrorOccurred(componentError: ComponentError) {
         lastComponentError = componentError
         val fragmentState = componentFragmentStateMutable.value
         val componentState = componentState

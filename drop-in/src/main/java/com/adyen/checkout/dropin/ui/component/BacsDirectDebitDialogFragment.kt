@@ -19,8 +19,7 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitMode
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -50,8 +49,7 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
 
-        component.observe(viewLifecycleOwner, this)
-        bacsDirectDebitComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
+        bacsDirectDebitComponent.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
@@ -66,6 +64,13 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<BacsDirectDebitComponentState>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
+            is PaymentComponentEvent.Error -> onComponentError(event.error)
+        }
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Logger.d(TAG, "onCreateDialog")
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -73,18 +78,17 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         return dialog
     }
 
-    override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        val bacsDirectDebitComponentState = paymentComponentState as? BacsDirectDebitComponentState
-
-        if (bacsDirectDebitComponentState != null) {
-            val payButtonText = when (bacsDirectDebitComponentState.mode) {
-                BacsDirectDebitMode.INPUT -> R.string.bacs_continue
-                BacsDirectDebitMode.CONFIRMATION -> R.string.bacs_confirm_and_pay
-            }
-            binding.payButton.setText(payButtonText)
+    private fun componentStateChanged(bacsDirectDebitComponentState: BacsDirectDebitComponentState) {
+        val payButtonText = when (bacsDirectDebitComponentState.mode) {
+            BacsDirectDebitMode.INPUT -> R.string.bacs_continue
+            BacsDirectDebitMode.CONFIRMATION -> R.string.bacs_confirm_and_pay
         }
+        binding.payButton.setText(payButtonText)
 
-        componentDialogViewModel.componentStateChanged(bacsDirectDebitComponent.state)
+        componentDialogViewModel.componentStateChanged(
+            bacsDirectDebitComponentState,
+            binding.bacsView.isConfirmationRequired
+        )
     }
 
     override fun setPaymentPendingInitialization(pending: Boolean) {
@@ -98,7 +102,8 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        val mode = bacsDirectDebitComponent.state?.mode
+        val componentState = getComponentState()
+        val mode = componentState?.mode
         val isConfirmationMode = mode == BacsDirectDebitMode.CONFIRMATION
         return if (isConfirmationMode) {
             bacsDirectDebitComponent.setInputMode()
@@ -110,11 +115,16 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private fun handleContinueClick() {
         componentDialogViewModel.payButtonClicked()
-        val mode = bacsDirectDebitComponent.state?.mode
+        val componentState = getComponentState()
+        val mode = componentState?.mode
         val isInputMode = mode == BacsDirectDebitMode.INPUT
-        if (isInputMode && bacsDirectDebitComponent.state?.isInputValid == true) {
+        if (isInputMode && componentState?.isInputValid == true) {
             bacsDirectDebitComponent.setConfirmationMode()
         }
+    }
+
+    private fun getComponentState(): BacsDirectDebitComponentState? {
+        return componentDialogViewModel.componentState as? BacsDirectDebitComponentState
     }
 
     // TODO improve

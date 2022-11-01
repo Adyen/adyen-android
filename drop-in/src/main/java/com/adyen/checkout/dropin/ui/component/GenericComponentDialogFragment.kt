@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -70,16 +71,11 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        componentDialogViewModel.componentStateChanged(component.state, binding.componentView.isConfirmationRequired)
-    }
-
     private fun attachComponent(
         component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     ) {
         if (component !is ViewableComponent) throw CheckoutException("Attached component is not viewable")
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
         binding.componentView.attach(component, viewLifecycleOwner)
 
         if (binding.componentView.isConfirmationRequired) {
@@ -88,6 +84,16 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             binding.componentView.requestFocus()
         } else {
             binding.payButton.isVisible = false
+        }
+    }
+
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
+                event.state,
+                binding.componentView.isConfirmationRequired
+            )
+            is PaymentComponentEvent.Error -> onComponentError(event.error)
         }
     }
 

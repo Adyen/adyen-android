@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components
 
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
@@ -22,6 +23,10 @@ interface PaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>,
     ConfigurationT : Configuration> :
     Component<ComponentStateT, ConfigurationT> {
+
+    // TODO documentation
+    fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
+
     /**
      * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]
      */

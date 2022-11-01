@@ -103,8 +103,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
         component =
             getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-        component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
-        component.observeErrors(viewLifecycleOwner, storedPaymentViewModel::componentErrorOccurred)
+        component.observe(viewLifecycleOwner, storedPaymentViewModel::onPaymentComponentEvent)
 
         _binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root

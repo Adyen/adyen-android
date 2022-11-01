@@ -23,7 +23,6 @@ import com.adyen.checkout.components.model.payments.response.Action
 interface ActionComponent<ConfigurationT : Configuration> : Component<ActionComponentData, ConfigurationT> {
 
     // TODO documentation
-    // TODO move to [Component]
     fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit)
 
     /**
