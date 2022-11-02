@@ -214,6 +214,8 @@ internal class DefaultCardDelegate(
         )
         val selectedOrFirstCardType = getDetectedCardType(filteredDetectedCardTypes)
 
+        val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
+
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
 
@@ -234,7 +236,7 @@ internal class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(inputData.address, addressFormUIState),
+            addressState = validateAddress(inputData.address, addressFormUIState, reliableSelectedCard),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
@@ -402,9 +404,15 @@ internal class DefaultCardDelegate(
 
     private fun validateAddress(
         addressInputModel: AddressInputModel,
-        addressFormUIState: AddressFormUIState
+        addressFormUIState: AddressFormUIState,
+        detectedCardType: DetectedCardType?
     ): AddressOutputData {
-        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
+        return AddressValidationUtils.validateAddressInput(
+            addressInputModel,
+            addressFormUIState,
+            configuration.addressConfiguration,
+            detectedCardType
+        )
     }
 
     private fun isCvcHidden(): Boolean {
