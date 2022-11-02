@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -20,9 +21,13 @@ import kotlinx.coroutines.flow.onEach
 fun <T> Flow<T>.mapToCallbackWithLifeCycle(
     lifecycleOwner: LifecycleOwner,
     coroutineScope: CoroutineScope,
-    callback: (T) -> Unit
-) {
-    flowWithLifecycle(lifecycleOwner.lifecycle)
+    jobs: MutableList<Job>,
+    callback: (T) -> Unit,
+): Job {
+    return flowWithLifecycle(lifecycleOwner.lifecycle)
         .onEach { callback(it) }
         .launchIn(coroutineScope)
+        .also {
+            jobs.add(it)
+        }
 }

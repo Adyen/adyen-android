@@ -27,6 +27,9 @@ interface PaymentComponent<
     // TODO documentation
     fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
 
+    // TODO documentation
+    fun removeObserver()
+
     /**
      * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]
      */

@@ -18,7 +18,10 @@ import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -41,22 +44,40 @@ class GiftCardComponent(
         delegate.initialize(viewModelScope)
     }
 
+    private var observerJobs: MutableList<Job> = mutableListOf()
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GiftCardComponentState>) -> Unit
     ) {
-        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        removeObserver()
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(PaymentComponentEvent.StateChanged(it))
         }
 
-        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(PaymentComponentEvent.Error(ComponentError(it)))
         }
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        removeObserver()
+    }
+
+    override fun removeObserver() {
+        if (observerJobs.isEmpty()) return
+        Logger.d(TAG, "cleaning up existing observer")
+        observerJobs.forEach { it.cancel() }
+        observerJobs.clear()
+    }
+
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
 

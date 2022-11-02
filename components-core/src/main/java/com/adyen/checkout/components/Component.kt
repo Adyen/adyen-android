@@ -7,8 +7,6 @@
  */
 package com.adyen.checkout.components
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.Configuration
 

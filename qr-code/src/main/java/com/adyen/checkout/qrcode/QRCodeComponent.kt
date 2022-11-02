@@ -24,6 +24,7 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 class QRCodeComponent(
@@ -40,12 +41,15 @@ class QRCodeComponent(
         delegate.initialize(viewModelScope)
     }
 
+    private var observerJobs: MutableList<Job> = mutableListOf()
+
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
-        delegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        removeObserver()
+        delegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.ActionDetails(it))
         }
 
-        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.Error(ComponentError(it)))
         }
 
@@ -79,13 +83,21 @@ class QRCodeComponent(
         super.onCleared()
         Logger.d(TAG, "onCleared")
         delegate.onCleared()
+        removeObserver()
+    }
+
+    override fun removeObserver() {
+        if (observerJobs.isEmpty()) return
+        Logger.d(TAG, "cleaning up existing observer")
+        observerJobs.forEach { it.cancel() }
+        observerJobs.clear()
     }
 
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
         val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> =
             QRCodeComponentProvider()
-
-        private val TAG = LogUtil.getTag()
     }
 }

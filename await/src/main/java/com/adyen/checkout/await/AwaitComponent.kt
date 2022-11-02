@@ -22,6 +22,7 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
@@ -38,12 +39,15 @@ class AwaitComponent(
         delegate.initialize(viewModelScope)
     }
 
+    private var observerJobs: MutableList<Job> = mutableListOf()
+
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
-        delegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        removeObserver()
+        delegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.ActionDetails(it))
         }
 
-        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.Error(ComponentError(it)))
         }
 
@@ -67,6 +71,14 @@ class AwaitComponent(
         super.onCleared()
         Logger.d(TAG, "onCleared")
         delegate.onCleared()
+        removeObserver()
+    }
+
+    override fun removeObserver() {
+        if (observerJobs.isEmpty()) return
+        Logger.d(TAG, "cleaning up existing observer")
+        observerJobs.forEach { it.cancel() }
+        observerJobs.clear()
     }
 
     companion object {

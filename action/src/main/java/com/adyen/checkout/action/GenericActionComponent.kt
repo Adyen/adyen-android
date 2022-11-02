@@ -24,7 +24,9 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
@@ -46,12 +48,15 @@ class GenericActionComponent(
         genericActionDelegate.initialize(viewModelScope)
     }
 
+    private var observerJobs: MutableList<Job> = mutableListOf()
+
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
-        genericActionDelegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        removeObserver()
+        genericActionDelegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.ActionDetails(it))
         }
 
-        genericActionDelegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        genericActionDelegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(ActionComponentEvent.Error(ComponentError(it)))
         }
 
@@ -87,7 +92,16 @@ class GenericActionComponent(
 
     override fun onCleared() {
         super.onCleared()
+        Logger.d(TAG, "onCleared")
         genericActionDelegate.onCleared()
+        removeObserver()
+    }
+
+    override fun removeObserver() {
+        if (observerJobs.isEmpty()) return
+        Logger.d(TAG, "cleaning up existing observer")
+        observerJobs.forEach { it.cancel() }
+        observerJobs.clear()
     }
 
     companion object {

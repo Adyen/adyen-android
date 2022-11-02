@@ -20,7 +20,9 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
+import kotlinx.coroutines.Job
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -37,15 +39,18 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
+    private var observerJobs: MutableList<Job> = mutableListOf()
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
     ) {
-        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        removeObserver()
+        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(PaymentComponentEvent.StateChanged(it))
         }
 
-        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope) {
+        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
             callback(PaymentComponentEvent.Error(ComponentError(it)))
         }
     }
@@ -70,6 +75,19 @@ class GooglePayComponent(
      */
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         delegate.handleActivityResult(resultCode, data)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        removeObserver()
+    }
+
+    override fun removeObserver() {
+        if (observerJobs.isEmpty()) return
+        Logger.d(TAG, "cleaning up existing observer")
+        observerJobs.forEach { it.cancel() }
+        observerJobs.clear()
     }
 
     companion object {
