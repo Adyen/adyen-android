@@ -19,7 +19,7 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PRO
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class OnlineBankingPLComponent(
+class OnlineBankingPLComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
     configuration: OnlineBankingPLConfiguration

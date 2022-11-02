@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class CardComponent(
+class CardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: CardDelegate,
     cardConfiguration: CardConfiguration

@@ -24,7 +24,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
     savedStateHandle: SavedStateHandle,
     final override val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
     configuration: Configuration

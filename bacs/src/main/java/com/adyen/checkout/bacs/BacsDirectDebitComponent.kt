@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class BacsDirectDebitComponent(
+class BacsDirectDebitComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BacsDirectDebitDelegate,
     configuration: BacsDirectDebitConfiguration

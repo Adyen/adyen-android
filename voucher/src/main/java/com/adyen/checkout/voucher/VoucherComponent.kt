@@ -25,7 +25,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-class VoucherComponent(
+class VoucherComponent internal constructor(
     override val configuration: VoucherConfiguration,
     override val delegate: VoucherDelegate,
 ) : ViewModel(),

@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class EntercashComponent(
+class EntercashComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<EntercashPaymentMethod>,
     configuration: EntercashConfiguration

@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class EPSComponent(
+class EPSComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<EPSPaymentMethod>,
     configuration: EPSConfiguration

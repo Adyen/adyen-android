@@ -30,7 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
-class GenericActionComponent(
+class GenericActionComponent internal constructor(
     override val configuration: GenericActionConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
 ) : ViewModel(),

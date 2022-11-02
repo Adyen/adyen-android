@@ -25,7 +25,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
-class PayByBankComponent(
+class PayByBankComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: PayByBankDelegate,
     configuration: PayByBankConfiguration

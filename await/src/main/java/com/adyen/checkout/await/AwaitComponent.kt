@@ -26,7 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
-class AwaitComponent(
+class AwaitComponent internal constructor(
     override val configuration: AwaitConfiguration,
     override val delegate: AwaitDelegate,
 ) : ViewModel(),

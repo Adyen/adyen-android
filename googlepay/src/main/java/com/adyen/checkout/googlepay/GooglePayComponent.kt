@@ -27,7 +27,7 @@ import kotlinx.coroutines.Job
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class GooglePayComponent(
+class GooglePayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GooglePayDelegate,
     configuration: GooglePayConfiguration

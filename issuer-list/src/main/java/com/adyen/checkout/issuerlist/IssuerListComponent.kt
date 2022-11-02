@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Component should not be instantiated directly.
  */
-abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
     savedStateHandle: SavedStateHandle,
     final override val delegate: IssuerListDelegate<IssuerListPaymentMethodT>,
     configuration: IssuerListConfiguration

@@ -15,7 +15,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
-class OnlineBankingSKComponent(
+class OnlineBankingSKComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
     configuration: OnlineBankingSKConfiguration

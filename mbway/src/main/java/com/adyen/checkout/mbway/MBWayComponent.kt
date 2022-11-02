@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class MBWayComponent(
+class MBWayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: MBWayDelegate,
     configuration: MBWayConfiguration
