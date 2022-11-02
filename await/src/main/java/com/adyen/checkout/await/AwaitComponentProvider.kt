@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -33,9 +34,10 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: AwaitConfiguration
+        configuration: AwaitConfiguration,
+        key: String?,
     ): AwaitComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -43,7 +45,8 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: AwaitConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): AwaitComponent {
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -54,7 +57,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
                 awaitDelegate,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java]
     }
 
     override fun getDelegate(

@@ -38,3 +38,11 @@ inline fun <reified ViewModelT : ViewModel> viewModelFactory(
         }
     }
 }
+
+operator fun <T : ViewModel> ViewModelProvider.get(key: String?, modelClass: Class<T>): T {
+    return if (key == null) {
+        this[modelClass]
+    } else {
+        this[key, modelClass]
+    }
+}

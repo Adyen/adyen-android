@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -24,7 +25,8 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): BlikComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -34,7 +36,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                     configuration = configuration,
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory)[BlikComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
     }
 
     override fun get(
@@ -42,7 +44,8 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): BlikComponent {
         val genericStoredFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -52,6 +55,6 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                     configuration = configuration,
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[BlikComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
     }
 }

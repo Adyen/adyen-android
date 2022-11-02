@@ -13,24 +13,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: IdealConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): IdealComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { IdealPaymentMethod() }
                 IdealComponent(savedStateHandle, delegate, configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(IdealComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, IdealComponent::class.java]
     }
 }

@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
@@ -31,9 +32,10 @@ class WeChatPayActionComponentProvider :
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: WeChatPayActionConfiguration
+        configuration: WeChatPayActionConfiguration,
+        key: String?,
     ): WeChatPayActionComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -41,7 +43,8 @@ class WeChatPayActionComponentProvider :
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: WeChatPayActionConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): WeChatPayActionComponent {
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val weChatDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -53,7 +56,7 @@ class WeChatPayActionComponentProvider :
             )
         }
 
-        return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, weChatFactory)[key, WeChatPayActionComponent::class.java]
     }
 
     override fun getDelegate(

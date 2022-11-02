@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
@@ -27,12 +28,14 @@ import com.adyen.checkout.components.handler.DefaultRedirectHandler
 private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
 class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
+
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: QRCodeConfiguration
+        configuration: QRCodeConfiguration,
+        key: String?,
     ): QRCodeComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -40,7 +43,8 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: QRCodeConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): QRCodeComponent {
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -51,7 +55,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
                 delegate = qrCodeDelegate,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, qrCodeFactory)[key, QRCodeComponent::class.java]
     }
 
     override fun getDelegate(

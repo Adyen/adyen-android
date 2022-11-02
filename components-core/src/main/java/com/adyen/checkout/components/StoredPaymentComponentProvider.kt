@@ -16,21 +16,25 @@ import com.adyen.checkout.core.exception.CheckoutException
 
 interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, ConfigurationT : Configuration> :
     PaymentComponentProvider<ComponentT, ConfigurationT> {
+
     /**
      * Get a [PaymentComponent] with a stored payment method.
      *
      * @param owner               The Activity or Fragment to associate the lifecycle.
      * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
      * @param configuration       The Configuration of the component.
+     * @param key                 Key
+     *
      * @return The Component
      */
     @Throws(CheckoutException::class)
     operator fun <T> get(
         owner: T,
         storedPaymentMethod: StoredPaymentMethod,
-        configuration: ConfigurationT
+        configuration: ConfigurationT,
+        key: String? = null,
     ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, storedPaymentMethod, configuration, null)
+        return get(owner, owner, storedPaymentMethod, configuration, null, key)
     }
 
     /**
@@ -42,14 +46,18 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
      * @param configuration           The Configuration of the component.
      * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in [ViewModel]
      *                                if there is no previously saved state or previously saved state misses a value by such key
+     * @param key                     Key
+     *
      * @return The Component
      */
+    @Suppress("LongParameterList")
     @Throws(CheckoutException::class)
     operator fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): ComponentT
 }

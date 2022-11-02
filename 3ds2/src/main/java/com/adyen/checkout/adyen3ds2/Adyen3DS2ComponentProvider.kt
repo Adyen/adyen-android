@@ -17,14 +17,15 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.encoding.AndroidBase64Encoder
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +36,10 @@ class Adyen3DS2ComponentProvider :
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: Adyen3DS2Configuration
+        configuration: Adyen3DS2Configuration,
+        key: String?,
     ): Adyen3DS2Component where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -45,7 +47,8 @@ class Adyen3DS2ComponentProvider :
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: Adyen3DS2Configuration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): Adyen3DS2Component {
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
@@ -57,7 +60,7 @@ class Adyen3DS2ComponentProvider :
                 delegate = adyen3DS2Delegate,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
+        return ViewModelProvider(viewModelStoreOwner, threeDS2Factory)[key, Adyen3DS2Component::class.java]
     }
 
     override fun getDelegate(

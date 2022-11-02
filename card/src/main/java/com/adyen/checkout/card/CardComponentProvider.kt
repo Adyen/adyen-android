@@ -15,6 +15,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -33,7 +34,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val genericEncrypter = DefaultGenericEncrypter()
@@ -58,7 +60,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                 verifiedConfiguration
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
     }
 
     override fun get(
@@ -66,7 +68,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): CardComponent {
         val publicKeyRepository = DefaultPublicKeyRepository()
         val genericEncrypter = DefaultGenericEncrypter()
@@ -83,7 +86,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                 configuration
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
     }
 
     /**

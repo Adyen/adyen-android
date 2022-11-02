@@ -29,15 +29,21 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @param owner         The Activity or Fragment to associate the lifecycle.
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
+     * @param key           The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
      * @return The Component
      */
     @Throws(CheckoutException::class)
     fun <T> get(
         owner: T,
         paymentMethod: PaymentMethod,
-        configuration: ConfigurationT
+        configuration: ConfigurationT,
+        key: String? = null,
     ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
+        return get(owner, owner, paymentMethod, configuration, null, key)
     }
 
     /**
@@ -49,14 +55,21 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @param configuration           The Configuration of the component.
      * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in [ViewModel]
      *                                if there is no previously saved state or previously saved state misses a value by such key
+     * @param key                     The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
      * @return The Component
      */
+    @Suppress("LongParameterList")
     @Throws(CheckoutException::class)
     fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): ComponentT
 }

@@ -29,12 +29,18 @@ interface ActionComponentProvider<
      * @param owner         The Activity or Fragment to associate the lifecycle.
      * @param application   Your main application class.
      * @param configuration The Configuration of the component.
+     * @param key           The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
      * @return The Component
      */
     operator fun <T> get(
         owner: T,
         application: Application,
-        configuration: ConfigurationT
+        configuration: ConfigurationT,
+        key: String? = null,
     ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner
 
     /**
@@ -46,14 +52,21 @@ interface ActionComponentProvider<
      * @param configuration           The Configuration of the component.
      * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in [ViewModel]
      *                                if there is no previously saved state or previously saved state misses a value by such key.
+     * @param key                     The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
      * @return The Component
      */
+    @Suppress("LongParameterList")
     operator fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: ConfigurationT,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String? = null,
     ): ComponentT
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

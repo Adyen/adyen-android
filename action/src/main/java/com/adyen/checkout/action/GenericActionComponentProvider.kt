@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -28,12 +29,14 @@ import com.adyen.checkout.components.model.payments.response.VoucherAction
 
 class GenericActionComponentProvider :
     ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
+
     override fun <T> get(
         owner: T,
         application: Application,
-        configuration: GenericActionConfiguration
+        configuration: GenericActionConfiguration,
+        key: String?,
     ): GenericActionComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null)
+        return get(owner, owner, application, configuration, null, key)
     }
 
     override fun get(
@@ -41,7 +44,8 @@ class GenericActionComponentProvider :
         viewModelStoreOwner: ViewModelStoreOwner,
         application: Application,
         configuration: GenericActionConfiguration,
-        defaultArgs: Bundle?
+        defaultArgs: Bundle?,
+        key: String?,
     ): GenericActionComponent {
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
@@ -52,7 +56,7 @@ class GenericActionComponentProvider :
                 genericActionDelegate
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, genericActionFactory).get(GenericActionComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericActionFactory)[key, GenericActionComponent::class.java]
     }
 
     override fun getDelegate(
