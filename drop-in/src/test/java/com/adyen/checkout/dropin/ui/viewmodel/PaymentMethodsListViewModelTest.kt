@@ -103,7 +103,7 @@ internal class PaymentMethodsListViewModelTest(
 
     @Nested
     @DisplayName("test payment method flow when")
-    inner class PaymentMethodFLow {
+    inner class PaymentMethodFlow {
 
         @Test
         fun `all payment methods available`() = runTest {
