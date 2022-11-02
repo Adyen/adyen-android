@@ -31,11 +31,6 @@ abstract class BasePaymentComponent<
     private var isCreatedForDropIn = false
     private var isAnalyticsEnabled = true
 
-    override fun requiresInput(): Boolean {
-        // By default all components require user input.
-        return true
-    }
-
     /**
      * Sets if the analytics events can be sent by the component.
      * Default is True.

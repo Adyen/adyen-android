@@ -40,5 +40,5 @@ interface PaymentComponent<
      *
      * @return If there is required user input or not.
      */
-    fun requiresInput(): Boolean
+    fun requiresInput(): Boolean = true
 }
