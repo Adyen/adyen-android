@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.PdfOpener
@@ -32,6 +33,8 @@ class OnlineBankingSKComponentProvider :
         defaultArgs: Bundle?,
         key: String?,
     ): OnlineBankingComponent<OnlineBankingSKPaymentMethod> {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate =
@@ -49,5 +52,15 @@ class OnlineBankingSKComponentProvider :
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OnlineBankingSKComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return OnlineBankingSKComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

@@ -16,6 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 
 class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration> {
 
@@ -27,6 +28,8 @@ class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, 
         defaultArgs: Bundle?,
         key: String?,
     ): PayByBankComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 PayByBankComponent(
@@ -36,5 +39,15 @@ class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, 
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return PayByBankComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

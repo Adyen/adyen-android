@@ -20,6 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.DefaultCardEncrypter
@@ -37,6 +38,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
+        assertSupported(paymentMethod)
+
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -71,6 +74,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
+        assertSupported(storedPaymentMethod)
+
         val publicKeyRepository = DefaultPublicKeyRepository()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -126,5 +131,25 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         return cardConfiguration.newBuilder()
             .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
             .build()
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    private fun assertSupported(storedPaymentMethod: StoredPaymentMethod) {
+        if (!isPaymentMethodSupported(storedPaymentMethod)) {
+            throw ComponentException("Unsupported payment method ${storedPaymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+    }
+
+    override fun isPaymentMethodSupported(storedPaymentMethod: StoredPaymentMethod): Boolean {
+        return CardComponent.PAYMENT_METHOD_TYPES.contains(storedPaymentMethod.type)
     }
 }

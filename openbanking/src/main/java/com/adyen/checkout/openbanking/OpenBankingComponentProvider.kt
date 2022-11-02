@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
@@ -29,6 +30,8 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
         defaultArgs: Bundle?,
         key: String?,
     ): OpenBankingComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { OpenBankingPaymentMethod() }
@@ -39,5 +42,15 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OpenBankingComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return OpenBankingComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

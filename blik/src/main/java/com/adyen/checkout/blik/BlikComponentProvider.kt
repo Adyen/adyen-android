@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 
 class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
 
@@ -28,6 +29,8 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
         defaultArgs: Bundle?,
         key: String?,
     ): BlikComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
@@ -47,6 +50,8 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
         defaultArgs: Bundle?,
         key: String?,
     ): BlikComponent {
+        assertSupported(storedPaymentMethod)
+
         val genericStoredFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
@@ -56,5 +61,25 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    private fun assertSupported(storedPaymentMethod: StoredPaymentMethod) {
+        if (!isPaymentMethodSupported(storedPaymentMethod)) {
+            throw ComponentException("Unsupported payment method ${storedPaymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return BlikComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+    }
+
+    override fun isPaymentMethodSupported(storedPaymentMethod: StoredPaymentMethod): Boolean {
+        return BlikComponent.PAYMENT_METHOD_TYPES.contains(storedPaymentMethod.type)
     }
 }

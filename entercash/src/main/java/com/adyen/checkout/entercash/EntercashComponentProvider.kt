@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, EntercashConfiguration> {
@@ -29,6 +30,8 @@ class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, 
         defaultArgs: Bundle?,
         key: String?,
     ): EntercashComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { EntercashPaymentMethod() }
@@ -39,5 +42,15 @@ class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, 
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EntercashComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return EntercashComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

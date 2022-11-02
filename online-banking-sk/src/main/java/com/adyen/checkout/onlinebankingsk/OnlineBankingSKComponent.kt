@@ -26,7 +26,7 @@ class OnlineBankingSKComponent internal constructor(
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 
-        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_SK)
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_SK)
 
         @JvmField
         val PROVIDER: PaymentComponentProvider<

@@ -31,10 +31,6 @@ abstract class BasePaymentComponent<
     private var isCreatedForDropIn = false
     private var isAnalyticsEnabled = true
 
-    init {
-        assertSupported(paymentMethodDelegate.getPaymentMethodType())
-    }
-
     override fun requiresInput(): Boolean {
         // By default all components require user input.
         return true
@@ -71,19 +67,6 @@ abstract class BasePaymentComponent<
             val analyticEvent = create(context, flavor, type, configuration.shopperLocale)
             dispatchEvent(context, configuration.environment, analyticEvent)
         }
-    }
-
-    private fun assertSupported(paymentMethodType: String) {
-        require(isSupported(paymentMethodType)) { "Unsupported payment method type $paymentMethodType" }
-    }
-
-    private fun isSupported(paymentMethodType: String): Boolean {
-        for (supportedType in getSupportedPaymentMethodTypes()) {
-            if (supportedType == paymentMethodType) {
-                return true
-            }
-        }
-        return false
     }
 
     fun setCreatedForDropIn() {

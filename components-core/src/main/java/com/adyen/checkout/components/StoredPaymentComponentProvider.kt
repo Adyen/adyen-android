@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 
@@ -60,4 +61,7 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
         defaultArgs: Bundle?,
         key: String?,
     ): ComponentT
+
+    //TODO docs
+    fun isPaymentMethodSupported(storedPaymentMethod: StoredPaymentMethod): Boolean
 }
