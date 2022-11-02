@@ -101,7 +101,11 @@ class StoredCardDelegate(
         return FieldState(kcpCardPassword, Validation.Valid)
     }
 
-    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
+    override fun validateAddress(
+        addressInputModel: AddressInputModel,
+        addressFormUIState: AddressFormUIState,
+        detectedCardType: DetectedCardType?
+    ): AddressOutputData {
         return AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel)
     }
 

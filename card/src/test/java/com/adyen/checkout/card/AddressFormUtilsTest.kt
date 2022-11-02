@@ -175,7 +175,7 @@ class AddressFormUtilsTest {
 
     @Test
     fun initializeCountryOptions_AddressConfigurationIsPostalCode_ExpectEmptyList() {
-        val addressConfiguration = AddressConfiguration.PostalCode
+        val addressConfiguration = AddressConfiguration.PostalCode()
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",

@@ -12,7 +12,7 @@ import android.util.LruCache
 import com.adyen.checkout.card.api.AddressDataType
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
-import com.adyen.checkout.card.ui.AddressFormInput
+import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.components.base.Configuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +33,7 @@ class AddressDelegate(
         countryCode: String?,
         coroutineScope: CoroutineScope
     ) {
-        val addressSpecification = AddressFormInput.AddressSpecification.fromString(countryCode)
+        val addressSpecification = AddressSpecification.fromString(countryCode)
         val needsStates = COUNTRIES_WITH_STATES.contains(addressSpecification)
         if (!countryCode.isNullOrEmpty() && needsStates) {
             cache[countryCode]?.let {
@@ -71,9 +71,9 @@ class AddressDelegate(
 
     companion object {
         private val COUNTRIES_WITH_STATES = listOf(
-            AddressFormInput.AddressSpecification.BR,
-            AddressFormInput.AddressSpecification.CA,
-            AddressFormInput.AddressSpecification.US
+            AddressSpecification.BR,
+            AddressSpecification.CA,
+            AddressSpecification.US
         )
         // Only US, CA and BR has states and there's only one countries list.
         private val CACHE_ENTRY_SIZE = COUNTRIES_WITH_STATES.size + 1

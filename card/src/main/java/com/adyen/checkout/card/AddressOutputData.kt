@@ -18,7 +18,8 @@ data class AddressOutputData(
     val houseNumberOrName: FieldState<String>,
     val apartmentSuite: FieldState<String>,
     val city: FieldState<String>,
-    val country: FieldState<String>
+    val country: FieldState<String>,
+    val isOptional: Boolean
 ) : OutputData {
     override fun isValid(): Boolean {
         return postalCode.validation.isValid() &&
