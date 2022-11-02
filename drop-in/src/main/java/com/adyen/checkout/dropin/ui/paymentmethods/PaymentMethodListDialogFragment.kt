@@ -16,6 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
@@ -25,8 +27,6 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -34,6 +34,8 @@ import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 private val TAG = LogUtil.getTag()
 
@@ -47,6 +49,7 @@ class PaymentMethodListDialogFragment :
     private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
 
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
+
     private var paymentMethodAdapter: PaymentMethodAdapter? = null
 
     override fun onAttach(context: Context) {
@@ -56,7 +59,6 @@ class PaymentMethodListDialogFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Logger.d(TAG, "onCreateView")
-
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
@@ -67,7 +69,6 @@ class PaymentMethodListDialogFragment :
                 dropInViewModel.amount
             )
         }
-
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -94,15 +95,13 @@ class PaymentMethodListDialogFragment :
     }
 
     private fun initObservers() {
-        paymentMethodsListViewModel.paymentMethodsLiveData.observe(
-            viewLifecycleOwner
-        ) { paymentMethods ->
-            Logger.d(TAG, "paymentMethods changed")
-            if (paymentMethods == null) {
-                throw CheckoutException("List of PaymentMethodModel is null.")
-            }
-            paymentMethodAdapter?.submitList(paymentMethods)
-        }
+        paymentMethodsListViewModel
+            .paymentMethodsFlow
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { paymentMethods ->
+                Logger.d(TAG, "paymentMethods changed")
+                paymentMethodAdapter?.submitList(paymentMethods)
+            }.launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {
@@ -130,11 +129,6 @@ class PaymentMethodListDialogFragment :
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
         Logger.d(TAG, "onStoredPaymentMethodSelected")
         val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
-        // TODO: 10/12/2020 remove this after we have UI for stored Blik component
-        if (storedPaymentMethod.type == PaymentMethodTypes.BLIK) {
-            Logger.e(TAG, "Stored Blik is not yet supported in this flow.")
-            throw ComponentException("Stored Blik is not yet supported in this flow.")
-        }
         protocol.showStoredComponentDialog(storedPaymentMethod, false)
     }
 
@@ -195,7 +189,7 @@ class PaymentMethodListDialogFragment :
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = PaymentComponentState(paymentComponentData, true, true)
+        val paymentComponentState = PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
         protocol.requestPaymentsCall(paymentComponentState)
     }
 

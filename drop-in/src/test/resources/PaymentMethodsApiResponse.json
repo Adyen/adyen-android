@@ -1,0 +1,248 @@
+{
+  "paymentMethods": [
+    {
+      "issuers": [
+        {
+          "id": "1",
+          "name": "Test Issuer"
+        },
+        {
+          "id": "2",
+          "name": "Test Issuer 5"
+        },
+        {
+          "id": "3",
+          "name": "Test Issuer 4"
+        },
+        {
+          "id": "4",
+          "name": "Test Issuer 3"
+        },
+        {
+          "id": "5",
+          "name": "Ideal bridge test issuer"
+        },
+        {
+          "id": "6",
+          "name": "Test Issuer 2"
+        },
+        {
+          "id": "7",
+          "name": "Test Issuer Cancelled"
+        },
+        {
+          "id": "8",
+          "name": "Test Issuer Pending"
+        },
+        {
+          "id": "9",
+          "name": "Test Issuer Refused"
+        },
+        {
+          "id": "10",
+          "name": "Test Issuer 10"
+        },
+        {
+          "id": "11",
+          "name": "Test Issuer 9"
+        },
+        {
+          "id": "12",
+          "name": "Test Issuer 8"
+        },
+        {
+          "id": "13",
+          "name": "Test Issuer 7"
+        },
+        {
+          "id": "14",
+          "name": "Test Issuer 6"
+        }
+      ],
+      "name": "iDEAL",
+      "type": "ideal"
+    },
+    {
+      "configuration": {
+        "merchantId": "123edfgh",
+        "intent": "authorize"
+      },
+      "name": "PayPal",
+      "type": "paypal"
+    },
+    {
+      "name": "Pay later with Klarna.",
+      "type": "klarna"
+    },
+    {
+      "brands": [
+        "mc",
+        "visa",
+        "amex",
+        "maestro",
+        "cup",
+        "diners",
+        "discover",
+        "jcb",
+        "bijcard",
+        "accel",
+        "nyce",
+        "pulse",
+        "star"
+      ],
+      "configuration": {
+        "mcDpaId": null,
+        "visaSrcInitiatorId": "1234rfghjkl",
+        "merchantCountryCode": "NL",
+        "merchantCategoryCode": "sfrjhgsej",
+        "mcSrcClientId": null,
+        "visaSrciDpaId": "2345rtfygvuhinjkml"
+      },
+      "name": "Credit Card",
+      "type": "scheme"
+    },
+    {
+      "name": "AfterPay Invoice",
+      "type": "afterpay_default"
+    },
+    {
+      "name": "SEPA Direct Debit",
+      "type": "sepadirectdebit"
+    },
+    {
+      "name": "Paysafecard",
+      "type": "paysafecard"
+    },
+    {
+      "name": "Android Pay",
+      "type": "androidpay"
+    },
+    {
+      "name": "c_cash",
+      "type": "c_cash"
+    },
+    {
+      "name": "Alfamart",
+      "type": "doku_alfamart"
+    },
+    {
+      "name": "Samsung Pay",
+      "type": "samsungpay"
+    },
+    {
+      "name": "UnionPay",
+      "type": "unionpay"
+    },
+    {
+      "brand": "genericgiftcard",
+      "name": "Generic GiftCard",
+      "type": "giftcard"
+    },
+    {
+      "brand": "plastix",
+      "name": "Plastix",
+      "type": "giftcard"
+    },
+    {
+      "name": "Pay over time with Klarna.",
+      "type": "klarna_account"
+    },
+    {
+      "configuration": {
+        "merchantId": "123ewdrfghjk",
+        "storeId": "2we45tghuikm",
+        "region": "UK",
+        "publicKeyId": "12we4ertfgyhbhj7trtfg"
+      },
+      "name": "Amazon Pay",
+      "type": "amazonpay"
+    },
+    {
+      "issuers": [
+        {
+          "disabled": false,
+          "id": "2163754rfshagdfv",
+          "name": "Demo Open Banking Redirect"
+        },
+        {
+          "disabled": false,
+          "id": "672134tegyrwhjdfbnm",
+          "name": "Demo Open Banking Redirect - configurable session expiry"
+        },
+        {
+          "disabled": false,
+          "id": "621534erfyhadgsjb",
+          "name": "Tink Demo Bank"
+        },
+        {
+          "disabled": false,
+          "id": "612534ertyfwghjdka",
+          "name": "Tink Demo Bank"
+        },
+        {
+          "disabled": false,
+          "id": "612534erytdfwhgqv",
+          "name": "Tink Demo Bank"
+        },
+        {
+          "disabled": false,
+          "id": "4312ertwyfghej",
+          "name": "Tink Demo Bank"
+        }
+      ],
+      "name": "Pay by Bank",
+      "type": "paybybank"
+    },
+    {
+      "name": "PromptPay",
+      "type": "promptpay"
+    }
+  ],
+  "storedPaymentMethods": [
+    {
+      "brand": "amex",
+      "expiryMonth": "02",
+      "expiryYear": "2020",
+      "holderName": "Checkout Shopper PlaceHolder",
+      "id": "1524ertwdfgchv",
+      "lastFour": "0000",
+      "name": "American Express",
+      "networkTxReference": "17623ewtrydgfhas",
+      "supportedShopperInteractions": [
+        "Ecommerce",
+        "ContAuth"
+      ],
+      "type": "scheme"
+    },
+    {
+      "brand": "visa",
+      "expiryMonth": "02",
+      "expiryYear": "2020",
+      "holderName": "Checkout Shopper PlaceHolder",
+      "id": "21653e4rtydafsgh",
+      "lastFour": "0000",
+      "name": "VISA",
+      "networkTxReference": "12653erytadsf",
+      "supportedShopperInteractions": [
+        "Ecommerce",
+        "ContAuth"
+      ],
+      "type": "scheme"
+    },
+    {
+      "brand": "maestro",
+      "expiryMonth": "02",
+      "expiryYear": "2020",
+      "holderName": "Checkout Shopper PlaceHolder",
+      "id": "123765eutywdg",
+      "lastFour": "0000",
+      "name": "Maestro",
+      "networkTxReference": "127635retyqwfdghn",
+      "supportedShopperInteractions": [
+        "Ecommerce",
+        "ContAuth"
+      ],
+      "type": "scheme"
+    }
+  ]
+}

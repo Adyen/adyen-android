@@ -1,0 +1,16 @@
+{
+  "paymentMethods": [
+    {
+      "amount": {
+        "currency": "EUR",
+        "value": 5000
+      },
+      "lastFour": "",
+      "type": "genericgiftcard"
+    }
+  ],
+  "remainingAmount": {
+    "currency": "EUR",
+    "value": 12340678
+  }
+}

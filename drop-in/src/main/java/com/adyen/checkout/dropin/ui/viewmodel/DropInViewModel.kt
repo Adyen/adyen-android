@@ -33,6 +33,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.order.OrderModel
+import com.adyen.checkout.dropin.ui.stored.isStoredPaymentSupported
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
@@ -138,13 +139,13 @@ class DropInViewModel(
     }
 
     fun shouldShowPreselectedStored(): Boolean {
-        return getStoredPaymentMethods().any { it.isEcommerce } &&
+        return getStoredPaymentMethods().any { it.isStoredPaymentSupported() } &&
             dropInConfiguration.showPreselectedStoredPaymentMethod
     }
 
     fun getPreselectedStoredPaymentMethod(): StoredPaymentMethod {
         return getStoredPaymentMethods().firstOrNull {
-            it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
+            it.isStoredPaymentSupported()
         } ?: StoredPaymentMethod()
     }
 
