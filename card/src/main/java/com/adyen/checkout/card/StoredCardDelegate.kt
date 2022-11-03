@@ -9,16 +9,19 @@
 package com.adyen.checkout.card
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
@@ -44,6 +47,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class StoredCardDelegate(
+    private val observerRepository: ObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
     override val configuration: CardConfiguration,
     private val cardEncrypter: CardEncrypter,
@@ -91,6 +95,24 @@ internal class StoredCardDelegate(
         this.coroutineScope = coroutineScope
         initializeInputData()
         fetchPublicKey()
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<CardComponentState>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     private fun fetchPublicKey() {
@@ -330,7 +352,8 @@ internal class StoredCardDelegate(
     override fun getViewProvider(): ViewProvider = CardViewProvider
 
     override fun onCleared() {
-        this.coroutineScope = null
+        removeObserver()
+        coroutineScope = null
     }
 
     companion object {

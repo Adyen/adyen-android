@@ -10,4 +10,6 @@ package com.adyen.checkout.components.base
 
 interface ComponentDelegate {
     val configuration: Configuration
+
+    fun onCleared()
 }

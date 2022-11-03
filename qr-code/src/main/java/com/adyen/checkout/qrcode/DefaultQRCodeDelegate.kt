@@ -11,11 +11,14 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -41,6 +44,7 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultQRCodeDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: QRCodeConfiguration,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
@@ -85,6 +89,24 @@ internal class DefaultQRCodeDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     @Suppress("ReturnCount")
@@ -203,6 +225,7 @@ internal class DefaultQRCodeDelegate(
     override fun getViewProvider(): ViewProvider = QrCodeViewProvider
 
     override fun onCleared() {
+        removeObserver()
         statusPollingJob?.cancel()
         statusPollingJob = null
         statusCountDownTimer.cancel()

@@ -9,19 +9,25 @@
 package com.adyen.checkout.blik
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@Suppress("TooManyFunctions")
 internal class DefaultBlikDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: BlikConfiguration,
     val paymentMethod: PaymentMethod
 ) : BlikDelegate {
@@ -41,6 +47,24 @@ internal class DefaultBlikDelegate(
 
     init {
         updateComponentState(outputData)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun getPaymentMethodType(): String {
@@ -88,6 +112,10 @@ internal class DefaultBlikDelegate(
             isInputValid = outputData.isValid,
             isReady = true
         )
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     override fun requiresInput(): Boolean = true

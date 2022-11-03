@@ -12,17 +12,14 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
-import kotlinx.coroutines.Job
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -39,20 +36,15 @@ class GooglePayComponent internal constructor(
     ),
     ActivityResultHandlingComponent {
 
-    private var observerJobs: MutableList<Job> = mutableListOf()
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
     ) {
-        removeObserver()
-        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
-            callback(PaymentComponentEvent.StateChanged(it))
-        }
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
 
-        delegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
-            callback(PaymentComponentEvent.Error(ComponentError(it)))
-        }
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
@@ -80,14 +72,7 @@ class GooglePayComponent internal constructor(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        removeObserver()
-    }
-
-    override fun removeObserver() {
-        if (observerJobs.isEmpty()) return
-        Logger.d(TAG, "cleaning up existing observer")
-        observerJobs.forEach { it.cancel() }
-        observerJobs.clear()
+        delegate.onCleared()
     }
 
     companion object {

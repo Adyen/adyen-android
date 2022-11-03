@@ -20,6 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
@@ -68,11 +69,12 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
 
         return DefaultQRCodeDelegate(
-            configuration,
-            statusRepository,
-            countDownTimer,
-            redirectHandler,
-            paymentDataRepository,
+            observerRepository = ObserverRepository(),
+            configuration = configuration,
+            statusRepository = statusRepository,
+            statusCountDownTimer = countDownTimer,
+            redirectHandler = redirectHandler,
+            paymentDataRepository = paymentDataRepository,
         )
     }
 

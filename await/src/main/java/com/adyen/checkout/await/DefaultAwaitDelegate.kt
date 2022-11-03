@@ -10,10 +10,13 @@ package com.adyen.checkout.await
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -39,6 +42,7 @@ import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -67,6 +71,24 @@ internal class DefaultAwaitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun handleAction(action: Action, activity: Activity) {
@@ -156,6 +178,7 @@ internal class DefaultAwaitDelegate(
     override fun getViewProvider(): ViewProvider = AwaitViewProvider
 
     override fun onCleared() {
+        removeObserver()
         statusPollingJob?.cancel()
         statusPollingJob = null
         _coroutineScope = null

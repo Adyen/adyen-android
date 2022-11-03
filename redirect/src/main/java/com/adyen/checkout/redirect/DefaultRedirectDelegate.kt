@@ -10,11 +10,14 @@ package com.adyen.checkout.redirect
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -22,6 +25,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +35,7 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class DefaultRedirectDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: RedirectConfiguration,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
@@ -43,6 +48,24 @@ internal class DefaultRedirectDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(RedirectComponentViewType)
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     override fun handleAction(action: Action, activity: Activity) {
         if (action !is RedirectAction) {
@@ -87,4 +110,8 @@ internal class DefaultRedirectDelegate(
     }
 
     override fun getViewProvider(): ViewProvider = RedirectViewProvider
+
+    override fun onCleared() {
+        removeObserver()
+    }
 }

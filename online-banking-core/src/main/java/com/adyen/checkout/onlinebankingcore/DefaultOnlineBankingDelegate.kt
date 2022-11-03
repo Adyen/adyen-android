@@ -11,23 +11,29 @@ package com.adyen.checkout.onlinebankingcore
 import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+    private val observerRepository: ObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
     override val configuration: Configuration,
@@ -54,6 +60,24 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         val outputData = OnlineBankingOutputData()
         _outputDataFlow.tryEmit(outputData)
         updateComponentState(outputData)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun getIssuers(): List<OnlineBankingModel> =
@@ -102,6 +126,10 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         } catch (e: IllegalStateException) {
             exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
         }
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     override fun getViewProvider(): ViewProvider = OnlineBankingViewProvider

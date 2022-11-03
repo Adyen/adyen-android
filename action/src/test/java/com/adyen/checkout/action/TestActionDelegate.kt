@@ -11,9 +11,11 @@ package com.adyen.checkout.action
 import android.app.Activity
 import android.content.Intent
 import android.os.Parcel
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
@@ -34,7 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.*
+import java.util.Locale
 
 internal class TestActionDelegate :
     ActionDelegate,
@@ -104,6 +106,14 @@ internal class TestActionDelegate :
     override fun getViewProvider(): ViewProvider {
         throw NotImplementedError()
     }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
 }
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
@@ -134,6 +144,16 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override fun getViewProvider(): ViewProvider {
         throw IllegalStateException("This method should not be called from unit tests")
     }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
+
+    override fun onCleared() = Unit
 }
 
 internal object TestComponentViewType : ComponentViewType

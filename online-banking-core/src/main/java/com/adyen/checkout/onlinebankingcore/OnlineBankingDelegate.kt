@@ -10,14 +10,14 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod> :
-    PaymentMethodDelegate,
+    PaymentComponentDelegate<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewProvidingDelegate {
 
     val outputData: OnlineBankingOutputData

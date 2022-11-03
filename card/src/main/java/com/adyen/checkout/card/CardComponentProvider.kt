@@ -20,6 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -51,14 +52,15 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             CardComponent(
                 savedStateHandle,
                 DefaultCardDelegate(
-                    publicKeyRepository,
-                    verifiedConfiguration,
-                    paymentMethod,
-                    addressRepository,
-                    detectCardTypeRepository,
-                    cardValidationMapper,
-                    cardEncrypter,
-                    genericEncrypter
+                    observerRepository = ObserverRepository(),
+                    publicKeyRepository = publicKeyRepository,
+                    configuration = verifiedConfiguration,
+                    paymentMethod = paymentMethod,
+                    addressRepository = addressRepository,
+                    detectCardTypeRepository = detectCardTypeRepository,
+                    cardValidationMapper = cardValidationMapper,
+                    cardEncrypter = cardEncrypter,
+                    genericEncrypter = genericEncrypter
                 ),
                 verifiedConfiguration
             )
@@ -83,10 +85,11 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             CardComponent(
                 savedStateHandle,
                 StoredCardDelegate(
-                    storedPaymentMethod,
-                    configuration,
-                    cardEncrypter,
-                    publicKeyRepository,
+                    observerRepository = ObserverRepository(),
+                    storedPaymentMethod = storedPaymentMethod,
+                    configuration = configuration,
+                    cardEncrypter = cardEncrypter,
+                    publicKeyRepository = publicKeyRepository,
                 ),
                 configuration
             )

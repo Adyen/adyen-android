@@ -10,9 +10,11 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
@@ -20,6 +22,7 @@ import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -38,6 +41,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
+    private val observerRepository: ObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: GenericActionConfiguration,
     private val actionDelegateProvider: ActionDelegateProvider,
@@ -63,6 +67,24 @@ internal class DefaultGenericActionDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
         _coroutineScope = coroutineScope
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun handleAction(action: Action, activity: Activity) {
@@ -152,6 +174,7 @@ internal class DefaultGenericActionDelegate(
 
     override fun onCleared() {
         Logger.d(TAG, "onCleared")
+        removeObserver()
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null

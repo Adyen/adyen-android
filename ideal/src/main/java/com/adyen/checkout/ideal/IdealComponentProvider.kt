@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
@@ -34,7 +35,11 @@ class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealCon
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { IdealPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(
+                    observerRepository = ObserverRepository(),
+                    configuration = configuration,
+                    paymentMethod = paymentMethod
+                ) { IdealPaymentMethod() }
                 IdealComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, IdealComponent::class.java]

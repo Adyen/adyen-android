@@ -10,18 +10,24 @@ package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+    private val observerRepository: ObserverRepository,
     override val configuration: IssuerListConfiguration,
     private val paymentMethod: PaymentMethod,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
@@ -38,6 +44,24 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     private fun getIssuerListComponentViewType(): IssuerListComponentViewType {
         return when (configuration.viewType) {
@@ -85,6 +109,10 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     override fun getViewProvider(): ViewProvider = IssuerListViewProvider

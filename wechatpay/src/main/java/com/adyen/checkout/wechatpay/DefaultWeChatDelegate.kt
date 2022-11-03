@@ -11,11 +11,14 @@ package com.adyen.checkout.wechatpay
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -27,6 +30,7 @@ import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +39,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: WeChatPayActionConfiguration,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
@@ -48,6 +53,24 @@ internal class DefaultWeChatDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     private val eventHandler = object : IWXAPIEventHandler {
         override fun onReq(baseReq: BaseReq) = Unit
@@ -128,6 +151,10 @@ internal class DefaultWeChatDelegate(
     }
 
     override fun getViewProvider(): ViewProvider = WeChatViewProvider
+
+    override fun onCleared() {
+        removeObserver()
+    }
 
     companion object {
         private val TAG = LogUtil.getTag()

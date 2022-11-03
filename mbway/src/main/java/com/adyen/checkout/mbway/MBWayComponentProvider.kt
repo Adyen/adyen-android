@@ -16,6 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
 class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
@@ -35,6 +36,7 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
                 MBWayComponent(
                     savedStateHandle,
                     DefaultMBWayDelegate(
+                        observerRepository = ObserverRepository(),
                         paymentMethod = paymentMethod,
                         configuration = configuration
                     ),

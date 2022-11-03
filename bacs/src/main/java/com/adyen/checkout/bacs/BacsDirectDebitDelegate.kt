@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.bacs
 
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BacsDirectDebitDelegate :
-    PaymentMethodDelegate,
+    PaymentComponentDelegate<BacsDirectDebitComponentState>,
     ViewProvidingDelegate {
 
     override val configuration: BacsDirectDebitConfiguration

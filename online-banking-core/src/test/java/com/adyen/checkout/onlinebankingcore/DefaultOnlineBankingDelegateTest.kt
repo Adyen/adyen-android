@@ -13,6 +13,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -48,6 +49,7 @@ internal class DefaultOnlineBankingDelegateTest(
     @BeforeEach
     fun setup() {
         delegate = DefaultOnlineBankingDelegate(
+            observerRepository = ObserverRepository(),
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             configuration = configuration,

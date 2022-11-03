@@ -14,6 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -55,6 +56,7 @@ internal class DefaultWeChatDelegateTest(
         ).build()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
+            observerRepository = ObserverRepository(),
             configuration = configuration,
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,

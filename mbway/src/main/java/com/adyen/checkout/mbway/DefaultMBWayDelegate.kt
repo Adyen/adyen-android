@@ -9,10 +9,13 @@
 package com.adyen.checkout.mbway
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
@@ -20,10 +23,13 @@ import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
+    private val observerRepository: ObserverRepository,
     val paymentMethod: PaymentMethod,
     override val configuration: MBWayConfiguration
 ) : MBWayDelegate {
@@ -42,6 +48,24 @@ internal class DefaultMBWayDelegate(
 
     init {
         updateComponentState(outputData)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun getPaymentMethodType(): String {
@@ -95,6 +119,10 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
+
+    override fun onCleared() {
+        removeObserver()
+    }
 
     override fun getViewProvider(): ViewProvider = MbWayViewProvider
 

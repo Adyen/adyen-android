@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface CardDelegate :
-    PaymentMethodDelegate,
+    PaymentComponentDelegate<CardComponentState>,
     ViewProvidingDelegate {
 
     val outputData: CardOutputData
@@ -31,6 +31,4 @@ interface CardDelegate :
     fun requiresInput(): Boolean
 
     fun updateInputData(update: CardInputData.() -> Unit)
-
-    fun onCleared()
 }

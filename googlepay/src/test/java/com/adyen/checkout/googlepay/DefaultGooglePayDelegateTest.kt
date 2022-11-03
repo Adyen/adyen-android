@@ -11,6 +11,7 @@ package com.adyen.checkout.googlepay
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,6 +38,7 @@ internal class DefaultGooglePayDelegateTest {
     @BeforeEach
     fun beforeEach() {
         delegate = DefaultGooglePayDelegate(
+            observerRepository = ObserverRepository(),
             paymentMethod = PaymentMethod(),
             configuration = GooglePayConfiguration.Builder(
                 Locale.US,

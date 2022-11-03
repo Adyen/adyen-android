@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
@@ -34,7 +35,11 @@ class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, Molpay
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { MolpayPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(
+                    observerRepository = ObserverRepository(),
+                    configuration = configuration,
+                    paymentMethod = paymentMethod
+                ) { MolpayPaymentMethod() }
                 MolpayComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MolpayComponent::class.java]

@@ -9,6 +9,8 @@
 package com.adyen.checkout.components.base
 
 import android.app.Activity
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +24,8 @@ interface ActionDelegate : ComponentDelegate {
 
     /**
      * Override this method if you need to initialize your delegate and use a [CoroutineScope] inside it.
+     *
+     * Use [onCleared] to clear any local reference to [CoroutineScope].
      */
     fun initialize(coroutineScope: CoroutineScope) = Unit
 
@@ -30,8 +34,11 @@ interface ActionDelegate : ComponentDelegate {
      */
     fun onError(e: CheckoutException) = Unit
 
-    /**
-     * Override this method if you used [initialize] to clear any local reference to [CoroutineScope].
-     */
-    fun onCleared() = Unit
+    fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    )
+
+    fun removeObserver()
 }

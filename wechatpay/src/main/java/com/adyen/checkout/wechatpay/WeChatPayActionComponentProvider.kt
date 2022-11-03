@@ -19,6 +19,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.tencent.mm.opensdk.openapi.IWXAPI
@@ -65,7 +66,13 @@ class WeChatPayActionComponentProvider :
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultWeChatDelegate(configuration, iwxApi, requestGenerator, paymentDataRepository)
+        return DefaultWeChatDelegate(
+            observerRepository = ObserverRepository(),
+            configuration = configuration,
+            iwxApi = iwxApi,
+            payRequestGenerator = requestGenerator,
+            paymentDataRepository = paymentDataRepository
+        )
     }
 
     override val supportedActionTypes: List<String>

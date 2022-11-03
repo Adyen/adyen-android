@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.paybybank
 
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
@@ -15,14 +17,17 @@ import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultPayByBankDelegate(
+    private val observerRepository: ObserverRepository,
     val paymentMethod: PaymentMethod,
     override val configuration: Configuration
 ) : PayByBankDelegate {
@@ -47,6 +52,24 @@ internal class DefaultPayByBankDelegate(
         } else {
             _viewFlow.tryEmit(PayByBankComponentViewType)
         }
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -130,4 +153,8 @@ internal class DefaultPayByBankDelegate(
                     null
                 }
             }
+
+    override fun onCleared() {
+        removeObserver()
+    }
 }

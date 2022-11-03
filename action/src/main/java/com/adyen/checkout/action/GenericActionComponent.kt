@@ -9,24 +9,20 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.IntentHandlingComponent
-import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
@@ -48,24 +44,13 @@ class GenericActionComponent internal constructor(
         genericActionDelegate.initialize(viewModelScope)
     }
 
-    private var observerJobs: MutableList<Job> = mutableListOf()
-
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
-        removeObserver()
-        genericActionDelegate.detailsFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
-            callback(ActionComponentEvent.ActionDetails(it))
-        }
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        // TODO refreshStatus
+    }
 
-        genericActionDelegate.exceptionFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
-            callback(ActionComponentEvent.Error(ComponentError(it)))
-        }
-
-        // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                genericActionDelegate.refreshStatus()
-            }
-        })
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun canHandleAction(action: Action): Boolean {
@@ -94,14 +79,6 @@ class GenericActionComponent internal constructor(
         super.onCleared()
         Logger.d(TAG, "onCleared")
         genericActionDelegate.onCleared()
-        removeObserver()
-    }
-
-    override fun removeObserver() {
-        if (observerJobs.isEmpty()) return
-        Logger.d(TAG, "cleaning up existing observer")
-        observerJobs.forEach { it.cancel() }
-        observerJobs.clear()
     }
 
     companion object {

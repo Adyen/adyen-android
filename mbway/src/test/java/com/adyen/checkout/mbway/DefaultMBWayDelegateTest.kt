@@ -10,6 +10,7 @@ package com.adyen.checkout.mbway
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -28,6 +29,7 @@ import java.util.Locale
 internal class DefaultMBWayDelegateTest {
 
     private val delegate = DefaultMBWayDelegate(
+        observerRepository = ObserverRepository(),
         paymentMethod = PaymentMethod(),
         configuration = MBWayConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
     )

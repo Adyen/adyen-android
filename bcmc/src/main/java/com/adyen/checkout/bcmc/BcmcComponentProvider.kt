@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -41,11 +42,12 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
             BcmcComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultBcmcDelegate(
-                    paymentMethod,
-                    publicKeyRepository,
-                    configuration,
-                    cardValidationMapper,
-                    cardEncrypter
+                    observerRepository = ObserverRepository(),
+                    paymentMethod = paymentMethod,
+                    publicKeyRepository = publicKeyRepository,
+                    configuration = configuration,
+                    cardValidationMapper = cardValidationMapper,
+                    cardEncrypter = cardEncrypter
                 ),
                 configuration = configuration,
             )

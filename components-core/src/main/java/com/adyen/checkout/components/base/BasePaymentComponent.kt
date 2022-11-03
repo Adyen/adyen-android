@@ -24,7 +24,7 @@ abstract class BasePaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    private val paymentMethodDelegate: PaymentMethodDelegate,
+    private val paymentComponentDelegate: PaymentComponentDelegate<*>,
     configuration: ConfigurationT
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration) {
 
@@ -55,7 +55,7 @@ abstract class BasePaymentComponent<
             } else {
                 Flavor.COMPONENT
             }
-            val type = paymentMethodDelegate.getPaymentMethodType()
+            val type = paymentComponentDelegate.getPaymentMethodType()
             if (type.isEmpty()) {
                 throw CheckoutException("Payment method has empty or null type")
             }

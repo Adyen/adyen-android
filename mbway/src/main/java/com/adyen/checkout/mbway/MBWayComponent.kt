@@ -14,7 +14,6 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.flow.mapToCallbackWithLifeCycle
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -22,7 +21,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -39,16 +37,15 @@ class MBWayComponent internal constructor(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    private var observerJobs: MutableList<Job> = mutableListOf()
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
     ) {
-        removeObserver()
-        delegate.componentStateFlow.mapToCallbackWithLifeCycle(lifecycleOwner, viewModelScope, observerJobs) {
-            callback(PaymentComponentEvent.StateChanged(it))
-        }
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
@@ -56,14 +53,7 @@ class MBWayComponent internal constructor(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        removeObserver()
-    }
-
-    override fun removeObserver() {
-        if (observerJobs.isEmpty()) return
-        Logger.d(TAG, "cleaning up existing observer")
-        observerJobs.forEach { it.cancel() }
-        observerJobs.clear()
+        delegate.onCleared()
     }
 
     companion object {

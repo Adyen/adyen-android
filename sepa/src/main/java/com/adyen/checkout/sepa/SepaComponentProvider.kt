@@ -16,6 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
 class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
@@ -34,7 +35,7 @@ class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfig
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 SepaComponent(
                     savedStateHandle,
-                    DefaultSepaDelegate(configuration, paymentMethod),
+                    DefaultSepaDelegate(ObserverRepository(), configuration, paymentMethod),
                     configuration
                 )
             }

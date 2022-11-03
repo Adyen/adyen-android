@@ -10,6 +10,7 @@ package com.adyen.checkout.blik
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -38,7 +39,7 @@ internal class DefaultBlikDelegateTest {
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build()
-        delegate = DefaultBlikDelegate(configuration, PaymentMethod())
+        delegate = DefaultBlikDelegate(ObserverRepository(), configuration, PaymentMethod())
         Logger.setLogcatLevel(Logger.NONE)
     }
 

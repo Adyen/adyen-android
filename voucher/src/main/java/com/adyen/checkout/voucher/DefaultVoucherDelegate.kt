@@ -9,20 +9,25 @@
 package com.adyen.checkout.voucher
 
 import android.app.Activity
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultVoucherDelegate(
+    private val observerRepository: ObserverRepository,
     override val configuration: VoucherConfiguration
 ) : VoucherDelegate {
 
@@ -37,6 +42,24 @@ internal class DefaultVoucherDelegate(
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
 
     override fun getViewProvider(): ViewProvider = VoucherViewProvider
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = null,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     override fun handleAction(action: Action, activity: Activity) {
         if (action !is VoucherAction) {
@@ -58,6 +81,10 @@ internal class DefaultVoucherDelegate(
         paymentMethodType = null,
         downloadUrl = null
     )
+
+    override fun onCleared() {
+        removeObserver()
+    }
 
     companion object {
         private val TAG = LogUtil.getTag()

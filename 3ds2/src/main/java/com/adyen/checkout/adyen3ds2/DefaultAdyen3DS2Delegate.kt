@@ -12,6 +12,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
@@ -20,6 +21,7 @@ import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.handler.RedirectHandler
@@ -29,6 +31,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -63,6 +66,7 @@ import org.json.JSONObject
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultAdyen3DS2Delegate(
+    private val observerRepository: ObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
@@ -99,6 +103,24 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.observeActionComponentEvents(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     @Suppress("ReturnCount")
@@ -427,6 +449,7 @@ internal class DefaultAdyen3DS2Delegate(
     override fun getViewProvider(): ViewProvider = Adyen3DS2ViewProvider
 
     override fun onCleared() {
+        removeObserver()
         _coroutineScope = null
     }
 

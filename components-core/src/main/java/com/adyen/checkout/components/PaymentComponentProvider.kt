@@ -73,6 +73,6 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
         key: String?,
     ): ComponentT
 
-    //TODO docs
+    // TODO docs
     fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean
 }

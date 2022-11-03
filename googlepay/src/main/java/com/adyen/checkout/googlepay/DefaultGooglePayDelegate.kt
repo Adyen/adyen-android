@@ -11,9 +11,12 @@ package com.adyen.checkout.googlepay
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -24,12 +27,14 @@ import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultGooglePayDelegate(
+    private val observerRepository: ObserverRepository,
     private val paymentMethod: PaymentMethod,
     override val configuration: GooglePayConfiguration,
 ) : GooglePayDelegate {
@@ -39,6 +44,24 @@ internal class DefaultGooglePayDelegate(
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     @VisibleForTesting
     internal fun updateComponentState(paymentData: PaymentData?) {
@@ -103,6 +126,10 @@ internal class DefaultGooglePayDelegate(
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     companion object {

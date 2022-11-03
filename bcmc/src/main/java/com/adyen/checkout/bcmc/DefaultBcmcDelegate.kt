@@ -9,17 +9,20 @@
 package com.adyen.checkout.bcmc
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.ObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -44,6 +47,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultBcmcDelegate(
+    private val observerRepository: ObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: BcmcConfiguration,
@@ -70,6 +74,24 @@ internal class DefaultBcmcDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         fetchPublicKey(coroutineScope)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
+    ) {
+        observerRepository.observePaymentComponentEvents(
+            stateFlow = componentStateFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     private fun fetchPublicKey(coroutineScope: CoroutineScope) {
@@ -219,6 +241,10 @@ internal class DefaultBcmcDelegate(
     override fun isCardNumberSupported(cardNumber: String?): Boolean {
         if (cardNumber.isNullOrEmpty()) return false
         return CardType.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     override fun getViewProvider(): ViewProvider = BcmcViewProvider
