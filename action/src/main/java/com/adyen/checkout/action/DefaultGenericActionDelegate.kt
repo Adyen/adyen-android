@@ -20,6 +20,7 @@ import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.repository.ObserverRepository
@@ -81,6 +82,9 @@ internal class DefaultGenericActionDelegate(
             coroutineScope = coroutineScope,
             callback = callback
         )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
     }
 
     override fun removeObserver() {

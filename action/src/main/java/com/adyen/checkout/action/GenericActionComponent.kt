@@ -46,7 +46,6 @@ class GenericActionComponent internal constructor(
 
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback)
-        // TODO refreshStatus
     }
 
     override fun removeObserver() {

@@ -12,6 +12,8 @@ import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -95,12 +97,15 @@ class DefaultStatusRepository constructor(
     }
 
     override fun refreshStatus(paymentData: String) {
+        Logger.v(TAG, "refreshStatus")
         refreshFlow.tryEmit(paymentData)
     }
 
     override fun getMaxPollingDuration(): Long = MAX_POLLING_DURATION_MILLIS
 
     companion object {
+        private val TAG = LogUtil.getTag()
+
         private val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(60)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(60)

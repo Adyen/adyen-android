@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.repository.ObserverRepository
@@ -85,6 +86,9 @@ internal class DefaultAwaitDelegate(
             coroutineScope = coroutineScope,
             callback = callback
         )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
     }
 
     override fun removeObserver() {

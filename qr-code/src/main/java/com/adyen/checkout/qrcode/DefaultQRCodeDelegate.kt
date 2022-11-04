@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
+import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.ObserverRepository
@@ -103,6 +104,9 @@ internal class DefaultQRCodeDelegate(
             coroutineScope = coroutineScope,
             callback = callback
         )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
     }
 
     override fun removeObserver() {

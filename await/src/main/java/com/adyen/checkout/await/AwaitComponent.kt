@@ -37,7 +37,6 @@ class AwaitComponent internal constructor(
 
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
-        // TODO refreshStatus
     }
 
     override fun removeObserver() {
