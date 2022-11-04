@@ -9,6 +9,7 @@ package com.adyen.checkout.components.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -21,6 +22,7 @@ import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +38,8 @@ class AdyenComponentView @JvmOverloads constructor(
     private val defStyleAttr: Int = 0
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
+
+    private val binding: AdyenComponentViewBinding = AdyenComponentViewBinding.inflate(LayoutInflater.from(context), this)
 
     private var componentView: ComponentView? = null
 
@@ -92,7 +96,7 @@ class AdyenComponentView @JvmOverloads constructor(
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
         val view = componentView.getView()
-        addView(view)
+        binding.frameLayoutComponentContainer.addView(view)
         view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
 
         componentView.initView(delegate, coroutineScope, localizedContext)
