@@ -15,7 +15,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultBlikDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     override val configuration: BlikConfiguration,
     val paymentMethod: PaymentMethod
 ) : BlikDelegate {
@@ -54,7 +54,7 @@ internal class DefaultBlikDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
             lifecycleOwner = lifecycleOwner,

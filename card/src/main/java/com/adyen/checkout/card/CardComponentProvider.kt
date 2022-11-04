@@ -20,7 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -52,7 +52,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             CardComponent(
                 savedStateHandle,
                 DefaultCardDelegate(
-                    observerRepository = ObserverRepository(),
+                    observerRepository = PaymentObserverRepository(),
                     publicKeyRepository = publicKeyRepository,
                     configuration = verifiedConfiguration,
                     paymentMethod = paymentMethod,
@@ -85,7 +85,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             CardComponent(
                 savedStateHandle,
                 StoredCardDelegate(
-                    observerRepository = ObserverRepository(),
+                    observerRepository = PaymentObserverRepository(),
                     storedPaymentMethod = storedPaymentMethod,
                     configuration = configuration,
                     cardEncrypter = cardEncrypter,

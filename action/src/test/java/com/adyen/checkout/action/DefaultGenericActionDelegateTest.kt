@@ -19,7 +19,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -59,7 +59,7 @@ internal class DefaultGenericActionDelegateTest(
             TEST_CLIENT_KEY
         ).build()
         genericActionDelegate = DefaultGenericActionDelegate(
-            ObserverRepository(),
+            ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
             actionDelegateProvider

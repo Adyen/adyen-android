@@ -18,7 +18,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -39,7 +39,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     override val configuration: WeChatPayActionConfiguration,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
@@ -59,7 +59,7 @@ internal class DefaultWeChatDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

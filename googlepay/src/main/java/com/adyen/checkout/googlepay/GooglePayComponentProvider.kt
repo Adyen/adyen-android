@@ -18,7 +18,7 @@ import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -52,7 +52,7 @@ class GooglePayComponentProvider :
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GooglePayComponent(
                 savedStateHandle = savedStateHandle,
-                delegate = DefaultGooglePayDelegate(ObserverRepository(), paymentMethod, configuration),
+                delegate = DefaultGooglePayDelegate(PaymentObserverRepository(), paymentMethod, configuration),
                 configuration = configuration,
             )
         }

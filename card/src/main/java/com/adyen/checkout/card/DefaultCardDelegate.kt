@@ -30,7 +30,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
 internal class DefaultCardDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: CardConfiguration,
     private val paymentMethod: PaymentMethod,
@@ -110,7 +110,7 @@ internal class DefaultCardDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

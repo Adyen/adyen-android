@@ -13,7 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
@@ -61,7 +61,7 @@ internal class DefaultQRCodeDelegateTest(
             TEST_CLIENT_KEY
         ).build()
         delegate = DefaultQRCodeDelegate(
-            observerRepository = ObserverRepository(),
+            observerRepository = ActionObserverRepository(),
             configuration = configuration,
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,

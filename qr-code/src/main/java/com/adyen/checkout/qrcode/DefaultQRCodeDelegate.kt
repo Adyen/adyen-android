@@ -19,7 +19,7 @@ import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultQRCodeDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     override val configuration: QRCodeConfiguration,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
@@ -97,7 +97,7 @@ internal class DefaultQRCodeDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

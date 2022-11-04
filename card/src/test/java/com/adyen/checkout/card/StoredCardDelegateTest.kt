@@ -18,7 +18,7 @@ import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
@@ -294,7 +294,7 @@ internal class StoredCardDelegateTest {
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
     ): StoredCardDelegate {
         return StoredCardDelegate(
-            observerRepository = ObserverRepository(),
+            observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
             configuration = configuration,

@@ -25,7 +25,7 @@ import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
@@ -706,7 +706,7 @@ internal class DefaultCardDelegateTest {
         paymentMethod: PaymentMethod = PaymentMethod(),
     ): DefaultCardDelegate {
         return DefaultCardDelegate(
-            observerRepository = ObserverRepository(),
+            observerRepository = PaymentObserverRepository(),
             paymentMethod = paymentMethod,
             publicKeyRepository = publicKeyRepository,
             configuration = configuration,

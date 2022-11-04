@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultGooglePayDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     override val configuration: GooglePayConfiguration,
 ) : GooglePayDelegate {
@@ -50,7 +50,7 @@ internal class DefaultGooglePayDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

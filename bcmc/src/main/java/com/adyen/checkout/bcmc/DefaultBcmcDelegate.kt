@@ -22,7 +22,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultBcmcDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: BcmcConfiguration,
@@ -81,7 +81,7 @@ internal class DefaultBcmcDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

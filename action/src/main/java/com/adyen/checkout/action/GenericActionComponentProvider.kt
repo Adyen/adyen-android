@@ -26,7 +26,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 
 class GenericActionComponentProvider :
     ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
@@ -64,7 +64,7 @@ class GenericActionComponentProvider :
         application: Application
     ): GenericActionDelegate {
         return DefaultGenericActionDelegate(
-            observerRepository = ObserverRepository(),
+            observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             actionDelegateProvider = ActionDelegateProvider()

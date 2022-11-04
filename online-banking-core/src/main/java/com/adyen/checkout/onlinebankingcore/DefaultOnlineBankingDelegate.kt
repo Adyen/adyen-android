@@ -19,7 +19,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
     override val configuration: Configuration,
@@ -67,7 +67,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

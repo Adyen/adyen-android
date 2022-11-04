@@ -17,7 +17,7 @@ import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultPayByBankDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     val paymentMethod: PaymentMethod,
     override val configuration: Configuration
 ) : PayByBankDelegate {
@@ -59,7 +59,7 @@ internal class DefaultPayByBankDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
             lifecycleOwner = lifecycleOwner,

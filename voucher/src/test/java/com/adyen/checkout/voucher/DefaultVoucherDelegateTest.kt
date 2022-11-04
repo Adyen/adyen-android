@@ -11,7 +11,7 @@ package com.adyen.checkout.voucher
 import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -28,7 +28,7 @@ internal class DefaultVoucherDelegateTest {
     @BeforeEach
     fun beforeEach() {
         delegate = DefaultVoucherDelegate(
-            ObserverRepository(),
+            ActionObserverRepository(),
             VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
         )
     }

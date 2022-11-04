@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
@@ -36,7 +36,7 @@ class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, Dotpay
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(
-                    observerRepository = ObserverRepository(),
+                    observerRepository = PaymentObserverRepository(),
                     configuration = configuration,
                     paymentMethod = paymentMethod
                 ) { DotpayPaymentMethod() }

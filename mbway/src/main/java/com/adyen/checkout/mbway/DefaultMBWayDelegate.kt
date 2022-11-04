@@ -15,7 +15,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     val paymentMethod: PaymentMethod,
     override val configuration: MBWayConfiguration
 ) : MBWayDelegate {
@@ -55,7 +55,7 @@ internal class DefaultMBWayDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
             lifecycleOwner = lifecycleOwner,

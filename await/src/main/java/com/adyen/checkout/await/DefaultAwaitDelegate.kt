@@ -17,7 +17,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -43,7 +43,7 @@ import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -79,7 +79,7 @@ internal class DefaultAwaitDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
@@ -40,7 +40,7 @@ class OnlineBankingSKComponentProvider :
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate =
                     DefaultOnlineBankingDelegate(
-                        observerRepository = ObserverRepository(),
+                        observerRepository = PaymentObserverRepository(),
                         pdfOpener = PdfOpener(),
                         paymentMethod = paymentMethod,
                         configuration = configuration,

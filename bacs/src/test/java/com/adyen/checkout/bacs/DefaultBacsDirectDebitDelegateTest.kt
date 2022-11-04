@@ -10,7 +10,7 @@ package com.adyen.checkout.bacs
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
@@ -41,7 +41,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build()
-        delegate = DefaultBacsDirectDebitDelegate(ObserverRepository(), configuration, PaymentMethod())
+        delegate = DefaultBacsDirectDebitDelegate(PaymentObserverRepository(), configuration, PaymentMethod())
         Logger.setLogcatLevel(Logger.NONE)
     }
 

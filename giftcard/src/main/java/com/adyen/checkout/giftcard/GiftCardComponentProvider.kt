@@ -16,7 +16,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -39,7 +39,7 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
-                    observerRepository = ObserverRepository(),
+                    observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
                     publicKeyRepository = DefaultPublicKeyRepository(),
                     configuration = configuration,

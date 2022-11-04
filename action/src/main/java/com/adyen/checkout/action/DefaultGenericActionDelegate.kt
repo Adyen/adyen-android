@@ -23,7 +23,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -42,7 +42,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: GenericActionConfiguration,
     private val actionDelegateProvider: ActionDelegateProvider,
@@ -75,7 +75,7 @@ internal class DefaultGenericActionDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

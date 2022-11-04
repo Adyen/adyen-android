@@ -17,7 +17,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -35,7 +35,7 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class DefaultRedirectDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     override val configuration: RedirectConfiguration,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
@@ -54,7 +54,7 @@ internal class DefaultRedirectDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: PaymentObserverRepository,
     override val configuration: IssuerListConfiguration,
     private val paymentMethod: PaymentMethod,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
@@ -50,7 +50,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
     ) {
-        observerRepository.observePaymentComponentEvents(
+        observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
             lifecycleOwner = lifecycleOwner,

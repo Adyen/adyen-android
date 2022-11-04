@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultVoucherDelegate(
-    private val observerRepository: ObserverRepository,
+    private val observerRepository: ActionObserverRepository,
     override val configuration: VoucherConfiguration
 ) : VoucherDelegate {
 
@@ -48,7 +48,7 @@ internal class DefaultVoucherDelegate(
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit
     ) {
-        observerRepository.observeActionComponentEvents(
+        observerRepository.addObservers(
             detailsFlow = null,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,

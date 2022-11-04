@@ -13,7 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.test.TestRedirectHandler
 import com.adyen.checkout.core.api.Environment
@@ -41,7 +41,7 @@ internal class DefaultRedirectDelegateTest {
         ).build()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultRedirectDelegate(ObserverRepository(), configuration, redirectHandler, paymentDataRepository)
+        delegate = DefaultRedirectDelegate(ActionObserverRepository(), configuration, redirectHandler, paymentDataRepository)
     }
 
     @Test

@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
 class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration> {
@@ -35,7 +35,7 @@ class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, 
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 PayByBankComponent(
                     savedStateHandle,
-                    DefaultPayByBankDelegate(ObserverRepository(), paymentMethod, configuration),
+                    DefaultPayByBankDelegate(PaymentObserverRepository(), paymentMethod, configuration),
                     configuration
                 )
             }

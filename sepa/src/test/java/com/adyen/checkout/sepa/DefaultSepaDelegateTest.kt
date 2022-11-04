@@ -3,7 +3,7 @@ package com.adyen.checkout.sepa
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -26,7 +26,7 @@ internal class DefaultSepaDelegateTest {
     @BeforeEach
     fun before() {
         delegate = DefaultSepaDelegate(
-            observerRepository = ObserverRepository(),
+            observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             configuration = SepaConfiguration.Builder(
                 Locale.US,

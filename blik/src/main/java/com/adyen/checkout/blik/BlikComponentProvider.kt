@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.repository.ObserverRepository
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
 class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
@@ -36,7 +36,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    delegate = DefaultBlikDelegate(ObserverRepository(), configuration, paymentMethod),
+                    delegate = DefaultBlikDelegate(PaymentObserverRepository(), configuration, paymentMethod),
                     configuration = configuration,
                 )
             }
@@ -57,7 +57,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    delegate = StoredBlikDelegate(ObserverRepository(), configuration, storedPaymentMethod),
+                    delegate = StoredBlikDelegate(PaymentObserverRepository(), configuration, storedPaymentMethod),
                     configuration = configuration,
                 )
             }
