@@ -352,7 +352,7 @@ class DropInActivity :
         Logger.d(TAG, "showStoredComponentDialog")
         hideAllScreens()
         val dialogFragment = when {
-            CardComponent.PAYMENT_METHOD_TYPES.contains(storedPaymentMethod.type) -> CardComponentDialogFragment
+            CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
         }.newInstance(storedPaymentMethod, fromPreselected)
 
@@ -363,13 +363,13 @@ class DropInActivity :
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
         val dialogFragment = when {
-            CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+            CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 CardComponentDialogFragment.newInstance(paymentMethod)
-            BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+            BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 BacsDirectDebitDialogFragment.newInstance(paymentMethod)
-            GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+            GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 GiftCardComponentDialogFragment.newInstance(paymentMethod)
-            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+            GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 GooglePayComponentDialogFragment.newInstance(paymentMethod)
             else -> GenericComponentDialogFragment.newInstance(paymentMethod)
         }
