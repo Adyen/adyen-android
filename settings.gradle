@@ -33,3 +33,4 @@ include ':3ds2',
         ':ui-core',
         ':voucher',
         ':wechatpay'
+include ':instant'
