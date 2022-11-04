@@ -9,18 +9,24 @@
 package com.adyen.checkout.bacs
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@Suppress("TooManyFunctions")
 internal class DefaultBacsDirectDebitDelegate(
+    private val observerRepository: PaymentObserverRepository,
     override val configuration: BacsDirectDebitConfiguration,
     val paymentMethod: PaymentMethod,
 ) : BacsDirectDebitDelegate {
@@ -39,6 +45,24 @@ internal class DefaultBacsDirectDebitDelegate(
     @Suppress("VariableNaming", "PropertyName")
     internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
+    ) {
+        observerRepository.addObservers(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
@@ -123,6 +147,10 @@ internal class DefaultBacsDirectDebitDelegate(
             isReady = true,
             mode = outputData.mode
         )
+    }
+
+    override fun onCleared() {
+        removeObserver()
     }
 
     override fun getViewProvider(): ViewProvider = BacsViewProvider

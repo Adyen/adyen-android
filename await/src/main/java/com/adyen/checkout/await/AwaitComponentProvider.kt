@@ -19,6 +19,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
@@ -51,8 +52,6 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 awaitDelegate,
             )
@@ -68,7 +67,12 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultAwaitDelegate(configuration, statusRepository, paymentDataRepository)
+        return DefaultAwaitDelegate(
+            observerRepository = ActionObserverRepository(),
+            configuration = configuration,
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository
+        )
     }
 
     override fun canHandleAction(action: Action): Boolean {

@@ -17,6 +17,8 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
@@ -29,11 +31,27 @@ class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfigura
         defaultArgs: Bundle?,
         key: String?,
     ): EPSComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { EPSPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    configuration = configuration,
+                    paymentMethod = paymentMethod
+                ) { EPSPaymentMethod() }
                 EPSComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EPSComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return EPSComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

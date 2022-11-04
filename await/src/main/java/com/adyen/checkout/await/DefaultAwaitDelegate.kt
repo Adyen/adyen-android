@@ -10,10 +10,14 @@ package com.adyen.checkout.await
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -39,6 +43,7 @@ import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
+    private val observerRepository: ActionObserverRepository,
     override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -69,7 +74,33 @@ internal class DefaultAwaitDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: AwaitAction, activity: Activity) {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.addObservers(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
+
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is AwaitAction) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
@@ -151,6 +182,7 @@ internal class DefaultAwaitDelegate(
     override fun getViewProvider(): ViewProvider = AwaitViewProvider
 
     override fun onCleared() {
+        removeObserver()
         statusPollingJob?.cancel()
         statusPollingJob = null
         _coroutineScope = null

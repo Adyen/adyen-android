@@ -103,8 +103,7 @@ class CardActivity : AppCompatActivity() {
 
         binding.cardView.attach(cardComponent, this)
 
-        cardComponent.observe(this, cardViewModel::onCardComponentState)
-        cardComponent.observeErrors(this, cardViewModel::onComponentError)
+        cardComponent.observe(this, cardViewModel::onPaymentComponentEvent)
     }
 
     private fun onPaymentResult(result: String) {
@@ -127,12 +126,10 @@ class CardActivity : AppCompatActivity() {
             this,
             application,
             checkoutConfigurationProvider.getRedirectConfiguration()
-        )
-
-        redirectComponent?.observe(this, cardViewModel::onActionComponentData)
-        redirectComponent?.observeErrors(this, cardViewModel::onComponentError)
-
-        redirectComponent?.handleAction(this, action)
+        ).apply {
+            observe(this@CardActivity, cardViewModel::onActionComponentEvent)
+            handleAction(action, this@CardActivity)
+        }
     }
 
     private fun setupThreeDS2Component(action: Action) {
@@ -140,12 +137,10 @@ class CardActivity : AppCompatActivity() {
             this,
             application,
             checkoutConfigurationProvider.get3DS2Configuration()
-        )
-
-        threeDS2Component?.observe(this, cardViewModel::onActionComponentData)
-        threeDS2Component?.observeErrors(this, cardViewModel::onComponentError)
-
-        threeDS2Component?.handleAction(this, action)
+        ).apply {
+            observe(this@CardActivity, cardViewModel::onActionComponentEvent)
+            handleAction(action, this@CardActivity)
+        }
     }
 
     override fun onDestroy() {

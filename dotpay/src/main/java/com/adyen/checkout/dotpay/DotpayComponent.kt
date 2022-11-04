@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class DotpayComponent(
+class DotpayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<DotpayPaymentMethod>,
     configuration: DotpayConfiguration

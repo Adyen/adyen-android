@@ -18,7 +18,7 @@ import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class MolpayComponent(
+class MolpayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<MolpayPaymentMethod>,
     configuration: MolpayConfiguration

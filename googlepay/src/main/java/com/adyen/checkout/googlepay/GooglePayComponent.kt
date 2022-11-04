@@ -9,21 +9,22 @@ package com.adyen.checkout.googlepay
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class GooglePayComponent(
+class GooglePayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GooglePayDelegate,
     configuration: GooglePayConfiguration
@@ -35,14 +36,15 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
-    init {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
+    ) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
 
-        delegate.exceptionFlow
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
@@ -65,6 +67,12 @@ class GooglePayComponent(
      */
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         delegate.handleActivityResult(resultCode, data)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
     }
 
     companion object {

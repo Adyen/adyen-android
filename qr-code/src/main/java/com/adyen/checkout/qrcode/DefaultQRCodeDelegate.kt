@@ -11,9 +11,15 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.handler.RedirectHandler
+import com.adyen.checkout.components.lifecycle.repeatOnResume
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -25,7 +31,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.components.handler.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -40,6 +45,7 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultQRCodeDelegate(
+    private val observerRepository: ActionObserverRepository,
     override val configuration: QRCodeConfiguration,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
@@ -86,7 +92,34 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: QrCodeAction, activity: Activity) {
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.addObservers(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
+    }
+
+    @Suppress("ReturnCount")
+    override fun handleAction(action: Action, activity: Activity) {
+        if (action !is QrCodeAction) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
+        }
+
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
@@ -196,6 +229,7 @@ internal class DefaultQRCodeDelegate(
     override fun getViewProvider(): ViewProvider = QrCodeViewProvider
 
     override fun onCleared() {
+        removeObserver()
         statusPollingJob?.cancel()
         statusPollingJob = null
         statusCountDownTimer.cancel()

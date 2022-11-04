@@ -10,16 +10,20 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -38,12 +42,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
+    private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: GenericActionConfiguration,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
-    private var _delegate: ActionDelegate<Action>? = null
-    override val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
+
+    private var _delegate: ActionDelegate? = null
+    override val delegate: ActionDelegate get() = requireNotNull(_delegate)
 
     private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
@@ -62,6 +68,27 @@ internal class DefaultGenericActionDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
         _coroutineScope = coroutineScope
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) {
+        observerRepository.addObservers(
+            detailsFlow = detailsFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.repeatOnResume { refreshStatus() }
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun handleAction(action: Action, activity: Activity) {
@@ -88,14 +115,14 @@ internal class DefaultGenericActionDelegate(
         delegate.handleAction(action, activity)
     }
 
-    private fun observeExceptions(delegate: ActionDelegate<Action>) {
+    private fun observeExceptions(delegate: ActionDelegate) {
         Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
             .onEach { exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
-    private fun observeDetails(delegate: ActionDelegate<Action>) {
+    private fun observeDetails(delegate: ActionDelegate) {
         if (delegate !is DetailsEmittingDelegate) return
         Logger.d(TAG, "Observing details")
         delegate.detailsFlow
@@ -103,7 +130,7 @@ internal class DefaultGenericActionDelegate(
             .launchIn(coroutineScope)
     }
 
-    private fun observeViewFlow(delegate: ActionDelegate<Action>) {
+    private fun observeViewFlow(delegate: ActionDelegate) {
         if (delegate !is ViewProvidingDelegate) return
         Logger.d(TAG, "Observing view flow")
         delegate.viewFlow
@@ -116,7 +143,7 @@ internal class DefaultGenericActionDelegate(
         set3DS2UICustomizationInDelegate(_delegate)
     }
 
-    private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate<Action>?) {
+    private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate?) {
         if (delegate !is Adyen3DS2Delegate) return
         if (uiCustomization != null) {
             Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")
@@ -151,6 +178,7 @@ internal class DefaultGenericActionDelegate(
 
     override fun onCleared() {
         Logger.d(TAG, "onCleared")
+        removeObserver()
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null

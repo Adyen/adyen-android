@@ -7,19 +7,21 @@
  */
 package com.adyen.checkout.onlinebankingcore
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
-abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
     savedStateHandle: SavedStateHandle,
     final override val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
     configuration: Configuration
@@ -31,13 +33,24 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+    ) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
 
-        delegate.exceptionFlow
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
+    override fun removeObserver() {
+        delegate.removeObserver()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -11,9 +11,11 @@ package com.adyen.checkout.action
 import android.app.Activity
 import android.content.Intent
 import android.os.Parcel
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
@@ -22,7 +24,6 @@ import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
@@ -38,7 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
 
 internal class TestActionDelegate :
-    ActionDelegate<Action>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     ViewableDelegate<OutputData>,
     IntentHandlingDelegate,
@@ -105,6 +106,14 @@ internal class TestActionDelegate :
     override fun getViewProvider(): ViewProvider {
         throw NotImplementedError()
     }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
 }
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
@@ -126,7 +135,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
         this.uiCustomization = uiCustomization
     }
 
-    override fun handleAction(action: BaseThreeds2Action, activity: Activity) {
+    override fun handleAction(action: Action, activity: Activity) {
         handleActionCalled = true
     }
 
@@ -135,6 +144,16 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override fun getViewProvider(): ViewProvider {
         throw IllegalStateException("This method should not be called from unit tests")
     }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
+
+    override fun onCleared() = Unit
 }
 
 internal object TestComponentViewType : ComponentViewType

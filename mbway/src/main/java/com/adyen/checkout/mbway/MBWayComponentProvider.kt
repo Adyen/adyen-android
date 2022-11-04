@@ -16,6 +16,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.exception.ComponentException
 
 class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
 
@@ -27,11 +29,14 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
         defaultArgs: Bundle?,
         key: String?,
     ): MBWayComponent {
+        assertSupported(paymentMethod)
+
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 MBWayComponent(
                     savedStateHandle,
                     DefaultMBWayDelegate(
+                        observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
                         configuration = configuration
                     ),
@@ -39,5 +44,15 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MBWayComponent::class.java]
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return MBWayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

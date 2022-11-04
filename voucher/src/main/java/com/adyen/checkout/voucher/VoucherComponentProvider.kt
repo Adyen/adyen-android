@@ -19,6 +19,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
@@ -45,8 +46,6 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 voucherDelegate,
             )
@@ -59,7 +58,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): VoucherDelegate {
-        return DefaultVoucherDelegate(configuration)
+        return DefaultVoucherDelegate(ActionObserverRepository(), configuration)
     }
 
     override val supportedActionTypes: List<String>

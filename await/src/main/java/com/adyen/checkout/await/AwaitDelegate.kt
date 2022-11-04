@@ -12,11 +12,10 @@ import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
-import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 
 interface AwaitDelegate :
-    ActionDelegate<AwaitAction>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     ViewableDelegate<AwaitOutputData>,
     StatusPollingDelegate,

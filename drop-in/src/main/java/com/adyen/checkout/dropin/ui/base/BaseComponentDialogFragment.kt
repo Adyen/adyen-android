@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
@@ -35,9 +34,7 @@ private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
 @Suppress("TooManyFunctions")
-abstract class BaseComponentDialogFragment :
-    DropInBottomSheetDialogFragment(),
-    Observer<PaymentComponentState<in PaymentMethodDetails>> {
+abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     companion object {
         private val TAG = LogUtil.getTag()
@@ -85,8 +82,6 @@ abstract class BaseComponentDialogFragment :
     ): View?
 
     abstract override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-
-    abstract override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?)
 
     protected abstract fun setPaymentPendingInitialization(pending: Boolean)
 
@@ -151,7 +146,7 @@ abstract class BaseComponentDialogFragment :
     }
 
     private fun startPayment() {
-        val componentState = component.state
+        val componentState = componentDialogViewModel.componentState
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
@@ -171,13 +166,9 @@ abstract class BaseComponentDialogFragment :
         protocol.requestPaymentsCall(componentState)
     }
 
-    protected fun createErrorHandlerObserver(): Observer<ComponentError> {
-        return Observer {
-            if (it != null) {
-                Logger.e(TAG, "ComponentError", it.exception)
-                handleError(it)
-            }
-        }
+    protected fun onComponentError(componentError: ComponentError) {
+        Logger.e(TAG, "ComponentError", componentError.exception)
+        handleError(componentError)
     }
 
     fun handleError(componentError: ComponentError) {

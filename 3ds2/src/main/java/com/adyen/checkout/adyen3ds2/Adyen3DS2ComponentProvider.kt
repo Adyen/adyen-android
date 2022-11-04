@@ -25,6 +25,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
@@ -54,8 +55,6 @@ class Adyen3DS2ComponentProvider :
             val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
 
             Adyen3DS2Component(
-                savedStateHandle = savedStateHandle,
-                application = application,
                 configuration = configuration,
                 delegate = adyen3DS2Delegate,
             )
@@ -75,6 +74,7 @@ class Adyen3DS2ComponentProvider :
         val redirectHandler = DefaultRedirectHandler()
         val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
         return DefaultAdyen3DS2Delegate(
+            observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             submitFingerprintRepository = submitFingerprintRepository,

@@ -36,7 +36,7 @@ class PaymentInProgressView @JvmOverloads constructor(
     private val binding = ViewPaymentInProgressBinding.inflate(LayoutInflater.from(context), this)
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is ActionDelegate<*>) throw IllegalStateException("Unsupported delegate type")
+        if (delegate !is ActionDelegate) throw IllegalStateException("Unsupported delegate type")
 
         initLocalizedStrings(localizedContext)
 

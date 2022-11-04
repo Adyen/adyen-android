@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -55,8 +56,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         // try to get the name from the payment methods response
         binding.header.text = dropInViewModel.getPaymentMethods()
@@ -73,8 +73,14 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        componentDialogViewModel.componentStateChanged(component.state)
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
+                event.state,
+                binding.cardView.isConfirmationRequired
+            )
+            is PaymentComponentEvent.Error -> onComponentError(event.error)
+        }
     }
 
     override fun onDestroyView() {

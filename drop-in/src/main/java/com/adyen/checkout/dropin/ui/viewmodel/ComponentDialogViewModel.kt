@@ -32,7 +32,8 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
 
     val componentFragmentState: LiveData<ComponentFragmentState> =
         savedStateHandle.getLiveData(COMPONENT_FRAGMENT_STATE_KEY)
-    private var componentState: PaymentComponentState<out PaymentMethodDetails>? = null
+    var componentState: PaymentComponentState<out PaymentMethodDetails>? = null
+        private set
 
     fun payButtonClicked() {
         val componentState = componentState
@@ -58,20 +59,23 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
     }
 
     fun componentStateChanged(
-        componentState: PaymentComponentState<out PaymentMethodDetails>?,
-        confirmationRequired: Boolean = true
+        componentState: PaymentComponentState<out PaymentMethodDetails>,
+        confirmationRequired: Boolean
     ) {
         Logger.v(
             TAG,
-            "componentStateChanged - componentState.isInputValid: ${componentState?.isInputValid} - " +
-                "componentState.isReady: ${componentState?.isReady} - confirmationRequired: $confirmationRequired"
+            "componentStateChanged - componentState.isInputValid: ${componentState.isInputValid} - " +
+                "componentState.isReady: ${componentState.isReady} - confirmationRequired: $confirmationRequired"
         )
         this.componentState = componentState
         val currentState = getComponentFragmentState()
         if (currentState == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION) {
-            if (componentState?.isValid == true) setComponentFragmentState(ComponentFragmentState.PAYMENT_READY)
-            else setComponentFragmentState(ComponentFragmentState.IDLE)
-        } else if (!confirmationRequired && componentState?.isValid == true) {
+            if (componentState.isValid) {
+                setComponentFragmentState(ComponentFragmentState.PAYMENT_READY)
+            } else {
+                setComponentFragmentState(ComponentFragmentState.IDLE)
+            }
+        } else if (!confirmationRequired && componentState.isValid) {
             setComponentFragmentState(ComponentFragmentState.PAYMENT_READY)
         }
     }

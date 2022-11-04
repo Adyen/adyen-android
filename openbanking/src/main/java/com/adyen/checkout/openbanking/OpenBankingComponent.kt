@@ -18,7 +18,7 @@ import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class OpenBankingComponent(
+class OpenBankingComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
     configuration: OpenBankingConfiguration

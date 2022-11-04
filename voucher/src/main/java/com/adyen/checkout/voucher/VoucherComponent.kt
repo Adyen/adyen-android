@@ -9,40 +9,53 @@
 package com.adyen.checkout.voucher
 
 import android.app.Activity
-import android.app.Application
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
-class VoucherComponent(
-    savedStateHandle: SavedStateHandle,
-    application: Application,
-    configuration: VoucherConfiguration,
+class VoucherComponent internal constructor(
+    override val configuration: VoucherConfiguration,
     override val delegate: VoucherDelegate,
-) : BaseActionComponent<VoucherConfiguration>(savedStateHandle, application, configuration),
+) : ViewModel(),
+    ActionComponent<VoucherConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    override fun removeObserver() {
+        delegate.removeObserver()
+    }
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity) {
-        if (action !is VoucherAction) {
-            notifyException(ComponentException("Unsupported action"))
-            return
-        }
+    override fun handleAction(action: Action, activity: Activity) {
         delegate.handleAction(action, activity)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
+    }
+
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
         val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> =
             VoucherComponentProvider()

@@ -8,70 +8,47 @@
 package com.adyen.checkout.await
 
 import android.app.Activity
-import android.app.Application
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-class AwaitComponent(
-    savedStateHandle: SavedStateHandle,
-    application: Application,
-    configuration: AwaitConfiguration,
+class AwaitComponent internal constructor(
+    override val configuration: AwaitConfiguration,
     override val delegate: AwaitDelegate,
-) : BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
+) : ViewModel(),
+    ActionComponent<AwaitConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
     init {
         delegate.initialize(viewModelScope)
+    }
 
-        delegate.detailsFlow
-            .onEach { notifyDetails(it) }
-            .launchIn(viewModelScope)
+    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
 
-        delegate.exceptionFlow
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity) {
-        if (action !is AwaitAction) {
-            notifyException(ComponentException("Unsupported action"))
-            return
-        }
+    override fun handleAction(action: Action, activity: Activity) {
         delegate.handleAction(action, activity)
-    }
-
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        super.observe(lifecycleOwner, observer)
-
-        // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                delegate.refreshStatus()
-            }
-        })
     }
 
     override fun onCleared() {

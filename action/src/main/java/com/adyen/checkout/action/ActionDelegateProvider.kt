@@ -41,7 +41,7 @@ internal class ActionDelegateProvider {
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
         application: Application,
-    ): ActionDelegate<Action> {
+    ): ActionDelegate {
         val delegate = when (action) {
             is AwaitAction -> {
                 AwaitComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
@@ -69,7 +69,7 @@ internal class ActionDelegateProvider {
         }
 
         @Suppress("UNCHECKED_CAST")
-        return (delegate as? ActionDelegate<Action>)
+        return (delegate as? ActionDelegate)
             ?: throw CheckoutException("Can't find delegate for action: ${action.type}")
     }
 

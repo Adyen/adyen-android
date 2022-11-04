@@ -18,7 +18,9 @@ import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.model.GooglePayParams
@@ -45,10 +47,12 @@ class GooglePayComponentProvider :
         defaultArgs: Bundle?,
         key: String?,
     ): GooglePayComponent {
+        assertSupported(paymentMethod)
+
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GooglePayComponent(
                 savedStateHandle = savedStateHandle,
-                delegate = DefaultGooglePayDelegate(paymentMethod, configuration),
+                delegate = DefaultGooglePayDelegate(PaymentObserverRepository(), paymentMethod, configuration),
                 configuration = configuration,
             )
         }
@@ -90,5 +94,15 @@ class GooglePayComponentProvider :
             Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
         }
+    }
+
+    private fun assertSupported(paymentMethod: PaymentMethod) {
+        if (!isPaymentMethodSupported(paymentMethod)) {
+            throw ComponentException("Unsupported payment method ${paymentMethod.type}")
+        }
+    }
+
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+        return GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

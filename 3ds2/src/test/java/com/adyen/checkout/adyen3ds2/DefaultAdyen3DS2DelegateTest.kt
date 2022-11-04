@@ -23,6 +23,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.test.TestRedirectHandler
 import com.adyen.checkout.core.api.Environment
@@ -83,6 +84,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultAdyen3DS2Delegate(
+            observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
             configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build(),
             submitFingerprintRepository = submitFingerprintRepository,

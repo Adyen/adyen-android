@@ -7,22 +7,24 @@
  */
 package com.adyen.checkout.giftcard
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class GiftCardComponent(
+class GiftCardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GiftCardDelegate,
     configuration: GiftCardConfiguration,
@@ -36,20 +38,31 @@ class GiftCardComponent(
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
     init {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-
-        delegate.exceptionFlow
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
-
         delegate.initialize(viewModelScope)
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<GiftCardComponentState>) -> Unit
+    ) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
+    }
+
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
 

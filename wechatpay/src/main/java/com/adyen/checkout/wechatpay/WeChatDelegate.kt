@@ -11,12 +11,10 @@ package com.adyen.checkout.wechatpay
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.model.payments.response.SdkAction
-import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 
 interface WeChatDelegate :
-    ActionDelegate<SdkAction<WeChatPaySdkData>>,
+    ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
     ViewProvidingDelegate

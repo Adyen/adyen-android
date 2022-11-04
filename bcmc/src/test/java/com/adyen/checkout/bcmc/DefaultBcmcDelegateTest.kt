@@ -13,6 +13,7 @@ import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -55,6 +56,7 @@ internal class DefaultBcmcDelegateTest {
         ).build()
         cardValidationMapper = CardValidationMapper()
         delegate = DefaultBcmcDelegate(
+            observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = testPublicKeyRepository,
             configuration = configuration,

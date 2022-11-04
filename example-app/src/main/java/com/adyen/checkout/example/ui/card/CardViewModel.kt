@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
@@ -62,12 +64,15 @@ internal class CardViewModel @Inject constructor(
         else CardViewState.ShowComponent(paymentMethod)
     }
 
-    fun onCardComponentState(state: CardComponentState?) {
-        cardComponentState = state
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> onCardComponentState(event.state)
+            is PaymentComponentEvent.Error -> onComponentError(event.error)
+        }
     }
 
-    fun onComponentError(error: ComponentError) {
-        viewModelScope.launch { _paymentResult.emit("Failed: ${error.errorMessage}") }
+    private fun onCardComponentState(state: CardComponentState) {
+        cardComponentState = state
     }
 
     fun onPayClick() {
@@ -123,8 +128,11 @@ internal class CardViewModel @Inject constructor(
         _additionalAction.emit(cardAction)
     }
 
-    fun onActionComponentData(actionComponentData: ActionComponentData) {
-        sendPaymentDetails(actionComponentData)
+    fun onActionComponentEvent(event: ActionComponentEvent) {
+        when (event) {
+            is ActionComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
+            is ActionComponentEvent.Error -> onComponentError(event.error)
+        }
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
@@ -132,5 +140,9 @@ internal class CardViewModel @Inject constructor(
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.detailsRequestAsync(json))
         }
+    }
+
+    private fun onComponentError(error: ComponentError) {
+        viewModelScope.launch { _paymentResult.emit("Failed: ${error.errorMessage}") }
     }
 }

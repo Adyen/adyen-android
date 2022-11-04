@@ -15,7 +15,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
-class OnlineBankingSKComponent(
+class OnlineBankingSKComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
     configuration: OnlineBankingSKConfiguration
@@ -26,7 +26,7 @@ class OnlineBankingSKComponent(
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 
-        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_SK)
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_SK)
 
         @JvmField
         val PROVIDER: PaymentComponentProvider<

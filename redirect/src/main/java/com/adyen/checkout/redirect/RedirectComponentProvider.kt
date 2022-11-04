@@ -17,10 +17,11 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.handler.DefaultRedirectHandler
 
 class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
     override fun <T> get(
@@ -43,8 +44,6 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 redirectDelegate
             )
@@ -59,7 +58,12 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     ): RedirectDelegate {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultRedirectDelegate(configuration, redirectHandler, paymentDataRepository)
+        return DefaultRedirectDelegate(
+            observerRepository = ActionObserverRepository(),
+            configuration = configuration,
+            redirectHandler = redirectHandler,
+            paymentDataRepository = paymentDataRepository
+        )
     }
 
     override val supportedActionTypes: List<String>

@@ -9,7 +9,7 @@
 package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
@@ -17,7 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface BcmcDelegate :
-    PaymentMethodDelegate,
+    PaymentComponentDelegate<PaymentComponentState<CardPaymentMethod>>,
     ViewProvidingDelegate {
 
     override val configuration: BcmcConfiguration

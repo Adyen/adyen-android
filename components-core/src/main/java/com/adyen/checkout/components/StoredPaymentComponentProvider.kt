@@ -60,4 +60,7 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
         defaultArgs: Bundle?,
         key: String?,
     ): ComponentT
+
+    // TODO docs
+    fun isPaymentMethodSupported(storedPaymentMethod: StoredPaymentMethod): Boolean
 }

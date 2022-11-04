@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.giftcard
 
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface GiftCardDelegate :
-    PaymentMethodDelegate,
+    PaymentComponentDelegate<GiftCardComponentState>,
     ViewProvidingDelegate {
 
     val outputData: GiftCardOutputData

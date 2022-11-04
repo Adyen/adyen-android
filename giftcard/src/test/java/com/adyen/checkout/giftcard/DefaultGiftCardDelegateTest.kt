@@ -10,6 +10,7 @@ package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.test.TestCardEncrypter
@@ -44,6 +45,7 @@ internal class DefaultGiftCardDelegateTest {
         publicKeyRepository = TestPublicKeyRepository()
 
         delegate = DefaultGiftCardDelegate(
+            observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = publicKeyRepository,
             configuration = GiftCardConfiguration.Builder(

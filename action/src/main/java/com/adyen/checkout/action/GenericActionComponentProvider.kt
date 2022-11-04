@@ -26,6 +26,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 
 class GenericActionComponentProvider :
     ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
@@ -50,8 +51,6 @@ class GenericActionComponentProvider :
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
             GenericActionComponent(
-                savedStateHandle,
-                application,
                 configuration,
                 genericActionDelegate
             )
@@ -64,7 +63,12 @@ class GenericActionComponentProvider :
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        return DefaultGenericActionDelegate(savedStateHandle, configuration, ActionDelegateProvider())
+        return DefaultGenericActionDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            configuration = configuration,
+            actionDelegateProvider = ActionDelegateProvider()
+        )
     }
 
     override val supportedActionTypes: List<String>

@@ -10,6 +10,7 @@ package com.adyen.checkout.issuerlist
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +40,11 @@ internal class DefaultIssuerListDelegateTest(
     @BeforeEach
     fun beforeEach() {
         whenever(configuration.viewType) doReturn IssuerListViewType.RECYCLER_VIEW
-        delegate = DefaultIssuerListDelegate(configuration, PaymentMethod()) { TestIssuerPaymentMethod() }
+        delegate = DefaultIssuerListDelegate(
+            PaymentObserverRepository(),
+            configuration,
+            PaymentMethod()
+        ) { TestIssuerPaymentMethod() }
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -123,7 +128,11 @@ internal class DefaultIssuerListDelegateTest(
     @Test
     fun `when configuration viewType is SPINNER_VIEW then viewFlow should emit SPINNER_VIEW`() = runTest {
         whenever(configuration.viewType) doReturn IssuerListViewType.SPINNER_VIEW
-        delegate = DefaultIssuerListDelegate(configuration, PaymentMethod()) { TestIssuerPaymentMethod() }
+        delegate = DefaultIssuerListDelegate(
+            PaymentObserverRepository(),
+            configuration,
+            PaymentMethod()
+        ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SPINNER_VIEW, expectMostRecentItem())
         }

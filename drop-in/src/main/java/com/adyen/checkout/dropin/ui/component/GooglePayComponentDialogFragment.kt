@@ -16,10 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -35,7 +35,7 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<GooglePayComponentState> {
+class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     private val googlePayViewModel: GooglePayViewModel by viewModels()
 
@@ -75,12 +75,22 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 googlePayViewModel.eventsFlow.collect { handleEvent(it) }
+            }
+        }
+    }
+
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<GooglePayComponentState>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> {
+                if (event.state.isValid) protocol.requestPaymentsCall(event.state)
+            }
+            is PaymentComponentEvent.Error -> {
+                handleError(event.error)
             }
         }
     }
@@ -104,15 +114,6 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
         protocol.terminateDropIn()
     }
 
-    private fun createErrorHandlerObserver(): Observer<ComponentError> {
-        return Observer {
-            if (it != null) {
-                Logger.e(TAG, "ComponentError", it.exception)
-                handleError(it)
-            }
-        }
-    }
-
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
         // TODO find a way to show an error dialog unless the payment is cancelled by the user
@@ -127,12 +128,6 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
             else -> protocol.showPaymentMethodsDialog()
         }
         return true
-    }
-
-    override fun onChanged(state: GooglePayComponentState?) {
-        if (state?.isValid == true) {
-            protocol.requestPaymentsCall(state)
-        }
     }
 
     fun handleActivityResult(resultCode: Int, data: Intent?) {

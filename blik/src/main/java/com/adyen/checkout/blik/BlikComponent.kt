@@ -7,9 +7,11 @@
  */
 package com.adyen.checkout.blik
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -18,14 +20,13 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class BlikComponent(
+class BlikComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BlikDelegate,
     configuration: BlikConfiguration
@@ -36,21 +37,28 @@ class BlikComponent(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    init {
-        observeComponentState()
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+    ) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    override fun removeObserver() {
+        delegate.removeObserver()
     }
 
     override fun requiresInput(): Boolean {
         return delegate.requiresInput()
     }
 
-    private fun observeComponentState() {
-        delegate.componentStateFlow
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-    }
-
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
+    }
 
     companion object {
         private val TAG = LogUtil.getTag()

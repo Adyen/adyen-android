@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.await.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.test.TestStatusRepository
@@ -48,7 +49,7 @@ internal class DefaultAwaitDelegateTest {
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build()
-        delegate = DefaultAwaitDelegate(configuration, statusRepository, paymentDataRepository)
+        delegate = DefaultAwaitDelegate(ActionObserverRepository(), configuration, statusRepository, paymentDataRepository)
         Logger.setLogcatLevel(Logger.NONE)
     }
 

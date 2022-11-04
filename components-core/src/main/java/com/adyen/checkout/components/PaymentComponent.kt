@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components
 
+import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
@@ -22,20 +23,22 @@ interface PaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>,
     ConfigurationT : Configuration> :
     Component<ComponentStateT, ConfigurationT> {
+
+    // TODO documentation
+    fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
+
+    // TODO documentation
+    fun removeObserver()
+
     /**
      * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]
      */
     fun getSupportedPaymentMethodTypes(): Array<String>
 
     /**
-     * @return The last [PaymentComponentState] of this Component.
-     */
-    val state: PaymentComponentState<out PaymentMethodDetails>?
-
-    /**
      * Checks if the component in its current configuration needs any input from the user to make the /payments call.
      *
      * @return If there is required user input or not.
      */
-    fun requiresInput(): Boolean
+    fun requiresInput(): Boolean = true
 }

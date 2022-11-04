@@ -20,7 +20,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 interface ActionComponentProvider<
     ComponentT : ActionComponent<out Configuration>,
     ConfigurationT : Configuration,
-    DelegateT : ActionDelegate<*>
+    DelegateT : ActionDelegate
     > : ComponentProvider<ComponentT> {
 
     /**
