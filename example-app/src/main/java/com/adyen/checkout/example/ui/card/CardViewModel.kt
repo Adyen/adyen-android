@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
@@ -44,12 +45,12 @@ internal class CardViewModel @Inject constructor(
 
     private var cardComponentState: CardComponentState? = null
 
-    init {
+    fun onCreate() {
         viewModelScope.launch { _cardViewState.emit(fetchPaymentMethods()) }
     }
 
     private suspend fun fetchPaymentMethods(): CardViewState = withContext(Dispatchers.IO) {
-        val paymentMethod = paymentsRepository.getPaymentMethods(
+        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -58,10 +59,14 @@ internal class CardViewModel @Inject constructor(
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
             )
-        )?.paymentMethods?.firstOrNull { it.type == "scheme" }
+        )
 
-        if (paymentMethod == null) CardViewState.Error
-        else CardViewState.ShowComponent(paymentMethod)
+        val cardPaymentMethod = paymentMethodResponse
+            ?.paymentMethods
+            ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
+
+        if (cardPaymentMethod == null) CardViewState.Error
+        else CardViewState.ShowComponent(cardPaymentMethod)
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {

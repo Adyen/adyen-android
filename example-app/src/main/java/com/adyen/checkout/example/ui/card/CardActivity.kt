@@ -57,6 +57,8 @@ class CardActivity : AppCompatActivity() {
                 launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
             }
         }
+
+        cardViewModel.onCreate()
     }
 
     override fun onNewIntent(intent: Intent) {
