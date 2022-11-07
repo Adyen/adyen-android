@@ -24,9 +24,6 @@ import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
-import com.adyen.checkout.components.util.PaymentMethodTypes
-
-private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
 class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
@@ -93,9 +90,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     }
 
     // TODO remove this method when we create a generic Action handling Component
-    override fun requiresView(action: Action): Boolean {
-        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
-    }
+    override fun requiresView(action: Action): Boolean = true
 
     override fun providesDetails(action: Action): Boolean {
         return true

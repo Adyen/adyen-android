@@ -27,6 +27,7 @@ import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -67,7 +68,8 @@ internal class DefaultQRCodeDelegate(
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(QrCodeComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -128,11 +130,14 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        if (!requiresView(action)) {
+        if (shouldLaunchRedirect(action)) {
             Logger.d(TAG, "Action does not require a view, redirecting.")
+            _viewFlow.tryEmit(QrCodeComponentViewType.REDIRECT)
             makeRedirect(activity, action)
             return
         }
+
+        _viewFlow.tryEmit(QrCodeComponentViewType.QR_CODE)
 
         // Notify UI to get the logo.
         createOutputData(null, action)
@@ -191,8 +196,8 @@ internal class DefaultQRCodeDelegate(
         }
     }
 
-    private fun requiresView(action: QrCodeAction): Boolean {
-        return QRCodeComponent.PROVIDER.requiresView(action)
+    private fun shouldLaunchRedirect(action: QrCodeAction): Boolean {
+        return !VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
     }
 
     override fun refreshStatus() {
@@ -226,6 +231,10 @@ internal class DefaultQRCodeDelegate(
         return jsonObject
     }
 
+    override fun onError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+    }
+
     override fun getViewProvider(): ViewProvider = QrCodeViewProvider
 
     override fun onCleared() {
@@ -244,6 +253,8 @@ internal class DefaultQRCodeDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
