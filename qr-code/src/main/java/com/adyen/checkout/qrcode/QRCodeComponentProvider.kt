@@ -79,18 +79,8 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         get() = listOf(QrCodeAction.ACTION_TYPE)
 
     override fun canHandleAction(action: Action): Boolean {
-        return when {
-            !supportedActionTypes.contains(action.type) -> false
-            // viewable action, can be handled
-            requiresView(action) -> true
-            // QR code actions that contain a url are handled as a redirect action
-            !(action as? QrCodeAction)?.url.isNullOrEmpty() -> true
-            else -> false
-        }
+        return supportedActionTypes.contains(action.type)
     }
-
-    // TODO remove this method when we create a generic Action handling Component
-    override fun requiresView(action: Action): Boolean = true
 
     override fun providesDetails(action: Action): Boolean {
         return true

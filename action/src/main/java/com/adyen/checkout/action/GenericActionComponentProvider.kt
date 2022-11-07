@@ -83,8 +83,6 @@ class GenericActionComponentProvider :
             SdkAction.ACTION_TYPE,
         )
 
-    override fun requiresView(action: Action): Boolean = getProvider(action).requiresView(action)
-
     override fun canHandleAction(action: Action): Boolean = getProvider(action).canHandleAction(action)
 
     override fun providesDetails(action: Action): Boolean = getProvider(action).providesDetails(action)

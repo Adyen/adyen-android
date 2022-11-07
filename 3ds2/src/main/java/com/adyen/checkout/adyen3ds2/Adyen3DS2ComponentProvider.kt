@@ -96,8 +96,6 @@ class Adyen3DS2ComponentProvider :
             Threeds2Action.ACTION_TYPE
         )
 
-    override fun requiresView(action: Action): Boolean = false
-
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)
     }

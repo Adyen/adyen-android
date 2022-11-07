@@ -82,8 +82,6 @@ class WeChatPayActionComponentProvider :
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)
     }
 
-    override fun requiresView(action: Action): Boolean = false
-
     override fun providesDetails(action: Action): Boolean {
         return true
     }

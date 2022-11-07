@@ -79,8 +79,6 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)
     }
 
-    override fun requiresView(action: Action): Boolean = true
-
     override fun providesDetails(action: Action): Boolean {
         return true
     }

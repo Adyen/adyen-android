@@ -85,11 +85,6 @@ interface ActionComponentProvider<
     fun canHandleAction(action: Action): Boolean
 
     /**
-     * @return If a view is required to handle this action.
-     */
-    fun requiresView(action: Action): Boolean
-
-    /**
      * @return the list of supported action types
      */
     val supportedActionTypes: List<String>
