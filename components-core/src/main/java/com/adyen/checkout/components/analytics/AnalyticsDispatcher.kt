@@ -11,7 +11,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import java.io.IOException
@@ -36,7 +35,6 @@ class AnalyticsDispatcher : JobIntentService() {
         try {
             val finalUrl = event.toUrl(envUrl + ANALYTICS_ENDPOINT)
             urlConnection = finalUrl.openConnection() as HttpsURLConnection
-            urlConnection.sslSocketFactory = TLS_SOCKET_FACTORY
             urlConnection.connect()
             urlConnection.inputStream.use { inputStream ->
                 // Need to read to consume the inputStream for the connection to count on the backend.

@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.example.di
 
-import android.os.Build
-import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.RecurringApiService
@@ -25,12 +23,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.security.KeyStore
-import java.util.Arrays
 import javax.inject.Named
 import javax.inject.Singleton
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -63,21 +57,6 @@ object NetworkModule {
                 .build()
 
             chain.proceed(request)
-        }
-
-        if (
-            Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT &&
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1
-        ) {
-            val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-            trustManagerFactory.init(null as KeyStore?)
-            val trustManagers = trustManagerFactory.trustManagers
-            check(!(trustManagers.size != 1 || trustManagers[0] !is X509TrustManager)) {
-                "Unexpected default trust managers:" + Arrays.toString(trustManagers)
-            }
-
-            val trustManager = trustManagers[0] as X509TrustManager
-            builder.sslSocketFactory(SSLSocketUtil.TLS_SOCKET_FACTORY, trustManager)
         }
 
         return builder.build()
