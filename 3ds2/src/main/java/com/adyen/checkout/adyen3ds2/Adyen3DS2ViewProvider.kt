@@ -15,7 +15,7 @@ import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-object Adyen3DS2ViewProvider : ViewProvider {
+internal object Adyen3DS2ViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
@@ -28,4 +28,4 @@ object Adyen3DS2ViewProvider : ViewProvider {
     }
 }
 
-object Adyen3DS2ComponentViewType : ComponentViewType
+internal object Adyen3DS2ComponentViewType : ComponentViewType

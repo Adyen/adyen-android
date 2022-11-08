@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-object BacsViewProvider : ViewProvider {
+internal object BacsViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
@@ -29,6 +29,6 @@ object BacsViewProvider : ViewProvider {
     }
 }
 
-enum class BacsComponentViewType : ComponentViewType {
+internal enum class BacsComponentViewType : ComponentViewType {
     INPUT, CONFIRMATION
 }

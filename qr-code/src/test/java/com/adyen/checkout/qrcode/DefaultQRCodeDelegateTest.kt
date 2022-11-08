@@ -30,8 +30,11 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -71,155 +74,192 @@ internal class DefaultQRCodeDelegateTest(
         Logger.setLogcatLevel(Logger.NONE)
     }
 
-    @Test
-    fun `when timer ticks, then left over time and progress are emitted`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+    @Nested
+    @DisplayName("when in the QR code flow and")
+    inner class QRCodeFlowTest {
 
-        delegate.timerFlow.test {
-            delegate.onTimerTick(10000)
+        @Test
+        fun `timer ticks, then left over time and progress are emitted`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            skipItems(1)
+            delegate.timerFlow.test {
+                delegate.onTimerTick(10000)
 
-            assertEquals(TimerData(10000, 1), awaitItem())
+                skipItems(1)
 
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+                assertEquals(TimerData(10000, 1), awaitItem())
 
-    @Test
-    fun `when  polling status, then output data will be emitted`() = runTest {
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = "pending")),
-            Result.success(StatusResponse(resultCode = "finished")),
-        )
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-        delegate.outputDataFlow.test {
-            delegate.handleAction(
-                QrCodeAction(
-                    paymentMethodType = PaymentMethodTypes.PIX,
-                    qrCodeData = "qrData",
-                    paymentData = "paymentData"
-                ),
-                Activity(),
-            )
-
-            skipItems(1)
-
-            with(awaitItem()) {
-                assertFalse(isValid)
-                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
-                assertEquals("qrData", qrCodeData)
+                cancelAndIgnoreRemainingEvents()
             }
+        }
 
-            with(awaitItem()) {
-                assertTrue(isValid)
-                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
-                assertEquals("qrData", qrCodeData)
+        @Test
+        fun `polling status is running, then output data will be emitted`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "pending")),
+                Result.success(StatusResponse(resultCode = "finished")),
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(
+                        paymentMethodType = PaymentMethodTypes.PIX,
+                        qrCodeData = "qrData",
+                        paymentData = "paymentData"
+                    ),
+                    Activity(),
+                )
+
+                skipItems(1)
+
+                with(awaitItem()) {
+                    assertFalse(isValid)
+                    assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
+                    assertEquals("qrData", qrCodeData)
+                }
+
+                with(awaitItem()) {
+                    assertTrue(isValid)
+                    assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
+                    assertEquals("qrData", qrCodeData)
+                }
+
+                cancelAndIgnoreRemainingEvents()
             }
-
-            cancelAndIgnoreRemainingEvents()
         }
-    }
 
-    @Test
-    fun `when polling is final, then details will be emitted`() = runTest {
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
-        )
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-        delegate.detailsFlow.test {
-            delegate.handleAction(
-                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                Activity(),
+        @Test
+        fun `polling is final, then details will be emitted`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
             )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+            delegate.detailsFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    Activity(),
+                )
 
-            cancelAndIgnoreRemainingEvents()
+                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `when polling fails, then an error is propagated`() = runTest {
-        val error = IOException("test")
-        statusRepository.pollingResults = listOf(Result.failure(error))
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        @Test
+        fun `polling fails, then an error is propagated`() = runTest {
+            val error = IOException("test")
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-        delegate.exceptionFlow.test {
-            delegate.handleAction(
-                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                Activity(),
+            delegate.exceptionFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertEquals(error, awaitItem().cause)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        fun `polling is final and payload is empty, then an error is propagated`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "finished", payload = "")),
             )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertEquals(error, awaitItem().cause)
+            delegate.exceptionFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    Activity(),
+                )
 
-            cancelAndIgnoreRemainingEvents()
+                assertTrue(awaitItem() is ComponentException)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        fun `handleAction called, then the view flow is updated`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.viewFlow.test {
+                assertNull(awaitItem())
+
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertEquals(awaitItem(), QrCodeComponentViewType.QR_CODE)
+            }
         }
     }
 
-    @Test
-    fun `when polling is final and payload is empty, then an error is propagated`() = runTest {
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = "finished", payload = "")),
-        )
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+    @Nested
+    @DisplayName("when in the redirect flow and")
+    inner class RedirectFlowTest {
 
-        delegate.exceptionFlow.test {
-            delegate.handleAction(
-                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                Activity(),
-            )
+        @Test
+        fun `handleAction called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+            val error = ComponentException("Failed to make redirect.")
+            redirectHandler.exception = error
 
-            assertTrue(awaitItem() is ComponentException)
+            delegate.exceptionFlow.test {
+                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            cancelAndIgnoreRemainingEvents()
+                assertEquals(error, awaitItem())
+            }
         }
-    }
 
-    @Test
-    fun `when handleAction called and RedirectHandler returns an error, then the error is propagated`() = runTest {
-        val error = ComponentException("Failed to make redirect.")
-        redirectHandler.exception = error
+        @Test
+        fun `handleAction called with valid data, then no error is propagated`() = runTest {
+            delegate.exceptionFlow.test {
+                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-        delegate.exceptionFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
-
-            assertEquals(error, awaitItem())
+                expectNoEvents()
+            }
         }
-    }
 
-    @Test
-    fun `when handleAction called with valid data, then no error is propagated`() = runTest {
-        delegate.exceptionFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        @Test
+        fun `handleIntent called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+            val error = ComponentException("Failed to parse redirect result.")
+            redirectHandler.exception = error
 
-            expectNoEvents()
+            delegate.exceptionFlow.test {
+                delegate.handleIntent(Intent())
+
+                assertEquals(error, awaitItem())
+            }
         }
-    }
 
-    @Test
-    fun `when handleIntent called and RedirectHandler returns an error, then the error is propagated`() = runTest {
-        val error = ComponentException("Failed to parse redirect result.")
-        redirectHandler.exception = error
+        @Test
+        fun `handleIntent called with valid data, then the details are emitted`() = runTest {
+            delegate.detailsFlow.test {
+                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
+                delegate.handleIntent(Intent())
 
-        delegate.exceptionFlow.test {
-            delegate.handleIntent(Intent())
-
-            assertEquals(error, awaitItem())
+                with(awaitItem()) {
+                    assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
+                    assertEquals("paymentData", paymentData)
+                }
+            }
         }
-    }
 
-    @Test
-    fun `when handleIntent called with valid data, then the details are emitted`() = runTest {
-        delegate.detailsFlow.test {
-            delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
-            delegate.handleIntent(Intent())
+        @Test
+        fun `handleAction called, then the view flow is updated`() = runTest {
+            delegate.viewFlow.test {
+                assertNull(awaitItem())
 
-            with(awaitItem()) {
-                assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
-                assertEquals("paymentData", paymentData)
+                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
+
+                assertEquals(awaitItem(), QrCodeComponentViewType.REDIRECT)
             }
         }
     }

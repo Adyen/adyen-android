@@ -69,8 +69,6 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     override val supportedActionTypes: List<String>
         get() = listOf(RedirectAction.ACTION_TYPE)
 
-    override fun requiresView(action: Action): Boolean = false
-
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)
     }

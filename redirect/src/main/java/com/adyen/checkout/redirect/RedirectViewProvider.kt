@@ -28,4 +28,4 @@ internal object RedirectViewProvider : ViewProvider {
     }
 }
 
-object RedirectComponentViewType : ComponentViewType
+internal object RedirectComponentViewType : ComponentViewType

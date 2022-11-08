@@ -24,9 +24,6 @@ import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
-import com.adyen.checkout.components.util.PaymentMethodTypes
-
-private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
 class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
@@ -82,19 +79,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         get() = listOf(QrCodeAction.ACTION_TYPE)
 
     override fun canHandleAction(action: Action): Boolean {
-        return when {
-            !supportedActionTypes.contains(action.type) -> false
-            // viewable action, can be handled
-            requiresView(action) -> true
-            // QR code actions that contain a url are handled as a redirect action
-            !(action as? QrCodeAction)?.url.isNullOrEmpty() -> true
-            else -> false
-        }
-    }
-
-    // TODO remove this method when we create a generic Action handling Component
-    override fun requiresView(action: Action): Boolean {
-        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
+        return supportedActionTypes.contains(action.type)
     }
 
     override fun providesDetails(action: Action): Boolean {

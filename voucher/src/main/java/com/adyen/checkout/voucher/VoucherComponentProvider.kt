@@ -68,10 +68,6 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)
     }
 
-    override fun requiresView(action: Action): Boolean {
-        return true
-    }
-
     override fun providesDetails(action: Action): Boolean {
         return false
     }
