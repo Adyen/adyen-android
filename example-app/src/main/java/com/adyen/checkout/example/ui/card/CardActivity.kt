@@ -53,10 +53,11 @@ class CardActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
-                launch { cardViewModel.paymentResult.collect(::onPaymentResult) }
-                launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
+                launch { cardViewModel.events.collect(::onCardEvent) }
             }
         }
+
+        cardViewModel.onCreate()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -83,9 +84,6 @@ class CardActivity : AppCompatActivity() {
 
                 setupCardView(cardViewState.paymentMethod)
             }
-            CardViewState.Invalid -> {
-                binding.cardView.highlightValidationErrors()
-            }
             CardViewState.Error -> {
                 binding.errorView.isVisible = true
                 binding.progressIndicator.isVisible = false
@@ -104,6 +102,14 @@ class CardActivity : AppCompatActivity() {
         binding.cardView.attach(cardComponent, this)
 
         cardComponent.observe(this, cardViewModel::onPaymentComponentEvent)
+    }
+
+    private fun onCardEvent(event: CardEvent) {
+        when (event) {
+            is CardEvent.PaymentResult -> onPaymentResult(event.result)
+            is CardEvent.AdditionalAction -> onAdditionalAction(event.action)
+            CardEvent.Invalid -> binding.cardView.highlightValidationErrors()
+        }
     }
 
     private fun onPaymentResult(result: String) {

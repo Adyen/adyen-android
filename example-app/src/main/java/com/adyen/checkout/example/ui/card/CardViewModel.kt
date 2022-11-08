@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
@@ -26,6 +27,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -36,20 +38,17 @@ internal class CardViewModel @Inject constructor(
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
 
-    private val _paymentResult = MutableSharedFlow<String>()
-    val paymentResult: Flow<String> = _paymentResult
-
-    private val _additionalAction = MutableSharedFlow<CardAction>()
-    val additionalAction: Flow<CardAction> = _additionalAction
+    private val _events = MutableSharedFlow<CardEvent>()
+    val events: Flow<CardEvent> = _events
 
     private var cardComponentState: CardComponentState? = null
 
-    init {
+    fun onCreate() {
         viewModelScope.launch { _cardViewState.emit(fetchPaymentMethods()) }
     }
 
     private suspend fun fetchPaymentMethods(): CardViewState = withContext(Dispatchers.IO) {
-        val paymentMethod = paymentsRepository.getPaymentMethods(
+        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -58,10 +57,14 @@ internal class CardViewModel @Inject constructor(
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
             )
-        )?.paymentMethods?.firstOrNull { it.type == "scheme" }
+        )
 
-        if (paymentMethod == null) CardViewState.Error
-        else CardViewState.ShowComponent(paymentMethod)
+        val cardPaymentMethod = paymentMethodResponse
+            ?.paymentMethods
+            ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
+
+        if (cardPaymentMethod == null) CardViewState.Error
+        else CardViewState.ShowComponent(cardPaymentMethod)
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {
@@ -80,7 +83,7 @@ internal class CardViewModel @Inject constructor(
         when {
             state == null -> _cardViewState.tryEmit(CardViewState.Error)
             state.isValid -> makePayment(state.data)
-            else -> _cardViewState.tryEmit(CardViewState.Invalid)
+            else -> viewModelScope.launch { _events.emit(CardEvent.Invalid) }
         }
     }
 
@@ -113,9 +116,9 @@ internal class CardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
-                else -> _paymentResult.emit("Success: ${json.getStringOrNull("resultCode")}")
+                else -> _events.emit(CardEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
             }
-        } ?: _paymentResult.emit("Failed")
+        } ?: _events.emit(CardEvent.PaymentResult("Failed"))
     }
 
     private suspend fun handleAction(action: Action) {
@@ -125,7 +128,7 @@ internal class CardViewModel @Inject constructor(
             else -> CardAction.Unsupported
         }
 
-        _additionalAction.emit(cardAction)
+        _events.emit(CardEvent.AdditionalAction(cardAction))
     }
 
     fun onActionComponentEvent(event: ActionComponentEvent) {
@@ -143,6 +146,6 @@ internal class CardViewModel @Inject constructor(
     }
 
     private fun onComponentError(error: ComponentError) {
-        viewModelScope.launch { _paymentResult.emit("Failed: ${error.errorMessage}") }
+        viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
     }
 }

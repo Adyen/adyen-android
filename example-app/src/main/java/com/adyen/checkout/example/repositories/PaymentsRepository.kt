@@ -21,6 +21,7 @@ import com.adyen.checkout.sessions.model.Session
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject
+import java.lang.ref.SoftReference
 
 interface PaymentsRepository {
     suspend fun getSessionAsync(sessionRequest: SessionRequest): Session?
@@ -37,14 +38,23 @@ interface PaymentsRepository {
 @Suppress("TooManyFunctions")
 internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository {
 
+    private val paymentMethodCache = HashMap<PaymentMethodsRequest, SoftReference<PaymentMethodsApiResponse?>>()
+
     override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
         return safeApiCall { checkoutApiService.sessionsAsync(sessionRequest) }
     }
 
     override suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse? {
-        return safeApiCall(
-            call = { checkoutApiService.paymentMethodsAsync(paymentMethodsRequest) }
-        )
+        var response = paymentMethodCache[paymentMethodsRequest]?.get()
+
+        if (response == null) {
+            response = safeApiCall(
+                call = { checkoutApiService.paymentMethodsAsync(paymentMethodsRequest) }
+            )
+            paymentMethodCache[paymentMethodsRequest] = SoftReference(response)
+        }
+
+        return response
     }
 
     override fun paymentsRequest(paymentsRequest: PaymentsRequest): JSONObject? {

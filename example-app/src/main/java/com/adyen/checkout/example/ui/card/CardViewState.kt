@@ -8,7 +8,5 @@ internal sealed class CardViewState {
 
     data class ShowComponent(val paymentMethod: PaymentMethod) : CardViewState()
 
-    object Invalid : CardViewState()
-
     object Error : CardViewState()
 }
