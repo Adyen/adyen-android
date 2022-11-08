@@ -57,6 +57,7 @@ dependencies {
     api project(':giftcard')
     api project(':googlepay')
     api project(':ideal')
+    api project(":instant")
     api project(':mbway')
     api project(':molpay')
     api project(':online-banking-cz')

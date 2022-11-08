@@ -16,6 +16,7 @@ include ':3ds2',
         ':giftcard',
         ':googlepay',
         ':ideal',
+        ':instant',
         ':issuer-list',
         ':mbway',
         ':molpay',
@@ -33,4 +34,3 @@ include ':3ds2',
         ':ui-core',
         ':voucher',
         ':wechatpay'
-include ':instant'
