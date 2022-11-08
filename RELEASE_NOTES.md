@@ -9,4 +9,4 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Changed
-- Update 3DS2 SDK version to `2.2.9`
+- Update 3DS2 SDK version to `2.2.10`
