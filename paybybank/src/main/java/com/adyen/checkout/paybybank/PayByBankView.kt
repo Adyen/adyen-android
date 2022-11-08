@@ -16,13 +16,14 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.IssuerModel
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -71,7 +72,14 @@ class PayByBankView @JvmOverloads constructor(
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
-        // TODO strings
+        binding.textInputLayoutSearchQuery.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_PayByBank_SearchQueryInput,
+            localizedContext
+        )
+        binding.textViewNoMatchingIssuers.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayByBank_NoMatchingIssuers,
+            localizedContext
+        )
     }
 
     private fun onItemClicked(issuerModel: IssuerModel) {
