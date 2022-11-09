@@ -20,9 +20,6 @@ class OnlineBankingSKComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
     configuration: OnlineBankingSKConfiguration
 ) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(savedStateHandle, delegate, configuration) {
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 

@@ -26,8 +26,6 @@ class InstantPaymentComponent internal constructor(
     configuration
 ) {
 
-    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<PaymentMethodDetails>>) -> Unit
@@ -51,9 +49,5 @@ class InstantPaymentComponent internal constructor(
         @JvmField
         val PROVIDER: PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> =
             InstantPaymentComponentProvider()
-
-        // FIXME txVariants
-        @JvmField
-        val PAYMENT_METHOD_TYPES = emptyArray<String>()
     }
 }

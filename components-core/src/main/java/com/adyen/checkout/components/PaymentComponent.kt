@@ -31,11 +31,6 @@ interface PaymentComponent<
     fun removeObserver()
 
     /**
-     * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]
-     */
-    fun getSupportedPaymentMethodTypes(): Array<String>
-
-    /**
      * Checks if the component in its current configuration needs any input from the user to make the /payments call.
      *
      * @return If there is required user input or not.

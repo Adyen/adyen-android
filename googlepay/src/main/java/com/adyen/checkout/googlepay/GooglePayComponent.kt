@@ -47,8 +47,6 @@ class GooglePayComponent internal constructor(
         delegate.removeObserver()
     }
 
-    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
-
     /**
      * Start the GooglePay screen which will return the result to the provided Activity.
      *

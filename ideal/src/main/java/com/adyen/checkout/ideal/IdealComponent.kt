@@ -28,8 +28,6 @@ class IdealComponent internal constructor(
     configuration
 ) {
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     companion object {
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)

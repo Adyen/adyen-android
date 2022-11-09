@@ -52,8 +52,6 @@ class BlikComponent internal constructor(
         return delegate.requiresInput()
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
