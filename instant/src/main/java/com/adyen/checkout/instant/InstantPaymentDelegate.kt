@@ -13,6 +13,6 @@ import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import kotlinx.coroutines.flow.Flow
 
-interface InstantDelegate : PaymentComponentDelegate<PaymentComponentState<PaymentMethodDetails>> {
+interface InstantPaymentDelegate : PaymentComponentDelegate<PaymentComponentState<PaymentMethodDetails>> {
     val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>>
 }

@@ -53,8 +53,8 @@ import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
-import com.adyen.checkout.instant.InstantComponent
-import com.adyen.checkout.instant.InstantConfiguration
+import com.adyen.checkout.instant.InstantPaymentComponent
+import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
@@ -207,7 +207,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
-        InstantComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> InstantConfiguration.Builder(
+        InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> InstantPaymentConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -423,10 +423,10 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
             IdealComponent.PROVIDER.get(fragment, paymentMethod, idealConfig)
         }
-        InstantComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val instantConfiguration: InstantConfiguration =
+        InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            InstantComponent.PROVIDER.get(fragment, paymentMethod, instantConfiguration)
+            InstantPaymentComponent.PROVIDER.get(fragment, paymentMethod, instantPaymentConfiguration)
         }
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val mbWayConfiguration: MBWayConfiguration =
@@ -494,7 +494,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is GiftCardConfiguration -> GiftCardConfiguration.Builder(this)
         is GooglePayConfiguration -> GooglePayConfiguration.Builder(this)
         is IdealConfiguration -> IdealConfiguration.Builder(this)
-        is InstantConfiguration -> InstantConfiguration.Builder(this)
+        is InstantPaymentConfiguration -> InstantPaymentConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
         is OnlineBankingCZConfiguration -> OnlineBankingCZConfiguration.Builder(this)

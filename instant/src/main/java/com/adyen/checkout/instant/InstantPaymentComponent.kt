@@ -11,11 +11,16 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-class InstantComponent internal constructor(
+/**
+ * Payment component used for handling payment methods that do not require any input from the shopper.
+ *
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
+class InstantPaymentComponent internal constructor(
     savedStateHandle: SavedStateHandle,
-    override val delegate: InstantDelegate,
-    configuration: InstantConfiguration
-) : BasePaymentComponent<InstantConfiguration, PaymentComponentState<PaymentMethodDetails>>(
+    override val delegate: InstantPaymentDelegate,
+    configuration: InstantPaymentConfiguration
+) : BasePaymentComponent<InstantPaymentConfiguration, PaymentComponentState<PaymentMethodDetails>>(
     savedStateHandle,
     delegate,
     configuration
@@ -44,7 +49,7 @@ class InstantComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<InstantComponent, InstantConfiguration> = InstantComponentProvider()
+        val PROVIDER: PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> = InstantPaymentComponentProvider()
 
         // FIXME txVariants
         @JvmField

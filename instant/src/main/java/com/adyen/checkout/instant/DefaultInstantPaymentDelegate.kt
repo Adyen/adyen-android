@@ -22,18 +22,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class DefaultInstantDelegate(
+internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     override val configuration: Configuration
-) : InstantDelegate {
+) : InstantPaymentDelegate {
 
-    private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>> = _componentStateFlow
-
-    init {
-        _componentStateFlow.tryEmit(createComponentState())
-    }
+    override val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>> =
+        MutableStateFlow(createComponentState())
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 

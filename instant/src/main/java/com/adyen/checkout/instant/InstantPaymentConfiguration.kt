@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-class InstantConfiguration private constructor(
+class InstantPaymentConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String
@@ -28,9 +28,9 @@ class InstantConfiguration private constructor(
     )
 
     /**
-     * Builder to create a [InstantConfiguration].
+     * Builder to create a [InstantPaymentConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<InstantConfiguration> {
+    class Builder : BaseConfigurationBuilder<InstantPaymentConfiguration> {
 
         /**
          * Constructor for Builder with default values.
@@ -63,7 +63,7 @@ class InstantConfiguration private constructor(
          *
          * @param configuration A configuration to initialize the builder.
          */
-        constructor(configuration: InstantConfiguration) : super(configuration)
+        constructor(configuration: InstantPaymentConfiguration) : super(configuration)
 
         override fun setShopperLocale(shopperLocale: Locale): Builder {
             return super.setShopperLocale(shopperLocale) as Builder
@@ -73,8 +73,8 @@ class InstantConfiguration private constructor(
             return super.setEnvironment(environment) as Builder
         }
 
-        override fun buildInternal(): InstantConfiguration {
-            return InstantConfiguration(this)
+        override fun buildInternal(): InstantPaymentConfiguration {
+            return InstantPaymentConfiguration(this)
         }
     }
 }

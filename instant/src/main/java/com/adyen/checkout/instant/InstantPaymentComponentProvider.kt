@@ -19,22 +19,22 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class InstantComponentProvider : PaymentComponentProvider<InstantComponent, InstantConfiguration> {
+class InstantPaymentComponentProvider : PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: InstantConfiguration,
+        configuration: InstantPaymentConfiguration,
         defaultArgs: Bundle?,
         key: String?
-    ): InstantComponent {
+    ): InstantPaymentComponent {
         assertSupported(paymentMethod)
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                InstantComponent(
+                InstantPaymentComponent(
                     savedStateHandle = savedStateHandle,
-                    delegate = DefaultInstantDelegate(
+                    delegate = DefaultInstantPaymentDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
                         configuration = configuration
@@ -43,7 +43,7 @@ class InstantComponentProvider : PaymentComponentProvider<InstantComponent, Inst
                 )
             }
 
-        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, InstantComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, InstantPaymentComponent::class.java]
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
@@ -53,6 +53,6 @@ class InstantComponentProvider : PaymentComponentProvider<InstantComponent, Inst
     }
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
-        return InstantComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+        return InstantPaymentComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }
