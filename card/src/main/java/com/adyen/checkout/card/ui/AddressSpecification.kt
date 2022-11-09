@@ -9,6 +9,7 @@
 
 package com.adyen.checkout.card.ui
 
+import androidx.annotation.StyleRes
 import com.adyen.checkout.card.R
 
 /**
@@ -54,12 +55,12 @@ enum class AddressSpecification(
         stateProvince = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput_Optional
+            optionalStyleResId = null
         ),
         country = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
+            optionalStyleResId = null
         )
     ),
     // Canada
@@ -92,12 +93,12 @@ enum class AddressSpecification(
         stateProvince = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_Card_ProvinceTerritoryInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ProvinceTerritoryInput_Optional
+            optionalStyleResId = null
         ),
         country = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
+            optionalStyleResId = null
         )
     ),
     // Great Britain
@@ -135,7 +136,7 @@ enum class AddressSpecification(
         country = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
+            optionalStyleResId = null
         )
     ),
     // United States
@@ -168,12 +169,12 @@ enum class AddressSpecification(
         stateProvince = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput_Optional
+            optionalStyleResId = null
         ),
         country = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput_Optional
+            optionalStyleResId = null
         )
     ),
     // Default
@@ -211,7 +212,7 @@ enum class AddressSpecification(
         country = AddressFieldSpec(
             isRequired = true,
             styleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
-            optionalStyleResId = R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput
+            optionalStyleResId = null
         )
     );
 
@@ -223,7 +224,15 @@ enum class AddressSpecification(
 
     internal data class AddressFieldSpec(
         val isRequired: Boolean,
-        val styleResId: Int,
-        val optionalStyleResId: Int
-    )
+        @StyleRes val styleResId: Int,
+        @StyleRes val optionalStyleResId: Int?
+    ) {
+        fun getStyleResId(isOptional: Boolean): Int? {
+            return if (isOptional) {
+                optionalStyleResId
+            } else {
+                styleResId
+            }
+        }
+    }
 }

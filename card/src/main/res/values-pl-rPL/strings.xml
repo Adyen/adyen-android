@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data urodzenia posiadacza karty (RRMMDD) lub firmowy numer rejestracyjny (10 cyfr)</string>
     <string name="checkout_kcp_tax_number_hint">Firmowy numer rejestracyjny (10 cyfr)</string>
     <string name="checkout_kcp_password_hint">Pierwsze 2 cyfry hasła karty</string>
-    <string name="checkout_card_postal_code_hint">Kod pocztowy</string>
 
     <string name="checkout_card_number_not_valid">Nieprawidłowy numer karty</string>
     <string name="checkout_expiry_date_not_valid">Nieprawidłowa data wygaśnięcia</string>
@@ -37,10 +36,23 @@
     <string name="checkout_address_form_city_hint">Miasto</string>
     <string name="checkout_address_form_country_hint">Kraj</string>
     <string name="checkout_address_form_states_hint">Stan</string>
+    <string name="checkout_card_postal_code_hint">Kod pocztowy</string>
     <string name="checkout_address_form_zip_code_hint">Kod pocztowy</string>
     <string name="checkout_address_form_province_territory_hint">Region lub terytorium</string>
     <string name="checkout_address_form_city_town_hint">Miejscowość</string>
     <string name="checkout_address_form_field_not_valid">Nieprawidłowe dane wejściowe</string>
+
+    <string name="checkout_address_form_street_hint_optional">Ulica (opcjonalnie)</string>
+    <string name="checkout_address_form_address_hint_optional">Adres (opcjonalnie)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Numer domu i mieszkania (opcjonalnie)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Numer domu/mieszkania (opcjonalnie)</string>
+    <string name="checkout_address_form_city_hint_optional">Miasto (opcjonalnie)</string>
+    <string name="checkout_address_form_country_hint_optional">Kraj (opcjonalnie)</string>
+    <string name="checkout_address_form_states_hint_optional">Stan (opcjonalnie)</string>
+    <string name="checkout_card_postal_code_hint_optional">Kod pocztowy (opcjonalnie)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Kod pocztowy (opcjonalnie)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Region lub terytorium (opcjonalnie)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Miejscowość (opcjonalnie)</string>
 
     <string name="checkout_card_installments_title">Liczba rat</string>
     <string name="checkout_card_installments_option_regular">%s miesięcy</string>
