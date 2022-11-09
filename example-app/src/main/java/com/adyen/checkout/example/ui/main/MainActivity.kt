@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 DropIn.startPaymentWithSession(
                     this,
                     dropInLauncher,
-                    navigation.session,
+                    navigation.sessionModel,
                     checkoutConfigurationProvider.getDropInConfiguration()
                 )
             }
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 DropIn.startPaymentWithSession(
                     this,
                     dropInLauncher,
-                    navigation.session,
+                    navigation.sessionModel,
                     checkoutConfigurationProvider.getDropInConfiguration(),
                     ExampleSessionsDropInService::class.java
                 )

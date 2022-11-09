@@ -14,7 +14,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.sessions.api.SessionService
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.model.orders.SessionBalanceRequest
 import com.adyen.checkout.sessions.model.orders.SessionBalanceResponse
 import com.adyen.checkout.sessions.model.orders.SessionCancelOrderRequest
@@ -34,21 +34,21 @@ import kotlinx.coroutines.flow.update
 class SessionRepository(
     private val sessionService: SessionService,
     private val clientKey: String,
-    session: Session,
+    sessionModel: SessionModel,
 ) {
 
-    private val _sessionFlow = MutableStateFlow(session)
-    val sessionFlow: Flow<Session> = _sessionFlow
+    private val _sessionFlow = MutableStateFlow(sessionModel)
+    val sessionFlow: Flow<SessionModel> = _sessionFlow
 
-    private val session: Session get() = _sessionFlow.value
+    private val sessionModel: SessionModel get() = _sessionFlow.value
 
     suspend fun setupSession(
         order: OrderRequest?
     ): Result<SessionSetupResponse> = runSuspendCatching {
-        val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
+        val request = SessionSetupRequest(sessionModel.sessionData.orEmpty(), order)
         sessionService.setupSession(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)
@@ -58,10 +58,10 @@ class SessionRepository(
     suspend fun submitPayment(
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
-        val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
+        val request = SessionPaymentsRequest(sessionModel.sessionData.orEmpty(), paymentComponentData)
         sessionService.submitPayment(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)
@@ -72,13 +72,13 @@ class SessionRepository(
         actionComponentData: ActionComponentData
     ): Result<SessionDetailsResponse> = runSuspendCatching {
         val request = SessionDetailsRequest(
-            sessionData = session.sessionData.orEmpty(),
+            sessionData = sessionModel.sessionData.orEmpty(),
             paymentData = actionComponentData.paymentData,
             details = actionComponentData.details
         )
         sessionService.submitDetails(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)
@@ -88,10 +88,10 @@ class SessionRepository(
     suspend fun checkBalance(
         paymentMethodDetails: PaymentMethodDetails
     ): Result<SessionBalanceResponse> = runSuspendCatching {
-        val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
+        val request = SessionBalanceRequest(sessionModel.sessionData.orEmpty(), paymentMethodDetails)
         sessionService.checkBalance(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)
@@ -99,10 +99,10 @@ class SessionRepository(
     }
 
     suspend fun createOrder(): Result<SessionOrderResponse> = runSuspendCatching {
-        val request = SessionOrderRequest(session.sessionData.orEmpty())
+        val request = SessionOrderRequest(sessionModel.sessionData.orEmpty())
         sessionService.createOrder(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)
@@ -112,10 +112,10 @@ class SessionRepository(
     suspend fun cancelOrder(
         order: OrderRequest
     ): Result<SessionCancelOrderResponse> = runSuspendCatching {
-        val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
+        val request = SessionCancelOrderRequest(sessionModel.sessionData.orEmpty(), order)
         sessionService.cancelOrder(
             request = request,
-            sessionId = session.id,
+            sessionId = sessionModel.id,
             clientKey = clientKey
         ).also {
             updateSessionData(it.sessionData)

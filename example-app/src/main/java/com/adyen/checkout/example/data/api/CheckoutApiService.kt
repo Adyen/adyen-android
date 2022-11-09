@@ -15,7 +15,7 @@ import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
@@ -32,7 +32,7 @@ internal interface CheckoutApiService {
     }
 
     @POST("sessions")
-    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): Session
+    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): SessionModel
 
     @POST("paymentMethods")
     suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse

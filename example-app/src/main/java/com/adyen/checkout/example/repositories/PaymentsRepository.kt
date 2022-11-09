@@ -17,14 +17,14 @@ import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject
 import java.lang.ref.SoftReference
 
 interface PaymentsRepository {
-    suspend fun getSessionAsync(sessionRequest: SessionRequest): Session?
+    suspend fun getSessionAsync(sessionRequest: SessionRequest): SessionModel?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     fun paymentsRequest(paymentsRequest: PaymentsRequest): JSONObject?
     suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): JSONObject?
@@ -40,7 +40,7 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
 
     private val paymentMethodCache = HashMap<PaymentMethodsRequest, SoftReference<PaymentMethodsApiResponse?>>()
 
-    override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
+    override suspend fun getSessionAsync(sessionRequest: SessionRequest): SessionModel? {
         return safeApiCall { checkoutApiService.sessionsAsync(sessionRequest) }
     }
 

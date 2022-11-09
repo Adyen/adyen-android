@@ -19,7 +19,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.api.SessionService
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
@@ -35,14 +35,14 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         private set
 
     final override fun initialize(
-        session: Session,
+        sessionModel: SessionModel,
         clientKey: String,
         baseUrl: String,
         shouldFetchPaymentMethods: Boolean,
         isFlowTakenOver: Boolean
     ) {
         val sessionService = SessionService(baseUrl)
-        sessionRepository = SessionRepository(sessionService = sessionService, clientKey = clientKey, session = session)
+        sessionRepository = SessionRepository(sessionService = sessionService, clientKey = clientKey, sessionModel = sessionModel)
         this.isFlowTakenOver = isFlowTakenOver
 
         launch {
@@ -324,7 +324,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
 
 internal interface SessionDropInServiceInterface : DropInServiceInterface {
     fun initialize(
-        session: Session,
+        sessionModel: SessionModel,
         clientKey: String,
         baseUrl: String,
         shouldFetchPaymentMethods: Boolean,

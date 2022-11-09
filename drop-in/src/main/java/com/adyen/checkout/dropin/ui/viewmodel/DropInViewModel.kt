@@ -39,7 +39,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -66,7 +66,7 @@ internal class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
-    private var session: Session?
+    private var sessionModel: SessionModel?
         get() = savedStateHandle[SESSION_KEY]
         private set(value) {
             savedStateHandle[SESSION_KEY] = value
@@ -179,12 +179,12 @@ internal class DropInViewModel(
     }
 
     fun onDropInServiceConnected() {
-        val session = this.session
+        val session = this.sessionModel
         if (session == null) {
             Logger.d(TAG, "Session is null")
         } else {
             val event = DropInActivityEvent.SessionServiceConnected(
-                session = session,
+                sessionModel = session,
                 clientKey = dropInConfiguration.clientKey,
                 baseUrl = dropInConfiguration.environment.baseUrl,
                 shouldFetchPaymentMethods = paymentMethodsApiResponse == null,
@@ -195,7 +195,7 @@ internal class DropInViewModel(
     }
 
     private fun isInitializedWithSession(): Boolean {
-        return session != null
+        return sessionModel != null
     }
 
     fun onSessionSetupSuccessful(paymentMethods: PaymentMethodsApiResponse?) {
@@ -204,7 +204,7 @@ internal class DropInViewModel(
     }
 
     fun onSessionDataChanged(sessionData: String) {
-        session = session?.copy(sessionData = sessionData)
+        sessionModel = sessionModel?.copy(sessionData = sessionData)
     }
 
     fun onSessionTakenOverUpdated(isFlowTakenOver: Boolean) {
@@ -464,11 +464,11 @@ internal class DropInViewModel(
         fun putIntentExtras(
             intent: Intent,
             dropInConfiguration: DropInConfiguration,
-            session: Session,
+            sessionModel: SessionModel,
             service: ComponentName,
         ) {
             intent.apply {
-                putExtra(SESSION_KEY, session)
+                putExtra(SESSION_KEY, sessionModel)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
                 putExtra(DROP_IN_SERVICE_KEY, service)
             }

@@ -12,7 +12,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 
 internal sealed class DropInActivityEvent {
     data class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()
@@ -21,7 +21,7 @@ internal sealed class DropInActivityEvent {
     object CancelDropIn : DropInActivityEvent()
     class NavigateTo(val destination: DropInDestination) : DropInActivityEvent()
     data class SessionServiceConnected(
-        val session: Session,
+        val sessionModel: SessionModel,
         val clientKey: String,
         val baseUrl: String,
         val shouldFetchPaymentMethods: Boolean,
