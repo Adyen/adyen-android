@@ -162,9 +162,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
-        val bundle = savedInstanceState ?: intent.extras
-
-        if (!DropInViewModel.assertBundleExists(bundle)) {
+        if (!DropInViewModel.assertBundleExists(intent.extras)) {
             terminateWithError("Initialization failed")
             return
         }
