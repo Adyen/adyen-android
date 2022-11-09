@@ -222,13 +222,41 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initForm(addressSpecification: AddressSpecification) {
         initHeader()
         initCountryInput(addressSpecification.country.styleResId)
-        initStreetInput(addressSpecification.street.styleResId)
-        initHouseNumberInput(addressSpecification.houseNumber.styleResId)
-        initApartmentSuiteInput(addressSpecification.apartmentSuite.styleResId)
-        initPostalCodeInput(addressSpecification.postalCode.styleResId)
-        initCityInput(addressSpecification.city.styleResId)
-        initProvinceTerritoryInput(addressSpecification.stateProvince.styleResId)
-        initStatesInput(addressSpecification.stateProvince.styleResId)
+        initStreetInput(
+            styleResId = addressSpecification.street.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initHouseNumberInput(
+            styleResId = addressSpecification.houseNumber.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initApartmentSuiteInput(
+            styleResId = addressSpecification.apartmentSuite.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initPostalCodeInput(
+            styleResId = addressSpecification.postalCode.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initCityInput(
+            styleResId = addressSpecification.city.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initProvinceTerritoryInput(
+            styleResId = addressSpecification.stateProvince.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
+        initStatesInput(
+            styleResId = addressSpecification.stateProvince.getStyleResId(
+                isOptional = delegate.outputData.addressState.isOptional
+            )
+        )
     }
 
     private fun initHeader() {
@@ -245,11 +273,8 @@ class AddressFormInput @JvmOverloads constructor(
         )
     }
 
-    private fun initStreetInput(styleResId: Int) {
-        textInputLayoutStreet?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initStreetInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextStreet?.apply {
             setText(delegate.outputData.addressState.street.value)
             setOnChangeListener {
@@ -267,11 +292,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initHouseNumberInput(styleResId: Int) {
-        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initHouseNumberInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
             setText(delegate.outputData.addressState.houseNumberOrName.value)
             setOnChangeListener {
@@ -289,11 +311,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initApartmentSuiteInput(styleResId: Int) {
-        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initApartmentSuiteInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextApartmentSuite?.apply {
             setText(delegate.outputData.addressState.apartmentSuite.value)
             setOnChangeListener {
@@ -310,11 +329,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initPostalCodeInput(styleResId: Int) {
-        textInputLayoutPostalCode?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initPostalCodeInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextPostalCode?.apply {
             setText(delegate.outputData.addressState.postalCode.value)
             setOnChangeListener {
@@ -332,11 +348,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initCityInput(styleResId: Int) {
-        textInputLayoutCity?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initCityInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextCity?.apply {
             setText(delegate.outputData.addressState.city.value)
             setOnChangeListener {
@@ -354,11 +367,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initProvinceTerritoryInput(styleResId: Int) {
-        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initProvinceTerritoryInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextProvinceTerritory?.apply {
             setText(delegate.outputData.addressState.stateOrProvince.value)
             setOnChangeListener {
@@ -376,11 +386,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initStatesInput(styleResId: Int) {
-        textInputLayoutState?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initStatesInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
         autoCompleteTextViewState?.apply {
             setText(statesAdapter.getItem { it.selected }?.name)
             inputType = 0
@@ -394,60 +401,37 @@ class AddressFormInput @JvmOverloads constructor(
     fun updateAddressHint(isOptional: Boolean) {
         val spec = AddressSpecification.fromString(delegate.outputData.addressState.country.value)
 
-        val countryStyleResId = if (isOptional) {
-            spec.country.optionalStyleResId
-        } else {
-            spec.country.styleResId
+        val streetStyleResId = spec.street.getStyleResId(isOptional)
+        streetStyleResId?.let {
+            textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutCountry?.setLocalizedHintFromStyle(countryStyleResId, localizedContext)
 
-        val streetStyleResId = if (isOptional) {
-            spec.street.optionalStyleResId
-        } else {
-            spec.street.styleResId
+        val houseNumberStyleResId = spec.houseNumber.getStyleResId(isOptional)
+        houseNumberStyleResId?.let {
+            textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutStreet?.setLocalizedHintFromStyle(streetStyleResId, localizedContext)
 
-        val houseNumberStyleResId = if (isOptional) {
-            spec.houseNumber.optionalStyleResId
-        } else {
-            spec.houseNumber.styleResId
+        val apartmentSuiteStyleResId = spec.apartmentSuite.getStyleResId(isOptional)
+        apartmentSuiteStyleResId?.let {
+            textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(houseNumberStyleResId, localizedContext)
 
-        val apartmentSuiteStyleResId = if (isOptional) {
-            spec.apartmentSuite.optionalStyleResId
-        } else {
-            spec.apartmentSuite.styleResId
+        val postalCodeStyleResId = spec.postalCode.getStyleResId(isOptional)
+        postalCodeStyleResId?.let {
+            textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(apartmentSuiteStyleResId, localizedContext)
 
-        val postalCodeStyleResId = if (isOptional) {
-            spec.postalCode.optionalStyleResId
-        } else {
-            spec.postalCode.styleResId
+        val cityStyleResId = spec.city.getStyleResId(isOptional)
+        cityStyleResId?.let {
+            textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutPostalCode?.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
 
-        val cityStyleResId = if (isOptional) {
-            spec.city.optionalStyleResId
-        } else {
-            spec.city.optionalStyleResId
+        val provinceTerritoryStyleResId = spec.stateProvince.getStyleResId(isOptional)
+        provinceTerritoryStyleResId?.let {
+            textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext)
         }
-        textInputLayoutCity?.setLocalizedHintFromStyle(cityStyleResId, localizedContext)
 
-        val provinceTerritoryStyleResId = if (isOptional) {
-            spec.stateProvince.optionalStyleResId
-        } else {
-            spec.stateProvince.styleResId
-        }
-        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(provinceTerritoryStyleResId, localizedContext)
-
-        val statesStyleResId = if (isOptional) {
-            spec.stateProvince.optionalStyleResId
-        } else {
-            spec.stateProvince.styleResId
-        }
-        textInputLayoutState?.setLocalizedHintFromStyle(statesStyleResId, localizedContext)
+        val statesStyleResId = spec.stateProvince.getStyleResId(isOptional)
+        statesStyleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
     }
 }

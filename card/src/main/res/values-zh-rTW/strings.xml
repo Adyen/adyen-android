@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">持卡人生日（年月日）或公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_tax_number_hint">公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_password_hint">卡密碼的前 2 位數字</string>
-    <string name="checkout_card_postal_code_hint">郵遞區號</string>
 
     <string name="checkout_card_number_not_valid">信用卡號碼無效</string>
     <string name="checkout_expiry_date_not_valid">到期日期無效</string>
@@ -39,10 +38,23 @@
     <string name="checkout_address_form_city_hint">城市</string>
     <string name="checkout_address_form_country_hint">國家/地區</string>
     <string name="checkout_address_form_states_hint">州</string>
+    <string name="checkout_card_postal_code_hint">郵遞區號</string>
     <string name="checkout_address_form_zip_code_hint">郵遞區號</string>
     <string name="checkout_address_form_province_territory_hint">省或地區</string>
     <string name="checkout_address_form_city_town_hint">市／鎮</string>
     <string name="checkout_address_form_field_not_valid">輸入無效</string>
+
+    <string name="checkout_address_form_street_hint_optional">街道（選用）</string>
+    <string name="checkout_address_form_address_hint_optional">地址（選用）</string>
+    <string name="checkout_address_form_house_number_hint_optional">門牌號（選用）</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">公寓／套房（選用）</string>
+    <string name="checkout_address_form_city_hint_optional">街道（選用</string>
+    <string name="checkout_address_form_country_hint_optional">國家/地區（選用）</string>
+    <string name="checkout_address_form_states_hint_optional">州（選用）</string>
+    <string name="checkout_card_postal_code_hint_optional">郵遞區號（選用）</string>
+    <string name="checkout_address_form_zip_code_hint_optional">郵遞區號（選用）</string>
+    <string name="checkout_address_form_province_territory_hint_optional">省或地區（選用）</string>
+    <string name="checkout_address_form_city_town_hint_optional">市／鎮（選用）</string>
 
     <string name="checkout_card_installments_title">分期付款的期數</string>
     <string name="checkout_card_installments_option_regular">%s 個月</string>
