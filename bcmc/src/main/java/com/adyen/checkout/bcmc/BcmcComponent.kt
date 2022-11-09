@@ -52,8 +52,6 @@ class BcmcComponent internal constructor(
         delegate.removeObserver()
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

@@ -56,8 +56,6 @@ class CardComponent internal constructor(
 
     override fun requiresInput() = delegate.requiresInput()
 
-    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
-
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

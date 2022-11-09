@@ -47,8 +47,6 @@ class BacsDirectDebitComponent internal constructor(
         delegate.removeObserver()
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     /**
      * Sets the displayed BACS view as the final confirmation view.
      * Should only be called if the form is valid.

@@ -19,14 +19,9 @@ import androidx.core.view.children
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -135,24 +130,7 @@ class PaymentMethodListDialogFragment :
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
         Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
 
-        // Check some specific payment methods that don't need to show a view
-        when {
-            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
-                Logger.d(TAG, "onPaymentMethodSelected: payment method does not need a component, sending payment")
-                sendPayment(paymentMethod.type)
-            }
-            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
-                Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
-                protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
-            }
-            else -> {
-                Logger.d(
-                    TAG,
-                    "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect"
-                )
-                sendPayment(paymentMethod.type)
-            }
-        }
+        protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
     }
 
     override fun onHeaderActionSelected(header: PaymentMethodHeader) {
@@ -184,13 +162,6 @@ class PaymentMethodListDialogFragment :
                 protocol.requestOrderCancellation()
             }
             .show()
-    }
-
-    private fun sendPayment(type: String) {
-        val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
-        paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
-        protocol.requestPaymentsCall(paymentComponentState)
     }
 
     private fun collapseNotUsedUnderlayButtons(recyclerView: RecyclerView, draggedItem: AdyenSwipeToRevealLayout) {

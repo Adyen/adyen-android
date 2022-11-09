@@ -27,9 +27,6 @@ class DotpayComponent internal constructor(
     delegate,
     configuration
 ) {
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = DotpayComponentProvider()
