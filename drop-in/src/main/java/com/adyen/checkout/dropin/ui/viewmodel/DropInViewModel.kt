@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.content.ComponentName
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -470,6 +471,21 @@ class DropInViewModel(
                 putExtra(SESSION_KEY, session)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
                 putExtra(DROP_IN_SERVICE_KEY, service)
+            }
+        }
+
+        fun assertBundleExists(bundle: Bundle?): Boolean {
+            return when {
+                bundle == null -> {
+                    Logger.e(TAG, "Failed to initialize - bundle is null")
+                    false
+                }
+                !bundle.containsKey(DROP_IN_SERVICE_KEY) ||
+                    !bundle.containsKey(DROP_IN_CONFIGURATION_KEY) -> {
+                    Logger.e(TAG, "Failed to initialize - bundle does not have the required keys")
+                    false
+                }
+                else -> true
             }
         }
     }
