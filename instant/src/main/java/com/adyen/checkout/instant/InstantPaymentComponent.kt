@@ -49,7 +49,8 @@ class InstantPaymentComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> = InstantPaymentComponentProvider()
+        val PROVIDER: PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> =
+            InstantPaymentComponentProvider()
 
         // FIXME txVariants
         @JvmField

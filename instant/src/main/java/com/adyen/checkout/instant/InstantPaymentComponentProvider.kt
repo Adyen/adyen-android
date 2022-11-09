@@ -17,6 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 
 class InstantPaymentComponentProvider : PaymentComponentProvider<InstantPaymentComponent, InstantPaymentConfiguration> {
@@ -53,6 +54,10 @@ class InstantPaymentComponentProvider : PaymentComponentProvider<InstantPaymentC
     }
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
-        return InstantPaymentComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+        return when {
+            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> true
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
+            else -> true
+        }
     }
 }

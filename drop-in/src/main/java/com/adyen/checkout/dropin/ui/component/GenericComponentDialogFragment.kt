@@ -74,17 +74,20 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     private fun attachComponent(
         component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     ) {
-        if (component !is ViewableComponent) throw CheckoutException("Attached component is not viewable")
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
-        binding.componentView.attach(component, viewLifecycleOwner)
+        if (component is ViewableComponent) {
+            binding.componentView.attach(component, viewLifecycleOwner)
 
-        if (binding.componentView.isConfirmationRequired) {
-            binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
-            setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
-            binding.componentView.requestFocus()
+            if (binding.componentView.isConfirmationRequired) {
+                binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
+                setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
+                binding.componentView.requestFocus()
+            } else {
+                binding.payButton.isVisible = false
+            }
         } else {
             binding.payButton.isVisible = false
         }
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
     }
 
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
