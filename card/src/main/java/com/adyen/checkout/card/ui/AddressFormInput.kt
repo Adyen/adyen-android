@@ -197,7 +197,10 @@ class AddressFormInput @JvmOverloads constructor(
         statesAdapter.setItems(stateList)
         stateList.firstOrNull { it.selected }?.let {
             autoCompleteTextViewState?.setText(it.name)
-            delegate.updateInputData { address.stateOrProvince = it.code }
+            val didStateChange = delegate.outputData.addressState.stateOrProvince.value != it.code
+            if (didStateChange) {
+                delegate.updateInputData { address.stateOrProvince = it.code }
+            }
         }
     }
 
