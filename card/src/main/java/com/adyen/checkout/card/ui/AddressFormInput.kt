@@ -215,15 +215,16 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initForm(addressSpecification: AddressSpecification) {
+        val isOptional = component.outputData?.addressState?.isOptional ?: false
         initHeader()
         initCountryInput(addressSpecification.country.styleResId)
-        initStreetInput(addressSpecification.street.styleResId)
-        initHouseNumberInput(addressSpecification.houseNumber.styleResId)
-        initApartmentSuiteInput(addressSpecification.apartmentSuite.styleResId)
-        initPostalCodeInput(addressSpecification.postalCode.styleResId)
-        initCityInput(addressSpecification.city.styleResId)
-        initProvinceTerritoryInput(addressSpecification.stateProvince.styleResId)
-        initStatesInput(addressSpecification.stateProvince.styleResId)
+        initStreetInput(addressSpecification.street.getStyleResId(isOptional))
+        initHouseNumberInput(addressSpecification.houseNumber.getStyleResId(isOptional))
+        initApartmentSuiteInput(addressSpecification.apartmentSuite.getStyleResId(isOptional))
+        initPostalCodeInput(addressSpecification.postalCode.getStyleResId(isOptional))
+        initCityInput(addressSpecification.city.getStyleResId(isOptional))
+        initProvinceTerritoryInput(addressSpecification.stateProvince.getStyleResId(isOptional))
+        initStatesInput(addressSpecification.stateProvince.getStyleResId(isOptional))
     }
 
     private fun initHeader() {
@@ -240,11 +241,8 @@ class AddressFormInput @JvmOverloads constructor(
         )
     }
 
-    private fun initStreetInput(styleResId: Int) {
-        textInputLayoutStreet?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initStreetInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextStreet?.apply {
             setText(component.inputData.address.street)
             setOnChangeListener {
@@ -263,11 +261,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initHouseNumberInput(styleResId: Int) {
-        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initHouseNumberInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
             setText(component.inputData.address.houseNumberOrName)
             setOnChangeListener {
@@ -286,11 +281,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initApartmentSuiteInput(styleResId: Int) {
-        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initApartmentSuiteInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextApartmentSuite?.apply {
             setText(component.inputData.address.apartmentSuite)
             setOnChangeListener {
@@ -308,11 +300,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initPostalCodeInput(styleResId: Int) {
-        textInputLayoutPostalCode?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initPostalCodeInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextPostalCode?.apply {
             setText(component.inputData.address.postalCode)
             setOnChangeListener {
@@ -331,11 +320,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initCityInput(styleResId: Int) {
-        textInputLayoutCity?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initCityInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextCity?.apply {
             setText(component.inputData.address.city)
             setOnChangeListener {
@@ -354,11 +340,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initProvinceTerritoryInput(styleResId: Int) {
-        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initProvinceTerritoryInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextProvinceTerritory?.apply {
             setText(component.inputData.address.stateOrProvince)
             setOnChangeListener {
@@ -377,11 +360,8 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initStatesInput(styleResId: Int) {
-        textInputLayoutState?.setLocalizedHintFromStyle(
-            styleResId,
-            localizedContext
-        )
+    private fun initStatesInput(styleResId: Int?) {
+        styleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
         autoCompleteTextViewState?.apply {
             setText(statesAdapter.getItem { it.selected }?.name)
             inputType = 0
@@ -396,29 +376,38 @@ class AddressFormInput @JvmOverloads constructor(
     fun updateAddressHint(isOptional: Boolean) {
         val spec = AddressSpecification.fromString(component.inputData.address.country)
 
-        val countryStyleResId = if (isOptional) spec.country.optionalStyleResId else spec.country.styleResId
-        textInputLayoutCountry?.setLocalizedHintFromStyle(countryStyleResId, localizedContext)
+        val streetStyleResId = spec.street.getStyleResId(isOptional)
+        streetStyleResId?.let {
+            textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val streetStyleResId = if (isOptional) spec.street.optionalStyleResId else spec.street.styleResId
-        textInputLayoutStreet?.setLocalizedHintFromStyle(streetStyleResId, localizedContext)
+        val houseNumberStyleResId = spec.houseNumber.getStyleResId(isOptional)
+        houseNumberStyleResId?.let {
+            textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val houseNumberStyleResId = if (isOptional) spec.houseNumber.optionalStyleResId else spec.houseNumber.styleResId
-        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(houseNumberStyleResId, localizedContext)
+        val apartmentSuiteStyleResId = spec.apartmentSuite.getStyleResId(isOptional)
+        apartmentSuiteStyleResId?.let {
+            textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val apartmentSuiteStyleResId = if (isOptional) spec.apartmentSuite.optionalStyleResId else spec.apartmentSuite.styleResId
-        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(apartmentSuiteStyleResId, localizedContext)
+        val postalCodeStyleResId = spec.postalCode.getStyleResId(isOptional)
+        postalCodeStyleResId?.let {
+            textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val postalCodeStyleResId = if (isOptional) spec.postalCode.optionalStyleResId else spec.postalCode.styleResId
-        textInputLayoutPostalCode?.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
+        val cityStyleResId = spec.city.getStyleResId(isOptional)
+        cityStyleResId?.let {
+            textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val cityStyleResId = if (isOptional) spec.city.optionalStyleResId else spec.city.optionalStyleResId
-        textInputLayoutCity?.setLocalizedHintFromStyle(cityStyleResId, localizedContext)
+        val provinceTerritoryStyleResId = spec.stateProvince.getStyleResId(isOptional)
+        provinceTerritoryStyleResId?.let {
+            textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext)
+        }
 
-        val provinceTerritoryStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
-        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(provinceTerritoryStyleResId, localizedContext)
-
-        val statesStyleResId = if (isOptional) spec.stateProvince.optionalStyleResId else spec.stateProvince.styleResId
-        textInputLayoutState?.setLocalizedHintFromStyle(statesStyleResId, localizedContext)
+        val statesStyleResId = spec.stateProvince.getStyleResId(isOptional)
+        statesStyleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
     }
 
     private fun notifyInputDataChanged() {

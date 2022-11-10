@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortinnehavarens födelsedatum (ÅÅMMDD) eller företagets organisationsnummer (10 siffror)</string>
     <string name="checkout_kcp_tax_number_hint">Företagets organisationsnummer (10 siffror)</string>
     <string name="checkout_kcp_password_hint">De två första siffrorna i kortets lösenord</string>
-    <string name="checkout_card_postal_code_hint">Postnummer</string>
 
     <string name="checkout_card_number_not_valid">Ogiltigt kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ogiltigt utgångsdatum</string>
@@ -37,10 +36,23 @@
     <string name="checkout_address_form_city_hint">Stad</string>
     <string name="checkout_address_form_country_hint">Land</string>
     <string name="checkout_address_form_states_hint">Delstat</string>
+    <string name="checkout_card_postal_code_hint">Postnummer</string>
     <string name="checkout_address_form_zip_code_hint">Postnummer</string>
     <string name="checkout_address_form_province_territory_hint">Provins eller territorium</string>
     <string name="checkout_address_form_city_town_hint">Ort</string>
     <string name="checkout_address_form_field_not_valid">Ogiltig inmatning</string>
+
+    <string name="checkout_address_form_street_hint_optional">Gatuadress (valfritt)</string>
+    <string name="checkout_address_form_address_hint_optional">Adress (valfritt)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Husnummer (valfritt)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Lägenhetsnummer (valfritt)</string>
+    <string name="checkout_address_form_city_hint_optional">Stad (valfritt)</string>
+    <string name="checkout_address_form_country_hint_optional">Land (valfritt)</string>
+    <string name="checkout_address_form_states_hint_optional">Delstat (valfritt)</string>
+    <string name="checkout_card_postal_code_hint_optional">Postnummer (valfritt)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valfritt)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valfritt)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Ort (valfritt)</string>
 
     <string name="checkout_card_installments_title">Antal delbetalningar</string>
     <string name="checkout_card_installments_option_regular">%s månader</string>

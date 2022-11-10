@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de naștere a posesorului de card (AALLZZ) sau numărul de înregistrare al societății (10 cifre).</string>
     <string name="checkout_kcp_tax_number_hint">Numărul de înregistrare al societății (10 cifre)</string>
     <string name="checkout_kcp_password_hint">Primele 2 cifre ale parolei aferente cardului</string>
-    <string name="checkout_card_postal_code_hint">Cod poștal</string>
 
     <string name="checkout_card_number_not_valid">Număr de card incorect</string>
     <string name="checkout_expiry_date_not_valid">Data de expirare este incorectă</string>
@@ -37,10 +36,23 @@
     <string name="checkout_address_form_city_hint">Oraș</string>
     <string name="checkout_address_form_country_hint">Țară</string>
     <string name="checkout_address_form_states_hint">Stat</string>
+    <string name="checkout_card_postal_code_hint">Cod poștal</string>
     <string name="checkout_address_form_zip_code_hint">Cod poștal</string>
     <string name="checkout_address_form_province_territory_hint">Provincie sau teritoriu</string>
     <string name="checkout_address_form_city_town_hint">Oraș/localitate</string>
     <string name="checkout_address_form_field_not_valid">Informațiile sunt incorecte</string>
+
+    <string name="checkout_address_form_street_hint_optional">Stradă (opțional)</string>
+    <string name="checkout_address_form_address_hint_optional">Adresă (opțional)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Număr (opțional)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Apartament(opțional)</string>
+    <string name="checkout_address_form_city_hint_optional">Oraș (opțional)</string>
+    <string name="checkout_address_form_country_hint_optional">Țară (opțional)</string>
+    <string name="checkout_address_form_states_hint_optional">Stat (opțional)</string>
+    <string name="checkout_card_postal_code_hint_optional">Cod poștal (opțional)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Cod poștal (opțional)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Provincie sau teritoriu (opțional)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Oraș/localitate (opțional)</string>
 
     <string name="checkout_card_installments_title">Număr de rate</string>
     <string name="checkout_card_installments_option_regular">%s luni</string>

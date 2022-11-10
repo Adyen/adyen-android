@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero (10 lukua)</string>
     <string name="checkout_kcp_tax_number_hint">Yrityksen rekisterinumero (10 lukua)</string>
     <string name="checkout_kcp_password_hint">Kortin salasanan ensimmäiset 2 lukua</string>
-    <string name="checkout_card_postal_code_hint">Postinumero</string>
 
     <string name="checkout_card_number_not_valid">Väärä kortin numero</string>
     <string name="checkout_expiry_date_not_valid">Virheellinen vanhenemispäivämäärä</string>
@@ -37,10 +36,23 @@
     <string name="checkout_address_form_city_hint">Kaupunki</string>
     <string name="checkout_address_form_country_hint">Maa</string>
     <string name="checkout_address_form_states_hint">Osavaltio</string>
+    <string name="checkout_card_postal_code_hint">Postinumero</string>
     <string name="checkout_address_form_zip_code_hint">Postinumero</string>
     <string name="checkout_address_form_province_territory_hint">Maakunta tai alue</string>
     <string name="checkout_address_form_city_town_hint">Kaupunki / taajama</string>
     <string name="checkout_address_form_field_not_valid">Ei-kelvollinen syöte</string>
+
+    <string name="checkout_address_form_street_hint_optional">Katu (valinnainen)</string>
+    <string name="checkout_address_form_address_hint_optional">Osoite (valinnainen)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Talon numero (valinnainen)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Huoneisto / sviitti (valinnainen)</string>
+    <string name="checkout_address_form_city_hint_optional">Kaupunki (valinnainen)</string>
+    <string name="checkout_address_form_country_hint_optional">Maa (valinnainen)</string>
+    <string name="checkout_address_form_states_hint_optional">Osavaltio (valinnainen)</string>
+    <string name="checkout_card_postal_code_hint_optional">Postinumerov (valinnainen)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Postinumero (valinnainen)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Maakunta tai alue (valinnainen)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Kaupunki / taajama (valinnainen)</string>
 
     <string name="checkout_card_installments_title">Asennusten määrä</string>
     <string name="checkout_card_installments_option_regular">%s kuukautta</string>

@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Dátum narodenia držiteľa karty (RRRMMDD) alebo identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_tax_number_hint">Identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_password_hint">Prvé 2 číslice hesla karty</string>
-    <string name="checkout_card_postal_code_hint">PSČ</string>
 
     <string name="checkout_card_number_not_valid">Neplatné číslo karty</string>
     <string name="checkout_expiry_date_not_valid">Neplatný dátum vypršania platnosti</string>
@@ -37,10 +36,23 @@
     <string name="checkout_address_form_city_hint">Mesto</string>
     <string name="checkout_address_form_country_hint">Krajina</string>
     <string name="checkout_address_form_states_hint">Štát</string>
+    <string name="checkout_card_postal_code_hint">PSČ</string>
     <string name="checkout_address_form_zip_code_hint">PSČ</string>
     <string name="checkout_address_form_province_territory_hint">Okres alebo územie</string>
     <string name="checkout_address_form_city_town_hint">Mesto/obec</string>
     <string name="checkout_address_form_field_not_valid">Neplatný vstup</string>
+
+    <string name="checkout_address_form_street_hint_optional">Ulica (voliteľné)</string>
+    <string name="checkout_address_form_address_hint_optional">Adresa (nepovinné)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Číslo domu (nepovinné)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Byt/apartmán (voliteľné)</string>
+    <string name="checkout_address_form_city_hint_optional">Mesto (voliteľné)</string>
+    <string name="checkout_address_form_country_hint_optional">Krajina (voliteľné)</string>
+    <string name="checkout_address_form_states_hint_optional">Štát (nepovinné)</string>
+    <string name="checkout_card_postal_code_hint_optional">PSČ (voliteľné)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">PSČ (nepovinné)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Okres alebo územie (voliteľné)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Mesto/obec (nepovinné)</string>
 
     <string name="checkout_card_installments_title">Počet splátok</string>
     <string name="checkout_card_installments_option_regular">%s mesiace/-ov</string>
