@@ -28,7 +28,7 @@ import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
+internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
 
     private var _binding: FragmentGiftcardComponentBinding? = null
     private val binding: FragmentGiftcardComponentBinding get() = requireNotNull(_binding)

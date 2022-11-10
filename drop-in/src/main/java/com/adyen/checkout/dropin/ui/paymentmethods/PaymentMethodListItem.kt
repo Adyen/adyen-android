@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-interface PaymentMethodListItem {
+internal interface PaymentMethodListItem {
 
     fun getViewType(): Int
 

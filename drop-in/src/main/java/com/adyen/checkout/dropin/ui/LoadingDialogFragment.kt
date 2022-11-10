@@ -17,7 +17,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.adyen.checkout.dropin.R
 
-class LoadingDialogFragment : DialogFragment() {
+internal class LoadingDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         isCancelable = false

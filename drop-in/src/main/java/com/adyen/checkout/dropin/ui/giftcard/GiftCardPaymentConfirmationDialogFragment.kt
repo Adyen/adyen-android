@@ -24,7 +24,7 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodAdapter
 
-class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragment() {
+internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragment() {
 
     private var _binding: FragmentGiftCardPaymentConfirmationBinding? = null
     private val binding: FragmentGiftCardPaymentConfirmationBinding get() = requireNotNull(_binding)

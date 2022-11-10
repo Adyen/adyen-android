@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @SuppressWarnings("TooManyFunctions")
-class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
+internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     private var _binding: FragmentGenericActionComponentBinding? = null
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)

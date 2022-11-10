@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-data class PaymentMethodNote(val note: String) : PaymentMethodListItem {
+internal data class PaymentMethodNote(val note: String) : PaymentMethodListItem {
 
     override fun getViewType(): Int = PaymentMethodListItem.PAYMENT_METHODS_NOTE
 }

@@ -14,7 +14,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.sessions.model.Session
 
-sealed class DropInActivityEvent {
+internal sealed class DropInActivityEvent {
     data class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()
     object ShowPaymentMethods : DropInActivityEvent()
     class CancelOrder(val order: OrderRequest, val isDropInCancelledByUser: Boolean) : DropInActivityEvent()
@@ -29,7 +29,7 @@ sealed class DropInActivityEvent {
     ) : DropInActivityEvent()
 }
 
-sealed class DropInDestination {
+internal sealed class DropInDestination {
     object PreselectedStored : DropInDestination()
     object PaymentMethods : DropInDestination()
     class PaymentComponent(val paymentMethod: PaymentMethod) : DropInDestination()

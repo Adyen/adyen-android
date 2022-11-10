@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-data class PaymentMethodModel(
+internal data class PaymentMethodModel(
     val index: Int,
     val type: String,
     val name: String,

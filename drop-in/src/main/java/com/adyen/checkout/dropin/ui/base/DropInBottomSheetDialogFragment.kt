@@ -29,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 private val TAG = LogUtil.getTag()
 
-abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
+internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var protocol: Protocol
 

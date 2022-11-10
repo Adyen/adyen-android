@@ -16,7 +16,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+internal class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     companion object {
         private val TAG = LogUtil.getTag()
         private const val COMPONENT_FRAGMENT_STATE_KEY = "COMPONENT_FRAGMENT_STATE"

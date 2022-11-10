@@ -44,7 +44,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredP
 private val TAG = LogUtil.getTag()
 private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
-class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
+internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
         PreselectedStoredPaymentViewModel(
