@@ -93,7 +93,7 @@ internal const val GOOGLE_PAY_REQUEST_CODE = 1
  * Activity that presents the available PaymentMethods to the Shopper.
  */
 @Suppress("TooManyFunctions")
-class DropInActivity :
+internal class DropInActivity :
     AppCompatActivity(),
     DropInBottomSheetDialogFragment.Protocol {
 

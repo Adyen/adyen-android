@@ -29,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 @Suppress("TooManyFunctions")
-class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
+internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private var _binding: FragmentBacsDirectDebitComponentBinding? = null
     private val binding: FragmentBacsDirectDebitComponentBinding get() = requireNotNull(_binding)

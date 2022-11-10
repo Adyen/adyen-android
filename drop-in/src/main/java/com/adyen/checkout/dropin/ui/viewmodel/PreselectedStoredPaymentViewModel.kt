@@ -26,7 +26,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentErro
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
 
-class PreselectedStoredPaymentViewModel(
+internal class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
     private val componentRequiresInput: Boolean,
     isRemovingEnabled: Boolean

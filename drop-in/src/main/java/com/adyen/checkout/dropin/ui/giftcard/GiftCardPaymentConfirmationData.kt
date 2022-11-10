@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-data class GiftCardPaymentConfirmationData(
+internal data class GiftCardPaymentConfirmationData(
     val amountPaid: Amount,
     val remainingBalance: Amount,
     val shopperLocale: Locale,

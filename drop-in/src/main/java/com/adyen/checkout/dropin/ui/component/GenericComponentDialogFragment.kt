@@ -29,7 +29,7 @@ import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class GenericComponentDialogFragment : BaseComponentDialogFragment() {
+internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     private var _binding: FragmentGenericComponentBinding? = null
     private val binding: FragmentGenericComponentBinding get() = requireNotNull(_binding)

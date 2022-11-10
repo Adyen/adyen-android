@@ -14,7 +14,7 @@ import com.adyen.checkout.components.model.payments.Amount
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class OrderModel(
+internal data class OrderModel(
     val orderData: String,
     val pspReference: String,
     val remainingAmount: Amount,

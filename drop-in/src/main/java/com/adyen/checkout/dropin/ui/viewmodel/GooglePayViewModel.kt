@@ -18,7 +18,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class GooglePayViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+internal class GooglePayViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     companion object {
         private val TAG = LogUtil.getTag()
         private const val IS_GOOGLE_PAY_STARTED = "IS_GOOGLE_PAY_STARTED"
@@ -45,6 +45,6 @@ class GooglePayViewModel(private val savedStateHandle: SavedStateHandle) : ViewM
     }
 }
 
-sealed class GooglePayFragmentEvent {
+internal sealed class GooglePayFragmentEvent {
     object StartGooglePay : GooglePayFragmentEvent()
 }

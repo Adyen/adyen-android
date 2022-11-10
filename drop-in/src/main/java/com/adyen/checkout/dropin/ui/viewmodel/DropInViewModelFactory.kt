@@ -14,7 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.repository.OrderStatusRepository
 
-class DropInViewModelFactory(
+internal class DropInViewModelFactory(
     activity: ComponentActivity
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {

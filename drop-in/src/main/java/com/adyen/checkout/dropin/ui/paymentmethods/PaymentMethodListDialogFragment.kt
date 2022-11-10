@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.onEach
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class PaymentMethodListDialogFragment :
+internal class PaymentMethodListDialogFragment :
     DropInBottomSheetDialogFragment(),
     PaymentMethodAdapter.OnPaymentMethodSelectedCallback,
     PaymentMethodAdapter.OnStoredPaymentRemovedCallback {

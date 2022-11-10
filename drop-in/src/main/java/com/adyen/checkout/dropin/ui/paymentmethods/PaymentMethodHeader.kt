@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 import androidx.annotation.StringRes
 import com.adyen.checkout.dropin.R
 
-data class PaymentMethodHeader(
+internal data class PaymentMethodHeader(
     val type: Int
 ) : PaymentMethodListItem {
     @StringRes

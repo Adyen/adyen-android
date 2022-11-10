@@ -46,7 +46,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-class DropInViewModel(
+internal class DropInViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val orderStatusRepository: OrderStatusRepository = OrderStatusRepository()
 ) : ViewModel() {

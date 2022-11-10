@@ -35,7 +35,7 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment() {
+internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     private val googlePayViewModel: GooglePayViewModel by viewModels()
 

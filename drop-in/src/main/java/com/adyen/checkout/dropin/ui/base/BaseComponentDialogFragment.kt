@@ -34,7 +34,7 @@ private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
 @Suppress("TooManyFunctions")
-abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment() {
+internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     companion object {
         private val TAG = LogUtil.getTag()

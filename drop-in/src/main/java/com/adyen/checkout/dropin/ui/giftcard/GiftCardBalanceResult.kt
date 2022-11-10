@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin.ui.giftcard
 
 import androidx.annotation.StringRes
 
-sealed class GiftCardBalanceResult {
+internal sealed class GiftCardBalanceResult {
     class FullPayment(val data: GiftCardPaymentConfirmationData) : GiftCardBalanceResult()
     object RequestOrderCreation : GiftCardBalanceResult()
     object RequestPartialPayment : GiftCardBalanceResult()

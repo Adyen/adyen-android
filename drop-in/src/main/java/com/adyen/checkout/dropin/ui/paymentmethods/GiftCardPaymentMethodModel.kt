@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 import com.adyen.checkout.components.model.payments.Amount
 import java.util.Locale
 
-data class GiftCardPaymentMethodModel(
+internal data class GiftCardPaymentMethodModel(
     val imageId: String,
     val lastFour: String,
     val amount: Amount?,
