@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">カード所有者の生年月日（YYMMDD）または法人登録番号（10桁）</string>
     <string name="checkout_kcp_tax_number_hint">法人登録番号（10桁）</string>
     <string name="checkout_kcp_password_hint">カードのパスワードの最初の2桁</string>
-    <string name="checkout_card_postal_code_hint">郵便番号</string>
 
     <string name="checkout_card_number_not_valid">カード番号が無効です</string>
     <string name="checkout_expiry_date_not_valid">有効期限が無効です</string>
@@ -39,10 +38,23 @@
     <string name="checkout_address_form_city_hint">市区</string>
     <string name="checkout_address_form_country_hint">国</string>
     <string name="checkout_address_form_states_hint">都道府県</string>
+    <string name="checkout_card_postal_code_hint">郵便番号</string>
     <string name="checkout_address_form_zip_code_hint">郵便番号</string>
     <string name="checkout_address_form_province_territory_hint">州または準州</string>
     <string name="checkout_address_form_city_town_hint">市区町村</string>
     <string name="checkout_address_form_field_not_valid">無効な入力</string>
+
+    <string name="checkout_address_form_street_hint_optional">番地 (任意)</string>
+    <string name="checkout_address_form_address_hint_optional">住所 (任意)</string>
+    <string name="checkout_address_form_house_number_hint_optional">部屋番号 (任意)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">アパート名/部屋名 (任意)</string>
+    <string name="checkout_address_form_city_hint_optional">市区 (任意)</string>
+    <string name="checkout_address_form_country_hint_optional">国 (任意)</string>
+    <string name="checkout_address_form_states_hint_optional">都道府県 (任意)</string>
+    <string name="checkout_card_postal_code_hint_optional">郵便番号 (任意)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">郵便番号 (任意)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">州または準州 (任意)</string>
+    <string name="checkout_address_form_city_town_hint_optional">市区町村 (任意)</string>
 
     <string name="checkout_card_installments_title">分割回数</string>
     <string name="checkout_card_installments_option_regular">%sか月</string>

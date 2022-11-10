@@ -16,7 +16,6 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">持卡人生日 (YYMMDD) 或公司注册号（10 位数）</string>
     <string name="checkout_kcp_tax_number_hint">公司注册号（10 位数）</string>
     <string name="checkout_kcp_password_hint">卡片密码的前 2 位数</string>
-    <string name="checkout_card_postal_code_hint">邮政编码</string>
 
     <string name="checkout_card_number_not_valid">无效的卡号</string>
     <string name="checkout_expiry_date_not_valid">无效的到期日期</string>
@@ -39,10 +38,23 @@
     <string name="checkout_address_form_city_hint">城市</string>
     <string name="checkout_address_form_country_hint">国家/地区</string>
     <string name="checkout_address_form_states_hint">州</string>
+    <string name="checkout_card_postal_code_hint">邮政编码</string>
     <string name="checkout_address_form_zip_code_hint">邮政编码</string>
     <string name="checkout_address_form_province_territory_hint">省或地区</string>
     <string name="checkout_address_form_city_town_hint">市 / 镇</string>
     <string name="checkout_address_form_field_not_valid">无效的输入</string>
+
+    <string name="checkout_address_form_street_hint_optional">街道（可选）</string>
+    <string name="checkout_address_form_address_hint_optional">地址（可选）</string>
+    <string name="checkout_address_form_house_number_hint_optional">门牌号（可选）</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">公寓/套房（可选）</string>
+    <string name="checkout_address_form_city_hint_optional">城市（可选）</string>
+    <string name="checkout_address_form_country_hint_optional">国家/地区（可选）</string>
+    <string name="checkout_address_form_states_hint_optional">州（可选）</string>
+    <string name="checkout_card_postal_code_hint_optional">邮政编码（可选）</string>
+    <string name="checkout_address_form_zip_code_hint_optional">邮政编码（可选）</string>
+    <string name="checkout_address_form_province_territory_hint_optional">省或地区（可选）</string>
+    <string name="checkout_address_form_city_town_hint_optional">市 / 镇（可选）</string>
 
     <string name="checkout_card_installments_title">分期付款期数</string>
     <string name="checkout_card_installments_option_regular">%s 个月</string>
