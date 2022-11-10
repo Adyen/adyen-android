@@ -143,8 +143,6 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
 
 internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
 
-    data class SetupDone(val paymentMethods: PaymentMethodsApiResponse?) : SessionDropInServiceResult()
-
     data class SessionDataChanged(val sessionData: String) : SessionDropInServiceResult()
 
     data class SessionTakenOverUpdated(val isFlowTakenOver: Boolean) : SessionDropInServiceResult()

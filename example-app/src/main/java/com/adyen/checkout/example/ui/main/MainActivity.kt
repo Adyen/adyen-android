@@ -28,21 +28,16 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.card.CardActivity
-import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), DropInCallback {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-
-    @Inject
-    internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -123,7 +118,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     this,
                     dropInLauncher,
                     navigation.paymentMethodsApiResponse,
-                    checkoutConfigurationProvider.getDropInConfiguration(),
+                    navigation.dropInConfiguration,
                     ExampleFullAsyncDropInService::class.java,
                 )
             }
@@ -131,16 +126,16 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 DropIn.startPaymentWithSession(
                     this,
                     dropInLauncher,
-                    navigation.sessionModel,
-                    checkoutConfigurationProvider.getDropInConfiguration()
+                    navigation.checkoutSession,
+                    navigation.dropInConfiguration,
                 )
             }
             is MainNavigation.DropInWithCustomSession -> {
                 DropIn.startPaymentWithSession(
                     this,
                     dropInLauncher,
-                    navigation.sessionModel,
-                    checkoutConfigurationProvider.getDropInConfiguration(),
+                    navigation.checkoutSession,
+                    navigation.dropInConfiguration,
                     ExampleSessionsDropInService::class.java
                 )
             }
