@@ -21,6 +21,7 @@ private val TAG = LogUtil.getTag()
 /**
  * Model class holding the parameters required to build requests for GooglePay
  */
+// TODO remove in favor of [GooglePayComponentParams]
 data class GooglePayParams(
     private val googlePayConfiguration: GooglePayConfiguration,
     private val serverGatewayMerchantId: String?,
