@@ -90,7 +90,7 @@ object AddressValidationUtils {
         return when (addressConfiguration) {
             AddressConfiguration.None -> true
             is AddressConfiguration.PostalCode -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
-            is AddressConfiguration.FullAddress -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
+            is AddressConfiguration.FullAddress -> false
             else -> true
         }
     }

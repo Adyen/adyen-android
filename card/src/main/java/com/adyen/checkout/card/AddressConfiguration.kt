@@ -56,8 +56,7 @@ sealed class AddressConfiguration : Parcelable {
      */
     data class FullAddress(
         val defaultCountryCode: String? = null,
-        val supportedCountryCodes: List<String> = emptyList(),
-        val addressFieldPolicy: AddressFieldPolicy = AddressFieldPolicy.Required()
+        val supportedCountryCodes: List<String> = emptyList()
     ) : AddressConfiguration() {
         companion object {
             @JvmField
@@ -66,7 +65,6 @@ sealed class AddressConfiguration : Parcelable {
                 override fun createFromParcel(source: Parcel) = FullAddress(
                     defaultCountryCode = source.readString(),
                     supportedCountryCodes = source.readArrayList(String::class.java.classLoader) as List<String>,
-                    addressFieldPolicy = source.readParcelable(AddressFieldPolicy::class.java.classLoader)!!
                 )
                 override fun newArray(size: Int) = arrayOfNulls<FullAddress>(size)
             }
@@ -76,7 +74,6 @@ sealed class AddressConfiguration : Parcelable {
         override fun writeToParcel(dest: Parcel, flags: Int) {
             dest.writeString(defaultCountryCode)
             dest.writeList(supportedCountryCodes)
-            dest.writeParcelable(addressFieldPolicy, flags)
         }
     }
 
