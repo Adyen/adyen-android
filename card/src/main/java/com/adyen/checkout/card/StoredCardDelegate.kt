@@ -56,6 +56,20 @@ internal class StoredCardDelegate(
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
+    private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
+    private val storedDetectedCardTypes = DetectedCardType(
+        cardType,
+        isReliable = true,
+        enableLuhnCheck = true,
+        cvcPolicy = when {
+            configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+            else -> Brand.FieldPolicy.REQUIRED
+        },
+        expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+        isSupported = true,
+        panLength = null,
+    )
+
     private val inputData: CardInputData = CardInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -74,22 +88,6 @@ internal class StoredCardDelegate(
     private var publicKey: String? = null
 
     private var coroutineScope: CoroutineScope? = null
-
-    private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
-    private val storedDetectedCardTypes = cardType?.let {
-        DetectedCardType(
-            cardType,
-            isReliable = true,
-            enableLuhnCheck = true,
-            cvcPolicy = when {
-                configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
-                else -> Brand.FieldPolicy.REQUIRED
-            },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = true,
-            panLength = null,
-        )
-    }
 
     override fun initialize(coroutineScope: CoroutineScope) {
         this.coroutineScope = coroutineScope
@@ -157,11 +155,11 @@ internal class StoredCardDelegate(
             addressState = AddressValidationUtils.makeValidEmptyAddressOutput(inputData.address),
             installmentState = FieldState(inputData.installmentOption, Validation.Valid),
             isStoredPaymentMethodEnable = isStorePaymentSelected,
-            cvcUIState = makeCvcUIState(storedDetectedCardTypes?.cvcPolicy),
-            expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes?.expiryDatePolicy),
+            cvcUIState = makeCvcUIState(storedDetectedCardTypes.cvcPolicy),
+            expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes.expiryDatePolicy),
             holderNameUIState = InputFieldUIState.HIDDEN,
             showStorePaymentField = false,
-            detectedCardTypes = listOfNotNull(storedDetectedCardTypes),
+            detectedCardTypes = listOf(storedDetectedCardTypes),
             isSocialSecurityNumberRequired = false,
             isKCPAuthRequired = false,
             addressUIState = AddressFormUIState.NONE,
@@ -241,8 +239,8 @@ internal class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    private fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
-        return if (configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType?.cardType)) {
+    private fun validateSecurityCode(securityCode: String, cardType: DetectedCardType): FieldState<String> {
+        return if (configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType.cardType)) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -326,7 +324,7 @@ internal class StoredCardDelegate(
         onInputDataChanged()
     }
 
-    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
+    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
             isCvcHidden() -> InputFieldUIState.HIDDEN
@@ -338,7 +336,7 @@ internal class StoredCardDelegate(
         }
     }
 
-    private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
+    private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy): InputFieldUIState {
         return when (expiryDatePolicy) {
             Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED

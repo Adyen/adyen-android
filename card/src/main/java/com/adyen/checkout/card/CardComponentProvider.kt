@@ -121,11 +121,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             supportedCardTypes = arrayListOf()
             for (brand in brands) {
                 val brandType = CardType.getByBrandName(brand)
-                if (brandType != null) {
-                    supportedCardTypes.add(brandType)
-                } else {
-                    Logger.e(TAG, "Failed to get card type for brand: $brand")
-                }
+                supportedCardTypes.add(brandType)
             }
         } else {
             Logger.d(TAG, "Falling back to DEFAULT_SUPPORTED_CARDS_LIST")

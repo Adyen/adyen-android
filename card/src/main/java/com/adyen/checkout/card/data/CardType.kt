@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.card.data
 
-import java.util.Collections
 import java.util.regex.Pattern
 
 @Suppress("unused", "SpellCheckingInspection")
@@ -59,8 +58,6 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
 
     companion object {
 
-        private val MAPPED_BY_NAME: Map<String, CardType>
-
         /**
          * Estimate all potential [CardTypes][CardType] for a given card number.
          *
@@ -68,29 +65,15 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
          * @return All matching [CardTypes][CardType] if the number was valid, otherwise an empty [List].
          */
         fun estimate(cardNumber: String): List<CardType> {
-            val result: MutableList<CardType> = ArrayList()
-            for (type in values()) {
-                if (type.isEstimateFor(cardNumber)) {
-                    result.add(type)
-                }
-            }
-            return result
+            return values().filter { it.isEstimateFor(cardNumber) }
         }
 
         /**
          * Get CardType from the brand name as it appears in the Checkout API.
-         * @see [](https://docs.adyen.com/api-explorer/./CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand)
          */
-        fun getByBrandName(brand: String): CardType? {
-            return MAPPED_BY_NAME[brand]
-        }
-
-        init {
-            val hashMap: MutableMap<String, CardType> = HashMap()
-            for (type in values()) {
-                hashMap[type.txVariant] = type
-            }
-            MAPPED_BY_NAME = Collections.unmodifiableMap(hashMap)
+        fun getByBrandName(brand: String): CardType {
+            return values().firstOrNull { it.txVariant == brand }
+                ?: UNKNOWN.apply { txVariant = brand }
         }
     }
 
@@ -100,7 +83,7 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
      * @param cardNumber The card number to make an estimation for.
      * @return Whether the [CardType] is an estimation for a given card number.
      */
-    fun isEstimateFor(cardNumber: String): Boolean {
+    private fun isEstimateFor(cardNumber: String): Boolean {
         val normalizedCardNumber = cardNumber.replace("\\s".toRegex(), "")
         val matcher = mPattern.matcher(normalizedCardNumber)
         return matcher.matches() || matcher.hitEnd()
