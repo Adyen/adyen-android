@@ -22,7 +22,8 @@ import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInService
 import com.adyen.checkout.dropin.ui.DropInActivity
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
 
 /**
  * Drop-in is our pre-built checkout UI for accepting payments. You only need to provide
@@ -123,7 +124,7 @@ object DropIn {
      *
      * @param context The context to start the Checkout flow with.
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
-     * @param session The result from the session/ endpoint.
+     * @param checkoutSession Pass the result from the session/ endpoint to [CheckoutSessionProvider] to get this value.
      * @param dropInConfiguration Additional required configuration data.
      * @param serviceClass Optional service that extends from [SessionDropInService] that would handle network requests.
      */
@@ -131,7 +132,7 @@ object DropIn {
     fun startPaymentWithSession(
         context: Context,
         dropInLauncher: ActivityResultLauncher<Intent>,
-        session: Session,
+        checkoutSession: CheckoutSession,
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
@@ -143,7 +144,7 @@ object DropIn {
         val intent = DropInActivity.createIntent(
             context,
             dropInConfiguration,
-            session,
+            checkoutSession,
             getComponentName(context, serviceClass),
         )
         dropInLauncher.launch(intent)

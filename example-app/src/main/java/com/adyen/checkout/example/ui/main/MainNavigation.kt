@@ -9,11 +9,23 @@
 package com.adyen.checkout.example.ui.main
 
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.sessions.CheckoutSession
 
 internal sealed class MainNavigation {
     object Card : MainNavigation()
-    data class DropIn(val paymentMethodsApiResponse: PaymentMethodsApiResponse) : MainNavigation()
-    data class DropInWithSession(val session: Session) : MainNavigation()
-    data class DropInWithCustomSession(val session: Session) : MainNavigation()
+    data class DropIn(
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        val dropInConfiguration: DropInConfiguration
+    ) : MainNavigation()
+
+    data class DropInWithSession(
+        val checkoutSession: CheckoutSession,
+        val dropInConfiguration: DropInConfiguration
+    ) : MainNavigation()
+
+    data class DropInWithCustomSession(
+        val checkoutSession: CheckoutSession,
+        val dropInConfiguration: DropInConfiguration
+    ) : MainNavigation()
 }

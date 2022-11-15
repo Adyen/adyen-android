@@ -15,7 +15,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.sessions.api.SessionService
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.model.orders.SessionBalanceResponse
 import com.adyen.checkout.sessions.model.orders.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.model.orders.SessionOrderResponse
@@ -47,8 +47,8 @@ internal class SessionRepositoryTest(
 
     @BeforeEach
     fun before() {
-        val initialSession = Session("id", "sessionData")
-        sessionRepository = SessionRepository(sessionService, "someclientkey", initialSession)
+        val initialSessionModel = SessionModel("id", "sessionData")
+        sessionRepository = SessionRepository(sessionService, "someclientkey", initialSessionModel)
     }
 
     @Nested

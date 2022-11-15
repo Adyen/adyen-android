@@ -31,6 +31,9 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.data.SessionDetails
+import com.adyen.checkout.dropin.data.mapToDetails
+import com.adyen.checkout.dropin.data.mapToModel
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.order.OrderModel
@@ -39,7 +42,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.CheckoutSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -66,7 +69,7 @@ internal class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
-    private var session: Session?
+    private var sessionDetails: SessionDetails?
         get() = savedStateHandle[SESSION_KEY]
         private set(value) {
             savedStateHandle[SESSION_KEY] = value
@@ -78,9 +81,9 @@ internal class DropInViewModel(
             savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] = value
         }
 
-    private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
+    private var paymentMethodsApiResponse: PaymentMethodsApiResponse
         get() {
-            return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
+            return getStateValueOrFail(PAYMENT_METHODS_RESPONSE_KEY)
         }
         private set(value) {
             savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY] = value
@@ -132,11 +135,11 @@ internal class DropInViewModel(
     }
 
     fun getPaymentMethods(): List<PaymentMethod> {
-        return paymentMethodsApiResponse?.paymentMethods.orEmpty()
+        return paymentMethodsApiResponse.paymentMethods.orEmpty()
     }
 
     fun getStoredPaymentMethods(): List<StoredPaymentMethod> {
-        return paymentMethodsApiResponse?.storedPaymentMethods.orEmpty()
+        return paymentMethodsApiResponse.storedPaymentMethods.orEmpty()
     }
 
     fun shouldShowPreselectedStored(): Boolean {
@@ -169,42 +172,27 @@ internal class DropInViewModel(
     }
 
     fun onCreated() {
-        if (isInitializedWithSession() && paymentMethodsApiResponse == null) {
-            // we just need to wait for the service to fetch the payment methods and send them to us
-            // TODO add loading state?
-            return
-        } else {
-            navigateToInitialDestination()
-        }
-    }
-
-    fun onDropInServiceConnected() {
-        val session = this.session
-        if (session == null) {
-            Logger.d(TAG, "Session is null")
-        } else {
-            val event = DropInActivityEvent.SessionServiceConnected(
-                session = session,
-                clientKey = dropInConfiguration.clientKey,
-                baseUrl = dropInConfiguration.environment.baseUrl,
-                shouldFetchPaymentMethods = paymentMethodsApiResponse == null,
-                isFlowTakenOver = isSessionsFlowTakenOver
-            )
-            sendEvent(event)
-        }
-    }
-
-    private fun isInitializedWithSession(): Boolean {
-        return session != null
-    }
-
-    fun onSessionSetupSuccessful(paymentMethods: PaymentMethodsApiResponse?) {
-        paymentMethodsApiResponse = paymentMethods
         navigateToInitialDestination()
     }
 
+    fun onDropInServiceConnected() {
+        val sessionModel = sessionDetails?.mapToModel()
+        if (sessionModel == null) {
+            Logger.d(TAG, "Session is null")
+            return
+        }
+
+        val event = DropInActivityEvent.SessionServiceConnected(
+            sessionModel = sessionModel,
+            clientKey = dropInConfiguration.clientKey,
+            baseUrl = dropInConfiguration.environment.baseUrl,
+            isFlowTakenOver = isSessionsFlowTakenOver
+        )
+        sendEvent(event)
+    }
+
     fun onSessionDataChanged(sessionData: String) {
-        session = session?.copy(sessionData = sessionData)
+        sessionDetails = sessionDetails?.copy(sessionData = sessionData)
     }
 
     fun onSessionTakenOverUpdated(isFlowTakenOver: Boolean) {
@@ -371,7 +359,7 @@ internal class DropInViewModel(
         val updatedStoredPaymentMethods = getStoredPaymentMethods().toMutableList()
         if (positionToRemove != -1) {
             updatedStoredPaymentMethods.removeAt(positionToRemove)
-            paymentMethodsApiResponse?.storedPaymentMethods = updatedStoredPaymentMethods
+            paymentMethodsApiResponse.storedPaymentMethods = updatedStoredPaymentMethods
         }
     }
 
@@ -464,13 +452,17 @@ internal class DropInViewModel(
         fun putIntentExtras(
             intent: Intent,
             dropInConfiguration: DropInConfiguration,
-            session: Session,
+            checkoutSession: CheckoutSession,
             service: ComponentName,
         ) {
+            putIntentExtras(
+                intent,
+                dropInConfiguration,
+                checkoutSession.sessionSetupResponse.paymentMethods ?: PaymentMethodsApiResponse(),
+                service
+            )
             intent.apply {
-                putExtra(SESSION_KEY, session)
-                putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-                putExtra(DROP_IN_SERVICE_KEY, service)
+                putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
             }
         }
 

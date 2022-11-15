@@ -74,7 +74,7 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
 
@@ -471,8 +471,6 @@ internal class DropInActivity :
 
     private fun handleDropInServiceResult(dropInServiceResult: SessionDropInServiceResult) {
         when (dropInServiceResult) {
-            is SessionDropInServiceResult.SetupDone ->
-                dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.paymentMethods)
             is SessionDropInServiceResult.SessionDataChanged ->
                 dropInViewModel.onSessionDataChanged(dropInServiceResult.sessionData)
             is SessionDropInServiceResult.SessionTakenOverUpdated ->
@@ -600,10 +598,9 @@ internal class DropInActivity :
 
     private fun onSessionServiceConnected(event: DropInActivityEvent.SessionServiceConnected) {
         (dropInService as? SessionDropInServiceInterface)?.initialize(
-            session = event.session,
+            sessionModel = event.sessionModel,
             clientKey = event.clientKey,
             baseUrl = event.baseUrl,
-            shouldFetchPaymentMethods = event.shouldFetchPaymentMethods,
             isFlowTakenOver = event.isFlowTakenOver,
         )
     }
@@ -714,11 +711,11 @@ internal class DropInActivity :
         fun createIntent(
             context: Context,
             dropInConfiguration: DropInConfiguration,
-            session: Session,
+            checkoutSession: CheckoutSession,
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, session, service)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, checkoutSession, service)
             return intent
         }
     }
