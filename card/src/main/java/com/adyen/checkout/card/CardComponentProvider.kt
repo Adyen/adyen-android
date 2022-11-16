@@ -16,6 +16,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -31,9 +32,11 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+class CardComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
 
-    private val componentParamsMapper = CardComponentParamsMapper()
+    private val componentParamsMapper = CardComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

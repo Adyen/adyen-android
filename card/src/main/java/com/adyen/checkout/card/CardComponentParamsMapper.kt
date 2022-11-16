@@ -9,18 +9,25 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-internal class CardComponentParamsMapper {
+internal class CardComponentParamsMapper(
+    private val parentConfiguration: Configuration?
+) {
 
     fun mapToParams(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
     ): CardComponentParams {
-        return mapToParams(cardConfiguration, getSupportedCardTypes(cardConfiguration, paymentMethod))
+        return mapToParams(
+            parentConfiguration = parentConfiguration ?: cardConfiguration,
+            cardConfiguration = cardConfiguration,
+            supportedCardTypes = getSupportedCardTypes(cardConfiguration, paymentMethod)
+        )
     }
 
     fun mapToParams(
@@ -28,18 +35,23 @@ internal class CardComponentParamsMapper {
         // not needed for the actual mapping but indicates that this is the method to use in a stored flow
         storedPaymentMethod: StoredPaymentMethod,
     ): CardComponentParams {
-        return mapToParams(cardConfiguration, cardConfiguration.supportedCardTypes)
+        return mapToParams(
+            parentConfiguration = parentConfiguration ?: cardConfiguration,
+            cardConfiguration = cardConfiguration,
+            supportedCardTypes = cardConfiguration.supportedCardTypes
+        )
     }
 
     private fun mapToParams(
+        parentConfiguration: Configuration,
         cardConfiguration: CardConfiguration,
         supportedCardTypes: List<CardType>,
     ): CardComponentParams {
         with(cardConfiguration) {
             return CardComponentParams(
-                shopperLocale = shopperLocale,
-                environment = environment,
-                clientKey = clientKey,
+                shopperLocale = parentConfiguration.shopperLocale,
+                environment = parentConfiguration.environment,
+                clientKey = parentConfiguration.clientKey,
                 isHolderNameRequired = isHolderNameRequired,
                 supportedCardTypes = supportedCardTypes,
                 shopperReference = shopperReference,

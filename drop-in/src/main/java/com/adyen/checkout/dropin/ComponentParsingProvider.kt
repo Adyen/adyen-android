@@ -22,6 +22,7 @@ import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardComponentProvider
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
@@ -341,7 +342,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration, amount)
-            CardComponent.PROVIDER.get(fragment, storedPaymentMethod, cardConfig)
+            CardComponentProvider(dropInConfiguration).get(fragment, storedPaymentMethod, cardConfig)
         }
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val blikConfig: BlikConfiguration =
@@ -391,7 +392,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            CardComponent.PROVIDER.get(fragment, paymentMethod, cardConfig)
+            CardComponentProvider(dropInConfiguration).get(fragment, paymentMethod, cardConfig)
         }
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
