@@ -297,7 +297,8 @@ internal class StoredCardDelegateTest {
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
-            configuration = configuration,
+            configuration  =configuration,
+            componentParams = CardComponentParamsMapper(null).mapToParams(configuration, storedPaymentMethod),
             cardEncrypter = cardEncrypter,
         )
     }

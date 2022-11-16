@@ -63,6 +63,7 @@ internal class DefaultCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: CardConfiguration,
+    private val componentParams: CardComponentParams,
     private val paymentMethod: PaymentMethod,
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
@@ -98,7 +99,7 @@ internal class DefaultCardDelegate(
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
-        if (configuration.addressConfiguration is AddressConfiguration.FullAddress) {
+        if (componentParams.addressConfiguration is AddressConfiguration.FullAddress) {
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
@@ -127,8 +128,8 @@ internal class DefaultCardDelegate(
         Logger.d(TAG, "fetchPublicKey")
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
+                environment = componentParams.environment,
+                clientKey = componentParams.clientKey
             ).fold(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
@@ -153,9 +154,9 @@ internal class DefaultCardDelegate(
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
-            supportedCardTypes = configuration.supportedCardTypes,
-            environment = configuration.environment,
-            clientKey = configuration.clientKey,
+            supportedCardTypes = componentParams.supportedCardTypes,
+            environment = componentParams.environment,
+            clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope
         )
         requestStateList(inputData.address.country)
@@ -180,7 +181,7 @@ internal class DefaultCardDelegate(
             .onEach { countries ->
                 Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
-                    addressConfiguration = configuration.addressConfiguration,
+                    addressConfiguration = componentParams.addressConfiguration,
                     countryList = countries
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
@@ -244,7 +245,7 @@ internal class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        val addressFormUIState = AddressFormUIState.fromAddressConfiguration(configuration.addressConfiguration)
+        val addressFormUIState = AddressFormUIState.fromAddressConfiguration(componentParams.addressConfiguration)
 
         return CardOutputData(
             cardNumberState = validateCardNumber(
@@ -270,7 +271,7 @@ internal class DefaultCardDelegate(
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
             installmentOptions = getInstallmentOptions(
-                installmentConfiguration = configuration.installmentConfiguration,
+                installmentConfiguration = componentParams.installmentConfiguration,
                 cardType = selectedOrFirstCardType?.cardType,
                 isCardTypeReliable = isReliable
             ),
@@ -376,7 +377,7 @@ internal class DefaultCardDelegate(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        return if (configuration.isHideCvc) {
+        return if (componentParams.isHideCvc) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -387,7 +388,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {
-        return if (configuration.isHolderNameRequired && holderName.isBlank()) {
+        return if (componentParams.isHolderNameRequired && holderName.isBlank()) {
             FieldState(
                 holderName,
                 Validation.Invalid(R.string.checkout_holder_name_not_valid)
@@ -432,21 +433,21 @@ internal class DefaultCardDelegate(
         return AddressValidationUtils.validateAddressInput(
             addressInputModel,
             addressFormUIState,
-            configuration.addressConfiguration,
+            componentParams.addressConfiguration,
             detectedCardType
         )
     }
 
     private fun isCvcHidden(): Boolean {
-        return configuration.isHideCvc
+        return componentParams.isHideCvc
     }
 
     private fun isSocialSecurityNumberRequired(): Boolean {
-        return configuration.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
+        return componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
     private fun isKCPAuthRequired(): Boolean {
-        return configuration.kcpAuthVisibility == KCPAuthVisibility.SHOW
+        return componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW
     }
 
     override fun requiresInput(): Boolean {
@@ -459,7 +460,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun isHolderNameRequired(): Boolean {
-        return configuration.isHolderNameRequired
+        return componentParams.isHolderNameRequired
     }
 
     private fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
@@ -484,11 +485,20 @@ internal class DefaultCardDelegate(
     }
 
     private fun requestCountryList() {
-        addressRepository.getCountryList(configuration, coroutineScope)
+        addressRepository.getCountryList(
+            environment = componentParams.environment,
+            shopperLocale = componentParams.shopperLocale,
+            coroutineScope = coroutineScope
+        )
     }
 
     private fun requestStateList(countryCode: String?) {
-        addressRepository.getStateList(configuration, countryCode, coroutineScope)
+        addressRepository.getStateList(
+            environment = componentParams.environment,
+            shopperLocale = componentParams.shopperLocale,
+            countryCode = countryCode,
+            coroutineScope = coroutineScope
+        )
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
@@ -586,7 +596,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun showStorePaymentField(): Boolean {
-        return configuration.isStorePaymentFieldVisible
+        return componentParams.isStorePaymentFieldVisible
     }
 
     private fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
@@ -603,7 +613,7 @@ internal class DefaultCardDelegate(
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable
-            shopperReference = configuration.shopperReference
+            shopperReference = componentParams.shopperReference
             if (isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
             }
@@ -625,7 +635,7 @@ internal class DefaultCardDelegate(
 
     private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
         val noCardDetected = detectedCardTypes.isEmpty()
-        return configuration.supportedCardTypes.map { cardType ->
+        return componentParams.supportedCardTypes.map { cardType ->
             CardListItem(cardType, noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType))
         }
     }

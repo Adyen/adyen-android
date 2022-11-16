@@ -11,7 +11,6 @@ package com.adyen.checkout.card.repository
 import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.AddressSpecification
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
@@ -36,7 +35,8 @@ internal class DefaultAddressRepository : AddressRepository {
     private val cache: HashMap<String, List<AddressItem>> = hashMapOf()
 
     override fun getStateList(
-        configuration: Configuration,
+        environment: Environment,
+        shopperLocale: Locale,
         countryCode: String?,
         coroutineScope: CoroutineScope
     ) {
@@ -47,8 +47,8 @@ internal class DefaultAddressRepository : AddressRepository {
                 statesChannel.trySend(it)
             } ?: run {
                 fetchStateList(
-                    configuration.environment,
-                    configuration.shopperLocale,
+                    environment,
+                    shopperLocale,
                     countryCode,
                     coroutineScope
                 )
@@ -82,13 +82,13 @@ internal class DefaultAddressRepository : AddressRepository {
         }
     }
 
-    override fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope) {
+    override fun getCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
         cache[COUNTRIES_CACHE_KEY]?.let {
             countriesChannel.trySend(it)
         } ?: run {
             fetchCountryList(
-                configuration.environment,
-                configuration.shopperLocale,
+                environment,
+                shopperLocale,
                 coroutineScope
             )
         }

@@ -9,9 +9,10 @@
 package com.adyen.checkout.card.repository
 
 import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import java.util.Locale
 
 interface AddressRepository {
 
@@ -20,10 +21,15 @@ interface AddressRepository {
     val countriesFlow: Flow<List<AddressItem>>
 
     fun getStateList(
-        configuration: Configuration,
+        environment: Environment,
+        shopperLocale: Locale,
         countryCode: String?,
         coroutineScope: CoroutineScope
     )
 
-    fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope)
+    fun getCountryList(
+        environment: Environment,
+        shopperLocale: Locale,
+        coroutineScope: CoroutineScope
+    )
 }

@@ -709,6 +709,7 @@ internal class DefaultCardDelegateTest {
             paymentMethod = paymentMethod,
             publicKeyRepository = publicKeyRepository,
             configuration = configuration,
+            componentParams = CardComponentParamsMapper(null).mapToParams(configuration, paymentMethod),
             cardEncrypter = cardEncrypter,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,
