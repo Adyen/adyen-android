@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components
 
+import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -24,17 +25,19 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
      * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
      * @param configuration       The Configuration of the component.
      * @param key                 Key
+     * @param application         The [Application] instance used to handle actions with.
      *
      * @return The Component
      */
     @Throws(CheckoutException::class)
-    operator fun <T> get(
+    fun <T> get(
         owner: T,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
+        application: Application,
         key: String? = null,
     ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, storedPaymentMethod, configuration, null, key)
+        return get(owner, owner, storedPaymentMethod, configuration, application, null, key)
     }
 
     /**
@@ -48,6 +51,7 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
      *                                [ViewModel] if there is no previously saved state or previously saved state misses
      *                                a value by such key
      * @param key                     Key
+     * @param application             The [Application] instance used to handle actions with.
      *
      * @return The Component
      */
@@ -58,6 +62,7 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): ComponentT

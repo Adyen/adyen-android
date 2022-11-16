@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dotpay
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,7 @@ class DotpayComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: DotpayConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): DotpayComponent {

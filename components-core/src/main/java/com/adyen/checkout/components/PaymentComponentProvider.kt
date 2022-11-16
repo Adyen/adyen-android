@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components
 
+import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -30,6 +31,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
      * @param key           The key to use to identify the [PaymentComponent].
+     * @param application   The [Application] instance used to handle actions with.
      *
      * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
      * instantiate multiple [PaymentComponent]s in the same lifecycle.
@@ -41,9 +43,10 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
         owner: T,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
+        application: Application,
         key: String? = null,
     ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null, key)
+        return get(owner, owner, paymentMethod, configuration, application, null, key)
     }
 
     /**
@@ -57,6 +60,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      *                                [ViewModel] if there is no previously saved state or previously saved state misses
      *                                a value by such key
      * @param key                     The key to use to identify the [PaymentComponent].
+     * @param application   The [Application] instance used to handle actions with.
      *
      * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
      * instantiate multiple [PaymentComponent]s in the same lifecycle.
@@ -70,6 +74,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): ComponentT

@@ -43,6 +43,7 @@ class CardComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
@@ -63,12 +64,11 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            // TODO: Fix application
             val actionHandlingDelegate = DefaultActionHandlingDelegate(
                 GenericActionComponent.PROVIDER.getDelegate(
                     actionConfiguration,
                     savedStateHandle,
-                    Application()
+                    application,
                 )
             )
 
@@ -98,6 +98,7 @@ class CardComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
@@ -115,12 +116,11 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            // TODO: Fix application
             val actionHandlingDelegate = DefaultActionHandlingDelegate(
                 GenericActionComponent.PROVIDER.getDelegate(
                     actionConfiguration,
                     savedStateHandle,
-                    Application()
+                    application,
                 )
             )
 

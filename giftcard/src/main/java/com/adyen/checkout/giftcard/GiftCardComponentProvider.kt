@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.giftcard
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,7 @@ class GiftCardComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): GiftCardComponent {

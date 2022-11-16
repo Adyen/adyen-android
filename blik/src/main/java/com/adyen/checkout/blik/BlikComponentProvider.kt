@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,7 @@ class BlikComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): BlikComponent {
@@ -61,6 +63,7 @@ class BlikComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): BlikComponent {

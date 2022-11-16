@@ -46,6 +46,7 @@ class GooglePayComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): GooglePayComponent {

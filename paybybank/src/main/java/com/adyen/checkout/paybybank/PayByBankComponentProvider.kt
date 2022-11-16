@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.paybybank
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ class PayByBankComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: PayByBankConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): PayByBankComponent {

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.sepa
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ class SepaComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: SepaConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): SepaComponent {

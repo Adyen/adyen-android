@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.eps
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +40,7 @@ class EPSComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: EPSConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): EPSComponent {

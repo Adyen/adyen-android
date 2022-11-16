@@ -94,7 +94,8 @@ class CardActivity : AppCompatActivity() {
         val cardComponent = CardComponent.PROVIDER.get(
             this,
             paymentMethod,
-            checkoutConfigurationProvider.getCardConfiguration()
+            checkoutConfigurationProvider.getCardConfiguration(),
+            application,
         )
 
         this.cardComponent = cardComponent

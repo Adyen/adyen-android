@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.instant
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +35,7 @@ class InstantPaymentComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: InstantPaymentConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?
     ): InstantPaymentComponent {
