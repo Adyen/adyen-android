@@ -11,6 +11,7 @@ package com.adyen.checkout.card
 import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
+import com.adyen.checkout.action.TestActionHandlingDelegate
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -714,6 +715,7 @@ internal class DefaultCardDelegateTest {
             detectCardTypeRepository = detectCardTypeRepository,
             cardValidationMapper = cardValidationMapper,
             genericEncrypter = genericEncrypter,
+            actionHandlingDelegate = TestActionHandlingDelegate(),
         )
     }
 

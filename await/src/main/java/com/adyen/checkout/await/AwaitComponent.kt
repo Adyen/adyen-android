@@ -16,7 +16,7 @@ import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow

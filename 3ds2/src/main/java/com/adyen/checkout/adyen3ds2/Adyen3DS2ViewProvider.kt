@@ -10,10 +10,11 @@ package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.ComponentViewType
 
 internal object Adyen3DS2ViewProvider : ViewProvider {
 
@@ -28,4 +29,5 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
     }
 }
 
-internal object Adyen3DS2ComponentViewType : ComponentViewType
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object Adyen3DS2ComponentViewType : ComponentViewType

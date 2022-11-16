@@ -11,12 +11,14 @@ package com.adyen.checkout.card
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
+import com.adyen.checkout.components.ActionHandlingComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -29,13 +31,15 @@ class CardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: CardDelegate,
     cardConfiguration: CardConfiguration,
+    private val actionHandlingDelegate: DefaultActionHandlingComponent
 ) :
     BasePaymentComponent<CardConfiguration, CardComponentState>(
         savedStateHandle,
         delegate,
         cardConfiguration
     ),
-    ViewableComponent {
+    ViewableComponent,
+    ActionHandlingComponent by actionHandlingDelegate {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 

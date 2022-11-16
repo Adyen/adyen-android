@@ -16,6 +16,8 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.components.ActionHandlingDelegate
+import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -27,7 +29,6 @@ import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -42,6 +43,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -52,7 +54,9 @@ internal class StoredCardDelegate(
     override val componentParams: CardComponentParams,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
-) : CardDelegate {
+    private val actionHandlingDelegate: ActionHandlingDelegate,
+) : CardDelegate,
+    ActionHandlingDelegate by actionHandlingDelegate {
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
@@ -81,7 +85,10 @@ internal class StoredCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = merge(
+        MutableStateFlow(CardComponentViewType),
+        actionHandlingDelegate.viewFlow,
+    )
 
     override val outputData: CardOutputData get() = _outputDataFlow.value
 

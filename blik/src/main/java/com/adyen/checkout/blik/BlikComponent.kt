@@ -17,7 +17,7 @@ import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

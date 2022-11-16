@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.RestrictTo
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.adyen.checkout.components.ActionHandlingDelegate
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.databinding.ViewPaymentInProgressBinding
@@ -36,12 +37,18 @@ class PaymentInProgressView @JvmOverloads constructor(
     private val binding = ViewPaymentInProgressBinding.inflate(LayoutInflater.from(context), this)
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is ActionDelegate) throw IllegalStateException("Unsupported delegate type")
+        val actionDelegate = if (delegate is ActionHandlingDelegate) {
+            delegate.actionDelegate
+        } else {
+            delegate
+        }
+
+        if (actionDelegate !is ActionDelegate) throw IllegalStateException("Unsupported delegate type")
 
         initLocalizedStrings(localizedContext)
 
         binding.buttonPaymentInProgressAbort.setOnClickListener {
-            delegate.onError(CancellationException("Payment in progress was cancelled"))
+            actionDelegate.onError(CancellationException("Payment in progress was cancelled"))
         }
     }
 

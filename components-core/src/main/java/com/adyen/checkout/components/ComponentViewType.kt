@@ -6,6 +6,6 @@
  * Created by josephj on 1/9/2022.
  */
 
-package com.adyen.checkout.components.ui.view
+package com.adyen.checkout.components
 
 interface ComponentViewType
