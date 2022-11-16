@@ -9,11 +9,15 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Added
-- `Online banking Poland` Component
+- For cards, in `AddressConfiguration.PostalCode` mode, you can now specify if the postal code field required.
+- For BCMC, you can now specify if the card holder name field is required.
+- After the card brand is detected and the shopper enters the full card number in the card number input field, focus automatically moves to the next input field.
 
 ## Changed
-- Update 3DS2 SDK version to `2.2.8`
+- Upgraded the 3D Secure 2 SDK version to v2.2.10.
+- For a card number to be valid, its minimum required length is now 12 digits. Previously, the minimum was 8 digits.
+- For cards, if you currently set the postal code input field in the AddressConfiguration as `.setAddressConfiguration(AddressConfiguration.PostalCode)`, you must update it to `.setAddressConfiguration(AddressConfiguration.PostalCode())`.
 
 ## Fixed
-- Gracefully terminate drop in without crashing when coming back from a redirect after drop-in was closed
-- Updating 3DS2 SDK version fixed a crash on Android 13
+- Configuration changes no longer dismiss Drop-in. Previously, some configuration changes dismissed Drop-in.
+- Drop-in can now be initialized with only stored payment methods. Previously, no payment methods were shown if only stored payment methods were available.
