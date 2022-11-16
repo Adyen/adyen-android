@@ -15,7 +15,8 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONObject
 
 /**
- * This class is a top level abstraction for data objects that can be serialized to the paymentMethod parameter on a payments/ call.
+ * This class is a top level abstraction for data objects that can be serialized to the paymentMethod parameter on a
+ * payments/ call.
  * The [SERIALIZER] object can serialize this to a [JSONObject] with the corresponding data.
  *
  * Alternatively you can use other parsing libraries if they support polymorphism.

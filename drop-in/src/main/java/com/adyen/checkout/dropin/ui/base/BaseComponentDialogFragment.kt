@@ -97,10 +97,11 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         }
 
         try {
-            component = if (isStoredPayment)
+            component = if (isStoredPayment) {
                 getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-            else
+            } else {
                 getComponentFor(this, paymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
+            }
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
             return

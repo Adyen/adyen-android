@@ -164,7 +164,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     /**
-     * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
+     * In this method you should make the network call to tell your server to make a call to the payments/details/
+     * endpoint.
      *
      * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
      * payments/details/ endpoint (if paymentData was provided).
@@ -311,7 +312,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     /**
-     * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
+     * In this method you should make the network call to tell your server to make a call to the payments/details/
+     * endpoint.
      *
      * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
      * payments/details/ endpoint (if paymentData was provided).

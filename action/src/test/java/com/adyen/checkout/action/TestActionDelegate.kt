@@ -159,4 +159,3 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 internal object TestComponentViewType : ComponentViewType
 
 private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-

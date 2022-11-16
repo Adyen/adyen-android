@@ -26,7 +26,6 @@ internal object ConfigurationProvider {
     private val amount = Amount(currency = "EUR", value = 1337)
     private val environment = Environment.TEST
 
-
     internal fun getDropInConfiguration(): DropInConfiguration {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             shopperLocale,

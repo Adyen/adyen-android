@@ -610,7 +610,8 @@ internal class CardView @JvmOverloads constructor(
             }
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutSecurityCode.isVisible = false
-                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
+                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the
+                // margin back.
                 val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
                 params.marginEnd = 0
                 binding.textInputLayoutExpiryDate.layoutParams = params

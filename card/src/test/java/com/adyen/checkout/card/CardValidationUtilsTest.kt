@@ -155,7 +155,6 @@ internal class CardValidationUtilsTest {
         assertEquals(true, actual)
     }
 
-
     @Test
     fun isInMinMonthRange_ExpiryDateThreeMonthsInPast_ExpectTrue() {
         // month is 0 based in calendar

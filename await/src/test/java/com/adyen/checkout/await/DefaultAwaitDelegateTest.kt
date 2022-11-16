@@ -49,7 +49,12 @@ internal class DefaultAwaitDelegateTest {
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build()
-        delegate = DefaultAwaitDelegate(ActionObserverRepository(), configuration, statusRepository, paymentDataRepository)
+        delegate = DefaultAwaitDelegate(
+            ActionObserverRepository(),
+            configuration,
+            statusRepository,
+            paymentDataRepository
+        )
         Logger.setLogcatLevel(Logger.NONE)
     }
 

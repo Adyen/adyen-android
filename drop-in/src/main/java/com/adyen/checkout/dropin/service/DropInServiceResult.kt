@@ -47,11 +47,11 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      *
      * Update drop-in with a new list of payment methods and optionally an order.
      *
-     * After submitting a partial payment, you need to call /paymentMethods again with the new remaining payment amount, and
-     * pass the updated payment methods list, alongside the latest order object.
+     * After submitting a partial payment, you need to call /paymentMethods again with the new remaining payment amount,
+     * and pass the updated payment methods list, alongside the latest order object.
      *
-     * Also after cancelling an order, you need to call /paymentMethods again with the original payment amount, and pass the
-     * updated payment methods list, with a null order object.
+     * Also after cancelling an order, you need to call /paymentMethods again with the original payment amount, and pass
+     * the updated payment methods list, with a null order object.
      *
      * Use [OrderResponse.SERIALIZER] to serialize your JSON response string.
      *

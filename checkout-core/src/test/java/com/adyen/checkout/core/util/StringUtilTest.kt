@@ -11,7 +11,6 @@ package com.adyen.checkout.core.util
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-
 internal class StringUtilTest {
 
     @Test

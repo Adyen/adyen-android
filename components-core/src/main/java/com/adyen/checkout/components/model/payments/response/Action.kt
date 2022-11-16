@@ -12,8 +12,10 @@ import com.adyen.checkout.core.model.ModelObject
 import org.json.JSONObject
 
 /**
- * An Action is an object from the response of the /payments endpoint that indicates what needs to be done to continue the payment.
- * Each type of Action contains different properties, so we use polymorphism to parse which type of Action we are dealing with.
+ * An Action is an object from the response of the /payments endpoint that indicates what needs to be done to continue
+ * the payment.
+ * Each type of Action contains different properties, so we use polymorphism to parse which type of Action we are
+ * dealing with.
  */
 abstract class Action : ModelObject() {
     abstract var type: String?

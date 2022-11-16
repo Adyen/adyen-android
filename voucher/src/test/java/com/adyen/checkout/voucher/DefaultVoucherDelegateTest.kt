@@ -58,4 +58,3 @@ internal class DefaultVoucherDelegateTest {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }
-

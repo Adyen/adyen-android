@@ -142,8 +142,8 @@ class CardConfiguration private constructor(
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the [com.adyen.checkout.components.model.payments.request.PaymentComponentData]
-         * for convenience.
+         * This value will simply be passed back to you in the
+         * [com.adyen.checkout.components.model.payments.request.PaymentComponentData] for convenience.
          *
          * @param shopperReference The unique shopper reference
          * @return [CardConfiguration.Builder]
@@ -154,8 +154,10 @@ class CardConfiguration private constructor(
         }
 
         /**
-         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular payment.
-         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling this.
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular
+         * payment.
+         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling
+         * this.
          *
          * @param hideCvc If CVC should be hidden or not.
          * @return [CardConfiguration.Builder]
@@ -166,7 +168,8 @@ class CardConfiguration private constructor(
         }
 
         /**
-         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a stored payment flow.
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a stored payment
+         * flow.
          * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
          *
          * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.

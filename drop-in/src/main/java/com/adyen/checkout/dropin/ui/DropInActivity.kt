@@ -201,7 +201,8 @@ internal class DropInActivity :
     private fun createLocalizedContext(baseContext: Context?): Context? {
         if (baseContext == null) return baseContext
 
-        // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't have the Config object yet.
+        // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't
+        // have the Config object yet.
         val locale = DropInPrefs.getShopperLocale(baseContext)
         return baseContext.createLocalizedContext(locale)
     }

@@ -333,7 +333,6 @@ internal class DefaultCardDelegateTest {
                     expiryDate = TEST_EXPIRY_DATE
                 }
 
-
                 with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertEquals(createOutputData(), this)

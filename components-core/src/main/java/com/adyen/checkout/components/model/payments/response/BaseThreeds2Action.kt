@@ -8,4 +8,5 @@
 
 package com.adyen.checkout.components.model.payments.response
 
+@Suppress("UnnecessaryAbstractClass")
 abstract class BaseThreeds2Action : Action()

@@ -30,15 +30,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable())
-        BuildConfig.MERCHANT_SERVER_URL
-    else
-        "http://myserver.com/my/endpoint/"
+    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable()) BuildConfig.MERCHANT_SERVER_URL
+    else "http://myserver.com/my/endpoint/"
 
-    private val BASE_URL_RECURRING = if (RecurringApiService.isRealUrlAvailable())
+    private val BASE_URL_RECURRING = if (RecurringApiService.isRealUrlAvailable()) {
         BuildConfig.MERCHANT_RECURRING_SERVER_URL
-    else
+    } else {
         "http://myserver.com/my/endpoint/"
+    }
 
     @Singleton
     @Provides

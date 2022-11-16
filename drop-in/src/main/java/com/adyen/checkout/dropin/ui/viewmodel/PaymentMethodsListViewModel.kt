@@ -121,10 +121,9 @@ internal class PaymentMethodsListViewModel(
             // payment methods
             val paymentMethodsList: List<PaymentMethodModel> = paymentMethods.mapToPaymentMethodModelList()
             if (paymentMethodsList.isNotEmpty()) {
-                val headerType = if (hasStoredPaymentMethods)
-                    PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
-                else
-                    PaymentMethodHeader.TYPE_REGULAR_HEADER_WITH_STORED
+                val headerType = if (hasStoredPaymentMethods) PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
+                else PaymentMethodHeader.TYPE_REGULAR_HEADER_WITH_STORED
+
                 add(PaymentMethodHeader(headerType))
                 addAll(paymentMethodsList)
             }
@@ -141,18 +140,17 @@ internal class PaymentMethodsListViewModel(
         mapIndexedNotNull { index, paymentMethod ->
             val isAvailable = paymentMethodsAvailabilityMap[paymentMethod]
                 ?: throw IllegalStateException("payment method not found in map")
-            if (isAvailable)
-                paymentMethod.mapToModel(index)
-            else
-                null
+            if (isAvailable) paymentMethod.mapToModel(index)
+            else null
         }
 
     private fun List<StoredPaymentMethod>.mapToStoredPaymentMethodsModelList(): List<StoredPaymentMethodModel> =
         mapNotNull { storedPaymentMethod ->
-            if (storedPaymentMethod.isStoredPaymentSupported())
+            if (storedPaymentMethod.isStoredPaymentSupported()) {
                 storedPaymentMethod.mapStoredModel(dropInConfiguration.isRemovingStoredPaymentMethodsEnabled)
-            else
+            } else {
                 null
+            }
         }
 
     private fun PaymentMethod.mapToModel(index: Int): PaymentMethodModel {
