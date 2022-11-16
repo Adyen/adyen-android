@@ -257,7 +257,7 @@ formatting:
     continuationIndentSize: 4
   MaximumLineLength:
     active: true
-    maxLineLength: 150
+    maxLineLength: 120
   ModifierOrdering:
     active: true
     autoCorrect: true
@@ -570,7 +570,7 @@ style:
     active: false
   MaxLineLength:
     active: true
-    maxLineLength: 150
+    maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
