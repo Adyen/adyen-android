@@ -8,6 +8,7 @@
 package com.adyen.checkout.card
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -29,7 +30,10 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 private val TAG = LogUtil.getTag()
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+
+    private val componentParamsMapper = CardComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -41,6 +45,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
     ): CardComponent {
         assertSupported(paymentMethod)
 
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -78,6 +83,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
+        val componentParams = componentParamsMapper.mapToParams(configuration, storedPaymentMethod)
         val publicKeyRepository = DefaultPublicKeyRepository()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -105,6 +111,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
      * @param cardConfiguration The configuration object that will start the component.
      * @return The Configuration object with possibly adjusted values.
      */
+    // TODO remove after replacing configuration with params
     private fun checkSupportedCardTypes(
         paymentMethod: PaymentMethod,
         cardConfiguration: CardConfiguration

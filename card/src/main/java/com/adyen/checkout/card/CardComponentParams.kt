@@ -11,8 +11,8 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.core.api.Environment
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 internal data class CardComponentParams(
