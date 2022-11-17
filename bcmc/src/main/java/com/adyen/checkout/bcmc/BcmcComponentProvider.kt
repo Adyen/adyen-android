@@ -8,11 +8,13 @@
 package com.adyen.checkout.bcmc
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -22,7 +24,12 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 
-class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class BcmcComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
+
+    private val componentParamsMapper = BcmcComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -34,6 +41,7 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
     ): BcmcComponent {
         assertSupported(paymentMethod)
 
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         val publicKeyRepository = DefaultPublicKeyRepository()
         val cardValidationMapper = CardValidationMapper()
         val genericEncrypter = DefaultGenericEncrypter()
@@ -46,6 +54,7 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
                     paymentMethod = paymentMethod,
                     publicKeyRepository = publicKeyRepository,
                     configuration = configuration,
+                    componentParams = componentParams,
                     cardValidationMapper = cardValidationMapper,
                     cardEncrypter = cardEncrypter
                 ),
