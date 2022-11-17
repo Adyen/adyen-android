@@ -31,8 +31,8 @@ class CardConfiguration private constructor(
     val isStorePaymentFieldVisible: Boolean,
     val isHideCvc: Boolean,
     val isHideCvcStoredCard: Boolean,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
-    val kcpAuthVisibility: KCPAuthVisibility?,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
+    val kcpAuthVisibility: KCPAuthVisibility,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration,
 ) : Configuration {
@@ -48,9 +48,9 @@ class CardConfiguration private constructor(
         private var shopperReference: String? = null
         private var isHideCvc = false
         private var isHideCvcStoredCard = false
-        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
+        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility =
             SocialSecurityNumberVisibility.HIDE
-        private var kcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
+        private var kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE
         private var installmentConfiguration: InstallmentConfiguration? = null
         private var addressConfiguration: AddressConfiguration = AddressConfiguration.None
 

@@ -163,8 +163,8 @@ internal class CardComponentParamsMapperTest {
         isStorePaymentFieldVisible: Boolean = true,
         isHideCvc: Boolean = false,
         isHideCvcStoredCard: Boolean = false,
-        socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = SocialSecurityNumberVisibility.HIDE,
-        kcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE,
+        socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
+        kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentConfiguration: InstallmentConfiguration? = null,
         addressConfiguration: AddressConfiguration = AddressConfiguration.None,
     ) = CardComponentParams(

@@ -25,8 +25,8 @@ internal data class CardComponentParams(
     val isStorePaymentFieldVisible: Boolean,
     val isHideCvc: Boolean,
     val isHideCvcStoredCard: Boolean,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
-    val kcpAuthVisibility: KCPAuthVisibility?,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
+    val kcpAuthVisibility: KCPAuthVisibility,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration,
 ) : ComponentParams
