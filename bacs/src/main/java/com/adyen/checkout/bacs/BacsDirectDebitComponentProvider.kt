@@ -19,7 +19,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class BacsComponentProvider : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
+class BacsDirectDebitComponentProvider : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
