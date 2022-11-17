@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -24,9 +25,11 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionComponentCallback
+import com.adyen.checkout.components.extensions.toast
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -50,6 +53,13 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val action: Action by arguments(ACTION)
     private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (!isGranted) {
+                requireContext().toast("permission is not granted")
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,10 +155,15 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     }
 
     private fun handleError(componentError: ComponentError) {
-        when (componentError.exception) {
+        when (val exception = componentError.exception) {
             is CancellationException -> {
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
+            }
+            is PermissionException -> {
+                val requiredPermission = exception.requiredPermission
+                Logger.e(TAG, "$requiredPermission permission is not granted", exception)
+                requestPermissionLauncher.launch(requiredPermission)
             }
             else -> {
                 Logger.e(TAG, componentError.errorMessage)

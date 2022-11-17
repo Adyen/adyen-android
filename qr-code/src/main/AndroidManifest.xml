@@ -6,4 +6,11 @@
   ~ Created by josephj on 26/3/2021.
   -->
 
-<manifest package="com.adyen.checkout.qrcode" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.adyen.checkout.qrcode">
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+</manifest>
