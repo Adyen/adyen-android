@@ -83,6 +83,8 @@ class BcmcConfiguration private constructor(
         /**
          * Set if the holder name is required and should be shown as an input field.
          *
+         * Default is false.
+         *
          * @param isHolderNameRequired [Boolean]
          * @return [BcmcConfiguration.Builder]
          */
@@ -93,6 +95,8 @@ class BcmcConfiguration private constructor(
 
         /**
          * Set if the option to store the card for future payments should be shown as an input field.
+         *
+         * Default is false.
          *
          * @param showStorePaymentField [Boolean]
          * @return [BcmcConfiguration.Builder]
