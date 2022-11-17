@@ -162,8 +162,6 @@ internal class DefaultBcmcDelegateTest {
                 }
             }
         }
-
-
     }
 
     @Nested

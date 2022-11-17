@@ -41,7 +41,12 @@ internal class DefaultRedirectDelegateTest {
         ).build()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultRedirectDelegate(ActionObserverRepository(), configuration, redirectHandler, paymentDataRepository)
+        delegate = DefaultRedirectDelegate(
+            ActionObserverRepository(),
+            configuration,
+            redirectHandler,
+            paymentDataRepository
+        )
     }
 
     @Test
@@ -94,4 +99,3 @@ internal class DefaultRedirectDelegateTest {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }
-

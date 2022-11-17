@@ -23,7 +23,8 @@ object Logger {
     @Retention(AnnotationRetention.SOURCE)
     annotation class LogLevel
 
-    // TODO: 14/02/2019 The idea is for this class to have a system where we can send a stream of logs to the merchant and/or proxy to Logcat.
+    // TODO: 14/02/2019 The idea is for this class to have a system where we can send a stream of logs to the merchant
+    //  and/or proxy to Logcat.
     private const val SENSITIVE = -1
     const val NONE = Log.ASSERT + 1
 

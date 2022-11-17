@@ -168,7 +168,8 @@ class Iban private constructor(val value: String) {
         }
 
         /**
-         * Parses an [Iban] by adding missing zeros after the last block of letters, e.g. NL13 TEST 1234 5678 9 becomes NL13 TEST 0123 4567 89.
+         * Parses an [Iban] by adding missing zeros after the last block of letters, e.g. NL13 TEST 1234 5678 9 becomes
+         * NL13 TEST 0123 4567 89.
          *
          * @param value The value to be parsed.
          * @return An [Iban] if the given can be parsed by adding zeros, otherwise `null`.

@@ -12,10 +12,11 @@ import android.os.Parcel
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 
 internal class TestIssuerPaymentMethod(
-    override var issuer: String? = "issuer", override var type: String? = "type"
+    override var issuer: String? = "issuer",
+    override var type: String? = "type"
 ) : IssuerListPaymentMethod() {
 
     override fun writeToParcel(p0: Parcel?, p1: Int) {
-        //mo need for implementation
+        // no need for implementation
     }
 }

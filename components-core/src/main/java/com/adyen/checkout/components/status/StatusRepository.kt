@@ -54,8 +54,9 @@ class DefaultStatusRepository constructor(
                 val result = fetchStatus(paymentData)
                 emit(result)
 
-                if (result.isSuccess && StatusResponseUtils.isFinalResult(result.getOrThrow()))
+                if (result.isSuccess && StatusResponseUtils.isFinalResult(result.getOrThrow())) {
                     currentCoroutineContext().cancel()
+                }
 
                 if (!updateDelay(startTime)) {
                     emit(Result.failure(IllegalStateException("Max polling time has been exceeded.")))

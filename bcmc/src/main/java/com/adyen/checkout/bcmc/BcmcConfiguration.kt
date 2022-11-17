@@ -104,8 +104,8 @@ class BcmcConfiguration private constructor(
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the [com.adyen.checkout.components.model.payments.request.PaymentComponentData]
-         * for convenience.
+         * This value will simply be passed back to you in the
+         * [com.adyen.checkout.components.model.payments.request.PaymentComponentData] for convenience.
          *
          * @param shopperReference The unique shopper reference
          * @return [BcmcConfiguration.Builder]

@@ -181,7 +181,12 @@ internal class DefaultAdyen3DS2DelegateTest(
 
                 delegate.exceptionFlow.test {
                     val encodedJson = base64Encoder.encode(
-                        "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\"}"
+                        """
+                            {
+                            "directoryServerId":"id",
+                            "directoryServerPublicKey":"key"
+                            }
+                        """.trimIndent()
                     )
                     delegate.identifyShopper(Activity(), encodedJson, false)
 
@@ -198,9 +203,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                val encodedJson = base64Encoder.encode(
-                    "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                )
+                val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                 delegate.identifyShopper(Activity(), encodedJson, false)
 
                 assertEquals(error, awaitItem().cause)
@@ -213,9 +216,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                val encodedJson = base64Encoder.encode(
-                    "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                )
+                val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                 delegate.identifyShopper(Activity(), encodedJson, false)
 
                 assertTrue(awaitItem() is ComponentException)
@@ -223,7 +224,9 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
-        fun `fingerprint is submitted automatically and result is completed, then details are emitted`(dispatcher: TestDispatcher) =
+        fun `fingerprint is submitted automatically and result is completed, then details are emitted`(
+            dispatcher: TestDispatcher
+        ) =
             runTest {
                 val authReqParams = TestAuthenticationRequestParameters(
                     deviceData = "deviceData",
@@ -241,9 +244,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 delegate.initialize(CoroutineScope(dispatcher))
 
                 delegate.detailsFlow.test {
-                    val encodedJson = base64Encoder.encode(
-                        "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                    )
+                    val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                     delegate.identifyShopper(Activity(), encodedJson, true)
 
                     val expected = ActionComponentData(
@@ -255,7 +256,9 @@ internal class DefaultAdyen3DS2DelegateTest(
             }
 
         @Test
-        fun `fingerprint is submitted automatically and result is redirect, then redirect should be handled`(dispatcher: TestDispatcher) =
+        fun `fingerprint is submitted automatically and result is redirect, then redirect should be handled`(
+            dispatcher: TestDispatcher
+        ) =
             runTest {
                 val authReqParams = TestAuthenticationRequestParameters(
                     deviceData = "deviceData",
@@ -272,16 +275,16 @@ internal class DefaultAdyen3DS2DelegateTest(
 
                 delegate.initialize(CoroutineScope(dispatcher))
 
-                val encodedJson = base64Encoder.encode(
-                    "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                )
+                val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                 delegate.identifyShopper(Activity(), encodedJson, true)
 
                 redirectHandler.assertLaunchRedirectCalled()
             }
 
         @Test
-        fun `fingerprint is submitted automatically and it fails, then an exception is emitted`(dispatcher: TestDispatcher) =
+        fun `fingerprint is submitted automatically and it fails, then an exception is emitted`(
+            dispatcher: TestDispatcher
+        ) =
             runTest {
                 val authReqParams = TestAuthenticationRequestParameters(
                     deviceData = "deviceData",
@@ -299,9 +302,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 delegate.initialize(CoroutineScope(dispatcher))
 
                 delegate.exceptionFlow.test {
-                    val encodedJson = base64Encoder.encode(
-                        "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                    )
+                    val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                     delegate.identifyShopper(Activity(), encodedJson, true)
                     assertEquals(error, awaitItem().cause)
                 }
@@ -325,9 +326,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 delegate.initialize(CoroutineScope(dispatcher))
 
                 delegate.detailsFlow.test {
-                    val encodedJson = base64Encoder.encode(
-                        "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                    )
+                    val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
                     delegate.identifyShopper(Activity(), encodedJson, false)
 
                     val expected = ActionComponentData(
@@ -383,7 +382,6 @@ internal class DefaultAdyen3DS2DelegateTest(
 
                 assertTrue(awaitItem().cause is InvalidInputException)
             }
-
         }
 
         private fun initializeTransaction(dispatcher: TestDispatcher): TestTransaction {
@@ -400,9 +398,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             delegate.initialize(CoroutineScope(dispatcher))
 
-            val encodedJson = base64Encoder.encode(
-                "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-            )
+            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             return transaction
@@ -586,5 +582,12 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_FINGERPRINT_TOKEN = """
+            {
+                "directoryServerId":"id",
+                "directoryServerPublicKey":"key",
+                "threeDSMessageVersion":"2.1.0"
+            }
+            """.trimIndent()
     }
 }

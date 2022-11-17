@@ -44,8 +44,9 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
      * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
      * @param configuration           The Configuration of the component.
-     * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in [ViewModel]
-     *                                if there is no previously saved state or previously saved state misses a value by such key
+     * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in
+     *                                [ViewModel] if there is no previously saved state or previously saved state misses
+     *                                a value by such key
      * @param key                     Key
      *
      * @return The Component

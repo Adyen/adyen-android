@@ -94,7 +94,8 @@ class ExpiryDateInput @JvmOverloads constructor(context: Context, attrs: Attribu
         }
 
     private fun fixCalendarYear(calendar: Calendar) {
-        // On SimpleDateFormat, if the truncated (yy) year is more than 20 years in the future it will use the previous century.
+        // On SimpleDateFormat, if the truncated (yy) year is more than 20 years in the future it will use the previous
+        // century.
         // This is a small fix to correct for that without implementing or overriding the DateFormat class.
         @Suppress("MagicNumber")
         val yearsInCentury = 100

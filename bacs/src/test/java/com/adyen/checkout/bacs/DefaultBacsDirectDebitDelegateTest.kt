@@ -175,7 +175,6 @@ internal class DefaultBacsDirectDebitDelegateTest {
             }
         }
 
-
         @Test
         fun `shopper email is invalid , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
@@ -212,7 +211,6 @@ internal class DefaultBacsDirectDebitDelegateTest {
             }
         }
 
-
         @Test
         fun `account consent check false , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
@@ -248,7 +246,6 @@ internal class DefaultBacsDirectDebitDelegateTest {
                 }
             }
         }
-
     }
 
     @Nested

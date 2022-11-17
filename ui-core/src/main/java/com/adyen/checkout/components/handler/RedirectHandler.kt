@@ -14,8 +14,9 @@ import org.json.JSONObject
 
 interface RedirectHandler {
     /**
-     * A redirect may return to the application using the ReturnUrl when properly setup in an Intent Filter. Is usually contains result information
-     * as parameters on that returnUrl. This method parses those results and returns a [JSONObject] to be used in the details call.
+     * A redirect may return to the application using the ReturnUrl when properly setup in an Intent Filter. Is usually
+     * contains result information as parameters on that returnUrl. This method parses those results and returns a
+     * [JSONObject] to be used in the details call.
      *
      * @param data The returned Uri
      * @return The parsed value to be passed on the payments/details call, on the details parameter.

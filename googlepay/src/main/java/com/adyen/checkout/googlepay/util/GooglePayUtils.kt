@@ -73,7 +73,8 @@ object GooglePayUtils {
     }
 
     /**
-     * Create a [IsReadyToPayRequest] based on the component configuration that can be used to verify Google Pay availability.
+     * Create a [IsReadyToPayRequest] based on the component configuration that can be used to verify Google Pay
+     * availability.
      *
      * @param params The parameters based on the Google Pay component configuration.
      * @return The IsReadyToPayRequest to start the task to verify Google Pay availability
@@ -85,7 +86,8 @@ object GooglePayUtils {
     }
 
     /**
-     * Create a [PaymentDataRequest] based on the component configuration that can be used to start the Google Pay payment.
+     * Create a [PaymentDataRequest] based on the component configuration that can be used to start the Google Pay
+     * payment.
      *
      * @param params The parameters based on the Google Pay component configuration.
      * @return The PaymentDataRequest to start the Google Pay payment flow.

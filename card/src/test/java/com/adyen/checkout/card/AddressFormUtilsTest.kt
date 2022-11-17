@@ -175,7 +175,7 @@ internal class AddressFormUtilsTest {
     }
 
     @Test
-    fun initializeCountryOptions_AddressConfigurationIsFullAddressWithoutDefaultCountryCode_ExpectListWithFirstItemSelected() {
+    fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithoutDefaultCountryCode_ExpectListWithFirstItemSelected`() {
         val addressConfiguration = AddressConfiguration.FullAddress()
         val inputCountryList = listOf(
             AddressItem(
@@ -215,7 +215,7 @@ internal class AddressFormUtilsTest {
     }
 
     @Test
-    fun initializeCountryOptions_AddressConfigurationIsFullAddressWithDefaultCountryCode_ExpectListWithItemHavingDefaultCountryCodeSelected() {
+    fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithDefaultCountryCode_ExpectListWithItemHavingDefaultCountryCodeSelected`() {
         val addressConfiguration = AddressConfiguration.FullAddress(defaultCountryCode = "GB")
         val inputCountryList = listOf(
             AddressItem(
@@ -258,7 +258,7 @@ internal class AddressFormUtilsTest {
      * Assumes [initializeCountryOptions_AddressConfigurationIsFullAddressWithoutDefaultCountryCode_ExpectListWithFirstItemSelected].
      */
     @Test
-    fun initializeCountryOptions_AddressConfigurationIsFullAddressWithSupportedCountryCodes_ExpectListFilteredBySupportedCountryCodes() {
+    fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithSupportedCountryCodes_ExpectListFilteredBySupportedCountryCodes`() {
         val addressConfiguration =
             AddressConfiguration.FullAddress(supportedCountryCodes = listOf("CA", "GB"))
         val inputCountryList = listOf(

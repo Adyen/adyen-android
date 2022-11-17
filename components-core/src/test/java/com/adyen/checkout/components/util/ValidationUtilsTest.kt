@@ -39,8 +39,16 @@ internal class ValidationUtilsTest {
             arguments("live_someclientkey", Environment.INDIA, true),
             arguments("live_someclientkey", Environment.APSE, true),
             arguments("live_someclientkey", Environment(URL("https://randomenv.com")), true),
-            arguments("live_someclientkey", Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")), true),
-            arguments("test_someclientkey", Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")), false),
+            arguments(
+                "live_someclientkey",
+                Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")),
+                true
+            ),
+            arguments(
+                "test_someclientkey",
+                Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")),
+                false
+            ),
         )
     }
 }

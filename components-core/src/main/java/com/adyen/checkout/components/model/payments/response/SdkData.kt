@@ -9,4 +9,5 @@ package com.adyen.checkout.components.model.payments.response
 
 import com.adyen.checkout.core.model.ModelObject
 
+@Suppress("UnnecessaryAbstractClass")
 abstract class SdkData : ModelObject()

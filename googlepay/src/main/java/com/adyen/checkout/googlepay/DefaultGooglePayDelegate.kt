@@ -91,7 +91,8 @@ internal class DefaultGooglePayDelegate(
         val googlePayParams = getGooglePayParams()
         val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams)
-        // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides any later.
+        // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides
+        //  any later.
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
     }
 

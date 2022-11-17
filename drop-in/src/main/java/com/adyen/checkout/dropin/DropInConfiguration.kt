@@ -47,7 +47,8 @@ import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
- * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to customize their behavior.
+ * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to
+ * customize their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
@@ -180,11 +181,12 @@ class DropInConfiguration private constructor(
         }
 
         /**
-         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method available and no stored
-         * payment methods.
+         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method
+         * available and no storedpayment methods.
          *
-         * This only applies to payment methods that require a component (user input). Which means redirect payment methods, SDK payment methods,
-         * etc will not be skipped even if this flag is set to true and a single payment method is present.
+         * This only applies to payment methods that require a component (user input). Which means redirect payment
+         * methods, SDK payment methods, etc will not be skipped even if this flag is set to true and a single payment
+         * method is present.
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
@@ -192,7 +194,8 @@ class DropInConfiguration private constructor(
         }
 
         /**
-         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in the payment methods screen.
+         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in
+         * the payment methods screen.
          *
          * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
          */
@@ -202,7 +205,8 @@ class DropInConfiguration private constructor(
         }
 
         /**
-         * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using [DropInService.getAdditionalData].
+         * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using
+         * [DropInService.getAdditionalData].
          */
         fun setAdditionalDataForDropInService(additionalDataForDropInService: Bundle): Builder {
             this.additionalDataForDropInService = additionalDataForDropInService

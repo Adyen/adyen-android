@@ -15,7 +15,8 @@ object CountryUtils {
     /**
      * Returns the list of supported countries to display.
      *
-     * @param allowedISOCodes the list of ISO codes to filter the countries with. No filtering is done if this param is `null`.
+     * @param allowedISOCodes the list of ISO codes to filter the countries with. No filtering is done if this param is
+     * `null`.
      * @return the list of countries.
      */
     @JvmStatic

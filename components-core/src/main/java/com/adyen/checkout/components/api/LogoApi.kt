@@ -31,7 +31,8 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         /**
          * Get the instance of the [LogoApi] for the specified environment.
          *
-         * @param environment The URL of the server for fetching the images. For optimization it should be the closest to the shopper.
+         * @param environment The URL of the server for fetching the images. For optimization it should be the closest
+         * to the shopper.
          * @param displayMetrics The [DisplayMetrics] of the device to fetch the correct size images.
          * @return The instance of the [LogoApi].
          */

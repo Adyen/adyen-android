@@ -34,7 +34,8 @@ class LogoTask(
             return
         }
         try {
-            // timeout just to make sure we don't get stuck, get call is blocking but should be finished or canceled by now.
+            // timeout just to make sure we don't get stuck, get call is blocking but should be finished or canceled by
+            // now.
             val result = get(SAFETY_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
             notifyLogo(result)
         } catch (e: ExecutionException) {

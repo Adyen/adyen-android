@@ -18,12 +18,14 @@ import com.adyen.checkout.dropin.ui.stored.mapStoredModel
 
 internal object Helpers {
 
-    internal fun List<StoredPaymentMethod>.mapToStoredPaymentMethodsModelList(isRemovingStoredPaymentMethodsEnabled: Boolean)
-        : List<StoredPaymentMethodModel> = mapNotNull { storedPaymentMethod ->
-        if (storedPaymentMethod.isStoredPaymentSupported())
+    internal fun List<StoredPaymentMethod>.mapToStoredPaymentMethodsModelList(
+        isRemovingStoredPaymentMethodsEnabled: Boolean
+    ): List<StoredPaymentMethodModel> = mapNotNull { storedPaymentMethod ->
+        if (storedPaymentMethod.isStoredPaymentSupported()) {
             storedPaymentMethod.mapStoredModel(isRemovingStoredPaymentMethodsEnabled)
-        else
+        } else {
             null
+        }
     }
 
     internal fun List<PaymentMethod>.mapToPaymentMethodModelList(): List<PaymentMethodModel> =
