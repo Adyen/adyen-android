@@ -13,13 +13,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class BacsDirectDebitComponentProvider : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
+class BacsDirectDebitComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
+
+    private val componentParamsMapper = BacsDirectDebitComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -33,9 +38,15 @@ class BacsDirectDebitComponentProvider : PaymentComponentProvider<BacsDirectDebi
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 BacsDirectDebitComponent(
                     savedStateHandle,
-                    DefaultBacsDirectDebitDelegate(PaymentObserverRepository(), configuration, paymentMethod),
+                    DefaultBacsDirectDebitDelegate(
+                        PaymentObserverRepository(),
+                        configuration,
+                        componentParams,
+                        paymentMethod
+                    ),
                     configuration
                 )
             }
