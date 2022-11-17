@@ -23,14 +23,14 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.qrcode.databinding.QrcodeViewBinding
+import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
-internal class QrCodeView @JvmOverloads constructor(
+internal class SimpleQRCodeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -42,7 +42,7 @@ internal class QrCodeView @JvmOverloads constructor(
     ),
     ComponentView {
 
-    private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: SimpleQrcodeViewBinding = SimpleQrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
