@@ -42,6 +42,7 @@ object PaymentMethodTypes {
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
+    const val PAY_NOW = "paynow"
     const val PIX = "pix"
 
     // Voucher payment methods that are not yet supported
@@ -104,6 +105,7 @@ object PaymentMethodTypes {
             SCHEME,
             BLIK,
             WECHAT_PAY_SDK,
+            PAY_NOW,
             PIX,
             ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL
@@ -112,6 +114,7 @@ object PaymentMethodTypes {
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
             WECHAT_PAY_SDK,
+            PAY_NOW,
             PIX
         )
     )
