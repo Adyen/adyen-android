@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.qrcode
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
@@ -32,6 +34,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.FileDownloader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -52,6 +55,7 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
+    private val fileDownloader: FileDownloader
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -137,7 +141,11 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        _viewFlow.tryEmit(QrCodeComponentViewType.QR_CODE)
+        val viewType = when (action.paymentMethodType) {
+            PaymentMethodTypes.PAY_NOW -> QrCodeComponentViewType.FULL_QR_CODE
+            else -> QrCodeComponentViewType.SIMPLE_QR_CODE
+        }
+        _viewFlow.tryEmit(viewType)
 
         // Notify UI to get the logo.
         createOutputData(null, action)
@@ -181,7 +189,18 @@ internal class DefaultQRCodeDelegate(
 
     private fun createOutputData(statusResponse: StatusResponse?, action: QrCodeAction) {
         val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
-        val outputData = QRCodeOutputData(isValid, action.paymentMethodType, action.qrCodeData)
+
+        var qrImageUrl: String? = null
+        if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
+            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, action.qrCodeData)
+        }
+
+        val outputData = QRCodeOutputData(
+            isValid = isValid,
+            paymentMethodType = action.paymentMethodType,
+            qrCodeData = action.qrCodeData,
+            qrImageUrl = qrImageUrl
+        )
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -249,14 +268,31 @@ internal class DefaultQRCodeDelegate(
         qrCodeData = null
     )
 
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    override suspend fun downloadQRImage(): Result<Unit> {
+        val date: Long = System.currentTimeMillis()
+        val imageName = String.format(IMAGE_NAME, date)
+        val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
+        return fileDownloader.download(
+            outputData.qrImageUrl.orEmpty(),
+            imageName,
+            imageDirectory,
+            MIME_TYPE
+        )
+    }
+
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
+        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX, PaymentMethodTypes.PAY_NOW)
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
         private const val HUNDRED = 100
+
+        private const val IMAGE_NAME = "paynow-qr-code-%s.png"
+        private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
+        private const val MIME_TYPE = "image/png"
     }
 }

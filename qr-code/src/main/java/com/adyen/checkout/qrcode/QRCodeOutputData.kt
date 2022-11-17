@@ -14,4 +14,5 @@ data class QRCodeOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,
     val qrCodeData: String?,
+    val qrImageUrl: String? = null
 ) : OutputData

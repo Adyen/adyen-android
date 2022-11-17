@@ -46,7 +46,7 @@ internal class QRCodeComponentTest(
     fun before() {
         Logger.setLogcatLevel(Logger.NONE)
 
-        whenever(qrCodeDelegate.viewFlow) doReturn MutableStateFlow(QrCodeComponentViewType.QR_CODE)
+        whenever(qrCodeDelegate.viewFlow) doReturn MutableStateFlow(QrCodeComponentViewType.SIMPLE_QR_CODE)
         component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
     }
 
@@ -82,19 +82,19 @@ internal class QRCodeComponentTest(
     @Test
     fun `when component is initialized then view flow should match delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertEquals(QrCodeComponentViewType.QR_CODE, awaitItem())
+            assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
             expectNoEvents()
         }
     }
 
     @Test
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
-        val delegateViewFlow = MutableStateFlow(QrCodeComponentViewType.QR_CODE)
+        val delegateViewFlow = MutableStateFlow(QrCodeComponentViewType.SIMPLE_QR_CODE)
         whenever(qrCodeDelegate.viewFlow) doReturn delegateViewFlow
         component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
-            assertEquals(QrCodeComponentViewType.QR_CODE, awaitItem())
+            assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
 
             delegateViewFlow.emit(QrCodeComponentViewType.REDIRECT)
             assertEquals(QrCodeComponentViewType.REDIRECT, awaitItem())

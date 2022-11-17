@@ -9,6 +9,7 @@
 package com.adyen.checkout.qrcode
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
@@ -24,9 +25,11 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.FileDownloader
 import com.adyen.checkout.qrcode.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -38,24 +41,32 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultQRCodeDelegateTest(
-    @Mock private val countDownTimer: QRCodeCountDownTimer
+    @Mock private val countDownTimer: QRCodeCountDownTimer,
+    @Mock private val context: Context
 ) {
 
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultQRCodeDelegate
+    private lateinit var fileDownloader: FileDownloader
 
     @BeforeEach
     fun beforeEach() {
+        fileDownloader = spy(FileDownloader(context))
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -70,7 +81,8 @@ internal class DefaultQRCodeDelegateTest(
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
-            paymentDataRepository = paymentDataRepository
+            paymentDataRepository = paymentDataRepository,
+            fileDownloader = fileDownloader
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -187,7 +199,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleAction called, then the view flow is updated`() = runTest {
+        fun `handleAction called, then simple qr view flow is updated`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.viewFlow.test {
@@ -198,7 +210,23 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals(awaitItem(), QrCodeComponentViewType.QR_CODE)
+                assertEquals(awaitItem(), QrCodeComponentViewType.SIMPLE_QR_CODE)
+            }
+        }
+
+        @Test
+        fun `handleAction called, then full qr view flow is updated`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.viewFlow.test {
+                assertNull(awaitItem())
+
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertEquals(awaitItem(), QrCodeComponentViewType.FULL_QR_CODE)
             }
         }
     }
@@ -263,6 +291,17 @@ internal class DefaultQRCodeDelegateTest(
                 assertEquals(awaitItem(), QrCodeComponentViewType.REDIRECT)
             }
         }
+    }
+
+    @Test
+    fun `download qr image successfully`(): Unit = runBlocking {
+        val expectedResult = Result.success(Unit)
+        whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn expectedResult
+
+        val actualResult = delegate.downloadQRImage()
+
+        assertEquals(expectedResult.isSuccess, actualResult.isSuccess)
+        verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString()).isSuccess
     }
 
     companion object {

@@ -21,4 +21,7 @@ interface QRCodeDelegate :
     ViewableDelegate<QRCodeOutputData>,
     IntentHandlingDelegate,
     StatusPollingDelegate,
-    ViewProvidingDelegate
+    ViewProvidingDelegate {
+
+    suspend fun downloadQRImage(): Result<Unit>
+}
