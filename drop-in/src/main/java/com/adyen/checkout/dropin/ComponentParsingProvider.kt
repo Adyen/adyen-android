@@ -19,6 +19,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikConfiguration
@@ -383,7 +384,7 @@ internal fun getComponentFor(
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
+            BcmcComponentProvider(dropInConfiguration).get(fragment, paymentMethod, bcmcConfiguration)
         }
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val blikConfiguration: BlikConfiguration =
