@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Kopier kode</string>
     <string name="checkout_qr_code_timer_text">Du har %s igjen til å betale</string>
     <string name="checkout_qr_code_copied_toast">Koden er kopiert til utklippstavlen</string>
+    <string name="checkout_qr_code_pay_now">Ta et skjermbilde eller lagre QR-koden, åpne bankappen din og last opp QR-koden for å verifisere opplysningene og fullføre betalingen.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Denne QR-koden er gyldig i %s</string>
+    <string name="checkout_qr_code_save_button">Lagre som bilde</string>
 </resources>

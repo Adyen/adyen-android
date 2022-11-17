@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Kopiraj kodo</string>
     <string name="checkout_qr_code_timer_text">Plačati morate %s</string>
     <string name="checkout_qr_code_copied_toast">Koda je kopirana v odložišče</string>
+    <string name="checkout_qr_code_pay_now">Naredite posnetek zaslona ali shranite kodo QR, odprite bančno aplikacijo in naložite kodo QR, da preverite podatke in izvedete plačilo.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Ta koda QR velja za %s</string>
+    <string name="checkout_qr_code_save_button">Shrani kot sliko</string>
 </resources>

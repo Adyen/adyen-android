@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Skopírovať kód</string>
     <string name="checkout_qr_code_timer_text">Na zaplatenie máte %s</string>
     <string name="checkout_qr_code_copied_toast">Kód bol skopírovaný do schránky</string>
+    <string name="checkout_qr_code_pay_now">Urobte snímku obrazovky alebo si uložte QR kód, otvorte bankovú aplikáciu, nahrajte QR kód, overte údaje a dokončite platbu.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Tento kód QR platí %s</string>
+    <string name="checkout_qr_code_save_button">Uložiť ako obrázok</string>
 </resources>

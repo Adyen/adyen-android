@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">نسخ الرمز</string>
     <string name="checkout_qr_code_timer_text">لديك %s للدفع</string>
     <string name="checkout_qr_code_copied_toast">تم نسخ الرمز إلى الحافظة</string>
+    <string name="checkout_qr_code_pay_now">التقط لقطة شاشة أو احفظ رمز الاستجابة السريعة، وافتح تطبيقك المصرفي وحمِّل رمز الاستجابة السريعة للتحقق من التفاصيل وإتمام الدفع.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">رمز الاستجابة السريعة هذا صالح لـ %s</string>
+    <string name="checkout_qr_code_save_button">حفظ كصورة</string>
 </resources>

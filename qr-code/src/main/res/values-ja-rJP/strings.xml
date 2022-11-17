@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">コードをコピー</string>
     <string name="checkout_qr_code_timer_text">%sをお支払い下さい。</string>
     <string name="checkout_qr_code_copied_toast">コードをクリップボードにコピーしました</string>
+    <string name="checkout_qr_code_pay_now">スクリーンショットを撮影するかQRコードを保存して、バンキングアプリケーションを開き、QRコードをアップロードして、詳細を確認し、支払いを完了します。</string>
+    <string name="checkout_qr_code_pay_now_timer_text">このQRコードは%s有効です</string>
+    <string name="checkout_qr_code_save_button">画像として保存</string>
 </resources>

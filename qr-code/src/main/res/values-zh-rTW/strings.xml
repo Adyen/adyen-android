@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">複製代碼</string>
     <string name="checkout_qr_code_timer_text">您有 %s 可以支付</string>
     <string name="checkout_qr_code_copied_toast">已將代碼複製到剪貼簿</string>
+    <string name="checkout_qr_code_pay_now">擷取螢幕畫面或儲存 QR 代碼，開啟您的銀行應用程式並上傳 QR 代碼以驗證詳細資料並完成付款。</string>
+    <string name="checkout_qr_code_pay_now_timer_text">此 QR 代碼對 %s 有效</string>
+    <string name="checkout_qr_code_save_button">儲存為圖像</string>
 </resources>

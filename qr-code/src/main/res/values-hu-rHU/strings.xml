@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Kód másolása</string>
     <string name="checkout_qr_code_timer_text">Fizetéshez rendelkezésre álló idő: %s</string>
     <string name="checkout_qr_code_copied_toast">Kód a vágólapra másolva</string>
+    <string name="checkout_qr_code_pay_now">Készítsen képernyőképet vagy mentse el a QR-kódot, nyissa meg a banki alkalmazást, és töltse fel a QR-kódot az adatok ellenőrzéséhez, illetve a fizetés befejezéséhez.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">A QR-kód ennyi ideig érvényes: %s</string>
+    <string name="checkout_qr_code_save_button">Mentés képként</string>
 </resources>

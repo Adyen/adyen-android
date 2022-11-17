@@ -14,4 +14,7 @@
     <string name="checkout_qr_code_copied_toast">%%pix.instructions.copiedMessage%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_qr_code_time_left_format" translatable="false">%02d:%02d</string>
+    <string name="checkout_qr_code_pay_now">%%promptPay.instructionMessage%%</string>
+    <string name="checkout_qr_code_pay_now_timer_text">%%promptPay.timerExpirationMessage%%</string>
+    <string name="checkout_qr_code_save_button">%%voucher.saveImage%%</string>
 </resources>

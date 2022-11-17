@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Copiați codul</string>
     <string name="checkout_qr_code_timer_text">Trebuie să achitați %s</string>
     <string name="checkout_qr_code_copied_toast">Cod copiat în clipboard</string>
+    <string name="checkout_qr_code_pay_now">Faceți o captură de ecran sau salvați codul QR, deschideți aplicația bancară și încărcați codul QR pentru a verifica detaliile și a finaliza plata.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Acest cod QR este valabil pentru %s</string>
+    <string name="checkout_qr_code_save_button">Salvați ca imagine</string>
 </resources>

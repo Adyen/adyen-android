@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Code kopieren</string>
     <string name="checkout_qr_code_timer_text">Sie haben noch %s um zu zahlen</string>
     <string name="checkout_qr_code_copied_toast">Code wurde in die Zwischenablage kopiert</string>
+    <string name="checkout_qr_code_pay_now">Erstellen Sie einen Screenshot oder speichern Sie den QR-Code, öffnen Sie Ihre Bankanwendung und laden Sie den QR-Code hoch, um die Details zu verifizieren und die Zahlung abzuschließen.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Dieser QR-Code gilt für %s</string>
+    <string name="checkout_qr_code_save_button">Als Bild speichern</string>
 </resources>

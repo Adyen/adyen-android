@@ -14,4 +14,7 @@
     <string name="checkout_qr_code_copied_toast">Code copied to clipboard</string>
     <!-- Untranslatable strings -->
     <string name="checkout_qr_code_time_left_format" translatable="false">%02d:%02d</string>
+    <string name="checkout_qr_code_pay_now">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">This QR code is valid for %s</string>
+    <string name="checkout_qr_code_save_button">Save as image</string>
 </resources>

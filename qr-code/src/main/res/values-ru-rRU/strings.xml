@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Скопировать код</string>
     <string name="checkout_qr_code_timer_text">У вас %s на оплату</string>
     <string name="checkout_qr_code_copied_toast">Код скопирован в буфер обмена</string>
+    <string name="checkout_qr_code_pay_now">Сделайте снимок экрана или сохраните QR-код, откройте банковское приложение и загрузите QR-код, чтобы подтвердить данные и завершить платеж.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Данный QR-код действителен в течение %s</string>
+    <string name="checkout_qr_code_save_button">Сохранить как изображение</string>
 </resources>

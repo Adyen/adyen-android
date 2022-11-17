@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Code kopiëren</string>
     <string name="checkout_qr_code_timer_text">U heeft %s om te betalen</string>
     <string name="checkout_qr_code_copied_toast">De code is naar het klembord gekopieerd</string>
+    <string name="checkout_qr_code_pay_now">Maak een schermafbeelding of sla de QR-code op, open uw bankapp en upload de QR-code om de gegevens te verifiëren en de betaling te voltooien.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Deze QR-code is %s geldig</string>
+    <string name="checkout_qr_code_save_button">Opslaan als afbeelding</string>
 </resources>

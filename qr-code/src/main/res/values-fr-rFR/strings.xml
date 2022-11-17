@@ -12,4 +12,7 @@
     <string name="checkout_qr_code_copy_button">Copier le code</string>
     <string name="checkout_qr_code_timer_text">Vous avez %s pour payer cette somme</string>
     <string name="checkout_qr_code_copied_toast">Code copié dans le presse-papiers</string>
+    <string name="checkout_qr_code_pay_now">Faites une capture d\'écran ou enregistrez le code QR, ouvrez votre application bancaire et chargez ce dernier pour valider les détails et effectuer le paiement.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Ce code QR est valide pendant %s</string>
+    <string name="checkout_qr_code_save_button">Enregistrer en tant qu\'image</string>
 </resources>
