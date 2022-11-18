@@ -56,10 +56,10 @@ class GooglePayConfiguration private constructor(
     class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
         private var merchantAccount: String? = null
         private var googlePayEnvironment = getDefaultGooglePayEnvironment(environment)
-        private var amount = Amount().apply {
-            value = 0
+        private var amount = Amount(
+            value = 0,
             currency = CheckoutCurrency.USD.name
-        }
+        )
         private var merchantInfo: MerchantInfo? = null
         private var countryCode: String? = null
         private var allowedAuthMethods: List<String>? = null
@@ -139,10 +139,6 @@ class GooglePayConfiguration private constructor(
             return super.setEnvironment(environment) as Builder
         }
 
-        fun setTotalPriceStatus(totalPriceStatus: String) {
-            this.totalPriceStatus = totalPriceStatus
-        }
-
         override fun buildInternal(): GooglePayConfiguration {
             return GooglePayConfiguration(
                 shopperLocale = shopperLocale,
@@ -180,6 +176,8 @@ class GooglePayConfiguration private constructor(
          * Set the environment to be used by GooglePay.
          * Should be either [WalletConstants.ENVIRONMENT_TEST] or [WalletConstants.ENVIRONMENT_PRODUCTION]
          *
+         * Default follows the value of the Adyen [environment].
+         *
          * @param googlePayEnvironment The GooglePay environment.
          */
         fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
@@ -197,6 +195,16 @@ class GooglePayConfiguration private constructor(
         private fun isGooglePayEnvironmentValid(environment: Int): Boolean =
             environment == WalletConstants.ENVIRONMENT_TEST || environment == WalletConstants.ENVIRONMENT_PRODUCTION
 
+        /**
+         * Sets the amount of the transaction.
+         *
+         * Default is 0 USD.
+         *
+         * Check the totalPrice field in the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         *
+         */
         override fun setAmount(amount: Amount): Builder {
             if (!isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")
@@ -205,59 +213,175 @@ class GooglePayConfiguration private constructor(
             return this
         }
 
+        /**
+         * Sets the information about the merchant requesting the payment.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#PaymentDataRequest)
+         * for more details.
+         *
+         */
         fun setMerchantInfo(merchantInfo: MerchantInfo?): Builder {
             this.merchantInfo = merchantInfo
             return this
         }
 
+        /**
+         * Sets the ISO 3166-1 alpha-2 country code where the transaction is processed.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         *
+         */
         fun setCountryCode(countryCode: String?): Builder {
             this.countryCode = countryCode
             return this
         }
 
+        /**
+         * Sets the supported authentication methods.
+         *
+         * Default is ["PAN_ONLY", "CRYPTOGRAM_3DS"].
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
         fun setAllowedAuthMethods(allowedAuthMethods: List<String>?): Builder {
             this.allowedAuthMethods = allowedAuthMethods
             return this
         }
 
+        /**
+         * Sets the allowed card networks. The allowed networks are automatically configured based on your account
+         * settings, but you can override them here.
+         *
+         * Default is ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"].
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
         fun setAllowedCardNetworks(allowedCardNetworks: List<String>?): Builder {
             this.allowedCardNetworks = allowedCardNetworks
             return this
         }
 
+        /**
+         * Set if you support prepaid cards.
+         *
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
         fun setAllowPrepaidCards(isAllowPrepaidCards: Boolean): Builder {
             this.isAllowPrepaidCards = isAllowPrepaidCards
             return this
         }
 
+        /**
+         * Set to true if you require an email address.
+         *
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#PaymentDataRequest)
+         * for more details.
+         *
+         */
         fun setEmailRequired(isEmailRequired: Boolean): Builder {
             this.isEmailRequired = isEmailRequired
             return this
         }
 
+        /**
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#IsReadyToPayRequest)
+         * for more details.
+         *
+         */
+        @Suppress("MaxLineLength")
         fun setExistingPaymentMethodRequired(isExistingPaymentMethodRequired: Boolean): Builder {
             this.isExistingPaymentMethodRequired = isExistingPaymentMethodRequired
             return this
         }
 
+        /**
+         * Set to true if you require a shipping address.
+         *
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#PaymentDataRequest)
+         * for more details.
+         *
+         */
         fun setShippingAddressRequired(isShippingAddressRequired: Boolean): Builder {
             this.isShippingAddressRequired = isShippingAddressRequired
             return this
         }
 
+        /**
+         * Sets the required shipping address details.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#PaymentDataRequest)
+         * for more details.
+         *
+         */
         fun setShippingAddressParameters(shippingAddressParameters: ShippingAddressParameters?): Builder {
             this.shippingAddressParameters = shippingAddressParameters
             return this
         }
 
+        /**
+         * Set to true if you require a billing address.
+         *
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
         fun setBillingAddressRequired(isBillingAddressRequired: Boolean): Builder {
             this.isBillingAddressRequired = isBillingAddressRequired
             return this
         }
 
+        /**
+         * Sets the required billing address details.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
         fun setBillingAddressParameters(billingAddressParameters: BillingAddressParameters?): Builder {
             this.billingAddressParameters = billingAddressParameters
             return this
+        }
+
+        /**
+         * Sets the status of the total price used.
+         *
+         * Default is "FINAL".
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         *
+         */
+        fun setTotalPriceStatus(totalPriceStatus: String) {
+            this.totalPriceStatus = totalPriceStatus
         }
     }
 }
