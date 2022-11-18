@@ -25,7 +25,7 @@ if (!hasProperty("checksums")) {
         "androidx.databinding:viewbinding:7.2.0:8c048d5a6199e4209952fa47c3f87227:MD5",
 
         // AndroidX
-        "androidx.annotation:annotation:1.3.0:a65958ba342e73cd31b9246352ce732a:MD5",
+        "androidx.annotation:annotation:1.5.0:5f8c96f5310d39845efa73dd82b717e4:MD5",
         "androidx.constraintlayout:constraintlayout:2.0.2:d3275b02544603c93a81397020891052:MD5",
         "androidx.fragment:fragment-ktx:1.5.4:50a47c9a59b5b47476d1e84e390cc12b:MD5",
         "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1:ddec34e06f4a0f22fd183b94a6772fce:MD5",
