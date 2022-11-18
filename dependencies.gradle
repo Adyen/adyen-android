@@ -8,8 +8,8 @@
 
 ext {
     // SDK
-    compile_sdk_version = 31
-    target_sdk_version = 31
+    compile_sdk_version = 32
+    target_sdk_version = 32
     min_sdk_version = 21
 
     // App version
@@ -32,7 +32,7 @@ ext {
 
     // Android Dependencies
     annotation_version = "1.5.0"
-    appcompat_version = "1.3.1"
+    appcompat_version = "1.5.1"
     browser_version = "1.3.0"
     coroutines_version = "1.6.4"
     fragment_version = "1.5.4"
