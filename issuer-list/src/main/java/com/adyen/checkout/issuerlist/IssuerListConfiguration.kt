@@ -40,16 +40,24 @@ abstract class IssuerListConfiguration : Configuration {
 
         /**
          * Sets the type of the view to be show with the component.
+         *
+         * Default is [IssuerListViewType.RECYCLER_VIEW].
+         *
+         * @param viewType an enum with the view type options.
          */
-        fun setViewType(viewType: IssuerListViewType): IssuerListBuilder<IssuerListConfigurationT> {
+        open fun setViewType(viewType: IssuerListViewType): IssuerListBuilder<IssuerListConfigurationT> {
             this.viewType = viewType
             return this
         }
 
         /**
          * Sets whether the logos should be shows next to the issuers name.
+         *
+         * Default is false.
+         *
+         * @param hideIssuerLogos if issuer logos should be hidden or not.
          */
-        fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilder<IssuerListConfigurationT> {
+        open fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilder<IssuerListConfigurationT> {
             this.hideIssuerLogos = hideIssuerLogos
             return this
         }
