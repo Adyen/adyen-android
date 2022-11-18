@@ -8,8 +8,8 @@
 
 ext {
     // SDK
-    compile_sdk_version = 31
-    target_sdk_version = 31
+    compile_sdk_version = 32
+    target_sdk_version = 32
     min_sdk_version = 21
 
     // App version
