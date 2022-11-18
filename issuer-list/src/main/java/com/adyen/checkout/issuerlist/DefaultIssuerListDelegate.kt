@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
     override val configuration: IssuerListConfiguration,
+    private val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : IssuerListDelegate<IssuerListPaymentMethodT> {
@@ -64,7 +65,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     }
 
     private fun getIssuerListComponentViewType(): IssuerListComponentViewType {
-        return when (configuration.viewType) {
+        return when (componentParams.viewType) {
             IssuerListViewType.RECYCLER_VIEW -> IssuerListComponentViewType.RECYCLER_VIEW
             IssuerListViewType.SPINNER_VIEW -> IssuerListComponentViewType.SPINNER_VIEW
         }
