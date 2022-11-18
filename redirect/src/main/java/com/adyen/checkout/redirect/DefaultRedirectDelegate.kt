@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
@@ -37,6 +38,7 @@ private val TAG = LogUtil.getTag()
 internal class DefaultRedirectDelegate(
     private val observerRepository: ActionObserverRepository,
     override val configuration: RedirectConfiguration,
+    private val componentParams: GenericComponentParams,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {

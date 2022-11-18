@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
@@ -63,11 +64,13 @@ class GenericActionComponentProvider :
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
+        val componentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
         return DefaultGenericActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
-            actionDelegateProvider = ActionDelegateProvider()
+            componentParams = componentParams,
+            actionDelegateProvider = ActionDelegateProvider(configuration)
         )
     }
 

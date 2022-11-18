@@ -17,6 +17,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.channel.bufferedChannel
@@ -45,6 +46,7 @@ internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: GenericActionConfiguration,
+    private val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
 

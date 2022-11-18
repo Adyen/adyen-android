@@ -10,11 +10,14 @@ package com.adyen.checkout.await
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
@@ -25,9 +28,12 @@ import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
-private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class AwaitComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -64,12 +70,14 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): AwaitDelegate {
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
             configuration = configuration,
+            componentParams = componentParams,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository
         )
@@ -81,5 +89,9 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
 
     override fun providesDetails(action: Action): Boolean {
         return true
+    }
+
+    companion object {
+        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
     }
 }

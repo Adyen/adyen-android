@@ -14,6 +14,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.handler.RedirectHandler
 import com.adyen.checkout.components.lifecycle.repeatOnResume
@@ -48,6 +49,7 @@ import java.util.concurrent.TimeUnit
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
     override val configuration: QRCodeConfiguration,
+    private val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
