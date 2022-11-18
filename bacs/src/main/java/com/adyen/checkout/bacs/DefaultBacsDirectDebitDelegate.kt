@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultBacsDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val configuration: BacsDirectDebitConfiguration,
+    private val componentParams: BacsDirectDebitComponentParams,
     val paymentMethod: PaymentMethod,
 ) : BacsDirectDebitDelegate {
 
