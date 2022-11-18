@@ -10,12 +10,14 @@ package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.model.GooglePayParamUtils
 import com.adyen.checkout.googlepay.util.AllowedAuthMethods
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
+import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper(
     private val parentConfiguration: Configuration?
@@ -45,7 +47,7 @@ internal class GooglePayComponentParamsMapper(
                 gatewayMerchantId = getPreferredGatewayMerchantId(googlePayConfiguration, paymentMethod),
                 allowedAuthMethods = getAvailableAuthMethods(googlePayConfiguration),
                 allowedCardNetworks = getAvailableCardNetworks(googlePayConfiguration, paymentMethod),
-                googlePayEnvironment = googlePayEnvironment,
+                googlePayEnvironment = getGooglePayEnvironment(googlePayConfiguration),
                 amount = amount,
                 totalPriceStatus = totalPriceStatus,
                 countryCode = countryCode,
@@ -97,6 +99,15 @@ internal class GooglePayComponentParamsMapper(
             val network = GooglePayParamUtils.mapBrandToGooglePayNetwork(brand)
             if (network == null) Logger.e(TAG, "skipping brand $brand, as it is not an allowed card network.")
             return@mapNotNull network
+        }
+    }
+
+    private fun getGooglePayEnvironment(googlePayConfiguration: GooglePayConfiguration): Int {
+        val googlePayEnvironment = googlePayConfiguration.googlePayEnvironment
+        return when {
+            googlePayEnvironment != null -> googlePayEnvironment
+            googlePayConfiguration.environment == Environment.TEST -> WalletConstants.ENVIRONMENT_TEST
+            else -> WalletConstants.ENVIRONMENT_PRODUCTION
         }
     }
 

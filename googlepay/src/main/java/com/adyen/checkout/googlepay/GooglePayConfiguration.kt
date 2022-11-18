@@ -33,7 +33,7 @@ class GooglePayConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     val merchantAccount: String?,
-    val googlePayEnvironment: Int,
+    val googlePayEnvironment: Int?,
     override val amount: Amount,
     val totalPriceStatus: String,
     val countryCode: String?,
@@ -55,7 +55,7 @@ class GooglePayConfiguration private constructor(
     @Suppress("TooManyFunctions")
     class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
         private var merchantAccount: String? = null
-        private var googlePayEnvironment = getDefaultGooglePayEnvironment(environment)
+        private var googlePayEnvironment: Int? = null
         private var amount = Amount(
             value = 0,
             currency = CheckoutCurrency.USD.name
@@ -72,16 +72,6 @@ class GooglePayConfiguration private constructor(
         private var isBillingAddressRequired = false
         private var billingAddressParameters: BillingAddressParameters? = null
         private var totalPriceStatus: String = "FINAL"
-
-        private var isGoogleEnvironmentSetManually = false
-
-        private fun getDefaultGooglePayEnvironment(environment: Environment): Int {
-            return if (environment == Environment.TEST) {
-                WalletConstants.ENVIRONMENT_TEST
-            } else {
-                WalletConstants.ENVIRONMENT_PRODUCTION
-            }
-        }
 
         /**
          * Constructor for Builder with default values.
@@ -132,13 +122,6 @@ class GooglePayConfiguration private constructor(
             billingAddressParameters = configuration.billingAddressParameters
         }
 
-        override fun setEnvironment(environment: Environment): Builder {
-            if (!isGoogleEnvironmentSetManually) {
-                googlePayEnvironment = getDefaultGooglePayEnvironment(environment)
-            }
-            return super.setEnvironment(environment) as Builder
-        }
-
         override fun buildInternal(): GooglePayConfiguration {
             return GooglePayConfiguration(
                 shopperLocale = shopperLocale,
@@ -173,8 +156,8 @@ class GooglePayConfiguration private constructor(
         }
 
         /**
-         * Set the environment to be used by GooglePay.
-         * Should be either [WalletConstants.ENVIRONMENT_TEST] or [WalletConstants.ENVIRONMENT_PRODUCTION]
+         * Sets the environment to be used by GooglePay.
+         * Should be either [WalletConstants.ENVIRONMENT_TEST] or [WalletConstants.ENVIRONMENT_PRODUCTION].
          *
          * Default follows the value of the Adyen [environment].
          *
@@ -188,7 +171,6 @@ class GooglePayConfiguration private constructor(
                 )
             }
             this.googlePayEnvironment = googlePayEnvironment
-            isGoogleEnvironmentSetManually = true
             return this
         }
 
