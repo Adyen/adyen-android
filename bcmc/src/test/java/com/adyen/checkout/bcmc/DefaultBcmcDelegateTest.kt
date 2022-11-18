@@ -16,6 +16,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
@@ -68,6 +69,7 @@ internal class DefaultBcmcDelegateTest(
             cardValidationMapper = cardValidationMapper,
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
+            buttonDelegate = DefaultButtonDelegate(),
         )
     }
 

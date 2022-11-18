@@ -25,6 +25,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -45,7 +46,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList", "TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -54,7 +55,8 @@ internal class DefaultBcmcDelegate(
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
-) : BcmcDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : BcmcDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData = BcmcInputData()
 
@@ -113,6 +115,7 @@ internal class DefaultBcmcDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

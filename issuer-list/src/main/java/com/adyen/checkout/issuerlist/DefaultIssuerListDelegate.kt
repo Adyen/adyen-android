@@ -18,6 +18,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -34,8 +35,9 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
+    private val buttonDelegate: ButtonDelegate,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
-) : IssuerListDelegate<IssuerListPaymentMethodT> {
+) : IssuerListDelegate<IssuerListPaymentMethodT>, ButtonDelegate by buttonDelegate {
 
     private val inputData: IssuerListInputData = IssuerListInputData()
 
@@ -68,6 +70,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

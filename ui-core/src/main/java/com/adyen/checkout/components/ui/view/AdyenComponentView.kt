@@ -19,6 +19,7 @@ import com.adyen.checkout.components.Component
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -39,12 +40,16 @@ class AdyenComponentView @JvmOverloads constructor(
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
-    private val binding: AdyenComponentViewBinding = AdyenComponentViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: AdyenComponentViewBinding = AdyenComponentViewBinding.inflate(
+        LayoutInflater.from(context),
+        this
+    )
 
     private var componentView: ComponentView? = null
 
     init {
         isVisible = isInEditMode
+        orientation = VERTICAL
     }
 
     /**
@@ -100,6 +105,18 @@ class AdyenComponentView @JvmOverloads constructor(
         view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
 
         componentView.initView(delegate, coroutineScope, localizedContext)
+
+        if (isConfirmationRequired) {
+            binding.payButton.setOnClickListener {
+                (delegate as? ButtonDelegate)?.onSubmit()
+            }
+        } else {
+            binding.payButton.isVisible = false
+        }
+    }
+
+    fun setPaymentPendingInitialization(pending: Boolean) {
+        binding.payButton.isVisible = !pending
     }
 
     /**

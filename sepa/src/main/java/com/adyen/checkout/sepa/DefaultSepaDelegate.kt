@@ -10,6 +10,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -25,7 +26,8 @@ internal class DefaultSepaDelegate(
     override val componentParams: GenericComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-) : SepaDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : SepaDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData: SepaInputData = SepaInputData()
 
@@ -58,6 +60,7 @@ internal class DefaultSepaDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

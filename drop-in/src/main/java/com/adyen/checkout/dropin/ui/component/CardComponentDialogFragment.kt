@@ -12,14 +12,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,7 +33,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = !pending
+        binding.cardView.setPaymentPendingInitialization(pending)
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
@@ -50,7 +48,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         if (!dropInViewModel.amount.isEmpty) {
             val value =
                 CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
-            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
+//            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
@@ -63,11 +61,8 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         binding.cardView.attach(component as CardComponent, viewLifecycleOwner)
 
         if (binding.cardView.isConfirmationRequired) {
-            binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
-        } else {
-            binding.payButton.isVisible = false
         }
     }
 
@@ -80,6 +75,9 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
+            }
+            is PaymentComponentEvent.Submit -> {
+                componentDialogViewModel.payButtonClicked()
             }
         }
     }

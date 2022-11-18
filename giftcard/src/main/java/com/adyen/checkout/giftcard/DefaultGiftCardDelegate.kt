@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMetho
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -44,7 +45,8 @@ internal class DefaultGiftCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: GenericComponentParams,
     private val cardEncrypter: CardEncrypter,
-) : GiftCardDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : GiftCardDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
 
@@ -103,6 +105,7 @@ internal class DefaultGiftCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

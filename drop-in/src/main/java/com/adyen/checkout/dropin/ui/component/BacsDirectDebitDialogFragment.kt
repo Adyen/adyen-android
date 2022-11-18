@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.core.view.isVisible
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitMode
@@ -55,13 +54,8 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
         if (binding.bacsView.isConfirmationRequired) {
-            binding.payButton.setOnClickListener {
-                handleContinueClick()
-            }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.bacsView.requestFocus()
-        } else {
-            binding.payButton.isVisible = false
         }
     }
 
@@ -72,6 +66,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
+            is PaymentComponentEvent.Submit -> componentDialogViewModel.payButtonClicked()
         }
     }
 
@@ -87,7 +82,8 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             BacsDirectDebitMode.INPUT -> R.string.bacs_continue
             BacsDirectDebitMode.CONFIRMATION -> R.string.bacs_confirm_and_pay
         }
-        binding.payButton.setText(payButtonText)
+//        binding.payButton.setText(payButtonText)
+        // TODO labels
 
         componentDialogViewModel.componentStateChanged(
             bacsDirectDebitComponentState,
@@ -96,7 +92,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = !pending
+        binding.bacsView.setPaymentPendingInitialization(pending)
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
@@ -113,16 +109,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             true
         } else {
             super.onBackPressed()
-        }
-    }
-
-    private fun handleContinueClick() {
-        componentDialogViewModel.payButtonClicked()
-        val componentState = getComponentState()
-        val mode = componentState?.mode
-        val isInputMode = mode == BacsDirectDebitMode.INPUT
-        if (isInputMode && componentState?.isInputValid == true) {
-            bacsDirectDebitComponent.setConfirmationMode()
         }
     }
 

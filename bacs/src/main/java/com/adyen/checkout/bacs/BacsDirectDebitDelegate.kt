@@ -9,12 +9,14 @@
 package com.adyen.checkout.bacs
 
 import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BacsDirectDebitDelegate :
     PaymentComponentDelegate<BacsDirectDebitComponentState>,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    ButtonDelegate {
 
     override val componentParams: BacsDirectDebitComponentParams
 

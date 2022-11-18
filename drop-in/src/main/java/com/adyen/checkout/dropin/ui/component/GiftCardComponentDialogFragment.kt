@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -42,7 +41,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun setPaymentPendingInitialization(pending: Boolean) {
         if (!binding.giftCardView.isConfirmationRequired) return
-        binding.redeemButton.isVisible = !pending
+        binding.giftCardView.setPaymentPendingInitialization(pending)
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
@@ -69,11 +68,8 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         binding.giftCardView.attach(component, viewLifecycleOwner)
 
         if (binding.giftCardView.isConfirmationRequired) {
-            binding.redeemButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.giftCardView.requestFocus()
-        } else {
-            binding.redeemButton.isVisible = false
         }
     }
 
@@ -86,6 +82,9 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
+            }
+            is PaymentComponentEvent.Submit -> {
+                componentDialogViewModel.payButtonClicked()
             }
         }
     }

@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -34,7 +35,8 @@ internal class DefaultPayByBankDelegate(
     private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-) : PayByBankDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : PayByBankDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData = PayByBankInputData()
 
@@ -77,6 +79,7 @@ internal class DefaultPayByBankDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

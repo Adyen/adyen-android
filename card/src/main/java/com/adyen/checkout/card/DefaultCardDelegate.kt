@@ -33,6 +33,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -70,7 +71,8 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-) : CardDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : CardDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData: CardInputData = CardInputData()
 
@@ -122,6 +124,7 @@ internal class DefaultCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

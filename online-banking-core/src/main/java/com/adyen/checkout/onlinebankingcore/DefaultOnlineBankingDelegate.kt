@@ -21,6 +21,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -42,8 +43,9 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
     private val termsAndConditionsUrl: String,
-    private val paymentMethodFactory: () -> IssuerListPaymentMethodT
-) : OnlineBankingDelegate<IssuerListPaymentMethodT> {
+    private val buttonDelegate: ButtonDelegate,
+    private val paymentMethodFactory: () -> IssuerListPaymentMethodT,
+) : OnlineBankingDelegate<IssuerListPaymentMethodT>, ButtonDelegate by buttonDelegate {
 
     private val inputData: OnlineBankingInputData = OnlineBankingInputData()
 
@@ -85,6 +87,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

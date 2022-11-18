@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -21,8 +22,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -42,6 +45,9 @@ internal class DefaultBacsDirectDebitDelegate(
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
+
+    private val submitChannel: Channel<Unit> = bufferedChannel()
+    override val submitFlow: Flow<Unit> = submitChannel.receiveAsFlow()
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
@@ -67,9 +73,10 @@ internal class DefaultBacsDirectDebitDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -101,6 +108,21 @@ internal class DefaultBacsDirectDebitDelegate(
     override fun updateInputData(update: BacsDirectDebitInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
+    }
+
+    override fun onSubmit() {
+        when (inputData.mode) {
+            BacsDirectDebitMode.INPUT -> {
+                if (outputData.isValid) {
+                    setMode(BacsDirectDebitMode.CONFIRMATION)
+                } else {
+                    submitChannel.trySend(Unit)
+                }
+            }
+            BacsDirectDebitMode.CONFIRMATION -> {
+                submitChannel.trySend(Unit)
+            }
+        }
     }
 
     private fun onInputDataChanged() {

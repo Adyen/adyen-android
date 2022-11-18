@@ -26,6 +26,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
@@ -69,7 +70,8 @@ class OnlineBankingSKComponentProvider(
                         paymentMethod = paymentMethod,
                         componentParams = componentParams,
                         analyticsRepository = analyticsRepository,
-                        termsAndConditionsUrl = OnlineBankingSKComponent.TERMS_CONDITIONS_URL
+                        termsAndConditionsUrl = OnlineBankingSKComponent.TERMS_CONDITIONS_URL,
+                        buttonDelegate = DefaultButtonDelegate()
                     ) { OnlineBankingSKPaymentMethod() }
 
                 OnlineBankingSKComponent(

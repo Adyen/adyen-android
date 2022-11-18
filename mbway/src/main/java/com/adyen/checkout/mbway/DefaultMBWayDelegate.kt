@@ -18,6 +18,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
@@ -35,7 +36,8 @@ internal class DefaultMBWayDelegate(
     private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-) : MBWayDelegate {
+    private val buttonDelegate: ButtonDelegate,
+) : MBWayDelegate, ButtonDelegate by buttonDelegate {
 
     private val inputData = MBWayInputData()
 
@@ -72,6 +74,7 @@ internal class DefaultMBWayDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

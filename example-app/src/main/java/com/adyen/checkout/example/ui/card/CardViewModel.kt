@@ -70,6 +70,7 @@ internal class CardViewModel @Inject constructor(
             is PaymentComponentEvent.StateChanged -> onCardComponentState(event.state)
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
+            is PaymentComponentEvent.Submit -> {}
         }
     }
 

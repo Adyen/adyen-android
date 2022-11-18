@@ -14,6 +14,7 @@ import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -61,6 +62,7 @@ internal class DefaultGiftCardDelegateTest(
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
+            buttonDelegate = DefaultButtonDelegate(),
         )
     }
 

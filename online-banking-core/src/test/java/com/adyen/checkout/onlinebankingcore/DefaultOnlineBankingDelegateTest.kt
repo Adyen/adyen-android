@@ -15,6 +15,7 @@ import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,7 +66,8 @@ internal class DefaultOnlineBankingDelegateTest(
             analyticsRepository = analyticsRepository,
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             termsAndConditionsUrl = TEST_URL,
-            paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
+            paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
+            buttonDelegate = DefaultButtonDelegate(),
         )
     }
 

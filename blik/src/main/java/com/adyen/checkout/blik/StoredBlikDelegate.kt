@@ -17,6 +17,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -31,7 +32,8 @@ internal class StoredBlikDelegate(
     override val componentParams: GenericComponentParams,
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-) : BlikDelegate {
+    private val buttonDelegate: ButtonDelegate
+) : BlikDelegate, ButtonDelegate by buttonDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
@@ -63,6 +65,7 @@ internal class StoredBlikDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = buttonDelegate.submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

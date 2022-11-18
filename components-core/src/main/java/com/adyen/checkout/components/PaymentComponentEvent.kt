@@ -23,4 +23,7 @@ sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out P
     class ActionDetails<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val data: ActionComponentData
     ) : PaymentComponentEvent<ComponentStateT>()
+
+    class Submit<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> :
+        PaymentComponentEvent<ComponentStateT>()
 }

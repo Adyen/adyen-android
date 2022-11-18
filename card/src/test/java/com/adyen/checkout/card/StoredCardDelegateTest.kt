@@ -23,6 +23,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
+import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -306,6 +307,7 @@ internal class StoredCardDelegateTest(
             componentParams = CardComponentParamsMapper(null).mapToParamsStored(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
+            buttonDelegate = DefaultButtonDelegate(),
         )
     }
 

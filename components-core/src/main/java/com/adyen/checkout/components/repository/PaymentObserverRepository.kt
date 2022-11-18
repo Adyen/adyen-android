@@ -23,9 +23,11 @@ class PaymentObserverRepository(
     private val observerContainer: ObserverContainer = ObserverContainer()
 ) {
 
+    @Suppress("LongParameterList")
     fun <T : PaymentComponentState<out PaymentMethodDetails>> addObservers(
         stateFlow: Flow<T>,
         exceptionFlow: Flow<CheckoutException>?,
+        submitFlow: Flow<Unit>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<T>) -> Unit,
@@ -39,6 +41,10 @@ class PaymentObserverRepository(
 
             exceptionFlow?.observe(lifecycleOwner, coroutineScope) {
                 callback(PaymentComponentEvent.Error(ComponentError(it)))
+            }
+
+            submitFlow?.observe(lifecycleOwner, coroutineScope) {
+                callback(PaymentComponentEvent.Submit())
             }
         }
     }
