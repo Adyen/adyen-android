@@ -14,7 +14,6 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.model.GooglePayParamUtils
 import com.adyen.checkout.googlepay.util.AllowedAuthMethods
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 import com.google.android.gms.wallet.WalletConstants
@@ -96,9 +95,17 @@ internal class GooglePayComponentParamsMapper(
     private fun getAvailableCardNetworksFromApi(paymentMethod: PaymentMethod): List<String>? {
         val brands = paymentMethod.brands ?: return null
         return brands.mapNotNull { brand ->
-            val network = GooglePayParamUtils.mapBrandToGooglePayNetwork(brand)
+            val network = mapBrandToGooglePayNetwork(brand)
             if (network == null) Logger.e(TAG, "skipping brand $brand, as it is not an allowed card network.")
             return@mapNotNull network
+        }
+    }
+
+    private fun mapBrandToGooglePayNetwork(brand: String): String? {
+        return when {
+            brand == "mc" -> AllowedCardNetworks.MASTERCARD
+            AllowedCardNetworks.allAllowedCardNetworks.contains(brand.uppercase()) -> brand.uppercase()
+            else -> null
         }
     }
 
