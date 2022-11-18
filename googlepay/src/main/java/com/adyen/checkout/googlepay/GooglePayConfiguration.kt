@@ -362,8 +362,9 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
-        fun setTotalPriceStatus(totalPriceStatus: String) {
+        fun setTotalPriceStatus(totalPriceStatus: String): Builder {
             this.totalPriceStatus = totalPriceStatus
+            return this
         }
     }
 }
