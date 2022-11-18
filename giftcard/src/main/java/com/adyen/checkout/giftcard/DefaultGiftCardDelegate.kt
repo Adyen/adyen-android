@@ -11,6 +11,7 @@ package com.adyen.checkout.giftcard
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
@@ -41,6 +42,7 @@ internal class DefaultGiftCardDelegate(
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: GiftCardConfiguration,
+    private val componentParams: GenericComponentParams,
     private val cardEncrypter: CardEncrypter,
 ) : GiftCardDelegate {
 
@@ -65,8 +67,8 @@ internal class DefaultGiftCardDelegate(
         Logger.d(TAG, "fetchPublicKey")
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
+                environment = componentParams.environment,
+                clientKey = componentParams.clientKey
             ).fold(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")

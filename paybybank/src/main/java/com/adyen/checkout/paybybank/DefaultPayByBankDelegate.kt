@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -29,7 +30,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultPayByBankDelegate(
     private val observerRepository: PaymentObserverRepository,
     val paymentMethod: PaymentMethod,
-    override val configuration: Configuration
+    override val configuration: Configuration,
+    private val componentParams: GenericComponentParams,
 ) : PayByBankDelegate {
 
     private val inputData = PayByBankInputData()

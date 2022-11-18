@@ -9,10 +9,13 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -23,8 +26,12 @@ import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.PdfOpener
 
-class OnlineBankingCZComponentProvider :
-    PaymentComponentProvider<OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class OnlineBankingCZComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -38,12 +45,14 @@ class OnlineBankingCZComponentProvider :
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 val delegate =
                     DefaultOnlineBankingDelegate(
                         observerRepository = PaymentObserverRepository(),
                         pdfOpener = PdfOpener(),
                         paymentMethod = paymentMethod,
                         configuration = configuration,
+                        componentParams = componentParams,
                         termsAndConditionsUrl = OnlineBankingCZComponent.TERMS_CONDITIONS_URL
                     ) { OnlineBankingCZPaymentMethod() }
 
