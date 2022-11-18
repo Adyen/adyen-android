@@ -54,7 +54,7 @@ ext {
     moshi_adapters_version = '1.11.0'
     moshi_kotlin_adapter_version = '1.13.0'
     okhttp_logging_version = "4.9.0"
-    preference_version = "1.1.1"
+    preference_version = "1.2.0"
     retrofit2_version = '2.9.0'
 
     // Tests
