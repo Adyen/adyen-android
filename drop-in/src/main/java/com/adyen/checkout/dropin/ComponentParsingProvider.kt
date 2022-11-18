@@ -207,11 +207,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
-        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> GooglePayConfiguration.Builder(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey
-        )
+        GooglePayComponentProvider(dropInConfiguration).isPaymentMethodSupported(paymentMethod) ->
+            GooglePayConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> IdealConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
