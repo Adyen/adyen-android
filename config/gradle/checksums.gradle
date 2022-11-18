@@ -19,7 +19,7 @@ if (!hasProperty("checksums")) {
         "org.jetbrains.kotlin:kotlin-parcelize-runtime:1.7.10:b64c2c35de858a750564ce3781af8785:MD5",
 
         // Coroutines
-        "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3:5d4bb91bea603d79f1b03418988aa56e:MD5",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4:7aad79016f327ae9cfd0b560b0b47558:MD5",
 
         // Android Gradle Plugin
         "androidx.databinding:viewbinding:7.2.0:8c048d5a6199e4209952fa47c3f87227:MD5",
