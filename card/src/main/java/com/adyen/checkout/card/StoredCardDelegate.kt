@@ -50,6 +50,7 @@ internal class StoredCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
     override val configuration: CardConfiguration,
+    private val componentParams: CardComponentParams,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
 ) : CardDelegate {
@@ -62,7 +63,7 @@ internal class StoredCardDelegate(
         isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = when {
-            configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+            componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -116,8 +117,8 @@ internal class StoredCardDelegate(
     private fun fetchPublicKey() {
         coroutineScope?.launch {
             publicKeyRepository.fetchPublicKey(
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
+                environment = componentParams.environment,
+                clientKey = componentParams.clientKey
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
@@ -240,7 +241,7 @@ internal class StoredCardDelegate(
     }
 
     private fun validateSecurityCode(securityCode: String, cardType: DetectedCardType): FieldState<String> {
-        return if (configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType.cardType)) {
+        return if (componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType.cardType)) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -251,11 +252,11 @@ internal class StoredCardDelegate(
     }
 
     private fun isCvcHidden(): Boolean {
-        return configuration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
+        return componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
 
     override fun requiresInput(): Boolean {
-        return !configuration.isHideCvcStoredCard
+        return !componentParams.isHideCvcStoredCard
     }
 
     private fun mapComponentState(
@@ -303,7 +304,7 @@ internal class StoredCardDelegate(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
-            shopperReference = configuration.shopperReference
+            shopperReference = componentParams.shopperReference
         }
     }
 

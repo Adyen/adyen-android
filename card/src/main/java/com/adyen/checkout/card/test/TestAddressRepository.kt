@@ -11,10 +11,11 @@ package com.adyen.checkout.card.test
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.util.Locale
 
 /**
  * Test implementation of [AddressRepository]. This class should never be used except in test code.
@@ -32,12 +33,17 @@ class TestAddressRepository : AddressRepository {
     private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
-    override fun getStateList(configuration: Configuration, countryCode: String?, coroutineScope: CoroutineScope) {
+    override fun getStateList(
+        environment: Environment,
+        shopperLocale: Locale,
+        countryCode: String?,
+        coroutineScope: CoroutineScope
+    ) {
         val states = if (shouldReturnError) emptyList() else STATES
         _statesFlow.tryEmit(states)
     }
 
-    override fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope) {
+    override fun getCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
         val countries = if (shouldReturnError) emptyList() else COUNTRIES
         _countriesFlow.tryEmit(countries)
     }

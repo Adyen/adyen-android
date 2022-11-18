@@ -11,6 +11,7 @@ import android.content.Context
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -30,15 +31,11 @@ class CardConfiguration private constructor(
     val isStorePaymentFieldVisible: Boolean,
     val isHideCvc: Boolean,
     val isHideCvcStoredCard: Boolean,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
-    val kcpAuthVisibility: KCPAuthVisibility?,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
+    val kcpAuthVisibility: KCPAuthVisibility,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration,
 ) : Configuration {
-
-    fun newBuilder(): Builder {
-        return Builder(this)
-    }
 
     /**
      * Builder to create a [CardConfiguration].
@@ -51,9 +48,9 @@ class CardConfiguration private constructor(
         private var shopperReference: String? = null
         private var isHideCvc = false
         private var isHideCvcStoredCard = false
-        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
+        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility =
             SocialSecurityNumberVisibility.HIDE
-        private var kcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
+        private var kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE
         private var installmentConfiguration: InstallmentConfiguration? = null
         private var addressConfiguration: AddressConfiguration = AddressConfiguration.None
 
@@ -110,6 +107,8 @@ class CardConfiguration private constructor(
         /**
          * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
          *
+         * Defaults to [PaymentMethod.brands] if it exists, or [DEFAULT_SUPPORTED_CARDS_LIST] otherwise.
+         *
          * @param supportCardTypes array of [CardType]
          * @return [CardConfiguration.Builder]
          */
@@ -121,6 +120,8 @@ class CardConfiguration private constructor(
         /**
          * Set if the holder name is required and should be shown as an input field.
          *
+         * Default is false.
+         *
          * @param holderNameRequired [Boolean]
          * @return [CardConfiguration.Builder]
          */
@@ -131,6 +132,8 @@ class CardConfiguration private constructor(
 
         /**
          * Set if the option to store the card for future payments should be shown as an input field.
+         *
+         * Default is true.
          *
          * @param showStorePaymentField [Boolean]
          * @return [CardConfiguration.Builder]
@@ -159,6 +162,8 @@ class CardConfiguration private constructor(
          * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling
          * this.
          *
+         * Default is false.
+         *
          * @param hideCvc If CVC should be hidden or not.
          * @return [CardConfiguration.Builder]
          */
@@ -172,6 +177,8 @@ class CardConfiguration private constructor(
          * flow.
          * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
          *
+         * Default is false.
+         *
          * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
          * @return [CardConfiguration.Builder]
          */
@@ -183,6 +190,8 @@ class CardConfiguration private constructor(
         /**
          * Set if CPF/CNPJ field for Brazil merchants should be visible or not.
          *
+         * Default is [SocialSecurityNumberVisibility.HIDE].
+         *
          * @param socialSecurityNumberVisibility If CPF/CNPJ field should be visible or not.
          * @return [CardConfiguration.Builder]
          */
@@ -191,6 +200,14 @@ class CardConfiguration private constructor(
             return this
         }
 
+        /**
+         * Set if security fields for Korean cards should be visible or not.
+         *
+         * Default is [KCPAuthVisibility.HIDE].
+         *
+         * @param kcpAuthVisibility If security fields for Korean cards should be visible or not.
+         * @return [CardConfiguration.Builder]
+         */
         fun setKcpAuthVisibility(kcpAuthVisibility: KCPAuthVisibility): Builder {
             this.kcpAuthVisibility = kcpAuthVisibility
             return this
@@ -209,6 +226,8 @@ class CardConfiguration private constructor(
 
         /**
          * Configures the address form to be shown to the shopper.
+         *
+         * Default is [AddressConfiguration.None].
          *
          * @param addressConfiguration The configuration object for address form.
          * @return [CardConfiguration.Builder]

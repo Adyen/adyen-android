@@ -8,13 +8,14 @@
 package com.adyen.checkout.card
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -22,14 +23,15 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 
-private val TAG = LogUtil.getTag()
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CardComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
 
-class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+    private val componentParamsMapper = CardComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -41,7 +43,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter)
@@ -54,7 +56,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                 DefaultCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     publicKeyRepository = publicKeyRepository,
-                    configuration = verifiedConfiguration,
+                    configuration = configuration,
+                    componentParams = componentParams,
                     paymentMethod = paymentMethod,
                     addressRepository = addressRepository,
                     detectCardTypeRepository = detectCardTypeRepository,
@@ -62,7 +65,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     cardEncrypter = cardEncrypter,
                     genericEncrypter = genericEncrypter
                 ),
-                verifiedConfiguration
+                configuration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -78,6 +81,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
+        val componentParams = componentParamsMapper.mapToParams(configuration, storedPaymentMethod)
         val publicKeyRepository = DefaultPublicKeyRepository()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -88,6 +92,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     observerRepository = PaymentObserverRepository(),
                     storedPaymentMethod = storedPaymentMethod,
                     configuration = configuration,
+                    componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                     publicKeyRepository = publicKeyRepository,
                 ),
@@ -95,41 +100,6 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
-    }
-
-    /**
-     * Check which set of supported cards to pass to the component.
-     * Priority is: Custom -> PaymentMethod.brands -> Default
-     *
-     * @param paymentMethod The payment methods object that will start the component.
-     * @param cardConfiguration The configuration object that will start the component.
-     * @return The Configuration object with possibly adjusted values.
-     */
-    private fun checkSupportedCardTypes(
-        paymentMethod: PaymentMethod,
-        cardConfiguration: CardConfiguration
-    ): CardConfiguration {
-        if (cardConfiguration.supportedCardTypes.isNotEmpty()) {
-            return cardConfiguration
-        }
-
-        val brands = paymentMethod.brands
-        var supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
-
-        // Get card types from brands in PaymentMethod object
-        if (!brands.isNullOrEmpty()) {
-            supportedCardTypes = arrayListOf()
-            for (brand in brands) {
-                val brandType = CardType.getByBrandName(brand)
-                supportedCardTypes.add(brandType)
-            }
-        } else {
-            Logger.d(TAG, "Falling back to DEFAULT_SUPPORTED_CARDS_LIST")
-        }
-        @Suppress("SpreadOperator")
-        return cardConfiguration.newBuilder()
-            .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
-            .build()
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
