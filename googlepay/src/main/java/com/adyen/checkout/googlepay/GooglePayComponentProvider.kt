@@ -9,12 +9,14 @@ package com.adyen.checkout.googlepay
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -23,21 +25,21 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.wallet.IsReadyToPayRequest
-import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import java.lang.ref.WeakReference
 
 private val TAG = LogUtil.getTag()
 
-class GooglePayComponentProvider :
-    PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class GooglePayComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
+
+    private val componentParamsMapper = GooglePayComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -49,10 +51,16 @@ class GooglePayComponentProvider :
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GooglePayComponent(
                 savedStateHandle = savedStateHandle,
-                delegate = DefaultGooglePayDelegate(PaymentObserverRepository(), paymentMethod, configuration),
+                delegate = DefaultGooglePayDelegate(
+                    PaymentObserverRepository(),
+                    paymentMethod,
+                    configuration,
+                    componentParams
+                ),
                 configuration = configuration,
             )
         }
@@ -75,14 +83,14 @@ class GooglePayComponentProvider :
             callback.onAvailabilityResult(false, paymentMethod, configuration)
             return
         }
-        val callbackWeakReference: WeakReference<ComponentAvailableCallback<GooglePayConfiguration>> =
-            WeakReference<ComponentAvailableCallback<GooglePayConfiguration>>(callback)
-        val serverGatewayMerchantId = paymentMethod.configuration?.gatewayMerchantId
-        val params = GooglePayParams(configuration, serverGatewayMerchantId, paymentMethod.brands)
-        val paymentsClient: PaymentsClient =
-            Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
-        val readyToPayRequest: IsReadyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(params)
-        val readyToPayTask: Task<Boolean> = paymentsClient.isReadyToPay(readyToPayRequest)
+        val callbackWeakReference = WeakReference(callback)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val paymentsClient = Wallet.getPaymentsClient(
+            applicationContext,
+            GooglePayUtils.createWalletOptions(componentParams)
+        )
+        val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
+        val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnSuccessListener { result ->
             callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod, configuration)
         }
