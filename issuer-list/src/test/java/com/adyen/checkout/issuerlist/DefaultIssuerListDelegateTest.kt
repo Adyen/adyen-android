@@ -11,7 +11,9 @@ package com.adyen.checkout.issuerlist
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -23,26 +25,26 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.whenever
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
-internal class DefaultIssuerListDelegateTest(
-    @Mock private val configuration: IssuerListConfiguration,
-) {
+internal class DefaultIssuerListDelegateTest {
+
+    private val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY_1
+    )
+        .build()
 
     private lateinit var delegate: DefaultIssuerListDelegate<*>
 
     @BeforeEach
     fun beforeEach() {
-        whenever(configuration.viewType) doReturn IssuerListViewType.RECYCLER_VIEW
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
             configuration,
+            IssuerListComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
         Logger.setLogcatLevel(Logger.NONE)
@@ -119,7 +121,21 @@ internal class DefaultIssuerListDelegateTest(
 
     @Test
     fun `when configuration viewType is RECYCLER_VIEW then viewFlow should emit RECYCLER_VIEW`() = runTest {
-        whenever(configuration.viewType) doReturn IssuerListViewType.RECYCLER_VIEW
+        val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1
+        )
+            .setViewType(IssuerListViewType.RECYCLER_VIEW)
+            .build()
+
+        delegate = DefaultIssuerListDelegate(
+            PaymentObserverRepository(),
+            configuration,
+            IssuerListComponentParamsMapper(null).mapToParams(configuration),
+            PaymentMethod()
+        ) { TestIssuerPaymentMethod() }
+
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.RECYCLER_VIEW, expectMostRecentItem())
         }
@@ -127,14 +143,26 @@ internal class DefaultIssuerListDelegateTest(
 
     @Test
     fun `when configuration viewType is SPINNER_VIEW then viewFlow should emit SPINNER_VIEW`() = runTest {
-        whenever(configuration.viewType) doReturn IssuerListViewType.SPINNER_VIEW
+        val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1
+        )
+            .setViewType(IssuerListViewType.SPINNER_VIEW)
+            .build()
+
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
             configuration,
+            IssuerListComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SPINNER_VIEW, expectMostRecentItem())
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

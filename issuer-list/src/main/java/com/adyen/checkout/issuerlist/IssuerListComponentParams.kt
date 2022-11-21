@@ -8,13 +8,15 @@
 
 package com.adyen.checkout.issuerlist
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Parcelize
-internal data class IssuerListComponentParams(
+data class IssuerListComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

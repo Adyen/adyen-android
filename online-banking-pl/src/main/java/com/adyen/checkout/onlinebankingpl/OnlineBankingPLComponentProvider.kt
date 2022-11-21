@@ -9,10 +9,12 @@
 package com.adyen.checkout.onlinebankingpl
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -20,9 +22,14 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPayme
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
+import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 
-class OnlineBankingPLComponentProvider :
-    PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class OnlineBankingPLComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> {
+
+    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -36,9 +43,11 @@ class OnlineBankingPLComponentProvider :
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 val delegate = DefaultIssuerListDelegate(
                     observerRepository = PaymentObserverRepository(),
                     configuration = configuration,
+                    componentParams = componentParams,
                     paymentMethod = paymentMethod
                 ) { OnlineBankingPLPaymentMethod() }
                 OnlineBankingPLComponent(

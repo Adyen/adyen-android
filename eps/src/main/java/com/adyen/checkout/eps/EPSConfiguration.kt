@@ -66,6 +66,17 @@ class EPSConfiguration private constructor(
             hideIssuerLogos = configuration.hideIssuerLogos
         }
 
+        /**
+         * Sets whether the logos should be shows next to the issuers name.
+         *
+         * Default is true.
+         *
+         * @param hideIssuerLogos if issuer logos should be hidden or not.
+         */
+        override fun setHideIssuerLogos(hideIssuerLogos: Boolean): Builder {
+            return super.setHideIssuerLogos(hideIssuerLogos) as Builder
+        }
+
         public override fun buildInternal(): EPSConfiguration {
             return EPSConfiguration(
                 shopperLocale = shopperLocale,
