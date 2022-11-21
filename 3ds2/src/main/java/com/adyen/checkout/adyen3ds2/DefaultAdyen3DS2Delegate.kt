@@ -392,8 +392,11 @@ internal class DefaultAdyen3DS2Delegate(
             // Check whether authorizationToken was set and create the corresponding details object
             val token = authorizationToken
             val details =
-                if (token == null) adyen3DS2Serializer.createChallengeDetails(completionEvent)
-                else adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
+                if (token == null) {
+                    adyen3DS2Serializer.createChallengeDetails(completionEvent)
+                } else {
+                    adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
+                }
             emitDetails(details)
         } catch (e: CheckoutException) {
             exceptionChannel.trySend(e)

@@ -18,20 +18,23 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable()) BuildConfig.MERCHANT_SERVER_URL
-    else "http://myserver.com/my/endpoint/"
+    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable()) {
+        BuildConfig.MERCHANT_SERVER_URL
+    } else {
+        "http://myserver.com/my/endpoint/"
+    }
 
     private val BASE_URL_RECURRING = if (RecurringApiService.isRealUrlAvailable()) {
         BuildConfig.MERCHANT_RECURRING_SERVER_URL

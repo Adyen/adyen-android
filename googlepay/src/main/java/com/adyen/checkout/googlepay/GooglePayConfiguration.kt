@@ -78,7 +78,9 @@ class GooglePayConfiguration private constructor(
         private fun getDefaultGooglePayEnvironment(environment: Environment): Int {
             return if (environment == Environment.TEST) {
                 WalletConstants.ENVIRONMENT_TEST
-            } else WalletConstants.ENVIRONMENT_PRODUCTION
+            } else {
+                WalletConstants.ENVIRONMENT_PRODUCTION
+            }
         }
 
         /**

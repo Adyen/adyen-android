@@ -80,8 +80,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun setPaymentPendingInitialization(pending: Boolean) {
         binding.payButton.isVisible = !pending
-        if (pending) binding.progressBar.show()
-        else binding.progressBar.hide()
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     private fun handleError(componentError: ComponentError) {

@@ -35,8 +35,7 @@ fun TextView.setLocalizedTextFromStyle(
     val attrs = intArrayOf(android.R.attr.text)
     val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
     val stringResValue = typedArray.getString(0).orEmpty()
-    text = if (formatHyperLink) stringResValue.formatStringWithHyperlink()
-    else stringResValue
+    text = if (formatHyperLink) stringResValue.formatStringWithHyperlink() else stringResValue
     typedArray.recycle()
 }
 

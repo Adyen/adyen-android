@@ -38,8 +38,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun setPaymentPendingInitialization(pending: Boolean) {
         binding.payButton.isVisible = !pending
-        if (pending) binding.progressBar.show()
-        else binding.progressBar.hide()
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     override fun highlightValidationErrors() {

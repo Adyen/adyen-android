@@ -153,9 +153,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
     }
 
     private fun buildUrl(txVariant: String, txSubVariant: String?, size: Size?): String {
-        val txString =
-            if (txSubVariant.isNullOrEmpty()) txVariant
-            else "$txVariant/$txSubVariant"
+        val txString = if (txSubVariant.isNullOrEmpty()) txVariant else "$txVariant/$txSubVariant"
         return String.format(logoUrlFormat, getSizeVariant(size), txString + densityExtension)
     }
 

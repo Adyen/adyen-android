@@ -18,8 +18,11 @@ data class OnlineBankingOutputData(
 
     val selectedIssuerField: FieldState<OnlineBankingModel?> = FieldState(
         value = selectedIssuer,
-        validation = if (selectedIssuer == null) Validation.Invalid(R.string.checkout_online_banking_hint)
-        else Validation.Valid
+        validation = if (selectedIssuer == null) {
+            Validation.Invalid(R.string.checkout_online_banking_hint)
+        } else {
+            Validation.Valid
+        }
     )
 
     override val isValid

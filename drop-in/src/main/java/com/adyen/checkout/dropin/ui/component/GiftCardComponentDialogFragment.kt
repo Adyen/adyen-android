@@ -45,8 +45,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
     override fun setPaymentPendingInitialization(pending: Boolean) {
         if (!binding.giftCardView.isConfirmationRequired) return
         binding.redeemButton.isVisible = !pending
-        if (pending) binding.progressBar.show()
-        else binding.progressBar.hide()
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     override fun highlightValidationErrors() {

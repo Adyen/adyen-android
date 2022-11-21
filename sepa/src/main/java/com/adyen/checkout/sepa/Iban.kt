@@ -164,7 +164,9 @@ class Iban private constructor(val value: String) {
             val details = if (normalizedValue.length >= 2) COUNTRY_DETAILS[normalizedValue.substring(0, 2)] else null
             return if (details != null && details.isFullMatch(normalizedValue) && isChecksumValid(normalizedValue)) {
                 Iban(normalizedValue)
-            } else null
+            } else {
+                null
+            }
         }
 
         /**

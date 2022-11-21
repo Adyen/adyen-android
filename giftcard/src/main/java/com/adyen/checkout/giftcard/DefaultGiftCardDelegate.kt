@@ -133,12 +133,14 @@ internal class DefaultGiftCardDelegate(
             lastFourDigits = null,
         )
 
-        if (!outputData.isValid) return GiftCardComponentState(
-            paymentComponentData = paymentComponentData,
-            isInputValid = false,
-            isReady = true,
-            lastFourDigits = null,
-        )
+        if (!outputData.isValid) {
+            return GiftCardComponentState(
+                paymentComponentData = paymentComponentData,
+                isInputValid = false,
+                isReady = true,
+                lastFourDigits = null,
+            )
+        }
 
         val encryptedCard = encryptCard(outputData, publicKey) ?: return GiftCardComponentState(
             paymentComponentData = paymentComponentData,

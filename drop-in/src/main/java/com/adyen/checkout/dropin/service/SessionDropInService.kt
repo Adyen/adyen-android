@@ -266,8 +266,11 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                 .fold(
                     onSuccess = { response ->
                         val paymentMethods = response.paymentMethods
-                        val result = if (paymentMethods != null) DropInServiceResult.Update(paymentMethods, order)
-                        else DropInServiceResult.Error(reason = "Payment methods should not be null")
+                        val result = if (paymentMethods != null) {
+                            DropInServiceResult.Update(paymentMethods, order)
+                        } else {
+                            DropInServiceResult.Error(reason = "Payment methods should not be null")
+                        }
                         sendResult(result)
                     },
                     onFailure = {
