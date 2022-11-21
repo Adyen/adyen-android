@@ -14,12 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -61,21 +61,10 @@ class CardComponent internal constructor(
     ) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
 
-        val actionCallback = { actionComponentEvent: ActionComponentEvent ->
-            when (actionComponentEvent) {
-                is ActionComponentEvent.ActionDetails -> {
-                    callback(PaymentComponentEvent.ActionDetails(actionComponentEvent.data))
-                }
-                is ActionComponentEvent.Error -> {
-                    callback(PaymentComponentEvent.Error(actionComponentEvent.error))
-                }
-            }
-        }
-
         genericActionDelegate.observe(
             lifecycleOwner,
             viewModelScope,
-            actionCallback,
+            callback.toActionCallback(),
         )
     }
 
