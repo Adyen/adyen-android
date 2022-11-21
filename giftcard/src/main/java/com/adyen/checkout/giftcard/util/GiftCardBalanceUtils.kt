@@ -38,9 +38,11 @@ object GiftCardBalanceUtils {
         transactionLimit: Amount?,
         amountToBePaid: Amount
     ): GiftCardBalanceStatus {
-        val maxPayableAmount =
-            if (transactionLimit == null || transactionLimit.isEmpty) balance.value
-            else min(balance.value, transactionLimit.value)
+        val maxPayableAmount = if (transactionLimit == null || transactionLimit.isEmpty) {
+            balance.value
+        } else {
+            min(balance.value, transactionLimit.value)
+        }
 
         val paidCurrency = amountToBePaid.currency
         val actualPaidAmount = min(maxPayableAmount, amountToBePaid.value)

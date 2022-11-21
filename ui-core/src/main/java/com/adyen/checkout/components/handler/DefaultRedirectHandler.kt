@@ -70,8 +70,11 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     private fun launchNative(context: Context, uri: Uri): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) launchNativeApi30(context, uri)
-        else launchNativeBeforeApi30(context, uri)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            launchNativeApi30(context, uri)
+        } else {
+            launchNativeBeforeApi30(context, uri)
+        }
     }
 
     private fun launchNativeBeforeApi30(context: Context, uri: Uri): Boolean {

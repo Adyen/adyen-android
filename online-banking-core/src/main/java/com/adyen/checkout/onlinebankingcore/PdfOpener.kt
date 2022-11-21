@@ -36,9 +36,14 @@ class PdfOpener {
 
     private fun open(context: Context, uri: Uri): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (openInExternalApp(context, uri)) true
-            else openInCustomTab(context, uri)
-        } else openInCustomTab(context, uri)
+            if (openInExternalApp(context, uri)) {
+                true
+            } else {
+                openInCustomTab(context, uri)
+            }
+        } else {
+            openInCustomTab(context, uri)
+        }
     }
 
     private fun openInExternalApp(context: Context, uri: Uri): Boolean {

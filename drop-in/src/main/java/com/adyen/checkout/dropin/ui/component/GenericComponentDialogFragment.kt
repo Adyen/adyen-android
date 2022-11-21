@@ -46,8 +46,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     override fun setPaymentPendingInitialization(pending: Boolean) {
         if (!binding.componentView.isConfirmationRequired) return
         binding.payButton.isVisible = !pending
-        if (pending) binding.progressBar.show()
-        else binding.progressBar.hide()
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     override fun highlightValidationErrors() {

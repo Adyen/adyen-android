@@ -455,8 +455,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun getHolderNameUIState(): InputFieldUIState {
-        return if (isHolderNameRequired()) InputFieldUIState.REQUIRED
-        else InputFieldUIState.HIDDEN
+        return if (isHolderNameRequired()) InputFieldUIState.REQUIRED else InputFieldUIState.HIDDEN
     }
 
     private fun isHolderNameRequired(): Boolean {

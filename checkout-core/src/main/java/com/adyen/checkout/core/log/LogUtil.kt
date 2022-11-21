@@ -64,8 +64,6 @@ object LogUtil {
 
     private fun simplifyClassName(className: String): String {
         val packageSplit = className.split(".").toTypedArray()
-        return if (packageSplit.isEmpty()) {
-            className
-        } else packageSplit[packageSplit.size - 1]
+        return if (packageSplit.isEmpty()) className else packageSplit[packageSplit.size - 1]
     }
 }

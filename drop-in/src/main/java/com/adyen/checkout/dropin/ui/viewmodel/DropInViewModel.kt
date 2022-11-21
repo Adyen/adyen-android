@@ -275,8 +275,11 @@ internal class DropInViewModel(
             }
             is GiftCardBalanceStatus.PartialPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
-                if (currentOrder == null) GiftCardBalanceResult.RequestOrderCreation
-                else GiftCardBalanceResult.RequestPartialPayment
+                if (currentOrder == null) {
+                    GiftCardBalanceResult.RequestOrderCreation
+                } else {
+                    GiftCardBalanceResult.RequestPartialPayment
+                }
             }
         }
     }

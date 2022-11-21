@@ -16,8 +16,11 @@ class SepaOutputData(ownerName: String, ibanNumber: String) : OutputData {
 
     val ownerNameField: FieldState<String> = FieldState(
         value = ownerName,
-        validation = if (ownerName.isEmpty()) Validation.Invalid(R.string.checkout_holder_name_not_valid)
-        else Validation.Valid
+        validation = if (ownerName.isEmpty()) {
+            Validation.Invalid(R.string.checkout_holder_name_not_valid)
+        } else {
+            Validation.Valid
+        }
     )
     val ibanNumberField: FieldState<String>
     val iban: Iban? = parse(ibanNumber)

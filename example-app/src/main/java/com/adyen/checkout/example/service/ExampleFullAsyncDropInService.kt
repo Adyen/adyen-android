@@ -179,10 +179,12 @@ class ExampleFullAsyncDropInService : DropInService() {
     private fun fetchPaymentMethods(order: OrderResponse? = null) {
         Logger.d(TAG, "fetchPaymentMethods")
         launch(Dispatchers.IO) {
-            val orderRequest = if (order == null) null else OrderRequest(
-                pspReference = order.pspReference,
-                orderData = order.orderData
-            )
+            val orderRequest = order?.let {
+                OrderRequest(
+                    pspReference = it.pspReference,
+                    orderData = it.orderData
+                )
+            }
             val paymentMethodRequest = getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

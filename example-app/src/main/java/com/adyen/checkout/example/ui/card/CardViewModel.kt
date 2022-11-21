@@ -63,8 +63,7 @@ internal class CardViewModel @Inject constructor(
             ?.paymentMethods
             ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-        if (cardPaymentMethod == null) CardViewState.Error
-        else CardViewState.ShowComponent(cardPaymentMethod)
+        if (cardPaymentMethod == null) CardViewState.Error else CardViewState.ShowComponent(cardPaymentMethod)
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {

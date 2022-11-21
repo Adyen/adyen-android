@@ -27,8 +27,11 @@ internal class DropInResultContract : ActivityResultContract<Intent, DropInResul
             data == null -> null
             resultCode == Activity.RESULT_CANCELED && data.hasExtra(DropIn.ERROR_REASON_KEY) -> {
                 val reason = data.getStringExtra(DropIn.ERROR_REASON_KEY) ?: ""
-                if (reason == DropIn.ERROR_REASON_USER_CANCELED) DropInResult.CancelledByUser()
-                else DropInResult.Error(reason)
+                if (reason == DropIn.ERROR_REASON_USER_CANCELED) {
+                    DropInResult.CancelledByUser()
+                } else {
+                    DropInResult.Error(reason)
+                }
             }
             resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.RESULT_KEY) -> {
                 DropInResult.Finished(data.getStringExtra(DropIn.RESULT_KEY) ?: "")
