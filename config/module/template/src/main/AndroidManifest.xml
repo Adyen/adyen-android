@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="#module_package_name" />
+<manifest package="#module_package_name" />

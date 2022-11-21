@@ -6,6 +6,4 @@
   ~ Created by atef on 23/8/2022.
   -->
 
-<manifest package="com.adyen.checkout.onlinebankingcz">
-
-</manifest>
+<manifest package="com.adyen.checkout.onlinebankingcz" />

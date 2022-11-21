@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.fragment.app.viewModels
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
@@ -75,18 +76,6 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         }
     }
 
-    abstract override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View?
-
-    abstract override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-
-    protected abstract fun setPaymentPendingInitialization(pending: Boolean)
-
-    protected abstract fun highlightValidationErrors()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -108,10 +97,21 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    abstract override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View?
+
+    @CallSuper
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         observeState()
-        super.onActivityCreated(savedInstanceState)
     }
+
+    protected abstract fun setPaymentPendingInitialization(pending: Boolean)
+
+    protected abstract fun highlightValidationErrors()
 
     private fun observeState() {
         componentDialogViewModel.componentFragmentState.observe(viewLifecycleOwner) {

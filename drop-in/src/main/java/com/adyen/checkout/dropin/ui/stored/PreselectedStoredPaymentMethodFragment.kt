@@ -53,40 +53,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
         )
     }
+
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
     private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        observeState()
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    private fun observeState() {
-        storedPaymentViewModel.componentFragmentState.observe(viewLifecycleOwner) {
-            Logger.v(TAG, "state: $it")
-            setPaymentPendingInitialization(it is AwaitingComponentInitialization)
-            when (it) {
-                is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
-                is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
-                is PaymentError -> handleError(it.componentError)
-                else -> { // do nothing
-                }
-            }
-        }
-    }
-
-    private fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = !pending
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         storedPaymentMethod = arguments?.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()
@@ -114,6 +86,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         Logger.d(TAG, "onViewCreated")
         binding.paymentMethodsListHeader.paymentMethodHeaderTitle.setText(R.string.store_payment_methods_header)
         binding.storedPaymentMethodItem.root.setBackgroundColor(android.R.color.transparent)
+        observeState()
         observe()
 
         if (component.requiresInput()) {
@@ -141,10 +114,28 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         }
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
+    private fun observeState() {
+        storedPaymentViewModel.componentFragmentState.observe(viewLifecycleOwner) {
+            Logger.v(TAG, "state: $it")
+            setPaymentPendingInitialization(it is AwaitingComponentInitialization)
+            when (it) {
+                is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
+                is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
+                is PaymentError -> handleError(it.componentError)
+                else -> { // do nothing
+                }
+            }
+        }
+    }
+
+    private fun setPaymentPendingInitialization(pending: Boolean) {
+        binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
+    }
+
+    private fun handleError(componentError: ComponentError) {
+        Logger.e(TAG, componentError.errorMessage)
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     private fun observe() {
@@ -186,6 +177,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        Logger.d(TAG, "onCancel")
+        protocol.terminateDropIn()
     }
 
     override fun onDestroyView() {

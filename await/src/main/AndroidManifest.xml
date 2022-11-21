@@ -7,5 +7,4 @@
   ~ Created by caiof on 17/12/2020.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.checkout.await"/>
+<manifest package="com.adyen.checkout.await" />
