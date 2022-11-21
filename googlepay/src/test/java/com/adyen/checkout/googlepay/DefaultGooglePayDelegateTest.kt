@@ -9,6 +9,7 @@
 package com.adyen.checkout.googlepay
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.model.paymentmethods.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -37,14 +38,19 @@ internal class DefaultGooglePayDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
+        val configuration = GooglePayConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        ).build()
+        val paymentMethod = PaymentMethod(
+            configuration = Configuration(gatewayMerchantId = "TEST_GATEWAY_MERCHANT_ID")
+        )
         delegate = DefaultGooglePayDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
-            configuration = GooglePayConfiguration.Builder(
-                Locale.US,
-                Environment.TEST,
-                "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-            ).build(),
+            configuration = configuration,
+            componentParams = GooglePayComponentParamsMapper(null).mapToParams(configuration, paymentMethod),
         )
     }
 

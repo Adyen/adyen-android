@@ -22,7 +22,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
@@ -37,6 +36,7 @@ internal class DefaultGooglePayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     override val configuration: GooglePayConfiguration,
+    private val componentParams: GooglePayComponentParams,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -88,18 +88,11 @@ internal class DefaultGooglePayDelegate(
 
     override fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         Logger.d(TAG, "startGooglePayScreen")
-        val googlePayParams = getGooglePayParams()
-        val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams))
-        val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams)
+        val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(componentParams))
+        val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides
         //  any later.
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
-    }
-
-    private fun getGooglePayParams(): GooglePayParams {
-        val config = paymentMethod.configuration
-        val serverGatewayMerchantId = config?.gatewayMerchantId
-        return GooglePayParams(configuration, serverGatewayMerchantId, paymentMethod.brands)
     }
 
     override fun handleActivityResult(resultCode: Int, data: Intent?) {

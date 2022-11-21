@@ -12,8 +12,8 @@ import com.adyen.checkout.components.util.AmountFormat.toBigDecimal
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.googlepay.GooglePayComponentParams
 import com.adyen.checkout.googlepay.model.CardParameters
-import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.model.IsReadyToPayRequestModel
 import com.adyen.checkout.googlepay.model.PaymentDataRequestModel
@@ -32,7 +32,7 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 
 @Suppress("TooManyFunctions")
-object GooglePayUtils {
+internal object GooglePayUtils {
 
     private val TAG = LogUtil.getTag()
     private val GOOGLE_PAY_DECIMAL_FORMAT = DecimalFormat("0.##", DecimalFormatSymbols(Locale.ROOT))
@@ -66,7 +66,7 @@ object GooglePayUtils {
      * @param params The parameters based on the Google Pay component configuration.
      * @return The WalletOptions object.
      */
-    fun createWalletOptions(params: GooglePayParams): WalletOptions {
+    fun createWalletOptions(params: GooglePayComponentParams): WalletOptions {
         return WalletOptions.Builder()
             .setEnvironment(params.googlePayEnvironment)
             .build()
@@ -79,7 +79,7 @@ object GooglePayUtils {
      * @param params The parameters based on the Google Pay component configuration.
      * @return The IsReadyToPayRequest to start the task to verify Google Pay availability
      */
-    fun createIsReadyToPayRequest(params: GooglePayParams): IsReadyToPayRequest {
+    fun createIsReadyToPayRequest(params: GooglePayComponentParams): IsReadyToPayRequest {
         val isReadyToPayRequestModel = createIsReadyToPayRequestModel(params)
         val requestJsonString = IsReadyToPayRequestModel.SERIALIZER.serialize(isReadyToPayRequestModel).toString()
         return IsReadyToPayRequest.fromJson(requestJsonString)
@@ -92,7 +92,7 @@ object GooglePayUtils {
      * @param params The parameters based on the Google Pay component configuration.
      * @return The PaymentDataRequest to start the Google Pay payment flow.
      */
-    fun createPaymentDataRequest(params: GooglePayParams): PaymentDataRequest {
+    fun createPaymentDataRequest(params: GooglePayComponentParams): PaymentDataRequest {
         val paymentDataRequestModel = createPaymentDataRequestModel(params)
         val requestJsonString = PaymentDataRequestModel.SERIALIZER.serialize(paymentDataRequestModel).toString()
         return PaymentDataRequest.fromJson(requestJsonString)
@@ -146,7 +146,7 @@ object GooglePayUtils {
         }
     }
 
-    private fun createIsReadyToPayRequestModel(params: GooglePayParams): IsReadyToPayRequestModel {
+    private fun createIsReadyToPayRequestModel(params: GooglePayComponentParams): IsReadyToPayRequestModel {
         val isReadyToPayRequestModel = IsReadyToPayRequestModel()
         isReadyToPayRequestModel.apiVersion = MAJOR_API_VERSION
         isReadyToPayRequestModel.apiVersionMinor = MINOT_API_VERSION
@@ -157,7 +157,7 @@ object GooglePayUtils {
         return isReadyToPayRequestModel
     }
 
-    private fun createPaymentDataRequestModel(params: GooglePayParams): PaymentDataRequestModel {
+    private fun createPaymentDataRequestModel(params: GooglePayComponentParams): PaymentDataRequestModel {
         val paymentDataRequestModel = PaymentDataRequestModel()
         paymentDataRequestModel.apiVersion = MAJOR_API_VERSION
         paymentDataRequestModel.apiVersionMinor = MINOT_API_VERSION
@@ -172,7 +172,7 @@ object GooglePayUtils {
         return paymentDataRequestModel
     }
 
-    private fun createCardPaymentMethod(params: GooglePayParams): GooglePayPaymentMethodModel {
+    private fun createCardPaymentMethod(params: GooglePayComponentParams): GooglePayPaymentMethodModel {
         val cardPaymentMethod = GooglePayPaymentMethodModel()
         cardPaymentMethod.type = PAYMENT_TYPE_CARD
         cardPaymentMethod.parameters = createCardParameters(params)
@@ -180,7 +180,7 @@ object GooglePayUtils {
         return cardPaymentMethod
     }
 
-    private fun createCardParameters(params: GooglePayParams): CardParameters {
+    private fun createCardParameters(params: GooglePayComponentParams): CardParameters {
         val cardParameters = CardParameters()
         cardParameters.allowedAuthMethods = params.allowedAuthMethods
         cardParameters.allowedCardNetworks = params.allowedCardNetworks
@@ -190,21 +190,23 @@ object GooglePayUtils {
         return cardParameters
     }
 
-    private fun createTokenizationSpecification(params: GooglePayParams): PaymentMethodTokenizationSpecification {
+    private fun createTokenizationSpecification(
+        params: GooglePayComponentParams
+    ): PaymentMethodTokenizationSpecification {
         val tokenizationSpecification = PaymentMethodTokenizationSpecification()
         tokenizationSpecification.type = PAYMENT_GATEWAY
         tokenizationSpecification.parameters = createGatewayParameters(params)
         return tokenizationSpecification
     }
 
-    private fun createGatewayParameters(params: GooglePayParams): TokenizationParameters {
+    private fun createGatewayParameters(params: GooglePayComponentParams): TokenizationParameters {
         val tokenizationParameters = TokenizationParameters()
         tokenizationParameters.gateway = ADYEN_GATEWAY
         tokenizationParameters.gatewayMerchantId = params.gatewayMerchantId
         return tokenizationParameters
     }
 
-    private fun createTransactionInfo(params: GooglePayParams): TransactionInfoModel {
+    private fun createTransactionInfo(params: GooglePayComponentParams): TransactionInfoModel {
         var bigDecimal = toBigDecimal(params.amount)
         bigDecimal = bigDecimal.setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP)
         val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal)
