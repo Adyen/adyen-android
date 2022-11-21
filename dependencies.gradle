@@ -58,7 +58,7 @@ ext {
 
     // Tests
     arch_core_testing_version = "2.1.0"
-    espresso_version = "3.4.0"
+    espresso_version = "3.5.0"
     json_version = '20220320'
     junit_version = '4.13.2'
     junit_jupiter_version = "5.8.2"
