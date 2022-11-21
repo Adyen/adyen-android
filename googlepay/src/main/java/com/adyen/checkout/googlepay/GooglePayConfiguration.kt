@@ -14,6 +14,7 @@ import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.core.api.Environment
@@ -143,6 +144,10 @@ class GooglePayConfiguration private constructor(
 
         /**
          * Set the merchant account to be put in the payment token from Google to Adyen.
+         *
+         * If not set then [PaymentMethod.configuration.gatewayMerchantId] will be used.
+         * If that value is also not set, an exception will be thrown indicating that you need to update you Adyen API
+         * version or pass this value manually.
          *
          * @param merchantAccount Your merchant account.
          */
