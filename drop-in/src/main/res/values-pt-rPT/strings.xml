@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Pagar</string>
-    <string name="pay_button_with_value">Pagar %s</string>
     <string name="payment_methods_header">forma de pagamento</string>
     <string name="error_dialog_title">Erro</string>
     <string name="error_dialog_button">OK</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Selecione outro método</string>
     <string name="continue_button">Continuar</string>
     <string name="change_payment_method">Alterar método de pagamento</string>
-    <string name="checkout_giftcard_redeem_button">Resgatar</string>
     <string name="checkout_giftcard_error_zero_balance">Este cartão oferta tem saldo zero</string>
     <string name="checkout_giftcard_error_currency">Os cartões oferta só são válidos na moeda em que foram emitidos</string>
     <string name="checkout_giftcard_remaining_balance_text">O saldo restante será de %s</string>

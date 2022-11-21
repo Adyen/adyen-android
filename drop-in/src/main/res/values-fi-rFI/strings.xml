@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Maksa</string>
-    <string name="pay_button_with_value">Maksa %s</string>
     <string name="payment_methods_header">Maksutavat</string>
     <string name="error_dialog_title">Virhe</string>
     <string name="error_dialog_button">Ok</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Valitse muu maksutapa</string>
     <string name="continue_button">Jatka</string>
     <string name="change_payment_method">Muuta maksutapaa</string>
-    <string name="checkout_giftcard_redeem_button">Lunasta</string>
     <string name="checkout_giftcard_error_zero_balance">Lahjakortin saldo on nolla</string>
     <string name="checkout_giftcard_error_currency">Gift cards are only valid in the currency they were issued in</string>
     <string name="checkout_giftcard_remaining_balance_text">Jäljellä oleva saldo on %s</string>

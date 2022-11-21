@@ -1,0 +1,11 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+<resources>
+    <string name="pay_button">دفع</string>
+    <string name="pay_button_with_value">دفع %s</string>
+</resources>

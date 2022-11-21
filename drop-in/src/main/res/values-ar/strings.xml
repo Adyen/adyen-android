@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">دفع</string>
-    <string name="pay_button_with_value">دفع %s</string>
     <string name="payment_methods_header">طرق الدفع</string>
     <string name="error_dialog_title">خطأ</string>
     <string name="error_dialog_button">موافق</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">تحديد طريقة أخرى</string>
     <string name="continue_button">متابعة</string>
     <string name="change_payment_method">تغيير طريقة الدفع</string>
-    <string name="checkout_giftcard_redeem_button">استرداد</string>
     <string name="checkout_giftcard_error_zero_balance">لا يوجد رصيد ببطاقة الهدايا هذه</string>
     <string name="checkout_giftcard_error_currency">لا تسري بطاقات الهدايا إلا بالعملة التي صدرت بها</string>
     <string name="checkout_giftcard_remaining_balance_text">سيبلغ الرصيد المتبقي %s</string>

@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Payer</string>
-    <string name="pay_button_with_value">Payer %s</string>
     <string name="payment_methods_header">Méthodes de paiement</string>
     <string name="error_dialog_title">Erreur</string>
     <string name="error_dialog_button">Ok</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Autre méthode de paiement</string>
     <string name="continue_button">Continuer</string>
     <string name="change_payment_method">Changer de moyen de paiement</string>
-    <string name="checkout_giftcard_redeem_button">Utiliser</string>
     <string name="checkout_giftcard_error_zero_balance">Aucun solde n\'est disponible sur cette carte cadeau</string>
     <string name="checkout_giftcard_error_currency">Les cartes cadeaux sont valables uniquement dans la devise dans laquelle elles ont été émises</string>
     <string name="checkout_giftcard_remaining_balance_text">Le solde restant sera de %s</string>

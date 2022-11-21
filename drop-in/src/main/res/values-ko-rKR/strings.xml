@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">결제</string>
-    <string name="pay_button_with_value">%s 결제</string>
     <string name="payment_methods_header">결제 수단</string>
     <string name="error_dialog_title">오류</string>
     <string name="error_dialog_button">확인</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">다른 수단 선택</string>
     <string name="continue_button">계속</string>
     <string name="change_payment_method">결제 수단 변경</string>
-    <string name="checkout_giftcard_redeem_button">기프트 카드로 결제</string>
     <string name="checkout_giftcard_error_zero_balance">이 기프트 카드에는 잔액이 없습니다</string>
     <string name="checkout_giftcard_error_currency">기프트 카드는 발급된 통화로만 사용하실 수 있습니다</string>
     <string name="checkout_giftcard_remaining_balance_text">남은 잔액은 %s입니다</string>
