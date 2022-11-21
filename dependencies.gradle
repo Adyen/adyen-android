@@ -61,7 +61,7 @@ ext {
     espresso_version = "3.5.0"
     json_version = '20220320'
     junit_version = '4.13.2'
-    junit_jupiter_version = "5.8.2"
+    junit_jupiter_version = "5.9.1"
     mockito_kotlin_version = "4.0.0"
     mockito_version = "4.6.1"
     robolectric_version = "4.9"
