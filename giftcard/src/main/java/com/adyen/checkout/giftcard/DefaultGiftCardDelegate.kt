@@ -61,7 +61,7 @@ internal class DefaultGiftCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType())
 
     private var publicKey: String? = null
 

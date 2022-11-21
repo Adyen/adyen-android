@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
 internal object GiftCardViewProvider : ViewProvider {
@@ -23,12 +24,13 @@ internal object GiftCardViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            GiftCardComponentViewType -> GiftCardView(context, attrs, defStyleAttr)
+            is GiftCardComponentViewType -> GiftCardView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal object GiftCardComponentViewType : ComponentViewType {
+internal class GiftCardComponentViewType(
+    override val buttonTextResId: Int = R.string.checkout_giftcard_redeem_button,
     override val viewProvider: ViewProvider = GiftCardViewProvider
-}
+) : ButtonComponentViewType

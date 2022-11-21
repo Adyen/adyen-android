@@ -51,7 +51,7 @@ internal class DefaultBacsDirectDebitDelegate(
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
-    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
+    internal val _viewFlow = MutableStateFlow<BacsComponentViewType>(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {

@@ -83,8 +83,8 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     private fun getIssuerListComponentViewType(): IssuerListComponentViewType {
         return when (componentParams.viewType) {
-            IssuerListViewType.RECYCLER_VIEW -> IssuerListComponentViewType.RECYCLER_VIEW
-            IssuerListViewType.SPINNER_VIEW -> IssuerListComponentViewType.SPINNER_VIEW
+            IssuerListViewType.RECYCLER_VIEW -> IssuerListComponentViewType.RecyclerView
+            IssuerListViewType.SPINNER_VIEW -> IssuerListComponentViewType.SpinnerView
         }
     }
 

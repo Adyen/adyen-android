@@ -100,6 +100,10 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
+        if (viewType is ButtonComponentViewType) {
+            binding.payButton.text = localizedContext.getString(viewType.buttonTextResId)
+        }
+
         val view = componentView.getView()
         binding.frameLayoutComponentContainer.addView(view)
         view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }

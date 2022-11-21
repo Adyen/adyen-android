@@ -145,11 +145,12 @@ internal class DefaultIssuerListDelegateTest(
             observerRepository = PaymentObserverRepository(),
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository
+            analyticsRepository = analyticsRepository,
+            buttonDelegate = DefaultButtonDelegate()
         ) { TestIssuerPaymentMethod() }
 
         delegate.viewFlow.test {
-            assertEquals(IssuerListComponentViewType.RECYCLER_VIEW, expectMostRecentItem())
+            assertEquals(IssuerListComponentViewType.RecyclerView, expectMostRecentItem())
         }
     }
 
@@ -171,7 +172,7 @@ internal class DefaultIssuerListDelegateTest(
             buttonDelegate = DefaultButtonDelegate()
         ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {
-            assertEquals(IssuerListComponentViewType.SPINNER_VIEW, expectMostRecentItem())
+            assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
         }
     }
 

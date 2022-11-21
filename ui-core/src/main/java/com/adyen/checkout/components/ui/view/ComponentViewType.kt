@@ -8,8 +8,14 @@
 
 package com.adyen.checkout.components.ui.view
 
+import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.components.ui.ViewProvider
 
 interface ComponentViewType {
     val viewProvider: ViewProvider
+}
+
+interface ButtonComponentViewType : ComponentViewType {
+    val buttonTextResId: Int
+        get() = R.string.pay_button
 }
