@@ -52,7 +52,7 @@ ext {
     leak_canary_version = '2.10'
     moshi_adapters_version = '1.14.0'
     moshi_kotlin_adapter_version = '1.14.0'
-    okhttp_logging_version = "4.9.0"
+    okhttp_logging_version = "4.10.0"
     preference_version = "1.2.0"
     retrofit2_version = '2.9.0'
 
