@@ -215,7 +215,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
-        GooglePayComponentProvider(dropInConfiguration).isPaymentMethodSupported(paymentMethod) ->
+        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             GooglePayConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
@@ -435,7 +435,7 @@ internal fun getComponentFor(
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val googlePayConfiguration: GooglePayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
+            GooglePayComponentProvider(dropInConfiguration).get(fragment, paymentMethod, googlePayConfiguration)
         }
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
