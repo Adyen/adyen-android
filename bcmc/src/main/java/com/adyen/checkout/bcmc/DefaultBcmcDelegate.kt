@@ -45,12 +45,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+@Suppress("LongParameterList", "TooManyFunctions")
 internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: BcmcConfiguration,
+    private val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {
@@ -98,8 +99,8 @@ internal class DefaultBcmcDelegate(
         Logger.d(TAG, "fetchPublicKey")
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
+                environment = componentParams.environment,
+                clientKey = componentParams.clientKey
             ).fold(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
@@ -141,7 +142,7 @@ internal class DefaultBcmcDelegate(
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {
-        return if (configuration.isHolderNameRequired && holderName.isBlank()) {
+        return if (componentParams.isHolderNameRequired && holderName.isBlank()) {
             FieldState(
                 holderName,
                 Validation.Invalid(R.string.checkout_holder_name_not_valid)
@@ -192,14 +193,14 @@ internal class DefaultBcmcDelegate(
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             threeDS2SdkVersion = get3DS2SdkVersion(),
         ).apply {
-            if (configuration.isHolderNameRequired) {
+            if (componentParams.isHolderNameRequired) {
                 holderName = outputData.cardHolderNameField.value
             }
         }
         paymentComponentData.apply {
             paymentMethod = cardPaymentMethod
             storePaymentMethod = outputData.isStoredPaymentMethodEnabled
-            shopperReference = configuration.shopperReference
+            shopperReference = componentParams.shopperReference
         }
 
         return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
