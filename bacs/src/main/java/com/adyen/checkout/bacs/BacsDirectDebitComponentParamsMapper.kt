@@ -9,6 +9,7 @@
 package com.adyen.checkout.bacs
 
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
 
 internal class BacsDirectDebitComponentParamsMapper(
     private val parentConfiguration: Configuration?
@@ -31,7 +32,7 @@ internal class BacsDirectDebitComponentParamsMapper(
             shopperLocale = parentConfiguration.shopperLocale,
             environment = parentConfiguration.environment,
             clientKey = parentConfiguration.clientKey,
-            amount = bacsDirectDebitConfiguration.amount,
+            amount = bacsDirectDebitConfiguration.amount ?: Amount.EMPTY,
         )
     }
 }

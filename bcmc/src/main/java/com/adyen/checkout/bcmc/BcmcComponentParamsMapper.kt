@@ -32,9 +32,9 @@ internal class BcmcComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
-                isHolderNameRequired = isHolderNameRequired,
+                isHolderNameRequired = isHolderNameRequired ?: false,
                 shopperReference = shopperReference,
-                isStorePaymentFieldVisible = isStorePaymentFieldVisible,
+                isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
             )
         }
     }

@@ -14,5 +14,5 @@ import com.adyen.checkout.components.model.payments.Amount
  * Represents a configuration class that contains an amount.
  */
 interface AmountConfiguration {
-    val amount: Amount
+    val amount: Amount?
 }

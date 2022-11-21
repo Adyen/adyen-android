@@ -38,7 +38,7 @@ internal class CardComponentParamsMapper(
         return mapToParams(
             parentConfiguration = parentConfiguration ?: cardConfiguration,
             cardConfiguration = cardConfiguration,
-            supportedCardTypes = cardConfiguration.supportedCardTypes
+            supportedCardTypes = cardConfiguration.supportedCardTypes.orEmpty()
         )
     }
 
@@ -52,16 +52,16 @@ internal class CardComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
-                isHolderNameRequired = isHolderNameRequired,
+                isHolderNameRequired = isHolderNameRequired ?: false,
                 supportedCardTypes = supportedCardTypes,
                 shopperReference = shopperReference,
-                isStorePaymentFieldVisible = isStorePaymentFieldVisible,
-                isHideCvc = isHideCvc,
-                isHideCvcStoredCard = isHideCvcStoredCard,
-                socialSecurityNumberVisibility = socialSecurityNumberVisibility,
-                kcpAuthVisibility = kcpAuthVisibility,
+                isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
+                isHideCvc = isHideCvc ?: false,
+                isHideCvcStoredCard = isHideCvcStoredCard ?: false,
+                socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
+                kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
                 installmentConfiguration = installmentConfiguration,
-                addressConfiguration = addressConfiguration
+                addressConfiguration = addressConfiguration ?: AddressConfiguration.None
             )
         }
     }
@@ -75,7 +75,7 @@ internal class CardComponentParamsMapper(
         paymentMethod: PaymentMethod
     ): List<CardType> {
         return when {
-            cardConfiguration.supportedCardTypes.isNotEmpty() -> {
+            !cardConfiguration.supportedCardTypes.isNullOrEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from configuration")
                 cardConfiguration.supportedCardTypes
             }

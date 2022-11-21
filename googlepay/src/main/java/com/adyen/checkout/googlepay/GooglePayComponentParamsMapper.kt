@@ -10,6 +10,8 @@ package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -47,16 +49,16 @@ internal class GooglePayComponentParamsMapper(
                 allowedAuthMethods = getAvailableAuthMethods(googlePayConfiguration),
                 allowedCardNetworks = getAvailableCardNetworks(googlePayConfiguration, paymentMethod),
                 googlePayEnvironment = getGooglePayEnvironment(googlePayConfiguration),
-                amount = amount,
-                totalPriceStatus = totalPriceStatus,
+                amount = amount ?: DEFAULT_AMOUNT,
+                totalPriceStatus = totalPriceStatus ?: DEFAULT_TOTAL_PRICE_STATUS,
                 countryCode = countryCode,
                 merchantInfo = merchantInfo,
-                isAllowPrepaidCards = isAllowPrepaidCards,
-                isEmailRequired = isEmailRequired,
-                isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
-                isShippingAddressRequired = isShippingAddressRequired,
+                isAllowPrepaidCards = isAllowPrepaidCards ?: false,
+                isEmailRequired = isEmailRequired ?: false,
+                isExistingPaymentMethodRequired = isExistingPaymentMethodRequired ?: false,
+                isShippingAddressRequired = isShippingAddressRequired ?: false,
                 shippingAddressParameters = shippingAddressParameters,
-                isBillingAddressRequired = isBillingAddressRequired,
+                isBillingAddressRequired = isBillingAddressRequired ?: false,
                 billingAddressParameters = billingAddressParameters,
             )
         }
@@ -120,5 +122,7 @@ internal class GooglePayComponentParamsMapper(
 
     companion object {
         private val TAG = LogUtil.getTag()
+        private val DEFAULT_AMOUNT = Amount(currency = CheckoutCurrency.USD.name, value = 0)
+        private const val DEFAULT_TOTAL_PRICE_STATUS = "FINAL"
     }
 }

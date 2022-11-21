@@ -29,7 +29,10 @@ class EPSComponentProvider(
     parentConfiguration: Configuration? = null,
 ) : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
 
-    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = IssuerListComponentParamsMapper(
+        parentConfiguration = parentConfiguration,
+        hideIssuerLogosDefaultValue = true
+    )
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

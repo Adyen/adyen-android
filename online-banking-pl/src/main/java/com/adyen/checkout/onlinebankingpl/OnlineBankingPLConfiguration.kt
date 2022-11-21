@@ -20,8 +20,8 @@ class OnlineBankingPLConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val viewType: IssuerListViewType,
-    override val hideIssuerLogos: Boolean,
+    override val viewType: IssuerListViewType?,
+    override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
 
     class Builder : IssuerListBuilder<OnlineBankingPLConfiguration> {
