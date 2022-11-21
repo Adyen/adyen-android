@@ -22,7 +22,6 @@ ext {
     android_gradle_plugin_version = '7.2.0'
     kotlin_version = '1.7.21'
     detekt_gradle_plugin_version = "1.22.0"
-    spotbugs_gradle_plugin_version = "4.5.1"
     dokka_version = "1.6.21"
     hilt_version = "2.43.2"
 
