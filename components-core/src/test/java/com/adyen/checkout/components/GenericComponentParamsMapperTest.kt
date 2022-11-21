@@ -16,7 +16,7 @@ import java.util.Locale
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class BacsDirectDebitComponentParamsMapperTest {
+internal class GenericComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null then params should match the component configuration`() {

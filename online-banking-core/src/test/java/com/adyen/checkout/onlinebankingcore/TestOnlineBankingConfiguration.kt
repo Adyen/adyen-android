@@ -3,26 +3,26 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 18/11/2022.
+ * Created by josephj on 21/11/2022.
  */
 
-package com.adyen.checkout.components.models
+package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class TestConfiguration private constructor(
+class TestOnlineBankingConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<TestConfiguration> {
+    class Builder : BaseConfigurationBuilder<TestOnlineBankingConfiguration> {
 
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -36,8 +36,8 @@ class TestConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        override fun buildInternal(): TestConfiguration {
-            return TestConfiguration(
+        override fun buildInternal(): TestOnlineBankingConfiguration {
+            return TestOnlineBankingConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,

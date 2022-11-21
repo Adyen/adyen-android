@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
@@ -28,10 +29,13 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultMBWayDelegateTest {
 
+    private val configuration =
+        MBWayConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
     private val delegate = DefaultMBWayDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
-        configuration = MBWayConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
+        configuration = configuration,
+        componentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
     )
 
     @Nested

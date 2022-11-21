@@ -12,6 +12,7 @@ import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.await.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -52,6 +53,7 @@ internal class DefaultAwaitDelegateTest {
         delegate = DefaultAwaitDelegate(
             ActionObserverRepository(),
             configuration,
+            GenericComponentParamsMapper(null).mapToParams(configuration),
             statusRepository,
             paymentDataRepository
         )

@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -66,6 +67,7 @@ internal class DefaultQRCodeDelegateTest(
         delegate = DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
             configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

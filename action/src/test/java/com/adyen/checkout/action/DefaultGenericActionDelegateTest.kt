@@ -15,6 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
@@ -62,6 +63,7 @@ internal class DefaultGenericActionDelegateTest(
             ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
+            GenericComponentParamsMapper(null).mapToParams(configuration),
             actionDelegateProvider
         )
         whenever(activity.application) doReturn Application()

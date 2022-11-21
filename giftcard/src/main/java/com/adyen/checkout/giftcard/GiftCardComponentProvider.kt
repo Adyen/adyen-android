@@ -25,9 +25,9 @@ import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GiftCardComponentProvider (
+class GiftCardComponentProvider(
     parentConfiguration: Configuration? = null,
-): PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
+) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 

@@ -18,6 +18,7 @@ import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.encoding.JavaBase64Encoder
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -83,10 +84,12 @@ internal class DefaultAdyen3DS2DelegateTest(
     fun beforeEach(dispatcher: TestDispatcher) {
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
+        val configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build(),
+            configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
