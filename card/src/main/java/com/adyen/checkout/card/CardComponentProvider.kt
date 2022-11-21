@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingDelegate
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.repository.DefaultAddressRepository
@@ -64,12 +63,10 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            val actionHandlingDelegate = DefaultActionHandlingDelegate(
-                GenericActionComponent.PROVIDER.getDelegate(
-                    actionConfiguration,
-                    savedStateHandle,
-                    application,
-                )
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                actionConfiguration,
+                savedStateHandle,
+                application,
             )
 
             CardComponent(
@@ -84,10 +81,10 @@ class CardComponentProvider(
                     cardValidationMapper = cardValidationMapper,
                     cardEncrypter = cardEncrypter,
                     genericEncrypter = genericEncrypter,
-                    actionHandlingDelegate = actionHandlingDelegate,
                 ),
                 cardConfiguration = configuration,
-                actionHandlingDelegate = DefaultActionHandlingComponent(actionHandlingDelegate),
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -116,12 +113,10 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            val actionHandlingDelegate = DefaultActionHandlingDelegate(
-                GenericActionComponent.PROVIDER.getDelegate(
-                    actionConfiguration,
-                    savedStateHandle,
-                    application,
-                )
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                actionConfiguration,
+                savedStateHandle,
+                application,
             )
 
             CardComponent(
@@ -132,10 +127,10 @@ class CardComponentProvider(
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                     publicKeyRepository = publicKeyRepository,
-                    actionHandlingDelegate = actionHandlingDelegate,
                 ),
                 cardConfiguration = configuration,
-                actionHandlingDelegate = DefaultActionHandlingComponent(actionHandlingDelegate),
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]

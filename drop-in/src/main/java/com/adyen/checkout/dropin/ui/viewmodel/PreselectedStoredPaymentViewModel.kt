@@ -53,6 +53,9 @@ internal class PreselectedStoredPaymentViewModel(
         when (event) {
             is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
             is PaymentComponentEvent.Error -> componentErrorOccurred(event.error)
+            is PaymentComponentEvent.ActionDetails -> {
+                throw IllegalStateException("This event should not be used in drop-in")
+            }
         }
     }
 

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.ui
 
-import com.adyen.checkout.components.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 
 /**

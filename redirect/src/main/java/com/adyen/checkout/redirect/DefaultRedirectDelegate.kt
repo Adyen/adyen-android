@@ -21,7 +21,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil

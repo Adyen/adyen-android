@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.ActionHandlingDelegate
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
@@ -17,8 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CardDelegate :
     PaymentComponentDelegate<CardComponentState>,
-    ViewProvidingDelegate,
-    ActionHandlingDelegate {
+    ViewProvidingDelegate {
 
     val outputData: CardOutputData
 

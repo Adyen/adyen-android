@@ -129,7 +129,6 @@ class CardActivity : AppCompatActivity() {
     }
 
     private fun onAction(action: Action) {
-        cardComponent?.observeAction(this, lifecycleScope, cardViewModel::onActionComponentEvent)
         cardComponent?.handleAction(action, this)
     }
 

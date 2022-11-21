@@ -25,7 +25,7 @@ import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.card.util.SocialSecurityNumberUtils
-import com.adyen.checkout.components.ActionHandlingDelegate
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -37,7 +37,6 @@ import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -55,7 +54,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -71,9 +69,7 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-    private val actionHandlingDelegate: ActionHandlingDelegate,
-) : CardDelegate,
-    ActionHandlingDelegate by actionHandlingDelegate {
+) : CardDelegate {
 
     private val inputData: CardInputData = CardInputData()
 
@@ -94,14 +90,10 @@ internal class DefaultCardDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    override val viewFlow: Flow<ComponentViewType?> = merge(
-        MutableStateFlow(CardComponentViewType),
-        actionHandlingDelegate.viewFlow,
-    )
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        actionHandlingDelegate.initializeActionHandling(coroutineScope)
 
         fetchPublicKey()
         subscribeToDetectedCardTypes()
@@ -651,7 +643,6 @@ internal class DefaultCardDelegate(
     override fun getViewProvider(): ViewProvider = CardViewProvider
 
     override fun onCleared() {
-        actionHandlingDelegate.onClearedActionHandling()
         removeObserver()
         _coroutineScope = null
     }

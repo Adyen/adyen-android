@@ -14,7 +14,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2ComponentViewType
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.redirect.RedirectComponentViewType
 
 internal object CardViewProvider : ViewProvider {

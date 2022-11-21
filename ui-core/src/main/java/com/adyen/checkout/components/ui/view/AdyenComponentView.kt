@@ -15,7 +15,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.Component
-import com.adyen.checkout.components.ComponentViewType
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams

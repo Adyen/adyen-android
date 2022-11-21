@@ -9,7 +9,6 @@
 package com.adyen.checkout.card
 
 import app.cash.turbine.test
-import com.adyen.checkout.action.TestActionHandlingDelegate
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -300,7 +299,6 @@ internal class StoredCardDelegateTest {
             publicKeyRepository = publicKeyRepository,
             componentParams = CardComponentParamsMapper(null).mapToParams(configuration, storedPaymentMethod),
             cardEncrypter = cardEncrypter,
-            actionHandlingDelegate = TestActionHandlingDelegate(),
         )
     }
 

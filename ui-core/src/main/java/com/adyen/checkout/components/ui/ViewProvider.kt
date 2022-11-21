@@ -10,7 +10,7 @@ package com.adyen.checkout.components.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType
 
 interface ViewProvider {
     fun getView(

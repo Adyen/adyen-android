@@ -6,27 +6,28 @@
  * Created by oscars on 11/11/2022.
  */
 
-package com.adyen.checkout.components
+package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.model.payments.response.Action
-import kotlinx.coroutines.CoroutineScope
+import com.adyen.threeds2.customization.UiCustomization
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionHandlingComponent {
 
+    fun canHandleAction(action: Action): Boolean
+
     fun handleAction(action: Action, activity: Activity)
 
+    /**
+     * Call this method when receiving the return URL from the redirect with the result data.
+     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
+     *
+     * @param intent The received [Intent].
+     */
     fun handleIntent(intent: Intent)
 
-    fun observeAction(
-        lifecycleOwner: LifecycleOwner,
-        coroutineScope: CoroutineScope,
-        callback: (ActionComponentEvent) -> Unit,
-    )
-
-    fun removeActionObserver()
+    fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

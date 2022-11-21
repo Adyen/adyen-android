@@ -11,35 +11,27 @@ package com.adyen.checkout.action
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.ActionHandlingComponent
-import com.adyen.checkout.components.ActionHandlingDelegate
 import com.adyen.checkout.components.model.payments.response.Action
-import kotlinx.coroutines.CoroutineScope
+import com.adyen.threeds2.customization.UiCustomization
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultActionHandlingComponent(
-    private val actionDelegate: ActionHandlingDelegate
+    private val genericActionDelegate: GenericActionDelegate
 ) : ActionHandlingComponent {
 
+    override fun canHandleAction(action: Action): Boolean {
+        return GenericActionComponent.PROVIDER.canHandleAction(action)
+    }
+
     override fun handleAction(action: Action, activity: Activity) {
-        actionDelegate.handleAction(action, activity)
+        genericActionDelegate.handleAction(action, activity)
     }
 
     override fun handleIntent(intent: Intent) {
-        actionDelegate.handleIntent(intent)
+        genericActionDelegate.handleIntent(intent)
     }
 
-    override fun observeAction(
-        lifecycleOwner: LifecycleOwner,
-        coroutineScope: CoroutineScope,
-        callback: (ActionComponentEvent) -> Unit,
-    ) {
-        actionDelegate.observeAction(lifecycleOwner, coroutineScope, callback)
-    }
-
-    override fun removeActionObserver() {
-        actionDelegate.removeActionObserver()
+    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
+        genericActionDelegate.set3DS2UICustomization(uiCustomization)
     }
 }

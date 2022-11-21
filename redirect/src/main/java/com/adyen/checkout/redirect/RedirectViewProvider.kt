@@ -14,7 +14,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType
 
 internal object RedirectViewProvider : ViewProvider {
 
