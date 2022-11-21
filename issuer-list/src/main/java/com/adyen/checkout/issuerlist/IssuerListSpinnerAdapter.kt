@@ -45,6 +45,7 @@ class IssuerListSpinnerAdapter internal constructor(
             binding = SpinnerListWithImageBinding.inflate(LayoutInflater.from(context), parent, false)
             view = binding.root
             viewHolder = IssuerListSpinnerViewHolder(binding, imageLoader, paymentMethod, hideIssuerLogo)
+            view.tag = viewHolder
         } else {
             view = convertView
             viewHolder = view.tag as IssuerListSpinnerViewHolder
