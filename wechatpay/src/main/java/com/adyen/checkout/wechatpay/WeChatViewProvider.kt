@@ -28,4 +28,6 @@ internal object WeChatViewProvider : ViewProvider {
     }
 }
 
-internal object WeChatComponentViewType : ComponentViewType
+internal object WeChatComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = WeChatViewProvider
+}

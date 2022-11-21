@@ -38,7 +38,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.Locale
+import java.util.*
 
 internal class TestActionDelegate :
     ActionDelegate,
@@ -106,10 +106,6 @@ internal class TestActionDelegate :
         refreshStatusCalled = true
     }
 
-    override fun getViewProvider(): ViewProvider {
-        throw NotImplementedError()
-    }
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
@@ -146,10 +142,6 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override fun handleIntent(intent: Intent) = Unit
 
-    override fun getViewProvider(): ViewProvider {
-        throw IllegalStateException("This method should not be called from unit tests")
-    }
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
@@ -161,6 +153,9 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override fun onCleared() = Unit
 }
 
-internal object TestComponentViewType : ComponentViewType
+internal object TestComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider
+        get() = throw IllegalStateException("This should not be called from unit tests")
+}
 
 private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

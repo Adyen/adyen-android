@@ -29,4 +29,6 @@ internal object AwaitViewProvider : ViewProvider {
     }
 }
 
-internal object AwaitComponentViewType : ComponentViewType
+internal object AwaitComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = AwaitViewProvider
+}

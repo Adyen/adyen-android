@@ -25,7 +25,6 @@ import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
@@ -179,9 +178,6 @@ internal class DefaultGenericActionDelegate(
         Logger.d(TAG, "Refreshing status")
         delegate.refreshStatus()
     }
-
-    override fun getViewProvider(): ViewProvider =
-        throw IllegalStateException("GenericActionDelegate doesn't have a ViewProvider")
 
     override fun onCleared() {
         Logger.d(TAG, "onCleared")

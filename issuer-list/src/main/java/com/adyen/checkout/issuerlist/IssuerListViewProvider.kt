@@ -31,5 +31,7 @@ internal object IssuerListViewProvider : ViewProvider {
 }
 
 enum class IssuerListComponentViewType : ComponentViewType {
-    RECYCLER_VIEW, SPINNER_VIEW
+    RECYCLER_VIEW, SPINNER_VIEW;
+
+    override val viewProvider: ViewProvider = IssuerListViewProvider
 }

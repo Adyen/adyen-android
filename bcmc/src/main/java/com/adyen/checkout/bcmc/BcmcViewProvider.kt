@@ -27,4 +27,6 @@ internal object BcmcViewProvider : ViewProvider {
     }
 }
 
-internal object BcmcComponentViewType : ComponentViewType
+internal object BcmcComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = BcmcViewProvider
+}

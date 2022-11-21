@@ -29,4 +29,6 @@ internal object SepaViewProvider : ViewProvider {
     }
 }
 
-internal object SepaComponentViewType : ComponentViewType
+internal object SepaComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = SepaViewProvider
+}

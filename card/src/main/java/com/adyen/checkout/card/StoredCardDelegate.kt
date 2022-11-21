@@ -16,7 +16,6 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -27,7 +26,7 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -346,8 +345,6 @@ internal class StoredCardDelegate(
     private fun getPaymentMethodId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
-
-    override fun getViewProvider(): ViewProvider = CardViewProvider
 
     override fun onCleared() {
         removeObserver()

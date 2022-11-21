@@ -58,16 +58,16 @@ class AdyenComponentView @JvmOverloads constructor(
     ) where T : ViewableComponent, T : Component<*, *> {
         component.viewFlow
             .filterNotNull()
-            .onEach {
+            .onEach { componentViewType ->
                 val delegate = component.delegate
                 if (delegate !is ViewProvidingDelegate) {
                     Logger.i(TAG, "View attached to non viewable component, ignoring.")
                     return@onEach
                 }
                 loadView(
-                    viewType = it,
+                    viewType = componentViewType,
                     delegate = delegate,
-                    viewProvider = delegate.getViewProvider(),
+                    viewProvider = componentViewType.viewProvider,
                     componentParams = delegate.componentParams,
                     coroutineScope = lifecycleOwner.lifecycleScope,
                 )

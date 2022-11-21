@@ -10,7 +10,6 @@ package com.adyen.checkout.redirect
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
@@ -29,5 +28,6 @@ internal object RedirectViewProvider : ViewProvider {
     }
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object RedirectComponentViewType : ComponentViewType
+internal object RedirectComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = RedirectViewProvider
+}

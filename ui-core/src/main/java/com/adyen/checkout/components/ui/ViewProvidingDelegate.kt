@@ -13,6 +13,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface ViewProvidingDelegate {
     val viewFlow: Flow<ComponentViewType?>
-
-    fun getViewProvider(): ViewProvider
 }

@@ -29,4 +29,6 @@ internal object GiftCardViewProvider : ViewProvider {
     }
 }
 
-internal object GiftCardComponentViewType : ComponentViewType
+internal object GiftCardComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = GiftCardViewProvider
+}

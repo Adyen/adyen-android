@@ -16,7 +16,6 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,8 +40,6 @@ internal class DefaultVoucherDelegate(
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
-
-    override fun getViewProvider(): ViewProvider = VoucherViewProvider
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,

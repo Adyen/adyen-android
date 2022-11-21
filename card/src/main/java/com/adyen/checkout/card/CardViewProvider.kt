@@ -10,12 +10,9 @@ package com.adyen.checkout.card
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.adyen3ds2.Adyen3DS2ComponentViewType
 import com.adyen.checkout.components.ui.ComponentView
-import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.redirect.RedirectComponentViewType
 
 internal object CardViewProvider : ViewProvider {
 
@@ -27,11 +24,11 @@ internal object CardViewProvider : ViewProvider {
     ): ComponentView {
         return when (viewType) {
             CardComponentViewType -> CardView(context, attrs, defStyleAttr)
-            Adyen3DS2ComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
-            RedirectComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal object CardComponentViewType : ComponentViewType
+internal object CardComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = CardViewProvider
+}

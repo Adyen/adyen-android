@@ -27,4 +27,6 @@ internal object MbWayViewProvider : ViewProvider {
     }
 }
 
-internal object MbWayComponentViewType : ComponentViewType
+internal object MbWayComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = MbWayViewProvider
+}

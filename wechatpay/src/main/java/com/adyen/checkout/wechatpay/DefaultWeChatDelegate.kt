@@ -21,7 +21,6 @@ import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -150,8 +149,6 @@ internal class DefaultWeChatDelegate(
             paymentData = paymentDataRepository.paymentData,
         )
     }
-
-    override fun getViewProvider(): ViewProvider = WeChatViewProvider
 
     override fun onCleared() {
         removeObserver()

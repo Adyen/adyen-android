@@ -9,7 +9,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -99,8 +98,6 @@ internal class DefaultSepaDelegate(
     override fun onCleared() {
         removeObserver()
     }
-
-    override fun getViewProvider(): ViewProvider = SepaViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()
