@@ -23,7 +23,7 @@ ext {
     kotlin_version = '1.7.21'
     detekt_gradle_plugin_version = "1.22.0"
     dokka_version = "1.7.20"
-    hilt_version = "2.43.2"
+    hilt_version = "2.44.2"
 
     // Code quality
     detekt_version = "1.22.0"
