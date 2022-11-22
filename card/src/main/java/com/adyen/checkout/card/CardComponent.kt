@@ -192,7 +192,8 @@ class CardComponent private constructor(
         val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
         val outputCardTypes = markSelectedCard(sortedCardTypes, selectedCardIndex)
 
-        val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
+        val selectedCardType = outputCardTypes.firstOrNull { it.isSelected }
+        val selectedOrFirstCardType = selectedCardType ?: outputCardTypes.firstOrNull()
 
         val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
 
@@ -430,7 +431,7 @@ class CardComponent private constructor(
         }
 
         if (isDualBrandedFlow(stateOutputData)) {
-            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.firstOrNull { it.isSelected }?.cardType?.txVariant
         }
 
         cardPaymentMethod.fundingSource = cardDelegate.getFundingSource()
