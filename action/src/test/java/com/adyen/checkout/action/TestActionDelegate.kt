@@ -17,8 +17,10 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
@@ -64,7 +66,7 @@ internal class TestActionDelegate :
 
     override val viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
 
-    override val configuration: Configuration = object : Configuration {
+    private val configuration: Configuration = object : Configuration {
         override val shopperLocale: Locale = Locale.US
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
@@ -77,6 +79,7 @@ internal class TestActionDelegate :
             throw NotImplementedError("This method shouldn't be used in tests")
         }
     }
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -118,8 +121,10 @@ internal class TestActionDelegate :
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
-    override val configuration: Adyen3DS2Configuration =
+    private val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

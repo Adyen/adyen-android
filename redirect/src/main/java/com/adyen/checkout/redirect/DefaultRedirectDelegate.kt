@@ -37,8 +37,7 @@ private val TAG = LogUtil.getTag()
 
 internal class DefaultRedirectDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: RedirectConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {

@@ -46,7 +46,6 @@ class OpenBankingComponentProvider(
                 val componentParams = componentParamsMapper.mapToParams(configuration)
                 val delegate = DefaultIssuerListDelegate(
                     observerRepository = PaymentObserverRepository(),
-                    configuration = configuration,
                     componentParams = componentParams,
                     paymentMethod = paymentMethod
                 ) { OpenBankingPaymentMethod() }

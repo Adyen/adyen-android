@@ -76,7 +76,6 @@ class AwaitComponentProvider(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
-            configuration = configuration,
             componentParams = componentParams,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository

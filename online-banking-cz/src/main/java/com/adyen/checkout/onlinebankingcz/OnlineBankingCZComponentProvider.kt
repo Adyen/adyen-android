@@ -51,7 +51,6 @@ class OnlineBankingCZComponentProvider(
                         observerRepository = PaymentObserverRepository(),
                         pdfOpener = PdfOpener(),
                         paymentMethod = paymentMethod,
-                        configuration = configuration,
                         componentParams = componentParams,
                         termsAndConditionsUrl = OnlineBankingCZComponent.TERMS_CONDITIONS_URL
                     ) { OnlineBankingCZPaymentMethod() }

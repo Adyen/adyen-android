@@ -48,8 +48,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: QRCodeConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,

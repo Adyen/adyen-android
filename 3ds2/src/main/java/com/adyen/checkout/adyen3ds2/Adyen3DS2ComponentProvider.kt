@@ -84,7 +84,6 @@ class Adyen3DS2ComponentProvider(
         return DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
-            configuration = configuration,
             componentParams = componentParams,
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,

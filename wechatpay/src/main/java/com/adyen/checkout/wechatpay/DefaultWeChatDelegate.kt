@@ -41,8 +41,7 @@ import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: WeChatPayActionConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
     private val paymentDataRepository: PaymentDataRepository,

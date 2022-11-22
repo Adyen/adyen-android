@@ -27,8 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val configuration: BlikConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     val storedPaymentMethod: StoredPaymentMethod
 ) : BlikDelegate {
 

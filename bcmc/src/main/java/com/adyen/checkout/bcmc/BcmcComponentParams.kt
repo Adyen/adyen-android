@@ -8,13 +8,15 @@
 
 package com.adyen.checkout.bcmc
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-internal data class BcmcComponentParams(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class BcmcComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

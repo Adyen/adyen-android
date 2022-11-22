@@ -120,7 +120,7 @@ internal class MbWayView @JvmOverloads constructor(
     private fun List<CountryInfo>.mapToCountryModel() = map {
         CountryModel(
             isoCode = it.isoCode,
-            countryName = CountryUtils.getCountryName(it.isoCode, delegate.configuration.shopperLocale),
+            countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
             callingCode = it.callingCode,
             emoji = it.emoji
         )

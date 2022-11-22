@@ -65,7 +65,7 @@ class VoucherComponentProvider(
         application: Application,
     ): VoucherDelegate {
         val componentParams = componentParamsMapper.mapToParams(configuration)
-        return DefaultVoucherDelegate(ActionObserverRepository(), configuration, componentParams)
+        return DefaultVoucherDelegate(ActionObserverRepository(), componentParams)
     }
 
     override val supportedActionTypes: List<String>

@@ -20,7 +20,7 @@ interface BcmcDelegate :
     PaymentComponentDelegate<PaymentComponentState<CardPaymentMethod>>,
     ViewProvidingDelegate {
 
-    override val configuration: BcmcConfiguration
+    override val componentParams: BcmcComponentParams
 
     val outputData: BcmcOutputData
 

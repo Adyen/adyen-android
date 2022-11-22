@@ -57,7 +57,6 @@ internal class DefaultOnlineBankingDelegateTest {
             observerRepository = PaymentObserverRepository(),
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
-            configuration = configuration,
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             termsAndConditionsUrl = TEST_URL,
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }

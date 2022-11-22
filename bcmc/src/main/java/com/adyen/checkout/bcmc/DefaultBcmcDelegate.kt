@@ -50,8 +50,7 @@ internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
-    override val configuration: BcmcConfiguration,
-    private val componentParams: BcmcComponentParams,
+    override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {

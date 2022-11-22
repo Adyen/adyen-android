@@ -47,7 +47,6 @@ class PayByBankComponentProvider(
                     DefaultPayByBankDelegate(
                         PaymentObserverRepository(),
                         paymentMethod,
-                        configuration,
                         componentParams,
                     ),
                     configuration,

@@ -54,9 +54,9 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
         issuersAdapter = IssuerListSpinnerAdapter(
             context = context,
             issuerList = delegate.getIssuers(),
-            imageLoader = getInstance(context, delegate.configuration.environment),
+            imageLoader = getInstance(context, delegate.componentParams.environment),
             paymentMethod = delegate.getPaymentMethodType(),
-            hideIssuerLogo = delegate.configuration.hideIssuerLogos,
+            hideIssuerLogo = delegate.componentParams.hideIssuerLogos,
         )
         binding.spinnerIssuers.apply {
             adapter = issuersAdapter

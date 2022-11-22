@@ -55,7 +55,7 @@ internal class AwaitView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = getInstance(context, delegate.configuration.environment)
+        imageLoader = getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
     }

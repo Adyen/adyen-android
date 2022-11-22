@@ -56,7 +56,6 @@ class CardComponentProvider(
                 DefaultCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     publicKeyRepository = publicKeyRepository,
-                    configuration = configuration,
                     componentParams = componentParams,
                     paymentMethod = paymentMethod,
                     addressRepository = addressRepository,
@@ -91,7 +90,6 @@ class CardComponentProvider(
                 StoredCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     storedPaymentMethod = storedPaymentMethod,
-                    configuration = configuration,
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                     publicKeyRepository = publicKeyRepository,

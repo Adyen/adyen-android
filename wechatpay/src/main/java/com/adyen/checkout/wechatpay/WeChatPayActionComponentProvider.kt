@@ -74,7 +74,6 @@ class WeChatPayActionComponentProvider(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
-            configuration = configuration,
             componentParams = componentParams,
             iwxApi = iwxApi,
             payRequestGenerator = requestGenerator,

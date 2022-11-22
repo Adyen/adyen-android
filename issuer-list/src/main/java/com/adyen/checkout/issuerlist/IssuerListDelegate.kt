@@ -18,7 +18,7 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
     PaymentComponentDelegate<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewProvidingDelegate {
 
-    override val configuration: IssuerListConfiguration
+    override val componentParams: IssuerListComponentParams
 
     val outputData: IssuerListOutputData
 

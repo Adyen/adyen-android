@@ -28,8 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
-    override val configuration: IssuerListConfiguration,
-    private val componentParams: IssuerListComponentParams,
+    override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : IssuerListDelegate<IssuerListPaymentMethodT> {

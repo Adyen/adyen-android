@@ -43,7 +43,6 @@ internal class DefaultIssuerListDelegateTest {
     fun beforeEach() {
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            configuration,
             IssuerListComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
@@ -131,7 +130,6 @@ internal class DefaultIssuerListDelegateTest {
 
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            configuration,
             IssuerListComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
@@ -153,7 +151,6 @@ internal class DefaultIssuerListDelegateTest {
 
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            configuration,
             IssuerListComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }

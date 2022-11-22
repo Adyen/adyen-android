@@ -45,8 +45,7 @@ import org.json.JSONObject
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: AwaitConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {

@@ -163,7 +163,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
             R.style.AdyenCheckout_Bacs_Switch_Account,
             localizedContext
         )
-        setAmountConsentSwitchText()
+        setAmountConsentSwitchText(bacsDelegate.componentParams)
     }
 
     private fun observeDelegate(delegate: BacsDirectDebitDelegate, coroutineScope: CoroutineScope) {
@@ -257,10 +257,12 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         }
     }
 
-    private fun setAmountConsentSwitchText() {
-        if (!bacsDelegate.configuration.amount.isEmpty) {
-            val formattedAmount =
-                CurrencyUtils.formatAmount(bacsDelegate.configuration.amount, bacsDelegate.configuration.shopperLocale)
+    private fun setAmountConsentSwitchText(componentParams: BacsDirectDebitComponentParams) {
+        if (!componentParams.amount.isEmpty) {
+            val formattedAmount = CurrencyUtils.formatAmount(
+                componentParams.amount,
+                componentParams.shopperLocale
+            )
             binding.switchConsentAmount.text =
                 localizedContext.getString(R.string.bacs_consent_amount_specified, formattedAmount)
         } else {

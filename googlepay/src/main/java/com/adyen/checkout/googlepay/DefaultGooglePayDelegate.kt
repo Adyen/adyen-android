@@ -35,8 +35,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultGooglePayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
-    override val configuration: GooglePayConfiguration,
-    private val componentParams: GooglePayComponentParams,
+    override val componentParams: GooglePayComponentParams,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())

@@ -58,7 +58,6 @@ class GooglePayComponentProvider(
                 delegate = DefaultGooglePayDelegate(
                     PaymentObserverRepository(),
                     paymentMethod,
-                    configuration,
                     componentParams
                 ),
                 configuration = configuration,

@@ -45,8 +45,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
-    override val configuration: GenericActionConfiguration,
-    private val componentParams: GenericComponentParams,
+    private val configuration: GenericActionConfiguration,
+    override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
 

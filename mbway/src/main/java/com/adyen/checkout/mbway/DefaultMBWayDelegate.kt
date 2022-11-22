@@ -32,8 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
     val paymentMethod: PaymentMethod,
-    override val configuration: MBWayConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
 ) : MBWayDelegate {
 
     private val inputData = MBWayInputData()
