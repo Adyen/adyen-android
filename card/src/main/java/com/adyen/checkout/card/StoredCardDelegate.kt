@@ -49,8 +49,7 @@ import kotlinx.coroutines.launch
 internal class StoredCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
-    override val configuration: CardConfiguration,
-    private val componentParams: CardComponentParams,
+    override val componentParams: CardComponentParams,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
 ) : CardDelegate {

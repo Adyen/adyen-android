@@ -95,7 +95,7 @@ class PayByBankView @JvmOverloads constructor(
 
     private fun initIssuersRecyclerView() {
         payByBankRecyclerAdapter = PayByBankRecyclerAdapter(
-            imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment),
+            imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             onItemClicked = ::onItemClicked
         ).apply {

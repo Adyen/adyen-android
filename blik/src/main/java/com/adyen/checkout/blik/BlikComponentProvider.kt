@@ -47,7 +47,6 @@ class BlikComponentProvider(
                     savedStateHandle = savedStateHandle,
                     delegate = DefaultBlikDelegate(
                         PaymentObserverRepository(),
-                        configuration,
                         componentParams,
                         paymentMethod
                     ),
@@ -74,7 +73,6 @@ class BlikComponentProvider(
                     savedStateHandle = savedStateHandle,
                     delegate = StoredBlikDelegate(
                         PaymentObserverRepository(),
-                        configuration,
                         componentParams,
                         storedPaymentMethod
                     ),

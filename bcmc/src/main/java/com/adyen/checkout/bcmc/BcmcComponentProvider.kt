@@ -53,7 +53,6 @@ class BcmcComponentProvider(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
                     publicKeyRepository = publicKeyRepository,
-                    configuration = configuration,
                     componentParams = componentParams,
                     cardValidationMapper = cardValidationMapper,
                     cardEncrypter = cardEncrypter

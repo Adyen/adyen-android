@@ -42,7 +42,6 @@ internal class DefaultBlikDelegateTest {
         ).build()
         delegate = DefaultBlikDelegate(
             PaymentObserverRepository(),
-            configuration,
             GenericComponentParamsMapper(null).mapToParams(configuration),
             PaymentMethod()
         )

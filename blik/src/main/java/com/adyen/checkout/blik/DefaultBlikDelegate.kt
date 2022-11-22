@@ -29,8 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Suppress("TooManyFunctions")
 internal class DefaultBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val configuration: BlikConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     val paymentMethod: PaymentMethod
 ) : BlikDelegate {
 

@@ -47,7 +47,6 @@ class MBWayComponentProvider(
                     DefaultMBWayDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
-                        configuration = configuration,
                         componentParams = componentParams,
                     ),
                     configuration

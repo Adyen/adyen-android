@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.Component
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
@@ -68,7 +68,7 @@ class AdyenComponentView @JvmOverloads constructor(
                     viewType = it,
                     delegate = delegate,
                     viewProvider = delegate.getViewProvider(),
-                    configuration = delegate.configuration,
+                    componentParams = delegate.componentParams,
                     coroutineScope = lifecycleOwner.lifecycleScope,
                 )
             }
@@ -83,7 +83,7 @@ class AdyenComponentView @JvmOverloads constructor(
         viewType: ComponentViewType?,
         delegate: ComponentDelegate,
         viewProvider: ViewProvider,
-        configuration: Configuration,
+        componentParams: ComponentParams,
         coroutineScope: CoroutineScope,
     ) {
         removeAllViews()
@@ -92,7 +92,7 @@ class AdyenComponentView @JvmOverloads constructor(
         val componentView = viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
 
-        val localizedContext = context.createLocalizedContext(configuration.shopperLocale)
+        val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
         val view = componentView.getView()
         addView(view)

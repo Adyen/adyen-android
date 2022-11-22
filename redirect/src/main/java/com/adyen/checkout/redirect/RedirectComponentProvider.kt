@@ -69,7 +69,6 @@ class RedirectComponentProvider(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
-            configuration = configuration,
             componentParams = componentParams,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository

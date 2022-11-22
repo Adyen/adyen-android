@@ -66,7 +66,6 @@ internal class DefaultQRCodeDelegateTest(
         ).build()
         delegate = DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
-            configuration = configuration,
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,

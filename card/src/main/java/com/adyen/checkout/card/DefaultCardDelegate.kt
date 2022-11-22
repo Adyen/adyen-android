@@ -62,8 +62,7 @@ import kotlinx.coroutines.launch
 internal class DefaultCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
-    override val configuration: CardConfiguration,
-    private val componentParams: CardComponentParams,
+    override val componentParams: CardComponentParams,
     private val paymentMethod: PaymentMethod,
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,

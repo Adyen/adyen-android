@@ -51,7 +51,6 @@ class GiftCardComponentProvider(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
                     publicKeyRepository = DefaultPublicKeyRepository(),
-                    configuration = configuration,
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                 ),

@@ -34,7 +34,6 @@ internal class DefaultSepaDelegateTest {
         delegate = DefaultSepaDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
-            configuration = configuration,
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
         )
     }

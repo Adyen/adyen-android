@@ -29,8 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: VoucherConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())

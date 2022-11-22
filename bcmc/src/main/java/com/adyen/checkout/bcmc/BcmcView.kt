@@ -118,7 +118,7 @@ internal class BcmcView @JvmOverloads constructor(
     }
 
     private fun initCardHolderInput() {
-        binding.textInputLayoutCardHolder.isVisible = delegate.configuration.isHolderNameRequired
+        binding.textInputLayoutCardHolder.isVisible = delegate.componentParams.isHolderNameRequired
         binding.editTextCardHolder.setOnChangeListener {
             delegate.updateInputData { cardHolderName = binding.editTextCardHolder.rawValue }
             binding.textInputLayoutCardHolder.hideError()
@@ -136,7 +136,7 @@ internal class BcmcView @JvmOverloads constructor(
     }
 
     private fun initStorePaymentMethodSwitch() {
-        binding.switchStorePaymentMethod.isVisible = delegate.configuration.isStorePaymentFieldVisible
+        binding.switchStorePaymentMethod.isVisible = delegate.componentParams.isStorePaymentFieldVisible
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             delegate.updateInputData { isStorePaymentSelected = isChecked }
         }

@@ -27,8 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Suppress("TooManyFunctions")
 internal class DefaultBacsDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val configuration: BacsDirectDebitConfiguration,
-    private val componentParams: BacsDirectDebitComponentParams,
+    override val componentParams: BacsDirectDebitComponentParams,
     val paymentMethod: PaymentMethod,
 ) : BacsDirectDebitDelegate {
 

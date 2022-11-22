@@ -47,9 +47,9 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         initLocalizedStrings(localizedContext)
 
         binding.recyclerIssuers.adapter = IssuerListRecyclerAdapter(
-            imageLoader = getInstance(context, delegate.configuration.environment),
+            imageLoader = getInstance(context, delegate.componentParams.environment),
             paymentMethod = delegate.getPaymentMethodType(),
-            hideIssuerLogo = delegate.configuration.hideIssuerLogos,
+            hideIssuerLogo = delegate.componentParams.hideIssuerLogos,
             onItemClicked = ::onItemClicked,
         ).apply {
             submitList(delegate.getIssuers())

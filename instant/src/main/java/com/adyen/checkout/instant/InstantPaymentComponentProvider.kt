@@ -47,7 +47,6 @@ class InstantPaymentComponentProvider(
                     delegate = DefaultInstantPaymentDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
-                        configuration = configuration,
                         componentParams = componentParams,
                     ),
                     configuration = configuration

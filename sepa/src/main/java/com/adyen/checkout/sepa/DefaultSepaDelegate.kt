@@ -20,8 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultSepaDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val configuration: SepaConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val paymentMethod: PaymentMethod
 ) : SepaDelegate {
 

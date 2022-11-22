@@ -76,7 +76,6 @@ class QRCodeComponentProvider(
 
         return DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
-            configuration = configuration,
             componentParams = componentParams,
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,

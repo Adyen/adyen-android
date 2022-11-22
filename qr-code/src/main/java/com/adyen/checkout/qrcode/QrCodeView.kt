@@ -59,7 +59,7 @@ internal class QrCodeView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment)
+        imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
 

@@ -69,8 +69,7 @@ import org.json.JSONObject
 internal class DefaultAdyen3DS2Delegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
-    override val configuration: Adyen3DS2Configuration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,

@@ -51,7 +51,6 @@ class OnlineBankingSKComponentProvider(
                         observerRepository = PaymentObserverRepository(),
                         pdfOpener = PdfOpener(),
                         paymentMethod = paymentMethod,
-                        configuration = configuration,
                         componentParams = componentParams,
                         termsAndConditionsUrl = OnlineBankingSKComponent.TERMS_CONDITIONS_URL
                     ) { OnlineBankingSKPaymentMethod() }

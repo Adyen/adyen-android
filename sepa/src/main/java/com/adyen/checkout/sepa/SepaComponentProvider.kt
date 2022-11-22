@@ -44,7 +44,7 @@ class SepaComponentProvider(
                 val componentParams = componentParamsMapper.mapToParams(configuration)
                 SepaComponent(
                     savedStateHandle,
-                    DefaultSepaDelegate(PaymentObserverRepository(), configuration, componentParams, paymentMethod),
+                    DefaultSepaDelegate(PaymentObserverRepository(), componentParams, paymentMethod),
                     configuration,
                 )
             }

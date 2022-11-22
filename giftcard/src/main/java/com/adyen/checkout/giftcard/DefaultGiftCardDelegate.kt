@@ -41,8 +41,7 @@ internal class DefaultGiftCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
-    override val configuration: GiftCardConfiguration,
-    private val componentParams: GenericComponentParams,
+    override val componentParams: GenericComponentParams,
     private val cardEncrypter: CardEncrypter,
 ) : GiftCardDelegate {
 
