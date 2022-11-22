@@ -235,7 +235,9 @@ internal class DefaultCardDelegate(
             detectedCardTypes,
             inputData.selectedCardIndex
         )
-        val selectedOrFirstCardType = getDetectedCardType(filteredDetectedCardTypes)
+        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+            detectedCardTypes = filteredDetectedCardTypes
+        )
 
         val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
 
@@ -301,7 +303,9 @@ internal class DefaultCardDelegate(
     ): CardComponentState {
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardType = getDetectedCardType(outputData.detectedCardTypes)?.cardType
+        val firstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+            detectedCardTypes = outputData.detectedCardTypes
+        )?.cardType
 
         val binValue = cardNumber.take(BIN_VALUE_LENGTH)
 
@@ -557,7 +561,9 @@ internal class DefaultCardDelegate(
             }
 
             if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
-                brand = getDetectedCardType(stateOutputData.detectedCardTypes)?.cardType?.txVariant
+                brand = DetectedCardTypesUtils.getSelectedCardType(
+                    detectedCardTypes = stateOutputData.detectedCardTypes
+                )?.cardType?.txVariant
             }
 
             fundingSource = getFundingSource()
@@ -583,10 +589,6 @@ internal class DefaultCardDelegate(
             binValue = binValue,
             lastFourDigits = lastFour
         )
-    }
-
-    private fun getDetectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
-        return DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(detectedCardTypes)
     }
 
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
