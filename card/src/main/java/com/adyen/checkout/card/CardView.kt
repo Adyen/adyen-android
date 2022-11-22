@@ -51,6 +51,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     companion object {
         private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
         private const val SELECTED_BRAND_LOGO_ALPHA = 1f
+        private const val UNSELECTED_BRAND_INDEX = -1
         private const val PRIMARY_BRAND_INDEX = 0
         private const val SECONDARY_BRAND_INDEX = 1
     }
@@ -360,6 +361,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initCardBrandLogoViews(selectedIndex: Int) {
         when (selectedIndex) {
+            UNSELECTED_BRAND_INDEX -> deselectBrands()
             PRIMARY_BRAND_INDEX -> selectPrimaryBrand()
             SECONDARY_BRAND_INDEX -> selectSecondaryBrand()
             else -> throw CheckoutException("Illegal brand index selected. Selected index must be either 0 or 1.")
@@ -383,6 +385,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun resetBrandSelectionInput() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener(null)
         binding.cardBrandLogoContainerSecondary.setOnClickListener(null)
+    }
+
+    private fun deselectBrands() {
+        binding.cardBrandLogoImageViewPrimary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
+        binding.cardBrandLogoImageViewSecondary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
     }
 
     private fun selectPrimaryBrand() {
