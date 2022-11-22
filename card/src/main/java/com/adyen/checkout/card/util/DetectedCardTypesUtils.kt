@@ -22,7 +22,11 @@ object DetectedCardTypesUtils {
     }
 
     fun getSelectedOrFirstDetectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
-        return detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
+        return getSelectedCardType(detectedCardTypes) ?: detectedCardTypes.firstOrNull()
+    }
+
+    fun getSelectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
+        return detectedCardTypes.firstOrNull { it.isSelected }
     }
 
     private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
