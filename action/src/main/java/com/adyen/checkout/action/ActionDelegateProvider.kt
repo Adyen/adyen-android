@@ -38,7 +38,7 @@ internal class ActionDelegateProvider(
     private val parentConfiguration: Configuration
 ) {
 
-    fun get(
+    fun getDelegate(
         action: Action,
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
@@ -47,42 +47,42 @@ internal class ActionDelegateProvider(
         val delegate = when (action) {
             is AwaitAction -> {
                 AwaitComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is QrCodeAction -> {
                 QRCodeComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is RedirectAction -> {
                 RedirectComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is BaseThreeds2Action -> {
                 Adyen3DS2ComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is VoucherAction -> {
                 VoucherComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is SdkAction<*> -> {
                 WeChatPayActionComponentProvider(parentConfiguration).getDelegate(
-                    getConfiguration(configuration),
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
@@ -95,7 +95,7 @@ internal class ActionDelegateProvider(
             ?: throw CheckoutException("Can't find delegate for action: ${action.type}")
     }
 
-    private inline fun <reified T : Configuration> getConfiguration(
+    private inline fun <reified T : Configuration> getConfigurationForAction(
         configuration: GenericActionConfiguration
     ): T {
         return configuration.getConfigurationForAction() ?: getDefaultConfiguration(configuration)

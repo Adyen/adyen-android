@@ -69,7 +69,7 @@ internal class DefaultGenericActionDelegateTest(
         whenever(activity.application) doReturn Application()
 
         testDelegate = TestActionDelegate()
-        whenever(actionDelegateProvider.get(any(), any(), any(), any())) doReturn testDelegate
+        whenever(actionDelegateProvider.getDelegate(any(), any(), any(), any())) doReturn testDelegate
 
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -93,7 +93,7 @@ internal class DefaultGenericActionDelegateTest(
 
         val newDelegate = TestActionDelegate()
 
-        whenever(actionDelegateProvider.get(any(), any(), any(), any())) doReturn newDelegate
+        whenever(actionDelegateProvider.getDelegate(any(), any(), any(), any())) doReturn newDelegate
 
         genericActionDelegate.handleAction(RedirectAction(), activity)
 
@@ -212,7 +212,7 @@ internal class DefaultGenericActionDelegateTest(
             val adyen3DS2Delegate = Test3DS2Delegate()
             @Suppress("UNCHECKED_CAST")
             whenever(
-                actionDelegateProvider.get(any(), any(), any(), any())
+                actionDelegateProvider.getDelegate(any(), any(), any(), any())
             ) doReturn adyen3DS2Delegate as ActionDelegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -233,7 +233,7 @@ internal class DefaultGenericActionDelegateTest(
             val adyen3DS2Delegate = Test3DS2Delegate()
             @Suppress("UNCHECKED_CAST")
             whenever(
-                actionDelegateProvider.get(any(), any(), any(), any())
+                actionDelegateProvider.getDelegate(any(), any(), any(), any())
             ) doReturn adyen3DS2Delegate as ActionDelegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -252,7 +252,9 @@ internal class DefaultGenericActionDelegateTest(
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
         @Suppress("UNCHECKED_CAST")
-        whenever(actionDelegateProvider.get(any(), any(), any(), any())) doReturn adyen3DS2Delegate as ActionDelegate
+        whenever(
+            actionDelegateProvider.getDelegate(any(), any(), any(), any())
+        ) doReturn adyen3DS2Delegate as ActionDelegate
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -262,7 +264,7 @@ internal class DefaultGenericActionDelegateTest(
         assertTrue(adyen3DS2Delegate.handleActionCalled)
 
         adyen3DS2Delegate.handleActionCalled = false
-        whenever(actionDelegateProvider.get(any(), any(), any(), any())) doReturn testDelegate
+        whenever(actionDelegateProvider.getDelegate(any(), any(), any(), any())) doReturn testDelegate
 
         genericActionDelegate.handleAction(Threeds2ChallengeAction(), activity)
 

@@ -101,7 +101,12 @@ internal class DefaultGenericActionDelegate(
         if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
             Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
         } else {
-            val delegate = actionDelegateProvider.get(action, configuration, savedStateHandle, activity.application)
+            val delegate = actionDelegateProvider.getDelegate(
+                action = action,
+                configuration = configuration,
+                savedStateHandle = savedStateHandle,
+                application = activity.application
+            )
             this._delegate = delegate
             Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
 
