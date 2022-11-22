@@ -10,11 +10,14 @@ package com.adyen.checkout.qrcode
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.handler.DefaultRedirectHandler
@@ -25,7 +28,12 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 
-class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class QRCodeComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun <T> get(
         owner: T,
@@ -59,6 +67,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): QRCodeDelegate {
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val countDownTimer = QRCodeCountDownTimer()
@@ -68,6 +77,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         return DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
             configuration = configuration,
+            componentParams = componentParams,
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

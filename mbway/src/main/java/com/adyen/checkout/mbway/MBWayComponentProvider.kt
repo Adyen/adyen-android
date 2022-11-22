@@ -9,17 +9,25 @@
 package com.adyen.checkout.mbway
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class MBWayComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -33,12 +41,14 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 MBWayComponent(
                     savedStateHandle,
                     DefaultMBWayDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
-                        configuration = configuration
+                        configuration = configuration,
+                        componentParams = componentParams,
                     ),
                     configuration
                 )

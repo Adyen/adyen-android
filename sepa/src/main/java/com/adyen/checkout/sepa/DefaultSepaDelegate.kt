@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultSepaDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val configuration: SepaConfiguration,
+    private val componentParams: GenericComponentParams,
     private val paymentMethod: PaymentMethod
 ) : SepaDelegate {
 

@@ -10,11 +10,14 @@ package com.adyen.checkout.redirect
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.handler.DefaultRedirectHandler
@@ -23,7 +26,12 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 
-class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class RedirectComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
     override fun <T> get(
         owner: T,
         application: Application,
@@ -56,11 +64,13 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): RedirectDelegate {
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
             configuration = configuration,
+            componentParams = componentParams,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository
         )

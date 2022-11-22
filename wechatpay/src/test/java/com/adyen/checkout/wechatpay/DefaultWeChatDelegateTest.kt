@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.ActionObserverRepository
@@ -58,6 +59,7 @@ internal class DefaultWeChatDelegateTest(
         delegate = DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
             configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,
             paymentDataRepository = paymentDataRepository,

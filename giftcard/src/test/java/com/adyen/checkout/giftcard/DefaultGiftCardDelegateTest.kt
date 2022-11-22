@@ -9,6 +9,7 @@
 package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -43,16 +44,17 @@ internal class DefaultGiftCardDelegateTest {
     fun before() {
         cardEncrypter = TestCardEncrypter()
         publicKeyRepository = TestPublicKeyRepository()
-
+        val configuration = GiftCardConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
         delegate = DefaultGiftCardDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = publicKeyRepository,
-            configuration = GiftCardConfiguration.Builder(
-                Locale.US,
-                Environment.TEST,
-                TEST_CLIENT_KEY
-            ).build(),
+            configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             cardEncrypter = cardEncrypter,
         )
     }

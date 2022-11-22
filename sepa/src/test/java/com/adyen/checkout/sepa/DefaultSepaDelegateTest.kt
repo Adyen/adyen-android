@@ -1,6 +1,7 @@
 package com.adyen.checkout.sepa
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -25,14 +26,16 @@ internal class DefaultSepaDelegateTest {
 
     @BeforeEach
     fun before() {
+        val configuration = SepaConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
         delegate = DefaultSepaDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
-            configuration = SepaConfiguration.Builder(
-                Locale.US,
-                Environment.TEST,
-                TEST_CLIENT_KEY
-            ).build(),
+            configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
         )
     }
 

@@ -10,6 +10,7 @@ package com.adyen.checkout.voucher
 
 import android.app.Activity
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.core.api.Environment
@@ -27,9 +28,11 @@ internal class DefaultVoucherDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
+        val configuration = VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
         delegate = DefaultVoucherDelegate(
             ActionObserverRepository(),
-            VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
+            configuration,
+            GenericComponentParamsMapper(null).mapToParams(configuration),
         )
     }
 

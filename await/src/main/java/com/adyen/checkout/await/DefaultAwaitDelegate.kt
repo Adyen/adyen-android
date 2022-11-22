@@ -13,6 +13,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.lifecycle.repeatOnResume
 import com.adyen.checkout.components.model.payments.response.Action
@@ -45,6 +46,7 @@ import org.json.JSONObject
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
     override val configuration: AwaitConfiguration,
+    private val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {

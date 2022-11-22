@@ -10,11 +10,14 @@ package com.adyen.checkout.voucher
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
@@ -22,9 +25,12 @@ import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
-private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class VoucherComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun <T> get(
         owner: T,
@@ -58,7 +64,8 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): VoucherDelegate {
-        return DefaultVoucherDelegate(ActionObserverRepository(), configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration)
+        return DefaultVoucherDelegate(ActionObserverRepository(), configuration, componentParams)
     }
 
     override val supportedActionTypes: List<String>
@@ -70,5 +77,9 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
 
     override fun providesDetails(action: Action): Boolean {
         return false
+    }
+
+    companion object {
+        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
     }
 }

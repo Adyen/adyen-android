@@ -10,6 +10,7 @@ package com.adyen.checkout.adyen3ds2
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -17,6 +18,8 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.encoding.AndroidBase64Encoder
@@ -31,8 +34,12 @@ import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 
-class Adyen3DS2ComponentProvider :
-    ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class Adyen3DS2ComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun <T> get(
         owner: T,
@@ -67,6 +74,7 @@ class Adyen3DS2ComponentProvider :
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): Adyen3DS2Delegate {
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         val submitFingerprintService = SubmitFingerprintService(configuration.environment)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
@@ -77,6 +85,7 @@ class Adyen3DS2ComponentProvider :
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
+            componentParams = componentParams,
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2DetailsParser,

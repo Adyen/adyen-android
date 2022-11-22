@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -31,7 +32,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
     val paymentMethod: PaymentMethod,
-    override val configuration: MBWayConfiguration
+    override val configuration: MBWayConfiguration,
+    private val componentParams: GenericComponentParams,
 ) : MBWayDelegate {
 
     private val inputData = MBWayInputData()

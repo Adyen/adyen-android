@@ -22,6 +22,7 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.handler.RedirectHandler
@@ -69,6 +70,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
     override val configuration: Adyen3DS2Configuration,
+    private val componentParams: GenericComponentParams,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
@@ -284,7 +286,7 @@ internal class DefaultAdyen3DS2Delegate(
     ) {
         submitFingerprintRepository.submitFingerprint(
             encodedFingerprint,
-            configuration.clientKey,
+            componentParams.clientKey,
             paymentDataRepository.paymentData
         )
             .fold(

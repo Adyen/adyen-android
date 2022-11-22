@@ -10,9 +10,9 @@ package com.adyen.checkout.action
 
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
+import com.adyen.checkout.adyen3ds2.Adyen3DS2ComponentProvider
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitComponent
+import com.adyen.checkout.await.AwaitComponentProvider
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
@@ -25,18 +25,20 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.qrcode.QRCodeComponent
+import com.adyen.checkout.qrcode.QRCodeComponentProvider
 import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.RedirectComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.voucher.VoucherComponent
+import com.adyen.checkout.voucher.VoucherComponentProvider
 import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionComponent
+import com.adyen.checkout.wechatpay.WeChatPayActionComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
-internal class ActionDelegateProvider {
+internal class ActionDelegateProvider(
+    private val parentConfiguration: Configuration
+) {
 
-    fun get(
+    fun getDelegate(
         action: Action,
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
@@ -44,23 +46,43 @@ internal class ActionDelegateProvider {
     ): ActionDelegate {
         val delegate = when (action) {
             is AwaitAction -> {
-                AwaitComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
+                AwaitComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
+                    savedStateHandle,
+                    application
+                )
             }
             is QrCodeAction -> {
-                QRCodeComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
+                QRCodeComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
+                    savedStateHandle,
+                    application
+                )
             }
             is RedirectAction -> {
-                RedirectComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
+                RedirectComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
+                    savedStateHandle,
+                    application
+                )
             }
             is BaseThreeds2Action -> {
-                Adyen3DS2Component.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
+                Adyen3DS2ComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
+                    savedStateHandle,
+                    application
+                )
             }
             is VoucherAction -> {
-                VoucherComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
+                VoucherComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
+                    savedStateHandle,
+                    application
+                )
             }
             is SdkAction<*> -> {
-                WeChatPayActionComponent.PROVIDER.getDelegate(
-                    getConfiguration(configuration),
+                WeChatPayActionComponentProvider(parentConfiguration).getDelegate(
+                    getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
@@ -73,13 +95,13 @@ internal class ActionDelegateProvider {
             ?: throw CheckoutException("Can't find delegate for action: ${action.type}")
     }
 
-    private inline fun <reified T : Configuration> getConfiguration(
+    private inline fun <reified T : Configuration> getConfigurationForAction(
         configuration: GenericActionConfiguration
     ): T {
         return configuration.getConfigurationForAction() ?: getDefaultConfiguration(configuration)
     }
 
-    inline fun <reified T : Configuration> getDefaultConfiguration(
+    private inline fun <reified T : Configuration> getDefaultConfiguration(
         configuration: Configuration
     ): T {
         val shopperLocale = configuration.shopperLocale

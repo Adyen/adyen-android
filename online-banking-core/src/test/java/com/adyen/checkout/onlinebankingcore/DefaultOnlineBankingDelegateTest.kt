@@ -10,10 +10,11 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import app.cash.turbine.test
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -31,12 +32,11 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultOnlineBankingDelegateTest(
-    @Mock private val configuration: Configuration
-) {
+internal class DefaultOnlineBankingDelegateTest {
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
@@ -48,11 +48,17 @@ internal class DefaultOnlineBankingDelegateTest(
 
     @BeforeEach
     fun setup() {
+        val configuration = TestOnlineBankingConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
         delegate = DefaultOnlineBankingDelegate(
             observerRepository = PaymentObserverRepository(),
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             configuration = configuration,
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             termsAndConditionsUrl = TEST_URL,
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
         )
@@ -147,5 +153,6 @@ internal class DefaultOnlineBankingDelegateTest(
 
     companion object {
         private const val TEST_URL = "any-url"
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

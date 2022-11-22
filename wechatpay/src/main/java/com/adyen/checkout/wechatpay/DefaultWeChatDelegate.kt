@@ -14,6 +14,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
@@ -41,6 +42,7 @@ import org.json.JSONObject
 internal class DefaultWeChatDelegate(
     private val observerRepository: ActionObserverRepository,
     override val configuration: WeChatPayActionConfiguration,
+    private val componentParams: GenericComponentParams,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
     private val paymentDataRepository: PaymentDataRepository,

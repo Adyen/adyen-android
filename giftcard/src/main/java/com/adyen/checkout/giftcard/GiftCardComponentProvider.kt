@@ -8,10 +8,13 @@
 package com.adyen.checkout.giftcard
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -21,7 +24,12 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 
-class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class GiftCardComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -36,6 +44,7 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
@@ -43,7 +52,8 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
                     paymentMethod = paymentMethod,
                     publicKeyRepository = DefaultPublicKeyRepository(),
                     configuration = configuration,
-                    cardEncrypter = cardEncrypter
+                    componentParams = componentParams,
+                    cardEncrypter = cardEncrypter,
                 ),
                 configuration = configuration,
             )

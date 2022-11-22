@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -30,13 +31,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
     override val configuration: Configuration,
+    private val componentParams: GenericComponentParams,
     private val termsAndConditionsUrl: String,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT> {

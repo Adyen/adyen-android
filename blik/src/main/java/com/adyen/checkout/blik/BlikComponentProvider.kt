@@ -9,10 +9,13 @@
 package com.adyen.checkout.blik
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -20,7 +23,12 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class BlikComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -34,9 +42,15 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    delegate = DefaultBlikDelegate(PaymentObserverRepository(), configuration, paymentMethod),
+                    delegate = DefaultBlikDelegate(
+                        PaymentObserverRepository(),
+                        configuration,
+                        componentParams,
+                        paymentMethod
+                    ),
                     configuration = configuration,
                 )
             }
@@ -55,9 +69,15 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
 
         val genericStoredFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    delegate = StoredBlikDelegate(PaymentObserverRepository(), configuration, storedPaymentMethod),
+                    delegate = StoredBlikDelegate(
+                        PaymentObserverRepository(),
+                        configuration,
+                        componentParams,
+                        storedPaymentMethod
+                    ),
                     configuration = configuration,
                 )
             }

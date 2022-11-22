@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -25,7 +26,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
-    override val configuration: Configuration
+    override val configuration: Configuration,
+    private val componentParams: GenericComponentParams,
 ) : InstantPaymentDelegate {
 
     override val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>> =

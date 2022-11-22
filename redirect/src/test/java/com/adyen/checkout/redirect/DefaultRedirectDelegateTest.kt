@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
@@ -44,6 +45,7 @@ internal class DefaultRedirectDelegateTest {
         delegate = DefaultRedirectDelegate(
             ActionObserverRepository(),
             configuration,
+            GenericComponentParamsMapper(null).mapToParams(configuration),
             redirectHandler,
             paymentDataRepository
         )

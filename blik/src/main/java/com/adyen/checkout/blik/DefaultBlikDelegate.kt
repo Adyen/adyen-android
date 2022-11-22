@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class DefaultBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val configuration: BlikConfiguration,
+    private val componentParams: GenericComponentParams,
     val paymentMethod: PaymentMethod
 ) : BlikDelegate {
 

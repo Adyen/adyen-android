@@ -9,17 +9,25 @@
 package com.adyen.checkout.sepa
 
 import android.os.Bundle
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.exception.ComponentException
 
-class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SepaComponentProvider(
+    parentConfiguration: Configuration? = null,
+) : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -33,10 +41,11 @@ class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfig
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                val componentParams = componentParamsMapper.mapToParams(configuration)
                 SepaComponent(
                     savedStateHandle,
-                    DefaultSepaDelegate(PaymentObserverRepository(), configuration, paymentMethod),
-                    configuration
+                    DefaultSepaDelegate(PaymentObserverRepository(), configuration, componentParams, paymentMethod),
+                    configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]

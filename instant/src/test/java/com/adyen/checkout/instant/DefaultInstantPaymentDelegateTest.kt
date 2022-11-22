@@ -9,6 +9,7 @@
 package com.adyen.checkout.instant
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
@@ -33,7 +34,12 @@ class DefaultInstantPaymentDelegateTest {
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build()
-        delegate = DefaultInstantPaymentDelegate(PaymentObserverRepository(), PaymentMethod(type = TYPE), configuration)
+        delegate = DefaultInstantPaymentDelegate(
+            PaymentObserverRepository(),
+            PaymentMethod(type = TYPE),
+            configuration,
+            GenericComponentParamsMapper(null).mapToParams(configuration)
+        )
         Logger.setLogcatLevel(Logger.NONE)
     }
 

@@ -11,6 +11,7 @@ package com.adyen.checkout.voucher
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
@@ -28,7 +29,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
-    override val configuration: VoucherConfiguration
+    override val configuration: VoucherConfiguration,
+    private val componentParams: GenericComponentParams,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
