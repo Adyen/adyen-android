@@ -1,5 +1,7 @@
 ## Description
-*Include a short summary of your changes*
+[//]: # (Include a short summary of your changes.)
+[//]: # (If this is a new feature: attach screenshots or a video if applicable.)
+[//]: # (If this is a bug fix: include a reproduction path)
 
 ## Things that needs extra attention/re-testing
 - [ ] Describe these things here
