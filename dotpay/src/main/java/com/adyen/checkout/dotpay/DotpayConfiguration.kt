@@ -64,14 +64,6 @@ class DotpayConfiguration private constructor(
             hideIssuerLogos = configuration.hideIssuerLogos
         }
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         override fun buildInternal(): DotpayConfiguration {
             return DotpayConfiguration(
                 shopperLocale = shopperLocale,

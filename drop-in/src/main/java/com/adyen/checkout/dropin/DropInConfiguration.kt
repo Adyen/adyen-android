@@ -156,14 +156,6 @@ class DropInConfiguration private constructor(
             additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
         }
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         fun setAmount(amount: Amount): Builder {
             if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")

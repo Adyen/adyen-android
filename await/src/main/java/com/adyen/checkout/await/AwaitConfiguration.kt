@@ -65,14 +65,6 @@ class AwaitConfiguration private constructor(
          */
         constructor(configuration: AwaitConfiguration) : super(configuration)
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         override fun buildInternal(): AwaitConfiguration {
             return AwaitConfiguration(this)
         }

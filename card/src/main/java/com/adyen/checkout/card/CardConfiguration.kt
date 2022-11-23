@@ -96,14 +96,6 @@ class CardConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         /**
          * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
          *
