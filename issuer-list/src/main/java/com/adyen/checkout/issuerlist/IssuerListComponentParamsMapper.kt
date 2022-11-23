@@ -13,7 +13,8 @@ import com.adyen.checkout.components.base.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val hideIssuerLogosDefaultValue: Boolean = false
 ) {
 
     fun mapToParams(
@@ -34,8 +35,8 @@ class IssuerListComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
-                viewType = viewType,
-                hideIssuerLogos = hideIssuerLogos,
+                viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
+                hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
             )
         }
     }

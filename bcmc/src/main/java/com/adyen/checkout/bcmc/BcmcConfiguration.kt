@@ -22,9 +22,9 @@ class BcmcConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    val isHolderNameRequired: Boolean,
+    val isHolderNameRequired: Boolean?,
     val shopperReference: String?,
-    val isStorePaymentFieldVisible: Boolean,
+    val isStorePaymentFieldVisible: Boolean?,
 ) : Configuration {
 
     /**
@@ -32,8 +32,8 @@ class BcmcConfiguration private constructor(
      */
     class Builder : BaseConfigurationBuilder<BcmcConfiguration> {
 
-        private var isHolderNameRequired = false
-        private var showStorePaymentField = false
+        private var isHolderNameRequired: Boolean? = null
+        private var showStorePaymentField: Boolean? = null
         private var shopperReference: String? = null
 
         /**

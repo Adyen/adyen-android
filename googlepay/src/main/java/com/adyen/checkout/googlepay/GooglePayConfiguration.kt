@@ -14,8 +14,8 @@ import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -34,18 +34,18 @@ class GooglePayConfiguration private constructor(
     override val clientKey: String,
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
-    override val amount: Amount,
-    val totalPriceStatus: String,
+    override val amount: Amount?,
+    val totalPriceStatus: String?,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,
     val allowedAuthMethods: List<String>?,
     val allowedCardNetworks: List<String>?,
-    val isAllowPrepaidCards: Boolean,
-    val isEmailRequired: Boolean,
-    val isExistingPaymentMethodRequired: Boolean,
-    val isShippingAddressRequired: Boolean,
+    val isAllowPrepaidCards: Boolean?,
+    val isEmailRequired: Boolean?,
+    val isExistingPaymentMethodRequired: Boolean?,
+    val isShippingAddressRequired: Boolean?,
     val shippingAddressParameters: ShippingAddressParameters?,
-    val isBillingAddressRequired: Boolean,
+    val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
 ) : Configuration, AmountConfiguration {
 
@@ -56,22 +56,19 @@ class GooglePayConfiguration private constructor(
     class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
         private var merchantAccount: String? = null
         private var googlePayEnvironment: Int? = null
-        private var amount = Amount(
-            value = 0,
-            currency = CheckoutCurrency.USD.name
-        )
+        private var amount: Amount? = null
         private var merchantInfo: MerchantInfo? = null
         private var countryCode: String? = null
         private var allowedAuthMethods: List<String>? = null
         private var allowedCardNetworks: List<String>? = null
-        private var isAllowPrepaidCards = false
-        private var isEmailRequired = false
-        private var isExistingPaymentMethodRequired = false
-        private var isShippingAddressRequired = false
+        private var isAllowPrepaidCards: Boolean? = null
+        private var isEmailRequired: Boolean? = null
+        private var isExistingPaymentMethodRequired: Boolean? = null
+        private var isShippingAddressRequired: Boolean? = null
         private var shippingAddressParameters: ShippingAddressParameters? = null
-        private var isBillingAddressRequired = false
+        private var isBillingAddressRequired: Boolean? = null
         private var billingAddressParameters: BillingAddressParameters? = null
-        private var totalPriceStatus: String = "FINAL"
+        private var totalPriceStatus: String? = null
 
         /**
          * Constructor for Builder with default values.
@@ -147,6 +144,10 @@ class GooglePayConfiguration private constructor(
 
         /**
          * Set the merchant account to be put in the payment token from Google to Adyen.
+         *
+         * If not set then [PaymentMethod.configuration.gatewayMerchantId] will be used.
+         * If that value is also not set, an exception will be thrown indicating that you need to update you Adyen API
+         * version or pass this value manually.
          *
          * @param merchantAccount Your merchant account.
          */

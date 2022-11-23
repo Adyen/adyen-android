@@ -25,16 +25,16 @@ class CardConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    val isHolderNameRequired: Boolean,
-    val supportedCardTypes: List<CardType>,
+    val isHolderNameRequired: Boolean?,
+    val supportedCardTypes: List<CardType>?,
     val shopperReference: String?,
-    val isStorePaymentFieldVisible: Boolean,
-    val isHideCvc: Boolean,
-    val isHideCvcStoredCard: Boolean,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
-    val kcpAuthVisibility: KCPAuthVisibility,
+    val isStorePaymentFieldVisible: Boolean?,
+    val isHideCvc: Boolean?,
+    val isHideCvcStoredCard: Boolean?,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
+    val kcpAuthVisibility: KCPAuthVisibility?,
     val installmentConfiguration: InstallmentConfiguration?,
-    val addressConfiguration: AddressConfiguration,
+    val addressConfiguration: AddressConfiguration?,
 ) : Configuration {
 
     /**
@@ -42,17 +42,16 @@ class CardConfiguration private constructor(
      */
     @Suppress("TooManyFunctions")
     class Builder : BaseConfigurationBuilder<CardConfiguration> {
-        private var supportedCardTypes: List<CardType> = emptyList()
-        private var holderNameRequired = false
-        private var isStorePaymentFieldVisible = true
+        private var supportedCardTypes: List<CardType>? = null
+        private var holderNameRequired: Boolean? = null
+        private var isStorePaymentFieldVisible: Boolean? = null
         private var shopperReference: String? = null
-        private var isHideCvc = false
-        private var isHideCvcStoredCard = false
-        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility =
-            SocialSecurityNumberVisibility.HIDE
-        private var kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE
+        private var isHideCvc: Boolean? = null
+        private var isHideCvcStoredCard: Boolean? = null
+        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
+        private var kcpAuthVisibility: KCPAuthVisibility? = null
         private var installmentConfiguration: InstallmentConfiguration? = null
-        private var addressConfiguration: AddressConfiguration = AddressConfiguration.None
+        private var addressConfiguration: AddressConfiguration? = null
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.

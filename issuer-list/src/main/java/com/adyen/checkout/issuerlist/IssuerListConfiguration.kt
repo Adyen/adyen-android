@@ -15,14 +15,14 @@ import java.util.Locale
 
 abstract class IssuerListConfiguration : Configuration {
 
-    abstract val viewType: IssuerListViewType
-    abstract val hideIssuerLogos: Boolean
+    abstract val viewType: IssuerListViewType?
+    abstract val hideIssuerLogos: Boolean?
 
     abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> :
         BaseConfigurationBuilder<IssuerListConfigurationT> {
 
-        protected open var viewType: IssuerListViewType = IssuerListViewType.RECYCLER_VIEW
-        protected open var hideIssuerLogos: Boolean = false
+        protected open var viewType: IssuerListViewType? = null
+        protected open var hideIssuerLogos: Boolean? = null
 
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
