@@ -34,7 +34,10 @@ internal class DefaultMBWayDelegateTest {
     private val delegate = DefaultMBWayDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
-        componentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+        componentParams = GenericComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(configuration)
     )
 
     @Nested

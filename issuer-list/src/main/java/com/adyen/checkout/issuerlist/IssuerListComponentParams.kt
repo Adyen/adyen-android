@@ -20,6 +20,7 @@ data class IssuerListComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isCreatedByDropIn: Boolean,
     val viewType: IssuerListViewType,
     val hideIssuerLogos: Boolean,
 ) : ComponentParams

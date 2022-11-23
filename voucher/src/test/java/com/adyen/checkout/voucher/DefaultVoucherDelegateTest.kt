@@ -31,7 +31,10 @@ internal class DefaultVoucherDelegateTest {
         val configuration = VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
         delegate = DefaultVoucherDelegate(
             ActionObserverRepository(),
-            GenericComponentParamsMapper(null).mapToParams(configuration),
+            GenericComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
         )
     }
 

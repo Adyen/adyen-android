@@ -43,7 +43,10 @@ internal class DefaultIssuerListDelegateTest {
     fun beforeEach() {
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            IssuerListComponentParamsMapper(null).mapToParams(configuration),
+            IssuerListComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
         Logger.setLogcatLevel(Logger.NONE)
@@ -130,7 +133,10 @@ internal class DefaultIssuerListDelegateTest {
 
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            IssuerListComponentParamsMapper(null).mapToParams(configuration),
+            IssuerListComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
 
@@ -151,7 +157,10 @@ internal class DefaultIssuerListDelegateTest {
 
         delegate = DefaultIssuerListDelegate(
             PaymentObserverRepository(),
-            IssuerListComponentParamsMapper(null).mapToParams(configuration),
+            IssuerListComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
             PaymentMethod()
         ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {

@@ -42,7 +42,10 @@ internal class DefaultBlikDelegateTest {
         ).build()
         delegate = DefaultBlikDelegate(
             PaymentObserverRepository(),
-            GenericComponentParamsMapper(null).mapToParams(configuration),
+            GenericComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
             PaymentMethod()
         )
         Logger.setLogcatLevel(Logger.NONE)

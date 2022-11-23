@@ -19,6 +19,7 @@ internal data class CardComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isCreatedByDropIn: Boolean,
     val isHolderNameRequired: Boolean,
     val supportedCardTypes: List<CardType>,
     val shopperReference: String?,

@@ -28,9 +28,10 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EntercashComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<EntercashComponent, EntercashConfiguration> {
 
-    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

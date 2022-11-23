@@ -28,9 +28,10 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class MolpayComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<MolpayComponent, MolpayConfiguration> {
 
-    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

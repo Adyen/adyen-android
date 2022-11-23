@@ -21,7 +21,8 @@ import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun mapToParams(
@@ -45,6 +46,7 @@ internal class GooglePayComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isCreatedByDropIn = isCreatedByDropIn,
                 gatewayMerchantId = getPreferredGatewayMerchantId(googlePayConfiguration, paymentMethod),
                 allowedAuthMethods = getAvailableAuthMethods(googlePayConfiguration),
                 allowedCardNetworks = getAvailableCardNetworks(googlePayConfiguration, paymentMethod),

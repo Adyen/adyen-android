@@ -12,7 +12,8 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 
 internal class BacsDirectDebitComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun mapToParams(
@@ -32,6 +33,7 @@ internal class BacsDirectDebitComponentParamsMapper(
             shopperLocale = parentConfiguration.shopperLocale,
             environment = parentConfiguration.environment,
             clientKey = parentConfiguration.clientKey,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = bacsDirectDebitConfiguration.amount ?: Amount.EMPTY,
         )
     }

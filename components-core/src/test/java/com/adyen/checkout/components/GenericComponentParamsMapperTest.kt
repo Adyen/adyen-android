@@ -12,9 +12,9 @@ import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.models.TestConfiguration
 import com.adyen.checkout.core.api.Environment
-import java.util.Locale
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 internal class GenericComponentParamsMapperTest {
 
@@ -26,12 +26,16 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1
         ).build()
 
-        val params = GenericComponentParamsMapper(null).mapToParams(componentConfiguration)
+        val params = GenericComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(componentConfiguration)
 
         val expected = GenericComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isCreatedByDropIn = false,
         )
 
         assertEquals(expected, params)
@@ -54,12 +58,18 @@ internal class GenericComponentParamsMapperTest {
         )
             .build()
 
-        val params = GenericComponentParamsMapper(parentConfiguration).mapToParams(componentConfiguration)
+        val params = GenericComponentParamsMapper(
+            parentConfiguration = parentConfiguration,
+            isCreatedByDropIn = true
+        ).mapToParams(
+            componentConfiguration
+        )
 
         val expected = GenericComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isCreatedByDropIn = true,
         )
 
         assertEquals(expected, params)

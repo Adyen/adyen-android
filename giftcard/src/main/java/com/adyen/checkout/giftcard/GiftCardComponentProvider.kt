@@ -28,9 +28,10 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GiftCardComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

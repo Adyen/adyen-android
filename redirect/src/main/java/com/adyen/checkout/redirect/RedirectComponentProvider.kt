@@ -29,9 +29,10 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RedirectComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
     override fun <T> get(
         owner: T,
         application: Application,

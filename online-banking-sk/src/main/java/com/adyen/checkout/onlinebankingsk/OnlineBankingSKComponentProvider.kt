@@ -30,9 +30,10 @@ import com.adyen.checkout.onlinebankingcore.PdfOpener
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingSKComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<OnlineBankingComponent<OnlineBankingSKPaymentMethod>, OnlineBankingSKConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

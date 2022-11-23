@@ -28,9 +28,10 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
 
-    private val componentParamsMapper = BcmcComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = BcmcComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

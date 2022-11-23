@@ -22,6 +22,7 @@ internal data class GooglePayComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isCreatedByDropIn: Boolean,
     val gatewayMerchantId: String,
     val googlePayEnvironment: Int,
     val amount: Amount,

@@ -360,7 +360,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration, amount)
-            CardComponentProvider(dropInConfiguration).get(
+            CardComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
@@ -370,7 +370,7 @@ internal fun getComponentFor(
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val blikConfig: BlikConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration, amount)
-            BlikComponentProvider(dropInConfiguration).get(
+            BlikComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
@@ -405,7 +405,7 @@ internal fun getComponentFor(
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BacsDirectDebitComponentProvider(dropInConfiguration).get(
+            BacsDirectDebitComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bacsConfiguration,
@@ -415,7 +415,7 @@ internal fun getComponentFor(
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BcmcComponentProvider(dropInConfiguration).get(
+            BcmcComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
@@ -425,7 +425,7 @@ internal fun getComponentFor(
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val blikConfiguration: BlikConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BlikComponentProvider(dropInConfiguration).get(
+            BlikComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
@@ -435,7 +435,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            CardComponentProvider(dropInConfiguration).get(
+            CardComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
@@ -445,7 +445,7 @@ internal fun getComponentFor(
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            DotpayComponentProvider(dropInConfiguration).get(
+            DotpayComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
@@ -455,7 +455,7 @@ internal fun getComponentFor(
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val entercashConfig: EntercashConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            EntercashComponentProvider(dropInConfiguration).get(
+            EntercashComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
@@ -465,7 +465,7 @@ internal fun getComponentFor(
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val epsConfig: EPSConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            EPSComponentProvider(dropInConfiguration).get(
+            EPSComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
@@ -475,7 +475,7 @@ internal fun getComponentFor(
         GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val giftcardConfiguration: GiftCardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            GiftCardComponentProvider(dropInConfiguration).get(
+            GiftCardComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = giftcardConfiguration,
@@ -485,7 +485,7 @@ internal fun getComponentFor(
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val googlePayConfiguration: GooglePayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            GooglePayComponentProvider(dropInConfiguration).get(
+            GooglePayComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = googlePayConfiguration,
@@ -495,7 +495,7 @@ internal fun getComponentFor(
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            IdealComponentProvider(dropInConfiguration).get(
+            IdealComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
@@ -505,7 +505,7 @@ internal fun getComponentFor(
         InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            InstantPaymentComponentProvider(dropInConfiguration).get(
+            InstantPaymentComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = instantPaymentConfiguration,
@@ -515,7 +515,7 @@ internal fun getComponentFor(
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val mbWayConfiguration: MBWayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            MBWayComponentProvider(dropInConfiguration).get(
+            MBWayComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = mbWayConfiguration,
@@ -525,7 +525,7 @@ internal fun getComponentFor(
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            MolpayComponentProvider(dropInConfiguration).get(
+            MolpayComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
@@ -535,7 +535,7 @@ internal fun getComponentFor(
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingCZConfig: OnlineBankingCZConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            OnlineBankingCZComponentProvider(dropInConfiguration).get(
+            OnlineBankingCZComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingCZConfig,
@@ -545,7 +545,7 @@ internal fun getComponentFor(
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            OnlineBankingPLComponentProvider(dropInConfiguration).get(
+            OnlineBankingPLComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
@@ -555,7 +555,7 @@ internal fun getComponentFor(
         OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingSKConfig: OnlineBankingSKConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            OnlineBankingSKComponentProvider(dropInConfiguration).get(
+            OnlineBankingSKComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingSKConfig,
@@ -565,7 +565,7 @@ internal fun getComponentFor(
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            OpenBankingComponentProvider(dropInConfiguration).get(
+            OpenBankingComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
@@ -575,7 +575,7 @@ internal fun getComponentFor(
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val payByBankConfig: PayByBankConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            PayByBankComponentProvider(dropInConfiguration).get(
+            PayByBankComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payByBankConfig,
@@ -585,7 +585,7 @@ internal fun getComponentFor(
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val sepaConfiguration: SepaConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            SepaComponentProvider(dropInConfiguration).get(
+            SepaComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,

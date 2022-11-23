@@ -26,9 +26,10 @@ import com.adyen.checkout.core.exception.ComponentException
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PayByBankComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

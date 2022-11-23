@@ -27,9 +27,10 @@ import com.adyen.checkout.core.exception.ComponentException
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BlikComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

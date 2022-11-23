@@ -31,9 +31,10 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class WeChatPayActionComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun <T> get(
         owner: T,

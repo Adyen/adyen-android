@@ -49,7 +49,10 @@ internal class DefaultGooglePayDelegateTest {
         delegate = DefaultGooglePayDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
-            componentParams = GooglePayComponentParamsMapper(null).mapToParams(configuration, paymentMethod),
+            componentParams = GooglePayComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration, paymentMethod),
         )
     }
 

@@ -12,7 +12,8 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun mapToParams(
@@ -23,6 +24,7 @@ class GenericComponentParamsMapper(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isCreatedByDropIn = isCreatedByDropIn,
             )
         }
     }
