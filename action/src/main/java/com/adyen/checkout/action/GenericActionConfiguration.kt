@@ -39,13 +39,6 @@ class GenericActionConfiguration private constructor(
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey,
-        builder.availableActionConfigs
-    )
-
     internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
         val actionClass = T::class.java
         if (availableActionConfigs.containsKey(actionClass)) {
@@ -59,7 +52,7 @@ class GenericActionConfiguration private constructor(
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
      */
     @Suppress("unused")
-    class Builder : BaseConfigurationBuilder<GenericActionConfiguration> {
+    class Builder : BaseConfigurationBuilder<GenericActionConfiguration, Builder> {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
@@ -146,7 +139,12 @@ class GenericActionConfiguration private constructor(
         }
 
         override fun buildInternal(): GenericActionConfiguration {
-            return GenericActionConfiguration(this)
+            return GenericActionConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                availableActionConfigs = availableActionConfigs,
+            )
         }
     }
 }

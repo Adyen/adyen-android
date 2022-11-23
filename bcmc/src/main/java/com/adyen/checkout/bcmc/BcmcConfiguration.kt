@@ -30,7 +30,7 @@ class BcmcConfiguration private constructor(
     /**
      * Builder to create a [BcmcConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<BcmcConfiguration> {
+    class Builder : BaseConfigurationBuilder<BcmcConfiguration, Builder> {
 
         private var isHolderNameRequired: Boolean? = null
         private var showStorePaymentField: Boolean? = null

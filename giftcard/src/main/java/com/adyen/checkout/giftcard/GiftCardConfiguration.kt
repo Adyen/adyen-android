@@ -21,16 +21,10 @@ class GiftCardConfiguration private constructor(
     override val clientKey: String
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [GiftCardConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<GiftCardConfiguration> {
+    class Builder : BaseConfigurationBuilder<GiftCardConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +60,11 @@ class GiftCardConfiguration private constructor(
         constructor(configuration: GiftCardConfiguration) : super(configuration)
 
         override fun buildInternal(): GiftCardConfiguration {
-            return GiftCardConfiguration(this)
+            return GiftCardConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

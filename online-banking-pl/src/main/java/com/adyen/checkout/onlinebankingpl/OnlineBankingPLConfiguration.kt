@@ -24,7 +24,7 @@ class OnlineBankingPLConfiguration private constructor(
     override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
 
-    class Builder : IssuerListBuilder<OnlineBankingPLConfiguration> {
+    class Builder : IssuerListBuilder<OnlineBankingPLConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

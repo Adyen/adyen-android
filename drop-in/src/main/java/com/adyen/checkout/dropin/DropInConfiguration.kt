@@ -66,21 +66,6 @@ class DropInConfiguration private constructor(
     val additionalDataForDropInService: Bundle?,
 ) : Configuration {
 
-    constructor(
-        builder: Builder
-    ) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey,
-        builder.availablePaymentConfigs,
-        builder.availableActionConfigs,
-        builder.amount,
-        builder.showPreselectedStoredPaymentMethod,
-        builder.skipListWhenSinglePaymentMethod,
-        builder.isRemovingStoredPaymentMethodsEnabled,
-        builder.additionalDataForDropInService,
-    )
-
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
         if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
@@ -103,21 +88,16 @@ class DropInConfiguration private constructor(
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
     @Suppress("unused", "TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<DropInConfiguration> {
+    class Builder : BaseConfigurationBuilder<DropInConfiguration, Builder> {
 
         internal val availablePaymentConfigs = HashMap<String, Configuration>()
         internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
-        var amount: Amount = Amount.EMPTY
-            private set
-        var showPreselectedStoredPaymentMethod: Boolean = true
-            private set
-        var skipListWhenSinglePaymentMethod: Boolean = false
-            private set
-        var isRemovingStoredPaymentMethodsEnabled: Boolean = false
-            private set
-        var additionalDataForDropInService: Bundle? = null
-            private set
+        private var amount: Amount = Amount.EMPTY
+        private var showPreselectedStoredPaymentMethod: Boolean = true
+        private var skipListWhenSinglePaymentMethod: Boolean = false
+        private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
+        private var additionalDataForDropInService: Bundle? = null
 
         /**
          * Create a [DropInConfiguration]
@@ -399,7 +379,18 @@ class DropInConfiguration private constructor(
         }
 
         override fun buildInternal(): DropInConfiguration {
-            return DropInConfiguration(this)
+            return DropInConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                availablePaymentConfigs = availablePaymentConfigs,
+                availableActionConfigs = availableActionConfigs,
+                amount = amount,
+                showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,
+                skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,
+                isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
+                additionalDataForDropInService = additionalDataForDropInService,
+            )
         }
     }
 }

@@ -26,7 +26,7 @@ class MolpayConfiguration private constructor(
     /**
      * Builder to create a [MolpayConfiguration].
      */
-    class Builder : IssuerListBuilder<MolpayConfiguration> {
+    class Builder : IssuerListBuilder<MolpayConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

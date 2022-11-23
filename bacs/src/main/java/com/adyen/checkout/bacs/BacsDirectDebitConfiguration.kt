@@ -28,14 +28,7 @@ class BacsDirectDebitConfiguration private constructor(
     override val amount: Amount?,
 ) : Configuration, AmountConfiguration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey,
-        builder.amount,
-    )
-
-    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration>, AmountConfigurationBuilder {
+    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration, Builder>, AmountConfigurationBuilder {
 
         internal var amount: Amount? = null
 
@@ -75,7 +68,12 @@ class BacsDirectDebitConfiguration private constructor(
         }
 
         override fun buildInternal(): BacsDirectDebitConfiguration {
-            return BacsDirectDebitConfiguration(this)
+            return BacsDirectDebitConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                amount = amount,
+            )
         }
 
         override fun setAmount(amount: Amount): Builder {

@@ -22,13 +22,7 @@ class VoucherConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
-    class Builder : BaseConfigurationBuilder<VoucherConfiguration> {
+    class Builder : BaseConfigurationBuilder<VoucherConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -64,7 +58,11 @@ class VoucherConfiguration private constructor(
         constructor(configuration: VoucherConfiguration) : super(configuration)
 
         override fun buildInternal(): VoucherConfiguration {
-            return VoucherConfiguration(this)
+            return VoucherConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

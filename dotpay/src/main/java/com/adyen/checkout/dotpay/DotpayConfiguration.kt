@@ -26,7 +26,7 @@ class DotpayConfiguration private constructor(
     /**
      * Builder to create a [DotpayConfiguration].
      */
-    class Builder : IssuerListBuilder<DotpayConfiguration> {
+    class Builder : IssuerListBuilder<DotpayConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

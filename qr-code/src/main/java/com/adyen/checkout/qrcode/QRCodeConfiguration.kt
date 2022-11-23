@@ -11,8 +11,8 @@ import android.content.Context
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class QRCodeConfiguration private constructor(
@@ -21,16 +21,10 @@ class QRCodeConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    internal constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [QRCodeConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<QRCodeConfiguration> {
+    class Builder : BaseConfigurationBuilder<QRCodeConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +60,11 @@ class QRCodeConfiguration private constructor(
         constructor(configuration: QRCodeConfiguration) : super(configuration)
 
         override fun buildInternal(): QRCodeConfiguration {
-            return QRCodeConfiguration(this)
+            return QRCodeConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

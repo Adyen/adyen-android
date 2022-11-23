@@ -26,7 +26,7 @@ class EntercashConfiguration private constructor(
     /**
      * Builder to create a [EntercashConfiguration].
      */
-    class Builder : IssuerListBuilder<EntercashConfiguration> {
+    class Builder : IssuerListBuilder<EntercashConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

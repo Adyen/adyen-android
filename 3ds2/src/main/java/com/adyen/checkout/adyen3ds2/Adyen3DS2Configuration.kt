@@ -21,16 +21,10 @@ class Adyen3DS2Configuration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [Adyen3DS2Configuration].
      */
-    class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration> {
+    class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +60,11 @@ class Adyen3DS2Configuration private constructor(
         constructor(configuration: Adyen3DS2Configuration) : super(configuration)
 
         override fun buildInternal(): Adyen3DS2Configuration {
-            return Adyen3DS2Configuration(this)
+            return Adyen3DS2Configuration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

@@ -24,7 +24,7 @@ class TestIssuerListConfiguration private constructor(
     override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
 
-    class Builder : IssuerListBuilder<TestIssuerListConfiguration> {
+    class Builder : IssuerListBuilder<TestIssuerListConfiguration, Builder> {
 
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,

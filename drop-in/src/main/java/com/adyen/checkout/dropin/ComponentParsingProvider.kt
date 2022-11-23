@@ -144,7 +144,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     val shopperLocale = dropInConfiguration.shopperLocale
     val environment = dropInConfiguration.environment
     val clientKey = dropInConfiguration.clientKey
-    val builder: BaseConfigurationBuilder<out Configuration> = when {
+    val builder: BaseConfigurationBuilder<*, *> = when {
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -173,7 +173,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     val clientKey = dropInConfiguration.clientKey
 
     // get default builder for Configuration type
-    val builder: BaseConfigurationBuilder<out Configuration> = when {
+    val builder: BaseConfigurationBuilder<*, *> = when {
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             BacsDirectDebitConfiguration.Builder(
                 shopperLocale = shopperLocale,
@@ -502,7 +502,7 @@ internal fun getComponentFor(
 }
 
 @Suppress("ComplexMethod")
-private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuration> {
+private fun Configuration.toBuilder(): BaseConfigurationBuilder<*, *> {
     return when (this) {
         is Adyen3DS2Configuration -> Adyen3DS2Configuration.Builder(this)
         is AwaitConfiguration -> AwaitConfiguration.Builder(this)

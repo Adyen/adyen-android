@@ -18,8 +18,10 @@ abstract class IssuerListConfiguration : Configuration {
     abstract val viewType: IssuerListViewType?
     abstract val hideIssuerLogos: Boolean?
 
-    abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> :
-        BaseConfigurationBuilder<IssuerListConfigurationT> {
+    abstract class IssuerListBuilder<
+        IssuerListConfigurationT : IssuerListConfiguration,
+        IssuerListBuilderT : IssuerListBuilder<IssuerListConfigurationT, IssuerListBuilderT>
+        > : BaseConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT> {
 
         protected open var viewType: IssuerListViewType? = null
         protected open var hideIssuerLogos: Boolean? = null
@@ -45,9 +47,10 @@ abstract class IssuerListConfiguration : Configuration {
          *
          * @param viewType an enum with the view type options.
          */
-        open fun setViewType(viewType: IssuerListViewType): IssuerListBuilder<IssuerListConfigurationT> {
+        fun setViewType(viewType: IssuerListViewType): IssuerListBuilderT {
             this.viewType = viewType
-            return this
+            @Suppress("UNCHECKED_CAST")
+            return this as IssuerListBuilderT
         }
 
         /**
@@ -57,9 +60,10 @@ abstract class IssuerListConfiguration : Configuration {
          *
          * @param hideIssuerLogos if issuer logos should be hidden or not.
          */
-        open fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilder<IssuerListConfigurationT> {
+        fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilderT {
             this.hideIssuerLogos = hideIssuerLogos
-            return this
+            @Suppress("UNCHECKED_CAST")
+            return this as IssuerListBuilderT
         }
     }
 }

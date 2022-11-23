@@ -14,10 +14,13 @@ import java.util.Locale
  * @param environment   The [Environment] to be used for network calls to Adyen.
  * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
  */
-abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
-    var shopperLocale: Locale,
-    var environment: Environment,
-    var clientKey: String
+abstract class BaseConfigurationBuilder<
+    ConfigurationT : Configuration,
+    BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
+    >(
+    protected var shopperLocale: Locale,
+    protected var environment: Environment,
+    protected var clientKey: String
 ) {
 
     init {

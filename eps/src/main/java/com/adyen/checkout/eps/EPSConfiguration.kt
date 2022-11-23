@@ -26,7 +26,7 @@ class EPSConfiguration private constructor(
     /**
      * Builder to create a [EPSConfiguration].
      */
-    class Builder : IssuerListBuilder<EPSConfiguration> {
+    class Builder : IssuerListBuilder<EPSConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -62,17 +62,6 @@ class EPSConfiguration private constructor(
         constructor(configuration: EPSConfiguration) : super(configuration) {
             viewType = configuration.viewType
             hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
-        /**
-         * Sets whether the logos should be shows next to the issuers name.
-         *
-         * Default is true.
-         *
-         * @param hideIssuerLogos if issuer logos should be hidden or not.
-         */
-        override fun setHideIssuerLogos(hideIssuerLogos: Boolean): Builder {
-            return super.setHideIssuerLogos(hideIssuerLogos) as Builder
         }
 
         public override fun buildInternal(): EPSConfiguration {

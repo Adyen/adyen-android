@@ -24,7 +24,7 @@ class RedirectConfiguration private constructor(
     /**
      * Builder to create a [RedirectConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<RedirectConfiguration> {
+    class Builder : BaseConfigurationBuilder<RedirectConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

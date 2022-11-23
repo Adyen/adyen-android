@@ -22,7 +22,7 @@ class TestConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<TestConfiguration> {
+    class Builder : BaseConfigurationBuilder<TestConfiguration, Builder> {
 
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
