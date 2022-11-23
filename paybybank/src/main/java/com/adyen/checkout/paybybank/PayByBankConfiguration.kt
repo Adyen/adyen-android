@@ -65,14 +65,6 @@ class PayByBankConfiguration private constructor(
          */
         constructor(configuration: PayByBankConfiguration) : super(configuration)
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         override fun buildInternal(): PayByBankConfiguration {
             return PayByBankConfiguration(this)
         }

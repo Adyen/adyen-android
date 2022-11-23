@@ -54,24 +54,6 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
         configuration.clientKey
     )
 
-    /**
-     * @param shopperLocale the [Locale] used for translations.
-     * @return The builder instance to chain calls.
-     */
-    open fun setShopperLocale(shopperLocale: Locale): BaseConfigurationBuilder<ConfigurationT> {
-        this.shopperLocale = shopperLocale
-        return this
-    }
-
-    /**
-     * @param environment The [Environment] used for network calls.
-     * @return The builder instance to chain calls.
-     */
-    open fun setEnvironment(environment: Environment): BaseConfigurationBuilder<ConfigurationT> {
-        this.environment = environment
-        return this
-    }
-
     protected abstract fun buildInternal(): ConfigurationT
 
     fun build(): ConfigurationT {

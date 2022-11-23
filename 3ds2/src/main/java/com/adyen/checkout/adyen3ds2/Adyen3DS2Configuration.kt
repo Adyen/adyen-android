@@ -65,14 +65,6 @@ class Adyen3DS2Configuration private constructor(
          */
         constructor(configuration: Adyen3DS2Configuration) : super(configuration)
 
-        override fun setShopperLocale(shopperLocale: Locale): Builder {
-            return super.setShopperLocale(shopperLocale) as Builder
-        }
-
-        override fun setEnvironment(environment: Environment): Builder {
-            return super.setEnvironment(environment) as Builder
-        }
-
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(this)
         }
