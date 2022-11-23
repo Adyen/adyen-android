@@ -54,7 +54,7 @@ class GenericActionComponentProvider :
             GenericActionComponent(
                 configuration = configuration,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, null),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, genericActionFactory)[key, GenericActionComponent::class.java]

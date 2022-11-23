@@ -12,11 +12,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -31,27 +33,29 @@ import kotlinx.coroutines.flow.merge
  */
 class CardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
-    override val delegate: CardDelegate,
+    val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
-    actionHandlingComponent: ActionHandlingComponent
+    private val actionHandlingComponent: DefaultActionHandlingComponent
 ) :
     BasePaymentComponent<CardConfiguration, CardComponentState>(
         savedStateHandle,
-        delegate,
+        cardDelegate,
         cardConfiguration
     ),
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
     override val viewFlow: Flow<ComponentViewType?>
         get() = merge(
-            delegate.viewFlow,
+            cardDelegate.viewFlow,
             genericActionDelegate.viewFlow,
         )
 
     init {
-        delegate.initialize(viewModelScope)
+        cardDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
     }
 
@@ -59,7 +63,7 @@ class CardComponent internal constructor(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        cardDelegate.observe(lifecycleOwner, viewModelScope, callback)
 
         genericActionDelegate.observe(
             lifecycleOwner,
@@ -69,16 +73,16 @@ class CardComponent internal constructor(
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        cardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
 
-    override fun requiresInput() = delegate.requiresInput()
+    override fun requiresInput() = cardDelegate.requiresInput()
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        cardDelegate.onCleared()
         genericActionDelegate.onCleared()
     }
 

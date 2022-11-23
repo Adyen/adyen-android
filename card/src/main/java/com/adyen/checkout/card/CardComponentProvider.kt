@@ -63,6 +63,18 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val cardDelegate = DefaultCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                publicKeyRepository = publicKeyRepository,
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                addressRepository = addressRepository,
+                detectCardTypeRepository = detectCardTypeRepository,
+                cardValidationMapper = cardValidationMapper,
+                cardEncrypter = cardEncrypter,
+                genericEncrypter = genericEncrypter,
+            )
+
             val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
                 actionConfiguration,
                 savedStateHandle,
@@ -71,20 +83,10 @@ class CardComponentProvider(
 
             CardComponent(
                 savedStateHandle = savedStateHandle,
-                delegate = DefaultCardDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    publicKeyRepository = publicKeyRepository,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    addressRepository = addressRepository,
-                    detectCardTypeRepository = detectCardTypeRepository,
-                    cardValidationMapper = cardValidationMapper,
-                    cardEncrypter = cardEncrypter,
-                    genericEncrypter = genericEncrypter,
-                ),
+                cardDelegate = cardDelegate,
                 cardConfiguration = configuration,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -113,6 +115,14 @@ class CardComponentProvider(
         ).build()
 
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val cardDelegate = StoredCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                storedPaymentMethod = storedPaymentMethod,
+                componentParams = componentParams,
+                cardEncrypter = cardEncrypter,
+                publicKeyRepository = publicKeyRepository,
+            )
+
             val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
                 actionConfiguration,
                 savedStateHandle,
@@ -121,16 +131,10 @@ class CardComponentProvider(
 
             CardComponent(
                 savedStateHandle = savedStateHandle,
-                delegate = StoredCardDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    storedPaymentMethod = storedPaymentMethod,
-                    componentParams = componentParams,
-                    cardEncrypter = cardEncrypter,
-                    publicKeyRepository = publicKeyRepository,
-                ),
+                cardDelegate = cardDelegate,
                 cardConfiguration = configuration,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
