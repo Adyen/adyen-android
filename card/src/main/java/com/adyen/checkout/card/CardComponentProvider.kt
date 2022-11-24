@@ -21,6 +21,10 @@ import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
@@ -64,6 +68,14 @@ class CardComponentProvider(
         val addressService = AddressService(httpClient)
         val addressRepository = DefaultAddressRepository(addressService)
         val cardValidationMapper = CardValidationMapper()
+        val analyticsService = AnalyticsService(httpClient)
+        val analyticsRepository = DefaultAnalyticsRepository(
+            packageName = application.packageName,
+            locale = componentParams.shopperLocale,
+            source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+            analyticsService = analyticsService,
+            analyticsMapper = AnalyticsMapper(),
+        )
 
         val actionConfiguration = GenericActionConfiguration.Builder(
             configuration.shopperLocale,
@@ -77,6 +89,7 @@ class CardComponentProvider(
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
+                analyticsRepository = analyticsRepository,
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
