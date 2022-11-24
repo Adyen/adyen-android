@@ -10,12 +10,8 @@ package com.adyen.checkout.components.base
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticEvent.Companion.create
-import com.adyen.checkout.components.analytics.AnalyticEvent.Flavor
-import com.adyen.checkout.components.analytics.AnalyticsDispatcher.Companion.dispatchEvent
 import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 
 @Suppress("TooManyFunctions")
@@ -49,19 +45,7 @@ abstract class BasePaymentComponent<
      */
     // TODO change later when analytics are implemented
     fun sendAnalyticsEvent(context: Context) {
-        if (isAnalyticsEnabled) {
-            val flavor: Flavor = if (isCreatedForDropIn) {
-                Flavor.DROPIN
-            } else {
-                Flavor.COMPONENT
-            }
-            val type = paymentComponentDelegate.getPaymentMethodType()
-            if (type.isEmpty()) {
-                throw CheckoutException("Payment method has empty or null type")
-            }
-            val analyticEvent = create(context, flavor, type, configuration.shopperLocale)
-            dispatchEvent(context, configuration.environment, analyticEvent)
-        }
+        // whole class will be deleted soon
     }
 
     fun setCreatedForDropIn() {
