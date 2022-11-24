@@ -21,7 +21,8 @@ class StatusService(
         statusRequest: StatusRequest
     ): StatusResponse {
         return HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "services/PaymentInitiation/v1/status?token=$clientKey",
+            path = "services/PaymentInitiation/v1/status",
+            queryParameters = mapOf("token" to clientKey),
             body = statusRequest,
             requestSerializer = StatusRequest.SERIALIZER,
             responseSerializer = StatusResponse.SERIALIZER

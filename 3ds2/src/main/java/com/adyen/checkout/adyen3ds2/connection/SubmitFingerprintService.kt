@@ -25,7 +25,8 @@ internal class SubmitFingerprintService(
         clientKey: String
     ): SubmitFingerprintResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v1/submitThreeDS2Fingerprint?token=$clientKey",
+            path = "v1/submitThreeDS2Fingerprint",
+            queryParameters = mapOf("token" to clientKey),
             body = request,
             requestSerializer = SubmitFingerprintRequest.SERIALIZER,
             responseSerializer = SubmitFingerprintResponse.SERIALIZER

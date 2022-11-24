@@ -25,7 +25,8 @@ internal class BinLookupService(
         clientKey: String,
     ): BinLookupResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v2/bin/binLookup?clientKey=$clientKey",
+            path = "v2/bin/binLookup",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = BinLookupRequest.SERIALIZER,
             responseSerializer = BinLookupResponse.SERIALIZER

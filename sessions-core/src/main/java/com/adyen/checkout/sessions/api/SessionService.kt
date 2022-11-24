@@ -35,7 +35,8 @@ class SessionService(
         clientKey: String,
     ): SessionSetupResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/setup?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/setup",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionSetupRequest.SERIALIZER,
             responseSerializer = SessionSetupResponse.SERIALIZER,
@@ -48,7 +49,8 @@ class SessionService(
         clientKey: String,
     ): SessionPaymentsResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/payments?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/payments",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionPaymentsRequest.SERIALIZER,
             responseSerializer = SessionPaymentsResponse.SERIALIZER,
@@ -61,7 +63,8 @@ class SessionService(
         clientKey: String,
     ): SessionDetailsResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/paymentDetails?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/paymentDetails",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionDetailsRequest.SERIALIZER,
             responseSerializer = SessionDetailsResponse.SERIALIZER,
@@ -74,7 +77,8 @@ class SessionService(
         clientKey: String,
     ): SessionBalanceResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/paymentMethodBalance?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/paymentMethodBalance",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionBalanceRequest.SERIALIZER,
             responseSerializer = SessionBalanceResponse.SERIALIZER,
@@ -87,7 +91,8 @@ class SessionService(
         clientKey: String,
     ): SessionOrderResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/orders?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/orders",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionOrderRequest.SERIALIZER,
             responseSerializer = SessionOrderResponse.SERIALIZER,
@@ -100,7 +105,8 @@ class SessionService(
         clientKey: String,
     ): SessionCancelOrderResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/orders/cancel?clientKey=$clientKey",
+            path = "v1/sessions/$sessionId/orders/cancel",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionCancelOrderRequest.SERIALIZER,
             responseSerializer = SessionCancelOrderResponse.SERIALIZER,

@@ -25,7 +25,8 @@ internal class OrderStatusService(
         clientKey: String
     ): OrderStatusResponse = withContext(Dispatchers.IO) {
         HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v1/order/status?clientKey=$clientKey",
+            path = "v1/order/status",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = OrderStatusRequest.SERIALIZER,
             responseSerializer = OrderStatusResponse.SERIALIZER

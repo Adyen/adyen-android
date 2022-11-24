@@ -20,11 +20,12 @@ private val TAG = LogUtil.getTag()
 
 fun <T : ModelObject> HttpClient.get(
     path: String,
-    responseSerializer: ModelObject.Serializer<T>
+    responseSerializer: ModelObject.Serializer<T>,
+    queryParameters: Map<String, String> = emptyMap(),
 ): T {
     Logger.d(TAG, "GET - $path")
 
-    val result = this.get(path)
+    val result = this.get(path, queryParameters)
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
@@ -34,11 +35,12 @@ fun <T : ModelObject> HttpClient.get(
 
 fun <T : ModelObject> HttpClient.getList(
     path: String,
-    responseSerializer: ModelObject.Serializer<T>
+    responseSerializer: ModelObject.Serializer<T>,
+    queryParameters: Map<String, String> = emptyMap(),
 ): List<T> {
     Logger.d(TAG, "GET - $path")
 
-    val result = this.get(path)
+    val result = this.get(path, queryParameters)
     val resultJson = JSONArray(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
@@ -50,7 +52,8 @@ fun <T : ModelObject, R : ModelObject> HttpClient.post(
     path: String,
     body: T,
     requestSerializer: ModelObject.Serializer<T>,
-    responseSerializer: ModelObject.Serializer<R>
+    responseSerializer: ModelObject.Serializer<R>,
+    queryParameters: Map<String, String> = emptyMap(),
 ): R {
     Logger.d(TAG, "POST - $path")
 
@@ -58,7 +61,7 @@ fun <T : ModelObject, R : ModelObject> HttpClient.post(
 
     Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
 
-    val result = this.post(path, requestJson.toString())
+    val result = this.post(path, requestJson.toString(), queryParameters)
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
