@@ -15,6 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.api.OrderStatusService
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -26,6 +27,7 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.repository.OrderStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -51,13 +53,18 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class DropInViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val orderStatusRepository: OrderStatusRepository = OrderStatusRepository()
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
+
+    private val orderStatusRepository: OrderStatusRepository = OrderStatusRepository(
+        OrderStatusService(
+            HttpClientFactory.getHttpClient(dropInConfiguration.environment)
+        )
+    )
 
     val serviceComponentName: ComponentName = getStateValueOrFail(DROP_IN_SERVICE_KEY)
 
@@ -185,7 +192,7 @@ internal class DropInViewModel(
         val event = DropInActivityEvent.SessionServiceConnected(
             sessionModel = sessionModel,
             clientKey = dropInConfiguration.clientKey,
-            baseUrl = dropInConfiguration.environment.baseUrl,
+            environment = dropInConfiguration.environment,
             isFlowTakenOver = isSessionsFlowTakenOver
         )
         sendEvent(event)

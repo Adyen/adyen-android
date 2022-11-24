@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
@@ -21,6 +22,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -48,12 +50,14 @@ class GiftCardComponentProvider(
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val publicKeyService = PublicKeyService(httpClient)
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
-                    publicKeyRepository = DefaultPublicKeyRepository(),
+                    publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                 ),

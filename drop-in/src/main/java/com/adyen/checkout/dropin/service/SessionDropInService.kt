@@ -15,6 +15,8 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.status.api.StatusResponseUtils.RESULT_REFUSED
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -37,10 +39,11 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
     final override fun initialize(
         sessionModel: SessionModel,
         clientKey: String,
-        baseUrl: String,
+        environment: Environment,
         isFlowTakenOver: Boolean
     ) {
-        val sessionService = SessionService(baseUrl)
+        val httpClient = HttpClientFactory.getHttpClient(environment)
+        val sessionService = SessionService(httpClient)
         sessionRepository = SessionRepository(
             sessionService = sessionService,
             clientKey = clientKey,
@@ -313,7 +316,7 @@ internal interface SessionDropInServiceInterface : DropInServiceInterface {
     fun initialize(
         sessionModel: SessionModel,
         clientKey: String,
-        baseUrl: String,
+        environment: Environment,
         isFlowTakenOver: Boolean
     )
 }

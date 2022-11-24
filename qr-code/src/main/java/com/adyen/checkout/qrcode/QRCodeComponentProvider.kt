@@ -27,6 +27,7 @@ import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
+import com.adyen.checkout.core.api.HttpClientFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
@@ -69,7 +70,8 @@ class QRCodeComponentProvider(
         application: Application,
     ): QRCodeDelegate {
         val componentParams = componentParamsMapper.mapToParams(configuration)
-        val statusService = StatusService(configuration.environment.baseUrl)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val countDownTimer = QRCodeCountDownTimer()
         val redirectHandler = DefaultRedirectHandler()

@@ -17,7 +17,6 @@ import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCar
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DUAL_BRANDED
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.ERROR
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.FETCHED_FROM_NETWORK
-import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,7 +39,6 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
         cardNumber: String,
         publicKey: String?,
         supportedCardTypes: List<CardType>,
-        environment: Environment,
         clientKey: String,
         coroutineScope: CoroutineScope,
     ) {

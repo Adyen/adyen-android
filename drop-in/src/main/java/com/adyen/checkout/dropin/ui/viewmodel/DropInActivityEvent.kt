@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.sessions.model.SessionModel
 
@@ -23,7 +24,7 @@ internal sealed class DropInActivityEvent {
     data class SessionServiceConnected(
         val sessionModel: SessionModel,
         val clientKey: String,
-        val baseUrl: String,
+        val environment: Environment,
         val isFlowTakenOver: Boolean,
     ) : DropInActivityEvent()
 }

@@ -30,6 +30,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAc
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +77,8 @@ class Adyen3DS2ComponentProvider(
         application: Application,
     ): Adyen3DS2Delegate {
         val componentParams = componentParamsMapper.mapToParams(configuration)
-        val submitFingerprintService = SubmitFingerprintService(configuration.environment)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()

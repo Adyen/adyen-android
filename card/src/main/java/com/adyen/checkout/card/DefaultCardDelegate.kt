@@ -153,7 +153,6 @@ internal class DefaultCardDelegate(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
             supportedCardTypes = componentParams.supportedCardTypes,
-            environment = componentParams.environment,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope
         )
@@ -487,7 +486,6 @@ internal class DefaultCardDelegate(
 
     private fun requestCountryList() {
         addressRepository.getCountryList(
-            environment = componentParams.environment,
             shopperLocale = componentParams.shopperLocale,
             coroutineScope = coroutineScope
         )
@@ -495,7 +493,6 @@ internal class DefaultCardDelegate(
 
     private fun requestStateList(countryCode: String?) {
         addressRepository.getStateList(
-            environment = componentParams.environment,
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
             coroutineScope = coroutineScope

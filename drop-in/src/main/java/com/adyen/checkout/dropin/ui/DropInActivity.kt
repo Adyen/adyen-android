@@ -601,7 +601,7 @@ internal class DropInActivity :
         (dropInService as? SessionDropInServiceInterface)?.initialize(
             sessionModel = event.sessionModel,
             clientKey = event.clientKey,
-            baseUrl = event.baseUrl,
+            environment = event.environment,
             isFlowTakenOver = event.isFlowTakenOver,
         )
     }

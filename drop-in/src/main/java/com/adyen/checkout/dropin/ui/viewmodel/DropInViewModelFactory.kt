@@ -12,13 +12,12 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.components.repository.OrderStatusRepository
 
 internal class DropInViewModelFactory(
     activity: ComponentActivity
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         @Suppress("UNCHECKED_CAST")
-        return DropInViewModel(handle, OrderStatusRepository()) as T
+        return DropInViewModel(handle) as T
     }
 }

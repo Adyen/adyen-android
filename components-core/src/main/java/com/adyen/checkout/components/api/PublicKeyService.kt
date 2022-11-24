@@ -8,21 +8,22 @@
 
 package com.adyen.checkout.components.api
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.PublicKeyResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class PublicKeyService(
-    private val environment: Environment
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class PublicKeyService(
+    private val httpClient: HttpClient,
 ) {
 
     suspend fun getPublicKey(
         clientKey: String
     ): PublicKeyResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(environment.baseUrl).get(
+        httpClient.get(
             "v1/clientKeys/$clientKey",
             PublicKeyResponse.SERIALIZER
         )
