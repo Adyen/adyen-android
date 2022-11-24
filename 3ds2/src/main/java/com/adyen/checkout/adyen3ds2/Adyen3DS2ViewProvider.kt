@@ -28,4 +28,6 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
     }
 }
 
-internal object Adyen3DS2ComponentViewType : ComponentViewType
+internal object Adyen3DS2ComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = Adyen3DS2ViewProvider
+}

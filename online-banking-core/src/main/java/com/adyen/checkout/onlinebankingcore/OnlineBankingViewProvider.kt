@@ -29,4 +29,6 @@ internal object OnlineBankingViewProvider : ViewProvider {
     }
 }
 
-internal object OnlineBankingComponentViewType : ComponentViewType
+internal object OnlineBankingComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = OnlineBankingViewProvider
+}

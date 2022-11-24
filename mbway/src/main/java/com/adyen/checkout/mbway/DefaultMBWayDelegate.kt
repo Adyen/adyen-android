@@ -17,7 +17,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
@@ -124,8 +123,6 @@ internal class DefaultMBWayDelegate(
     override fun onCleared() {
         removeObserver()
     }
-
-    override fun getViewProvider(): ViewProvider = MbWayViewProvider
 
     private fun componentStateChanged(componentState: PaymentComponentState<MBWayPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)

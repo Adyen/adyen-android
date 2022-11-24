@@ -32,5 +32,7 @@ internal object QrCodeViewProvider : ViewProvider {
 }
 
 internal enum class QrCodeComponentViewType : ComponentViewType {
-    QR_CODE, REDIRECT
+    QR_CODE, REDIRECT;
+
+    override val viewProvider: ViewProvider = QrCodeViewProvider
 }

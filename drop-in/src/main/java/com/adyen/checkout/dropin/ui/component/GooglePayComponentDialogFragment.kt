@@ -92,6 +92,9 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
             is PaymentComponentEvent.Error -> {
                 handleError(event.error)
             }
+            is PaymentComponentEvent.ActionDetails -> {
+                throw IllegalStateException("This event should not be used in drop-in")
+            }
         }
     }
 

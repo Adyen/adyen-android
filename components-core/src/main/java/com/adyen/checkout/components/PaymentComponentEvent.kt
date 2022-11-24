@@ -19,4 +19,8 @@ sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out P
     class Error<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val error: ComponentError
     ) : PaymentComponentEvent<ComponentStateT>()
+
+    class ActionDetails<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+        val data: ActionComponentData
+    ) : PaymentComponentEvent<ComponentStateT>()
 }

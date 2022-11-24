@@ -29,4 +29,6 @@ internal object VoucherViewProvider : ViewProvider {
     }
 }
 
-internal object VoucherComponentViewType : ComponentViewType
+internal object VoucherComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = VoucherViewProvider
+}

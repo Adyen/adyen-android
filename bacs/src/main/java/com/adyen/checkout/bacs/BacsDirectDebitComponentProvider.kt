@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bacs
 
+import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -31,6 +32,7 @@ class BacsDirectDebitComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: BacsDirectDebitConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): BacsDirectDebitComponent {

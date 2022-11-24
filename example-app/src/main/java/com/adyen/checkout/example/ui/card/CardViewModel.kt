@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -70,6 +69,7 @@ internal class CardViewModel @Inject constructor(
         when (event) {
             is PaymentComponentEvent.StateChanged -> onCardComponentState(event.state)
             is PaymentComponentEvent.Error -> onComponentError(event.error)
+            is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
         }
     }
 
@@ -128,13 +128,6 @@ internal class CardViewModel @Inject constructor(
         }
 
         _events.emit(CardEvent.AdditionalAction(cardAction))
-    }
-
-    fun onActionComponentEvent(event: ActionComponentEvent) {
-        when (event) {
-            is ActionComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
-            is ActionComponentEvent.Error -> onComponentError(event.error)
-        }
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {

@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
@@ -30,9 +29,7 @@ class CardActivity : AppCompatActivity() {
 
     private val cardViewModel: CardViewModel by viewModels()
 
-    private var redirectComponent: RedirectComponent? = null
-
-    private var threeDS2Component: Adyen3DS2Component? = null
+    private var cardComponent: CardComponent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +62,15 @@ class CardActivity : AppCompatActivity() {
 
         val data = intent.data
         if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-            redirectComponent?.handleIntent(intent)
-            threeDS2Component?.handleIntent(intent)
+            cardComponent?.handleIntent(intent)
         }
     }
 
     private fun onCardViewState(cardViewState: CardViewState) {
         when (cardViewState) {
             CardViewState.Loading -> {
+                // We are hiding the CardView here to display our own loading state. If you leave the view visible
+                // the built in loading state will be shown.
                 binding.progressIndicator.isVisible = true
                 binding.cardContainer.isVisible = false
                 binding.errorView.isVisible = false
@@ -96,8 +94,11 @@ class CardActivity : AppCompatActivity() {
         val cardComponent = CardComponent.PROVIDER.get(
             this,
             paymentMethod,
-            checkoutConfigurationProvider.getCardConfiguration()
+            checkoutConfigurationProvider.getCardConfiguration(),
+            application,
         )
+
+        this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
 
@@ -119,40 +120,21 @@ class CardActivity : AppCompatActivity() {
 
     private fun onAdditionalAction(cardAction: CardAction) {
         when (cardAction) {
-            is CardAction.Redirect -> setupRedirectComponent(cardAction.action)
-            is CardAction.ThreeDS2 -> setupThreeDS2Component(cardAction.action)
+            is CardAction.Redirect -> onAction(cardAction.action)
+            is CardAction.ThreeDS2 -> onAction(cardAction.action)
             CardAction.Unsupported -> {
                 Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun setupRedirectComponent(action: Action) {
-        redirectComponent = RedirectComponent.PROVIDER.get(
-            this,
-            application,
-            checkoutConfigurationProvider.getRedirectConfiguration()
-        ).apply {
-            observe(this@CardActivity, cardViewModel::onActionComponentEvent)
-            handleAction(action, this@CardActivity)
-        }
-    }
-
-    private fun setupThreeDS2Component(action: Action) {
-        threeDS2Component = Adyen3DS2Component.PROVIDER.get(
-            this,
-            application,
-            checkoutConfigurationProvider.get3DS2Configuration()
-        ).apply {
-            observe(this@CardActivity, cardViewModel::onActionComponentEvent)
-            handleAction(action, this@CardActivity)
-        }
+    private fun onAction(action: Action) {
+        cardComponent?.handleAction(action, this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        redirectComponent = null
-        threeDS2Component = null
+        cardComponent = null
     }
 
     companion object {

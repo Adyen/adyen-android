@@ -29,4 +29,6 @@ internal object CardViewProvider : ViewProvider {
     }
 }
 
-internal object CardComponentViewType : ComponentViewType
+internal object CardComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = CardViewProvider
+}

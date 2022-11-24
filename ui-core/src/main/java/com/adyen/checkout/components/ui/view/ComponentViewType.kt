@@ -8,4 +8,8 @@
 
 package com.adyen.checkout.components.ui.view
 
-interface ComponentViewType
+import com.adyen.checkout.components.ui.ViewProvider
+
+interface ComponentViewType {
+    val viewProvider: ViewProvider
+}

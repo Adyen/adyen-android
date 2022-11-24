@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.entercash
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,7 @@ class EntercashComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: EntercashConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): EntercashComponent {

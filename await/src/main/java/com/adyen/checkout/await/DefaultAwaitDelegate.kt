@@ -24,7 +24,6 @@ import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -179,8 +178,6 @@ internal class DefaultAwaitDelegate(
         val paymentData = paymentDataRepository.paymentData ?: return
         statusRepository.refreshStatus(paymentData)
     }
-
-    override fun getViewProvider(): ViewProvider = AwaitViewProvider
 
     override fun onCleared() {
         removeObserver()

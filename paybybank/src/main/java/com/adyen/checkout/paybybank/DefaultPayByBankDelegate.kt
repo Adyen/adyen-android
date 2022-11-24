@@ -19,7 +19,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerModel
@@ -74,8 +73,6 @@ internal class DefaultPayByBankDelegate(
     }
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
-
-    override fun getViewProvider(): ViewProvider = PayByBankViewProvider
 
     override fun updateInputData(update: PayByBankInputData.() -> Unit) {
         inputData.update()

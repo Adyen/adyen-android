@@ -28,4 +28,6 @@ internal object BlikViewProvider : ViewProvider {
     }
 }
 
-internal object BlikComponentViewType : ComponentViewType
+internal object BlikComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = BlikViewProvider
+}

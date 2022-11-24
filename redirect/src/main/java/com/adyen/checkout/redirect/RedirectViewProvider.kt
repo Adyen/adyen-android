@@ -28,4 +28,6 @@ internal object RedirectViewProvider : ViewProvider {
     }
 }
 
-internal object RedirectComponentViewType : ComponentViewType
+internal object RedirectComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = RedirectViewProvider
+}

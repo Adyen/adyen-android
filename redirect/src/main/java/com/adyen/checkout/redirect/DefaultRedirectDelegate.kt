@@ -20,7 +20,6 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -109,8 +108,6 @@ internal class DefaultRedirectDelegate(
     override fun onError(e: CheckoutException) {
         exceptionChannel.trySend(e)
     }
-
-    override fun getViewProvider(): ViewProvider = RedirectViewProvider
 
     override fun onCleared() {
         removeObserver()

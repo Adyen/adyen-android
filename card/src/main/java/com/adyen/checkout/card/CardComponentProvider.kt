@@ -7,11 +7,15 @@
  */
 package com.adyen.checkout.card
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -38,6 +42,7 @@ class CardComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
@@ -50,21 +55,38 @@ class CardComponentProvider(
         val publicKeyRepository = DefaultPublicKeyRepository()
         val addressRepository = DefaultAddressRepository()
         val cardValidationMapper = CardValidationMapper()
+
+        val actionConfiguration = GenericActionConfiguration.Builder(
+            configuration.shopperLocale,
+            configuration.environment,
+            configuration.clientKey
+        ).build()
+
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            CardComponent(
+            val cardDelegate = DefaultCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                publicKeyRepository = publicKeyRepository,
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                addressRepository = addressRepository,
+                detectCardTypeRepository = detectCardTypeRepository,
+                cardValidationMapper = cardValidationMapper,
+                cardEncrypter = cardEncrypter,
+                genericEncrypter = genericEncrypter,
+            )
+
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                actionConfiguration,
                 savedStateHandle,
-                DefaultCardDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    publicKeyRepository = publicKeyRepository,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    addressRepository = addressRepository,
-                    detectCardTypeRepository = detectCardTypeRepository,
-                    cardValidationMapper = cardValidationMapper,
-                    cardEncrypter = cardEncrypter,
-                    genericEncrypter = genericEncrypter
-                ),
-                configuration
+                application,
+            )
+
+            CardComponent(
+                savedStateHandle = savedStateHandle,
+                cardDelegate = cardDelegate,
+                cardConfiguration = configuration,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -75,6 +97,7 @@ class CardComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): CardComponent {
@@ -84,17 +107,34 @@ class CardComponentProvider(
         val publicKeyRepository = DefaultPublicKeyRepository()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+
+        val actionConfiguration = GenericActionConfiguration.Builder(
+            configuration.shopperLocale,
+            configuration.environment,
+            configuration.clientKey
+        ).build()
+
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            CardComponent(
+            val cardDelegate = StoredCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                storedPaymentMethod = storedPaymentMethod,
+                componentParams = componentParams,
+                cardEncrypter = cardEncrypter,
+                publicKeyRepository = publicKeyRepository,
+            )
+
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                actionConfiguration,
                 savedStateHandle,
-                StoredCardDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    storedPaymentMethod = storedPaymentMethod,
-                    componentParams = componentParams,
-                    cardEncrypter = cardEncrypter,
-                    publicKeyRepository = publicKeyRepository,
-                ),
-                configuration
+                application,
+            )
+
+            CardComponent(
+                savedStateHandle = savedStateHandle,
+                cardDelegate = cardDelegate,
+                cardConfiguration = configuration,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]

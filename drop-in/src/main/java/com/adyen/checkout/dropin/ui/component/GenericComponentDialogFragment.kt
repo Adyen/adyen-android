@@ -97,6 +97,9 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
                 binding.componentView.isConfirmationRequired
             )
             is PaymentComponentEvent.Error -> onComponentError(event.error)
+            is PaymentComponentEvent.ActionDetails -> {
+                throw IllegalStateException("This event should not be used in drop-in")
+            }
         }
     }
 

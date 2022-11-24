@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.onlinebankingcz
 
+import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +39,7 @@ class OnlineBankingCZComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
         configuration: OnlineBankingCZConfiguration,
+        application: Application,
         defaultArgs: Bundle?,
         key: String?,
     ): OnlineBankingComponent<OnlineBankingCZPaymentMethod> {

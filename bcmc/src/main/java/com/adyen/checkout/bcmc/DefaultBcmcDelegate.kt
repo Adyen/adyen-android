@@ -26,7 +26,6 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -246,8 +245,6 @@ internal class DefaultBcmcDelegate(
     override fun onCleared() {
         removeObserver()
     }
-
-    override fun getViewProvider(): ViewProvider = BcmcViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()

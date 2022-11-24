@@ -34,7 +34,6 @@ import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAc
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -449,8 +448,6 @@ internal class DefaultAdyen3DS2Delegate(
     override fun onError(e: CheckoutException) {
         exceptionChannel.trySend(e)
     }
-
-    override fun getViewProvider(): ViewProvider = Adyen3DS2ViewProvider
 
     override fun onCleared() {
         removeObserver()

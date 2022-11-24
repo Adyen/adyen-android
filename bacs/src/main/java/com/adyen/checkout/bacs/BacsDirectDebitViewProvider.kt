@@ -30,5 +30,7 @@ internal object BacsViewProvider : ViewProvider {
 }
 
 internal enum class BacsComponentViewType : ComponentViewType {
-    INPUT, CONFIRMATION
+    INPUT, CONFIRMATION;
+
+    override val viewProvider: ViewProvider = BacsViewProvider
 }
