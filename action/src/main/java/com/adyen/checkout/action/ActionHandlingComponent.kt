@@ -17,8 +17,20 @@ import com.adyen.threeds2.customization.UiCustomization
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionHandlingComponent {
 
+    /**
+     * Checks if this component can handle the specific action type.
+     *
+     * @param action The Action object from the API response.
+     * @return If the action can be handled by this component.
+     */
     fun canHandleAction(action: Action): Boolean
 
+    /**
+     * Provide the action from the API response that needs to be handled.
+     *
+     * @param action The parsed object from the API of the action to be taken.
+     * @param activity The Activity starting the action.
+     */
     fun handleAction(action: Action, activity: Activity)
 
     /**
@@ -29,5 +41,11 @@ interface ActionHandlingComponent {
      */
     fun handleIntent(intent: Intent)
 
+    /**
+     * Set a [UiCustomization] object to be passed to the 3DS2 SDK for customizing the challenge screen.
+     * Needs to be set before handling any action.
+     *
+     * @param uiCustomization The customization object.
+     */
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }
