@@ -19,7 +19,8 @@ import java.util.Locale
 class InstantPaymentConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
-    override val clientKey: String
+    override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
 ) : Configuration {
 
     /**
@@ -65,6 +66,7 @@ class InstantPaymentConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
             )
         }
     }

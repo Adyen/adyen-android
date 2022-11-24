@@ -19,6 +19,7 @@ class Adyen3DS2Configuration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
 ) : Configuration {
 
     /**
@@ -64,6 +65,7 @@ class Adyen3DS2Configuration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
             )
         }
     }

@@ -70,6 +70,7 @@ internal class TestActionDelegate :
         override val shopperLocale: Locale = Locale.US
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
+        override val isAnalyticsEnabled: Boolean? = null
 
         override fun describeContents(): Int {
             throw NotImplementedError("This method shouldn't be used in tests")

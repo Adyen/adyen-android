@@ -36,6 +36,7 @@ class GenericActionConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
 
@@ -143,6 +144,7 @@ class GenericActionConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
                 availableActionConfigs = availableActionConfigs,
             )
         }

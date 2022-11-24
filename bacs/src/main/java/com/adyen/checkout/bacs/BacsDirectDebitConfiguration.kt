@@ -26,6 +26,7 @@ class BacsDirectDebitConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val amount: Amount?,
+    override val isAnalyticsEnabled: Boolean?,
 ) : Configuration, AmountConfiguration {
 
     class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration, Builder>, AmountConfigurationBuilder {
@@ -73,6 +74,7 @@ class BacsDirectDebitConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 amount = amount,
+                isAnalyticsEnabled = isAnalyticsEnabled,
             )
         }
 
