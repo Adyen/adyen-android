@@ -21,16 +21,10 @@ class BlikConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [BlikConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<BlikConfiguration> {
+    class Builder : BaseConfigurationBuilder<BlikConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +60,11 @@ class BlikConfiguration private constructor(
         constructor(configuration: BlikConfiguration) : super(configuration)
 
         override fun buildInternal(): BlikConfiguration {
-            return BlikConfiguration(this)
+            return BlikConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

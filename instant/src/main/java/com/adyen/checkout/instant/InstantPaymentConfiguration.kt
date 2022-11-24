@@ -21,16 +21,11 @@ class InstantPaymentConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String
 ) : Configuration {
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
 
     /**
      * Builder to create a [InstantPaymentConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<InstantPaymentConfiguration> {
+    class Builder : BaseConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +61,11 @@ class InstantPaymentConfiguration private constructor(
         constructor(configuration: InstantPaymentConfiguration) : super(configuration)
 
         override fun buildInternal(): InstantPaymentConfiguration {
-            return InstantPaymentConfiguration(this)
+            return InstantPaymentConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

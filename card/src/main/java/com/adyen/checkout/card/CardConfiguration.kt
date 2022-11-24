@@ -41,7 +41,7 @@ class CardConfiguration private constructor(
      * Builder to create a [CardConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<CardConfiguration> {
+    class Builder : BaseConfigurationBuilder<CardConfiguration, Builder> {
         private var supportedCardTypes: List<CardType>? = null
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null

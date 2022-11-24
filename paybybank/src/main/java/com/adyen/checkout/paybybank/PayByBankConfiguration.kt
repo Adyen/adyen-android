@@ -22,16 +22,10 @@ class PayByBankConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [PayByBankConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<PayByBankConfiguration> {
+    class Builder : BaseConfigurationBuilder<PayByBankConfiguration, Builder> {
         /**
          * Constructor for Builder with default values.
          *
@@ -66,7 +60,11 @@ class PayByBankConfiguration private constructor(
         constructor(configuration: PayByBankConfiguration) : super(configuration)
 
         override fun buildInternal(): PayByBankConfiguration {
-            return PayByBankConfiguration(this)
+            return PayByBankConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

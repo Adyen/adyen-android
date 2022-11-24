@@ -22,7 +22,7 @@ class OnlineBankingSKConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<OnlineBankingSKConfiguration> {
+    class Builder : BaseConfigurationBuilder<OnlineBankingSKConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

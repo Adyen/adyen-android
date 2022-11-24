@@ -26,7 +26,7 @@ class IdealConfiguration private constructor(
     /**
      * Builder to create a [IdealConfiguration].
      */
-    class Builder : IssuerListBuilder<IdealConfiguration> {
+    class Builder : IssuerListBuilder<IdealConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

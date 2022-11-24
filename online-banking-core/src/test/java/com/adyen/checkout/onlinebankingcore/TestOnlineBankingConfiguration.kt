@@ -22,7 +22,7 @@ class TestOnlineBankingConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<TestOnlineBankingConfiguration> {
+    class Builder : BaseConfigurationBuilder<TestOnlineBankingConfiguration, Builder> {
 
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,

@@ -24,7 +24,7 @@ class WeChatPayActionConfiguration private constructor(
     /**
      * Builder to create a [WeChatPayActionConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<WeChatPayActionConfiguration> {
+    class Builder : BaseConfigurationBuilder<WeChatPayActionConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

@@ -53,7 +53,7 @@ class GooglePayConfiguration private constructor(
      * Builder to create a [GooglePayConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
+    class Builder : BaseConfigurationBuilder<GooglePayConfiguration, Builder>, AmountConfigurationBuilder {
         private var merchantAccount: String? = null
         private var googlePayEnvironment: Int? = null
         private var amount: Amount? = null
@@ -117,29 +117,6 @@ class GooglePayConfiguration private constructor(
             shippingAddressParameters = configuration.shippingAddressParameters
             isBillingAddressRequired = configuration.isBillingAddressRequired
             billingAddressParameters = configuration.billingAddressParameters
-        }
-
-        override fun buildInternal(): GooglePayConfiguration {
-            return GooglePayConfiguration(
-                shopperLocale = shopperLocale,
-                environment = environment,
-                clientKey = clientKey,
-                merchantAccount = merchantAccount,
-                googlePayEnvironment = googlePayEnvironment,
-                amount = amount,
-                totalPriceStatus = totalPriceStatus,
-                countryCode = countryCode,
-                merchantInfo = merchantInfo,
-                allowedAuthMethods = allowedAuthMethods,
-                allowedCardNetworks = allowedCardNetworks,
-                isAllowPrepaidCards = isAllowPrepaidCards,
-                isEmailRequired = isEmailRequired,
-                isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
-                isShippingAddressRequired = isShippingAddressRequired,
-                shippingAddressParameters = shippingAddressParameters,
-                isBillingAddressRequired = isBillingAddressRequired,
-                billingAddressParameters = billingAddressParameters,
-            )
         }
 
         /**
@@ -366,6 +343,29 @@ class GooglePayConfiguration private constructor(
         fun setTotalPriceStatus(totalPriceStatus: String): Builder {
             this.totalPriceStatus = totalPriceStatus
             return this
+        }
+
+        override fun buildInternal(): GooglePayConfiguration {
+            return GooglePayConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                merchantAccount = merchantAccount,
+                googlePayEnvironment = googlePayEnvironment,
+                amount = amount,
+                totalPriceStatus = totalPriceStatus,
+                countryCode = countryCode,
+                merchantInfo = merchantInfo,
+                allowedAuthMethods = allowedAuthMethods,
+                allowedCardNetworks = allowedCardNetworks,
+                isAllowPrepaidCards = isAllowPrepaidCards,
+                isEmailRequired = isEmailRequired,
+                isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
+                isShippingAddressRequired = isShippingAddressRequired,
+                shippingAddressParameters = shippingAddressParameters,
+                isBillingAddressRequired = isBillingAddressRequired,
+                billingAddressParameters = billingAddressParameters,
+            )
         }
     }
 }

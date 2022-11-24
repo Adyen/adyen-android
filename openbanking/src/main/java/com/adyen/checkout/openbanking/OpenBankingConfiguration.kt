@@ -26,7 +26,7 @@ class OpenBankingConfiguration private constructor(
     /**
      * Builder to create a [OpenBankingConfiguration].
      */
-    class Builder : IssuerListBuilder<OpenBankingConfiguration> {
+    class Builder : IssuerListBuilder<OpenBankingConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.

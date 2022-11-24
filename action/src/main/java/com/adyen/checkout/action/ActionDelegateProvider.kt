@@ -108,7 +108,7 @@ internal class ActionDelegateProvider(
         val environment = configuration.environment
         val clientKey = configuration.clientKey
 
-        val builder: BaseConfigurationBuilder<out Configuration> = when (T::class) {
+        val builder: BaseConfigurationBuilder<*, *> = when (T::class) {
             AwaitConfiguration::class -> AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
             RedirectConfiguration::class -> RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)

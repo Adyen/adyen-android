@@ -21,16 +21,10 @@ class MBWayConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-    private constructor(builder: Builder) : this(
-        builder.shopperLocale,
-        builder.environment,
-        builder.clientKey
-    )
-
     /**
      * Builder to create a [MBWayConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<MBWayConfiguration> {
+    class Builder : BaseConfigurationBuilder<MBWayConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -66,7 +60,11 @@ class MBWayConfiguration private constructor(
         constructor(configuration: MBWayConfiguration) : super(configuration)
 
         override fun buildInternal(): MBWayConfiguration {
-            return MBWayConfiguration(this)
+            return MBWayConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+            )
         }
     }
 }

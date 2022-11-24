@@ -24,7 +24,7 @@ class SepaConfiguration private constructor(
     /**
      * Builder to create a [SepaConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<SepaConfiguration> {
+    class Builder : BaseConfigurationBuilder<SepaConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -63,7 +63,7 @@ class SepaConfiguration private constructor(
             return SepaConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
-                clientKey = clientKey
+                clientKey = clientKey,
             )
         }
     }
