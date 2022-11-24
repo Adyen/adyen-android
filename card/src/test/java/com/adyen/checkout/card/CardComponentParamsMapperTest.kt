@@ -93,7 +93,9 @@ internal class CardComponentParamsMapperTest {
             Locale.GERMAN,
             Environment.EUROPE,
             TEST_CLIENT_KEY_2
-        ).build()
+        )
+            .setAnalyticsEnabled(false)
+            .build()
 
         val params = CardComponentParamsMapper(
             parentConfiguration = parentConfiguration,
@@ -104,6 +106,7 @@ internal class CardComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
         )
 
@@ -176,6 +179,7 @@ internal class CardComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
+        isAnalyticsEnabled: Boolean = true,
         isCreatedByDropIn: Boolean = false,
         isHolderNameRequired: Boolean = false,
         supportedCardTypes: List<CardType> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
@@ -191,6 +195,7 @@ internal class CardComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
+        isAnalyticsEnabled = isAnalyticsEnabled,
         isCreatedByDropIn = isCreatedByDropIn,
         isHolderNameRequired = isHolderNameRequired,
         supportedCardTypes = supportedCardTypes,

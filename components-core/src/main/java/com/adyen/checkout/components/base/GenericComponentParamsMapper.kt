@@ -24,6 +24,7 @@ class GenericComponentParamsMapper(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled ?: true,
                 isCreatedByDropIn = isCreatedByDropIn,
             )
         }

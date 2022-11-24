@@ -12,8 +12,8 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -22,6 +22,7 @@ data class BacsDirectDebitComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     val amount: Amount,
 ) : ComponentParams

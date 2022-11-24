@@ -36,6 +36,7 @@ class IssuerListComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
                 isCreatedByDropIn = isCreatedByDropIn,
                 viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
                 hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,

@@ -35,6 +35,7 @@ internal class GenericComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
         )
 
@@ -56,6 +57,7 @@ internal class GenericComponentParamsMapperTest {
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
         )
+            .setAnalyticsEnabled(false)
             .build()
 
         val params = GenericComponentParamsMapper(
@@ -69,6 +71,7 @@ internal class GenericComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
         )
 

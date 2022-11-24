@@ -33,6 +33,7 @@ internal class BcmcComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
             isHolderNameRequired = false,
             shopperReference = null,
@@ -65,6 +66,7 @@ internal class BcmcComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
             isHolderNameRequired = true,
             shopperReference = shopperReference,
@@ -89,7 +91,9 @@ internal class BcmcComponentParamsMapperTest {
             Locale.GERMAN,
             Environment.EUROPE,
             TEST_CLIENT_KEY_2
-        ).build()
+        )
+            .setAnalyticsEnabled(false)
+            .build()
 
         val params =
             BcmcComponentParamsMapper(
@@ -101,6 +105,7 @@ internal class BcmcComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
             isHolderNameRequired = false,
             shopperReference = null,

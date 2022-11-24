@@ -35,6 +35,7 @@ internal class BcmcComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
                 isCreatedByDropIn = isCreatedByDropIn,
                 isHolderNameRequired = isHolderNameRequired ?: false,
                 shopperReference = shopperReference,

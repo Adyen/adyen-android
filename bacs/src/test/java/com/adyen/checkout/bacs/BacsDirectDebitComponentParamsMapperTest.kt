@@ -34,6 +34,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
             amount = Amount.EMPTY
         )
@@ -61,6 +62,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
             amount = amount
         )
@@ -86,6 +88,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
         )
+            .setAnalyticsEnabled(false)
             .build()
 
         val params = BacsDirectDebitComponentParamsMapper(
@@ -97,6 +100,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
             amount = amount
         )

@@ -103,7 +103,9 @@ internal class GooglePayComponentParamsMapperTest {
         // class can work
         val parentConfiguration = GooglePayConfiguration.Builder(
             Locale.GERMAN, Environment.EUROPE, TEST_CLIENT_KEY_2
-        ).build()
+        )
+            .setAnalyticsEnabled(false)
+            .build()
 
         val params = GooglePayComponentParamsMapper(
             parentConfiguration = parentConfiguration,
@@ -116,6 +118,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
         )
 
@@ -266,6 +269,7 @@ internal class GooglePayComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
+        isAnalyticsEnabled: Boolean = true,
         isCreatedByDropIn: Boolean = false,
         gatewayMerchantId: String = TEST_GATEWAY_MERCHANT_ID,
         googlePayEnvironment: Int = WalletConstants.ENVIRONMENT_TEST,
@@ -283,25 +287,26 @@ internal class GooglePayComponentParamsMapperTest {
         isBillingAddressRequired: Boolean = false,
         billingAddressParameters: BillingAddressParameters? = null,
     ) = GooglePayComponentParams(
-        shopperLocale,
-        environment,
-        clientKey,
-        isCreatedByDropIn,
-        gatewayMerchantId,
-        googlePayEnvironment,
-        amount,
-        totalPriceStatus,
-        countryCode,
-        merchantInfo,
-        allowedAuthMethods,
-        allowedCardNetworks,
-        isAllowPrepaidCards,
-        isEmailRequired,
-        isExistingPaymentMethodRequired,
-        isShippingAddressRequired,
-        shippingAddressParameters,
-        isBillingAddressRequired,
-        billingAddressParameters,
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        isAnalyticsEnabled = isAnalyticsEnabled,
+        isCreatedByDropIn = isCreatedByDropIn,
+        gatewayMerchantId = gatewayMerchantId,
+        googlePayEnvironment = googlePayEnvironment,
+        amount = amount,
+        totalPriceStatus = totalPriceStatus,
+        countryCode = countryCode,
+        merchantInfo = merchantInfo,
+        allowedAuthMethods = allowedAuthMethods,
+        allowedCardNetworks = allowedCardNetworks,
+        isAllowPrepaidCards = isAllowPrepaidCards,
+        isEmailRequired = isEmailRequired,
+        isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
+        isShippingAddressRequired = isShippingAddressRequired,
+        shippingAddressParameters = shippingAddressParameters,
+        isBillingAddressRequired = isBillingAddressRequired,
+        billingAddressParameters = billingAddressParameters,
     )
 
     companion object {

@@ -33,6 +33,7 @@ internal class BacsDirectDebitComponentParamsMapper(
             shopperLocale = parentConfiguration.shopperLocale,
             environment = parentConfiguration.environment,
             clientKey = parentConfiguration.clientKey,
+            isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
             isCreatedByDropIn = isCreatedByDropIn,
             amount = bacsDirectDebitConfiguration.amount ?: Amount.EMPTY,
         )

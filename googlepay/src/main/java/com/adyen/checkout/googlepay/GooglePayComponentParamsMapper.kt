@@ -46,6 +46,7 @@ internal class GooglePayComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
                 isCreatedByDropIn = isCreatedByDropIn,
                 gatewayMerchantId = getPreferredGatewayMerchantId(googlePayConfiguration, paymentMethod),
                 allowedAuthMethods = getAvailableAuthMethods(googlePayConfiguration),

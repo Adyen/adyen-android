@@ -53,6 +53,7 @@ internal class CardComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
                 isCreatedByDropIn = isCreatedByDropIn,
                 isHolderNameRequired = isHolderNameRequired ?: false,
                 supportedCardTypes = supportedCardTypes,

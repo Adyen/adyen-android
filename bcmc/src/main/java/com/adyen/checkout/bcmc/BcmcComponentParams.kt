@@ -20,6 +20,7 @@ data class BcmcComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     val isHolderNameRequired: Boolean,
     val shopperReference: String?,
