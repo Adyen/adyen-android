@@ -28,9 +28,10 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OpenBankingComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
 
-    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

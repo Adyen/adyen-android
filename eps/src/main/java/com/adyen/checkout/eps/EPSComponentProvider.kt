@@ -28,11 +28,13 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EPSComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(
         parentConfiguration = parentConfiguration,
-        hideIssuerLogosDefaultValue = true
+        isCreatedByDropIn = isCreatedByDropIn,
+        hideIssuerLogosDefaultValue = true,
     )
 
     override fun get(

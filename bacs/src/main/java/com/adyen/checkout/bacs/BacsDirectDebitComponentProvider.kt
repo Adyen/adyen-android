@@ -23,9 +23,10 @@ import com.adyen.checkout.core.exception.ComponentException
 
 class BacsDirectDebitComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
 
-    private val componentParamsMapper = BacsDirectDebitComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = BacsDirectDebitComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

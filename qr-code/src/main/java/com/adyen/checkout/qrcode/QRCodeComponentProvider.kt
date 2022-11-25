@@ -31,9 +31,10 @@ import com.adyen.checkout.components.status.api.StatusService
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun <T> get(
         owner: T,

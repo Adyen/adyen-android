@@ -26,9 +26,10 @@ import com.adyen.checkout.core.exception.ComponentException
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SepaComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

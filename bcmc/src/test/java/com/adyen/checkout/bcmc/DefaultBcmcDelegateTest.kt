@@ -59,7 +59,10 @@ internal class DefaultBcmcDelegateTest {
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = testPublicKeyRepository,
-            componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = BcmcComponentParamsMapper(
+                parentConfiguration = null,
+                isCreatedByDropIn = false
+            ).mapToParams(configuration),
             cardValidationMapper = cardValidationMapper,
             cardEncrypter = cardEncrypter
         )

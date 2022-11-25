@@ -36,10 +36,11 @@ private val TAG = LogUtil.getTag()
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GooglePayComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

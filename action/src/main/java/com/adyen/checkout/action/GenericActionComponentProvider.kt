@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -29,8 +30,12 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Fingerprint
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 
-class GenericActionComponentProvider :
-    ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
+class GenericActionComponentProvider(
+    parentConfiguration: Configuration? = null,
+    private val isCreatedByDropIn: Boolean = false,
+) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
+
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun <T> get(
         owner: T,
@@ -65,13 +70,13 @@ class GenericActionComponentProvider :
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        val componentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration)
         return DefaultGenericActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(configuration)
+            actionDelegateProvider = ActionDelegateProvider(configuration, isCreatedByDropIn)
         )
     }
 

@@ -11,7 +11,8 @@ package com.adyen.checkout.bcmc
 import com.adyen.checkout.components.base.Configuration
 
 internal class BcmcComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun mapToParams(
@@ -20,18 +21,22 @@ internal class BcmcComponentParamsMapper(
         return mapToParams(
             parentConfiguration = parentConfiguration ?: bcmcConfiguration,
             bcmcConfiguration = bcmcConfiguration,
+            isCreatedByDropIn = isCreatedByDropIn,
         )
     }
 
     private fun mapToParams(
         parentConfiguration: Configuration,
         bcmcConfiguration: BcmcConfiguration,
+        isCreatedByDropIn: Boolean,
     ): BcmcComponentParams {
         with(bcmcConfiguration) {
             return BcmcComponentParams(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
+                isCreatedByDropIn = isCreatedByDropIn,
                 isHolderNameRequired = isHolderNameRequired ?: false,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,

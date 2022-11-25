@@ -35,7 +35,8 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
 internal class ActionDelegateProvider(
-    private val parentConfiguration: Configuration
+    private val parentConfiguration: Configuration,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun getDelegate(
@@ -46,21 +47,21 @@ internal class ActionDelegateProvider(
     ): ActionDelegate {
         val delegate = when (action) {
             is AwaitAction -> {
-                AwaitComponentProvider(parentConfiguration).getDelegate(
+                AwaitComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is QrCodeAction -> {
-                QRCodeComponentProvider(parentConfiguration).getDelegate(
+                QRCodeComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is RedirectAction -> {
-                RedirectComponentProvider(parentConfiguration).getDelegate(
+                RedirectComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
@@ -74,14 +75,14 @@ internal class ActionDelegateProvider(
                 )
             }
             is VoucherAction -> {
-                VoucherComponentProvider(parentConfiguration).getDelegate(
+                VoucherComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is SdkAction<*> -> {
-                WeChatPayActionComponentProvider(parentConfiguration).getDelegate(
+                WeChatPayActionComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application

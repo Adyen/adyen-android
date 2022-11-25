@@ -26,12 +26,17 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .build()
 
-        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             viewType = IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = false,
         )
@@ -50,12 +55,17 @@ internal class IssuerListComponentParamsMapperTest {
             .setViewType(IssuerListViewType.SPINNER_VIEW)
             .build()
 
-        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
         )
@@ -81,14 +91,20 @@ internal class IssuerListComponentParamsMapperTest {
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
         )
+            .setAnalyticsEnabled(false)
             .build()
 
-        val params = IssuerListComponentParamsMapper(parentConfiguration).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(
+            parentConfiguration = parentConfiguration,
+            isCreatedByDropIn = true
+        ).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
         )

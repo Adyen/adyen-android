@@ -70,6 +70,7 @@ internal class TestActionDelegate :
         override val shopperLocale: Locale = Locale.US
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
+        override val isAnalyticsEnabled: Boolean? = null
 
         override fun describeContents(): Int {
             throw NotImplementedError("This method shouldn't be used in tests")
@@ -79,7 +80,10 @@ internal class TestActionDelegate :
             throw NotImplementedError("This method shouldn't be used in tests")
         }
     }
-    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(
+        parentConfiguration = null,
+        isCreatedByDropIn = false
+    ).mapToParams(configuration)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -120,7 +124,10 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     private val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
 
-    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(
+        parentConfiguration = null,
+        isCreatedByDropIn = false
+    ).mapToParams(configuration)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

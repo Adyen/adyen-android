@@ -18,10 +18,12 @@ import java.util.Locale
  * [Configuration] class required by [BcmcComponent] to change it's behavior. Pass it to the [BcmcComponent.PROVIDER].
  */
 @Parcelize
+@Suppress("LongParameterList")
 class BcmcConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
     val isHolderNameRequired: Boolean?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
@@ -121,6 +123,7 @@ class BcmcConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
                 isHolderNameRequired = isHolderNameRequired,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,

@@ -9,9 +9,9 @@
 package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.core.api.Environment
-import java.util.Locale
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 internal class BcmcComponentParamsMapperTest {
 
@@ -24,12 +24,17 @@ internal class BcmcComponentParamsMapperTest {
         )
             .build()
 
-        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             isHolderNameRequired = false,
             shopperReference = null,
             isStorePaymentFieldVisible = false,
@@ -52,12 +57,17 @@ internal class BcmcComponentParamsMapperTest {
             .setShowStorePaymentField(true)
             .build()
 
-        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             isHolderNameRequired = true,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
@@ -81,14 +91,22 @@ internal class BcmcComponentParamsMapperTest {
             Locale.GERMAN,
             Environment.EUROPE,
             TEST_CLIENT_KEY_2
-        ).build()
+        )
+            .setAnalyticsEnabled(false)
+            .build()
 
-        val params = BcmcComponentParamsMapper(parentConfiguration).mapToParams(bcmcConfiguration)
+        val params =
+            BcmcComponentParamsMapper(
+                parentConfiguration = parentConfiguration,
+                isCreatedByDropIn = true
+            ).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
             isHolderNameRequired = false,
             shopperReference = null,
             isStorePaymentFieldVisible = false,

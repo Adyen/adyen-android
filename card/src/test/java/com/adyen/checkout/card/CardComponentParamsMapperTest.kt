@@ -21,7 +21,10 @@ internal class CardComponentParamsMapperTest {
     fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -56,7 +59,10 @@ internal class CardComponentParamsMapperTest {
             .setAddressConfiguration(addressConfiguration)
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -87,14 +93,21 @@ internal class CardComponentParamsMapperTest {
             Locale.GERMAN,
             Environment.EUROPE,
             TEST_CLIENT_KEY_2
-        ).build()
+        )
+            .setAnalyticsEnabled(false)
+            .build()
 
-        val params = CardComponentParamsMapper(parentConfiguration).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(
+            parentConfiguration = parentConfiguration,
+            isCreatedByDropIn = true
+        ).mapToParams(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
         )
 
         assertEquals(expected, params)
@@ -108,7 +121,10 @@ internal class CardComponentParamsMapperTest {
 
         val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardTypes = listOf(CardType.MAESTRO, CardType.BCMC)
@@ -124,7 +140,10 @@ internal class CardComponentParamsMapperTest {
 
         val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD)
@@ -138,7 +157,10 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
@@ -157,6 +179,8 @@ internal class CardComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
+        isAnalyticsEnabled: Boolean = true,
+        isCreatedByDropIn: Boolean = false,
         isHolderNameRequired: Boolean = false,
         supportedCardTypes: List<CardType> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
@@ -171,6 +195,8 @@ internal class CardComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
+        isAnalyticsEnabled = isAnalyticsEnabled,
+        isCreatedByDropIn = isCreatedByDropIn,
         isHolderNameRequired = isHolderNameRequired,
         supportedCardTypes = supportedCardTypes,
         shopperReference = shopperReference,

@@ -37,9 +37,10 @@ import kotlinx.coroutines.Dispatchers
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class Adyen3DS2ComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun <T> get(
         owner: T,

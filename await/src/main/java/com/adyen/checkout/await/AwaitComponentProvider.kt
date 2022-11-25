@@ -31,9 +31,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AwaitComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)

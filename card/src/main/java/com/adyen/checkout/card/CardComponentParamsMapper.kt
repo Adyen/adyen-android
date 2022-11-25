@@ -16,7 +16,8 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 internal class CardComponentParamsMapper(
-    private val parentConfiguration: Configuration?
+    private val parentConfiguration: Configuration?,
+    private val isCreatedByDropIn: Boolean,
 ) {
 
     fun mapToParams(
@@ -26,7 +27,7 @@ internal class CardComponentParamsMapper(
         return mapToParams(
             parentConfiguration = parentConfiguration ?: cardConfiguration,
             cardConfiguration = cardConfiguration,
-            supportedCardTypes = getSupportedCardTypes(cardConfiguration, paymentMethod)
+            supportedCardTypes = getSupportedCardTypes(cardConfiguration, paymentMethod),
         )
     }
 
@@ -38,7 +39,7 @@ internal class CardComponentParamsMapper(
         return mapToParams(
             parentConfiguration = parentConfiguration ?: cardConfiguration,
             cardConfiguration = cardConfiguration,
-            supportedCardTypes = cardConfiguration.supportedCardTypes.orEmpty()
+            supportedCardTypes = cardConfiguration.supportedCardTypes.orEmpty(),
         )
     }
 
@@ -52,6 +53,8 @@ internal class CardComponentParamsMapper(
                 shopperLocale = parentConfiguration.shopperLocale,
                 environment = parentConfiguration.environment,
                 clientKey = parentConfiguration.clientKey,
+                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
+                isCreatedByDropIn = isCreatedByDropIn,
                 isHolderNameRequired = isHolderNameRequired ?: false,
                 supportedCardTypes = supportedCardTypes,
                 shopperReference = shopperReference,

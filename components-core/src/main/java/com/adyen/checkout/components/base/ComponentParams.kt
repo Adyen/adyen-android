@@ -18,4 +18,6 @@ interface ComponentParams : Parcelable {
     val shopperLocale: Locale
     val environment: Environment
     val clientKey: String
+    val isAnalyticsEnabled: Boolean
+    val isCreatedByDropIn: Boolean
 }

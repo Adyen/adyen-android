@@ -25,12 +25,17 @@ internal class BacsDirectDebitComponentParamsMapperTest {
         )
             .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(null).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             amount = Amount.EMPTY
         )
 
@@ -48,12 +53,17 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             .setAmount(amount)
             .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(null).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(
+            parentConfiguration = null,
+            isCreatedByDropIn = false
+        ).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
             amount = amount
         )
 
@@ -78,14 +88,20 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
         )
+            .setAnalyticsEnabled(false)
             .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(parentConfiguration).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(
+            parentConfiguration = parentConfiguration,
+            isCreatedByDropIn = true
+        ).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
             amount = amount
         )
 

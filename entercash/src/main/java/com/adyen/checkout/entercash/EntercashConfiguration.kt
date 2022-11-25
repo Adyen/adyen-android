@@ -19,6 +19,7 @@ class EntercashConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
     override val viewType: IssuerListViewType?,
     override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
@@ -69,6 +70,7 @@ class EntercashConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

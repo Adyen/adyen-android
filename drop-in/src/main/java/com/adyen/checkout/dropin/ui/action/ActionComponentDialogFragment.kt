@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
@@ -66,8 +67,13 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
         binding.header.isVisible = false
 
         try {
-            actionComponent =
-                GenericActionComponent.PROVIDER.get(this, requireActivity().application, actionConfiguration)
+            // We don't need to pass dropInConfiguration as parentConfiguration because actionConfiguration is built
+            // using dropInConfiguration.
+            actionComponent = GenericActionComponentProvider(isCreatedByDropIn = true).get(
+                this,
+                requireActivity().application,
+                actionConfiguration
+            )
 
             if (shouldFinishWithAction()) {
                 binding.buttonFinish.apply {

@@ -23,6 +23,8 @@ abstract class BaseConfigurationBuilder<
     protected var clientKey: String
 ) {
 
+    protected var isAnalyticsEnabled: Boolean? = null
+
     init {
         if (!ValidationUtils.isClientKeyValid(clientKey)) {
             throw CheckoutException("Client key is not valid.")
@@ -56,6 +58,19 @@ abstract class BaseConfigurationBuilder<
         configuration.environment,
         configuration.clientKey
     )
+
+    /**
+     * Sets if components can send analytics events.
+     *
+     * Default is True.
+     *
+     * @param isAnalyticsEnabled Is analytics should be enabled or not.
+     */
+    fun setAnalyticsEnabled(isAnalyticsEnabled: Boolean): BuilderT {
+        this.isAnalyticsEnabled = isAnalyticsEnabled
+        @Suppress("UNCHECKED_CAST")
+        return this as BuilderT
+    }
 
     protected abstract fun buildInternal(): ConfigurationT
 

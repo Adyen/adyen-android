@@ -20,6 +20,7 @@ class OnlineBankingCZConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
 ) : Configuration {
 
     class Builder : BaseConfigurationBuilder<OnlineBankingCZConfiguration, Builder> {
@@ -62,6 +63,7 @@ class OnlineBankingCZConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
             )
         }
     }

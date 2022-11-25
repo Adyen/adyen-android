@@ -28,9 +28,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class VoucherComponentProvider(
     parentConfiguration: Configuration? = null,
+    isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration)
+    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
 
     override fun <T> get(
         owner: T,
