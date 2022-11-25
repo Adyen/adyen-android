@@ -1,7 +1,9 @@
 package com.adyen.checkout.example.ui.configuration
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.payments.Amount
@@ -62,6 +64,12 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setShopperReference(keyValueStorage.getShopperReference())
             .setAddressConfiguration(getAddressConfiguration())
             .build()
+
+    fun getBlikConfiguration(): BlikConfiguration =
+        BlikConfiguration.Builder(shopperLocale, environment, clientKey).build()
+
+    fun getAwaitConfiguration(): AwaitConfiguration =
+        AwaitConfiguration.Builder(shopperLocale, environment, clientKey).build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
         0 -> AddressConfiguration.None
