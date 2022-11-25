@@ -89,7 +89,8 @@ class BlikActivity : AppCompatActivity(), BlikListener {
         val blikComponent = BlikComponent.PROVIDER.get(
             this,
             paymentMethod,
-            checkoutConfigurationProvider.getBlikConfiguration()
+            checkoutConfigurationProvider.getBlikConfiguration(),
+            application
         )
         binding.blikView.attach(blikComponent, this)
         blikComponent.observe(this, blikViewModel::onPaymentComponentEvent)

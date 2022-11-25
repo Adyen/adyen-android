@@ -38,6 +38,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("TooManyFunctions")
 class BlikViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
@@ -72,8 +73,11 @@ class BlikViewModel @Inject constructor(
             ?.paymentMethods
             ?.firstOrNull { BlikComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-        if (cardPaymentMethod == null) BlikViewState.Error
-        else BlikViewState.ShowComponent(cardPaymentMethod)
+        if (cardPaymentMethod == null) {
+            BlikViewState.Error
+        } else {
+            BlikViewState.ShowComponent(cardPaymentMethod)
+        }
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) {
@@ -83,6 +87,9 @@ class BlikViewModel @Inject constructor(
             }
             is PaymentComponentEvent.Error -> {
                 onComponentError(event.error)
+            }
+            is PaymentComponentEvent.ActionDetails -> {
+                sendPaymentDetails(event.data)
             }
         }
     }
@@ -101,7 +108,6 @@ class BlikViewModel @Inject constructor(
                 makePayment(it.data)
             } else {
                 viewModelScope.launch { _events.emit(BlikEvent.Invalid) }
-
             }
         } ?: run {
             _blikViewState.tryEmit(BlikViewState.Error)

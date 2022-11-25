@@ -31,7 +31,9 @@ class BlikBottomSheetFragment : BottomSheetDialogFragment() {
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private val action: Action by lazy { arguments?.get(ACTION) as Action }
-    private val awaitConfiguration: AwaitConfiguration by lazy { arguments?.get(ACTION_CONFIGURATION) as AwaitConfiguration }
+    private val awaitConfiguration: AwaitConfiguration by lazy {
+        arguments?.get(ACTION_CONFIGURATION) as AwaitConfiguration
+    }
     lateinit var blikListener: BlikListener
 
     override fun onAttach(context: Context) {

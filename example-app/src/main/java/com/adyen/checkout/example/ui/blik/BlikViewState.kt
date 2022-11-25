@@ -10,7 +10,7 @@ package com.adyen.checkout.example.ui.blik
 
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
- sealed class BlikViewState {
+sealed class BlikViewState {
 
     object Loading : BlikViewState()
 
