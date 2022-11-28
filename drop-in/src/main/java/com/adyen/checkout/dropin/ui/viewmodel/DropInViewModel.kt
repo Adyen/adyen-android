@@ -15,12 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.analytics.AnalyticsSource
-import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
-import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.api.OrderStatusService
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -32,7 +27,6 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.repository.OrderStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -58,6 +52,8 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class DropInViewModel(
     private val savedStateHandle: SavedStateHandle,
+    private val orderStatusRepository: OrderStatusRepository,
+    private val analyticsRepository: AnalyticsRepository,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -127,9 +123,6 @@ internal class DropInViewModel(
             savedStateHandle[CURRENT_ORDER] = value
         }
 
-    private val orderStatusRepository: OrderStatusRepository
-    private val analyticsRepository: AnalyticsRepository
-
     private fun <T> getStateValueOrFail(key: String): T {
         val value: T? = savedStateHandle[key]
         if (value == null) {
@@ -141,16 +134,6 @@ internal class DropInViewModel(
 
     init {
         amount = dropInConfiguration.amount
-
-        val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
-        orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
-        analyticsRepository = DefaultAnalyticsRepository(
-            packageName = getStateValueOrFail(PACKAGE_NAME_KEY),
-            locale = dropInConfiguration.shopperLocale,
-            source = AnalyticsSource.DropIn(),
-            analyticsService = AnalyticsService(httpClient),
-            analyticsMapper = AnalyticsMapper(),
-        )
     }
 
     fun getPaymentMethods(): List<PaymentMethod> {
@@ -457,10 +440,10 @@ internal class DropInViewModel(
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
         private const val SESSION_KEY = "SESSION_KEY"
         private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
-        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+        internal const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
         private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
         private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
-        private const val PACKAGE_NAME_KEY = "PACKAGE_NAME_KEY"
+        internal const val PACKAGE_NAME_KEY = "PACKAGE_NAME_KEY"
         private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
         private const val CURRENT_ORDER = "CURRENT_ORDER"
         private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
