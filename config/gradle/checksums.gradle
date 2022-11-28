@@ -12,11 +12,11 @@ if (!hasProperty("checksums")) {
         "com.adyen.threeds:adyen-3ds2:2.2.10:837e38377835138ae5fc3aac4b1dde3e:MD5",
 
         // Kotlin
-        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.21:1ab685896fec04b593d62bf092fd5b5f:MD5",
-        "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.7.21:d43f5d80e03e145d6f01a2032c3925fd:MD5",
-        "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.7.21:2d7ff3cdc1fa35689c3f23b25d4cb20f:MD5",
-        "org.jetbrains.kotlin:kotlin-parcelize-compiler:1.7.21:43e5aad5f119685f3b3087f01a3ae928:MD5",
-        "org.jetbrains.kotlin:kotlin-parcelize-runtime:1.7.21:152efb57f30d2566e181366395112fd8:MD5",
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.22:fbcbc00744dd4790fa55f0ab933ef868:MD5",
+        "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.7.22:d1aa19fb32fc150b73549f5abd137401:MD5",
+        "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.7.22:c5134cee71df28f7fe15eb29cd88f4aa:MD5",
+        "org.jetbrains.kotlin:kotlin-parcelize-compiler:1.7.22:86bef0d8cff51ae3ae0cb9f602ea6a9d:MD5",
+        "org.jetbrains.kotlin:kotlin-parcelize-runtime:1.7.22:365b707cfa8775873ce01689ab1d7d1a:MD5",
 
         // Coroutines
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4:7aad79016f327ae9cfd0b560b0b47558:MD5",
