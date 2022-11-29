@@ -20,18 +20,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.example.databinding.ActivityBilkBinding
+import com.adyen.checkout.example.R
+import com.adyen.checkout.example.databinding.ActivityBlikBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
-
 @AndroidEntryPoint
 class BlikActivity : AppCompatActivity(), BlikListener {
-    private lateinit var binding: ActivityBilkBinding
+    private lateinit var binding: ActivityBlikBinding
     private val blikViewModel: BlikViewModel by viewModels()
 
     @Inject
@@ -42,21 +41,27 @@ class BlikActivity : AppCompatActivity(), BlikListener {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/blik"
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
-        binding = ActivityBilkBinding.inflate(layoutInflater)
+
+        binding = ActivityBlikBinding.inflate(layoutInflater)
         binding.payButton.setOnClickListener { blikViewModel.onPayClick() }
         setContentView(binding.root)
+
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.blik_title)
+
         binding.toolbar.setNavigationOnClickListener {
             finish()
         }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch { blikViewModel.blikViewState.collect(::onBlikViewState) }
                 launch { blikViewModel.events.collect(::onBlikEvent) }
             }
         }
+
         blikViewModel.onCreate()
     }
 
@@ -66,7 +71,6 @@ class BlikActivity : AppCompatActivity(), BlikListener {
                 binding.progressIndicator.isVisible = true
                 binding.errorView.isVisible = false
                 binding.blikView.isVisible = false
-                binding.blinkLogo.isVisible = false
                 binding.payButton.isVisible = false
             }
             is BlikViewState.ShowComponent -> {
@@ -74,7 +78,6 @@ class BlikActivity : AppCompatActivity(), BlikListener {
                 binding.errorView.isVisible = false
                 binding.blikView.isVisible = true
                 binding.payButton.isVisible = true
-                binding.blinkLogo.isVisible = true
 
                 setupBlikView(blikViewState.paymentMethod)
             }
@@ -112,7 +115,7 @@ class BlikActivity : AppCompatActivity(), BlikListener {
 
     private fun onAdditionalAction(blikAction: BlikAction) {
         when (blikAction) {
-            is BlikAction.Awaiting -> {
+            is BlikAction.Await -> {
                 val actionFragment = BlikBottomSheetFragment.newInstance(
                     blikAction.action,
                     checkoutConfigurationProvider.getAwaitConfiguration()
@@ -136,5 +139,6 @@ class BlikActivity : AppCompatActivity(), BlikListener {
 
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
     }
 }

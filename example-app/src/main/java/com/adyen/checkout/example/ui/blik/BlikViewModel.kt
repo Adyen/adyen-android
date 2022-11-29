@@ -69,14 +69,14 @@ class BlikViewModel @Inject constructor(
             )
         )
 
-        val cardPaymentMethod = paymentMethodResponse
+        val blikPaymentMethod = paymentMethodResponse
             ?.paymentMethods
             ?.firstOrNull { BlikComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-        if (cardPaymentMethod == null) {
+        if (blikPaymentMethod == null) {
             BlikViewState.Error
         } else {
-            BlikViewState.ShowComponent(cardPaymentMethod)
+            BlikViewState.ShowComponent(blikPaymentMethod)
         }
     }
 
@@ -149,7 +149,7 @@ class BlikViewModel @Inject constructor(
 
     private suspend fun handleAction(action: Action) {
         val blikAction = when (action.type) {
-            "await" -> BlikAction.Awaiting(action)
+            "await" -> BlikAction.Await(action)
             else -> BlikAction.Unsupported
         }
 
