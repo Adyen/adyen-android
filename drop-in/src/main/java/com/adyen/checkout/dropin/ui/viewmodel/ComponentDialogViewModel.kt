@@ -12,25 +12,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-internal class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+internal class ComponentDialogViewModel(
+    override val savedStateHandle: SavedStateHandle
+) : ViewModel(), SavedStateHandleContainer {
     companion object {
         private val TAG = LogUtil.getTag()
         private const val COMPONENT_FRAGMENT_STATE_KEY = "COMPONENT_FRAGMENT_STATE"
     }
 
-    private fun getComponentFragmentState(): ComponentFragmentState? {
-        return savedStateHandle.get<ComponentFragmentState>(COMPONENT_FRAGMENT_STATE_KEY)
-    }
+    private var componentFragmentState: ComponentFragmentState?
+        by SavedStateHandleProperty(COMPONENT_FRAGMENT_STATE_KEY)
 
-    private fun setComponentFragmentState(state: ComponentFragmentState) {
-        savedStateHandle[COMPONENT_FRAGMENT_STATE_KEY] = state
-    }
-
-    val componentFragmentState: LiveData<ComponentFragmentState> =
+    val componentFragmentStateLiveData: LiveData<ComponentFragmentState> =
         savedStateHandle.getLiveData(COMPONENT_FRAGMENT_STATE_KEY)
     var componentState: PaymentComponentState<out PaymentMethodDetails>? = null
         private set
@@ -50,12 +49,12 @@ internal class ComponentDialogViewModel(private val savedStateHandle: SavedState
             else -> ComponentFragmentState.IDLE
         }
         Logger.v(TAG, "payButtonClicked - setting state $paymentState")
-        setComponentFragmentState(paymentState)
+        componentFragmentState = paymentState
     }
 
     fun paymentStarted() {
         Logger.v(TAG, "paymentStarted")
-        setComponentFragmentState(ComponentFragmentState.IDLE)
+        componentFragmentState = ComponentFragmentState.IDLE
     }
 
     fun componentStateChanged(
@@ -68,15 +67,15 @@ internal class ComponentDialogViewModel(private val savedStateHandle: SavedState
                 "componentState.isReady: ${componentState.isReady} - confirmationRequired: $confirmationRequired"
         )
         this.componentState = componentState
-        val currentState = getComponentFragmentState()
+        val currentState = componentFragmentState
         if (currentState == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION) {
-            if (componentState.isValid) {
-                setComponentFragmentState(ComponentFragmentState.PAYMENT_READY)
+            componentFragmentState = if (componentState.isValid) {
+                ComponentFragmentState.PAYMENT_READY
             } else {
-                setComponentFragmentState(ComponentFragmentState.IDLE)
+                ComponentFragmentState.IDLE
             }
         } else if (!confirmationRequired && componentState.isValid) {
-            setComponentFragmentState(ComponentFragmentState.PAYMENT_READY)
+            componentFragmentState = ComponentFragmentState.PAYMENT_READY
         }
     }
 }

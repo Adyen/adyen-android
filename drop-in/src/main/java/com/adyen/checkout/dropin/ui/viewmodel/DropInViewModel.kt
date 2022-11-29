@@ -9,9 +9,6 @@
 package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.content.ComponentName
-import android.content.Intent
-import android.os.Bundle
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
@@ -33,7 +30,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.data.SessionDetails
-import com.adyen.checkout.dropin.data.mapToDetails
 import com.adyen.checkout.dropin.data.mapToModel
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
@@ -43,7 +39,6 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.sessions.CheckoutSession
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -51,7 +46,7 @@ import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DropInViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     private val analyticsRepository: AnalyticsRepository,
 ) : ViewModel() {
@@ -59,82 +54,57 @@ internal class DropInViewModel(
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
-    val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
+    val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
 
-    val serviceComponentName: ComponentName = getStateValueOrFail(DROP_IN_SERVICE_KEY)
+    val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
     var amount: Amount
-        get() {
-            return getStateValueOrFail(AMOUNT)
-        }
+        get() = bundleHandler.amount ?: dropInConfiguration.amount
         private set(value) {
-            savedStateHandle[AMOUNT] = value
+            bundleHandler.amount = value
         }
 
     private var sessionDetails: SessionDetails?
-        get() = savedStateHandle[SESSION_KEY]
-        private set(value) {
-            savedStateHandle[SESSION_KEY] = value
+        get() = bundleHandler.sessionDetails
+        set(value) {
+            bundleHandler.sessionDetails = value
         }
 
     private var isSessionsFlowTakenOver: Boolean
-        get() = savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] ?: false
-        private set(value) {
-            savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] = value
+        get() = bundleHandler.isSessionsFlowTakenOver ?: false
+        set(value) {
+            bundleHandler.isSessionsFlowTakenOver = value
         }
 
     private var paymentMethodsApiResponse: PaymentMethodsApiResponse
-        get() {
-            return getStateValueOrFail(PAYMENT_METHODS_RESPONSE_KEY)
-        }
-        private set(value) {
-            savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY] = value
+        get() = requireNotNull(bundleHandler.paymentMethodsApiResponse)
+        set(value) {
+            bundleHandler.paymentMethodsApiResponse = value
         }
 
     var isWaitingResult: Boolean
-        get() {
-            return savedStateHandle[IS_WAITING_FOR_RESULT_KEY] ?: false
-        }
+        get() = bundleHandler.isWaitingResult ?: false
         set(value) {
-            savedStateHandle[IS_WAITING_FOR_RESULT_KEY] = value
+            bundleHandler.isWaitingResult = value
         }
 
     private var cachedGiftCardComponentState: GiftCardComponentState?
-        get() {
-            return savedStateHandle[CACHED_GIFT_CARD]
-        }
-        private set(value) {
-            savedStateHandle[CACHED_GIFT_CARD] = value
+        get() = bundleHandler.cachedGiftCardComponentState
+        set(value) {
+            bundleHandler.cachedGiftCardComponentState = value
         }
 
     private var cachedPartialPaymentAmount: Amount?
-        get() {
-            return savedStateHandle[PARTIAL_PAYMENT_AMOUNT]
-        }
-        private set(value) {
-            savedStateHandle[PARTIAL_PAYMENT_AMOUNT] = value
+        get() = bundleHandler.cachedPartialPaymentAmount
+        set(value) {
+            bundleHandler.cachedPartialPaymentAmount = value
         }
 
     var currentOrder: OrderModel?
-        get() {
-            return savedStateHandle[CURRENT_ORDER]
-        }
+        get() = bundleHandler.currentOrder
         private set(value) {
-            savedStateHandle[CURRENT_ORDER] = value
+            bundleHandler.currentOrder = value
         }
-
-    private fun <T> getStateValueOrFail(key: String): T {
-        val value: T? = savedStateHandle[key]
-        if (value == null) {
-            Logger.e(TAG, "Failed to initialize bundle from SavedStateHandle")
-            throw CheckoutException("Failed to initialize Drop-in, did you manually launch DropInActivity?")
-        }
-        return value
-    }
-
-    init {
-        amount = dropInConfiguration.amount
-    }
 
     fun getPaymentMethods(): List<PaymentMethod> {
         return paymentMethodsApiResponse.paymentMethods.orEmpty()
@@ -434,68 +404,6 @@ internal class DropInViewModel(
     }
 
     companion object {
-
         private val TAG = LogUtil.getTag()
-
-        private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
-        private const val SESSION_KEY = "SESSION_KEY"
-        private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
-        internal const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-        private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
-        private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
-        internal const val PACKAGE_NAME_KEY = "PACKAGE_NAME_KEY"
-        private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
-        private const val CURRENT_ORDER = "CURRENT_ORDER"
-        private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
-        private const val AMOUNT = "AMOUNT"
-
-        fun putIntentExtras(
-            intent: Intent,
-            dropInConfiguration: DropInConfiguration,
-            paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            service: ComponentName,
-            packageName: String,
-        ) {
-            intent.apply {
-                putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
-                putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-                putExtra(DROP_IN_SERVICE_KEY, service)
-                putExtra(PACKAGE_NAME_KEY, packageName)
-            }
-        }
-
-        fun putIntentExtras(
-            intent: Intent,
-            dropInConfiguration: DropInConfiguration,
-            checkoutSession: CheckoutSession,
-            service: ComponentName,
-            packageName: String,
-        ) {
-            putIntentExtras(
-                intent,
-                dropInConfiguration,
-                checkoutSession.sessionSetupResponse.paymentMethods ?: PaymentMethodsApiResponse(),
-                service,
-                packageName,
-            )
-            intent.apply {
-                putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
-            }
-        }
-
-        fun assertBundleExists(bundle: Bundle?): Boolean {
-            return when {
-                bundle == null -> {
-                    Logger.e(TAG, "Failed to initialize - bundle is null")
-                    false
-                }
-                !bundle.containsKey(DROP_IN_SERVICE_KEY) ||
-                    !bundle.containsKey(DROP_IN_CONFIGURATION_KEY) -> {
-                    Logger.e(TAG, "Failed to initialize - bundle does not have the required keys")
-                    false
-                }
-                else -> true
-            }
-        }
     }
 }
