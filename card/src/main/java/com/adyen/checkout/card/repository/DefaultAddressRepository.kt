@@ -12,7 +12,6 @@ import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
@@ -24,7 +23,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-internal class DefaultAddressRepository : AddressRepository {
+internal class DefaultAddressRepository(
+    private val addressService: AddressService,
+) : AddressRepository {
 
     private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()
     override val statesFlow: Flow<List<AddressItem>> = statesChannel.receiveAsFlow()
@@ -35,7 +36,6 @@ internal class DefaultAddressRepository : AddressRepository {
     private val cache: HashMap<String, List<AddressItem>> = hashMapOf()
 
     override fun getStateList(
-        environment: Environment,
         shopperLocale: Locale,
         countryCode: String?,
         coroutineScope: CoroutineScope
@@ -47,7 +47,6 @@ internal class DefaultAddressRepository : AddressRepository {
                 statesChannel.trySend(it)
             } ?: run {
                 fetchStateList(
-                    environment,
                     shopperLocale,
                     countryCode,
                     coroutineScope
@@ -59,14 +58,12 @@ internal class DefaultAddressRepository : AddressRepository {
     }
 
     private fun fetchStateList(
-        environment: Environment,
         shopperLocale: Locale,
         countryCode: String,
         coroutineScope: CoroutineScope
     ) {
         coroutineScope.launch(Dispatchers.IO) {
             val states = getStates(
-                environment = environment,
                 shopperLocale = shopperLocale,
                 countryCode = countryCode
             ).fold(
@@ -82,22 +79,20 @@ internal class DefaultAddressRepository : AddressRepository {
         }
     }
 
-    override fun getCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
+    override fun getCountryList(shopperLocale: Locale, coroutineScope: CoroutineScope) {
         cache[COUNTRIES_CACHE_KEY]?.let {
             countriesChannel.trySend(it)
         } ?: run {
             fetchCountryList(
-                environment,
                 shopperLocale,
                 coroutineScope
             )
         }
     }
 
-    private fun fetchCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
+    private fun fetchCountryList(shopperLocale: Locale, coroutineScope: CoroutineScope) {
         coroutineScope.launch(Dispatchers.IO) {
             val countries = getCountries(
-                environment = environment,
                 shopperLocale = shopperLocale
             ).fold(
                 onSuccess = { countries ->
@@ -115,21 +110,18 @@ internal class DefaultAddressRepository : AddressRepository {
     }
 
     private suspend fun getCountries(
-        environment: Environment,
         shopperLocale: Locale
     ): Result<List<AddressItem>> = runSuspendCatching {
         Logger.d(TAG, "getting country list")
-        return@runSuspendCatching AddressService(environment.baseUrl).getCountries(shopperLocale.toLanguageTag())
+        return@runSuspendCatching addressService.getCountries(shopperLocale.toLanguageTag())
     }
 
     private suspend fun getStates(
-        environment: Environment,
         shopperLocale: Locale,
         countryCode: String
     ): Result<List<AddressItem>> = runSuspendCatching {
         Logger.d(TAG, "getting state list for $countryCode")
-        return@runSuspendCatching AddressService(environment.baseUrl)
-            .getStates(shopperLocale.toLanguageTag(), countryCode)
+        return@runSuspendCatching addressService.getStates(shopperLocale.toLanguageTag(), countryCode)
     }
 
     companion object {

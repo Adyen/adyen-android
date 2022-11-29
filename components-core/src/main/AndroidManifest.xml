@@ -11,10 +11,4 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application>
-        <service
-            android:name=".analytics.AnalyticsDispatcher"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
-    </application>
-
 </manifest>

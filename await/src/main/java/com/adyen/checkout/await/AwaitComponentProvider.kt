@@ -27,6 +27,7 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.api.HttpClientFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AwaitComponentProvider(
@@ -72,7 +73,8 @@ class AwaitComponentProvider(
         application: Application,
     ): AwaitDelegate {
         val componentParams = componentParamsMapper.mapToParams(configuration)
-        val statusService = StatusService(configuration.environment.baseUrl)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(

@@ -24,6 +24,7 @@ import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
@@ -51,12 +52,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class DefaultCardDelegateTest {
+internal class DefaultCardDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
     private lateinit var genericEncrypter: TestGenericEncrypter
@@ -694,6 +699,12 @@ internal class DefaultCardDelegateTest {
         }
     }
 
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
+    }
+
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
@@ -703,6 +714,7 @@ internal class DefaultCardDelegateTest {
         genericEncrypter: GenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
+        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
     ): DefaultCardDelegate {
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -717,6 +729,7 @@ internal class DefaultCardDelegateTest {
             detectCardTypeRepository = detectCardTypeRepository,
             cardValidationMapper = cardValidationMapper,
             genericEncrypter = genericEncrypter,
+            analyticsRepository = analyticsRepository,
         )
     }
 

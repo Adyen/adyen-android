@@ -1,18 +1,18 @@
 package com.adyen.checkout.card.api
 
 import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.getList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AddressService(
-    private val baseUrl: String
+internal class AddressService(
+    private val httpClient: HttpClient,
 ) {
     suspend fun getCountries(
         shopperLocale: String
     ): List<AddressItem> = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).getList(
+        httpClient.getList(
             path = "datasets/countries/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,
         )
@@ -22,7 +22,7 @@ class AddressService(
         shopperLocale: String,
         countryCode: String
     ): List<AddressItem> = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).getList(
+        httpClient.getList(
             path = "datasets/states/$countryCode/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,
         )

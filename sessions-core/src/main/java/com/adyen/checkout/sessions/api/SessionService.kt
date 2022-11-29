@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.sessions.api
 
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 import com.adyen.checkout.sessions.model.orders.SessionBalanceRequest
 import com.adyen.checkout.sessions.model.orders.SessionBalanceResponse
@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class SessionService(
-    private val baseUrl: String,
+    private val httpClient: HttpClient,
 ) {
 
     suspend fun setupSession(
@@ -34,8 +34,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionSetupResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/setup?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/setup",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionSetupRequest.SERIALIZER,
             responseSerializer = SessionSetupResponse.SERIALIZER,
@@ -47,8 +48,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionPaymentsResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/payments?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/payments",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionPaymentsRequest.SERIALIZER,
             responseSerializer = SessionPaymentsResponse.SERIALIZER,
@@ -60,8 +62,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionDetailsResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/paymentDetails?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/paymentDetails",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionDetailsRequest.SERIALIZER,
             responseSerializer = SessionDetailsResponse.SERIALIZER,
@@ -73,8 +76,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionBalanceResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/paymentMethodBalance?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/paymentMethodBalance",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionBalanceRequest.SERIALIZER,
             responseSerializer = SessionBalanceResponse.SERIALIZER,
@@ -86,8 +90,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionOrderResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/orders?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/orders",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionOrderRequest.SERIALIZER,
             responseSerializer = SessionOrderResponse.SERIALIZER,
@@ -99,8 +104,9 @@ class SessionService(
         sessionId: String,
         clientKey: String,
     ): SessionCancelOrderResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "v1/sessions/$sessionId/orders/cancel?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/sessions/$sessionId/orders/cancel",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = SessionCancelOrderRequest.SERIALIZER,
             responseSerializer = SessionCancelOrderResponse.SERIALIZER,

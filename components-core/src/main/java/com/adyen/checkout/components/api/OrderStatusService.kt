@@ -8,24 +8,26 @@
 
 package com.adyen.checkout.components.api
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.connection.OrderStatusRequest
 import com.adyen.checkout.components.model.connection.OrderStatusResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class OrderStatusService(
-    private val environment: Environment
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class OrderStatusService(
+    private val httpClient: HttpClient,
 ) {
 
     suspend fun getOrderStatus(
         request: OrderStatusRequest,
         clientKey: String
     ): OrderStatusResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v1/order/status?clientKey=$clientKey",
+        httpClient.post(
+            path = "v1/order/status",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = OrderStatusRequest.SERIALIZER,
             responseSerializer = OrderStatusResponse.SERIALIZER

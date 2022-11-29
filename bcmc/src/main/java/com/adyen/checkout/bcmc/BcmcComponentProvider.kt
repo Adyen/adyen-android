@@ -15,12 +15,14 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -45,7 +47,9 @@ class BcmcComponentProvider(
         assertSupported(paymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(configuration)
-        val publicKeyRepository = DefaultPublicKeyRepository()
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val publicKeyService = PublicKeyService(httpClient)
+        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
         val cardValidationMapper = CardValidationMapper()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)

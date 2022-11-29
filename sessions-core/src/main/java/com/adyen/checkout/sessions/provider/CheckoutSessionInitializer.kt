@@ -9,6 +9,7 @@
 package com.adyen.checkout.sessions.provider
 
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.api.SessionService
@@ -21,7 +22,8 @@ internal class CheckoutSessionInitializer(
     sessionModel: SessionModel,
     configuration: Configuration,
 ) {
-    private val sessionService = SessionService(configuration.environment.baseUrl)
+    private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
+    private val sessionService = SessionService(httpClient)
     private val sessionRepository = SessionRepository(sessionService, configuration.clientKey, sessionModel)
 
     suspend fun setupSession(): CheckoutSessionResult {

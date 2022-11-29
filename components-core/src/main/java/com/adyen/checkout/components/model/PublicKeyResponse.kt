@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-internal data class PublicKeyResponse(
+data class PublicKeyResponse(
     val publicKey: String
 ) : ModelObject() {
 

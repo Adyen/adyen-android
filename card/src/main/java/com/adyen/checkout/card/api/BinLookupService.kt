@@ -10,22 +10,22 @@ package com.adyen.checkout.card.api
 
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class BinLookupService(
-    private val environment: Environment,
+    private val httpClient: HttpClient,
 ) {
 
     suspend fun makeBinLookup(
         request: BinLookupRequest,
         clientKey: String,
     ): BinLookupResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v2/bin/binLookup?clientKey=$clientKey",
+        httpClient.post(
+            path = "v2/bin/binLookup",
+            queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = BinLookupRequest.SERIALIZER,
             responseSerializer = BinLookupResponse.SERIALIZER

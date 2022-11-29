@@ -26,8 +26,6 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticEvent
-import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -182,8 +180,6 @@ internal class DropInActivity :
         }
 
         handleIntent(intent)
-
-        sendAnalyticsEvent()
 
         initObservers()
 
@@ -564,17 +560,6 @@ internal class DropInActivity :
         return fragment
     }
 
-    private fun sendAnalyticsEvent() {
-        Logger.d(TAG, "sendAnalyticsEvent")
-        val analyticEvent = AnalyticEvent.create(
-            this,
-            AnalyticEvent.Flavor.DROPIN,
-            "dropin",
-            dropInViewModel.dropInConfiguration.shopperLocale
-        )
-        AnalyticsDispatcher.dispatchEvent(this, dropInViewModel.dropInConfiguration.environment, analyticEvent)
-    }
-
     private fun initObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -601,7 +586,7 @@ internal class DropInActivity :
         (dropInService as? SessionDropInServiceInterface)?.initialize(
             sessionModel = event.sessionModel,
             clientKey = event.clientKey,
-            baseUrl = event.baseUrl,
+            environment = event.environment,
             isFlowTakenOver = event.isFlowTakenOver,
         )
     }
@@ -705,7 +690,13 @@ internal class DropInActivity :
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, service)
+            DropInViewModel.putIntentExtras(
+                intent = intent,
+                dropInConfiguration = dropInConfiguration,
+                paymentMethodsApiResponse = paymentMethodsApiResponse,
+                service = service,
+                packageName = context.packageName
+            )
             return intent
         }
 
@@ -716,7 +707,13 @@ internal class DropInActivity :
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, checkoutSession, service)
+            DropInViewModel.putIntentExtras(
+                intent = intent,
+                dropInConfiguration = dropInConfiguration,
+                checkoutSession = checkoutSession,
+                service = service,
+                packageName = context.packageName
+            )
             return intent
         }
     }

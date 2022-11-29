@@ -26,6 +26,7 @@ import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.card.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -63,6 +64,7 @@ internal class DefaultCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: CardComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
@@ -94,6 +96,7 @@ internal class DefaultCardDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
+        sendAnalyticsEvent(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
@@ -101,6 +104,12 @@ internal class DefaultCardDelegate(
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
+        }
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
         }
     }
 
@@ -153,7 +162,6 @@ internal class DefaultCardDelegate(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
             supportedCardTypes = componentParams.supportedCardTypes,
-            environment = componentParams.environment,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope
         )
@@ -487,7 +495,6 @@ internal class DefaultCardDelegate(
 
     private fun requestCountryList() {
         addressRepository.getCountryList(
-            environment = componentParams.environment,
             shopperLocale = componentParams.shopperLocale,
             coroutineScope = coroutineScope
         )
@@ -495,7 +502,6 @@ internal class DefaultCardDelegate(
 
     private fun requestStateList(countryCode: String?) {
         addressRepository.getStateList(
-            environment = componentParams.environment,
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
             coroutineScope = coroutineScope

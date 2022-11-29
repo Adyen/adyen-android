@@ -10,22 +10,22 @@ package com.adyen.checkout.adyen3ds2.connection
 
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class SubmitFingerprintService(
-    private val environment: Environment,
+    private val httpClient: HttpClient,
 ) {
 
     suspend fun submitFingerprint(
         request: SubmitFingerprintRequest,
         clientKey: String
     ): SubmitFingerprintResponse = withContext(Dispatchers.IO) {
-        HttpClientFactory.getHttpClient(environment.baseUrl).post(
-            path = "v1/submitThreeDS2Fingerprint?token=$clientKey",
+        httpClient.post(
+            path = "v1/submitThreeDS2Fingerprint",
+            queryParameters = mapOf("token" to clientKey),
             body = request,
             requestSerializer = SubmitFingerprintRequest.SERIALIZER,
             responseSerializer = SubmitFingerprintResponse.SERIALIZER

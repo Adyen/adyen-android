@@ -16,9 +16,16 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.card.api.AddressService
+import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
+import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -26,6 +33,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -50,12 +58,24 @@ class CardComponentProvider(
         assertSupported(paymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter)
-        val publicKeyRepository = DefaultPublicKeyRepository()
-        val addressRepository = DefaultAddressRepository()
+        val binLookupService = BinLookupService(httpClient)
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+        val publicKeyService = PublicKeyService(httpClient)
+        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
+        val addressService = AddressService(httpClient)
+        val addressRepository = DefaultAddressRepository(addressService)
         val cardValidationMapper = CardValidationMapper()
+        val analyticsService = AnalyticsService(httpClient)
+        val analyticsRepository = DefaultAnalyticsRepository(
+            packageName = application.packageName,
+            locale = componentParams.shopperLocale,
+            source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+            analyticsService = analyticsService,
+            analyticsMapper = AnalyticsMapper(),
+        )
 
         val actionConfiguration = GenericActionConfiguration.Builder(
             configuration.shopperLocale,
@@ -69,6 +89,7 @@ class CardComponentProvider(
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
+                analyticsRepository = analyticsRepository,
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
@@ -105,7 +126,9 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(configuration, storedPaymentMethod)
-        val publicKeyRepository = DefaultPublicKeyRepository()
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val publicKeyService = PublicKeyService(httpClient)
+        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 

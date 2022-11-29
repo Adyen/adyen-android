@@ -7,21 +7,24 @@
  */
 package com.adyen.checkout.components.status.api
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class StatusService(
-    private val baseUrl: String
+    private val httpClient: HttpClient,
 ) {
 
     fun checkStatus(
         clientKey: String,
         statusRequest: StatusRequest
     ): StatusResponse {
-        return HttpClientFactory.getHttpClient(baseUrl).post(
-            path = "services/PaymentInitiation/v1/status?token=$clientKey",
+        return httpClient.post(
+            path = "services/PaymentInitiation/v1/status",
+            queryParameters = mapOf("token" to clientKey),
             body = statusRequest,
             requestSerializer = StatusRequest.SERIALIZER,
             responseSerializer = StatusResponse.SERIALIZER

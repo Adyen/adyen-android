@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.core.api
 
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import okhttp3.Headers.Companion.toHeaders
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,24 +26,40 @@ internal class OkHttpClient(
     private val defaultHeaders: Map<String, String> = emptyMap()
 ) : HttpClient {
 
-    override fun get(path: String, headers: Map<String, String>): ByteArray {
+    override fun get(path: String, queryParameters: Map<String, String>, headers: Map<String, String>): ByteArray {
         val request = Request.Builder()
             .headers(headers.combineToHeaders())
-            .url(baseUrl + path)
+            .url(buildURL(path, queryParameters))
             .get()
             .build()
 
         return executeRequest(request)
     }
 
-    override fun post(path: String, jsonBody: String, headers: Map<String, String>): ByteArray {
+    override fun post(
+        path: String,
+        jsonBody: String,
+        queryParameters: Map<String, String>,
+        headers: Map<String, String>
+    ): ByteArray {
         val request = Request.Builder()
             .headers(headers.combineToHeaders())
-            .url(baseUrl + path)
+            .url(buildURL(path, queryParameters))
             .post(jsonBody.toRequestBody(MEDIA_TYPE_JSON))
             .build()
 
         return executeRequest(request)
+    }
+
+    private fun buildURL(path: String, queryParameters: Map<String, String>): String {
+        val builder = (baseUrl + path).toHttpUrlOrNull()?.newBuilder()
+            ?: throw CheckoutException("Failed to parse URL.")
+
+        queryParameters.forEach { entry ->
+            builder.addQueryParameter(entry.key, entry.value)
+        }
+
+        return builder.toString()
     }
 
     private fun executeRequest(request: Request): ByteArray {

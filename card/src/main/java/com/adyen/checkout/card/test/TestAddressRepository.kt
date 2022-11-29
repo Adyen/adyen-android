@@ -11,7 +11,6 @@ package com.adyen.checkout.card.test
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
-import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,7 +33,6 @@ class TestAddressRepository : AddressRepository {
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     override fun getStateList(
-        environment: Environment,
         shopperLocale: Locale,
         countryCode: String?,
         coroutineScope: CoroutineScope
@@ -43,7 +41,7 @@ class TestAddressRepository : AddressRepository {
         _statesFlow.tryEmit(states)
     }
 
-    override fun getCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
+    override fun getCountryList(shopperLocale: Locale, coroutineScope: CoroutineScope) {
         val countries = if (shouldReturnError) emptyList() else COUNTRIES
         _countriesFlow.tryEmit(countries)
     }

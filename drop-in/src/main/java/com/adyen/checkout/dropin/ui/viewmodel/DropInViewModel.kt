@@ -15,6 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -51,7 +52,8 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class DropInViewModel(
     private val savedStateHandle: SavedStateHandle,
-    private val orderStatusRepository: OrderStatusRepository = OrderStatusRepository()
+    private val orderStatusRepository: OrderStatusRepository,
+    private val analyticsRepository: AnalyticsRepository,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -173,6 +175,7 @@ internal class DropInViewModel(
 
     fun onCreated() {
         navigateToInitialDestination()
+        sendAnalyticsEvent()
     }
 
     fun onDropInServiceConnected() {
@@ -185,7 +188,7 @@ internal class DropInViewModel(
         val event = DropInActivityEvent.SessionServiceConnected(
             sessionModel = sessionModel,
             clientKey = dropInConfiguration.clientKey,
-            baseUrl = dropInConfiguration.environment.baseUrl,
+            environment = dropInConfiguration.environment,
             isFlowTakenOver = isSessionsFlowTakenOver
         )
         sendEvent(event)
@@ -213,6 +216,12 @@ internal class DropInViewModel(
             else -> DropInDestination.PaymentMethods
         }
         sendEvent(DropInActivityEvent.NavigateTo(destination))
+    }
+
+    private fun sendAnalyticsEvent() {
+        viewModelScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     /**
@@ -431,9 +440,10 @@ internal class DropInViewModel(
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
         private const val SESSION_KEY = "SESSION_KEY"
         private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
-        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+        internal const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
         private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
         private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
+        internal const val PACKAGE_NAME_KEY = "PACKAGE_NAME_KEY"
         private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
         private const val CURRENT_ORDER = "CURRENT_ORDER"
         private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
@@ -444,11 +454,13 @@ internal class DropInViewModel(
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
             service: ComponentName,
+            packageName: String,
         ) {
             intent.apply {
                 putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
                 putExtra(DROP_IN_SERVICE_KEY, service)
+                putExtra(PACKAGE_NAME_KEY, packageName)
             }
         }
 
@@ -457,12 +469,14 @@ internal class DropInViewModel(
             dropInConfiguration: DropInConfiguration,
             checkoutSession: CheckoutSession,
             service: ComponentName,
+            packageName: String,
         ) {
             putIntentExtras(
                 intent,
                 dropInConfiguration,
                 checkoutSession.sessionSetupResponse.paymentMethods ?: PaymentMethodsApiResponse(),
-                service
+                service,
+                packageName,
             )
             intent.apply {
                 putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())

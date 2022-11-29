@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.repository
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.api.OrderStatusService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.connection.OrderStatusRequest
@@ -16,7 +17,10 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 
-class OrderStatusRepository {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class OrderStatusRepository(
+    private val orderStatusService: OrderStatusService,
+) {
 
     suspend fun getOrderStatus(
         configuration: Configuration,
@@ -25,7 +29,7 @@ class OrderStatusRepository {
         Logger.d(TAG, "Getting order status")
 
         val request = OrderStatusRequest(orderData)
-        OrderStatusService(configuration.environment).getOrderStatus(
+        orderStatusService.getOrderStatus(
             request,
             configuration.clientKey
         )

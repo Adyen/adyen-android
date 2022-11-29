@@ -8,13 +8,17 @@
 
 package com.adyen.checkout.components.repository
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 
-class DefaultPublicKeyRepository : PublicKeyRepository {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultPublicKeyRepository(
+    private val publicKeyService: PublicKeyService,
+) : PublicKeyRepository {
 
     override suspend fun fetchPublicKey(
         environment: Environment,
@@ -23,7 +27,7 @@ class DefaultPublicKeyRepository : PublicKeyRepository {
         Logger.d(TAG, "fetching publicKey from API")
 
         retryOnFailure(CONNECTION_RETRIES) {
-            PublicKeyService(environment).getPublicKey(clientKey).publicKey
+            publicKeyService.getPublicKey(clientKey).publicKey
         }
     }
 

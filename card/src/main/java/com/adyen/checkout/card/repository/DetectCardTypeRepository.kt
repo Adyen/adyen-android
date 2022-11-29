@@ -10,7 +10,6 @@ package com.adyen.checkout.card.repository
 
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
-import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -23,7 +22,6 @@ interface DetectCardTypeRepository {
         cardNumber: String,
         publicKey: String?,
         supportedCardTypes: List<CardType>,
-        environment: Environment,
         clientKey: String,
         coroutineScope: CoroutineScope,
     )
