@@ -9,78 +9,69 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 internal class CardComponentParamsMapper(
-    private val parentConfiguration: Configuration?,
-    private val isCreatedByDropIn: Boolean,
+    private val overrideComponentParams: ComponentParams?,
 ) {
 
     fun mapToParams(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
     ): CardComponentParams {
-        return mapToParams(
-            parentConfiguration = parentConfiguration ?: cardConfiguration,
-            cardConfiguration = cardConfiguration,
-            supportedCardTypes = getSupportedCardTypes(cardConfiguration, paymentMethod),
-        )
+        val supportedCardTypes = cardConfiguration.getSupportedCardTypes(paymentMethod)
+        return cardConfiguration
+            .mapToParamsInternal(supportedCardTypes)
+            .override(overrideComponentParams)
     }
 
     fun mapToParams(
         cardConfiguration: CardConfiguration,
-        // not needed for the actual mapping but indicates that this is the method to use in a stored flow
         storedPaymentMethod: StoredPaymentMethod,
     ): CardComponentParams {
-        return mapToParams(
-            parentConfiguration = parentConfiguration ?: cardConfiguration,
-            cardConfiguration = cardConfiguration,
-            supportedCardTypes = cardConfiguration.supportedCardTypes.orEmpty(),
-        )
+        val supportedCardTypes = cardConfiguration.getSupportedCardTypes(storedPaymentMethod)
+        return cardConfiguration
+            .mapToParamsInternal(supportedCardTypes)
+            .override(overrideComponentParams)
     }
 
-    private fun mapToParams(
-        parentConfiguration: Configuration,
-        cardConfiguration: CardConfiguration,
+    private fun CardConfiguration.mapToParamsInternal(
         supportedCardTypes: List<CardType>,
     ): CardComponentParams {
-        with(cardConfiguration) {
-            return CardComponentParams(
-                shopperLocale = parentConfiguration.shopperLocale,
-                environment = parentConfiguration.environment,
-                clientKey = parentConfiguration.clientKey,
-                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
-                isCreatedByDropIn = isCreatedByDropIn,
-                isHolderNameRequired = isHolderNameRequired ?: false,
-                supportedCardTypes = supportedCardTypes,
-                shopperReference = shopperReference,
-                isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
-                isHideCvc = isHideCvc ?: false,
-                isHideCvcStoredCard = isHideCvcStoredCard ?: false,
-                socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
-                kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-                installmentConfiguration = installmentConfiguration,
-                addressConfiguration = addressConfiguration ?: AddressConfiguration.None
-            )
-        }
+        return CardComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            isCreatedByDropIn = false,
+            isHolderNameRequired = isHolderNameRequired ?: false,
+            supportedCardTypes = supportedCardTypes,
+            shopperReference = shopperReference,
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
+            isHideCvc = isHideCvc ?: false,
+            isHideCvcStoredCard = isHideCvcStoredCard ?: false,
+            socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
+            kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
+            installmentConfiguration = installmentConfiguration,
+            addressConfiguration = addressConfiguration ?: AddressConfiguration.None
+        )
     }
 
     /**
      * Check which set of supported cards to pass to the component.
      * Priority is: Custom -> PaymentMethod.brands -> Default
      */
-    private fun getSupportedCardTypes(
-        cardConfiguration: CardConfiguration,
+    private fun CardConfiguration.getSupportedCardTypes(
         paymentMethod: PaymentMethod
     ): List<CardType> {
         return when {
-            !cardConfiguration.supportedCardTypes.isNullOrEmpty() -> {
+            !supportedCardTypes.isNullOrEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from configuration")
-                cardConfiguration.supportedCardTypes
+                supportedCardTypes
             }
             paymentMethod.brands.orEmpty().isNotEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from API brands")
@@ -93,6 +84,26 @@ internal class CardComponentParamsMapper(
                 CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
             }
         }
+    }
+
+    private fun CardConfiguration.getSupportedCardTypes(
+        // not needed for the actual mapping but indicates that this is the method to use in a stored flow
+        storedPaymentMethod: StoredPaymentMethod,
+    ): List<CardType> {
+        return supportedCardTypes.orEmpty()
+    }
+
+    private fun CardComponentParams.override(
+        overrideComponentParams: ComponentParams?
+    ): CardComponentParams {
+        if (overrideComponentParams == null) return this
+        return copy(
+            shopperLocale = overrideComponentParams.shopperLocale,
+            environment = overrideComponentParams.environment,
+            clientKey = overrideComponentParams.clientKey,
+            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+        )
     }
 
     companion object {

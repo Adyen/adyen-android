@@ -356,11 +356,12 @@ internal fun getComponentFor(
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+    val dropInParams = dropInConfiguration.mapToParams(amount)
     val component = when {
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration, amount)
-            CardComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
+            CardComponentProvider(dropInParams).get(
                 owner = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
@@ -436,7 +437,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            CardComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
+            CardComponentProvider(dropInParams).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
