@@ -19,7 +19,9 @@ import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMetho
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -45,8 +47,8 @@ internal class DefaultGiftCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: GenericComponentParams,
     private val cardEncrypter: CardEncrypter,
-    private val buttonDelegate: ButtonDelegate,
-) : GiftCardDelegate, ButtonDelegate by buttonDelegate {
+    private val submitHandler: SubmitHandler
+) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
 
@@ -62,6 +64,15 @@ internal class DefaultGiftCardDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType())
+
+    private val submitChannel: Channel<GiftCardComponentState> = bufferedChannel()
+    override val submitFlow: Flow<GiftCardComponentState> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
 
     private var publicKey: String? = null
 
@@ -105,7 +116,7 @@ internal class DefaultGiftCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -184,6 +195,17 @@ internal class DefaultGiftCardDelegate(
             lastFourDigits = lastDigits,
         )
     }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
+    }
+
 
     private fun encryptCard(
         outputData: GiftCardOutputData,

@@ -9,13 +9,17 @@
 package com.adyen.checkout.giftcard
 
 import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.ui.ButtonDelegate
+import com.adyen.checkout.components.ui.UiStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
 interface GiftCardDelegate :
     PaymentComponentDelegate<GiftCardComponentState>,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    ButtonDelegate,
+    UiStateDelegate {
 
     val outputData: GiftCardOutputData
 
