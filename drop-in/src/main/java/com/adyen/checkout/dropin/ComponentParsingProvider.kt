@@ -401,6 +401,7 @@ internal fun getComponentFor(
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+    val dropInParams = dropInConfiguration.mapToParams(amount)
     val component = when {
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
@@ -485,7 +486,7 @@ internal fun getComponentFor(
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val googlePayConfiguration: GooglePayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            GooglePayComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
+            GooglePayComponentProvider(dropInParams).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = googlePayConfiguration,
@@ -600,6 +601,10 @@ internal fun getComponentFor(
     component.setCreatedForDropIn()
 
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+}
+
+private fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {
+    return DropInComponentParamsMapper().mapToParams(this, amount)
 }
 
 @Suppress("ComplexMethod")
