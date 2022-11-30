@@ -55,16 +55,6 @@ class EPSConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: EPSConfiguration) : super(configuration) {
-            viewType = configuration.viewType
-            hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
         public override fun buildInternal(): EPSConfiguration {
             return EPSConfiguration(
                 shopperLocale = shopperLocale,

@@ -53,13 +53,6 @@ class AwaitConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: AwaitConfiguration) : super(configuration)
-
         override fun buildInternal(): AwaitConfiguration {
             return AwaitConfiguration(
                 shopperLocale = shopperLocale,

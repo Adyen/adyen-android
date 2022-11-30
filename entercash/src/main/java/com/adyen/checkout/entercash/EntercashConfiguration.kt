@@ -55,16 +55,6 @@ class EntercashConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: EntercashConfiguration) : super(configuration) {
-            viewType = configuration.viewType
-            hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
         override fun buildInternal(): EntercashConfiguration {
             return EntercashConfiguration(
                 shopperLocale = shopperLocale,

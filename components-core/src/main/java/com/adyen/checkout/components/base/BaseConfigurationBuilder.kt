@@ -49,17 +49,6 @@ abstract class BaseConfigurationBuilder<
     )
 
     /**
-     * Constructor that copies an existing configuration.
-     *
-     * @param configuration A configuration to initialize the builder.
-     */
-    constructor(configuration: ConfigurationT) : this(
-        configuration.shopperLocale,
-        configuration.environment,
-        configuration.clientKey
-    )
-
-    /**
      * Sets if components can send analytics events.
      *
      * Default is True.

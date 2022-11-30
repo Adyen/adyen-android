@@ -86,7 +86,7 @@ class GooglePayComponentProvider(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration?,
-        callback: ComponentAvailableCallback<GooglePayConfiguration>
+        callback: ComponentAvailableCallback
     ) {
         if (configuration == null) {
             throw CheckoutException("GooglePayConfiguration cannot be null")
@@ -95,7 +95,7 @@ class GooglePayComponentProvider(
             GoogleApiAvailability.getInstance()
                 .isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS
         ) {
-            callback.onAvailabilityResult(false, paymentMethod, configuration)
+            callback.onAvailabilityResult(false, paymentMethod)
             return
         }
         val callbackWeakReference = WeakReference(callback)
@@ -107,15 +107,15 @@ class GooglePayComponentProvider(
         val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
         val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnSuccessListener { result ->
-            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
         }
         readyToPayTask.addOnCanceledListener {
             Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
         readyToPayTask.addOnFailureListener {
             Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
     }
 

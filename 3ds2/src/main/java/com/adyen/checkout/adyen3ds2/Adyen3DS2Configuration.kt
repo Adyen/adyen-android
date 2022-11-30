@@ -53,13 +53,6 @@ class Adyen3DS2Configuration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: Adyen3DS2Configuration) : super(configuration)
-
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(
                 shopperLocale = shopperLocale,

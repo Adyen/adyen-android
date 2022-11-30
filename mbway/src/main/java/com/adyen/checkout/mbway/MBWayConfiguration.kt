@@ -53,13 +53,6 @@ class MBWayConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: MBWayConfiguration) : super(configuration)
-
         override fun buildInternal(): MBWayConfiguration {
             return MBWayConfiguration(
                 shopperLocale = shopperLocale,

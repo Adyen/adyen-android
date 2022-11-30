@@ -18,8 +18,8 @@ class AlwaysAvailablePaymentMethod : PaymentMethodAvailabilityCheck<Configuratio
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: Configuration?,
-        callback: ComponentAvailableCallback<Configuration>
+        callback: ComponentAvailableCallback
     ) {
-        callback.onAvailabilityResult(true, paymentMethod, configuration)
+        callback.onAvailabilityResult(true, paymentMethod)
     }
 }

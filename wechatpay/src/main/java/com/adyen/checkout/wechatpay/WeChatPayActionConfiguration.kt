@@ -53,13 +53,6 @@ class WeChatPayActionConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: WeChatPayActionConfiguration) : super(configuration)
-
         override fun buildInternal(): WeChatPayActionConfiguration {
             return WeChatPayActionConfiguration(
                 shopperLocale = shopperLocale,

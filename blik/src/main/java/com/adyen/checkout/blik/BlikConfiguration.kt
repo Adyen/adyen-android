@@ -53,13 +53,6 @@ class BlikConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: BlikConfiguration) : super(configuration)
-
         override fun buildInternal(): BlikConfiguration {
             return BlikConfiguration(
                 shopperLocale = shopperLocale,

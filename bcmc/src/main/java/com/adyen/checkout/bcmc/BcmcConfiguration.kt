@@ -65,16 +65,6 @@ class BcmcConfiguration private constructor(
         ) : super(shopperLocale, environment, clientKey)
 
         /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: BcmcConfiguration) : super(configuration) {
-            shopperReference = configuration.shopperReference
-            showStorePaymentField = configuration.isStorePaymentFieldVisible
-        }
-
-        /**
          * Set if the holder name is required and should be shown as an input field.
          *
          * Default is false.

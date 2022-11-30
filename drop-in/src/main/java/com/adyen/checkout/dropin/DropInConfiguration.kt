@@ -128,17 +128,6 @@ class DropInConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Create a Builder with the same values of an existing Configuration object.
-         */
-        constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
-            amount = dropInConfiguration.amount
-            showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
-            skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
-            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
-            additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
-        }
-
         override fun setAmount(amount: Amount): Builder {
             if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")

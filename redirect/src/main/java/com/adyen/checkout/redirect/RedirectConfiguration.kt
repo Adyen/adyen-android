@@ -53,13 +53,6 @@ class RedirectConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: RedirectConfiguration) : super(configuration)
-
         override fun buildInternal(): RedirectConfiguration {
             return RedirectConfiguration(
                 shopperLocale = shopperLocale,
