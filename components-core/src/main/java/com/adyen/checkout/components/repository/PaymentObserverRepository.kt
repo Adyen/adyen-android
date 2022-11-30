@@ -27,7 +27,7 @@ class PaymentObserverRepository(
     fun <T : PaymentComponentState<out PaymentMethodDetails>> addObservers(
         stateFlow: Flow<T>,
         exceptionFlow: Flow<CheckoutException>?,
-        submitFlow: Flow<Unit>?,
+        submitFlow: Flow<T>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<T>) -> Unit,
@@ -44,7 +44,7 @@ class PaymentObserverRepository(
             }
 
             submitFlow?.observe(lifecycleOwner, coroutineScope) {
-                callback(PaymentComponentEvent.Submit())
+                callback(PaymentComponentEvent.Submit(it))
             }
         }
     }

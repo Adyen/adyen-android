@@ -19,6 +19,7 @@ import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -116,18 +117,12 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         protocol.terminateDropIn()
     }
 
-    protected fun startPayment() {
-        // TODO pass state here
-        val componentState = componentDialogViewModel.componentState
+    protected fun startPayment(componentState: PaymentComponentState<out PaymentMethodDetails>) {
         try {
-            if (componentState != null) {
-                if (componentState.isValid) {
-                    requestProtocolCall(componentState)
-                } else {
-                    throw CheckoutException("PaymentComponentState are not valid.")
-                }
+            if (componentState.isValid) {
+                requestProtocolCall(componentState)
             } else {
-                throw CheckoutException("PaymentComponentState are null.")
+                throw CheckoutException("PaymentComponentState are not valid.")
             }
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

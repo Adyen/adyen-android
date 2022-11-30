@@ -60,7 +60,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
-            is PaymentComponentEvent.Submit -> startPayment()
+            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

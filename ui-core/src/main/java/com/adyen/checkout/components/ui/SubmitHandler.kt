@@ -9,22 +9,23 @@
 package com.adyen.checkout.components.ui
 
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 // TODO docs
 class SubmitHandler {
 
-    fun onSubmit(
-        state: PaymentComponentState<*>,
-        submitChannel: Channel<Unit>,
+    fun <T : PaymentComponentState<out PaymentMethodDetails>> onSubmit(
+        state: T,
+        submitChannel: Channel<T>,
         uiEventChannel: Channel<PaymentComponentUiEvent>,
         uiStateChannel: MutableStateFlow<PaymentComponentUiState>
     ) {
         when {
             !state.isInputValid -> uiEventChannel.trySend(PaymentComponentUiEvent.InvalidUI)
             state.isValid -> {
-                submitChannel.trySend(Unit)
+                submitChannel.trySend(state)
                 uiStateChannel.tryEmit(PaymentComponentUiState.Idle)
             }
             !state.isReady -> uiStateChannel.tryEmit(PaymentComponentUiState.Loading)
