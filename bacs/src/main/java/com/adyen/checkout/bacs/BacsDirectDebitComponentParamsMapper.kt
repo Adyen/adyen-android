@@ -8,34 +8,42 @@
 
 package com.adyen.checkout.bacs
 
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 
 internal class BacsDirectDebitComponentParamsMapper(
-    private val parentConfiguration: Configuration?,
-    private val isCreatedByDropIn: Boolean,
+    private val overrideComponentParams: ComponentParams?,
 ) {
 
     fun mapToParams(
         bacsDirectDebitConfiguration: BacsDirectDebitConfiguration,
     ): BacsDirectDebitComponentParams {
-        return mapToParams(
-            parentConfiguration = parentConfiguration ?: bacsDirectDebitConfiguration,
-            bacsDirectDebitConfiguration = bacsDirectDebitConfiguration,
+        return bacsDirectDebitConfiguration
+            .mapToParamsInternal()
+            .override(overrideComponentParams)
+    }
+
+    private fun BacsDirectDebitConfiguration.mapToParamsInternal(): BacsDirectDebitComponentParams {
+        return BacsDirectDebitComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            isCreatedByDropIn = false,
+            amount = amount ?: Amount.EMPTY,
         )
     }
 
-    private fun mapToParams(
-        parentConfiguration: Configuration,
-        bacsDirectDebitConfiguration: BacsDirectDebitConfiguration,
+    private fun BacsDirectDebitComponentParams.override(
+        overrideComponentParams: ComponentParams?
     ): BacsDirectDebitComponentParams {
-        return BacsDirectDebitComponentParams(
-            shopperLocale = parentConfiguration.shopperLocale,
-            environment = parentConfiguration.environment,
-            clientKey = parentConfiguration.clientKey,
-            isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
-            isCreatedByDropIn = isCreatedByDropIn,
-            amount = bacsDirectDebitConfiguration.amount ?: Amount.EMPTY,
+        if (overrideComponentParams == null) return this
+        return copy(
+            shopperLocale = overrideComponentParams.shopperLocale,
+            environment = overrideComponentParams.environment,
+            clientKey = overrideComponentParams.clientKey,
+            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
         )
     }
 }

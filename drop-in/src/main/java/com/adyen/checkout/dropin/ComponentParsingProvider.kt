@@ -406,7 +406,7 @@ internal fun getComponentFor(
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BacsDirectDebitComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
+            BacsDirectDebitComponentProvider(dropInParams).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bacsConfiguration,
