@@ -18,6 +18,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.PaymentComponentUiEvent
@@ -56,8 +57,8 @@ internal class DefaultBlikDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
 
-    private val submitChannel: Channel<Unit> = bufferedChannel()
-    override val submitFlow: Flow<Unit> = submitChannel.receiveAsFlow()
+    private val submitChannel: Channel<PaymentComponentState<BlikPaymentMethod>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitChannel.receiveAsFlow()
 
     private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
     override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
