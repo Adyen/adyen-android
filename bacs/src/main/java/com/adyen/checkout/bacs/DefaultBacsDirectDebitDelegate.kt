@@ -50,8 +50,8 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
-    private val submitChannel: Channel<Unit> = bufferedChannel()
-    override val submitFlow: Flow<Unit> = submitChannel.receiveAsFlow()
+    private val submitChannel: Channel<BacsDirectDebitComponentState> = bufferedChannel()
+    override val submitFlow: Flow<BacsDirectDebitComponentState> = submitChannel.receiveAsFlow()
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
