@@ -18,7 +18,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -37,11 +37,10 @@ import kotlinx.coroutines.Dispatchers
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class Adyen3DS2ComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
     override fun <T> get(
         owner: T,

@@ -19,7 +19,7 @@ import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -33,11 +33,10 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GiftCardComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null
 ) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

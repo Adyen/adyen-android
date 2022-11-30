@@ -26,10 +26,7 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1
         ).build()
 
-        val params = GenericComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(componentConfiguration)
+        val params = GenericComponentParamsMapper(null).mapToParams(componentConfiguration)
 
         val expected = GenericComponentParams(
             shopperLocale = Locale.US,
@@ -50,20 +47,17 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1
         ).build()
 
-        // this is in practice DropInConfiguration, but we don't have access to it in this module and any Configuration
-        // class can work
-        val parentConfiguration = TestConfiguration.Builder(
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        val overrideParams = GenericComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
         )
-            .setAnalyticsEnabled(false)
-            .build()
 
-        val params = GenericComponentParamsMapper(
-            parentConfiguration = parentConfiguration,
-            isCreatedByDropIn = true
-        ).mapToParams(
+        val params = GenericComponentParamsMapper(overrideParams).mapToParams(
             componentConfiguration
         )
 

@@ -31,6 +31,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
+import com.adyen.checkout.dropin.mapToParams
 import com.adyen.checkout.dropin.ui.arguments
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentFragmentEvent
@@ -67,9 +68,8 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
         binding.header.isVisible = false
 
         try {
-            // We don't need to pass dropInConfiguration as parentConfiguration because actionConfiguration is built
-            // using dropInConfiguration.
-            actionComponent = GenericActionComponentProvider(isCreatedByDropIn = true).get(
+            val componentParams = dropInViewModel.dropInConfiguration.mapToParams(dropInViewModel.amount)
+            actionComponent = GenericActionComponentProvider(componentParams).get(
                 this,
                 requireActivity().application,
                 actionConfiguration

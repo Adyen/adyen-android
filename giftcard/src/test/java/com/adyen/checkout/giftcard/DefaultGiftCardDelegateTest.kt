@@ -58,10 +58,7 @@ internal class DefaultGiftCardDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = publicKeyRepository,
-            componentParams = GenericComponentParamsMapper(
-                parentConfiguration = null,
-                isCreatedByDropIn = false
-            ).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
         )

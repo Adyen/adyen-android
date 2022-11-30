@@ -12,21 +12,37 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
-    private val parentConfiguration: Configuration?,
-    private val isCreatedByDropIn: Boolean,
+    private val overrideComponentParams: ComponentParams?,
 ) {
 
     fun mapToParams(
         configuration: Configuration,
     ): GenericComponentParams {
-        with(parentConfiguration ?: configuration) {
-            return GenericComponentParams(
-                shopperLocale = shopperLocale,
-                environment = environment,
-                clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled ?: true,
-                isCreatedByDropIn = isCreatedByDropIn,
-            )
-        }
+        return configuration
+            .mapToParamsInternal()
+            .override(overrideComponentParams)
+    }
+
+    private fun Configuration.mapToParamsInternal(): GenericComponentParams {
+        return GenericComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            isCreatedByDropIn = false,
+        )
+    }
+
+    private fun GenericComponentParams.override(
+        overrideComponentParams: ComponentParams?
+    ): GenericComponentParams {
+        if (overrideComponentParams == null) return this
+        return copy(
+            shopperLocale = overrideComponentParams.shopperLocale,
+            environment = overrideComponentParams.environment,
+            clientKey = overrideComponentParams.clientKey,
+            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+        )
     }
 }

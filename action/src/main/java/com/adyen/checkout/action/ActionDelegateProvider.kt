@@ -16,6 +16,7 @@ import com.adyen.checkout.await.AwaitComponentProvider
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -35,8 +36,7 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
 internal class ActionDelegateProvider(
-    private val parentConfiguration: Configuration,
-    private val isCreatedByDropIn: Boolean,
+    private val overrideComponentParams: ComponentParams?
 ) {
 
     fun getDelegate(
@@ -47,42 +47,42 @@ internal class ActionDelegateProvider(
     ): ActionDelegate {
         val delegate = when (action) {
             is AwaitAction -> {
-                AwaitComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
+                AwaitComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is QrCodeAction -> {
-                QRCodeComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
+                QRCodeComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is RedirectAction -> {
-                RedirectComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
+                RedirectComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is BaseThreeds2Action -> {
-                Adyen3DS2ComponentProvider(parentConfiguration).getDelegate(
+                Adyen3DS2ComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is VoucherAction -> {
-                VoucherComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
+                VoucherComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is SdkAction<*> -> {
-                WeChatPayActionComponentProvider(parentConfiguration, isCreatedByDropIn).getDelegate(
+                WeChatPayActionComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
