@@ -416,7 +416,7 @@ internal fun getComponentFor(
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, amount)
-            BcmcComponentProvider(dropInConfiguration, isCreatedByDropIn = true).get(
+            BcmcComponentProvider(dropInParams).get(
                 owner = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,

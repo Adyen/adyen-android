@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bcmc
 
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -24,10 +25,7 @@ internal class BcmcComponentParamsMapperTest {
         )
             .build()
 
-        val params = BcmcComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
@@ -57,10 +55,7 @@ internal class BcmcComponentParamsMapperTest {
             .setShowStorePaymentField(true)
             .build()
 
-        val params = BcmcComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
@@ -85,21 +80,17 @@ internal class BcmcComponentParamsMapperTest {
         )
             .build()
 
-        // this is in practice DropInConfiguration, but we don't have access to it in this module and any Configuration
-        // class can work
-        val parentConfiguration = BcmcConfiguration.Builder(
-            Locale.GERMAN,
-            Environment.EUROPE,
-            TEST_CLIENT_KEY_2
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        val overrideParams = GenericComponentParams(
+            shopperLocale = Locale.GERMAN,
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
         )
-            .setAnalyticsEnabled(false)
-            .build()
 
-        val params =
-            BcmcComponentParamsMapper(
-                parentConfiguration = parentConfiguration,
-                isCreatedByDropIn = true
-            ).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(overrideParams).mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.GERMAN,
