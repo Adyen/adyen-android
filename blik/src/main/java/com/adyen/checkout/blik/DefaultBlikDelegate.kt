@@ -18,9 +18,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.PaymentComponentUiEvent
 import com.adyen.checkout.components.ui.PaymentComponentUiState
 import com.adyen.checkout.components.ui.SubmitHandler
