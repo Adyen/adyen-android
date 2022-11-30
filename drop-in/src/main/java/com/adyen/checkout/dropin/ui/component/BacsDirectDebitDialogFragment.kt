@@ -21,7 +21,6 @@ import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -61,12 +60,14 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<BacsDirectDebitComponentState>) {
         when (event) {
-            is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
+            is PaymentComponentEvent.StateChanged -> {
+                // no ops
+            }
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
-            is PaymentComponentEvent.Submit -> componentDialogViewModel.payButtonClicked()
+            is PaymentComponentEvent.Submit -> startPayment()
         }
     }
 
@@ -75,29 +76,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         setDialogToFullScreen(dialog)
         return dialog
-    }
-
-    private fun componentStateChanged(bacsDirectDebitComponentState: BacsDirectDebitComponentState) {
-        val payButtonText = when (bacsDirectDebitComponentState.mode) {
-            BacsDirectDebitMode.INPUT -> R.string.bacs_continue
-            BacsDirectDebitMode.CONFIRMATION -> R.string.bacs_confirm_and_pay
-        }
-//        binding.payButton.setText(payButtonText)
-        // TODO labels
-
-        componentDialogViewModel.componentStateChanged(
-            bacsDirectDebitComponentState,
-            binding.bacsView.isConfirmationRequired
-        )
-    }
-
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.bacsView.setPaymentPendingInitialization(pending)
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.bacsView.highlightValidationErrors()
     }
 
     override fun onBackPressed(): Boolean {

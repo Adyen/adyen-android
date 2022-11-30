@@ -17,6 +17,9 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -34,6 +37,7 @@ internal class DefaultBacsDirectDebitDelegate(
     override val componentParams: BacsDirectDebitComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
+    val submitHandler: SubmitHandler
 ) : BacsDirectDebitDelegate {
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
@@ -51,8 +55,14 @@ internal class DefaultBacsDirectDebitDelegate(
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
-    internal val _viewFlow = MutableStateFlow<BacsComponentViewType>(BacsComponentViewType.INPUT)
+    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
@@ -111,16 +121,18 @@ internal class DefaultBacsDirectDebitDelegate(
     }
 
     override fun onSubmit() {
+        // TODO improve
+        val state = _componentStateFlow.value
         when (inputData.mode) {
             BacsDirectDebitMode.INPUT -> {
                 if (outputData.isValid) {
                     setMode(BacsDirectDebitMode.CONFIRMATION)
                 } else {
-                    submitChannel.trySend(Unit)
+                    submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
                 }
             }
             BacsDirectDebitMode.CONFIRMATION -> {
-                submitChannel.trySend(Unit)
+                submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
             }
         }
     }

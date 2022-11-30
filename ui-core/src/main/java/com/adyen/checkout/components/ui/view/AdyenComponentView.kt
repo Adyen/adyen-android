@@ -21,6 +21,9 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.UiStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
@@ -64,7 +67,7 @@ class AdyenComponentView @JvmOverloads constructor(
     ) where T : ViewableComponent, T : Component {
         component.viewFlow
             .onEach { componentViewType ->
-                removeAllViews()
+                binding.frameLayoutComponentContainer.removeAllViews()
 
                 if (componentViewType == null) {
                     Logger.i(TAG, "Component view type is null, ignoring.")
@@ -85,7 +88,6 @@ class AdyenComponentView @JvmOverloads constructor(
                 )
             }
             .launchIn(lifecycleOwner.lifecycleScope)
-
         isVisible = true
     }
 
@@ -111,6 +113,21 @@ class AdyenComponentView @JvmOverloads constructor(
         componentView.initView(delegate, coroutineScope, localizedContext)
 
         if (isConfirmationRequired) {
+            val uiStateDelegate = (delegate as? UiStateDelegate)
+            uiStateDelegate?.uiStateFlow?.onEach {
+                // setPaymentPendingInitialization has to be called on each event?
+                when (it) {
+                    PaymentComponentUiState.Idle -> setPaymentPendingInitialization(false)
+                    PaymentComponentUiState.Loading -> setPaymentPendingInitialization(true)
+                }
+            }?.launchIn(coroutineScope)
+
+            uiStateDelegate?.uiEventFlow?.onEach {
+                when (it) {
+                    PaymentComponentUiEvent.InvalidUI -> highlightValidationErrors()
+                }
+            }?.launchIn(coroutineScope)
+
             binding.payButton.setOnClickListener {
                 (delegate as? ButtonDelegate)?.onSubmit()
             }
@@ -119,8 +136,9 @@ class AdyenComponentView @JvmOverloads constructor(
         }
     }
 
-    fun setPaymentPendingInitialization(pending: Boolean) {
+    private fun setPaymentPendingInitialization(pending: Boolean) {
         binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     /**

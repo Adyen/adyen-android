@@ -39,16 +39,6 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        if (!binding.giftCardView.isConfirmationRequired) return
-        binding.giftCardView.setPaymentPendingInitialization(pending)
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.giftCardView.highlightValidationErrors()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
@@ -83,9 +73,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
-            is PaymentComponentEvent.Submit -> {
-                componentDialogViewModel.payButtonClicked()
-            }
+            is PaymentComponentEvent.Submit -> startPayment()
         }
     }
 

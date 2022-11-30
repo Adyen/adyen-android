@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -32,24 +31,9 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.cardView.setPaymentPendingInitialization(pending)
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.cardView.highlightValidationErrors()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
-
-        if (!dropInViewModel.amount.isEmpty) {
-            val value =
-                CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
-//            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
-        }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
         component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
@@ -76,9 +60,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
-            is PaymentComponentEvent.Submit -> {
-                componentDialogViewModel.payButtonClicked()
-            }
+            is PaymentComponentEvent.Submit -> startPayment()
         }
     }
 

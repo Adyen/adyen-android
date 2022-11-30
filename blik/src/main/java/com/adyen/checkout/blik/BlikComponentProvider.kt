@@ -27,6 +27,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.DefaultButtonDelegate
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 
@@ -66,7 +67,7 @@ class BlikComponentProvider(
                         componentParams = componentParams,
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository,
-                        buttonDelegate = DefaultButtonDelegate()
+                        submitHandler = SubmitHandler()
                     ),
                 )
             }
@@ -102,7 +103,8 @@ class BlikComponentProvider(
                         componentParams = componentParams,
                         storedPaymentMethod = storedPaymentMethod,
                         analyticsRepository = analyticsRepository,
-                        buttonDelegate = DefaultButtonDelegate()
+                        buttonDelegate = DefaultButtonDelegate(),
+                        submitHandler = SubmitHandler()
                     ),
                 )
             }

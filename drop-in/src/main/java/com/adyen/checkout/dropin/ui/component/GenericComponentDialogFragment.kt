@@ -16,7 +16,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -38,27 +37,10 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        if (!binding.componentView.isConfirmationRequired) return
-        binding.componentView.setPaymentPendingInitialization(pending)
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.componentView.highlightValidationErrors()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
-
-        if (!dropInViewModel.amount.isEmpty) {
-            val value =
-                CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
-//            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
-            // TODO button labels
-        }
 
         try {
             attachComponent(component)
@@ -89,9 +71,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
-            is PaymentComponentEvent.Submit -> {
-                componentDialogViewModel.payButtonClicked()
-            }
+            is PaymentComponentEvent.Submit -> startPayment()
         }
     }
 
