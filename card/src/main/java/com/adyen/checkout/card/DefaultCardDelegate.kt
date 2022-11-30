@@ -33,9 +33,11 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -71,8 +73,8 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-    private val buttonDelegate: ButtonDelegate,
-) : CardDelegate, ButtonDelegate by buttonDelegate {
+    private val submitHandler: SubmitHandler
+) : CardDelegate {
 
     private val inputData: CardInputData = CardInputData()
 
@@ -94,6 +96,15 @@ internal class DefaultCardDelegate(
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
+
+    private val submitChannel: Channel<CardComponentState> = bufferedChannel()
+    override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -124,7 +135,7 @@ internal class DefaultCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -367,6 +378,16 @@ internal class DefaultCardDelegate(
             cardNumber,
             firstCardType,
             binValue
+        )
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
         )
     }
 

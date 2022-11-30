@@ -27,6 +27,9 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -54,8 +57,8 @@ internal class StoredCardDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
-    private val buttonDelegate: ButtonDelegate,
-) : CardDelegate, ButtonDelegate by buttonDelegate {
+    private val submitHandler: SubmitHandler
+) : CardDelegate {
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
@@ -86,6 +89,15 @@ internal class StoredCardDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
 
+    private val submitChannel: Channel<CardComponentState> = bufferedChannel()
+    override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
+
     override val outputData: CardOutputData get() = _outputDataFlow.value
 
     private var publicKey: String? = null
@@ -114,7 +126,7 @@ internal class StoredCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -244,6 +256,16 @@ internal class StoredCardDelegate(
             encryptedCard,
             cardNumber,
             firstCardType,
+        )
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
         )
     }
 

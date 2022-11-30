@@ -32,6 +32,7 @@ import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
@@ -728,7 +729,7 @@ internal class DefaultCardDelegateTest(
             cardValidationMapper = cardValidationMapper,
             genericEncrypter = genericEncrypter,
             analyticsRepository = analyticsRepository,
-            buttonDelegate = DefaultButtonDelegate(),
+            submitHandler = SubmitHandler(),
         )
     }
 
