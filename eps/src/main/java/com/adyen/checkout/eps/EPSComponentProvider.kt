@@ -19,7 +19,7 @@ import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -32,13 +32,11 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EPSComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null,
 ) : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(
-        parentConfiguration = parentConfiguration,
-        isCreatedByDropIn = isCreatedByDropIn,
+        overrideComponentParams = overrideComponentParams,
         hideIssuerLogosDefaultValue = true,
     )
 

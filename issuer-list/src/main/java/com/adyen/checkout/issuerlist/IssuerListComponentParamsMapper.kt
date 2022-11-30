@@ -9,38 +9,44 @@
 package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
-    private val parentConfiguration: Configuration?,
-    private val isCreatedByDropIn: Boolean,
+    private val overrideComponentParams: ComponentParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
 
     fun mapToParams(
         issuerListConfiguration: IssuerListConfiguration
     ): IssuerListComponentParams {
-        return mapToParams(
-            parentConfiguration = parentConfiguration ?: issuerListConfiguration,
-            issuerListConfiguration = issuerListConfiguration,
+        return issuerListConfiguration
+            .mapToParamsInternal()
+            .override(overrideComponentParams)
+    }
+
+    private fun IssuerListConfiguration.mapToParamsInternal(): IssuerListComponentParams {
+        return IssuerListComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            isCreatedByDropIn = false,
+            viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
+            hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
         )
     }
 
-    private fun mapToParams(
-        parentConfiguration: Configuration,
-        issuerListConfiguration: IssuerListConfiguration,
+    private fun IssuerListComponentParams.override(
+        overrideComponentParams: ComponentParams?
     ): IssuerListComponentParams {
-        with(issuerListConfiguration) {
-            return IssuerListComponentParams(
-                shopperLocale = parentConfiguration.shopperLocale,
-                environment = parentConfiguration.environment,
-                clientKey = parentConfiguration.clientKey,
-                isAnalyticsEnabled = parentConfiguration.isAnalyticsEnabled ?: true,
-                isCreatedByDropIn = isCreatedByDropIn,
-                viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
-                hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
-            )
-        }
+        if (overrideComponentParams == null) return this
+        return copy(
+            shopperLocale = overrideComponentParams.shopperLocale,
+            environment = overrideComponentParams.environment,
+            clientKey = overrideComponentParams.clientKey,
+            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+        )
     }
 }
