@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bacs
 
+import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 
@@ -38,12 +39,14 @@ internal class BacsDirectDebitComponentParamsMapper(
         overrideComponentParams: ComponentParams?
     ): BacsDirectDebitComponentParams {
         if (overrideComponentParams == null) return this
+        val amount = (overrideComponentParams as? AmountComponentParams)?.amount ?: amount
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+            amount = amount,
         )
     }
 }
