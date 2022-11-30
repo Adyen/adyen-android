@@ -114,7 +114,7 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
     protected abstract fun highlightValidationErrors()
 
     private fun observeState() {
-        componentDialogViewModel.componentFragmentState.observe(viewLifecycleOwner) {
+        componentDialogViewModel.componentFragmentStateLiveData.observe(viewLifecycleOwner) {
             Logger.v(TAG, "state: $it")
             setPaymentPendingInitialization(it == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION)
             when (it) {

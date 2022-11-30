@@ -23,6 +23,8 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.handler.RedirectHandler
@@ -67,7 +69,7 @@ import org.json.JSONObject
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultAdyen3DS2Delegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -78,7 +80,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val embeddedRequestorAppUrl: String,
     private val base64Encoder: Base64Encoder,
     private val application: Application,
-) : Adyen3DS2Delegate, ChallengeStatusReceiver {
+) : Adyen3DS2Delegate, ChallengeStatusReceiver, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -95,11 +97,7 @@ internal class DefaultAdyen3DS2Delegate(
 
     private var currentTransaction: Transaction? = null
 
-    private var authorizationToken: String?
-        get() = savedStateHandle[AUTHORIZATION_TOKEN_KEY]
-        set(value) {
-            savedStateHandle[AUTHORIZATION_TOKEN_KEY] = value
-        }
+    private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope

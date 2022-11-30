@@ -25,8 +25,10 @@ internal class DropInViewModelFactory(
     activity: ComponentActivity
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
-        val dropInConfiguration: DropInConfiguration = requireNotNull(handle[DropInViewModel.DROP_IN_CONFIGURATION_KEY])
-        val packageName: String = requireNotNull(handle[DropInViewModel.PACKAGE_NAME_KEY])
+        val bundleHandler = DropInSavedStateHandleContainer(handle)
+
+        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+        val packageName: String = requireNotNull(bundleHandler.packageName)
 
         val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
@@ -39,6 +41,6 @@ internal class DropInViewModelFactory(
         )
 
         @Suppress("UNCHECKED_CAST")
-        return DropInViewModel(handle, orderStatusRepository, analyticsRepository) as T
+        return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository) as T
     }
 }

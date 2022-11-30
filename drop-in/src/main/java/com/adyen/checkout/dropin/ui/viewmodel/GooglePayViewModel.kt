@@ -11,6 +11,8 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -18,7 +20,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-internal class GooglePayViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+internal class GooglePayViewModel(
+    override val savedStateHandle: SavedStateHandle
+) : ViewModel(), SavedStateHandleContainer {
     companion object {
         private val TAG = LogUtil.getTag()
         private const val IS_GOOGLE_PAY_STARTED = "IS_GOOGLE_PAY_STARTED"
@@ -27,16 +31,10 @@ internal class GooglePayViewModel(private val savedStateHandle: SavedStateHandle
     private val eventChannel: Channel<GooglePayFragmentEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
-    private var isGooglePayStarted: Boolean
-        get() {
-            return savedStateHandle[IS_GOOGLE_PAY_STARTED] ?: false
-        }
-        set(value) {
-            savedStateHandle[IS_GOOGLE_PAY_STARTED] = value
-        }
+    private var isGooglePayStarted: Boolean? by SavedStateHandleProperty(IS_GOOGLE_PAY_STARTED)
 
     fun fragmentLoaded() {
-        if (isGooglePayStarted) return
+        if (isGooglePayStarted == true) return
         isGooglePayStarted = true
         viewModelScope.launch {
             Logger.d(TAG, "Sending start GooglePay event")

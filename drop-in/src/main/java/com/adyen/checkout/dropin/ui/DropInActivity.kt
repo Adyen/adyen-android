@@ -65,6 +65,7 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFr
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.dropin.ui.viewmodel.DropInActivityEvent
+import com.adyen.checkout.dropin.ui.viewmodel.DropInBundleHandler
 import com.adyen.checkout.dropin.ui.viewmodel.DropInDestination
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
@@ -170,7 +171,7 @@ internal class DropInActivity :
         setContentView(binding.root)
         overridePendingTransition(0, 0)
 
-        if (!DropInViewModel.assertBundleExists(intent.extras)) {
+        if (!DropInBundleHandler.assertBundleExists(intent.extras)) {
             terminateWithError("Initialization failed")
             return
         }
@@ -690,7 +691,7 @@ internal class DropInActivity :
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(
+            DropInBundleHandler.putIntentExtras(
                 intent = intent,
                 dropInConfiguration = dropInConfiguration,
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
@@ -707,7 +708,7 @@ internal class DropInActivity :
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(
+            DropInBundleHandler.putIntentExtras(
                 intent = intent,
                 dropInConfiguration = dropInConfiguration,
                 checkoutSession = checkoutSession,
