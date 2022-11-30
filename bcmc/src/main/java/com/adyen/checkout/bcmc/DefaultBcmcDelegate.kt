@@ -25,8 +25,10 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.PaymentComponentUiEvent
+import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -55,8 +57,8 @@ internal class DefaultBcmcDelegate(
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
-    private val buttonDelegate: ButtonDelegate,
-) : BcmcDelegate, ButtonDelegate by buttonDelegate {
+    private val submitHandler: SubmitHandler
+) : BcmcDelegate {
 
     private val inputData = BcmcInputData()
 
@@ -72,6 +74,15 @@ internal class DefaultBcmcDelegate(
     override val outputData get() = _outputDataFlow.value
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
+
+    private val submitChannel: Channel<PaymentComponentState<CardPaymentMethod>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
 
     private var publicKey: String? = null
 
@@ -115,7 +126,7 @@ internal class DefaultBcmcDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -215,6 +226,16 @@ internal class DefaultBcmcDelegate(
         }
 
         return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
     }
 
     private fun encryptCardData(
