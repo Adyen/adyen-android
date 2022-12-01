@@ -11,7 +11,6 @@ package com.adyen.checkout.giftcard
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface GiftCardDelegate :
@@ -25,8 +24,6 @@ interface GiftCardDelegate :
     val componentStateFlow: Flow<GiftCardComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
-
-    fun initialize(coroutineScope: CoroutineScope)
 
     fun updateInputData(update: GiftCardInputData.() -> Unit)
 }

@@ -13,7 +13,6 @@ import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface BcmcDelegate :
@@ -29,8 +28,6 @@ interface BcmcDelegate :
     val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>>
 
     val exceptionFlow: Flow<CheckoutException>
-
-    fun initialize(coroutineScope: CoroutineScope)
 
     fun isCardNumberSupported(cardNumber: String?): Boolean
 
