@@ -16,11 +16,16 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -55,12 +60,22 @@ class GooglePayComponentProvider(
 
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
             GooglePayComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultGooglePayDelegate(
-                    PaymentObserverRepository(),
-                    paymentMethod,
-                    componentParams
+                    observerRepository = PaymentObserverRepository(),
+                    paymentMethod = paymentMethod,
+                    componentParams = componentParams,
+                    analyticsRepository = analyticsRepository,
                 ),
                 configuration = configuration,
             )
