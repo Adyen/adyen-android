@@ -67,7 +67,6 @@ class BlikComponentProvider(
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration = configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
@@ -104,7 +103,6 @@ class BlikComponentProvider(
                         storedPaymentMethod = storedPaymentMethod,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration = configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]

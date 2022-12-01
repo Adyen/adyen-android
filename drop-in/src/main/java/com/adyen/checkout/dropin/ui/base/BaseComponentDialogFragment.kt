@@ -18,7 +18,6 @@ import androidx.fragment.app.viewModels
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -45,7 +44,7 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
-    lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+    lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
     private var isStoredPayment = false
     private var navigatedFromPreselected = false
 

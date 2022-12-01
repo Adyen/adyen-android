@@ -69,7 +69,7 @@ class EPSComponentProvider(
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
                 ) { EPSPaymentMethod() }
-                EPSComponent(savedStateHandle, delegate, configuration)
+                EPSComponent(savedStateHandle, delegate)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EPSComponent::class.java]
     }

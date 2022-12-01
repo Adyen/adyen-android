@@ -35,12 +35,11 @@ import kotlinx.coroutines.flow.Flow
 class CardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     val cardDelegate: CardDelegate,
-    override val configuration: CardConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent
 ) :
     ViewModel(),
-    PaymentComponent<CardComponentState, CardConfiguration>,
+    PaymentComponent<CardComponentState>,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 

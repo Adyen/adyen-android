@@ -332,7 +332,7 @@ internal fun getComponentFor(
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val component = when {
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
@@ -360,7 +360,7 @@ internal fun getComponentFor(
         }
     }
 
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
 }
 
 /**
@@ -376,7 +376,7 @@ internal fun getComponentFor(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val component = when {
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -574,7 +574,7 @@ internal fun getComponentFor(
         }
     }
 
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
 }
 
 internal fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {

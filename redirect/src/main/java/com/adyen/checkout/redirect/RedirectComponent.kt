@@ -25,10 +25,9 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class RedirectComponent internal constructor(
-    override val configuration: RedirectConfiguration,
     override val delegate: RedirectDelegate
 ) : ViewModel(),
-    ActionComponent<RedirectConfiguration>,
+    ActionComponent,
     IntentHandlingComponent,
     ViewableComponent {
 

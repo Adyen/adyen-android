@@ -30,9 +30,8 @@ import kotlinx.coroutines.flow.Flow
 class MBWayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: MBWayDelegate,
-    override val configuration: MBWayConfiguration
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<MBWayPaymentMethod>, MBWayConfiguration>,
+    PaymentComponent<PaymentComponentState<MBWayPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

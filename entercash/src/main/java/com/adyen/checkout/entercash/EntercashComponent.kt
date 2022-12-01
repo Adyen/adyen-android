@@ -21,11 +21,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 class EntercashComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<EntercashPaymentMethod>,
-    configuration: EntercashConfiguration
 ) : IssuerListComponent<EntercashPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

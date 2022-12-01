@@ -18,11 +18,9 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 class OnlineBankingCZComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
-    configuration: OnlineBankingCZConfiguration
 ) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

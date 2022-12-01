@@ -22,11 +22,9 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PRO
 class OnlineBankingPLComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
-    configuration: OnlineBankingPLConfiguration
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

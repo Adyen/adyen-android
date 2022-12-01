@@ -66,7 +66,6 @@ class SepaComponentProvider(
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository
                     ),
-                    configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]

@@ -21,11 +21,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 class IdealComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<IdealPaymentMethod>,
-    configuration: IdealConfiguration
 ) : IssuerListComponent<IdealPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

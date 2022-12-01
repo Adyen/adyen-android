@@ -21,11 +21,9 @@ import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
 class MolpayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<MolpayPaymentMethod>,
-    configuration: MolpayConfiguration
 ) : IssuerListComponent<MolpayPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

@@ -21,11 +21,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 class EPSComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<EPSPaymentMethod>,
-    configuration: EPSConfiguration
 ) : IssuerListComponent<EPSPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

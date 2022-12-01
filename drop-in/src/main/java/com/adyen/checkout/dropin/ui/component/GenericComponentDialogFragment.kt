@@ -17,7 +17,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -72,7 +71,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     private fun attachComponent(
-        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
     ) {
         if (component is ViewableComponent) {
             binding.componentView.attach(component, viewLifecycleOwner)

@@ -30,9 +30,8 @@ import kotlinx.coroutines.flow.Flow
 class SepaComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: SepaDelegate,
-    override val configuration: SepaConfiguration,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<SepaPaymentMethod>, SepaConfiguration>,
+    PaymentComponent<PaymentComponentState<SepaPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

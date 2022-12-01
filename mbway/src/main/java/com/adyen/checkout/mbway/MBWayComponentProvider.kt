@@ -66,7 +66,6 @@ class MBWayComponentProvider(
                         componentParams = componentParams,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MBWayComponent::class.java]

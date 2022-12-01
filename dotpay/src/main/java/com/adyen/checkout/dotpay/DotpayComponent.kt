@@ -21,11 +21,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 class DotpayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<DotpayPaymentMethod>,
-    configuration: DotpayConfiguration
 ) : IssuerListComponent<DotpayPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

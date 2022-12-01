@@ -21,7 +21,7 @@ import com.adyen.checkout.core.exception.CheckoutException
  * @param <ComponentT>     The Component to be provided
  * @param <ConfigurationT> The Configuration for the Component to be provided
  */
-interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, ConfigurationT : Configuration> :
+interface PaymentComponentProvider<ComponentT : PaymentComponent<*>, ConfigurationT : Configuration> :
     ComponentProvider<ComponentT> {
 
     /**

@@ -25,10 +25,9 @@ import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.Flow
 
 class Adyen3DS2Component internal constructor(
-    override val configuration: Adyen3DS2Configuration,
     override val delegate: Adyen3DS2Delegate,
 ) : ViewModel(),
-    ActionComponent<Adyen3DS2Configuration>,
+    ActionComponent,
     IntentHandlingComponent,
     ViewableComponent {
 

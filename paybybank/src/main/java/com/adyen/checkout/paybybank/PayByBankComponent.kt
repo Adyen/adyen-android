@@ -27,9 +27,8 @@ import kotlinx.coroutines.flow.Flow
 class PayByBankComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: PayByBankDelegate,
-    override val configuration: PayByBankConfiguration
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<PayByBankPaymentMethod>, PayByBankConfiguration>,
+    PaymentComponent<PaymentComponentState<PayByBankPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

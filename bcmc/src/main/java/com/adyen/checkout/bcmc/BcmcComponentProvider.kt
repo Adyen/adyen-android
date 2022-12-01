@@ -76,7 +76,6 @@ class BcmcComponentProvider(
                     cardEncrypter = cardEncrypter,
                     analyticsRepository = analyticsRepository,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]

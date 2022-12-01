@@ -28,9 +28,8 @@ import kotlinx.coroutines.flow.Flow
 class GiftCardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GiftCardDelegate,
-    override val configuration: GiftCardConfiguration,
 ) : ViewModel(),
-    PaymentComponent<GiftCardComponentState, GiftCardConfiguration>,
+    PaymentComponent<GiftCardComponentState>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow

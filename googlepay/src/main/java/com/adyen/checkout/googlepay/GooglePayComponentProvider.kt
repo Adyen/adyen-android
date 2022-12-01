@@ -76,7 +76,6 @@ class GooglePayComponentProvider(
                     componentParams = componentParams,
                     analyticsRepository = analyticsRepository,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]

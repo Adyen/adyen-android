@@ -66,7 +66,6 @@ class PayByBankComponentProvider(
                         componentParams,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]

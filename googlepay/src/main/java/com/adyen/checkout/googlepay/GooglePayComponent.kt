@@ -28,9 +28,8 @@ import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
 class GooglePayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GooglePayDelegate,
-    override val configuration: GooglePayConfiguration
 ) : ViewModel(),
-    PaymentComponent<GooglePayComponentState, GooglePayConfiguration>,
+    PaymentComponent<GooglePayComponentState>,
     ActivityResultHandlingComponent {
 
     init {

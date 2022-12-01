@@ -52,7 +52,7 @@ class AdyenComponentView @JvmOverloads constructor(
     fun <T> attach(
         component: T,
         lifecycleOwner: LifecycleOwner
-    ) where T : ViewableComponent, T : Component<*, *> {
+    ) where T : ViewableComponent, T : Component {
         component.viewFlow
             .onEach { componentViewType ->
                 removeAllViews()

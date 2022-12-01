@@ -24,10 +24,9 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class WeChatPayActionComponent internal constructor(
-    override val configuration: WeChatPayActionConfiguration,
     override val delegate: WeChatDelegate,
 ) : ViewModel(),
-    ActionComponent<WeChatPayActionConfiguration>,
+    ActionComponent,
     IntentHandlingComponent,
     ViewableComponent {
 

@@ -31,9 +31,8 @@ import kotlinx.coroutines.flow.Flow
 class BcmcComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BcmcDelegate,
-    override val configuration: BcmcConfiguration,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<CardPaymentMethod>, BcmcConfiguration>,
+    PaymentComponent<PaymentComponentState<CardPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

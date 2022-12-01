@@ -24,10 +24,9 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class QRCodeComponent internal constructor(
-    override val configuration: QRCodeConfiguration,
     override val delegate: QRCodeDelegate,
 ) : ViewModel(),
-    ActionComponent<QRCodeConfiguration>,
+    ActionComponent,
     IntentHandlingComponent,
     ViewableComponent {
 

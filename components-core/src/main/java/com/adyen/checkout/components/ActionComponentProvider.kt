@@ -18,7 +18,7 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 
 interface ActionComponentProvider<
-    ComponentT : ActionComponent<out Configuration>,
+    ComponentT : ActionComponent,
     ConfigurationT : Configuration,
     DelegateT : ActionDelegate
     > : ComponentProvider<ComponentT> {

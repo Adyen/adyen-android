@@ -18,8 +18,7 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 class OnlineBankingSKComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
-    configuration: OnlineBankingSKConfiguration
-) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(savedStateHandle, delegate, configuration) {
+) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(savedStateHandle, delegate) {
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 

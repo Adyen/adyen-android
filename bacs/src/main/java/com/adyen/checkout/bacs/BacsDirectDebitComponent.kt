@@ -29,9 +29,8 @@ import kotlinx.coroutines.flow.Flow
 class BacsDirectDebitComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BacsDirectDebitDelegate,
-    override val configuration: BacsDirectDebitConfiguration
 ) : ViewModel(),
-    PaymentComponent<BacsDirectDebitComponentState, BacsDirectDebitConfiguration>,
+    PaymentComponent<BacsDirectDebitComponentState>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

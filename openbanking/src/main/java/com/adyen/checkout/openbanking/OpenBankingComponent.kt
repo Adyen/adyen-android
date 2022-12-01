@@ -21,11 +21,9 @@ import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
 class OpenBankingComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
-    configuration: OpenBankingConfiguration
 ) : IssuerListComponent<OpenBankingPaymentMethod>(
     savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

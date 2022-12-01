@@ -23,10 +23,9 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class VoucherComponent internal constructor(
-    override val configuration: VoucherConfiguration,
     override val delegate: VoucherDelegate,
 ) : ViewModel(),
-    ActionComponent<VoucherConfiguration>,
+    ActionComponent,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

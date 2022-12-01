@@ -69,7 +69,6 @@ class EntercashComponentProvider(
                 EntercashComponent(
                     savedStateHandle,
                     delegate,
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EntercashComponent::class.java]

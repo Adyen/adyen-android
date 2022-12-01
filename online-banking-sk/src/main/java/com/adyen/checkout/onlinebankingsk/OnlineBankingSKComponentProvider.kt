@@ -75,7 +75,6 @@ class OnlineBankingSKComponentProvider(
                 OnlineBankingSKComponent(
                     savedStateHandle,
                     delegate,
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OnlineBankingSKComponent::class.java]

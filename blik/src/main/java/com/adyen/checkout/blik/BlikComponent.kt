@@ -30,9 +30,8 @@ import kotlinx.coroutines.flow.Flow
 class BlikComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BlikDelegate,
-    override val configuration: BlikConfiguration
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<BlikPaymentMethod>, BlikConfiguration>,
+    PaymentComponent<PaymentComponentState<BlikPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

@@ -52,7 +52,6 @@ class VoucherComponentProvider(
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
-                configuration,
                 voucherDelegate,
             )
         }

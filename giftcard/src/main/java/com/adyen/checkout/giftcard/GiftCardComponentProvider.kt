@@ -73,7 +73,6 @@ class GiftCardComponentProvider(
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]

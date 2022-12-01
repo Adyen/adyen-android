@@ -66,7 +66,6 @@ class InstantPaymentComponentProvider(
                         componentParams = componentParams,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration = configuration
                 )
             }
 

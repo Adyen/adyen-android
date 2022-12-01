@@ -21,9 +21,8 @@ import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
 class InstantPaymentComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: InstantPaymentDelegate,
-    override val configuration: InstantPaymentConfiguration
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<PaymentMethodDetails>, InstantPaymentConfiguration> {
+    PaymentComponent<PaymentComponentState<PaymentMethodDetails>> {
 
     init {
         delegate.initialize(viewModelScope)

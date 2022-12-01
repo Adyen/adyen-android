@@ -64,7 +64,6 @@ class BacsDirectDebitComponentProvider(
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]

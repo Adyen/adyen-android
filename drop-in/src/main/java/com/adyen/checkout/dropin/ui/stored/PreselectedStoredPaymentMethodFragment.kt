@@ -20,7 +20,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -58,7 +57,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
-    private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+    private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         storedPaymentMethod = arguments?.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()

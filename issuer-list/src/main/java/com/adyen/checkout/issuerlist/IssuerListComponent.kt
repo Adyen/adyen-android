@@ -27,9 +27,8 @@ import kotlinx.coroutines.flow.Flow
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
     savedStateHandle: SavedStateHandle,
     final override val delegate: IssuerListDelegate<IssuerListPaymentMethodT>,
-    override val configuration: IssuerListConfiguration
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>, IssuerListConfiguration>,
+    PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

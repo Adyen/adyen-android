@@ -29,7 +29,7 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun getActionProviderFor(
     action: Action
-): ActionComponentProvider<out ActionComponent<out Configuration>, out Configuration, out ActionDelegate>? {
+): ActionComponentProvider<out ActionComponent, out Configuration, out ActionDelegate>? {
     val allActionProviders = listOf(
         RedirectComponent.PROVIDER,
         Adyen3DS2Component.PROVIDER,

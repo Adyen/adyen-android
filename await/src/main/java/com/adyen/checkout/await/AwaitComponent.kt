@@ -23,10 +23,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooManyFunctions")
 class AwaitComponent internal constructor(
-    override val configuration: AwaitConfiguration,
     override val delegate: AwaitDelegate,
 ) : ViewModel(),
-    ActionComponent<AwaitConfiguration>,
+    ActionComponent,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
