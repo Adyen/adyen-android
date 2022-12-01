@@ -18,7 +18,6 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.PaymentComponentUiEvent
 import com.adyen.checkout.components.ui.PaymentComponentUiState
 import com.adyen.checkout.components.ui.SubmitHandler
@@ -36,10 +35,10 @@ import kotlinx.coroutines.launch
 internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: GenericComponentParams,
-    private val storedPaymentMethod: StoredPaymentMethod,
+    val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler,
-) : BlikDelegate, ButtonDelegate {
+    private val submitHandler: SubmitHandler
+) : BlikDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
@@ -99,6 +98,16 @@ internal class StoredBlikDelegate(
         Logger.e(TAG, "updateInputData should not be called in StoredBlikDelegate")
     }
 
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
+    }
+
     private fun createOutputData() = BlikOutputData(blikCode = "")
 
     private fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
@@ -119,16 +128,6 @@ internal class StoredBlikDelegate(
     }
 
     override fun requiresInput(): Boolean = false
-
-    override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
-        )
-    }
 
     override fun onCleared() {
         removeObserver()

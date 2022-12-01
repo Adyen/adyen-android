@@ -40,7 +40,7 @@ internal class DefaultBlikDelegate(
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler
-) : BlikDelegate, ButtonDelegate {
+) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()
 
