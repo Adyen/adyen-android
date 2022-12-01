@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
@@ -24,12 +25,14 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: GenericComponentParams,
-    val paymentMethod: PaymentMethod
+    private val paymentMethod: PaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
 ) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()
@@ -47,6 +50,17 @@ internal class DefaultBlikDelegate(
 
     init {
         updateComponentState(outputData)
+    }
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     override fun observe(

@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -16,11 +17,14 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class DefaultSepaDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: GenericComponentParams,
-    private val paymentMethod: PaymentMethod
+    private val paymentMethod: PaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
 ) : SepaDelegate {
 
     private val inputData: SepaInputData = SepaInputData()
@@ -34,6 +38,17 @@ internal class DefaultSepaDelegate(
     override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
+    }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,

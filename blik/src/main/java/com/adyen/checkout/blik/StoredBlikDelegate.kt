@@ -11,6 +11,7 @@ package com.adyen.checkout.blik
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
@@ -23,11 +24,13 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: GenericComponentParams,
-    val storedPaymentMethod: StoredPaymentMethod
+    private val storedPaymentMethod: StoredPaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
 ) : BlikDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -40,6 +43,17 @@ internal class StoredBlikDelegate(
     override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
+    }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,

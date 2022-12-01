@@ -14,6 +14,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -23,11 +24,14 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -36,6 +40,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
+    private val analyticsRepository: AnalyticsRepository,
     private val termsAndConditionsUrl: String,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT> {
@@ -59,6 +64,17 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         val outputData = OnlineBankingOutputData()
         _outputDataFlow.tryEmit(outputData)
         updateComponentState(outputData)
+    }
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     override fun observe(
@@ -129,5 +145,9 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
 
     override fun onCleared() {
         removeObserver()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }
