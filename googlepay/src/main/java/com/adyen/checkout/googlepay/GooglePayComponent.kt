@@ -11,11 +11,12 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -27,13 +28,9 @@ import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
 class GooglePayComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GooglePayDelegate,
-    configuration: GooglePayConfiguration
-) :
-    BasePaymentComponent<GooglePayConfiguration, GooglePayComponentState>(
-        savedStateHandle,
-        delegate,
-        configuration
-    ),
+    override val configuration: GooglePayConfiguration
+) : ViewModel(),
+    PaymentComponent<GooglePayComponentState, GooglePayConfiguration>,
     ActivityResultHandlingComponent {
 
     init {

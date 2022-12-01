@@ -9,12 +9,13 @@ package com.adyen.checkout.blik
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -29,10 +30,9 @@ import kotlinx.coroutines.flow.Flow
 class BlikComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BlikDelegate,
-    configuration: BlikConfiguration
-) : BasePaymentComponent<
-    BlikConfiguration,
-    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, delegate, configuration),
+    override val configuration: BlikConfiguration
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<BlikPaymentMethod>, BlikConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

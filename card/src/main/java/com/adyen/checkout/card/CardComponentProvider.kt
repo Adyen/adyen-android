@@ -105,7 +105,7 @@ class CardComponentProvider(
             CardComponent(
                 savedStateHandle = savedStateHandle,
                 cardDelegate = cardDelegate,
-                cardConfiguration = configuration,
+                configuration = configuration,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
@@ -165,7 +165,7 @@ class CardComponentProvider(
             CardComponent(
                 savedStateHandle = savedStateHandle,
                 cardDelegate = cardDelegate,
-                cardConfiguration = configuration,
+                configuration = configuration,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )

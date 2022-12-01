@@ -9,10 +9,11 @@ package com.adyen.checkout.giftcard
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,12 +28,9 @@ import kotlinx.coroutines.flow.Flow
 class GiftCardComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: GiftCardDelegate,
-    configuration: GiftCardConfiguration,
-) : BasePaymentComponent<GiftCardConfiguration, GiftCardComponentState>(
-    savedStateHandle,
-    delegate,
-    configuration
-),
+    override val configuration: GiftCardConfiguration,
+) : ViewModel(),
+    PaymentComponent<GiftCardComponentState, GiftCardConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow

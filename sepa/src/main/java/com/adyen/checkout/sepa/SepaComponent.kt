@@ -9,11 +9,12 @@ package com.adyen.checkout.sepa
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -29,12 +30,9 @@ import kotlinx.coroutines.flow.Flow
 class SepaComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: SepaDelegate,
-    configuration: SepaConfiguration,
-) : BasePaymentComponent<SepaConfiguration, PaymentComponentState<SepaPaymentMethod>>(
-    savedStateHandle,
-    delegate,
-    configuration
-),
+    override val configuration: SepaConfiguration,
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<SepaPaymentMethod>, SepaConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

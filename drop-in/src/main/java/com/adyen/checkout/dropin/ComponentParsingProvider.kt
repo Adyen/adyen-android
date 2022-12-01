@@ -360,8 +360,6 @@ internal fun getComponentFor(
         }
     }
 
-    component.setCreatedForDropIn()
-
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 
@@ -575,8 +573,6 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
     }
-
-    component.setCreatedForDropIn()
 
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }

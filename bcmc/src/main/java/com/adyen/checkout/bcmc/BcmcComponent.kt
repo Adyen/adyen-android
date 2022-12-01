@@ -9,13 +9,14 @@ package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -30,9 +31,9 @@ import kotlinx.coroutines.flow.Flow
 class BcmcComponent internal constructor(
     savedStateHandle: SavedStateHandle,
     override val delegate: BcmcDelegate,
-    configuration: BcmcConfiguration,
-) : BasePaymentComponent<BcmcConfiguration,
-    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, delegate, configuration),
+    override val configuration: BcmcConfiguration,
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<CardPaymentMethod>, BcmcConfiguration>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
