@@ -73,7 +73,6 @@ class OnlineBankingSKComponentProvider(
                     ) { OnlineBankingSKPaymentMethod() }
 
                 OnlineBankingSKComponent(
-                    savedStateHandle,
                     delegate,
                 )
             }

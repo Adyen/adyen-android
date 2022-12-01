@@ -8,7 +8,6 @@
 package com.adyen.checkout.mbway
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponent
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MBWayComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: MBWayDelegate,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<MBWayPaymentMethod>>,

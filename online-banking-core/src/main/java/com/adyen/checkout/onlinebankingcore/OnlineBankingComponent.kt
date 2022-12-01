@@ -8,7 +8,6 @@
 package com.adyen.checkout.onlinebankingcore
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponent
@@ -22,7 +21,6 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    savedStateHandle: SavedStateHandle,
     final override val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,

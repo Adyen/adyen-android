@@ -1,7 +1,6 @@
 package com.adyen.checkout.instant
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponent
@@ -19,7 +18,6 @@ import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class InstantPaymentComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: InstantPaymentDelegate,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<PaymentMethodDetails>> {

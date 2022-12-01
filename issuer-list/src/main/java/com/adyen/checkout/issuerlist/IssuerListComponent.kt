@@ -8,7 +8,6 @@
 package com.adyen.checkout.issuerlist
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponent
@@ -25,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly.
  */
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    savedStateHandle: SavedStateHandle,
     final override val delegate: IssuerListDelegate<IssuerListPaymentMethodT>,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,

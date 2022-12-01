@@ -66,7 +66,7 @@ class IdealComponentProvider(
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
                 ) { IdealPaymentMethod() }
-                IdealComponent(savedStateHandle, delegate)
+                IdealComponent(delegate)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, IdealComponent::class.java]
     }

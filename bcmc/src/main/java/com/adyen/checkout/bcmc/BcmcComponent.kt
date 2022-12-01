@@ -8,7 +8,6 @@
 package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
@@ -29,7 +28,6 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class BcmcComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: BcmcDelegate,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<CardPaymentMethod>>,

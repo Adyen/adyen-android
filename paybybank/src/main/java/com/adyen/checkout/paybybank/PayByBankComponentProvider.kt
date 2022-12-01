@@ -59,7 +59,6 @@ class PayByBankComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 PayByBankComponent(
-                    savedStateHandle,
                     DefaultPayByBankDelegate(
                         PaymentObserverRepository(),
                         paymentMethod,

@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.entercash
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,10 +18,8 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EntercashComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<EntercashPaymentMethod>,
 ) : IssuerListComponent<EntercashPaymentMethod>(
-    savedStateHandle,
     delegate,
 ) {
     companion object {

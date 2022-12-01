@@ -69,7 +69,6 @@ class GooglePayComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
             GooglePayComponent(
-                savedStateHandle = savedStateHandle,
                 delegate = DefaultGooglePayDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,

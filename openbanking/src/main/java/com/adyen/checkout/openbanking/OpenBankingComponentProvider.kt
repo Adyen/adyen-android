@@ -67,7 +67,6 @@ class OpenBankingComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { OpenBankingPaymentMethod() }
                 OpenBankingComponent(
-                    savedStateHandle,
                     delegate,
                 )
             }

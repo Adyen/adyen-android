@@ -48,7 +48,7 @@ class BlikComponentProvider(
         assertSupported(paymentMethod)
 
         val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            viewModelFactory(savedStateRegistryOwner, defaultArgs) {
                 val componentParams = componentParamsMapper.mapToParams(configuration)
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
                 val analyticsService = AnalyticsService(httpClient)
@@ -60,7 +60,6 @@ class BlikComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 BlikComponent(
-                    savedStateHandle = savedStateHandle,
                     delegate = DefaultBlikDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,
@@ -96,7 +95,6 @@ class BlikComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 BlikComponent(
-                    savedStateHandle = savedStateHandle,
                     delegate = StoredBlikDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,

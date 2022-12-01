@@ -59,7 +59,6 @@ class SepaComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 SepaComponent(
-                    savedStateHandle,
                     DefaultSepaDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,

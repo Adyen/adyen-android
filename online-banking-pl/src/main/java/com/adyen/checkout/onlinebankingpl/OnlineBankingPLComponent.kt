@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.onlinebankingpl
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -20,10 +19,8 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PRO
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class OnlineBankingPLComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
-    savedStateHandle,
     delegate,
 ) {
     companion object {

@@ -9,7 +9,6 @@
 package com.adyen.checkout.bacs
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class BacsDirectDebitComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: BacsDirectDebitDelegate,
 ) : ViewModel(),
     PaymentComponent<BacsDirectDebitComponentState>,

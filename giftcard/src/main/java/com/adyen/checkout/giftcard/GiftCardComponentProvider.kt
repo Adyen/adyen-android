@@ -64,7 +64,6 @@ class GiftCardComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
             GiftCardComponent(
-                savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,

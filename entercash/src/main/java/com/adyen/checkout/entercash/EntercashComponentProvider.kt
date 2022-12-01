@@ -67,7 +67,6 @@ class EntercashComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { EntercashPaymentMethod() }
                 EntercashComponent(
-                    savedStateHandle,
                     delegate,
                 )
             }

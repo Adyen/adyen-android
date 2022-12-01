@@ -66,7 +66,7 @@ class MolpayComponentProvider(
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
                 ) { MolpayPaymentMethod() }
-                MolpayComponent(savedStateHandle, delegate)
+                MolpayComponent(delegate)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MolpayComponent::class.java]
     }

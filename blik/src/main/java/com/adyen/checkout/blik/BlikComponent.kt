@@ -8,7 +8,6 @@
 package com.adyen.checkout.blik
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class BlikComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: BlikDelegate,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<BlikPaymentMethod>>,

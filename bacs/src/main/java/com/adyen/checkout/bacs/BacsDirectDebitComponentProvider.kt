@@ -57,7 +57,6 @@ class BacsDirectDebitComponentProvider(
                 )
 
                 BacsDirectDebitComponent(
-                    savedStateHandle,
                     DefaultBacsDirectDebitDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,

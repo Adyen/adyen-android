@@ -67,7 +67,6 @@ class OnlineBankingPLComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { OnlineBankingPLPaymentMethod() }
                 OnlineBankingPLComponent(
-                    savedStateHandle,
                     delegate,
                 )
             }

@@ -73,7 +73,6 @@ class OnlineBankingCZComponentProvider(
                     ) { OnlineBankingCZPaymentMethod() }
 
                 OnlineBankingCZComponent(
-                    savedStateHandle,
                     delegate,
                 )
             }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponent
@@ -25,7 +24,6 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class PayByBankComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: PayByBankDelegate,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<PayByBankPaymentMethod>>,

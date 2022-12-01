@@ -59,7 +59,6 @@ class MBWayComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 MBWayComponent(
-                    savedStateHandle,
                     DefaultMBWayDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,

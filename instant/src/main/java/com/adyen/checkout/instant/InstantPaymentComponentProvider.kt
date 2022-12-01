@@ -59,7 +59,6 @@ class InstantPaymentComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 InstantPaymentComponent(
-                    savedStateHandle = savedStateHandle,
                     delegate = DefaultInstantPaymentDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
