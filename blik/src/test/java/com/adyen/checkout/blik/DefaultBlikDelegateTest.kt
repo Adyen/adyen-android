@@ -9,12 +9,15 @@
 package com.adyen.checkout.blik
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -24,12 +27,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultBlikDelegateTest {
+internal class DefaultBlikDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var delegate: DefaultBlikDelegate
 
@@ -41,12 +48,13 @@ internal class DefaultBlikDelegateTest {
             TEST_CLIENT_KEY
         ).build()
         delegate = DefaultBlikDelegate(
-            PaymentObserverRepository(),
-            GenericComponentParamsMapper(
+            observerRepository = PaymentObserverRepository(),
+            componentParams = GenericComponentParamsMapper(
                 parentConfiguration = null,
                 isCreatedByDropIn = false
             ).mapToParams(configuration),
-            PaymentMethod()
+            paymentMethod = PaymentMethod(),
+            analyticsRepository = analyticsRepository,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -161,6 +169,12 @@ internal class DefaultBlikDelegateTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

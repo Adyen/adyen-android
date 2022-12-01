@@ -16,6 +16,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressValidationUtils
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -42,12 +43,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class StoredCardDelegateTest {
+internal class StoredCardDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
     private lateinit var publicKeyRepository: TestPublicKeyRepository
@@ -292,6 +297,7 @@ internal class StoredCardDelegateTest {
         cardEncrypter: CardEncrypter = this.cardEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
+        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
     ): StoredCardDelegate {
         return StoredCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -302,6 +308,7 @@ internal class StoredCardDelegateTest {
                 isCreatedByDropIn = false
             ).mapToParams(configuration, storedPaymentMethod),
             cardEncrypter = cardEncrypter,
+            analyticsRepository = analyticsRepository,
         )
     }
 
@@ -419,6 +426,12 @@ internal class StoredCardDelegateTest {
             panLength = panLength,
             isSelected = isSelected,
         )
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

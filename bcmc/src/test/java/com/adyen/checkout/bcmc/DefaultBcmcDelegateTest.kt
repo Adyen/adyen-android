@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -32,12 +33,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class DefaultBcmcDelegateTest {
+internal class DefaultBcmcDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var testPublicKeyRepository: TestPublicKeyRepository
     private lateinit var cardEncrypter: TestCardEncrypter
@@ -64,7 +69,8 @@ internal class DefaultBcmcDelegateTest {
                 isCreatedByDropIn = false
             ).mapToParams(configuration),
             cardValidationMapper = cardValidationMapper,
-            cardEncrypter = cardEncrypter
+            cardEncrypter = cardEncrypter,
+            analyticsRepository = analyticsRepository,
         )
     }
 
@@ -289,6 +295,12 @@ internal class DefaultBcmcDelegateTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     private fun createOutputData(

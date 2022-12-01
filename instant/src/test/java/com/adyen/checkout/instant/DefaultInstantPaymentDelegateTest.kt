@@ -9,21 +9,31 @@
 package com.adyen.checkout.instant
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DefaultInstantPaymentDelegateTest {
+@ExtendWith(MockitoExtension::class)
+class DefaultInstantPaymentDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var delegate: DefaultInstantPaymentDelegate
 
@@ -35,12 +45,13 @@ class DefaultInstantPaymentDelegateTest {
             TEST_CLIENT_KEY
         ).build()
         delegate = DefaultInstantPaymentDelegate(
-            PaymentObserverRepository(),
-            PaymentMethod(type = TYPE),
-            GenericComponentParamsMapper(
+            observerRepository = PaymentObserverRepository(),
+            paymentMethod = PaymentMethod(type = TYPE),
+            componentParams = GenericComponentParamsMapper(
                 parentConfiguration = null,
                 isCreatedByDropIn = false
-            ).mapToParams(configuration)
+            ).mapToParams(configuration),
+            analyticsRepository = analyticsRepository
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -56,6 +67,12 @@ class DefaultInstantPaymentDelegateTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {
