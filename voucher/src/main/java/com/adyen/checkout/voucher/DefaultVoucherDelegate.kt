@@ -41,6 +41,10 @@ internal class DefaultVoucherDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
 
+    override fun initialize(coroutineScope: CoroutineScope) {
+        // no ops
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,

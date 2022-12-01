@@ -54,6 +54,10 @@ internal class DefaultWeChatDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
 
+    override fun initialize(coroutineScope: CoroutineScope) {
+        // no ops
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,

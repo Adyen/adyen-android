@@ -23,13 +23,6 @@ interface ActionDelegate : ComponentDelegate {
     fun handleAction(action: Action, activity: Activity)
 
     /**
-     * Override this method if you need to initialize your delegate and use a [CoroutineScope] inside it.
-     *
-     * Use [onCleared] to clear any local reference to [CoroutineScope].
-     */
-    fun initialize(coroutineScope: CoroutineScope) = Unit
-
-    /**
      * Override this method if you need to emit to the [exceptionFlow] from outside of this class.
      */
     fun onError(e: CheckoutException) = Unit

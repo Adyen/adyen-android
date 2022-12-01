@@ -23,8 +23,6 @@ interface PaymentComponentDelegate<
 
     fun getPaymentMethodType(): String
 
-    fun initialize(coroutineScope: CoroutineScope)
-
     fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
