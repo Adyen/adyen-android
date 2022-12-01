@@ -12,7 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.DefaultButtonDelegate
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
@@ -57,7 +57,7 @@ internal class DefaultIssuerListDelegateTest(
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
-            buttonDelegate = DefaultButtonDelegate()
+            submitHandler = SubmitHandler()
         ) { TestIssuerPaymentMethod() }
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -146,7 +146,7 @@ internal class DefaultIssuerListDelegateTest(
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
-            buttonDelegate = DefaultButtonDelegate()
+            submitHandler = SubmitHandler()
         ) { TestIssuerPaymentMethod() }
 
         delegate.viewFlow.test {
@@ -169,7 +169,7 @@ internal class DefaultIssuerListDelegateTest(
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
-            buttonDelegate = DefaultButtonDelegate()
+            submitHandler = SubmitHandler()
         ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())

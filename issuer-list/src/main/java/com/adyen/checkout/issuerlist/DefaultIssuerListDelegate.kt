@@ -14,18 +14,21 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -35,9 +38,9 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-    private val buttonDelegate: ButtonDelegate,
+    private val submitHandler: SubmitHandler,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
-) : IssuerListDelegate<IssuerListPaymentMethodT>, ButtonDelegate by buttonDelegate {
+) : IssuerListDelegate<IssuerListPaymentMethodT> {
 
     private val inputData: IssuerListInputData = IssuerListInputData()
 
@@ -50,6 +53,15 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
+
+    private val submitChannel: Channel<PaymentComponentState<IssuerListPaymentMethodT>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitChannel.receiveAsFlow()
+
+//    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
+//    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+//
+//    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
+//    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
@@ -70,7 +82,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -94,6 +106,16 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override fun updateInputData(update: IssuerListInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = null,
+            uiStateChannel = null
+        )
     }
 
     private fun onInputDataChanged() {

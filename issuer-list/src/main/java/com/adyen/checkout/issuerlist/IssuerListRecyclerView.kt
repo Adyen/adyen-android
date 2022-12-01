@@ -74,6 +74,7 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     private fun onItemClicked(issuerModel: IssuerModel) {
         Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
         issuerListDelegate.updateInputData { selectedIssuer = issuerModel }
+        issuerListDelegate.onSubmit()
     }
 
     override fun getView(): View = this
