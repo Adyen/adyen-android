@@ -8,11 +8,14 @@
 package com.adyen.checkout.card
 
 import android.content.Context
+import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.redirect.RedirectConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -36,6 +39,7 @@ class CardConfiguration private constructor(
     val kcpAuthVisibility: KCPAuthVisibility?,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
     /**
@@ -53,6 +57,12 @@ class CardConfiguration private constructor(
         private var kcpAuthVisibility: KCPAuthVisibility? = null
         private var installmentConfiguration: InstallmentConfiguration? = null
         private var addressConfiguration: AddressConfiguration? = null
+
+        private val genericActionConfigurationBuilder = GenericActionConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+        )
 
         /**
          * Constructor for Builder with default values.
@@ -214,6 +224,22 @@ class CardConfiguration private constructor(
         }
 
         /**
+         * Add configuration for 3DS2 action.
+         */
+        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
+            genericActionConfigurationBuilder.add3ds2ActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for Redirect action.
+         */
+        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+            genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
+            return this
+        }
+
+        /**
          * Build [CardConfiguration] object from [CardConfiguration.Builder] inputs.
          *
          * @return [CardConfiguration]
@@ -234,6 +260,7 @@ class CardConfiguration private constructor(
                 kcpAuthVisibility = kcpAuthVisibility,
                 installmentConfiguration = installmentConfiguration,
                 addressConfiguration = addressConfiguration,
+                genericActionConfiguration = genericActionConfigurationBuilder.build()
             )
         }
     }
