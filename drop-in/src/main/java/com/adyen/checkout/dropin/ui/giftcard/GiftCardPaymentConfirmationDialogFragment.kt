@@ -14,7 +14,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.components.api.ImageLoader
+import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -95,10 +96,8 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
 
         val paymentMethods = alreadyPaidMethods + currentPaymentMethod
 
-        val imageLoader = ImageLoader.getInstance(
-            requireContext(),
-            dropInViewModel.dropInConfiguration.environment
-        )
+        val imageLoader = DefaultImageLoader.with(dropInViewModel.dropInConfiguration.environment)
+        imageLoader.initialize(lifecycleScope)
 
         binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(imageLoader).apply {
             submitList(paymentMethods)

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.INVALID_TYPE
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
@@ -34,7 +34,7 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 
 @SuppressWarnings("TooManyFunctions")
 internal class PaymentMethodAdapter @JvmOverloads constructor(
-    private val imageLoader: ImageLoader,
+    private val imageLoader: DefaultImageLoader,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
     private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
@@ -90,7 +90,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class StoredPaymentMethodVH(
         private val binding: RemovablePaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader,
+        private val imageLoader: DefaultImageLoader,
         private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -122,11 +122,16 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             }
         }
 
-        private fun bindStoredCard(model: StoredCardModel, imageLoader: ImageLoader) {
+        private fun bindStoredCard(model: StoredCardModel, imageLoader: DefaultImageLoader) {
             with(binding) {
                 val context = root.context
                 textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
-                imageLoader.load(model.imageId, imageViewLogo)
+                imageLoader.loadLogo(
+                    model.imageId,
+                    imageViewLogo,
+                    R.drawable.ic_placeholder_image,
+                    R.drawable.ic_placeholder_image
+                )
                 textViewDetail.apply {
                     text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
                     isVisible = true
@@ -139,7 +144,12 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             with(binding) {
                 textViewTitle.text = model.name
                 textViewDetail.isVisible = false
-                imageLoader.load(model.imageId, imageViewLogo)
+                imageLoader.loadLogo(
+                    model.imageId,
+                    imageViewLogo,
+                    R.drawable.ic_placeholder_image,
+                    R.drawable.ic_placeholder_image
+                )
                 textViewAmount.isVisible = false
             }
         }
@@ -165,7 +175,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class PaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader
+        private val imageLoader: DefaultImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -176,7 +186,12 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             textViewDetail.isVisible = false
 
             imageViewLogo.borderEnabled = model.drawIconBorder
-            imageLoader.load(model.icon, imageViewLogo)
+            imageLoader.loadLogo(
+                model.icon,
+                imageViewLogo,
+                R.drawable.ic_placeholder_image,
+                R.drawable.ic_placeholder_image
+            )
 
             itemView.setOnClickListener {
                 onPaymentMethodSelectedCallback?.onPaymentMethodSelected(model)
@@ -188,13 +203,18 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class GiftCardPaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader
+        private val imageLoader: DefaultImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
             val context = binding.root.context
             textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
-            imageLoader.load(model.imageId, imageViewLogo)
+            imageLoader.loadLogo(
+                model.imageId,
+                imageViewLogo,
+                R.drawable.ic_placeholder_image,
+                R.drawable.ic_placeholder_image
+            )
             if (model.transactionLimit == null || model.shopperLocale == null) {
                 textViewDetail.isVisible = false
             } else {

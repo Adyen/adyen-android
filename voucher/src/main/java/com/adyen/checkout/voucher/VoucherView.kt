@@ -15,10 +15,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
+import com.adyen.checkout.components.imageloader.LogoSize
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.log.LogUtil
@@ -42,7 +42,7 @@ internal class VoucherView @JvmOverloads constructor(
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: DefaultImageLoader
 
     private lateinit var localizedContext: Context
 
@@ -60,7 +60,8 @@ internal class VoucherView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment)
+        imageLoader = DefaultImageLoader.with(delegate.componentParams.environment)
+        imageLoader.initialize(coroutineScope)
 
         observeDelegate(delegate, coroutineScope)
 
@@ -88,9 +89,16 @@ internal class VoucherView @JvmOverloads constructor(
         Logger.d(TAG, "outputDataChanged")
         loadLogo(outputData.paymentMethodType)
     }
+
     private fun loadLogo(paymentMethodType: String?) {
         if (!paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
+            imageLoader.loadLogo(
+                paymentMethodType,
+                binding.imageViewLogo,
+                LogoSize.MEDIUM,
+                R.drawable.ic_placeholder_image,
+                R.drawable.ic_placeholder_image
+            )
         }
     }
 

@@ -13,8 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
-import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -50,11 +50,13 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
+        val imageLoader = DefaultImageLoader.with(delegate.componentParams.environment)
+        imageLoader.initialize(coroutineScope)
 
         issuersAdapter = IssuerListSpinnerAdapter(
             context = context,
             issuerList = delegate.getIssuers(),
-            imageLoader = getInstance(context, delegate.componentParams.environment),
+            imageLoader = imageLoader,
             paymentMethod = delegate.getPaymentMethodType(),
             hideIssuerLogo = delegate.componentParams.hideIssuerLogos,
         )

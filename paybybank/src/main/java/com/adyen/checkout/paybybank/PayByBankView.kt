@@ -14,10 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -31,7 +31,7 @@ class PayByBankView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): LinearLayout(context, attrs, defStyleAttr), ComponentView {
+) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     private val binding: PayByBankViewBinding = PayByBankViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -40,6 +40,8 @@ class PayByBankView @JvmOverloads constructor(
     private lateinit var delegate: PayByBankDelegate
 
     private var payByBankRecyclerAdapter: PayByBankRecyclerAdapter? = null
+
+    private lateinit var imageLoader: DefaultImageLoader
 
     init {
         orientation = VERTICAL
@@ -53,6 +55,9 @@ class PayByBankView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
+
+        imageLoader = DefaultImageLoader.with(delegate.componentParams.environment)
+        imageLoader.initialize(coroutineScope)
 
         observeDelegate(delegate, coroutineScope)
 
@@ -95,7 +100,7 @@ class PayByBankView @JvmOverloads constructor(
 
     private fun initIssuersRecyclerView() {
         payByBankRecyclerAdapter = PayByBankRecyclerAdapter(
-            imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment),
+            imageLoader = imageLoader,
             paymentMethod = delegate.getPaymentMethodType(),
             onItemClicked = ::onItemClicked
         ).apply {

@@ -16,9 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
@@ -54,7 +55,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private lateinit var storedPaymentMethod: StoredPaymentMethod
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: DefaultImageLoader
     private lateinit var component: PaymentComponent<*>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -64,10 +65,8 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             throw ComponentException("Stored payment method is empty or not found.")
         }
 
-        imageLoader = ImageLoader.getInstance(
-            requireContext(),
-            dropInViewModel.dropInConfiguration.environment
-        )
+        imageLoader = DefaultImageLoader.with(dropInViewModel.dropInConfiguration.environment)
+        imageLoader.initialize(lifecycleScope)
 
         component =
             getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
@@ -144,7 +143,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 is StoredCardModel -> {
                     binding.storedPaymentMethodItem.textViewTitle.text =
                         requireActivity().getString(R.string.card_number_4digit, it.lastFour)
-                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
+                    imageLoader.loadLogo(
+                        it.imageId,
+                        binding.storedPaymentMethodItem.imageViewLogo,
+                        R.drawable.ic_placeholder_image,
+                        R.drawable.ic_placeholder_image
+                    )
                     binding.storedPaymentMethodItem.textViewDetail.text =
                         DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
                     binding.storedPaymentMethodItem.textViewDetail.isVisible = true
@@ -152,7 +156,11 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 is GenericStoredModel -> {
                     binding.storedPaymentMethodItem.textViewTitle.text = it.name
                     binding.storedPaymentMethodItem.textViewDetail.isVisible = false
-                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
+                    imageLoader.loadLogo(
+                        it.imageId,
+                        binding.storedPaymentMethodItem.imageViewLogo,
+                        R.drawable.ic_placeholder_image,
+                    )
                 }
             }
         }

@@ -14,10 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -44,7 +44,7 @@ internal class QrCodeView @JvmOverloads constructor(
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: DefaultImageLoader
 
     private lateinit var localizedContext: Context
 
@@ -59,7 +59,8 @@ internal class QrCodeView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment)
+        imageLoader = DefaultImageLoader.with(delegate.componentParams.environment)
+        imageLoader.initialize(coroutineScope)
 
         observeDelegate(delegate, coroutineScope)
 
@@ -98,7 +99,12 @@ internal class QrCodeView @JvmOverloads constructor(
     private fun updateLogo(paymentMethodType: String?) {
         Logger.d(TAG, "updateLogo - $paymentMethodType")
         if (!paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(paymentMethodType, binding.imageViewLogo)
+            imageLoader.loadLogo(
+                paymentMethodType,
+                binding.imageViewLogo,
+                R.drawable.ic_placeholder_image,
+                R.drawable.ic_placeholder_image
+            )
         }
     }
 

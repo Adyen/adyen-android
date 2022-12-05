@@ -13,13 +13,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerModel
 import com.adyen.checkout.issuerlist.R
 
 internal class PayByBankRecyclerAdapter(
-    private val imageLoader: ImageLoader,
+    private val imageLoader: DefaultImageLoader,
     private val paymentMethod: String,
     private val onItemClicked: (IssuerModel) -> Unit,
 ) : ListAdapter<IssuerModel, PayByBankRecyclerAdapter.PayByBankViewHolder>(IssuerDiffCallBack) {
@@ -40,13 +40,13 @@ internal class PayByBankRecyclerAdapter(
         fun bind(
             paymentMethod: String,
             issuerModel: IssuerModel,
-            imageLoader: ImageLoader,
+            imageLoader: DefaultImageLoader,
             onItemClicked: (IssuerModel) -> Unit,
         ) {
             binding.root.setOnClickListener { onItemClicked(issuerModel) }
 
             binding.textViewTitle.text = issuerModel.name
-            imageLoader.load(
+            imageLoader.loadLogo(
                 paymentMethod,
                 issuerModel.id,
                 binding.imageViewLogo,

@@ -28,13 +28,13 @@ import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.InstallmentUtils
-import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.isVisible
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.extensions.showError
+import com.adyen.checkout.components.imageloader.DefaultImageLoader
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.FieldState
@@ -65,7 +65,7 @@ internal class CardView @JvmOverloads constructor(
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var imageLoader: ImageLoader? = null
+    private var imageLoader: DefaultImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
 
@@ -101,8 +101,8 @@ internal class CardView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment)
-
+        imageLoader = DefaultImageLoader.with(delegate.componentParams.environment)
+        imageLoader?.initialize(coroutineScope)
         observeDelegate(delegate, coroutineScope)
 
         initCardNumberInput()
@@ -285,11 +285,11 @@ internal class CardView @JvmOverloads constructor(
         } else {
             val firtDetectedCardType = detectedCardTypes.first()
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-            imageLoader?.load(
+            imageLoader?.loadLogo(
                 detectedCardTypes[0].cardType.txVariant,
                 binding.cardBrandLogoImageViewPrimary,
-                0,
-                R.drawable.ic_card
+                R.drawable.ic_placeholder_image,
+                R.drawable.ic_card,
             )
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
@@ -318,10 +318,10 @@ internal class CardView @JvmOverloads constructor(
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let { detectedCardType ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-                imageLoader?.load(
+                imageLoader?.loadLogo(
                     detectedCardType.cardType.txVariant,
                     binding.cardBrandLogoImageViewSecondary,
-                    0,
+                    R.drawable.ic_placeholder_image,
                     R.drawable.ic_card
                 )
                 initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
