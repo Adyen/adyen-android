@@ -31,7 +31,6 @@ class ImageLoaderService {
         }
     }
 
-
     companion object {
         private val TAG = LogUtil.getTag()
     }

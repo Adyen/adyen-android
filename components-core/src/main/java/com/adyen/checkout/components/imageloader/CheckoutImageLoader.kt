@@ -12,6 +12,7 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("LongParameterList")
 interface CheckoutImageLoader {
     fun loadLogo(
         txVariant: String,
