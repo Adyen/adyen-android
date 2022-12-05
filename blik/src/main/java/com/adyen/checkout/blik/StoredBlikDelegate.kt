@@ -38,9 +38,8 @@ internal class StoredBlikDelegate(
     override val componentParams: GenericComponentParams,
     private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-    private val buttonDelegate: ButtonDelegate,
-    private val submitHandler: SubmitHandler
-) : BlikDelegate, ButtonDelegate by buttonDelegate {
+    private val submitHandler: SubmitHandler,
+) : BlikDelegate, ButtonDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
@@ -52,6 +51,9 @@ internal class StoredBlikDelegate(
     override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
+
+    private val submitChannel: Channel<PaymentComponentState<BlikPaymentMethod>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitChannel.receiveAsFlow()
 
     private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
     override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
@@ -78,7 +80,7 @@ internal class StoredBlikDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
-            submitFlow = buttonDelegate.submitFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -117,6 +119,16 @@ internal class StoredBlikDelegate(
     }
 
     override fun requiresInput(): Boolean = false
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
+    }
 
     override fun onCleared() {
         removeObserver()

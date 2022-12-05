@@ -32,7 +32,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.DefaultButtonDelegate
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -142,7 +141,7 @@ class CardComponentProvider(
                 analyticsRepository = analyticsRepository,
                 cardEncrypter = cardEncrypter,
                 publicKeyRepository = publicKeyRepository,
-                buttonDelegate = DefaultButtonDelegate()
+                submitHandler = SubmitHandler()
             )
 
             val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
