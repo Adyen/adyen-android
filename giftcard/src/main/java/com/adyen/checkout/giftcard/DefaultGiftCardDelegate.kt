@@ -206,7 +206,6 @@ internal class DefaultGiftCardDelegate(
         )
     }
 
-
     private fun encryptCard(
         outputData: GiftCardOutputData,
         publicKey: String,
