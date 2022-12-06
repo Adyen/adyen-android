@@ -32,6 +32,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -68,7 +69,9 @@ internal class DefaultPayByBankDelegate(
     init {
         val hasIssuers = paymentMethod.issuers?.isNotEmpty() == true
         if (!hasIssuers) {
-            _componentStateFlow.tryEmit(createValidComponentState())
+            val state = createValidComponentState()
+            _componentStateFlow.tryEmit(state)
+            submitChannel.trySend(state)
         } else {
             _viewFlow.tryEmit(PayByBankComponentViewType)
         }

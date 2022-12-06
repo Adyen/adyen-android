@@ -85,6 +85,7 @@ class PayByBankView @JvmOverloads constructor(
     private fun onItemClicked(issuerModel: IssuerModel) {
         Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
         delegate.updateInputData { selectedIssuer = issuerModel }
+        delegate.onSubmit()
     }
 
     private fun initSearchQueryInput() {
