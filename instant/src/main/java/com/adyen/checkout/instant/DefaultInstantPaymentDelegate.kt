@@ -13,6 +13,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -22,8 +23,11 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 internal class DefaultInstantPaymentDelegate(
@@ -33,8 +37,15 @@ internal class DefaultInstantPaymentDelegate(
     private val analyticsRepository: AnalyticsRepository,
 ) : InstantPaymentDelegate {
 
-    override val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>> =
+    override val componentStateFlow: StateFlow<PaymentComponentState<PaymentMethodDetails>> =
         MutableStateFlow(createComponentState())
+
+    private val submitChannel: Channel<PaymentComponentState<PaymentMethodDetails>> = bufferedChannel()
+    private val submitFlow: Flow<PaymentComponentState<PaymentMethodDetails>> = submitChannel.receiveAsFlow()
+
+    init {
+        submitChannel.trySend(componentStateFlow.value)
+    }
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
@@ -63,7 +74,7 @@ internal class DefaultInstantPaymentDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
-            submitFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
