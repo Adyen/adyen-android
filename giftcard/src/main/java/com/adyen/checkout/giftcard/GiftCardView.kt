@@ -100,8 +100,6 @@ internal class GiftCardView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired: Boolean = true
-
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val outputData = giftCardDelegate.outputData

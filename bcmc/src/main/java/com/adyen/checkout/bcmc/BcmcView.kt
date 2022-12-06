@@ -41,8 +41,6 @@ internal class BcmcView @JvmOverloads constructor(
 
     private lateinit var delegate: BcmcDelegate
 
-    override val isConfirmationRequired: Boolean = true
-
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()

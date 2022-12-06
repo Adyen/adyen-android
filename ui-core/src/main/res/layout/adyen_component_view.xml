@@ -22,7 +22,8 @@
     <Button
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
-        android:text="Pay" />
+        android:visibility="gone"
+        tools:text="Pay" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"

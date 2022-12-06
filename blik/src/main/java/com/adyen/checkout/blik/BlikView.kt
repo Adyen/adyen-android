@@ -90,8 +90,6 @@ internal class BlikView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired: Boolean = true
-
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val blikCodeValidation = blikDelegate.outputData.blikCodeField.validation

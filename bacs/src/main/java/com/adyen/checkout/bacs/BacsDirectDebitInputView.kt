@@ -87,9 +87,6 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         initConsentSwitches()
     }
 
-    override val isConfirmationRequired: Boolean
-        get() = true
-
     override fun highlightValidationErrors() {
         bacsDelegate.outputData.let {
             var isErrorFocused = false

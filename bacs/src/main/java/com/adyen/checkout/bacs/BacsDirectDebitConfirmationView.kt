@@ -59,8 +59,6 @@ internal class BacsDirectDebitConfirmationView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired = true
-
     override fun highlightValidationErrors() {
         // no ops
     }

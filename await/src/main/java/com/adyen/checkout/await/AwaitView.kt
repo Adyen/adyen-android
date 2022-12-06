@@ -80,8 +80,6 @@ internal class AwaitView @JvmOverloads constructor(
         updateLogo(outputData.paymentMethodType)
     }
 
-    override val isConfirmationRequired = false
-
     override fun highlightValidationErrors() {
         // No validation required
     }

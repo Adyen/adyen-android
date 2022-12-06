@@ -49,6 +49,7 @@ class AdyenComponentView @JvmOverloads constructor(
     )
 
     private var componentView: ComponentView? = null
+    private var componentViewType: ComponentViewType? = null
 
     init {
         isVisible = isInEditMode
@@ -99,6 +100,7 @@ class AdyenComponentView @JvmOverloads constructor(
     ) {
         val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
+        this.componentViewType = viewType
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
@@ -128,11 +130,13 @@ class AdyenComponentView @JvmOverloads constructor(
                 }
             }?.launchIn(coroutineScope)
 
+            binding.payButton.isVisible = true
             binding.payButton.setOnClickListener {
                 (delegate as? ButtonDelegate)?.onSubmit()
             }
         } else {
             binding.payButton.isVisible = false
+            binding.payButton.setOnClickListener(null)
         }
     }
 
@@ -154,7 +158,7 @@ class AdyenComponentView @JvmOverloads constructor(
      * not.
      */
     val isConfirmationRequired: Boolean
-        get() = componentView?.isConfirmationRequired ?: false
+        get() = componentViewType is ButtonComponentViewType
 
     /**
      * Highlight and focus on the current validation errors for the user to take action.

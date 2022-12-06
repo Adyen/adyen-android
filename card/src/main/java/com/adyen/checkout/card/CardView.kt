@@ -754,8 +754,6 @@ internal class CardView @JvmOverloads constructor(
         return outputData.componentMode == ComponentMode.STORED
     }
 
-    override val isConfirmationRequired: Boolean = true
-
     override fun getView(): View = this
 
     companion object {

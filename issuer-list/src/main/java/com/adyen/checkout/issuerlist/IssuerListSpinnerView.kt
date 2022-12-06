@@ -68,9 +68,6 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
         // no embedded localized strings on this view
     }
 
-    override val isConfirmationRequired: Boolean
-        get() = true
-
     override fun highlightValidationErrors() {
         // no implementation
     }

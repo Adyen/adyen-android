@@ -105,8 +105,6 @@ class PayByBankView @JvmOverloads constructor(
         binding.recyclerIssuers.adapter = payByBankRecyclerAdapter
     }
 
-    override val isConfirmationRequired: Boolean = false
-
     override fun highlightValidationErrors() {
         // no validation
     }

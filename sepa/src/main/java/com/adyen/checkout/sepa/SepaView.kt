@@ -87,8 +87,6 @@ internal class SepaView @JvmOverloads constructor(
         )
     }
 
-    override val isConfirmationRequired: Boolean = true
-
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val outputData: SepaOutputData = sepaDelegate.outputData
