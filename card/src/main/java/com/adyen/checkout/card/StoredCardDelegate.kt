@@ -24,7 +24,6 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.PaymentComponentUiEvent
@@ -46,6 +45,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -106,6 +107,11 @@ internal class StoredCardDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         this.coroutineScope = coroutineScope
+
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         initializeInputData()
         fetchPublicKey()
@@ -257,6 +263,17 @@ internal class StoredCardDelegate(
             cardNumber,
             firstCardType,
         )
+    }
+
+    private fun onState(state: CardComponentState) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUiState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUiState.Idle)
+            }
+        }
     }
 
     override fun onSubmit() {

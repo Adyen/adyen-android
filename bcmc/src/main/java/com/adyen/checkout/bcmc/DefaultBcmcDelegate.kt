@@ -45,6 +45,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -87,6 +89,10 @@ internal class DefaultBcmcDelegate(
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
@@ -182,6 +188,17 @@ internal class DefaultBcmcDelegate(
         Logger.v(TAG, "updateComponentState")
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun onState(state: PaymentComponentState<CardPaymentMethod>) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUiState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUiState.Idle)
+            }
+        }
     }
 
     @Suppress("ReturnCount")

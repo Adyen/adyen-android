@@ -109,6 +109,10 @@ internal class DefaultCardDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
@@ -316,6 +320,17 @@ internal class DefaultCardDelegate(
         Logger.v(TAG, "updateComponentState")
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun onState(state: CardComponentState) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUiState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUiState.Idle)
+            }
+        }
     }
 
     @Suppress("ReturnCount")
