@@ -36,6 +36,10 @@ class GooglePayComponent internal constructor(
     ),
     ActivityResultHandlingComponent {
 
+    init {
+        delegate.initialize(viewModelScope)
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit

@@ -39,6 +39,10 @@ class SepaComponent internal constructor(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
+    init {
+        delegate.initialize(viewModelScope)
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit

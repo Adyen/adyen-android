@@ -18,6 +18,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
 internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
@@ -72,25 +74,15 @@ internal class DefaultBcmcDelegate(
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
 
-    override fun observe(
-        lifecycleOwner: LifecycleOwner,
-        coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
-    ) {
-        observerRepository.addObservers(
-            stateFlow = componentStateFlow,
-            exceptionFlow = exceptionFlow,
-            lifecycleOwner = lifecycleOwner,
-            coroutineScope = coroutineScope,
-            callback = callback
-        )
-    }
-
-    override fun removeObserver() {
-        observerRepository.removeObservers()
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     private fun fetchPublicKey(coroutineScope: CoroutineScope) {
@@ -111,6 +103,24 @@ internal class DefaultBcmcDelegate(
                 }
             )
         }
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
+    ) {
+        observerRepository.addObservers(
+            stateFlow = componentStateFlow,
+            exceptionFlow = exceptionFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
+    }
+
+    override fun removeObserver() {
+        observerRepository.removeObservers()
     }
 
     override fun updateInputData(update: BcmcInputData.() -> Unit) {

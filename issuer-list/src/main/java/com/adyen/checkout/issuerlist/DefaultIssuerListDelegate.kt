@@ -13,15 +13,19 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -29,6 +33,7 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val analyticsRepository: AnalyticsRepository,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : IssuerListDelegate<IssuerListPaymentMethodT> {
 
@@ -43,6 +48,17 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
+    }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
@@ -112,5 +128,9 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     override fun onCleared() {
         removeObserver()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

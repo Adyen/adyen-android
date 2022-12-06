@@ -9,13 +9,16 @@
 package com.adyen.checkout.googlepay
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.google.android.gms.wallet.PaymentData
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -24,12 +27,16 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultGooglePayDelegateTest {
+internal class DefaultGooglePayDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var delegate: DefaultGooglePayDelegate
 
@@ -53,6 +60,7 @@ internal class DefaultGooglePayDelegateTest {
                 parentConfiguration = null,
                 isCreatedByDropIn = false
             ).mapToParams(configuration, paymentMethod),
+            analyticsRepository = analyticsRepository,
         )
     }
 
@@ -106,5 +114,11 @@ internal class DefaultGooglePayDelegateTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 }

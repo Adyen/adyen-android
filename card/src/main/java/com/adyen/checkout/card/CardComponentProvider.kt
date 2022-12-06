@@ -138,11 +138,21 @@ class CardComponentProvider(
             configuration.clientKey
         ).build()
 
+        val analyticsService = AnalyticsService(httpClient)
+        val analyticsRepository = DefaultAnalyticsRepository(
+            packageName = application.packageName,
+            locale = componentParams.shopperLocale,
+            source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+            analyticsService = analyticsService,
+            analyticsMapper = AnalyticsMapper(),
+        )
+
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val cardDelegate = StoredCardDelegate(
                 observerRepository = PaymentObserverRepository(),
                 storedPaymentMethod = storedPaymentMethod,
                 componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
                 cardEncrypter = cardEncrypter,
                 publicKeyRepository = publicKeyRepository,
             )

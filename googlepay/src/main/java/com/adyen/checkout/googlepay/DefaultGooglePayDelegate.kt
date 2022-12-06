@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -31,11 +32,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 internal class DefaultGooglePayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     override val componentParams: GooglePayComponentParams,
+    private val analyticsRepository: AnalyticsRepository,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -43,6 +46,17 @@ internal class DefaultGooglePayDelegate(
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
+    }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,

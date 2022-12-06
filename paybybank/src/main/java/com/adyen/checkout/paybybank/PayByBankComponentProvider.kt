@@ -15,12 +15,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -45,12 +50,22 @@ class PayByBankComponentProvider(
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val componentParams = componentParamsMapper.mapToParams(configuration)
+                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+                val analyticsService = AnalyticsService(httpClient)
+                val analyticsRepository = DefaultAnalyticsRepository(
+                    packageName = application.packageName,
+                    locale = componentParams.shopperLocale,
+                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                    analyticsService = analyticsService,
+                    analyticsMapper = AnalyticsMapper(),
+                )
                 PayByBankComponent(
                     savedStateHandle,
                     DefaultPayByBankDelegate(
                         PaymentObserverRepository(),
                         paymentMethod,
                         componentParams,
+                        analyticsRepository = analyticsRepository,
                     ),
                     configuration,
                 )

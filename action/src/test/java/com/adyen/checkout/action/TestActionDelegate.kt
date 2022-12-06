@@ -139,6 +139,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     var handleActionCalled = false
 
+    override fun initialize(coroutineScope: CoroutineScope) = Unit
+
     override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
         this.uiCustomization = uiCustomization
     }

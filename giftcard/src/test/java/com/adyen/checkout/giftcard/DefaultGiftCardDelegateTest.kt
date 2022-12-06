@@ -9,6 +9,7 @@
 package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -29,12 +30,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class DefaultGiftCardDelegateTest {
+internal class DefaultGiftCardDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
     private lateinit var publicKeyRepository: TestPublicKeyRepository
@@ -58,6 +63,7 @@ internal class DefaultGiftCardDelegateTest {
                 isCreatedByDropIn = false
             ).mapToParams(configuration),
             cardEncrypter = cardEncrypter,
+            analyticsRepository = analyticsRepository,
         )
     }
 
@@ -139,6 +145,12 @@ internal class DefaultGiftCardDelegateTest {
                 assertEquals("0000", componentState.lastFourDigits)
             }
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

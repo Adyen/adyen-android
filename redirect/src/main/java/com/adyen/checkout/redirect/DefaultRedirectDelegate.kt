@@ -49,6 +49,10 @@ internal class DefaultRedirectDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(RedirectComponentViewType)
 
+    override fun initialize(coroutineScope: CoroutineScope) {
+        // no ops
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,

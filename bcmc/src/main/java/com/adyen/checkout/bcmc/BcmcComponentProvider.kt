@@ -15,6 +15,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.lifecycle.get
@@ -53,6 +57,14 @@ class BcmcComponentProvider(
         val cardValidationMapper = CardValidationMapper()
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val analyticsService = AnalyticsService(httpClient)
+        val analyticsRepository = DefaultAnalyticsRepository(
+            packageName = application.packageName,
+            locale = componentParams.shopperLocale,
+            source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+            analyticsService = analyticsService,
+            analyticsMapper = AnalyticsMapper(),
+        )
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             BcmcComponent(
                 savedStateHandle = savedStateHandle,
@@ -62,7 +74,8 @@ class BcmcComponentProvider(
                     publicKeyRepository = publicKeyRepository,
                     componentParams = componentParams,
                     cardValidationMapper = cardValidationMapper,
-                    cardEncrypter = cardEncrypter
+                    cardEncrypter = cardEncrypter,
+                    analyticsRepository = analyticsRepository,
                 ),
                 configuration = configuration,
             )

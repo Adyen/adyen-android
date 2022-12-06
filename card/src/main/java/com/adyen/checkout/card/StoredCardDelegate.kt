@@ -17,6 +17,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -49,6 +50,7 @@ internal class StoredCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
     override val componentParams: CardComponentParams,
+    private val analyticsRepository: AnalyticsRepository,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
 ) : CardDelegate {
@@ -90,8 +92,16 @@ internal class StoredCardDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         this.coroutineScope = coroutineScope
+        sendAnalyticsEvent(coroutineScope)
         initializeInputData()
         fetchPublicKey()
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     override fun observe(

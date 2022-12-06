@@ -189,6 +189,7 @@ internal class DropInViewModel(
     }
 
     private fun sendAnalyticsEvent() {
+        Logger.v(TAG, "sendAnalyticsEvent")
         viewModelScope.launch {
             analyticsRepository.sendAnalyticsEvent()
         }

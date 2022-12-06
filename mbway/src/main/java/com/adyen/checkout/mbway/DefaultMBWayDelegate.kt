@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
@@ -26,12 +27,14 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
-    val paymentMethod: PaymentMethod,
+    private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
+    private val analyticsRepository: AnalyticsRepository,
 ) : MBWayDelegate {
 
     private val inputData = MBWayInputData()
@@ -48,6 +51,17 @@ internal class DefaultMBWayDelegate(
 
     init {
         updateComponentState(outputData)
+    }
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     override fun observe(

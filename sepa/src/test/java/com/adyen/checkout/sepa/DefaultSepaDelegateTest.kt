@@ -1,12 +1,15 @@
 package com.adyen.checkout.sepa
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -15,12 +18,16 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultSepaDelegateTest {
+internal class DefaultSepaDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var delegate: DefaultSepaDelegate
 
@@ -38,6 +45,7 @@ internal class DefaultSepaDelegateTest {
                 parentConfiguration = null,
                 isCreatedByDropIn = false
             ).mapToParams(configuration),
+            analyticsRepository = analyticsRepository,
         )
     }
 
@@ -80,6 +88,12 @@ internal class DefaultSepaDelegateTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

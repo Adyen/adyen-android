@@ -26,6 +26,10 @@ class InstantPaymentComponent internal constructor(
     configuration
 ) {
 
+    init {
+        delegate.initialize(viewModelScope)
+    }
+
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<PaymentMethodDetails>>) -> Unit

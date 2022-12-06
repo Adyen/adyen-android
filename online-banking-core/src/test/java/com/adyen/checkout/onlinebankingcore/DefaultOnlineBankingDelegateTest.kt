@@ -10,12 +10,15 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import app.cash.turbine.test
+import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -36,7 +39,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultOnlineBankingDelegateTest {
+internal class DefaultOnlineBankingDelegateTest(
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
@@ -57,6 +62,7 @@ internal class DefaultOnlineBankingDelegateTest {
             observerRepository = PaymentObserverRepository(),
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
+            analyticsRepository = analyticsRepository,
             componentParams = GenericComponentParamsMapper(
                 parentConfiguration = null,
                 isCreatedByDropIn = false
@@ -151,6 +157,12 @@ internal class DefaultOnlineBankingDelegateTest {
 
             assertThrows<IllegalStateException> { pdfOpener.open(context, url) }
         }
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

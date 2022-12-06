@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.analytics.AnalyticsMapper
+import com.adyen.checkout.components.analytics.AnalyticsSource
+import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
+import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
@@ -52,11 +56,20 @@ class GiftCardComponentProvider(
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
+                    analyticsRepository = analyticsRepository,
                     publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,

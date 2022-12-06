@@ -11,7 +11,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface CardDelegate :
@@ -25,8 +24,6 @@ interface CardDelegate :
     val componentStateFlow: Flow<CardComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
-
-    fun initialize(coroutineScope: CoroutineScope)
 
     fun requiresInput(): Boolean
 
