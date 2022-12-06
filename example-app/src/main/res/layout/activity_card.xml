@@ -20,22 +20,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <Button
-        android:id="@+id/pay_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="@string/pay_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_view" />
-
     <androidx.constraintlayout.widget.Group
         android:id="@+id/card_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="card_view,pay_button" />
+        app:constraint_referenced_ids="card_view" />
 
     <ProgressBar
         android:id="@+id/progress_indicator"
