@@ -63,10 +63,9 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
-            is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
-                event.state,
-                binding.componentView.isConfirmationRequired
-            )
+            is PaymentComponentEvent.StateChanged -> {
+                // no ops
+            }
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")

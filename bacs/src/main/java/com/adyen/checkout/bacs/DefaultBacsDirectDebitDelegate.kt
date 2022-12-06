@@ -137,6 +137,16 @@ internal class DefaultBacsDirectDebitDelegate(
         }
     }
 
+    override fun handleBackPress(): Boolean {
+        val isConfirmationMode = _componentStateFlow.value.mode == BacsDirectDebitMode.CONFIRMATION
+        return if (isConfirmationMode) {
+            setMode(BacsDirectDebitMode.INPUT)
+            true
+        } else {
+            false
+        }
+    }
+
     private fun onInputDataChanged() {
         updateViewType(inputData.mode)
 

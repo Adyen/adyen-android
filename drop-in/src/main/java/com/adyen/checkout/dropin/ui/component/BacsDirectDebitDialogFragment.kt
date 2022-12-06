@@ -17,7 +17,6 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
-import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -79,19 +78,11 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        val componentState = getComponentState()
-        val mode = componentState?.mode
-        val isConfirmationMode = mode == BacsDirectDebitMode.CONFIRMATION
-        return if (isConfirmationMode) {
-            bacsDirectDebitComponent.setInputMode()
+        return if (bacsDirectDebitComponent.delegate.handleBackPress()) {
             true
         } else {
             super.onBackPressed()
         }
-    }
-
-    private fun getComponentState(): BacsDirectDebitComponentState? {
-        return componentDialogViewModel.componentState as? BacsDirectDebitComponentState
     }
 
     // TODO improve

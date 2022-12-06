@@ -31,4 +31,6 @@ interface BacsDirectDebitDelegate :
     fun setMode(mode: BacsDirectDebitMode): Boolean
 
     fun updateInputData(update: BacsDirectDebitInputData.() -> Unit)
+
+    fun handleBackPress(): Boolean
 }

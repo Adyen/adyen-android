@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
@@ -25,7 +24,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
-import com.adyen.checkout.dropin.ui.viewmodel.ComponentDialogViewModel
 
 private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
@@ -37,8 +35,6 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
     companion object {
         private val TAG = LogUtil.getTag()
     }
-
-    protected val componentDialogViewModel: ComponentDialogViewModel by viewModels()
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
