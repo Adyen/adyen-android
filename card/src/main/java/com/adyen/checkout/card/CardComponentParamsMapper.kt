@@ -11,7 +11,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
@@ -19,7 +18,7 @@ internal class CardComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
 ) {
 
-    fun mapToParams(
+    fun mapToParamsDefault(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
     ): CardComponentParams {
@@ -29,11 +28,10 @@ internal class CardComponentParamsMapper(
             .override(overrideComponentParams)
     }
 
-    fun mapToParams(
+    fun mapToParamsStored(
         cardConfiguration: CardConfiguration,
-        storedPaymentMethod: StoredPaymentMethod,
     ): CardComponentParams {
-        val supportedCardTypes = cardConfiguration.getSupportedCardTypes(storedPaymentMethod)
+        val supportedCardTypes = cardConfiguration.getSupportedCardTypesStored()
         return cardConfiguration
             .mapToParamsInternal(supportedCardTypes)
             .override(overrideComponentParams)
@@ -86,10 +84,7 @@ internal class CardComponentParamsMapper(
         }
     }
 
-    private fun CardConfiguration.getSupportedCardTypes(
-        // not needed for the actual mapping but indicates that this is the method to use in a stored flow
-        storedPaymentMethod: StoredPaymentMethod,
-    ): List<CardType> {
+    private fun CardConfiguration.getSupportedCardTypesStored(): List<CardType> {
         return supportedCardTypes.orEmpty()
     }
 

@@ -56,7 +56,7 @@ class CardComponentProvider(
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -124,7 +124,7 @@ class CardComponentProvider(
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, storedPaymentMethod)
+        val componentParams = componentParamsMapper.mapToParamsStored(configuration)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

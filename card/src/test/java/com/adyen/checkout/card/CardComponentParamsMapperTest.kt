@@ -22,7 +22,7 @@ internal class CardComponentParamsMapperTest {
     fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -57,7 +57,7 @@ internal class CardComponentParamsMapperTest {
             .setAddressConfiguration(addressConfiguration)
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -92,7 +92,7 @@ internal class CardComponentParamsMapperTest {
             isCreatedByDropIn = true,
         )
 
-        val params = CardComponentParamsMapper(overrideParams).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(overrideParams).mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -113,7 +113,7 @@ internal class CardComponentParamsMapperTest {
 
         val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardTypes = listOf(CardType.MAESTRO, CardType.BCMC)
@@ -129,7 +129,7 @@ internal class CardComponentParamsMapperTest {
 
         val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD)
@@ -143,7 +143,7 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParams(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
