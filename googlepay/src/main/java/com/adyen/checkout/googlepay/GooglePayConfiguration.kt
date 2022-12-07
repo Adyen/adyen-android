@@ -10,9 +10,10 @@
 package com.adyen.checkout.googlepay
 
 import android.content.Context
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -48,13 +49,16 @@ class GooglePayConfiguration private constructor(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, AmountConfiguration {
 
     /**
      * Builder to create a [GooglePayConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<GooglePayConfiguration, Builder>, AmountConfigurationBuilder {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder>,
+        AmountConfigurationBuilder {
         private var merchantAccount: String? = null
         private var googlePayEnvironment: Int? = null
         private var amount: Amount? = null
@@ -344,6 +348,7 @@ class GooglePayConfiguration private constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 isBillingAddressRequired = isBillingAddressRequired,
                 billingAddressParameters = billingAddressParameters,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
