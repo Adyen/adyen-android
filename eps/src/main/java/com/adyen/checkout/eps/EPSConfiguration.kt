@@ -8,11 +8,12 @@
 package com.adyen.checkout.eps
 
 import android.content.Context
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
-import java.util.Locale
 import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
 @Parcelize
 class EPSConfiguration private constructor(
@@ -22,6 +23,7 @@ class EPSConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val viewType: IssuerListViewType?,
     override val hideIssuerLogos: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
     /**
@@ -63,6 +65,7 @@ class EPSConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
