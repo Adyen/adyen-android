@@ -40,7 +40,6 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.createGenericActionConfiguration
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.BaseDropInServiceResult
@@ -488,7 +487,7 @@ internal class DropInActivity :
         Logger.d(TAG, "showActionDialog")
         setLoading(false)
         hideAllScreens()
-        val actionConfiguration = createGenericActionConfiguration(dropInViewModel.dropInConfiguration)
+        val actionConfiguration = dropInViewModel.dropInConfiguration.genericActionConfiguration
         val actionFragment = ActionComponentDialogFragment.newInstance(action, actionConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
     }

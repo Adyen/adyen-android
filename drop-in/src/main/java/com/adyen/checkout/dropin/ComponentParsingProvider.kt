@@ -12,7 +12,6 @@ package com.adyen.checkout.dropin
 
 import android.app.Application
 import androidx.fragment.app.Fragment
-import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -252,18 +251,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
-}
-
-internal fun createGenericActionConfiguration(dropInConfiguration: DropInConfiguration): GenericActionConfiguration {
-    return GenericActionConfiguration.Builder(
-        dropInConfiguration.shopperLocale,
-        dropInConfiguration.environment,
-        dropInConfiguration.clientKey
-    ).apply {
-        dropInConfiguration.availableActionConfigs.entries.forEach { entry ->
-            availableActionConfigs[entry.key] = entry.value
-        }
-    }.build()
 }
 
 private inline fun <reified T : Configuration> getConfigurationForPaymentMethodOrNull(

@@ -10,6 +10,8 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
+import com.adyen.checkout.action.ActionHandlingConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -62,7 +64,7 @@ class DropInConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
-    internal val availableActionConfigs: HashMap<Class<*>, Configuration>,
+    internal val genericActionConfiguration: GenericActionConfiguration,
     val showPreselectedStoredPaymentMethod: Boolean,
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
@@ -77,30 +79,28 @@ class DropInConfiguration private constructor(
         return null
     }
 
-    @Suppress("unused")
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            @Suppress("UNCHECKED_CAST")
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
-
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
     @Suppress("unused", "TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<DropInConfiguration, Builder>, AmountConfigurationBuilder {
+    class Builder :
+        BaseConfigurationBuilder<DropInConfiguration, Builder>,
+        AmountConfigurationBuilder,
+        ActionHandlingConfigurationBuilder {
 
-        internal val availablePaymentConfigs = HashMap<String, Configuration>()
-        internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
+        private val availablePaymentConfigs = HashMap<String, Configuration>()
 
         private var amount: Amount = Amount.EMPTY
         private var showPreselectedStoredPaymentMethod: Boolean = true
         private var skipListWhenSinglePaymentMethod: Boolean = false
         private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
         private var additionalDataForDropInService: Bundle? = null
+
+        private val genericActionConfigurationBuilder = GenericActionConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+        )
 
         /**
          * Create a [DropInConfiguration]
@@ -325,48 +325,48 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for 3DS2 action.
          */
-        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        override fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
+            genericActionConfigurationBuilder.add3ds2ActionConfiguration(configuration)
             return this
         }
 
         /**
          * Add configuration for Await action.
          */
-        fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        override fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
+            genericActionConfigurationBuilder.addAwaitActionConfiguration(configuration)
             return this
         }
 
         /**
          * Add configuration for QR code action.
          */
-        fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        override fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
+            genericActionConfigurationBuilder.addQRCodeActionConfiguration(configuration)
             return this
         }
 
         /**
          * Add configuration for Redirect action.
          */
-        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for WeChat Pay action.
-         */
-        fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+            genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
             return this
         }
 
         /**
          * Add configuration for Voucher action.
          */
-        fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        override fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
+            genericActionConfigurationBuilder.addVoucherActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for WeChat Pay action.
+         */
+        override fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
+            genericActionConfigurationBuilder.addWeChatPayActionConfiguration(configuration)
             return this
         }
 
@@ -377,7 +377,7 @@ class DropInConfiguration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 availablePaymentConfigs = availablePaymentConfigs,
-                availableActionConfigs = availableActionConfigs,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
                 amount = amount,
                 showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,
                 skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,
