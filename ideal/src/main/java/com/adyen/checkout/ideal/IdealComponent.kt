@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.ideal
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,13 +18,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class IdealComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<IdealPaymentMethod>,
-    configuration: IdealConfiguration
 ) : IssuerListComponent<IdealPaymentMethod>(
-    savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

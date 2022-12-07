@@ -15,7 +15,7 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 
-interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, ConfigurationT : Configuration> :
+interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*>, ConfigurationT : Configuration> :
     PaymentComponentProvider<ComponentT, ConfigurationT> {
 
     /**

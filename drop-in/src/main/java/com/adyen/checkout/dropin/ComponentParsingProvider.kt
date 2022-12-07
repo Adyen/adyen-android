@@ -28,14 +28,12 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -332,9 +330,9 @@ internal fun getComponentFor(
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+): PaymentComponent<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    val component = when {
+    return when {
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
@@ -359,10 +357,6 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
     }
-
-    component.setCreatedForDropIn()
-
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 
 /**
@@ -378,9 +372,9 @@ internal fun getComponentFor(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+): PaymentComponent<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    val component = when {
+    return when {
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -575,10 +569,6 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
     }
-
-    component.setCreatedForDropIn()
-
-    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 
 internal fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {

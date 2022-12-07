@@ -1,15 +1,16 @@
 package com.adyen.checkout.instant
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
 
 /**
  * Payment component used for handling payment methods that do not require any input from the shopper.
@@ -17,14 +18,9 @@ import com.adyen.checkout.core.log.Logger
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class InstantPaymentComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: InstantPaymentDelegate,
-    configuration: InstantPaymentConfiguration
-) : BasePaymentComponent<InstantPaymentConfiguration, PaymentComponentState<PaymentMethodDetails>>(
-    savedStateHandle,
-    delegate,
-    configuration
-) {
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<PaymentMethodDetails>> {
 
     init {
         delegate.initialize(viewModelScope)

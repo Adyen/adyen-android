@@ -15,7 +15,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
@@ -42,14 +41,14 @@ internal class PreselectedStoredPaymentViewModel(
     private val componentFragmentStateMutable = MutableLiveData<PreselectedStoredState>(Idle)
     val componentFragmentState: LiveData<PreselectedStoredState> = componentFragmentStateMutable
 
-    private var componentState: PaymentComponentState<PaymentMethodDetails>? = null
+    private var componentState: PaymentComponentState<*>? = null
     private var lastComponentError: ComponentError? = null
 
     init {
         storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(isRemovingEnabled)
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
             is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
             is PaymentComponentEvent.Error -> componentErrorOccurred(event.error)
@@ -59,7 +58,7 @@ internal class PreselectedStoredPaymentViewModel(
         }
     }
 
-    private fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {
+    private fun componentStateChanged(componentState: PaymentComponentState<*>) {
         val fragmentState = componentFragmentStateMutable.value
         Logger.v(
             TAG,
@@ -115,7 +114,7 @@ sealed class PreselectedStoredState {
     object Idle : PreselectedStoredState()
     object ShowStoredPaymentDialog : PreselectedStoredState()
     object AwaitingComponentInitialization : PreselectedStoredState()
-    class RequestPayment(val componentState: PaymentComponentState<PaymentMethodDetails>) : PreselectedStoredState()
+    class RequestPayment(val componentState: PaymentComponentState<*>) : PreselectedStoredState()
     class PaymentError(val componentError: ComponentError) : PreselectedStoredState()
 
     override fun toString(): String = this::class.simpleName ?: ""

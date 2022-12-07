@@ -17,8 +17,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -64,9 +62,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun attachComponent(
-        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>,
-    ) {
+    private fun attachComponent(component: PaymentComponent<*>) {
         if (component !is ViewableComponent) throw CheckoutException("Attached component is not viewable")
         component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
@@ -81,7 +77,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
             is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
                 event.state,
@@ -94,7 +90,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    override fun requestProtocolCall(componentState: PaymentComponentState<out PaymentMethodDetails>) {
+    override fun requestProtocolCall(componentState: PaymentComponentState<*>) {
         if (componentState !is GiftCardComponentState) {
             throw CheckoutException("Unsupported payment method, not a gift card: $componentState")
         }

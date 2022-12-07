@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.molpay
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,13 +18,9 @@ import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MolpayComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<MolpayPaymentMethod>,
-    configuration: MolpayConfiguration
 ) : IssuerListComponent<MolpayPaymentMethod>(
-    savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

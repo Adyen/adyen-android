@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.Configuration
 
 /**
  * A [Component] is a class that helps to retrieve or format data related to a part of the Checkout API payment.
@@ -16,14 +15,9 @@ import com.adyen.checkout.components.base.Configuration
  * @param <ComponentResultT> The main parameter that notifies changes on this component.
  * @param <ConfigurationT> The Configuration object associated with this Component.
  */
-interface Component<ComponentResultT, ConfigurationT : Configuration> {
+interface Component {
     /**
      * The delegate from this component.
      */
     val delegate: ComponentDelegate
-
-    /**
-     * @return The [Configuration] object used to initialize this Component.
-     */
-    val configuration: ConfigurationT
 }

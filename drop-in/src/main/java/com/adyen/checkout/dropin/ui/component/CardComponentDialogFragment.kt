@@ -15,8 +15,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -73,7 +71,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<in PaymentMethodDetails>>) {
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
             is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
                 event.state,

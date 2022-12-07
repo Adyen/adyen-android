@@ -64,7 +64,6 @@ class GiftCardComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
             GiftCardComponent(
-                savedStateHandle = savedStateHandle,
                 delegate = DefaultGiftCardDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
@@ -73,7 +72,6 @@ class GiftCardComponentProvider(
                     componentParams = componentParams,
                     cardEncrypter = cardEncrypter,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]

@@ -67,9 +67,7 @@ class OnlineBankingPLComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { OnlineBankingPLPaymentMethod() }
                 OnlineBankingPLComponent(
-                    savedStateHandle,
                     delegate,
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OnlineBankingPLComponent::class.java]

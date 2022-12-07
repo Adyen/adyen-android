@@ -9,15 +9,15 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
@@ -32,17 +32,12 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class CardComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     val cardDelegate: CardDelegate,
-    cardConfiguration: CardConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent
 ) :
-    BasePaymentComponent<CardConfiguration, CardComponentState>(
-        savedStateHandle,
-        cardDelegate,
-        cardConfiguration
-    ),
+    ViewModel(),
+    PaymentComponent<CardComponentState>,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 

@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.openbanking
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,13 +18,9 @@ import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class OpenBankingComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
-    configuration: OpenBankingConfiguration
 ) : IssuerListComponent<OpenBankingPaymentMethod>(
-    savedStateHandle,
     delegate,
-    configuration
 ) {
     companion object {
         @JvmField

@@ -59,14 +59,12 @@ class MBWayComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 MBWayComponent(
-                    savedStateHandle,
                     DefaultMBWayDelegate(
                         observerRepository = PaymentObserverRepository(),
                         paymentMethod = paymentMethod,
                         componentParams = componentParams,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MBWayComponent::class.java]

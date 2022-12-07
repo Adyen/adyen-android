@@ -52,7 +52,6 @@ class RedirectComponentProvider(
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
-                configuration,
                 redirectDelegate
             )
         }

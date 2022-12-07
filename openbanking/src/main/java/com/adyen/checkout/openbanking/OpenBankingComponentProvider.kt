@@ -67,9 +67,7 @@ class OpenBankingComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { OpenBankingPaymentMethod() }
                 OpenBankingComponent(
-                    savedStateHandle,
                     delegate,
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OpenBankingComponent::class.java]

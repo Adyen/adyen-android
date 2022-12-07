@@ -8,12 +8,12 @@
 package com.adyen.checkout.mbway
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -27,12 +27,9 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MBWayComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: MBWayDelegate,
-    configuration: MBWayConfiguration
-) :
-    BasePaymentComponent<MBWayConfiguration,
-        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, delegate, configuration),
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<MBWayPaymentMethod>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

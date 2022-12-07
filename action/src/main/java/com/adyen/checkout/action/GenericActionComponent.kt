@@ -22,11 +22,10 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class GenericActionComponent internal constructor(
-    override val configuration: GenericActionConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: ActionHandlingComponent
 ) : ViewModel(),
-    ActionComponent<GenericActionConfiguration>,
+    ActionComponent,
     ViewableComponent,
     IntentHandlingComponent,
     ActionHandlingComponent by actionHandlingComponent {

@@ -9,12 +9,12 @@
 package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -24,14 +24,10 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class PayByBankComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     override val delegate: PayByBankDelegate,
-    configuration: PayByBankConfiguration
-) : BasePaymentComponent<PayByBankConfiguration, PaymentComponentState<PayByBankPaymentMethod>>(
-    savedStateHandle,
-    delegate,
-    configuration
-), ViewableComponent {
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<PayByBankPaymentMethod>>,
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

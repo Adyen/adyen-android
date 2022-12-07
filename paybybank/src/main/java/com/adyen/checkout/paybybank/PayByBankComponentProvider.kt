@@ -59,14 +59,12 @@ class PayByBankComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 PayByBankComponent(
-                    savedStateHandle,
                     DefaultPayByBankDelegate(
                         PaymentObserverRepository(),
                         paymentMethod,
                         componentParams,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]

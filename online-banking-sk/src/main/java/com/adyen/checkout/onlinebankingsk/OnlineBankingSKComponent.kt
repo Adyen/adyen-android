@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.onlinebankingsk
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -16,10 +15,8 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingSKComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
-    configuration: OnlineBankingSKConfiguration
-) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(savedStateHandle, delegate, configuration) {
+) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(delegate) {
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 

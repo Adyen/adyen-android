@@ -8,12 +8,11 @@
 package com.adyen.checkout.onlinebankingcore
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -22,13 +21,9 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    savedStateHandle: SavedStateHandle,
     final override val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
-    configuration: Configuration
-) : BasePaymentComponent<
-    Configuration,
-    PaymentComponentState<IssuerListPaymentMethodT>
-    >(savedStateHandle, delegate, configuration),
+) : ViewModel(),
+    PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow

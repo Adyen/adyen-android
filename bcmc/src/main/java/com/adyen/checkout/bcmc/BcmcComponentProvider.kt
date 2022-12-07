@@ -66,7 +66,6 @@ class BcmcComponentProvider(
         )
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             BcmcComponent(
-                savedStateHandle = savedStateHandle,
                 delegate = DefaultBcmcDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
@@ -76,7 +75,6 @@ class BcmcComponentProvider(
                     cardEncrypter = cardEncrypter,
                     analyticsRepository = analyticsRepository,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]

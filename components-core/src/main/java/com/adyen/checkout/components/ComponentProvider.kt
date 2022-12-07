@@ -10,4 +10,4 @@ package com.adyen.checkout.components
 /**
  * This provider should be used to get an instance of a [Component] that is bound your lifecycle.
  */
-interface ComponentProvider<ComponentT : Component<*, *>>
+interface ComponentProvider<ComponentT : Component>

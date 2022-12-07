@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 /**
@@ -19,10 +18,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  *
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-interface PaymentComponent<
-    ComponentStateT : PaymentComponentState<out PaymentMethodDetails>,
-    ConfigurationT : Configuration> :
-    Component<ComponentStateT, ConfigurationT> {
+interface PaymentComponent<ComponentStateT : PaymentComponentState<*>> : Component {
 
     // TODO documentation
     fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)

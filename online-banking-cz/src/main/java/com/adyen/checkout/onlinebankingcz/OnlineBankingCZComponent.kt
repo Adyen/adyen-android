@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.onlinebankingcz
 
-import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -16,13 +15,9 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingCZComponent internal constructor(
-    savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
-    configuration: OnlineBankingCZConfiguration
 ) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
-    savedStateHandle,
     delegate,
-    configuration
 ) {
 
     companion object {

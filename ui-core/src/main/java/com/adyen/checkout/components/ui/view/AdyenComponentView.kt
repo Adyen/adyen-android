@@ -15,7 +15,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.Component
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
@@ -53,7 +52,7 @@ class AdyenComponentView @JvmOverloads constructor(
     fun <T> attach(
         component: T,
         lifecycleOwner: LifecycleOwner
-    ) where T : ViewableComponent, T : Component<*, *> {
+    ) where T : ViewableComponent, T : Component {
         component.viewFlow
             .onEach { componentViewType ->
                 removeAllViews()
@@ -74,8 +73,6 @@ class AdyenComponentView @JvmOverloads constructor(
             .launchIn(lifecycleOwner.lifecycleScope)
 
         isVisible = true
-        // TODO change later when analytics are implemented
-        (component as? BasePaymentComponent<*, *>)?.sendAnalyticsEvent(context)
     }
 
     private fun loadView(

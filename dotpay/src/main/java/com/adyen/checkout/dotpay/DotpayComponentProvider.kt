@@ -66,7 +66,7 @@ class DotpayComponentProvider(
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
                 ) { DotpayPaymentMethod() }
-                DotpayComponent(savedStateHandle, delegate, configuration)
+                DotpayComponent(delegate)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, DotpayComponent::class.java]
     }

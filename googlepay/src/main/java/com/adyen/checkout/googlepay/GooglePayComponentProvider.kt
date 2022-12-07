@@ -69,14 +69,12 @@ class GooglePayComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
             GooglePayComponent(
-                savedStateHandle = savedStateHandle,
                 delegate = DefaultGooglePayDelegate(
                     observerRepository = PaymentObserverRepository(),
                     paymentMethod = paymentMethod,
                     componentParams = componentParams,
                     analyticsRepository = analyticsRepository,
                 ),
-                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]

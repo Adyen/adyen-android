@@ -56,7 +56,6 @@ class QRCodeComponentProvider(
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
-                configuration = configuration,
                 delegate = qrCodeDelegate,
             )
         }

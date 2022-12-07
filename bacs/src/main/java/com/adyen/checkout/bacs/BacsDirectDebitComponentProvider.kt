@@ -57,14 +57,12 @@ class BacsDirectDebitComponentProvider(
                 )
 
                 BacsDirectDebitComponent(
-                    savedStateHandle,
                     DefaultBacsDirectDebitDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository,
                     ),
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]

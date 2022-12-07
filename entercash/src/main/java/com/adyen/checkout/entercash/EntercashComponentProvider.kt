@@ -67,9 +67,7 @@ class EntercashComponentProvider(
                     analyticsRepository = analyticsRepository,
                 ) { EntercashPaymentMethod() }
                 EntercashComponent(
-                    savedStateHandle,
                     delegate,
-                    configuration
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EntercashComponent::class.java]

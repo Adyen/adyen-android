@@ -59,14 +59,12 @@ class SepaComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
                 SepaComponent(
-                    savedStateHandle,
                     DefaultSepaDelegate(
                         observerRepository = PaymentObserverRepository(),
                         componentParams = componentParams,
                         paymentMethod = paymentMethod,
                         analyticsRepository = analyticsRepository
                     ),
-                    configuration,
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]
