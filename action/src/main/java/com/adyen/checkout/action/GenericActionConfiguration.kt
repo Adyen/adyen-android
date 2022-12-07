@@ -53,7 +53,8 @@ class GenericActionConfiguration private constructor(
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
      */
     @Suppress("unused")
-    class Builder : BaseConfigurationBuilder<GenericActionConfiguration, Builder>,
+    class Builder :
+        BaseConfigurationBuilder<GenericActionConfiguration, Builder>,
         ActionHandlingConfigurationBuilder<Builder> {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
