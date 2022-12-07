@@ -8,7 +8,8 @@
 package com.adyen.checkout.mbway
 
 import android.content.Context
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
@@ -20,12 +21,13 @@ class MBWayConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
     /**
      * Builder to create a [MBWayConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<MBWayConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<MBWayConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -59,6 +61,7 @@ class MBWayConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
