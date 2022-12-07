@@ -55,7 +55,6 @@ internal class DefaultSepaDelegate(
     private val uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
     override val uiEventFlow: Flow<PaymentComponentUiEvent> = uiEventChannel.receiveAsFlow()
 
-
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
     }
