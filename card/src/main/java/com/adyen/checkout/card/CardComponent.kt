@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class CardComponent internal constructor(
-    val cardDelegate: CardDelegate,
+    private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent
 ) :
