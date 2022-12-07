@@ -8,14 +8,19 @@
 package com.adyen.checkout.card
 
 import android.content.Context
+import com.adyen.checkout.action.ActionHandlingConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -46,7 +51,7 @@ class CardConfiguration private constructor(
      * Builder to create a [CardConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<CardConfiguration, Builder> {
+    class Builder : BaseConfigurationBuilder<CardConfiguration, Builder>, ActionHandlingConfigurationBuilder {
         private var supportedCardTypes: List<CardType>? = null
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null
@@ -226,16 +231,48 @@ class CardConfiguration private constructor(
         /**
          * Add configuration for 3DS2 action.
          */
-        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
+        override fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
             genericActionConfigurationBuilder.add3ds2ActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for Await action.
+         */
+        override fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
+            genericActionConfigurationBuilder.addAwaitActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for QR code action.
+         */
+        override fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
+            genericActionConfigurationBuilder.addQRCodeActionConfiguration(configuration)
             return this
         }
 
         /**
          * Add configuration for Redirect action.
          */
-        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+        override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
             genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for Voucher action.
+         */
+        override fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
+            genericActionConfigurationBuilder.addVoucherActionConfiguration(configuration)
+            return this
+        }
+
+        /**
+         * Add configuration for WeChat Pay action.
+         */
+        override fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
+            genericActionConfigurationBuilder.addWeChatPayActionConfiguration(configuration)
             return this
         }
 
