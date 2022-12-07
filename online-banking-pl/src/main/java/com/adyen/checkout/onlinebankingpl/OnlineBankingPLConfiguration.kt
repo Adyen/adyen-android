@@ -17,6 +17,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
+@Suppress("LongParameterList")
 class OnlineBankingPLConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,

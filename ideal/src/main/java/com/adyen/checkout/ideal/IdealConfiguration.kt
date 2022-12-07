@@ -16,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
+@Suppress("LongParameterList")
 class IdealConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
