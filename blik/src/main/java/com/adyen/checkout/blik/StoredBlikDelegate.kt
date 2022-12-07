@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: GenericComponentParams,
