@@ -20,13 +20,11 @@ import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentView
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -57,17 +55,18 @@ class AdyenComponentView @JvmOverloads constructor(
         lifecycleOwner: LifecycleOwner
     ) where T : ViewableComponent, T : Component<*, *> {
         component.viewFlow
-            .filterNotNull()
             .onEach { componentViewType ->
+                removeAllViews()
+
                 val delegate = component.delegate
                 if (delegate !is ViewProvidingDelegate) {
                     Logger.i(TAG, "View attached to non viewable component, ignoring.")
                     return@onEach
                 }
+
                 loadView(
                     viewType = componentViewType,
                     delegate = delegate,
-                    viewProvider = componentViewType.viewProvider,
                     componentParams = delegate.componentParams,
                     coroutineScope = lifecycleOwner.lifecycleScope,
                 )
@@ -82,14 +81,12 @@ class AdyenComponentView @JvmOverloads constructor(
     private fun loadView(
         viewType: ComponentViewType?,
         delegate: ComponentDelegate,
-        viewProvider: ViewProvider,
         componentParams: ComponentParams,
         coroutineScope: CoroutineScope,
     ) {
-        removeAllViews()
         viewType ?: return
 
-        val componentView = viewProvider.getView(viewType, context, attrs, defStyleAttr)
+        val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
