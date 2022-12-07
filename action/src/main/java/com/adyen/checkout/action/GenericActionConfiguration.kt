@@ -53,7 +53,7 @@ class GenericActionConfiguration private constructor(
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
      */
     @Suppress("unused")
-    class Builder : BaseConfigurationBuilder<GenericActionConfiguration, Builder> {
+    class Builder : BaseConfigurationBuilder<GenericActionConfiguration, Builder>, ActionHandlingConfigurationBuilder {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
@@ -87,7 +87,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for 3DS2 action.
          */
-        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
+        override fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
@@ -95,7 +95,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for Await action.
          */
-        fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
+        override fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
@@ -103,7 +103,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for QR code action.
          */
-        fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
+        override fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
@@ -111,7 +111,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for Redirect action.
          */
-        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+        override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
@@ -119,7 +119,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for WeChat Pay action.
          */
-        fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
+        override fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
@@ -127,7 +127,7 @@ class GenericActionConfiguration private constructor(
         /**
          * Add configuration for Voucher action.
          */
-        fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
+        override fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }
