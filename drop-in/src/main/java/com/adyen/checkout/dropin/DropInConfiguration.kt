@@ -10,17 +10,14 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
-import com.adyen.checkout.action.ActionHandlingConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -40,11 +37,7 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
@@ -84,9 +77,8 @@ class DropInConfiguration private constructor(
      */
     @Suppress("unused", "TooManyFunctions")
     class Builder :
-        BaseConfigurationBuilder<DropInConfiguration, Builder>,
-        AmountConfigurationBuilder,
-        ActionHandlingConfigurationBuilder {
+        ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder>,
+        AmountConfigurationBuilder {
 
         private val availablePaymentConfigs = HashMap<String, Configuration>()
 
@@ -95,12 +87,6 @@ class DropInConfiguration private constructor(
         private var skipListWhenSinglePaymentMethod: Boolean = false
         private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
         private var additionalDataForDropInService: Bundle? = null
-
-        private val genericActionConfigurationBuilder = GenericActionConfiguration.Builder(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-        )
 
         /**
          * Create a [DropInConfiguration]
@@ -319,54 +305,6 @@ class DropInConfiguration private constructor(
          */
         fun addBacsDirectDebitConfiguration(bacsDirectDebitConfiguration: BacsDirectDebitConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BACS] = bacsDirectDebitConfiguration
-            return this
-        }
-
-        /**
-         * Add configuration for 3DS2 action.
-         */
-        override fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
-            genericActionConfigurationBuilder.add3ds2ActionConfiguration(configuration)
-            return this
-        }
-
-        /**
-         * Add configuration for Await action.
-         */
-        override fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
-            genericActionConfigurationBuilder.addAwaitActionConfiguration(configuration)
-            return this
-        }
-
-        /**
-         * Add configuration for QR code action.
-         */
-        override fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
-            genericActionConfigurationBuilder.addQRCodeActionConfiguration(configuration)
-            return this
-        }
-
-        /**
-         * Add configuration for Redirect action.
-         */
-        override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
-            genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
-            return this
-        }
-
-        /**
-         * Add configuration for Voucher action.
-         */
-        override fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
-            genericActionConfigurationBuilder.addVoucherActionConfiguration(configuration)
-            return this
-        }
-
-        /**
-         * Add configuration for WeChat Pay action.
-         */
-        override fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
-            genericActionConfigurationBuilder.addWeChatPayActionConfiguration(configuration)
             return this
         }
 
