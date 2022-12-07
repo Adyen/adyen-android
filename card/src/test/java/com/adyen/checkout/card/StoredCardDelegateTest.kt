@@ -303,10 +303,7 @@ internal class StoredCardDelegateTest(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper(
-                parentConfiguration = null,
-                isCreatedByDropIn = false
-            ).mapToParams(configuration, storedPaymentMethod),
+            componentParams = CardComponentParamsMapper(null).mapToParamsStored(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
         )

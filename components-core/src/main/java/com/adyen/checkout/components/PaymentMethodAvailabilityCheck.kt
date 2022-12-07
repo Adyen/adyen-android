@@ -22,6 +22,6 @@ interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT?,
-        callback: ComponentAvailableCallback<ConfigurationT>
+        callback: ComponentAvailableCallback
     )
 }

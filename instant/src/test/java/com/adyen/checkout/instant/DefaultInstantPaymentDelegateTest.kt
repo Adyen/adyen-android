@@ -47,10 +47,7 @@ class DefaultInstantPaymentDelegateTest(
         delegate = DefaultInstantPaymentDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
-            componentParams = GenericComponentParamsMapper(
-                parentConfiguration = null,
-                isCreatedByDropIn = false
-            ).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             analyticsRepository = analyticsRepository
         )
         Logger.setLogcatLevel(Logger.NONE)

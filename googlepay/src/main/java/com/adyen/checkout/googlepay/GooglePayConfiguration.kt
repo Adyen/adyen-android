@@ -98,29 +98,6 @@ class GooglePayConfiguration private constructor(
         ) : super(shopperLocale, environment, clientKey)
 
         /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: GooglePayConfiguration) : super(configuration) {
-            merchantAccount = configuration.merchantAccount
-            googlePayEnvironment = configuration.googlePayEnvironment
-            amount = configuration.amount
-            totalPriceStatus = configuration.totalPriceStatus
-            countryCode = configuration.countryCode
-            merchantInfo = configuration.merchantInfo
-            allowedAuthMethods = configuration.allowedAuthMethods
-            allowedCardNetworks = configuration.allowedCardNetworks
-            isAllowPrepaidCards = configuration.isAllowPrepaidCards
-            isEmailRequired = configuration.isEmailRequired
-            isExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired
-            isShippingAddressRequired = configuration.isShippingAddressRequired
-            shippingAddressParameters = configuration.shippingAddressParameters
-            isBillingAddressRequired = configuration.isBillingAddressRequired
-            billingAddressParameters = configuration.billingAddressParameters
-        }
-
-        /**
          * Set the merchant account to be put in the payment token from Google to Adyen.
          *
          * If not set then [PaymentMethod.configuration.gatewayMerchantId] will be used.

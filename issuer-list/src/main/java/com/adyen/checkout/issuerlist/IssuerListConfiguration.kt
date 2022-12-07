@@ -38,8 +38,6 @@ abstract class IssuerListConfiguration : Configuration {
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        protected constructor(configuration: IssuerListConfigurationT) : super(configuration)
-
         /**
          * Sets the type of the view to be show with the component.
          *

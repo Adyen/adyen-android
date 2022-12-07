@@ -55,16 +55,6 @@ class MolpayConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: MolpayConfiguration) : super(configuration) {
-            viewType = configuration.viewType
-            hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
         override fun buildInternal(): MolpayConfiguration {
             return MolpayConfiguration(
                 shopperLocale = shopperLocale,

@@ -53,13 +53,6 @@ class SepaConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: SepaConfiguration) : super(configuration)
-
         override fun buildInternal(): SepaConfiguration {
             return SepaConfiguration(
                 shopperLocale = shopperLocale,

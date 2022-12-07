@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bacs
 
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,10 +26,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
         )
             .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(null).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.US,
@@ -53,10 +51,7 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             .setAmount(amount)
             .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(null).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.US,
@@ -81,20 +76,17 @@ internal class BacsDirectDebitComponentParamsMapperTest {
             .setAmount(amount)
             .build()
 
-        // this is in practice DropInConfiguration, but we don't have access to it in this module and any Configuration
-        // class can work
-        val parentConfiguration = BacsDirectDebitConfiguration.Builder(
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        val overrideParams = GenericComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
         )
-            .setAnalyticsEnabled(false)
-            .build()
 
-        val params = BacsDirectDebitComponentParamsMapper(
-            parentConfiguration = parentConfiguration,
-            isCreatedByDropIn = true
-        ).mapToParams(bacsDirectDebitConfiguration)
+        val params = BacsDirectDebitComponentParamsMapper(overrideParams).mapToParams(bacsDirectDebitConfiguration)
 
         val expected = BacsDirectDebitComponentParams(
             shopperLocale = Locale.GERMAN,

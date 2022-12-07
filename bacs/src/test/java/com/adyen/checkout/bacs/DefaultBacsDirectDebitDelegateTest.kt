@@ -50,10 +50,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
         ).build()
         delegate = DefaultBacsDirectDebitDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = BacsDirectDebitComponentParamsMapper(
-                parentConfiguration = null,
-                isCreatedByDropIn = false
-            ).mapToParams(configuration),
+            componentParams = BacsDirectDebitComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
         )

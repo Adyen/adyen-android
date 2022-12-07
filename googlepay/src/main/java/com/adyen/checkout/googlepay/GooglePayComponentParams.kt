@@ -8,14 +8,15 @@
 
 package com.adyen.checkout.googlepay
 
+import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.googlepay.model.BillingAddressParameters
 import com.adyen.checkout.googlepay.model.MerchantInfo
 import com.adyen.checkout.googlepay.model.ShippingAddressParameters
-import java.util.Locale
 import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
 @Parcelize
 internal data class GooglePayComponentParams(
@@ -24,9 +25,9 @@ internal data class GooglePayComponentParams(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
+    override val amount: Amount,
     val gatewayMerchantId: String,
     val googlePayEnvironment: Int,
-    val amount: Amount,
     val totalPriceStatus: String,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,
@@ -39,4 +40,4 @@ internal data class GooglePayComponentParams(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
-) : ComponentParams
+) : ComponentParams, AmountComponentParams

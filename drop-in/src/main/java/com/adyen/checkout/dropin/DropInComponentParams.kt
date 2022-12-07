@@ -3,12 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 15/11/2022.
+ * Created by josephj on 30/11/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.dropin
 
-import androidx.annotation.RestrictTo
+import android.os.Bundle
 import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
@@ -17,13 +17,15 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-// TODO check if this class is still needed once all params support [Amount]
-data class BacsDirectDebitComponentParams(
+internal data class DropInComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
+    val showPreselectedStoredPaymentMethod: Boolean,
+    val skipListWhenSinglePaymentMethod: Boolean,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean,
+    val additionalDataForDropInService: Bundle?,
 ) : ComponentParams, AmountComponentParams

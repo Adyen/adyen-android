@@ -16,6 +16,8 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.base.AmountConfiguration
+import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
@@ -58,14 +60,14 @@ class DropInConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
     internal val availableActionConfigs: HashMap<Class<*>, Configuration>,
-    val amount: Amount,
     val showPreselectedStoredPaymentMethod: Boolean,
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
-) : Configuration {
+) : Configuration, AmountConfiguration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
         if (availablePaymentConfigs.containsKey(paymentMethod)) {
@@ -89,7 +91,7 @@ class DropInConfiguration private constructor(
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
     @Suppress("unused", "TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<DropInConfiguration, Builder> {
+    class Builder : BaseConfigurationBuilder<DropInConfiguration, Builder>, AmountConfigurationBuilder {
 
         internal val availablePaymentConfigs = HashMap<String, Configuration>()
         internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
@@ -126,18 +128,7 @@ class DropInConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Create a Builder with the same values of an existing Configuration object.
-         */
-        constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
-            amount = dropInConfiguration.amount
-            showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
-            skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
-            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
-            additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
-        }
-
-        fun setAmount(amount: Amount): Builder {
+        override fun setAmount(amount: Amount): Builder {
             if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")
             }

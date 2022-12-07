@@ -19,7 +19,7 @@ import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -32,11 +32,10 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OpenBankingComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null,
 ) : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
 
-    private val componentParamsMapper = IssuerListComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = IssuerListComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

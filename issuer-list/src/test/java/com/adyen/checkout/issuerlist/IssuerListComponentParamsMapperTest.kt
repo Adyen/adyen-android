@@ -6,6 +6,7 @@
  * Created by josephj on 17/11/2022.
  */
 
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
@@ -26,10 +27,7 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .build()
 
-        val params = IssuerListComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -55,10 +53,7 @@ internal class IssuerListComponentParamsMapperTest {
             .setViewType(IssuerListViewType.SPINNER_VIEW)
             .build()
 
-        val params = IssuerListComponentParamsMapper(
-            parentConfiguration = null,
-            isCreatedByDropIn = false
-        ).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -84,20 +79,17 @@ internal class IssuerListComponentParamsMapperTest {
             .setViewType(IssuerListViewType.SPINNER_VIEW)
             .build()
 
-        // this is in practice DropInConfiguration, but we don't have access to it in this module and any Configuration
-        // class can work
-        val parentConfiguration = TestIssuerListConfiguration.Builder(
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        val overrideParams = GenericComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
+            isAnalyticsEnabled = false,
+            isCreatedByDropIn = true,
         )
-            .setAnalyticsEnabled(false)
-            .build()
 
-        val params = IssuerListComponentParamsMapper(
-            parentConfiguration = parentConfiguration,
-            isCreatedByDropIn = true
-        ).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(overrideParams).mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.GERMAN,

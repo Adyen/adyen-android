@@ -20,7 +20,7 @@ import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -40,12 +40,11 @@ private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null,
 ) : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -87,7 +86,7 @@ class GooglePayComponentProvider(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration?,
-        callback: ComponentAvailableCallback<GooglePayConfiguration>
+        callback: ComponentAvailableCallback
     ) {
         if (configuration == null) {
             throw CheckoutException("GooglePayConfiguration cannot be null")
@@ -96,7 +95,7 @@ class GooglePayComponentProvider(
             GoogleApiAvailability.getInstance()
                 .isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS
         ) {
-            callback.onAvailabilityResult(false, paymentMethod, configuration)
+            callback.onAvailabilityResult(false, paymentMethod)
             return
         }
         val callbackWeakReference = WeakReference(callback)
@@ -108,15 +107,15 @@ class GooglePayComponentProvider(
         val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
         val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnSuccessListener { result ->
-            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
         }
         readyToPayTask.addOnCanceledListener {
             Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
         readyToPayTask.addOnFailureListener {
             Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
     }
 

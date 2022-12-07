@@ -59,15 +59,6 @@ class BacsDirectDebitConfiguration private constructor(
             clientKey
         )
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: BacsDirectDebitConfiguration) : super(configuration) {
-            amount = configuration.amount
-        }
-
         override fun buildInternal(): BacsDirectDebitConfiguration {
             return BacsDirectDebitConfiguration(
                 shopperLocale = shopperLocale,

@@ -39,11 +39,6 @@ class TestIssuerListConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        constructor(configuration: TestIssuerListConfiguration) : super(configuration) {
-            viewType = configuration.viewType
-            hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
         public override fun buildInternal(): TestIssuerListConfiguration {
             return TestIssuerListConfiguration(
                 shopperLocale = shopperLocale,

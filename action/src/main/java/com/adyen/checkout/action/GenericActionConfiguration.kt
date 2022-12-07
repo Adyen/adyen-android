@@ -85,13 +85,6 @@ class GenericActionConfiguration private constructor(
         )
 
         /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: GenericActionConfiguration) : super(configuration)
-
-        /**
          * Add configuration for 3DS2 action.
          */
         fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {

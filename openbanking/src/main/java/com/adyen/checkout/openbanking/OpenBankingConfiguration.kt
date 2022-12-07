@@ -55,16 +55,6 @@ class OpenBankingConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        /**
-         * Constructor that copies an existing configuration.
-         *
-         * @param configuration A configuration to initialize the builder.
-         */
-        constructor(configuration: OpenBankingConfiguration) : super(configuration) {
-            viewType = configuration.viewType
-            hideIssuerLogos = configuration.hideIssuerLogos
-        }
-
         override fun buildInternal(): OpenBankingConfiguration {
             return OpenBankingConfiguration(
                 shopperLocale = shopperLocale,

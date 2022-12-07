@@ -55,22 +55,6 @@ class CardConfiguration private constructor(
         private var addressConfiguration: AddressConfiguration? = null
 
         /**
-         * Constructor of Card Configuration Builder with instance of CardConfiguration.
-         */
-        constructor(cardConfiguration: CardConfiguration) : super(cardConfiguration) {
-            supportedCardTypes = cardConfiguration.supportedCardTypes
-            holderNameRequired = cardConfiguration.isHolderNameRequired
-            isStorePaymentFieldVisible = cardConfiguration.isStorePaymentFieldVisible
-            shopperReference = cardConfiguration.shopperReference
-            isHideCvc = cardConfiguration.isHideCvc
-            isHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard
-            socialSecurityNumberVisibility = cardConfiguration.socialSecurityNumberVisibility
-            kcpAuthVisibility = cardConfiguration.kcpAuthVisibility
-            installmentConfiguration = cardConfiguration.installmentConfiguration
-            addressConfiguration = cardConfiguration.addressConfiguration
-        }
-
-        /**
          * Constructor for Builder with default values.
          *
          * @param context   A context

@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.connection.OrderPaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -43,7 +42,7 @@ internal class PaymentMethodsListViewModel(
     private val order: OrderModel?,
     private val dropInConfiguration: DropInConfiguration,
     private val amount: Amount
-) : ViewModel(), ComponentAvailableCallback<Configuration> {
+) : ViewModel(), ComponentAvailableCallback {
 
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
     internal val paymentMethodsFlow: StateFlow<List<PaymentMethodListItem>> = _paymentMethodsFlow
@@ -82,7 +81,7 @@ internal class PaymentMethodsListViewModel(
         checkIfListReady()
     }
 
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
+    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
         Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type}: $isAvailable")
         paymentMethodsAvailabilityMap[paymentMethod] = isAvailable
         checkIfListReady()

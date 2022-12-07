@@ -45,6 +45,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .addBcmcConfiguration(getBcmcConfiguration())
             .addGooglePayConfiguration(getGooglePayConfiguration())
             .add3ds2ActionConfiguration(get3DS2Configuration())
+            .addRedirectActionConfiguration(getRedirectConfiguration())
             .setEnableRemovingStoredPaymentMethods(true)
 
         try {
@@ -86,11 +87,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAmount(amount)
             .build()
 
-    fun get3DS2Configuration(): Adyen3DS2Configuration =
+    private fun get3DS2Configuration(): Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
             .build()
 
-    fun getRedirectConfiguration(): RedirectConfiguration =
+    private fun getRedirectConfiguration(): RedirectConfiguration =
         RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             .build()
 

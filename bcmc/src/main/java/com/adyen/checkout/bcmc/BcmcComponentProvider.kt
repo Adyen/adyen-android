@@ -20,7 +20,7 @@ import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -33,11 +33,10 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(
-    parentConfiguration: Configuration? = null,
-    isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null,
 ) : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
 
-    private val componentParamsMapper = BcmcComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

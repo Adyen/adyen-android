@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -31,11 +31,10 @@ import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 
 class GenericActionComponentProvider(
-    parentConfiguration: Configuration? = null,
-    private val isCreatedByDropIn: Boolean = false,
+    overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(parentConfiguration, isCreatedByDropIn)
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
     override fun <T> get(
         owner: T,
@@ -76,7 +75,7 @@ class GenericActionComponentProvider(
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(configuration, isCreatedByDropIn)
+            actionDelegateProvider = ActionDelegateProvider(componentParams)
         )
     }
 
