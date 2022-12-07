@@ -1,6 +1,7 @@
 package com.adyen.checkout.components.base
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -14,6 +15,7 @@ import java.util.Locale
  * @param environment   The [Environment] to be used for network calls to Adyen.
  * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class BaseConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
