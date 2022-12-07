@@ -18,7 +18,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  *
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-interface PaymentComponent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> : Component {
+interface PaymentComponent<ComponentStateT : PaymentComponentState<*>> : Component {
 
     // TODO documentation
     fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)

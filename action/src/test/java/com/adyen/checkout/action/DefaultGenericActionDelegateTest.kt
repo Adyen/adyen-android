@@ -14,7 +14,6 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -210,10 +209,9 @@ internal class DefaultGenericActionDelegateTest(
     fun `when set3DS2UICustomization is called on the generic delegate after handleAction then it's also called on the 3DS2 delegate`() =
         runTest {
             val adyen3DS2Delegate = Test3DS2Delegate()
-            @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.getDelegate(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate as ActionDelegate
+            ) doReturn adyen3DS2Delegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -231,10 +229,9 @@ internal class DefaultGenericActionDelegateTest(
     fun `when set3DS2UICustomization is called on the generic delegate before handleAction then it's also called on the 3DS2 delegate`() =
         runTest {
             val adyen3DS2Delegate = Test3DS2Delegate()
-            @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.getDelegate(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate as ActionDelegate
+            ) doReturn adyen3DS2Delegate
 
             genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -251,10 +248,9 @@ internal class DefaultGenericActionDelegateTest(
     @Test
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
-        @Suppress("UNCHECKED_CAST")
         whenever(
             actionDelegateProvider.getDelegate(any(), any(), any(), any())
-        ) doReturn adyen3DS2Delegate as ActionDelegate
+        ) doReturn adyen3DS2Delegate
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 

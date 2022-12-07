@@ -45,7 +45,7 @@ internal class ActionDelegateProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): ActionDelegate {
-        val delegate = when (action) {
+        return when (action) {
             is AwaitAction -> {
                 AwaitComponentProvider(overrideComponentParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -88,12 +88,8 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
-            else -> null
+            else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
-
-        @Suppress("UNCHECKED_CAST")
-        return (delegate as? ActionDelegate)
-            ?: throw CheckoutException("Can't find delegate for action: ${action.type}")
     }
 
     private inline fun <reified T : Configuration> getConfigurationForAction(
