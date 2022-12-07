@@ -20,7 +20,9 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -53,11 +55,17 @@ class BlikViewModel @Inject constructor(
 
     private var blikComponentState: PaymentComponentState<BlikPaymentMethod>? = null
 
-    fun onCreate() {
+    init {
         viewModelScope.launch { _blikViewState.emit(fetchPaymentMethods()) }
     }
 
     private suspend fun fetchPaymentMethods(): BlikViewState = withContext(Dispatchers.IO) {
+        if (keyValueStorage.getAmount().currency != CheckoutCurrency.PLN.name) {
+            return@withContext BlikViewState.Error(R.string.blik_currency_error)
+        } else if (keyValueStorage.getCountry() != POLAND_COUNTRY_CODE) {
+            return@withContext BlikViewState.Error(R.string.blik_country_error)
+        }
+
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -74,7 +82,7 @@ class BlikViewModel @Inject constructor(
             ?.firstOrNull { BlikComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (blikPaymentMethod == null) {
-            BlikViewState.Error
+            BlikViewState.Error(R.string.error_dialog_title)
         } else {
             BlikViewState.ShowComponent(blikPaymentMethod)
         }
@@ -110,7 +118,7 @@ class BlikViewModel @Inject constructor(
                 viewModelScope.launch { _events.emit(BlikEvent.Invalid) }
             }
         } ?: run {
-            _blikViewState.tryEmit(BlikViewState.Error)
+            _blikViewState.tryEmit(BlikViewState.Error(R.string.error_dialog_title))
         }
     }
 
@@ -148,12 +156,10 @@ class BlikViewModel @Inject constructor(
     }
 
     private suspend fun handleAction(action: Action) {
-        val blikAction = when (action.type) {
-            "await" -> BlikAction.Await(action)
-            else -> BlikAction.Unsupported
+        when (action.type) {
+            "await" -> _blikViewState.value = BlikViewState.Await(action)
+            else -> _events.emit(BlikEvent.AdditionalAction(BlikAction.Unsupported))
         }
-
-        _events.emit(BlikEvent.AdditionalAction(blikAction))
     }
 
     fun onActionComponentEvent(event: ActionComponentEvent) {
@@ -168,5 +174,9 @@ class BlikViewModel @Inject constructor(
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.detailsRequestAsync(json))
         }
+    }
+
+    companion object {
+        const val POLAND_COUNTRY_CODE = "PL"
     }
 }

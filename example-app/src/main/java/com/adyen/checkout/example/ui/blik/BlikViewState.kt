@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.example.ui.blik
 
+import androidx.annotation.StringRes
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.response.Action
 
 sealed class BlikViewState {
 
@@ -16,5 +18,7 @@ sealed class BlikViewState {
 
     data class ShowComponent(val paymentMethod: PaymentMethod) : BlikViewState()
 
-    object Error : BlikViewState()
+    data class Await(val action: Action) : BlikViewState()
+
+    class Error(@StringRes val stringId: Int) : BlikViewState()
 }

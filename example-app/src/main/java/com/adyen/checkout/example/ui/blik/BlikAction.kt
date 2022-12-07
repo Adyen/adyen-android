@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.example.ui.blik
 
-import com.adyen.checkout.components.model.payments.response.Action
-
 sealed class BlikAction {
-    class Await(val action: Action) : BlikAction()
     object Unsupported : BlikAction()
 }
