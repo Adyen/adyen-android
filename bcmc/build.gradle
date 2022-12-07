@@ -43,6 +43,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(":action")
     api project(":card")
 
     // If 3DS2 SDK is present.
