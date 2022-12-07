@@ -8,6 +8,7 @@
 package com.adyen.checkout.entercash
 
 import android.content.Context
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -22,6 +23,7 @@ class EntercashConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val viewType: IssuerListViewType?,
     override val hideIssuerLogos: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
     /**
@@ -63,6 +65,7 @@ class EntercashConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
