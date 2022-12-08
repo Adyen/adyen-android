@@ -8,8 +8,9 @@
 package com.adyen.checkout.card
 
 import android.content.Context
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.data.CardType
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.api.Environment
@@ -36,13 +37,14 @@ class CardConfiguration private constructor(
     val kcpAuthVisibility: KCPAuthVisibility?,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
     /**
      * Builder to create a [CardConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<CardConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder> {
         private var supportedCardTypes: List<CardType>? = null
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null
@@ -234,6 +236,7 @@ class CardConfiguration private constructor(
                 kcpAuthVisibility = kcpAuthVisibility,
                 installmentConfiguration = installmentConfiguration,
                 addressConfiguration = addressConfiguration,
+                genericActionConfiguration = genericActionConfigurationBuilder.build()
             )
         }
     }

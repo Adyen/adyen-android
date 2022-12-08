@@ -10,15 +10,14 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -38,11 +37,7 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
@@ -62,7 +57,7 @@ class DropInConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
-    internal val availableActionConfigs: HashMap<Class<*>, Configuration>,
+    internal val genericActionConfiguration: GenericActionConfiguration,
     val showPreselectedStoredPaymentMethod: Boolean,
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
@@ -77,24 +72,15 @@ class DropInConfiguration private constructor(
         return null
     }
 
-    @Suppress("unused")
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            @Suppress("UNCHECKED_CAST")
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
-
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
     @Suppress("unused", "TooManyFunctions")
-    class Builder : BaseConfigurationBuilder<DropInConfiguration, Builder>, AmountConfigurationBuilder {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder>,
+        AmountConfigurationBuilder {
 
-        internal val availablePaymentConfigs = HashMap<String, Configuration>()
-        internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
+        private val availablePaymentConfigs = HashMap<String, Configuration>()
 
         private var amount: Amount = Amount.EMPTY
         private var showPreselectedStoredPaymentMethod: Boolean = true
@@ -322,54 +308,6 @@ class DropInConfiguration private constructor(
             return this
         }
 
-        /**
-         * Add configuration for 3DS2 action.
-         */
-        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for Await action.
-         */
-        fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for QR code action.
-         */
-        fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for Redirect action.
-         */
-        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for WeChat Pay action.
-         */
-        fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
-        /**
-         * Add configuration for Voucher action.
-         */
-        fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
-            return this
-        }
-
         override fun buildInternal(): DropInConfiguration {
             return DropInConfiguration(
                 shopperLocale = shopperLocale,
@@ -377,7 +315,7 @@ class DropInConfiguration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 availablePaymentConfigs = availablePaymentConfigs,
-                availableActionConfigs = availableActionConfigs,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
                 amount = amount,
                 showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,
                 skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,

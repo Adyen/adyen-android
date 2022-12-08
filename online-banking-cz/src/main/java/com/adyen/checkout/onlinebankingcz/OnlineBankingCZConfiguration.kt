@@ -9,7 +9,8 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
@@ -21,9 +22,10 @@ class OnlineBankingCZConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<OnlineBankingCZConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingCZConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -57,6 +59,7 @@ class OnlineBankingCZConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }

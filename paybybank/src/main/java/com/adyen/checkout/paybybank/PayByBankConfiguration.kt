@@ -9,7 +9,8 @@
 package com.adyen.checkout.paybybank
 
 import android.content.Context
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
@@ -21,12 +22,13 @@ class PayByBankConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
     /**
      * Builder to create a [PayByBankConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<PayByBankConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<PayByBankConfiguration, Builder> {
         /**
          * Constructor for Builder with default values.
          *
@@ -59,6 +61,7 @@ class PayByBankConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }

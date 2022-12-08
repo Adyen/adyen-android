@@ -34,6 +34,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(':action')
     api project(':issuer-list')
 
     // Dependencies

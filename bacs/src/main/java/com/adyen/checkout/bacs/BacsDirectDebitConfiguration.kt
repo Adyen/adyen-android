@@ -9,9 +9,10 @@
 package com.adyen.checkout.bacs
 
 import android.content.Context
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -27,9 +28,12 @@ class BacsDirectDebitConfiguration private constructor(
     override val clientKey: String,
     override val amount: Amount?,
     override val isAnalyticsEnabled: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, AmountConfiguration {
 
-    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration, Builder>, AmountConfigurationBuilder {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder>,
+        AmountConfigurationBuilder {
 
         internal var amount: Amount? = null
 
@@ -66,6 +70,7 @@ class BacsDirectDebitConfiguration private constructor(
                 clientKey = clientKey,
                 amount = amount,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
 

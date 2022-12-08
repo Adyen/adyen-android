@@ -8,7 +8,7 @@
 package com.adyen.checkout.issuerlist
 
 import android.content.Context
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
@@ -21,7 +21,7 @@ abstract class IssuerListConfiguration : Configuration {
     abstract class IssuerListBuilder<
         IssuerListConfigurationT : IssuerListConfiguration,
         IssuerListBuilderT : IssuerListBuilder<IssuerListConfigurationT, IssuerListBuilderT>
-        > : BaseConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT> {
+        > : ActionHandlingPaymentMethodConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT> {
 
         protected open var viewType: IssuerListViewType? = null
         protected open var hideIssuerLogos: Boolean? = null

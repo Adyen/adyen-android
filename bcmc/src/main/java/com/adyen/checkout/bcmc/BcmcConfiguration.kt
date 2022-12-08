@@ -8,7 +8,8 @@
 package com.adyen.checkout.bcmc
 
 import android.content.Context
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
@@ -27,12 +28,13 @@ class BcmcConfiguration private constructor(
     val isHolderNameRequired: Boolean?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
     /**
      * Builder to create a [BcmcConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<BcmcConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<BcmcConfiguration, Builder> {
 
         private var isHolderNameRequired: Boolean? = null
         private var showStorePaymentField: Boolean? = null
@@ -117,6 +119,7 @@ class BcmcConfiguration private constructor(
                 isHolderNameRequired = isHolderNameRequired,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }

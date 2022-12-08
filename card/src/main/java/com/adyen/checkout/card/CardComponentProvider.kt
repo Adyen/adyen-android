@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponent
-import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultAddressRepository
@@ -76,12 +75,6 @@ class CardComponentProvider(
             analyticsMapper = AnalyticsMapper(),
         )
 
-        val actionConfiguration = GenericActionConfiguration.Builder(
-            configuration.shopperLocale,
-            configuration.environment,
-            configuration.clientKey
-        ).build()
-
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val cardDelegate = DefaultCardDelegate(
                 observerRepository = PaymentObserverRepository(),
@@ -97,9 +90,9 @@ class CardComponentProvider(
             )
 
             val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
-                actionConfiguration,
-                savedStateHandle,
-                application,
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
             )
 
             CardComponent(
@@ -129,12 +122,6 @@ class CardComponentProvider(
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
-        val actionConfiguration = GenericActionConfiguration.Builder(
-            configuration.shopperLocale,
-            configuration.environment,
-            configuration.clientKey
-        ).build()
-
         val analyticsService = AnalyticsService(httpClient)
         val analyticsRepository = DefaultAnalyticsRepository(
             packageName = application.packageName,
@@ -155,9 +142,9 @@ class CardComponentProvider(
             )
 
             val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
-                actionConfiguration,
-                savedStateHandle,
-                application,
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
             )
 
             CardComponent(

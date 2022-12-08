@@ -34,5 +34,6 @@ android {
 
 dependencies {
     // Checkout
+    api project(':action')
     api project(':online-banking-core')
 }
