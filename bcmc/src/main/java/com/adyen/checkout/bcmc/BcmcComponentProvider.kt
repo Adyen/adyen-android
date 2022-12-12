@@ -13,6 +13,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
@@ -26,8 +28,8 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -65,18 +67,29 @@ class BcmcComponentProvider(
             analyticsService = analyticsService,
             analyticsMapper = AnalyticsMapper(),
         )
+
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val bcmcDelegate = DefaultBcmcDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                publicKeyRepository = publicKeyRepository,
+                componentParams = componentParams,
+                cardValidationMapper = cardValidationMapper,
+                cardEncrypter = cardEncrypter,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler()
+            )
+
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
             BcmcComponent(
-                delegate = DefaultBcmcDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    paymentMethod = paymentMethod,
-                    publicKeyRepository = publicKeyRepository,
-                    componentParams = componentParams,
-                    cardValidationMapper = cardValidationMapper,
-                    cardEncrypter = cardEncrypter,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler()
-                ),
+                bcmcDelegate = bcmcDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]

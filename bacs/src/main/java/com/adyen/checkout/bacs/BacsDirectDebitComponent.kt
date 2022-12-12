@@ -58,7 +58,6 @@ class BacsDirectDebitComponent internal constructor(
         callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
     ) {
         bacsDelegate.observe(lifecycleOwner, viewModelScope, callback)
-
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
