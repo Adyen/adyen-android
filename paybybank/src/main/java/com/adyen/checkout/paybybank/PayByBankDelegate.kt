@@ -12,7 +12,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UiStateDelegate
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.issuerlist.IssuerModel
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,7 @@ interface PayByBankDelegate :
     PaymentComponentDelegate<PaymentComponentState<PayByBankPaymentMethod>>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UiStateDelegate {
+    UIStateDelegate {
 
     val outputData: PayByBankOutputData
 

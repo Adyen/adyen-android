@@ -21,9 +21,9 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
-import com.adyen.checkout.components.ui.PaymentComponentUiEvent
-import com.adyen.checkout.components.ui.PaymentComponentUiState
-import com.adyen.checkout.components.ui.UiStateDelegate
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
@@ -115,18 +115,18 @@ class AdyenComponentView @JvmOverloads constructor(
         componentView.initView(delegate, coroutineScope, localizedContext)
 
         if (isConfirmationRequired) {
-            val uiStateDelegate = (delegate as? UiStateDelegate)
+            val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
                 // setPaymentPendingInitialization has to be called on each event?
                 when (it) {
-                    PaymentComponentUiState.Idle -> setPaymentPendingInitialization(false)
-                    PaymentComponentUiState.Loading -> setPaymentPendingInitialization(true)
+                    PaymentComponentUIState.Idle -> setPaymentPendingInitialization(false)
+                    PaymentComponentUIState.Loading -> setPaymentPendingInitialization(true)
                 }
             }?.launchIn(coroutineScope)
 
             uiStateDelegate?.uiEventFlow?.onEach {
                 when (it) {
-                    PaymentComponentUiEvent.InvalidUI -> highlightValidationErrors()
+                    PaymentComponentUIEvent.InvalidUI -> highlightValidationErrors()
                 }
             }?.launchIn(coroutineScope)
 

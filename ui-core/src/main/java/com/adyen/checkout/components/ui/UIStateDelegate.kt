@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.components.ui
 
+import androidx.annotation.RestrictTo
 import kotlinx.coroutines.flow.Flow
 
-interface UiStateDelegate {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface UIStateDelegate {
 
-    val uiStateFlow: Flow<PaymentComponentUiState>
+    val uiStateFlow: Flow<PaymentComponentUIState>
 
-    val uiEventFlow: Flow<PaymentComponentUiEvent>
+    val uiEventFlow: Flow<PaymentComponentUIEvent>
 }

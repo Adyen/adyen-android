@@ -19,26 +19,26 @@ class SubmitHandler {
     fun <T : PaymentComponentState<out PaymentMethodDetails>> onSubmit(
         state: T,
         submitChannel: Channel<T>,
-        uiEventChannel: Channel<PaymentComponentUiEvent>?,
-        uiStateChannel: MutableStateFlow<PaymentComponentUiState>?
+        uiEventChannel: Channel<PaymentComponentUIEvent>?,
+        uiStateChannel: MutableStateFlow<PaymentComponentUIState>?
     ) {
         when {
-            !state.isInputValid -> uiEventChannel?.trySend(PaymentComponentUiEvent.InvalidUI)
+            !state.isInputValid -> uiEventChannel?.trySend(PaymentComponentUIEvent.InvalidUI)
             state.isValid -> {
                 submitChannel.trySend(state)
-                uiStateChannel?.tryEmit(PaymentComponentUiState.Idle)
+                uiStateChannel?.tryEmit(PaymentComponentUIState.Idle)
             }
-            !state.isReady -> uiStateChannel?.tryEmit(PaymentComponentUiState.Loading)
-            else -> uiStateChannel?.tryEmit(PaymentComponentUiState.Idle)
+            !state.isReady -> uiStateChannel?.tryEmit(PaymentComponentUIState.Loading)
+            else -> uiStateChannel?.tryEmit(PaymentComponentUIState.Idle)
         }
     }
 
     fun <T : PaymentComponentState<out PaymentMethodDetails>> onState(
         state: T,
-        uiState: PaymentComponentUiState?,
+        uiState: PaymentComponentUIState?,
         submitChannel: Channel<T>
     ) {
-        if (uiState == PaymentComponentUiState.Loading) {
+        if (uiState == PaymentComponentUIState.Loading) {
             if (state.isValid) {
                 submitChannel.trySend(state) // TODO add state to submit
             } else {

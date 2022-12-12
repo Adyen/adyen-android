@@ -26,8 +26,8 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.PaymentComponentUiEvent
-import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -93,11 +93,11 @@ internal class StoredCardDelegate(
     private val submitChannel: Channel<CardComponentState> = bufferedChannel()
     override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
 
-    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
+    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
 
     override val outputData: CardOutputData get() = _outputDataFlow.value
 
@@ -267,11 +267,11 @@ internal class StoredCardDelegate(
 
     private fun onState(state: CardComponentState) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUiState.Loading) {
+        if (uiState == PaymentComponentUIState.Loading) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
-                _uiStateFlow.tryEmit(PaymentComponentUiState.Idle)
+                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
             }
         }
     }

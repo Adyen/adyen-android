@@ -13,7 +13,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UiStateDelegate
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +22,7 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     PaymentComponentDelegate<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UiStateDelegate {
+    UIStateDelegate {
 
     val outputData: OnlineBankingOutputData
 

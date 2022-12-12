@@ -19,8 +19,8 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.PaymentComponentUiEvent
-import com.adyen.checkout.components.ui.PaymentComponentUiState
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
@@ -59,11 +59,11 @@ internal class DefaultMBWayDelegate(
     private val submitChannel: Channel<PaymentComponentState<MBWayPaymentMethod>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = submitChannel.receiveAsFlow()
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
 
-    private val uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUiEvent> = uiEventChannel.receiveAsFlow()
+    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
 
     init {
         updateComponentState(outputData)
