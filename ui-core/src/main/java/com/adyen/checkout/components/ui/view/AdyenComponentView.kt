@@ -57,6 +57,11 @@ class AdyenComponentView @JvmOverloads constructor(
             .onEach { componentViewType ->
                 removeAllViews()
 
+                if (componentViewType == null) {
+                    Logger.i(TAG, "Component view type is null, ignoring.")
+                    return@onEach
+                }
+
                 val delegate = component.delegate
                 if (delegate !is ViewProvidingDelegate) {
                     Logger.i(TAG, "View attached to non viewable component, ignoring.")
@@ -76,13 +81,11 @@ class AdyenComponentView @JvmOverloads constructor(
     }
 
     private fun loadView(
-        viewType: ComponentViewType?,
+        viewType: ComponentViewType,
         delegate: ComponentDelegate,
         componentParams: ComponentParams,
         coroutineScope: CoroutineScope,
     ) {
-        viewType ?: return
-
         val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
 
