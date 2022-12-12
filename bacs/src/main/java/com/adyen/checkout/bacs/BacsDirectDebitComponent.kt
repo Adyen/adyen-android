@@ -11,10 +11,16 @@ package com.adyen.checkout.bacs
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -26,26 +32,39 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class BacsDirectDebitComponent internal constructor(
-    override val delegate: BacsDirectDebitDelegate,
+    private val bacsDelegate: BacsDirectDebitDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<BacsDirectDebitComponentState>,
-    ViewableComponent {
+    ViewableComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        bacsDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         delegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        bacsDelegate.observe(lifecycleOwner, viewModelScope, callback)
+
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        bacsDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     /**
@@ -55,7 +74,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return whether the view was successfully changed.
      */
     fun setConfirmationMode(): Boolean {
-        return delegate.setMode(BacsDirectDebitMode.CONFIRMATION)
+        return bacsDelegate.setMode(BacsDirectDebitMode.CONFIRMATION)
     }
 
     /**
@@ -64,7 +83,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return whether the view was successfully changed.
      */
     fun setInputMode(): Boolean {
-        return delegate.setMode(BacsDirectDebitMode.INPUT)
+        return bacsDelegate.setMode(BacsDirectDebitMode.INPUT)
     }
 
     /**
@@ -79,7 +98,7 @@ class BacsDirectDebitComponent internal constructor(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        bacsDelegate.onCleared()
     }
 
     companion object {
