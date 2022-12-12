@@ -37,7 +37,7 @@ internal class DefaultBacsDirectDebitDelegate(
     override val componentParams: BacsDirectDebitComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-    val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandler
 ) : BacsDirectDebitDelegate {
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
