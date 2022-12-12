@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.ui.view
 
+import androidx.annotation.StringRes
 import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.components.ui.ViewProvider
 
@@ -17,5 +18,9 @@ interface ComponentViewType {
 
 interface ButtonComponentViewType : ComponentViewType {
     val buttonTextResId: Int
-        get() = R.string.pay_button
+        @StringRes get
+
+    companion object {
+        val DEFAULT_BUTTON_TEXT_RES_ID = R.string.pay_button
+    }
 }

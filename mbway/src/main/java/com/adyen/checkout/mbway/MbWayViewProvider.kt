@@ -30,4 +30,5 @@ internal object MbWayViewProvider : ViewProvider {
 
 internal object MbWayComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = MbWayViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

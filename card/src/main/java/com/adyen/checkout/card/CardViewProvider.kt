@@ -32,4 +32,5 @@ internal object CardViewProvider : ViewProvider {
 
 internal object CardComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = CardViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

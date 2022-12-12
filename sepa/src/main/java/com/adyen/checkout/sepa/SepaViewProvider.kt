@@ -32,4 +32,5 @@ internal object SepaViewProvider : ViewProvider {
 
 internal object SepaComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = SepaViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

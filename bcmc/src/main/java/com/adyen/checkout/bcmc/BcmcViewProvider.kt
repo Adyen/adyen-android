@@ -30,4 +30,5 @@ internal object BcmcViewProvider : ViewProvider {
 
 internal object BcmcComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = BcmcViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

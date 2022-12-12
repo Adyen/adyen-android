@@ -31,4 +31,5 @@ internal object BlikViewProvider : ViewProvider {
 
 internal object BlikComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = BlikViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

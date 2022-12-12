@@ -32,4 +32,5 @@ internal object OnlineBankingViewProvider : ViewProvider {
 
 internal object OnlineBankingComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = OnlineBankingViewProvider
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

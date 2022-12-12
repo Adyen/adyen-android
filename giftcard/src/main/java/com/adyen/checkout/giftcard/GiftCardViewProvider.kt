@@ -24,13 +24,13 @@ internal object GiftCardViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            is GiftCardComponentViewType -> GiftCardView(context, attrs, defStyleAttr)
+            GiftCardComponentViewType -> GiftCardView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal class GiftCardComponentViewType(
-    override val buttonTextResId: Int = R.string.checkout_giftcard_redeem_button,
+internal object GiftCardComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = GiftCardViewProvider
-) : ButtonComponentViewType
+    override val buttonTextResId: Int = R.string.checkout_giftcard_redeem_button
+}
