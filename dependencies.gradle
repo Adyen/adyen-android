@@ -34,7 +34,7 @@ ext {
     appcompat_version = "1.5.1"
     browser_version = "1.4.0"
     coroutines_version = "1.6.4"
-    fragment_version = "1.5.4"
+    fragment_version = "1.5.5"
     lifecycle_version = "2.5.1"
     material_version = "1.7.0"
     recyclerview_version = "1.2.1"
