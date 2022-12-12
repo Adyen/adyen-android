@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.openbanking
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,8 +21,12 @@ import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
  */
 class OpenBankingComponent internal constructor(
     delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<OpenBankingPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
     companion object {
         @JvmField

@@ -20,6 +20,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -43,7 +44,11 @@ class BcmcComponent internal constructor(
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?> = bcmcDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        bcmcDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         bcmcDelegate.initialize(viewModelScope)

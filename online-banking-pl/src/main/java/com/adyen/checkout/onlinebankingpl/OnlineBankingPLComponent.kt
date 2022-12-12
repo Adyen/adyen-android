@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.onlinebankingpl
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -20,8 +22,12 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PRO
  */
 class OnlineBankingPLComponent internal constructor(
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
     companion object {
         @JvmField

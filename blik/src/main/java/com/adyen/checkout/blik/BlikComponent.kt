@@ -19,6 +19,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -42,7 +43,11 @@ class BlikComponent internal constructor(
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?> = blikDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        blikDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         blikDelegate.initialize(viewModelScope)
