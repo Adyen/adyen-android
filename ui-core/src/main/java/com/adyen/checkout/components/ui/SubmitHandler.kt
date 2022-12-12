@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.components.ui
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 // TODO docs
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SubmitHandler {
 
     fun <T : PaymentComponentState<out PaymentMethodDetails>> onSubmit(
