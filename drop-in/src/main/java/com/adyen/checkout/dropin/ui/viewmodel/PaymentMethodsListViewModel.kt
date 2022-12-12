@@ -121,9 +121,9 @@ internal class PaymentMethodsListViewModel(
             val paymentMethodsList: List<PaymentMethodModel> = paymentMethods.mapToPaymentMethodModelList()
             if (paymentMethodsList.isNotEmpty()) {
                 val headerType = if (hasStoredPaymentMethods) {
-                    PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
-                } else {
                     PaymentMethodHeader.TYPE_REGULAR_HEADER_WITH_STORED
+                } else {
+                    PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
                 }
 
                 add(PaymentMethodHeader(headerType))
