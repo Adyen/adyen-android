@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.onlinebankingcz
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -16,8 +18,12 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingCZComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
 
     companion object {

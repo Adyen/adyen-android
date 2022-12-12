@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.onlinebankingsk
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -16,7 +18,13 @@ import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingSKComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
-) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(delegate) {
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
+) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(
+    delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
+) {
     companion object {
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 
