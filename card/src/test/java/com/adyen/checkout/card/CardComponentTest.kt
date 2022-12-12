@@ -17,6 +17,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.test.extensions.invokeOnCleared
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -63,8 +64,7 @@ internal class CardComponentTest(
 
     @Test
     fun `when component is cleared then delegates are cleared`() {
-        // calling onCleared by reflection since it's not public
-        component.javaClass.getDeclaredMethod("onCleared").invoke(component)
+        component.invokeOnCleared()
 
         verify(cardDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
