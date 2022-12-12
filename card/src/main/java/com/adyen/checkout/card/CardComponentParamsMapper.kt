@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.log.LogUtil
@@ -26,6 +27,7 @@ internal class CardComponentParamsMapper(
         return cardConfiguration
             .mapToParamsInternal(supportedCardTypes)
             .override(overrideComponentParams)
+            .removeRestrictedCards()
     }
 
     fun mapToParamsStored(
@@ -35,6 +37,7 @@ internal class CardComponentParamsMapper(
         return cardConfiguration
             .mapToParamsInternal(supportedCardTypes)
             .override(overrideComponentParams)
+            .removeRestrictedCards()
     }
 
     private fun CardConfiguration.mapToParamsInternal(
@@ -98,6 +101,12 @@ internal class CardComponentParamsMapper(
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+        )
+    }
+
+    private fun CardComponentParams.removeRestrictedCards(): CardComponentParams {
+        return copy(
+            supportedCardTypes = supportedCardTypes.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
         )
     }
 
