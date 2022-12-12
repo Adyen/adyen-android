@@ -13,6 +13,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -64,16 +66,27 @@ class GiftCardComponentProvider(
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
             )
+
+            val giftCardDelegate = DefaultGiftCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                analyticsRepository = analyticsRepository,
+                publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
+                componentParams = componentParams,
+                cardEncrypter = cardEncrypter,
+                submitHandler = SubmitHandler(),
+            )
+
+            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
             GiftCardComponent(
-                delegate = DefaultGiftCardDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    paymentMethod = paymentMethod,
-                    analyticsRepository = analyticsRepository,
-                    publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
-                    componentParams = componentParams,
-                    cardEncrypter = cardEncrypter,
-                    submitHandler = SubmitHandler(),
-                ),
+                giftCardDelegate = giftCardDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, giftCardDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
