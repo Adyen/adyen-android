@@ -124,8 +124,9 @@ class DropInViewModel(
         amount = dropInConfiguration.amount
     }
 
-    val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
-        dropInConfiguration.showPreselectedStoredPaymentMethod
+    val showPreselectedStored
+        get() = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
+            dropInConfiguration.showPreselectedStoredPaymentMethod
 
     val preselectedStoredPayment
         get() = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
@@ -133,7 +134,8 @@ class DropInViewModel(
         } ?: StoredPaymentMethod()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
-        return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
+        return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id }
+            ?: StoredPaymentMethod()
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
@@ -169,7 +171,8 @@ class DropInViewModel(
             transactionLimit = balanceResult.transactionLimit,
             amountToBePaid = amount
         )
-        val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
+        val cachedGiftCardComponentState = cachedGiftCardComponentState
+            ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceStatus.ZeroBalance -> {
                 Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
@@ -271,7 +274,8 @@ class DropInViewModel(
     }
 
     fun removeStoredPaymentMethodWithId(id: String) {
-        val positionToRemove = paymentMethodsApiResponse.storedPaymentMethods?.indexOfFirst { it.id == id } ?: -1
+        val positionToRemove = paymentMethodsApiResponse.storedPaymentMethods?.indexOfFirst { it.id == id }
+            ?: -1
         val updatedStoredPaymentMethods = paymentMethodsApiResponse.storedPaymentMethods?.toMutableList()
         if (positionToRemove != -1) {
             updatedStoredPaymentMethods?.removeAt(positionToRemove)
