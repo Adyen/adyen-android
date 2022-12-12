@@ -12,10 +12,15 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -25,24 +30,35 @@ import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class GooglePayComponent internal constructor(
-    override val delegate: GooglePayDelegate,
+    private val googlePayDelegate: GooglePayDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<GooglePayComponentState>,
-    ActivityResultHandlingComponent {
+    ActivityResultHandlingComponent,
+    ActionHandlingComponent by actionHandlingComponent {
+
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
+    // TODO: do we need a viewFlow now?
+    // override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
 
     init {
-        delegate.initialize(viewModelScope)
+        googlePayDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        googlePayDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        googlePayDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     /**
@@ -52,7 +68,7 @@ class GooglePayComponent internal constructor(
      * @param requestCode The code that will be returned on the [Activity.onActivityResult]
      */
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
-        delegate.startGooglePayScreen(activity, requestCode)
+        googlePayDelegate.startGooglePayScreen(activity, requestCode)
     }
 
     /**
@@ -62,13 +78,14 @@ class GooglePayComponent internal constructor(
      * @param data       The data intent from the [Activity.onActivityResult]
      */
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
-        delegate.handleActivityResult(resultCode, data)
+        googlePayDelegate.handleActivityResult(resultCode, data)
     }
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        googlePayDelegate.onCleared()
+        genericActionDelegate.onCleared()
     }
 
     companion object {
