@@ -117,7 +117,7 @@ class AdyenComponentView @JvmOverloads constructor(
         if (isConfirmationRequired) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
-                // setPaymentPendingInitialization has to be called on each event?
+                // TODO check if setPaymentPendingInitialization has to be called on each event?
                 when (it) {
                     PaymentComponentUIState.Idle -> setPaymentPendingInitialization(false)
                     PaymentComponentUIState.Loading -> setPaymentPendingInitialization(true)
