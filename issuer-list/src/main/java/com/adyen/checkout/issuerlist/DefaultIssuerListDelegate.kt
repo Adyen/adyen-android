@@ -57,12 +57,6 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     private val submitChannel: Channel<PaymentComponentState<IssuerListPaymentMethodT>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitChannel.receiveAsFlow()
 
-//    private val _uiStateFlow = MutableStateFlow<PaymentComponentUiState>(PaymentComponentUiState.Idle)
-//    override val uiStateFlow: Flow<PaymentComponentUiState> = _uiStateFlow
-//
-//    private val _uiEventChannel: Channel<PaymentComponentUiEvent> = bufferedChannel()
-//    override val uiEventFlow: Flow<PaymentComponentUiEvent> = _uiEventChannel.receiveAsFlow()
-
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
     }
