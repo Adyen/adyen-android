@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.api.Environment
@@ -117,6 +118,21 @@ internal class CardComponentParamsMapperTest {
 
         val expected = getCardComponentParams(
             supportedCardTypes = listOf(CardType.MAESTRO, CardType.BCMC)
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when there are any restricted card brand in payment method,they are removed from the params`() {
+        val cardConfiguration = getCardConfigurationBuilder().build()
+        val paymentMethod =
+            PaymentMethod(brands = listOf(RestrictedCardType.NYCE.txVariant, CardType.MASTERCARD.txVariant))
+
+        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+
+        val expected = getCardComponentParams(
+            supportedCardTypes = listOf(CardType.MASTERCARD)
         )
 
         assertEquals(expected, params)
