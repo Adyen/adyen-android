@@ -27,7 +27,6 @@ internal class CardComponentParamsMapper(
         return cardConfiguration
             .mapToParamsInternal(supportedCardTypes)
             .override(overrideComponentParams)
-            .removeRestrictedCards()
     }
 
     fun mapToParamsStored(
@@ -37,7 +36,6 @@ internal class CardComponentParamsMapper(
         return cardConfiguration
             .mapToParamsInternal(supportedCardTypes)
             .override(overrideComponentParams)
-            .removeRestrictedCards()
     }
 
     private fun CardConfiguration.mapToParamsInternal(
@@ -65,6 +63,7 @@ internal class CardComponentParamsMapper(
     /**
      * Check which set of supported cards to pass to the component.
      * Priority is: Custom -> PaymentMethod.brands -> Default
+     * remove restricted card type
      */
     private fun CardConfiguration.getSupportedCardTypes(
         paymentMethod: PaymentMethod
@@ -84,11 +83,15 @@ internal class CardComponentParamsMapper(
                 Logger.v(TAG, "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST")
                 CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
             }
-        }
+        }.removeRestrictedCards()
     }
 
     private fun CardConfiguration.getSupportedCardTypesStored(): List<CardType> {
-        return supportedCardTypes.orEmpty()
+        return supportedCardTypes.orEmpty().removeRestrictedCards()
+    }
+
+    private fun List<CardType>.removeRestrictedCards(): List<CardType> {
+        return this.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
     }
 
     private fun CardComponentParams.override(
@@ -101,12 +104,6 @@ internal class CardComponentParamsMapper(
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-        )
-    }
-
-    private fun CardComponentParams.removeRestrictedCards(): CardComponentParams {
-        return copy(
-            supportedCardTypes = supportedCardTypes.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
         )
     }
 
