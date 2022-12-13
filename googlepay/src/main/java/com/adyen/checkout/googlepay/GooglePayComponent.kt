@@ -21,10 +21,13 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.toActionCallback
+import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -36,12 +39,12 @@ class GooglePayComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<GooglePayComponentState>,
     ActivityResultHandlingComponent,
+    ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    // TODO: do we need a viewFlow now?
-    // override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
 
     init {
         googlePayDelegate.initialize(viewModelScope)

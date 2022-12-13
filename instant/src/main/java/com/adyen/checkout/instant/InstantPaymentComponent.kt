@@ -13,9 +13,12 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.toActionCallback
+import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Payment component used for handling payment methods that do not require any input from the shopper.
@@ -28,12 +31,12 @@ class InstantPaymentComponent internal constructor(
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<PaymentMethodDetails>>,
+    ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    // TODO: do we need a viewFlow now?
-    // override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
 
     init {
         instantPaymentDelegate.initialize(viewModelScope)
