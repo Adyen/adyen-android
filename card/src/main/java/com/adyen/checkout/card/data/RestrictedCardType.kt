@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.data
 
-enum class RestrictedCardType(val txVariant: String) {
+internal enum class RestrictedCardType(val txVariant: String) {
     ACCEL("accel"),
     PULSE("pulse"),
     STAR("star"),
