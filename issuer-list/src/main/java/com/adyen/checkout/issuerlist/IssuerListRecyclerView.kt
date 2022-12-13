@@ -60,8 +60,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         // no embedded localized strings on this view
     }
 
-    override val isConfirmationRequired: Boolean = false
-
     override fun highlightValidationErrors() {
         // no ops
     }
@@ -74,6 +72,7 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     private fun onItemClicked(issuerModel: IssuerModel) {
         Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
         issuerListDelegate.updateInputData { selectedIssuer = issuerModel }
+        issuerListDelegate.onSubmit()
     }
 
     override fun getView(): View = this

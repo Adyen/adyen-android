@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
 internal object BacsViewProvider : ViewProvider {
@@ -29,8 +30,9 @@ internal object BacsViewProvider : ViewProvider {
     }
 }
 
-internal enum class BacsComponentViewType : ComponentViewType {
-    INPUT, CONFIRMATION;
+internal enum class BacsComponentViewType(override val buttonTextResId: Int) : ButtonComponentViewType {
+    INPUT(R.string.bacs_continue),
+    CONFIRMATION(R.string.bacs_confirm_and_pay);
 
     override val viewProvider: ViewProvider = BacsViewProvider
 }

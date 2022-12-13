@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
 internal object IssuerListViewProvider : ViewProvider {
@@ -23,15 +24,18 @@ internal object IssuerListViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            IssuerListComponentViewType.RECYCLER_VIEW -> IssuerListRecyclerView(context, attrs, defStyleAttr)
-            IssuerListComponentViewType.SPINNER_VIEW -> IssuerListSpinnerView(context, attrs, defStyleAttr)
+            IssuerListComponentViewType.RecyclerView -> IssuerListRecyclerView(context, attrs, defStyleAttr)
+            IssuerListComponentViewType.SpinnerView -> IssuerListSpinnerView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-enum class IssuerListComponentViewType : ComponentViewType {
-    RECYCLER_VIEW, SPINNER_VIEW;
-
+internal sealed class IssuerListComponentViewType(
     override val viewProvider: ViewProvider = IssuerListViewProvider
+) : ComponentViewType {
+    object RecyclerView : IssuerListComponentViewType()
+    object SpinnerView : IssuerListComponentViewType(), ButtonComponentViewType {
+        override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    }
 }

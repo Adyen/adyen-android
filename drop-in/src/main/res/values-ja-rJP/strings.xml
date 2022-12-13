@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">支払う</string>
-    <string name="pay_button_with_value">%sのお支払い</string>
     <string name="payment_methods_header">お支払い方法</string>
     <string name="error_dialog_title">エラー</string>
     <string name="error_dialog_button">OK</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">その他のお支払いオプション</string>
     <string name="continue_button">続ける</string>
     <string name="change_payment_method">お支払方法を変更する</string>
-    <string name="checkout_giftcard_redeem_button">利用する</string>
     <string name="checkout_giftcard_error_zero_balance">このギフトカードの残高はゼロです</string>
     <string name="checkout_giftcard_error_currency">ギフトカードは、発行された通貨でのみ有効です。</string>
     <string name="checkout_giftcard_remaining_balance_text">残りの残高は%sになります</string>

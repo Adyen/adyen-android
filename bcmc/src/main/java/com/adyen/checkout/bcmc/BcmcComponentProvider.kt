@@ -27,6 +27,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
@@ -74,6 +75,7 @@ class BcmcComponentProvider(
                     cardValidationMapper = cardValidationMapper,
                     cardEncrypter = cardEncrypter,
                     analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler()
                 ),
             )
         }

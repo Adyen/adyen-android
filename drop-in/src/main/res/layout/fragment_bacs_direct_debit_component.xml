@@ -38,11 +38,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/payButton"
-                style="@style/AdyenCheckout.Button.Colored"
-                android:text="@string/pay_button" />
-
             <androidx.core.widget.ContentLoadingProgressBar
                 android:id="@+id/progressBar"
                 style="@style/Widget.AppCompat.ProgressBar"

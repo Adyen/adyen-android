@@ -85,6 +85,7 @@ class PayByBankView @JvmOverloads constructor(
     private fun onItemClicked(issuerModel: IssuerModel) {
         Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
         delegate.updateInputData { selectedIssuer = issuerModel }
+        delegate.onSubmit()
     }
 
     private fun initSearchQueryInput() {
@@ -103,8 +104,6 @@ class PayByBankView @JvmOverloads constructor(
         }
         binding.recyclerIssuers.adapter = payByBankRecyclerAdapter
     }
-
-    override val isConfirmationRequired: Boolean = false
 
     override fun highlightValidationErrors() {
         // no validation

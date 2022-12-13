@@ -9,12 +9,16 @@
 package com.adyen.checkout.bacs
 
 import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.ui.ButtonDelegate
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BacsDirectDebitDelegate :
     PaymentComponentDelegate<BacsDirectDebitComponentState>,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    ButtonDelegate,
+    UIStateDelegate {
 
     override val componentParams: BacsDirectDebitComponentParams
 
@@ -27,4 +31,6 @@ interface BacsDirectDebitDelegate :
     fun setMode(mode: BacsDirectDebitMode): Boolean
 
     fun updateInputData(update: BacsDirectDebitInputData.() -> Unit)
+
+    fun handleBackPress(): Boolean
 }

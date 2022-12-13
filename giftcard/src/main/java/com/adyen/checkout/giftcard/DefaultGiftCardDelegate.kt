@@ -19,6 +19,9 @@ import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMetho
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -36,7 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultGiftCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -44,6 +47,7 @@ internal class DefaultGiftCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: GenericComponentParams,
     private val cardEncrypter: CardEncrypter,
+    private val submitHandler: SubmitHandler
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -60,6 +64,15 @@ internal class DefaultGiftCardDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
+
+    private val submitChannel: Channel<GiftCardComponentState> = bufferedChannel()
+    override val submitFlow: Flow<GiftCardComponentState> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
 
     private var publicKey: String? = null
 
@@ -103,6 +116,7 @@ internal class DefaultGiftCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -179,6 +193,16 @@ internal class DefaultGiftCardDelegate(
             isInputValid = true,
             isReady = true,
             lastFourDigits = lastDigits,
+        )
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
         )
     }
 

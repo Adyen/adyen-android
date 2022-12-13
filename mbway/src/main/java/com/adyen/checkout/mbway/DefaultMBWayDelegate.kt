@@ -14,10 +14,14 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
@@ -25,8 +29,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -35,6 +41,7 @@ internal class DefaultMBWayDelegate(
     private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
+    private val submitHandler: SubmitHandler,
 ) : MBWayDelegate {
 
     private val inputData = MBWayInputData()
@@ -48,6 +55,15 @@ internal class DefaultMBWayDelegate(
     override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
+
+    private val submitChannel: Channel<PaymentComponentState<MBWayPaymentMethod>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
 
     init {
         updateComponentState(outputData)
@@ -72,6 +88,7 @@ internal class DefaultMBWayDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -133,6 +150,16 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
+    }
 
     override fun onCleared() {
         removeObserver()

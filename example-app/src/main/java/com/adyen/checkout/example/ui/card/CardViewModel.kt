@@ -70,20 +70,12 @@ internal class CardViewModel @Inject constructor(
             is PaymentComponentEvent.StateChanged -> onCardComponentState(event.state)
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
+            is PaymentComponentEvent.Submit -> makePayment(event.state.data)
         }
     }
 
     private fun onCardComponentState(state: CardComponentState) {
         cardComponentState = state
-    }
-
-    fun onPayClick() {
-        val state = cardComponentState
-        when {
-            state == null -> _cardViewState.tryEmit(CardViewState.Error)
-            state.isValid -> makePayment(state.data)
-            else -> viewModelScope.launch { _events.emit(CardEvent.Invalid) }
-        }
     }
 
     private fun makePayment(data: PaymentComponentData<*>) {

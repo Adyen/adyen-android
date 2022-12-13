@@ -46,8 +46,6 @@ internal class VoucherView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    override val isConfirmationRequired: Boolean = false
-
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()

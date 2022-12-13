@@ -1,0 +1,12 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Pagar</string>
+    <string name="pay_button_with_value">Pagar %s</string>
+</resources>

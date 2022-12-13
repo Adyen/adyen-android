@@ -26,6 +26,9 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -42,10 +45,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList", "TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -54,6 +59,7 @@ internal class DefaultBcmcDelegate(
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
+    private val submitHandler: SubmitHandler
 ) : BcmcDelegate {
 
     private val inputData = BcmcInputData()
@@ -71,9 +77,22 @@ internal class DefaultBcmcDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
 
+    private val submitChannel: Channel<PaymentComponentState<CardPaymentMethod>> = bufferedChannel()
+    override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
@@ -113,6 +132,7 @@ internal class DefaultBcmcDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -170,6 +190,17 @@ internal class DefaultBcmcDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
+    private fun onState(state: PaymentComponentState<CardPaymentMethod>) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUIState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
+            }
+        }
+    }
+
     @Suppress("ReturnCount")
     private fun createComponentState(
         outputData: BcmcOutputData = this.outputData
@@ -212,6 +243,16 @@ internal class DefaultBcmcDelegate(
         }
 
         return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
+        )
     }
 
     private fun encryptCardData(

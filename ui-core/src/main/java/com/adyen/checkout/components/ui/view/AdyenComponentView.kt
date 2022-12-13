@@ -9,6 +9,7 @@ package com.adyen.checkout.components.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -18,9 +19,14 @@ import com.adyen.checkout.components.Component
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
+import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -37,10 +43,17 @@ class AdyenComponentView @JvmOverloads constructor(
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
+    private val binding: AdyenComponentViewBinding = AdyenComponentViewBinding.inflate(
+        LayoutInflater.from(context),
+        this
+    )
+
     private var componentView: ComponentView? = null
+    private var componentViewType: ComponentViewType? = null
 
     init {
         isVisible = isInEditMode
+        orientation = VERTICAL
     }
 
     /**
@@ -55,7 +68,7 @@ class AdyenComponentView @JvmOverloads constructor(
     ) where T : ViewableComponent, T : Component {
         component.viewFlow
             .onEach { componentViewType ->
-                removeAllViews()
+                binding.frameLayoutComponentContainer.removeAllViews()
 
                 if (componentViewType == null) {
                     Logger.i(TAG, "Component view type is null, ignoring.")
@@ -76,7 +89,6 @@ class AdyenComponentView @JvmOverloads constructor(
                 )
             }
             .launchIn(lifecycleOwner.lifecycleScope)
-
         isVisible = true
     }
 
@@ -88,14 +100,49 @@ class AdyenComponentView @JvmOverloads constructor(
     ) {
         val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
+        this.componentViewType = viewType
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
+        if (viewType is ButtonComponentViewType) {
+            binding.payButton.text = localizedContext.getString(viewType.buttonTextResId)
+        }
+
         val view = componentView.getView()
-        addView(view)
+        binding.frameLayoutComponentContainer.addView(view)
         view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
 
         componentView.initView(delegate, coroutineScope, localizedContext)
+
+        if (isConfirmationRequired) {
+            val uiStateDelegate = (delegate as? UIStateDelegate)
+            uiStateDelegate?.uiStateFlow?.onEach {
+                // TODO check if setPaymentPendingInitialization has to be called on each event?
+                when (it) {
+                    PaymentComponentUIState.Idle -> setPaymentPendingInitialization(false)
+                    PaymentComponentUIState.Loading -> setPaymentPendingInitialization(true)
+                }
+            }?.launchIn(coroutineScope)
+
+            uiStateDelegate?.uiEventFlow?.onEach {
+                when (it) {
+                    PaymentComponentUIEvent.InvalidUI -> highlightValidationErrors()
+                }
+            }?.launchIn(coroutineScope)
+
+            binding.payButton.isVisible = true
+            binding.payButton.setOnClickListener {
+                (delegate as? ButtonDelegate)?.onSubmit()
+            }
+        } else {
+            binding.payButton.isVisible = false
+            binding.payButton.setOnClickListener(null)
+        }
+    }
+
+    private fun setPaymentPendingInitialization(pending: Boolean) {
+        binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
     /**
@@ -111,7 +158,7 @@ class AdyenComponentView @JvmOverloads constructor(
      * not.
      */
     val isConfirmationRequired: Boolean
-        get() = componentView?.isConfirmationRequired ?: false
+        get() = componentViewType is ButtonComponentViewType
 
     /**
      * Highlight and focus on the current validation errors for the user to take action.

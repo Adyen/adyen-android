@@ -45,8 +45,6 @@ class CardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.payButton.setOnClickListener { cardViewModel.onPayClick() }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }

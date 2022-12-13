@@ -54,8 +54,6 @@ class PaymentInProgressView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired: Boolean = false
-
     override fun highlightValidationErrors() = Unit
 
     override fun getView(): View = this

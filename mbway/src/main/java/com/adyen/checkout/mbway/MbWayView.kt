@@ -97,8 +97,6 @@ internal class MbWayView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired: Boolean = true
-
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation

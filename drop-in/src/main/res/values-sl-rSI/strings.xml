@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Plačilo</string>
-    <string name="pay_button_with_value">Plačilo %s</string>
     <string name="payment_methods_header">Načini plačila</string>
     <string name="error_dialog_title">Napaka</string>
     <string name="error_dialog_button">OK</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Izberite drug način</string>
     <string name="continue_button">Nadaljuj</string>
     <string name="change_payment_method">Spremeni način plačila</string>
-    <string name="checkout_giftcard_redeem_button">Unovči</string>
     <string name="checkout_giftcard_error_zero_balance">Na tej darilni kartici ni sredstev</string>
     <string name="checkout_giftcard_error_currency">Darilne kartice so veljavne samo za valuto, za katero so bile izdane</string>
     <string name="checkout_giftcard_remaining_balance_text">Preostalo stanje bo %s</string>

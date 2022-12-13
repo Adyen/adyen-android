@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Paga</string>
-    <string name="pay_button_with_value">Paga %s</string>
     <string name="payment_methods_header">Metodo di Pagamento</string>
     <string name="error_dialog_title">Errore</string>
     <string name="error_dialog_button">OK</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Scegli altro metodo di pagamento</string>
     <string name="continue_button">Continua</string>
     <string name="change_payment_method">Cambia metodo di pagamento</string>
-    <string name="checkout_giftcard_redeem_button">Riscatta</string>
     <string name="checkout_giftcard_error_zero_balance">Questo buono regalo ha un saldo pari a zero</string>
     <string name="checkout_giftcard_error_currency">I buono regalo sono validi solo nella valuta in cui sono state emessi</string>
     <string name="checkout_giftcard_remaining_balance_text">Il saldo rimanente sarà di %s</string>

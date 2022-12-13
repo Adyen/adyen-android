@@ -75,8 +75,6 @@ internal class OnlineBankingView @JvmOverloads constructor(
         }
     }
 
-    override val isConfirmationRequired = true
-
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val output = onlineBankingDelegate.outputData

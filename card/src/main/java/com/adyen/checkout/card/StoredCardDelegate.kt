@@ -26,6 +26,9 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -42,10 +45,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class StoredCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
@@ -53,6 +58,7 @@ internal class StoredCardDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
+    private val submitHandler: SubmitHandler
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
@@ -84,6 +90,15 @@ internal class StoredCardDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
 
+    private val submitChannel: Channel<CardComponentState> = bufferedChannel()
+    override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+
     override val outputData: CardOutputData get() = _outputDataFlow.value
 
     private var publicKey: String? = null
@@ -92,6 +107,11 @@ internal class StoredCardDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         this.coroutineScope = coroutineScope
+
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         initializeInputData()
         fetchPublicKey()
@@ -112,6 +132,7 @@ internal class StoredCardDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -241,6 +262,27 @@ internal class StoredCardDelegate(
             encryptedCard,
             cardNumber,
             firstCardType,
+        )
+    }
+
+    private fun onState(state: CardComponentState) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUIState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
+            }
+        }
+    }
+
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(
+            state = state,
+            submitChannel = submitChannel,
+            uiEventChannel = _uiEventChannel,
+            uiStateChannel = _uiStateFlow
         )
     }
 

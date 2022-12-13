@@ -137,8 +137,6 @@ internal class QrCodeView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() = Unit
 
-    override val isConfirmationRequired: Boolean = false
-
     companion object {
         private val TAG = LogUtil.getTag()
     }

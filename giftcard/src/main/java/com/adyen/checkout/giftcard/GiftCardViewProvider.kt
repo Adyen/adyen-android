@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
 internal object GiftCardViewProvider : ViewProvider {
@@ -29,6 +30,7 @@ internal object GiftCardViewProvider : ViewProvider {
     }
 }
 
-internal object GiftCardComponentViewType : ComponentViewType {
+internal object GiftCardComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = GiftCardViewProvider
+    override val buttonTextResId: Int = R.string.checkout_giftcard_redeem_button
 }

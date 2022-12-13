@@ -12,16 +12,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -40,26 +37,10 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        if (!binding.componentView.isConfirmationRequired) return
-        binding.payButton.isVisible = !pending
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.componentView.highlightValidationErrors()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
-
-        if (!dropInViewModel.amount.isEmpty) {
-            val value =
-                CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
-            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
-        }
 
         try {
             attachComponent(component)
@@ -73,28 +54,23 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             binding.componentView.attach(component, viewLifecycleOwner)
 
             if (binding.componentView.isConfirmationRequired) {
-                binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
                 setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
                 binding.componentView.requestFocus()
-            } else {
-                binding.payButton.isVisible = false
             }
-        } else {
-            binding.payButton.isVisible = false
         }
         component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
     }
 
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
-            is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
-                event.state,
-                binding.componentView.isConfirmationRequired
-            )
+            is PaymentComponentEvent.StateChanged -> {
+                // no ops
+            }
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
+            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

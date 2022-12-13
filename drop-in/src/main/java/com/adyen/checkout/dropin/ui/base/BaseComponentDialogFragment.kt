@@ -13,20 +13,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.fragment.app.viewModels
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
-import com.adyen.checkout.dropin.ui.viewmodel.ComponentDialogViewModel
-import com.adyen.checkout.dropin.ui.viewmodel.ComponentFragmentState
 
 private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
@@ -38,8 +35,6 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
     companion object {
         private val TAG = LogUtil.getTag()
     }
-
-    protected val componentDialogViewModel: ComponentDialogViewModel by viewModels()
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
@@ -101,32 +96,6 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         savedInstanceState: Bundle?
     ): View?
 
-    @CallSuper
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeState()
-    }
-
-    protected abstract fun setPaymentPendingInitialization(pending: Boolean)
-
-    protected abstract fun highlightValidationErrors()
-
-    private fun observeState() {
-        componentDialogViewModel.componentFragmentStateLiveData.observe(viewLifecycleOwner) {
-            Logger.v(TAG, "state: $it")
-            setPaymentPendingInitialization(it == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION)
-            when (it) {
-                ComponentFragmentState.INVALID_UI -> highlightValidationErrors()
-                ComponentFragmentState.PAYMENT_READY -> {
-                    startPayment()
-                    componentDialogViewModel.paymentStarted()
-                }
-                else -> { // do nothing
-                }
-            }
-        }
-    }
-
     override fun onBackPressed(): Boolean {
         Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
 
@@ -144,17 +113,12 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         protocol.terminateDropIn()
     }
 
-    private fun startPayment() {
-        val componentState = componentDialogViewModel.componentState
+    protected fun startPayment(componentState: PaymentComponentState<out PaymentMethodDetails>) {
         try {
-            if (componentState != null) {
-                if (componentState.isValid) {
-                    requestProtocolCall(componentState)
-                } else {
-                    throw CheckoutException("PaymentComponentState are not valid.")
-                }
+            if (componentState.isValid) {
+                requestProtocolCall(componentState)
             } else {
-                throw CheckoutException("PaymentComponentState are null.")
+                throw CheckoutException("PaymentComponentState are not valid.")
             }
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

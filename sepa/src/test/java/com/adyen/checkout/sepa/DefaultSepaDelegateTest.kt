@@ -6,6 +6,7 @@ import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,6 +44,7 @@ internal class DefaultSepaDelegateTest(
             paymentMethod = PaymentMethod(),
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             analyticsRepository = analyticsRepository,
+            submitHandler = SubmitHandler()
         )
     }
 

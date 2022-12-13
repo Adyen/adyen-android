@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Πληρωμή</string>
-    <string name="pay_button_with_value">Πληρωμή %s</string>
     <string name="payment_methods_header">Τρόποι πληρωμής</string>
     <string name="error_dialog_title">Σφάλμα</string>
     <string name="error_dialog_button">ΟΚ</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Επιλέξτε άλλον τρόπο</string>
     <string name="continue_button">Συνέχεια</string>
     <string name="change_payment_method">Αλλαγή τρόπου πληρωμής</string>
-    <string name="checkout_giftcard_redeem_button">Εξαργύρωση</string>
     <string name="checkout_giftcard_error_zero_balance">Η συγκεκριμένη δωροκάρτα έχει μηδενικό υπόλοιπο</string>
     <string name="checkout_giftcard_error_currency">Οι δωροκάρτες ισχύουν μόνο για το νόμισμα στο οποίο εκδόθηκαν</string>
     <string name="checkout_giftcard_remaining_balance_text">Το υπόλοιπο θα είναι %s</string>

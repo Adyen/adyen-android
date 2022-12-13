@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -40,16 +39,6 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
-    override fun setPaymentPendingInitialization(pending: Boolean) {
-        if (!binding.giftCardView.isConfirmationRequired) return
-        binding.redeemButton.isVisible = !pending
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
-    }
-
-    override fun highlightValidationErrors() {
-        binding.giftCardView.highlightValidationErrors()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
@@ -69,24 +58,21 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         binding.giftCardView.attach(component, viewLifecycleOwner)
 
         if (binding.giftCardView.isConfirmationRequired) {
-            binding.redeemButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.giftCardView.requestFocus()
-        } else {
-            binding.redeemButton.isVisible = false
         }
     }
 
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
-            is PaymentComponentEvent.StateChanged -> componentDialogViewModel.componentStateChanged(
-                event.state,
-                binding.giftCardView.isConfirmationRequired
-            )
+            is PaymentComponentEvent.StateChanged -> {
+                // no ops
+            }
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
+            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

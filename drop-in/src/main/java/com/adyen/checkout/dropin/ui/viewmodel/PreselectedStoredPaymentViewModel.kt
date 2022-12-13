@@ -55,6 +55,9 @@ internal class PreselectedStoredPaymentViewModel(
             is PaymentComponentEvent.ActionDetails -> {
                 throw IllegalStateException("This event should not be used in drop-in")
             }
+            is PaymentComponentEvent.Submit -> {
+                // TODO
+            }
         }
     }
 

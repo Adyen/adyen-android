@@ -12,17 +12,23 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.ui.PaymentComponentUIEvent
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -31,6 +37,7 @@ internal class DefaultBacsDirectDebitDelegate(
     override val componentParams: BacsDirectDebitComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
+    private val submitHandler: SubmitHandler
 ) : BacsDirectDebitDelegate {
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
@@ -43,10 +50,19 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
+    private val submitChannel: Channel<BacsDirectDebitComponentState> = bufferedChannel()
+    override val submitFlow: Flow<BacsDirectDebitComponentState> = submitChannel.receiveAsFlow()
+
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
     internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
@@ -67,9 +83,10 @@ internal class DefaultBacsDirectDebitDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -101,6 +118,33 @@ internal class DefaultBacsDirectDebitDelegate(
     override fun updateInputData(update: BacsDirectDebitInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
+    }
+
+    override fun onSubmit() {
+        // TODO improve
+        val state = _componentStateFlow.value
+        when (inputData.mode) {
+            BacsDirectDebitMode.INPUT -> {
+                if (outputData.isValid) {
+                    setMode(BacsDirectDebitMode.CONFIRMATION)
+                } else {
+                    submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
+                }
+            }
+            BacsDirectDebitMode.CONFIRMATION -> {
+                submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
+            }
+        }
+    }
+
+    override fun handleBackPress(): Boolean {
+        val isConfirmationMode = _componentStateFlow.value.mode == BacsDirectDebitMode.CONFIRMATION
+        return if (isConfirmationMode) {
+            setMode(BacsDirectDebitMode.INPUT)
+            true
+        } else {
+            false
+        }
     }
 
     private fun onInputDataChanged() {
