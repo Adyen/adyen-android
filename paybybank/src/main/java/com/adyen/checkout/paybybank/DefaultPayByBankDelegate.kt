@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.paybybank
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
@@ -131,7 +132,8 @@ internal class DefaultPayByBankDelegate(
         }
     } ?: getIssuers()
 
-    private fun updateComponentState(outputData: PayByBankOutputData) {
+    @VisibleForTesting
+    internal fun updateComponentState(outputData: PayByBankOutputData) {
         _componentStateFlow.tryEmit(createComponentState(outputData))
     }
 
