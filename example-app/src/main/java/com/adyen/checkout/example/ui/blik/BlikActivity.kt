@@ -53,7 +53,7 @@ class BlikActivity : AppCompatActivity() {
         supportActionBar?.setTitle(R.string.blik_title)
 
         binding.toolbar.setNavigationOnClickListener {
-            finish()
+            onBackPressed()
         }
 
         lifecycleScope.launch {
@@ -122,15 +122,7 @@ class BlikActivity : AppCompatActivity() {
             is BlikEvent.PaymentResult -> {
                 onPaymentResult(event.result)
             }
-            is BlikEvent.AdditionalAction -> {
-                onAdditionalAction(event.action)
-            }
-        }
-    }
-
-    private fun onAdditionalAction(blikAction: BlikAction) {
-        when (blikAction) {
-            is BlikAction.Unsupported -> {
+            is BlikEvent.Unsupported -> {
                 Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
             }
         }

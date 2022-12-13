@@ -126,7 +126,7 @@ class BlikViewModel @Inject constructor(
         _blikViewState.value = BlikViewState.Loading
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -158,7 +158,7 @@ class BlikViewModel @Inject constructor(
     private suspend fun handleAction(action: Action) {
         when (action.type) {
             "await" -> _blikViewState.value = BlikViewState.Await(action)
-            else -> _events.emit(BlikEvent.AdditionalAction(BlikAction.Unsupported))
+            else -> _events.emit(BlikEvent.Unsupported)
         }
     }
 
@@ -177,6 +177,6 @@ class BlikViewModel @Inject constructor(
     }
 
     companion object {
-        const val POLAND_COUNTRY_CODE = "PL"
+        private const val POLAND_COUNTRY_CODE = "PL"
     }
 }

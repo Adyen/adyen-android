@@ -12,7 +12,7 @@ sealed class BlikEvent {
 
     data class PaymentResult(val result: String) : BlikEvent()
 
-    data class AdditionalAction(val action: BlikAction) : BlikEvent()
+    object Unsupported : BlikEvent()
 
     object Invalid : BlikEvent()
 }
