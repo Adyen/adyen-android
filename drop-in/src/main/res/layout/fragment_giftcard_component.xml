@@ -43,11 +43,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-<!--            <Button-->
-<!--                android:id="@+id/redeemButton"-->
-<!--                style="@style/AdyenCheckout.Button.Colored"-->
-<!--                android:text="@string/checkout_giftcard_redeem_button" />-->
-
             <androidx.core.widget.ContentLoadingProgressBar
                 android:id="@+id/progressBar"
                 style="@style/Widget.AppCompat.ProgressBar"
