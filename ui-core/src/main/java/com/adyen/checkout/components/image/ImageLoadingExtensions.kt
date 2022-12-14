@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.components.image
 
-import android.graphics.BitmapFactory
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -27,13 +26,8 @@ fun ImageView.load(
     setImageResource(placeholder)
     imageLoader.load(
         url,
-        onSuccess = { byteArray ->
-            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-            setImageBitmap(bitmap)
-        },
-        onError = {
-            setImageResource(errorFallback)
-        }
+        onSuccess = { setImageBitmap(it) },
+        onError = { setImageResource(errorFallback) }
     )
 }
 

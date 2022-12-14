@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.image
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.adyen.checkout.core.api.HttpException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,7 @@ interface ImageLoader {
 
     fun load(
         url: String,
-        onSuccess: (ByteArray) -> Unit,
+        onSuccess: (Bitmap) -> Unit,
         onError: (Throwable) -> Unit
     )
 }
@@ -31,17 +33,17 @@ object DefaultImageLoader : ImageLoader {
     private val okHttpClient = OkHttpClient()
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun load(url: String, onSuccess: (ByteArray) -> Unit, onError: (Throwable) -> Unit) {
+    override fun load(url: String, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val request = Request.Builder()
                 .url(url)
                 .get()
                 .build()
-            executeRequest(request, onSuccess, onError)
+            load(request, onSuccess, onError)
         }
     }
 
-    private suspend fun executeRequest(request: Request, onSuccess: (ByteArray) -> Unit, onError: (Throwable) -> Unit) {
+    private suspend fun load(request: Request, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
         val response = okHttpClient.newCall(request).execute()
 
         if (response.isSuccessful) {
@@ -49,8 +51,10 @@ object DefaultImageLoader : ImageLoader {
                 ?.bytes()
                 ?: ByteArray(0)
 
+            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
             withContext(Dispatchers.Main) {
-                onSuccess(bytes)
+                onSuccess(bitmap)
             }
         } else {
             onError(HttpException(response.code, response.message, null))
