@@ -11,12 +11,14 @@ package com.adyen.checkout.components.image
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.image.DefaultImageLoader
 import com.adyen.checkout.core.image.ImageLoader
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
     url: String,
     imageLoader: ImageLoader = DefaultImageLoader,
@@ -31,6 +33,7 @@ fun ImageView.load(
     )
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
     environment: Environment,
     path: String,
@@ -41,6 +44,8 @@ fun ImageView.load(
     load(environment.baseUrl + path, imageLoader, placeholder, errorFallback)
 }
 
+@Suppress("LongParameterList")
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.loadLogo(
     environment: Environment,
     txVariant: String,

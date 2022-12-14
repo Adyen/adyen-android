@@ -10,6 +10,7 @@ package com.adyen.checkout.core.image
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.api.HttpException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ImageLoader {
 
     fun load(
@@ -28,6 +30,7 @@ interface ImageLoader {
     )
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DefaultImageLoader : ImageLoader {
 
     private val okHttpClient = OkHttpClient()
