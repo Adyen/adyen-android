@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -40,4 +39,4 @@ internal data class GooglePayComponentParams(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
-) : ComponentParams, AmountComponentParams
+) : ComponentParams

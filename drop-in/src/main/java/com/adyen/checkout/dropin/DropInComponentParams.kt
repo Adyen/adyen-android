@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin
 
 import android.os.Bundle
-import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -28,4 +27,4 @@ internal data class DropInComponentParams(
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
-) : ComponentParams, AmountComponentParams
+) : ComponentParams
