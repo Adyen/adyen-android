@@ -12,11 +12,14 @@ import android.util.DisplayMetrics
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.image.DefaultImageLoader
 import com.adyen.checkout.core.image.ImageLoader
+import kotlinx.coroutines.launch
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
@@ -26,11 +29,13 @@ fun ImageView.load(
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
     setImageResource(placeholder)
-    imageLoader.load(
-        url,
-        onSuccess = { setImageBitmap(it) },
-        onError = { setImageResource(errorFallback) }
-    )
+    findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+        imageLoader.load(
+            url,
+            onSuccess = { setImageBitmap(it) },
+            onError = { setImageResource(errorFallback) }
+        )
+    }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -12,18 +12,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.api.HttpException
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.IOException
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ImageLoader {
 
-    fun load(
+    suspend fun load(
         url: String,
         onSuccess: (Bitmap) -> Unit,
         onError: (Throwable) -> Unit
@@ -32,35 +31,43 @@ interface ImageLoader {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DefaultImageLoader : ImageLoader {
-
     private val okHttpClient = OkHttpClient()
 
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun load(url: String, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            val request = Request.Builder()
-                .url(url)
-                .get()
-                .build()
-            load(request, onSuccess, onError)
-        }
+    override suspend fun load(url: String, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        load(request, onSuccess, onError)
     }
 
-    private suspend fun load(request: Request, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
-        val response = okHttpClient.newCall(request).execute()
+    private suspend fun load(
+        request: Request,
+        onSuccess: (Bitmap) -> Unit,
+        onError: (Throwable) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        val call = okHttpClient.newCall(request)
 
-        if (response.isSuccessful) {
-            val bytes = response.body
-                ?.bytes()
-                ?: ByteArray(0)
+        try {
+            val response = call.execute()
 
-            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            if (response.isSuccessful) {
+                val bytes = response.body
+                    ?.bytes()
+                    ?: ByteArray(0)
 
-            withContext(Dispatchers.Main) {
-                onSuccess(bitmap)
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
+                withContext(Dispatchers.Main) {
+                    onSuccess(bitmap)
+                }
+            } else {
+                onError(HttpException(response.code, response.message, null))
             }
-        } else {
-            onError(HttpException(response.code, response.message, null))
+        } catch (e: CancellationException) {
+            call.cancel()
+        } catch (e: IOException) {
+            onError(e)
         }
     }
 }
