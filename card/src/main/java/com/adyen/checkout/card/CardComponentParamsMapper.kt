@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.log.LogUtil
@@ -62,6 +63,7 @@ internal class CardComponentParamsMapper(
     /**
      * Check which set of supported cards to pass to the component.
      * Priority is: Custom -> PaymentMethod.brands -> Default
+     * remove restricted card type
      */
     private fun CardConfiguration.getSupportedCardTypes(
         paymentMethod: PaymentMethod
@@ -81,11 +83,15 @@ internal class CardComponentParamsMapper(
                 Logger.v(TAG, "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST")
                 CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
             }
-        }
+        }.removeRestrictedCards()
     }
 
     private fun CardConfiguration.getSupportedCardTypesStored(): List<CardType> {
-        return supportedCardTypes.orEmpty()
+        return supportedCardTypes.orEmpty().removeRestrictedCards()
+    }
+
+    private fun List<CardType>.removeRestrictedCards(): List<CardType> {
+        return this.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
     }
 
     private fun CardComponentParams.override(
