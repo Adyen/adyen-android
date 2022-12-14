@@ -17,7 +17,6 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
-import com.adyen.checkout.bacs.BacsDirectDebitDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -79,8 +78,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        val delegate = bacsDirectDebitComponent.delegate as? BacsDirectDebitDelegate
-        return if (delegate?.handleBackPress() == true) {
+        return if (bacsDirectDebitComponent.handleBackPress()) {
             true
         } else {
             super.onBackPressed()

@@ -91,7 +91,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return Whether back press has been handled or not.
      */
     fun handleBackPress(): Boolean {
-        return delegate.handleBackPress()
+        return bacsDelegate.handleBackPress()
     }
 
     override fun onCleared() {
