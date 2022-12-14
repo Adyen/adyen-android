@@ -67,6 +67,15 @@ class BacsDirectDebitComponent internal constructor(
         return delegate.setMode(BacsDirectDebitMode.INPUT)
     }
 
+    /**
+     * Handle back press in [BacsDirectDebitComponent] if necessary.
+     *
+     * @return Whether back press has been handled or not.
+     */
+    fun handleBackPress(): Boolean {
+        return delegate.handleBackPress()
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
