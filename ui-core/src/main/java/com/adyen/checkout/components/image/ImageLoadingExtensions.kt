@@ -56,7 +56,7 @@ fun ImageView.loadLogo(
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
     val densityExtension = this.resources.displayMetrics.densityDpi.getDensityExtension()
-    val logoPath = densityExtension.buildLogoPath(txVariant, txSubVariant, size)
+    val logoPath = buildLogoPath(size, txVariant, txSubVariant, densityExtension)
     load(environment, logoPath, imageLoader, placeholder, errorFallback)
 }
 
@@ -71,12 +71,12 @@ private fun Int.getDensityExtension(): String {
     }
 }
 
-private fun String.buildLogoPath(
+private fun buildLogoPath(
+    size: LogoApi.Size,
     txVariant: String,
     txSubVariant: String,
-    size: LogoApi.Size
+    densityExtension: String,
 ): String {
-    val logoPath = "images/logos/%1\$s/%2\$s.png"
     val txString = if (txSubVariant.isEmpty()) txVariant else "$txVariant/$txSubVariant"
-    return String.format(logoPath, size.toString(), txString + this)
+    return "images/logos/$size/$txString$densityExtension.png"
 }
