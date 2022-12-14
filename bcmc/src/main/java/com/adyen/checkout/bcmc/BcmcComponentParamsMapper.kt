@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 
 internal class BcmcComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
@@ -29,6 +30,7 @@ internal class BcmcComponentParamsMapper(
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
+            amount = Amount.EMPTY,
             isHolderNameRequired = isHolderNameRequired ?: false,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
@@ -45,6 +47,7 @@ internal class BcmcComponentParamsMapper(
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+            amount = overrideComponentParams.amount
         )
     }
 }

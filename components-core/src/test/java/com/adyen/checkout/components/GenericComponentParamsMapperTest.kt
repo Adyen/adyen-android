@@ -10,6 +10,7 @@ package com.adyen.checkout.components
 
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.models.TestConfiguration
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -34,6 +35,7 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1,
             isAnalyticsEnabled = true,
             isCreatedByDropIn = false,
+            amount = Amount.EMPTY
         )
 
         assertEquals(expected, params)
@@ -55,6 +57,10 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "EUR",
+                value = 49_00L
+            )
         )
 
         val params = GenericComponentParamsMapper(overrideParams).mapToParams(
@@ -67,6 +73,10 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "EUR",
+                value = 49_00L
+            )
         )
 
         assertEquals(expected, params)

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -33,7 +34,7 @@ class BacsDirectDebitComponentProvider(
     overrideComponentParams: ComponentParams? = null,
 ) : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
 
-    private val componentParamsMapper = BacsDirectDebitComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

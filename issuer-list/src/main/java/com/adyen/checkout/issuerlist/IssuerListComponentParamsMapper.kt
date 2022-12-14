@@ -10,6 +10,7 @@ package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
@@ -32,6 +33,7 @@ class IssuerListComponentParamsMapper(
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
+            amount = Amount.EMPTY,
             viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
         )
@@ -47,6 +49,7 @@ class IssuerListComponentParamsMapper(
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
+            amount = overrideComponentParams.amount
         )
     }
 }

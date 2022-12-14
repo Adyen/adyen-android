@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 import kotlinx.parcelize.Parcelize
@@ -21,6 +22,7 @@ internal data class CardComponentParams(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
+    override val amount: Amount,
     val isHolderNameRequired: Boolean,
     val supportedCardTypes: List<CardType>,
     val shopperReference: String?,

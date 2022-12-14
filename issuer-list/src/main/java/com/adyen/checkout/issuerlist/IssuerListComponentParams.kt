@@ -10,6 +10,7 @@ package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -22,6 +23,7 @@ data class IssuerListComponentParams(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
+    override val amount: Amount,
     val viewType: IssuerListViewType,
     val hideIssuerLogos: Boolean,
 ) : ComponentParams

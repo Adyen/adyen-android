@@ -102,6 +102,10 @@ internal class GooglePayComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "XCD",
+                value = 4_00L
+            )
         )
 
         val params = GooglePayComponentParamsMapper(overrideParams).mapToParams(
@@ -114,6 +118,10 @@ internal class GooglePayComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "XCD",
+                value = 4_00L
+            )
         )
 
         assertEquals(expected, params)
