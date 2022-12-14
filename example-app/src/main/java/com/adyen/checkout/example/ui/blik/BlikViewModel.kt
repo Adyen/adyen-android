@@ -100,6 +100,7 @@ class BlikViewModel @Inject constructor(
                 sendPaymentDetails(event.data)
             }
             is PaymentComponentEvent.Submit -> {
+                makePayment(event.state.data)
             }
         }
     }
@@ -110,18 +111,6 @@ class BlikViewModel @Inject constructor(
 
     private fun onComponentError(error: ComponentError) {
         viewModelScope.launch { _events.emit(BlikEvent.PaymentResult("Failed: ${error.errorMessage}")) }
-    }
-
-    fun onPayClick() {
-        blikComponentState?.let {
-            if (it.isValid) {
-                makePayment(it.data)
-            } else {
-                viewModelScope.launch { _events.emit(BlikEvent.Invalid) }
-            }
-        } ?: run {
-            _blikViewState.tryEmit(BlikViewState.Error(R.string.error_dialog_title))
-        }
     }
 
     private fun makePayment(data: PaymentComponentData<BlikPaymentMethod>) {

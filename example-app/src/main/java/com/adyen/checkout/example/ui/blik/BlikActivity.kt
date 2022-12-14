@@ -44,7 +44,6 @@ class BlikActivity : AppCompatActivity() {
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
         binding = ActivityBlikBinding.inflate(layoutInflater)
-        binding.payButton.setOnClickListener { blikViewModel.onPayClick() }
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
@@ -70,13 +69,11 @@ class BlikActivity : AppCompatActivity() {
                 binding.progressIndicator.isVisible = true
                 binding.errorView.isVisible = false
                 binding.blikView.isVisible = false
-                binding.payButton.isVisible = false
             }
             is BlikViewState.ShowComponent -> {
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
                 binding.blikView.isVisible = true
-                binding.payButton.isVisible = true
 
                 setupBlikView(blikViewState.paymentMethod)
             }
@@ -84,7 +81,6 @@ class BlikActivity : AppCompatActivity() {
                 binding.progressIndicator.isVisible = false
                 binding.blikView.isVisible = true
                 binding.errorView.isVisible = false
-                binding.payButton.isVisible = false
                 val awaitComponent = AwaitComponent.PROVIDER.get(
                     this,
                     application,
