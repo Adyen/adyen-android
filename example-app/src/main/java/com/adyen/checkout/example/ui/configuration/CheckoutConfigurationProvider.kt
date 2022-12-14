@@ -60,7 +60,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     }
 
     fun getCardConfiguration(): CardConfiguration =
-        CardConfiguration.Builder(shopperLocale, environment, clientKey)
+        CardConfiguration.Builder(Locale.CHINA, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setAddressConfiguration(getAddressConfiguration())
             .build()

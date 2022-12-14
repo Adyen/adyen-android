@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -72,7 +72,7 @@ class EntercashComponentProvider(
                     submitHandler = SubmitHandler()
                 ) { EntercashPaymentMethod() }
 
-                val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
                     configuration = configuration.genericActionConfiguration,
                     savedStateHandle = savedStateHandle,
                     application = application,

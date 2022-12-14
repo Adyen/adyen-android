@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultAddressRepository
@@ -91,7 +91,7 @@ class CardComponentProvider(
                 submitHandler = SubmitHandler()
             )
 
-            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
                 configuration = configuration.genericActionConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -144,7 +144,7 @@ class CardComponentProvider(
                 submitHandler = SubmitHandler()
             )
 
-            val genericActionDelegate = GenericActionComponent.PROVIDER.getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
                 configuration = configuration.genericActionConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
