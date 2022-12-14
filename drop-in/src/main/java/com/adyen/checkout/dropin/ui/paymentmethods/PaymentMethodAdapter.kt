@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.INVALID_TYPE
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
@@ -34,7 +34,7 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 
 @SuppressWarnings("TooManyFunctions")
 internal class PaymentMethodAdapter @JvmOverloads constructor(
-    private val imageLoader: ImageLoader,
+    private val imageLoader: OldImageLoader,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
     private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
@@ -90,7 +90,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class StoredPaymentMethodVH(
         private val binding: RemovablePaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader,
+        private val imageLoader: OldImageLoader,
         private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -122,7 +122,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             }
         }
 
-        private fun bindStoredCard(model: StoredCardModel, imageLoader: ImageLoader) {
+        private fun bindStoredCard(model: StoredCardModel, imageLoader: OldImageLoader) {
             with(binding) {
                 val context = root.context
                 textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
@@ -165,7 +165,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class PaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader
+        private val imageLoader: OldImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -188,7 +188,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
     private class GiftCardPaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
-        private val imageLoader: ImageLoader
+        private val imageLoader: OldImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {

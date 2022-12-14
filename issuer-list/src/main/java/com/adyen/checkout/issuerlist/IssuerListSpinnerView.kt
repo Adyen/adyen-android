@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
-import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
+import com.adyen.checkout.components.api.OldImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil

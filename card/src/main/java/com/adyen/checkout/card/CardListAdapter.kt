@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
 import com.adyen.checkout.card.databinding.BrandLogoBinding
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 
 internal class CardListAdapter(
-    private val imageLoader: ImageLoader,
+    private val imageLoader: OldImageLoader,
 ) : ListAdapter<CardListItem, ImageViewHolder>(CardDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -36,7 +36,7 @@ internal class CardListAdapter(
         private val binding: BrandLogoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(card: CardListItem, alpha: Float, imageLoader: ImageLoader) {
+        fun bind(card: CardListItem, alpha: Float, imageLoader: OldImageLoader) {
             binding.imageViewBrandLogo.alpha = alpha
             imageLoader.load(card.cardType.txVariant, binding.imageViewBrandLogo)
         }

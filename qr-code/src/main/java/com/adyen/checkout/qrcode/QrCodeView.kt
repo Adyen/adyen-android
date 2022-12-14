@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
@@ -44,7 +44,7 @@ internal class QrCodeView @JvmOverloads constructor(
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: OldImageLoader
 
     private lateinit var localizedContext: Context
 
@@ -59,7 +59,7 @@ internal class QrCodeView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = ImageLoader.getInstance(context, delegate.componentParams.environment)
+        imageLoader = OldImageLoader.getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
 

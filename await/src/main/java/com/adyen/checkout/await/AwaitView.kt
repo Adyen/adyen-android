@@ -14,8 +14,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.adyen.checkout.await.databinding.AwaitViewBinding
-import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
+import com.adyen.checkout.components.api.OldImageLoader
+import com.adyen.checkout.components.api.OldImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.ComponentView
@@ -40,7 +40,7 @@ internal class AwaitView @JvmOverloads constructor(
 
     private val binding: AwaitViewBinding = AwaitViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: OldImageLoader
 
     private lateinit var localizedContext: Context
 

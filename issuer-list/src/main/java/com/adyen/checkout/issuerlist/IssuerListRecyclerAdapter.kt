@@ -13,12 +13,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerListRecyclerAdapter.IssuerViewHolder
 
 internal class IssuerListRecyclerAdapter(
-    private val imageLoader: ImageLoader,
+    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean,
     private val onItemClicked: (IssuerModel) -> Unit,
@@ -46,7 +46,7 @@ internal class IssuerListRecyclerAdapter(
             paymentMethod: String,
             issuerModel: IssuerModel,
             hideIssuerLogo: Boolean,
-            imageLoader: ImageLoader,
+            imageLoader: OldImageLoader,
             onItemClicked: (IssuerModel) -> Unit,
         ) {
             binding.root.setOnClickListener { onItemClicked(issuerModel) }

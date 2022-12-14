@@ -14,13 +14,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
 
 class IssuerListSpinnerAdapter internal constructor(
     private val context: Context,
     private var issuerList: List<IssuerModel>,
-    private val imageLoader: ImageLoader,
+    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean
 ) : BaseAdapter() {
@@ -57,7 +57,7 @@ class IssuerListSpinnerAdapter internal constructor(
 
 internal class IssuerListSpinnerViewHolder(
     private val binding: SpinnerListWithImageBinding,
-    private val imageLoader: ImageLoader,
+    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean
 ) : ViewHolder(binding.root) {
