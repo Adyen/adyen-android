@@ -99,6 +99,8 @@ class BlikViewModel @Inject constructor(
             is PaymentComponentEvent.ActionDetails -> {
                 sendPaymentDetails(event.data)
             }
+            is PaymentComponentEvent.Submit -> {
+            }
         }
     }
 
