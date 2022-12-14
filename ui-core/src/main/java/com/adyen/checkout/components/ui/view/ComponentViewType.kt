@@ -24,3 +24,5 @@ interface ButtonComponentViewType : ComponentViewType {
         val DEFAULT_BUTTON_TEXT_RES_ID = R.string.pay_button
     }
 }
+
+interface AmountButtonComponentViewType : ButtonComponentViewType

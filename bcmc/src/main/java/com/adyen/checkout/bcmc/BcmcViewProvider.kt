@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -28,7 +29,7 @@ internal object BcmcViewProvider : ViewProvider {
     }
 }
 
-internal object BcmcComponentViewType : ButtonComponentViewType {
+internal object BcmcComponentViewType : AmountButtonComponentViewType {
     override val viewProvider: ViewProvider = BcmcViewProvider
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

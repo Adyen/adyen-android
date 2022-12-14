@@ -23,10 +23,12 @@ import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -104,7 +106,12 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
-        if (viewType is ButtonComponentViewType) {
+        if (viewType is AmountButtonComponentViewType && !componentParams.amount.isEmpty) {
+            binding.payButton.text = localizedContext.getString(
+                R.string.pay_button_with_value,
+                CurrencyUtils.formatAmount(componentParams.amount, componentParams.shopperLocale)
+            )
+        } else if (viewType is ButtonComponentViewType) {
             binding.payButton.text = localizedContext.getString(viewType.buttonTextResId)
         }
 
