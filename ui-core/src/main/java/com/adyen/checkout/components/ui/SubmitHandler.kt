@@ -34,20 +34,4 @@ class SubmitHandler {
             else -> uiStateChannel?.tryEmit(PaymentComponentUIState.Idle)
         }
     }
-
-    fun <T : PaymentComponentState<out PaymentMethodDetails>> onState(
-        state: T,
-        uiState: PaymentComponentUIState?,
-        submitChannel: Channel<T>
-    ) {
-        if (uiState == PaymentComponentUIState.Loading) {
-            if (state.isValid) {
-                submitChannel.trySend(state) // TODO add state to submit
-            } else {
-                // set ui state to idle?
-            }
-        } else if (state.isValid) { // TODO don't forget is confirmation required
-            submitChannel.trySend(state) // TODO add state to submit
-        }
-    }
 }

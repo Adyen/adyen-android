@@ -13,8 +13,6 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.ideal.IdealConfiguration
-import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.redirect.RedirectConfiguration
 import java.util.Locale
 import javax.inject.Inject
@@ -44,11 +42,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             clientKey,
         )
             .addCardConfiguration(getCardConfiguration())
-            .addIdealConfiguration(
-                IdealConfiguration.Builder(shopperLocale, environment, clientKey)
-                    .setViewType(IssuerListViewType.SPINNER_VIEW)
-                    .build()
-            )
             .addBcmcConfiguration(getBcmcConfiguration())
             .addGooglePayConfiguration(getGooglePayConfiguration())
             .add3ds2ActionConfiguration(get3DS2Configuration())
