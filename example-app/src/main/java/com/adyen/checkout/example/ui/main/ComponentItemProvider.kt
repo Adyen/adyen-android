@@ -11,5 +11,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.DropInWithCustomSession,
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.Card,
+        ComponentItem.Entry.Blik,
     )
 }

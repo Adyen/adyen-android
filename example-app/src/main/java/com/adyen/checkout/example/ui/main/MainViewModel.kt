@@ -52,6 +52,7 @@ internal class MainViewModel @Inject constructor(
             ComponentItem.Entry.DropIn -> startDropInFlow()
             ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow()
             ComponentItem.Entry.DropInWithCustomSession -> startCustomSessionDropInFlow()
+            ComponentItem.Entry.Blik -> _navigateTo.tryEmit(MainNavigation.Blik)
         }
     }
 

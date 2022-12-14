@@ -14,6 +14,7 @@ import com.adyen.checkout.sessions.CheckoutSession
 
 internal sealed class MainNavigation {
     object Card : MainNavigation()
+    object Blik : MainNavigation()
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val dropInConfiguration: DropInConfiguration

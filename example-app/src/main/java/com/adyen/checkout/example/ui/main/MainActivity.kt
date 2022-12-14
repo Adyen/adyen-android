@@ -27,6 +27,7 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
+import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.redirect.RedirectComponent
@@ -138,6 +139,10 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     navigation.dropInConfiguration,
                     ExampleSessionsDropInService::class.java
                 )
+            }
+            is MainNavigation.Blik -> {
+                val intent = Intent(this, BlikActivity::class.java)
+                startActivity(intent)
             }
         }
     }

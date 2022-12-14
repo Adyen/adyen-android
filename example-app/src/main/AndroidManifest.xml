@@ -36,6 +36,12 @@
         </activity>
 
         <activity
+            android:name=".ui.blik.BlikActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+        </activity>
+        <activity
             android:name=".ui.card.CardActivity"
             android:exported="true"
             android:launchMode="singleTop">
