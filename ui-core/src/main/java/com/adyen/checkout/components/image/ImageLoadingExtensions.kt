@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.image
 
+import android.content.Context
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
@@ -21,10 +22,20 @@ import com.adyen.checkout.core.image.DefaultImageLoader
 import com.adyen.checkout.core.image.ImageLoader
 import kotlinx.coroutines.launch
 
+// Re-use the same instance to ensure the cache is working optimally
+private var localImageLoader: ImageLoader? = null
+private val Context.imageLoader: ImageLoader
+    get() {
+        localImageLoader?.let { return it }
+        val newImageLoader = DefaultImageLoader(this)
+        localImageLoader = newImageLoader
+        return newImageLoader
+    }
+
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
     url: String,
-    imageLoader: ImageLoader = DefaultImageLoader,
+    imageLoader: ImageLoader = context.imageLoader,
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
@@ -42,7 +53,7 @@ fun ImageView.load(
 fun ImageView.load(
     environment: Environment,
     path: String,
-    imageLoader: ImageLoader = DefaultImageLoader,
+    imageLoader: ImageLoader = context.imageLoader,
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
@@ -56,7 +67,7 @@ fun ImageView.loadLogo(
     txVariant: String,
     txSubVariant: String = "",
     size: LogoApi.Size = LogoApi.Size.SMALL,
-    imageLoader: ImageLoader = DefaultImageLoader,
+    imageLoader: ImageLoader = context.imageLoader,
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
