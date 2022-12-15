@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.ideal
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,8 +21,12 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  */
 class IdealComponent internal constructor(
     delegate: IssuerListDelegate<IdealPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<IdealPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
 
     companion object {

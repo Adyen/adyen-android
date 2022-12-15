@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.dotpay
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,8 +21,12 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  */
 class DotpayComponent internal constructor(
     delegate: IssuerListDelegate<DotpayPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<DotpayPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
     companion object {
         @JvmField

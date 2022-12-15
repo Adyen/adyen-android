@@ -14,6 +14,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -59,14 +61,25 @@ class SepaComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
+
+                val sepaDelegate = DefaultSepaDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler(),
+                )
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
                 SepaComponent(
-                    DefaultSepaDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        componentParams = componentParams,
-                        paymentMethod = paymentMethod,
-                        analyticsRepository = analyticsRepository,
-                        submitHandler = SubmitHandler(),
-                    ),
+                    sepaDelegate = sepaDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]

@@ -14,6 +14,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -63,19 +65,30 @@ class OnlineBankingCZComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
-                val delegate =
-                    DefaultOnlineBankingDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        pdfOpener = PdfOpener(),
-                        paymentMethod = paymentMethod,
-                        componentParams = componentParams,
-                        analyticsRepository = analyticsRepository,
-                        termsAndConditionsUrl = OnlineBankingCZComponent.TERMS_CONDITIONS_URL,
-                        submitHandler = SubmitHandler(),
-                    ) { OnlineBankingCZPaymentMethod() }
+
+                val onlineBankingDelegate = DefaultOnlineBankingDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    pdfOpener = PdfOpener(),
+                    paymentMethod = paymentMethod,
+                    componentParams = componentParams,
+                    analyticsRepository = analyticsRepository,
+                    termsAndConditionsUrl = OnlineBankingCZComponent.TERMS_CONDITIONS_URL,
+                    submitHandler = SubmitHandler(),
+                ) { OnlineBankingCZPaymentMethod() }
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
                 OnlineBankingCZComponent(
-                    delegate,
+                    delegate = onlineBankingDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(
+                        genericActionDelegate,
+                        onlineBankingDelegate
+                    ),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OnlineBankingCZComponent::class.java]

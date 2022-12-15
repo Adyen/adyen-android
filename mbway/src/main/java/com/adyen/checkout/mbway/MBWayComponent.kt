@@ -10,11 +10,17 @@ package com.adyen.checkout.mbway
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,32 +33,45 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MBWayComponent internal constructor(
-    override val delegate: MBWayDelegate,
+    private val mbWayDelegate: MBWayDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<MBWayPaymentMethod>>,
-    ViewableComponent {
+    ViewableComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        mbWayDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
-        delegate.initialize(viewModelScope)
+        mbWayDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        mbWayDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        mbWayDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        mbWayDelegate.onCleared()
+        genericActionDelegate.onCleared()
     }
 
     companion object {

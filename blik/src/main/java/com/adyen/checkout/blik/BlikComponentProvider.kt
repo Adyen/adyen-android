@@ -14,6 +14,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -49,7 +51,7 @@ class BlikComponentProvider(
         assertSupported(paymentMethod)
 
         val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) {
+            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val componentParams = componentParamsMapper.mapToParams(configuration)
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
                 val analyticsService = AnalyticsService(httpClient)
@@ -60,14 +62,25 @@ class BlikComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
+
+                val blikDelegate = DefaultBlikDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler()
+                )
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
                 BlikComponent(
-                    delegate = DefaultBlikDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        componentParams = componentParams,
-                        paymentMethod = paymentMethod,
-                        analyticsRepository = analyticsRepository,
-                        submitHandler = SubmitHandler()
-                    ),
+                    blikDelegate = blikDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
@@ -96,14 +109,25 @@ class BlikComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
+
+                val blikDelegate = StoredBlikDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                    analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler(),
+                )
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
                 BlikComponent(
-                    delegate = StoredBlikDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        componentParams = componentParams,
-                        storedPaymentMethod = storedPaymentMethod,
-                        analyticsRepository = analyticsRepository,
-                        submitHandler = SubmitHandler(),
-                    ),
+                    blikDelegate = blikDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]

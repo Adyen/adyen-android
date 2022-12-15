@@ -14,6 +14,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -61,14 +63,25 @@ class MolpayComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
-                val delegate = DefaultIssuerListDelegate(
+                val issuerListDelegate = DefaultIssuerListDelegate(
                     observerRepository = PaymentObserverRepository(),
                     componentParams = componentParams,
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
                     submitHandler = SubmitHandler()
                 ) { MolpayPaymentMethod() }
-                MolpayComponent(delegate)
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
+                MolpayComponent(
+                    delegate = issuerListDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, issuerListDelegate),
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MolpayComponent::class.java]
     }

@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.eps
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,8 +21,12 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  */
 class EPSComponent internal constructor(
     delegate: IssuerListDelegate<EPSPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<EPSPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
     companion object {
         @JvmField

@@ -10,11 +10,17 @@ package com.adyen.checkout.sepa
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -27,32 +33,45 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class SepaComponent internal constructor(
-    override val delegate: SepaDelegate,
+    private val sepaDelegate: SepaDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<SepaPaymentMethod>>,
-    ViewableComponent {
+    ViewableComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        sepaDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
-        delegate.initialize(viewModelScope)
+        sepaDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        sepaDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        sepaDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        sepaDelegate.onCleared()
+        genericActionDelegate.onCleared()
     }
 
     companion object {

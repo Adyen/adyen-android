@@ -13,6 +13,8 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -57,14 +59,24 @@ class BacsDirectDebitComponentProvider(
                     analyticsMapper = AnalyticsMapper(),
                 )
 
+                val bacsDelegate = DefaultBacsDirectDebitDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler(),
+                )
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
                 BacsDirectDebitComponent(
-                    DefaultBacsDirectDebitDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        componentParams = componentParams,
-                        paymentMethod = paymentMethod,
-                        analyticsRepository = analyticsRepository,
-                        submitHandler = SubmitHandler()
-                    ),
+                    bacsDelegate = bacsDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]

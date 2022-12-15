@@ -14,6 +14,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -59,14 +61,25 @@ class PayByBankComponentProvider(
                     analyticsService = analyticsService,
                     analyticsMapper = AnalyticsMapper(),
                 )
+
+                val payByBankDelegate = DefaultPayByBankDelegate(
+                    observerRepository = PaymentObserverRepository(),
+                    paymentMethod = paymentMethod,
+                    componentParams = componentParams,
+                    analyticsRepository = analyticsRepository,
+                    submitHandler = SubmitHandler(),
+                )
+
+                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                    configuration = configuration.genericActionConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
+
                 PayByBankComponent(
-                    DefaultPayByBankDelegate(
-                        observerRepository = PaymentObserverRepository(),
-                        paymentMethod = paymentMethod,
-                        componentParams = componentParams,
-                        analyticsRepository = analyticsRepository,
-                        submitHandler = SubmitHandler(),
-                    ),
+                    payByBankDelegate = payByBankDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]

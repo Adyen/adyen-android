@@ -10,10 +10,16 @@ package com.adyen.checkout.issuerlist
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.ActionHandlingComponent
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
@@ -24,32 +30,45 @@ import kotlinx.coroutines.flow.Flow
  * Component should not be instantiated directly.
  */
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    final override val delegate: IssuerListDelegate<IssuerListPaymentMethodT>,
+    private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,
-    ViewableComponent {
+    ViewableComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+    final override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        issuerListDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
-        delegate.initialize(viewModelScope)
+        issuerListDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
     ) {
-        delegate.observe(lifecycleOwner, viewModelScope, callback)
+        issuerListDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        issuerListDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        delegate.onCleared()
+        issuerListDelegate.onCleared()
+        genericActionDelegate.onCleared()
     }
 
     companion object {

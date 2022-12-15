@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.entercash
 
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -19,8 +21,12 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
  */
 class EntercashComponent internal constructor(
     delegate: IssuerListDelegate<EntercashPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
 ) : IssuerListComponent<EntercashPaymentMethod>(
     delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
 ) {
     companion object {
         @JvmField

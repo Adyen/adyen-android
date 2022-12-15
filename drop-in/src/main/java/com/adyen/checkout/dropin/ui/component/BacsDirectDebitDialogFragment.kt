@@ -78,7 +78,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onBackPressed(): Boolean {
-        return if (bacsDirectDebitComponent.delegate.handleBackPress()) {
+        return if (bacsDirectDebitComponent.handleBackPress()) {
             true
         } else {
             super.onBackPressed()

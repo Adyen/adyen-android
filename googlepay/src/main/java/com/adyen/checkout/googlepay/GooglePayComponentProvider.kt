@@ -13,6 +13,8 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
@@ -68,13 +70,24 @@ class GooglePayComponentProvider(
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
             )
+
+            val googlePayDelegate = DefaultGooglePayDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
             GooglePayComponent(
-                delegate = DefaultGooglePayDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    paymentMethod = paymentMethod,
-                    componentParams = componentParams,
-                    analyticsRepository = analyticsRepository,
-                ),
+                googlePayDelegate = googlePayDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, googlePayDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]
