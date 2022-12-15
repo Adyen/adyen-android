@@ -17,6 +17,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPayme
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
