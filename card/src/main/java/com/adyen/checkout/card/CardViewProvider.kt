@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -30,7 +31,7 @@ internal object CardViewProvider : ViewProvider {
     }
 }
 
-internal object CardComponentViewType : ButtonComponentViewType {
+internal object CardComponentViewType : AmountButtonComponentViewType {
     override val viewProvider: ViewProvider = CardViewProvider
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

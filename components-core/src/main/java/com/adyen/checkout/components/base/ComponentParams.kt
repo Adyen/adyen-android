@@ -10,6 +10,7 @@ package com.adyen.checkout.components.base
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
@@ -20,4 +21,5 @@ interface ComponentParams : Parcelable {
     val clientKey: String
     val isAnalyticsEnabled: Boolean
     val isCreatedByDropIn: Boolean
+    val amount: Amount
 }

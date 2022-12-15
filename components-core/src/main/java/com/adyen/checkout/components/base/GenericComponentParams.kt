@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.base
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -21,4 +22,5 @@ data class GenericComponentParams(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
+    override val amount: Amount
 ) : ComponentParams

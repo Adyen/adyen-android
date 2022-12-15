@@ -7,6 +7,7 @@
  */
 
 import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
@@ -37,6 +38,7 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = false,
+            amount = Amount.EMPTY
         )
 
         assertEquals(expected, params)
@@ -63,6 +65,7 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
+            amount = Amount.EMPTY
         )
 
         assertEquals(expected, params)
@@ -87,6 +90,10 @@ internal class IssuerListComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "XCD",
+                value = 4_00L
+            )
         )
 
         val params = IssuerListComponentParamsMapper(overrideParams).mapToParams(issuerListConfiguration)
@@ -99,6 +106,10 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = true,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
+            amount = Amount(
+                currency = "XCD",
+                value = 4_00L
+            )
         )
 
         assertEquals(expected, params)

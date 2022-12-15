@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">支払う</string>
     <string name="pay_button_with_value">%sのお支払い</string>
+    <string name="confirm_preauthorization">事前承認を確認する</string>
 </resources>

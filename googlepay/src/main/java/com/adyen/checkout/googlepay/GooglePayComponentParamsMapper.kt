@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.components.base.AmountComponentParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -116,14 +115,13 @@ internal class GooglePayComponentParamsMapper(
 
     private fun GooglePayComponentParams.override(overrideComponentParams: ComponentParams?): GooglePayComponentParams {
         if (overrideComponentParams == null) return this
-        val amount = (overrideComponentParams as? AmountComponentParams)?.amount ?: amount
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = amount,
+            amount = overrideComponentParams.amount,
         )
     }
 

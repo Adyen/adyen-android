@@ -10,6 +10,7 @@ package com.adyen.checkout.bacs
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.FieldState
@@ -51,7 +52,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
         ).build()
         delegate = DefaultBacsDirectDebitDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = BacsDirectDebitComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler()

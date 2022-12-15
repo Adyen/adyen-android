@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">Betala</string>
     <string name="pay_button_with_value">Betala %s</string>
+    <string name="confirm_preauthorization">Bekräfta förauktorisering</string>
 </resources>

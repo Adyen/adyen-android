@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">Πληρωμή</string>
     <string name="pay_button_with_value">Πληρωμή %s</string>
+    <string name="confirm_preauthorization">Επιβεβαίωση προεξουσιοδότησης</string>
 </resources>

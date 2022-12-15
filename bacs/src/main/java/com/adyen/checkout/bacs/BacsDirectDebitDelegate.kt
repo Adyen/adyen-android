@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bacs
 
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.UIStateDelegate
@@ -20,7 +21,7 @@ interface BacsDirectDebitDelegate :
     ButtonDelegate,
     UIStateDelegate {
 
-    override val componentParams: BacsDirectDebitComponentParams
+    override val componentParams: GenericComponentParams
 
     val outputData: BacsDirectDebitOutputData
 

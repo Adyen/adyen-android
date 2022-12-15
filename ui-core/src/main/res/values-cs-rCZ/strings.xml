@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">Zaplatit</string>
     <string name="pay_button_with_value">Zaplatit %s</string>
+    <string name="confirm_preauthorization">Potvrdit předautorizaci</string>
 </resources>

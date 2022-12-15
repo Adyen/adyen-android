@@ -12,6 +12,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -91,6 +92,10 @@ internal class CardComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "CAD",
+                value = 1235_00L
+            )
         )
 
         val params = CardComponentParamsMapper(overrideParams).mapToParamsDefault(cardConfiguration, PaymentMethod())
@@ -101,6 +106,10 @@ internal class CardComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "CAD",
+                value = 1235_00L
+            )
         )
 
         assertEquals(expected, params)
@@ -180,6 +189,7 @@ internal class CardComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         isAnalyticsEnabled: Boolean = true,
         isCreatedByDropIn: Boolean = false,
+        amount: Amount = Amount.EMPTY,
         isHolderNameRequired: Boolean = false,
         supportedCardTypes: List<CardType> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
@@ -205,7 +215,8 @@ internal class CardComponentParamsMapperTest {
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         kcpAuthVisibility = kcpAuthVisibility,
         installmentConfiguration = installmentConfiguration,
-        addressConfiguration = addressConfiguration
+        addressConfiguration = addressConfiguration,
+        amount = amount
     )
 
     companion object {

@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -36,6 +37,7 @@ internal class BcmcComponentParamsMapperTest {
             isHolderNameRequired = false,
             shopperReference = null,
             isStorePaymentFieldVisible = false,
+            amount = Amount.EMPTY
         )
 
         assertEquals(expected, params)
@@ -66,6 +68,7 @@ internal class BcmcComponentParamsMapperTest {
             isHolderNameRequired = true,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
+            amount = Amount.EMPTY
         )
 
         assertEquals(expected, params)
@@ -88,6 +91,10 @@ internal class BcmcComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             isAnalyticsEnabled = false,
             isCreatedByDropIn = true,
+            amount = Amount(
+                currency = "USD",
+                value = 25_00L
+            )
         )
 
         val params = BcmcComponentParamsMapper(overrideParams).mapToParams(bcmcConfiguration)
@@ -101,6 +108,10 @@ internal class BcmcComponentParamsMapperTest {
             isHolderNameRequired = false,
             shopperReference = null,
             isStorePaymentFieldVisible = false,
+            amount = Amount(
+                currency = "USD",
+                value = 25_00L
+            )
         )
 
         assertEquals(expected, params)

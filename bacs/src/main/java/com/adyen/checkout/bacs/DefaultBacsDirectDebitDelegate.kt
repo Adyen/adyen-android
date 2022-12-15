@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class DefaultBacsDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val componentParams: BacsDirectDebitComponentParams,
+    override val componentParams: GenericComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler
