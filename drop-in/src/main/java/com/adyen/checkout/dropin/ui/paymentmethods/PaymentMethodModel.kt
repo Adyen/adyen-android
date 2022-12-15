@@ -8,12 +8,16 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import com.adyen.checkout.core.api.Environment
+
 internal data class PaymentMethodModel(
     val index: Int,
     val type: String,
     val name: String,
     val icon: String,
-    val drawIconBorder: Boolean
+    val drawIconBorder: Boolean,
+    // We need the environment to load the logo
+    val environment: Environment,
 ) : PaymentMethodListItem {
     override fun getViewType(): Int = PaymentMethodListItem.PAYMENT_METHOD
 }

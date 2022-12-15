@@ -19,7 +19,6 @@ import androidx.core.view.children
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.core.log.LogUtil
@@ -77,12 +76,7 @@ internal class PaymentMethodListDialogFragment :
     }
 
     private fun initPaymentMethodsRecyclerView() {
-        val imageLoader = OldImageLoader.getInstance(
-            requireContext(),
-            dropInViewModel.dropInConfiguration.environment
-        )
-
-        paymentMethodAdapter = PaymentMethodAdapter(imageLoader, this, this) {
+        paymentMethodAdapter = PaymentMethodAdapter(this, this) {
             collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
         }
 

@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.adyen.checkout.components.api.OldImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
@@ -47,7 +46,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         initLocalizedStrings(localizedContext)
 
         binding.recyclerIssuers.adapter = IssuerListRecyclerAdapter(
-            imageLoader = getInstance(context, delegate.componentParams.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             hideIssuerLogo = delegate.componentParams.hideIssuerLogos,
             onItemClicked = ::onItemClicked,

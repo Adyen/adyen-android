@@ -95,7 +95,9 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     }
 
     override fun getIssuers(): List<IssuerModel> =
-        paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
+        paymentMethod.issuers?.mapToModel(componentParams.environment) ?: paymentMethod.details.getLegacyIssuers(
+            componentParams.environment
+        )
 
     override fun updateInputData(update: IssuerListInputData.() -> Unit) {
         inputData.update()

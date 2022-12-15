@@ -681,7 +681,11 @@ internal class DefaultCardDelegate(
     private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
         val noCardDetected = detectedCardTypes.isEmpty()
         return componentParams.supportedCardTypes.map { cardType ->
-            CardListItem(cardType, noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType))
+            CardListItem(
+                cardType = cardType,
+                isDetected = noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType),
+                environment = componentParams.environment,
+            )
         }
     }
 

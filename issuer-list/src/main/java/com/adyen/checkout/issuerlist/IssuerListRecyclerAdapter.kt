@@ -13,12 +13,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.api.OldImageLoader
+import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerListRecyclerAdapter.IssuerViewHolder
 
 internal class IssuerListRecyclerAdapter(
-    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean,
     private val onItemClicked: (IssuerModel) -> Unit,
@@ -30,7 +29,7 @@ internal class IssuerListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: IssuerViewHolder, position: Int) {
-        viewHolder.bind(paymentMethod, currentList[position], hideIssuerLogo, imageLoader, onItemClicked)
+        viewHolder.bind(paymentMethod, currentList[position], hideIssuerLogo, onItemClicked)
     }
 
     class IssuerViewHolder(
@@ -46,19 +45,16 @@ internal class IssuerListRecyclerAdapter(
             paymentMethod: String,
             issuerModel: IssuerModel,
             hideIssuerLogo: Boolean,
-            imageLoader: OldImageLoader,
             onItemClicked: (IssuerModel) -> Unit,
         ) {
             binding.root.setOnClickListener { onItemClicked(issuerModel) }
 
             binding.textViewTitle.text = issuerModel.name
             if (!hideIssuerLogo) {
-                imageLoader.load(
-                    paymentMethod,
-                    issuerModel.id,
-                    binding.imageViewLogo,
-                    R.drawable.ic_placeholder_image,
-                    R.drawable.ic_placeholder_image
+                binding.imageViewLogo.loadLogo(
+                    environment = issuerModel.environment,
+                    txVariant = paymentMethod,
+                    txSubVariant = issuerModel.id,
                 )
             }
         }
