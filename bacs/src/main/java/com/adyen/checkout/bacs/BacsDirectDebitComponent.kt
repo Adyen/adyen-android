@@ -49,7 +49,7 @@ class BacsDirectDebitComponent internal constructor(
     )
 
     init {
-        delegate.initialize(viewModelScope)
+        bacsDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
     }
 
@@ -98,6 +98,7 @@ class BacsDirectDebitComponent internal constructor(
         super.onCleared()
         Logger.d(TAG, "onCleared")
         bacsDelegate.onCleared()
+        genericActionDelegate.onCleared()
     }
 
     companion object {
