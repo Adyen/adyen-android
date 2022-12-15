@@ -27,8 +27,8 @@ interface ImageLoader {
 
     suspend fun load(
         url: String,
-        onSuccess: (Bitmap) -> Unit,
-        onError: (Throwable) -> Unit
+        onSuccess: suspend (Bitmap) -> Unit,
+        onError: suspend (Throwable) -> Unit
     )
 }
 
@@ -41,12 +41,14 @@ class DefaultImageLoader(context: Context) : ImageLoader {
 
     override suspend fun load(
         url: String,
-        onSuccess: (Bitmap) -> Unit,
-        onError: (Throwable) -> Unit
+        onSuccess: suspend (Bitmap) -> Unit,
+        onError: suspend (Throwable) -> Unit
     ) = withContext(Dispatchers.IO) {
         val cachedBitmap = cache[url]
         if (cachedBitmap != null) {
-            onSuccess(cachedBitmap)
+            withContext(Dispatchers.Main) {
+                onSuccess(cachedBitmap)
+            }
             return@withContext
         }
 
@@ -73,12 +75,16 @@ class DefaultImageLoader(context: Context) : ImageLoader {
                     onSuccess(bitmap)
                 }
             } else {
-                onError(HttpException(response.code, response.message, null))
+                withContext(Dispatchers.Main) {
+                    onError(HttpException(response.code, response.message, null))
+                }
             }
         } catch (e: CancellationException) {
             call.cancel()
         } catch (e: IOException) {
-            onError(e)
+            withContext(Dispatchers.Main) {
+                onError(e)
+            }
         }
     }
 
