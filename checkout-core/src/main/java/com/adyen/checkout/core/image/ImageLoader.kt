@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.core.image
 
+import android.app.ActivityManager
+import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.RestrictTo
@@ -30,22 +33,28 @@ interface ImageLoader {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object DefaultImageLoader : ImageLoader {
+class DefaultImageLoader(context: Context) : ImageLoader {
+
     private val okHttpClient = OkHttpClient()
 
-    override suspend fun load(url: String, onSuccess: (Bitmap) -> Unit, onError: (Throwable) -> Unit) {
+    private val cache = InMemoryCache(calculateInMemoryCacheSize(context))
+
+    override suspend fun load(
+        url: String,
+        onSuccess: (Bitmap) -> Unit,
+        onError: (Throwable) -> Unit
+    ) = withContext(Dispatchers.IO) {
+        val cachedBitmap = cache[url]
+        if (cachedBitmap != null) {
+            onSuccess(cachedBitmap)
+            return@withContext
+        }
+
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
-        load(request, onSuccess, onError)
-    }
 
-    private suspend fun load(
-        request: Request,
-        onSuccess: (Bitmap) -> Unit,
-        onError: (Throwable) -> Unit
-    ) = withContext(Dispatchers.IO) {
         val call = okHttpClient.newCall(request)
 
         try {
@@ -58,6 +67,8 @@ object DefaultImageLoader : ImageLoader {
 
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
+                cache[url] = bitmap
+
                 withContext(Dispatchers.Main) {
                     onSuccess(bitmap)
                 }
@@ -68,6 +79,25 @@ object DefaultImageLoader : ImageLoader {
             call.cancel()
         } catch (e: IOException) {
             onError(e)
+        }
+    }
+
+    companion object {
+
+        private const val LOW_MEMORY_PERCENT = 0.15
+        private const val DEFAULT_MEMORY_PERCENT = 0.2
+        private const val DEFAULT_MEMORY_MEGABYTES = 256
+        private const val BYTE_CONVERSION = 1024
+
+        private fun calculateInMemoryCacheSize(context: Context): Int = try {
+            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val percent = if (activityManager.isLowRamDevice) LOW_MEMORY_PERCENT else DEFAULT_MEMORY_PERCENT
+            val isLargeHeap = (context.applicationInfo.flags and ApplicationInfo.FLAG_LARGE_HEAP) != 0
+            val memoryMegabytes = if (isLargeHeap) activityManager.largeMemoryClass else activityManager.memoryClass
+            // Available megabytes to kilobytes to bytes
+            (percent * memoryMegabytes * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
+        } catch (_: Exception) {
+            (DEFAULT_MEMORY_PERCENT * DEFAULT_MEMORY_MEGABYTES * BYTE_CONVERSION * BYTE_CONVERSION).toInt()
         }
     }
 }
