@@ -42,6 +42,7 @@ dependencies {
     api libraries.playServicesWallet
 
     //Tests
+    testImplementation project(':test-core')
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
