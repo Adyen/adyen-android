@@ -15,7 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.components.api.LogoApi
+import com.adyen.checkout.components.image.LogoSize
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.image.loadLogo
@@ -90,7 +90,7 @@ internal class VoucherView @JvmOverloads constructor(
             binding.imageViewLogo.loadLogo(
                 environment = delegate.componentParams.environment,
                 txVariant = paymentMethodType,
-                size = LogoApi.Size.MEDIUM,
+                size = LogoSize.MEDIUM,
             )
         }
     }

@@ -349,9 +349,9 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `input data with custom config is valid, then output data should be good`() = runTest {
             val cardBrands = listOf(
-                CardListItem(CardType.VISA, true),
-                CardListItem(CardType.MASTERCARD, false),
-                CardListItem(CardType.AMERICAN_EXPRESS, false)
+                CardListItem(CardType.VISA, true, Environment.TEST),
+                CardListItem(CardType.MASTERCARD, false, Environment.TEST),
+                CardListItem(CardType.AMERICAN_EXPRESS, false, Environment.TEST)
             )
             val supportedCardTypes = cardBrands.map { it.cardType }
             val installmentConfiguration = InstallmentConfiguration(
@@ -649,9 +649,9 @@ internal class DefaultCardDelegateTest(
                         countryOptions = emptyList(),
                         stateOptions = emptyList(),
                         cardBrands = listOf(
-                            CardListItem(CardType.VISA, false),
-                            CardListItem(CardType.MASTERCARD, false),
-                            CardListItem(CardType.AMERICAN_EXPRESS, false)
+                            CardListItem(CardType.VISA, false, Environment.TEST),
+                            CardListItem(CardType.MASTERCARD, false, Environment.TEST),
+                            CardListItem(CardType.AMERICAN_EXPRESS, false, Environment.TEST)
                         ),
                     )
                 )
@@ -783,7 +783,7 @@ internal class DefaultCardDelegateTest(
         stateOptions: List<AddressListItem> = emptyList(),
         isDualBranded: Boolean = false,
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
-        cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true)),
+        cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true, Environment.TEST)),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,

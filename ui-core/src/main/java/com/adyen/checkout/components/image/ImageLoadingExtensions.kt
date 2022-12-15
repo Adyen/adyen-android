@@ -16,11 +16,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.image.DefaultImageLoader
 import com.adyen.checkout.core.image.ImageLoader
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.launch
 
 // Re-use the same instance to ensure the cache is working optimally
@@ -32,6 +33,8 @@ private val Context.imageLoader: ImageLoader
         localImageLoader = newImageLoader
         return newImageLoader
     }
+
+private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
@@ -56,7 +59,10 @@ fun ImageView.load(
         imageLoader.load(
             url,
             onSuccess = { setImageBitmap(it) },
-            onError = { setImageResource(errorFallback) }
+            onError = { e ->
+                Logger.e(TAG, "Failed loading image for $url", e)
+                setImageResource(errorFallback)
+            }
         )
     }
 }
@@ -78,7 +84,7 @@ fun ImageView.loadLogo(
     environment: Environment,
     txVariant: String,
     txSubVariant: String = "",
-    size: LogoApi.Size = LogoApi.Size.SMALL,
+    size: LogoSize = LogoSize.SMALL,
     imageLoader: ImageLoader = context.imageLoader,
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
@@ -100,7 +106,7 @@ private fun Int.getDensityExtension(): String {
 }
 
 private fun buildLogoPath(
-    size: LogoApi.Size,
+    size: LogoSize,
     txVariant: String,
     txSubVariant: String,
     densityExtension: String,

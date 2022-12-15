@@ -11,6 +11,7 @@ package com.adyen.checkout.util
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.isStoredPaymentSupported
@@ -22,7 +23,7 @@ internal object Helpers {
         isRemovingStoredPaymentMethodsEnabled: Boolean
     ): List<StoredPaymentMethodModel> = mapNotNull { storedPaymentMethod ->
         if (storedPaymentMethod.isStoredPaymentSupported()) {
-            storedPaymentMethod.mapStoredModel(isRemovingStoredPaymentMethodsEnabled)
+            storedPaymentMethod.mapStoredModel(isRemovingStoredPaymentMethodsEnabled, Environment.TEST)
         } else {
             null
         }
@@ -46,7 +47,8 @@ internal object Helpers {
             type = type.orEmpty(),
             name = name.orEmpty(),
             icon = icon.orEmpty(),
-            drawIconBorder = drawIconBorder
+            drawIconBorder = drawIconBorder,
+            Environment.TEST,
         )
     }
 
