@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">Pay</string>
     <string name="pay_button_with_value">Pay %s</string>
+    <string name="confirm_preauthorization">Confirm preauthorization</string>
 </resources>

@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">%%payButton%%</string>
     <string name="pay_button_with_value">%%payAmountFormat%%</string>
+    <string name="confirm_preauthorization">%%confirmPreauthorization%%</string>
 </resources>

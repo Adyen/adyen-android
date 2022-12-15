@@ -9,4 +9,5 @@
 <resources>
     <string name="pay_button">Betaal</string>
     <string name="pay_button_with_value">%s betalen</string>
+    <string name="confirm_preauthorization">Preautorisatie bevestigen</string>
 </resources>

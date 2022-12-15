@@ -10,6 +10,7 @@ package com.adyen.checkout.components.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -106,14 +107,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
-        if (viewType is AmountButtonComponentViewType && !componentParams.amount.isEmpty) {
-            binding.payButton.text = localizedContext.getString(
-                R.string.pay_button_with_value,
-                CurrencyUtils.formatAmount(componentParams.amount, componentParams.shopperLocale)
-            )
-        } else if (viewType is ButtonComponentViewType) {
-            binding.payButton.text = localizedContext.getString(viewType.buttonTextResId)
-        }
+        binding.payButton.setText(viewType, componentParams, localizedContext)
 
         val view = componentView.getView()
         binding.frameLayoutComponentContainer.addView(view)
@@ -150,6 +144,25 @@ class AdyenComponentView @JvmOverloads constructor(
     private fun setPaymentPendingInitialization(pending: Boolean) {
         binding.payButton.isVisible = !pending
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
+    }
+
+    private fun Button.setText(
+        viewType: ComponentViewType,
+        componentParams: ComponentParams,
+        localizedContext: Context
+    ) {
+        if (viewType is AmountButtonComponentViewType && !componentParams.amount.isEmpty) {
+            text = if (componentParams.amount.isZero) {
+                localizedContext.getString(R.string.confirm_preauthorization)
+            } else {
+                localizedContext.getString(
+                    R.string.pay_button_with_value,
+                    CurrencyUtils.formatAmount(componentParams.amount, componentParams.shopperLocale)
+                )
+            }
+        } else if (viewType is ButtonComponentViewType) {
+            text = localizedContext.getString(viewType.buttonTextResId)
+        }
     }
 
     /**
