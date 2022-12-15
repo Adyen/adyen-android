@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference
 /**
  * Loading Image from LogoApi.
  */
-class ImageLoader(private val logoApi: LogoApi) {
+class OldImageLoader(private val logoApi: LogoApi) {
     private val callbacks: MutableMap<String, LogoCallback> = HashMap()
     private val imageViews: MutableMap<String, WeakReference<ImageView>> = HashMap()
 
@@ -119,8 +119,8 @@ class ImageLoader(private val logoApi: LogoApi) {
         private val TAG = LogUtil.getTag()
 
         @JvmStatic
-        fun getInstance(context: Context, environment: Environment): ImageLoader {
-            return ImageLoader(getInstance(environment, context.resources.displayMetrics))
+        fun getInstance(context: Context, environment: Environment): OldImageLoader {
+            return OldImageLoader(getInstance(environment, context.resources.displayMetrics))
         }
     }
 }

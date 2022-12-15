@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
@@ -54,7 +54,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private lateinit var storedPaymentMethod: StoredPaymentMethod
-    private lateinit var imageLoader: ImageLoader
+    private lateinit var imageLoader: OldImageLoader
     private lateinit var component: PaymentComponent<*>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -64,7 +64,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             throw ComponentException("Stored payment method is empty or not found.")
         }
 
-        imageLoader = ImageLoader.getInstance(
+        imageLoader = OldImageLoader.getInstance(
             requireContext(),
             dropInViewModel.dropInConfiguration.environment
         )
