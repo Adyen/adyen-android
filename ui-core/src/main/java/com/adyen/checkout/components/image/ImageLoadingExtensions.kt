@@ -9,11 +9,12 @@
 package com.adyen.checkout.components.image
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
-import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.ui.R
@@ -39,8 +40,19 @@ fun ImageView.load(
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
+    fun Context?.getLifecycleOwner(): LifecycleOwner? {
+        var context: Context? = this
+        while (true) {
+            when (context) {
+                is LifecycleOwner -> return context
+                !is ContextWrapper -> return null
+                else -> context = context.baseContext
+            }
+        }
+    }
+
     setImageResource(placeholder)
-    findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+    context.getLifecycleOwner()?.lifecycleScope?.launch {
         imageLoader.load(
             url,
             onSuccess = { setImageBitmap(it) },
