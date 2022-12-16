@@ -470,9 +470,14 @@ ij_groovy_while_brace_force = never
 ij_groovy_while_on_new_line = false
 ij_groovy_wrap_long_lines = false
 
-[{*.kt,*.kts}]
 # noinspection EditorConfigKeyCorrectness
-ktlint_disabled_rules=import-ordering,multiline-if-else,trailing-comma-on-call-site,trailing-comma-on-declaration-site
+[{*.kt,*.kts}]
+ktlint_standard_import-ordering = disabled
+ktlint_standard_multiline-if-else = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+# TODO: remove once they fixed this rule for enums
+ktlint_standard_no-semi = disabled
 max_line_length = 120
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
