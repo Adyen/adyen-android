@@ -18,7 +18,7 @@ class StatusService(
     private val httpClient: HttpClient,
 ) {
 
-    fun checkStatus(
+    suspend fun checkStatus(
         clientKey: String,
         statusRequest: StatusRequest
     ): StatusResponse {
