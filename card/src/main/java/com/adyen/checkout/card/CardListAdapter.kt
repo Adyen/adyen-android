@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
 import com.adyen.checkout.card.databinding.BrandLogoBinding
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.api.OldImageLoader
+import com.adyen.checkout.components.image.loadLogo
 
-internal class CardListAdapter(
-    private val imageLoader: OldImageLoader,
-) : ListAdapter<CardListItem, ImageViewHolder>(CardDiffCallback) {
+internal class CardListAdapter : ListAdapter<CardListItem, ImageViewHolder>(CardDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val binding = BrandLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,16 +27,19 @@ internal class CardListAdapter(
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val card = currentList[position]
         val alpha = if (card.isDetected) VIEW_ALPHA_DETECTED else VIEW_ALPHA_NON_DETECTED
-        holder.bind(card, alpha, imageLoader)
+        holder.bind(card, alpha)
     }
 
     internal class ImageViewHolder(
         private val binding: BrandLogoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(card: CardListItem, alpha: Float, imageLoader: OldImageLoader) {
+        fun bind(card: CardListItem, alpha: Float) {
             binding.imageViewBrandLogo.alpha = alpha
-            imageLoader.load(card.cardType.txVariant, binding.imageViewBrandLogo)
+            binding.imageViewBrandLogo.loadLogo(
+                environment = card.environment,
+                txVariant = card.cardType.txVariant,
+            )
         }
     }
 

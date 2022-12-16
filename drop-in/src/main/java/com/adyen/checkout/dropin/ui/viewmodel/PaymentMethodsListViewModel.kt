@@ -148,7 +148,10 @@ internal class PaymentMethodsListViewModel(
     private fun List<StoredPaymentMethod>.mapToStoredPaymentMethodsModelList(): List<StoredPaymentMethodModel> =
         mapNotNull { storedPaymentMethod ->
             if (storedPaymentMethod.isStoredPaymentSupported()) {
-                storedPaymentMethod.mapStoredModel(dropInConfiguration.isRemovingStoredPaymentMethodsEnabled)
+                storedPaymentMethod.mapStoredModel(
+                    dropInConfiguration.isRemovingStoredPaymentMethodsEnabled,
+                    dropInConfiguration.environment,
+                )
             } else {
                 null
             }
@@ -167,7 +170,8 @@ internal class PaymentMethodsListViewModel(
             type = type.orEmpty(),
             name = name.orEmpty(),
             icon = icon.orEmpty(),
-            drawIconBorder = drawIconBorder
+            drawIconBorder = drawIconBorder,
+            environment = dropInConfiguration.environment,
         )
     }
 
@@ -178,7 +182,8 @@ internal class PaymentMethodsListViewModel(
                 lastFour = it.lastFour,
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
-                shopperLocale = dropInConfiguration.shopperLocale
+                shopperLocale = dropInConfiguration.shopperLocale,
+                environment = dropInConfiguration.environment,
             )
         }
 

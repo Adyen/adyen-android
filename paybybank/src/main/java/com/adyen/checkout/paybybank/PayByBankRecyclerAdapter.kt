@@ -13,13 +13,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.api.OldImageLoader
+import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerModel
-import com.adyen.checkout.issuerlist.R
 
 internal class PayByBankRecyclerAdapter(
-    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val onItemClicked: (IssuerModel) -> Unit,
 ) : ListAdapter<IssuerModel, PayByBankRecyclerAdapter.PayByBankViewHolder>(IssuerDiffCallBack) {
@@ -30,7 +28,7 @@ internal class PayByBankRecyclerAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: PayByBankViewHolder, position: Int) {
-        viewHolder.bind(paymentMethod, currentList[position], imageLoader, onItemClicked)
+        viewHolder.bind(paymentMethod, currentList[position], onItemClicked)
     }
 
     class PayByBankViewHolder(
@@ -40,18 +38,15 @@ internal class PayByBankRecyclerAdapter(
         fun bind(
             paymentMethod: String,
             issuerModel: IssuerModel,
-            imageLoader: OldImageLoader,
             onItemClicked: (IssuerModel) -> Unit,
         ) {
             binding.root.setOnClickListener { onItemClicked(issuerModel) }
 
             binding.textViewTitle.text = issuerModel.name
-            imageLoader.load(
-                paymentMethod,
-                issuerModel.id,
-                binding.imageViewLogo,
-                R.drawable.ic_placeholder_image,
-                R.drawable.ic_placeholder_image
+            binding.imageViewLogo.loadLogo(
+                environment = issuerModel.environment,
+                txVariant = paymentMethod,
+                txSubVariant = issuerModel.id,
             )
         }
     }

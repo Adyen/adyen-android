@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -82,7 +81,8 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
                 lastFour = it.lastFour,
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
-                shopperLocale = giftCardPaymentConfirmationData.shopperLocale
+                shopperLocale = giftCardPaymentConfirmationData.shopperLocale,
+                environment = dropInViewModel.dropInConfiguration.environment,
             )
         }
         val currentPaymentMethod = GiftCardPaymentMethodModel(
@@ -90,17 +90,13 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
             lastFour = giftCardPaymentConfirmationData.lastFourDigits,
             amount = null,
             transactionLimit = null,
-            shopperLocale = null
+            shopperLocale = null,
+            environment = dropInViewModel.dropInConfiguration.environment,
         )
 
         val paymentMethods = alreadyPaidMethods + currentPaymentMethod
 
-        val imageLoader = OldImageLoader.getInstance(
-            requireContext(),
-            dropInViewModel.dropInConfiguration.environment
-        )
-
-        binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(imageLoader).apply {
+        binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter().apply {
             submitList(paymentMethods)
         }
     }

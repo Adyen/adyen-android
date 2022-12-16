@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
 internal data class GiftCardPaymentMethodModel(
@@ -16,7 +17,9 @@ internal data class GiftCardPaymentMethodModel(
     val lastFour: String,
     val amount: Amount?,
     val transactionLimit: Amount?,
-    val shopperLocale: Locale?
+    val shopperLocale: Locale?,
+    // We need the environment to load the logo
+    val environment: Environment,
 ) : PaymentMethodListItem {
     override fun getViewType(): Int = PaymentMethodListItem.GIFT_CARD_PAYMENT_METHOD
 }

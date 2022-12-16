@@ -14,10 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -44,9 +44,9 @@ internal class QrCodeView @JvmOverloads constructor(
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: OldImageLoader
-
     private lateinit var localizedContext: Context
+
+    private lateinit var delegate: QRCodeDelegate
 
     init {
         orientation = VERTICAL
@@ -57,9 +57,10 @@ internal class QrCodeView @JvmOverloads constructor(
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         if (delegate !is QRCodeDelegate) throw IllegalStateException("Unsupported delegate type")
 
+        this.delegate = delegate
+
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = OldImageLoader.getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
 
@@ -98,7 +99,10 @@ internal class QrCodeView @JvmOverloads constructor(
     private fun updateLogo(paymentMethodType: String?) {
         Logger.d(TAG, "updateLogo - $paymentMethodType")
         if (!paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(paymentMethodType, binding.imageViewLogo)
+            binding.imageViewLogo.loadLogo(
+                environment = delegate.componentParams.environment,
+                txVariant = paymentMethodType,
+            )
         }
     }
 

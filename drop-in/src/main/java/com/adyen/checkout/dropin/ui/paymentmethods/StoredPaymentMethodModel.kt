@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import com.adyen.checkout.core.api.Environment
+
 internal sealed class StoredPaymentMethodModel : PaymentMethodListItem {
     abstract val id: String
     abstract val imageId: String
@@ -22,12 +24,16 @@ internal data class StoredCardModel(
     override val isRemovable: Boolean,
     val lastFour: String,
     val expiryMonth: String,
-    val expiryYear: String
+    val expiryYear: String,
+    // We need the environment to load the logo
+    val environment: Environment,
 ) : StoredPaymentMethodModel()
 
 internal data class GenericStoredModel(
     override val id: String,
     override val imageId: String,
     override val isRemovable: Boolean,
-    val name: String
+    val name: String,
+    // We need the environment to load the logo
+    val environment: Environment,
 ) : StoredPaymentMethodModel()

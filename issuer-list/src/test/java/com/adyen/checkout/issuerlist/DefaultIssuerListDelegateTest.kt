@@ -92,7 +92,9 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `selectedIssuer is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.updateInputData { selectedIssuer = IssuerModel(id = "id", name = "test") }
+                delegate.updateInputData {
+                    selectedIssuer = IssuerModel(id = "id", name = "test", environment = Environment.TEST)
+                }
 
                 with(expectMostRecentItem()) {
                     assertEquals("test", selectedIssuer?.name)
@@ -121,7 +123,15 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `output is valid, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(IssuerListOutputData(IssuerModel(id = "issuer-id", name = "issuer-name")))
+                delegate.updateComponentState(
+                    IssuerListOutputData(
+                        IssuerModel(
+                            id = "issuer-id",
+                            name = "issuer-name",
+                            environment = Environment.TEST
+                        )
+                    )
+                )
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
                     assertTrue(isInputValid)

@@ -8,7 +8,11 @@
 
 package com.adyen.checkout.issuerlist
 
+import com.adyen.checkout.core.api.Environment
+
 data class IssuerModel(
     val id: String,
-    val name: String
+    val name: String,
+    // We need the environment to load the logo
+    val environment: Environment,
 )

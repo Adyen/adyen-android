@@ -171,7 +171,7 @@ internal class DefaultPayByBankDelegate(
     private fun List<Issuer>.mapToModel(): List<IssuerModel> =
         this.mapNotNull { (id, name, isDisabled) ->
             if (!isDisabled && id != null && name != null) {
-                IssuerModel(id, name)
+                IssuerModel(id, name, componentParams.environment)
             } else {
                 null
             }
@@ -182,7 +182,7 @@ internal class DefaultPayByBankDelegate(
             .flatMap { it.items.orEmpty() }
             .mapNotNull { (id, name) ->
                 if (id != null && name != null) {
-                    IssuerModel(id, name)
+                    IssuerModel(id, name, componentParams.environment)
                 } else {
                     null
                 }

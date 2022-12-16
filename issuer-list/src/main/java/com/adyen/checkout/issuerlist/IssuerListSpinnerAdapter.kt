@@ -14,13 +14,12 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.adyen.checkout.components.api.OldImageLoader
+import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
 
 class IssuerListSpinnerAdapter internal constructor(
     private val context: Context,
     private var issuerList: List<IssuerModel>,
-    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean
 ) : BaseAdapter() {
@@ -44,7 +43,7 @@ class IssuerListSpinnerAdapter internal constructor(
         if (convertView == null) {
             binding = SpinnerListWithImageBinding.inflate(LayoutInflater.from(context), parent, false)
             view = binding.root
-            viewHolder = IssuerListSpinnerViewHolder(binding, imageLoader, paymentMethod, hideIssuerLogo)
+            viewHolder = IssuerListSpinnerViewHolder(binding, paymentMethod, hideIssuerLogo)
             view.tag = viewHolder
         } else {
             view = convertView
@@ -57,7 +56,6 @@ class IssuerListSpinnerAdapter internal constructor(
 
 internal class IssuerListSpinnerViewHolder(
     private val binding: SpinnerListWithImageBinding,
-    private val imageLoader: OldImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean
 ) : ViewHolder(binding.root) {
@@ -65,12 +63,10 @@ internal class IssuerListSpinnerViewHolder(
     fun bind(model: IssuerModel) {
         binding.textViewTitle.text = model.name
         if (!hideIssuerLogo) {
-            imageLoader.load(
-                paymentMethod,
-                model.id,
-                binding.imageViewLogo,
-                R.drawable.ic_placeholder_image,
-                R.drawable.ic_placeholder_image
+            binding.imageViewLogo.loadLogo(
+                environment = model.environment,
+                txVariant = paymentMethod,
+                txSubVariant = model.id,
             )
         } else {
             binding.imageViewLogo.isVisible = false

@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
@@ -31,7 +30,7 @@ class PayByBankView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): LinearLayout(context, attrs, defStyleAttr), ComponentView {
+) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     private val binding: PayByBankViewBinding = PayByBankViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -96,7 +95,6 @@ class PayByBankView @JvmOverloads constructor(
 
     private fun initIssuersRecyclerView() {
         payByBankRecyclerAdapter = PayByBankRecyclerAdapter(
-            imageLoader = OldImageLoader.getInstance(context, delegate.componentParams.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             onItemClicked = ::onItemClicked
         ).apply {

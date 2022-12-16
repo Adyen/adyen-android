@@ -17,6 +17,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.mapStoredModel
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
@@ -28,7 +29,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredP
 internal class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
     private val componentRequiresInput: Boolean,
-    isRemovingEnabled: Boolean
+    dropInConfiguration: DropInConfiguration,
 ) : ViewModel() {
 
     companion object {
@@ -45,7 +46,10 @@ internal class PreselectedStoredPaymentViewModel(
     private var lastComponentError: ComponentError? = null
 
     init {
-        storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(isRemovingEnabled)
+        storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(
+            dropInConfiguration.isRemovingStoredPaymentMethodsEnabled,
+            dropInConfiguration.environment,
+        )
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {

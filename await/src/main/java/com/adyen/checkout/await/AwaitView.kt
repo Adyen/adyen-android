@@ -14,10 +14,9 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.adyen.checkout.await.databinding.AwaitViewBinding
-import com.adyen.checkout.components.api.OldImageLoader
-import com.adyen.checkout.components.api.OldImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -40,9 +39,9 @@ internal class AwaitView @JvmOverloads constructor(
 
     private val binding: AwaitViewBinding = AwaitViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var imageLoader: OldImageLoader
-
     private lateinit var localizedContext: Context
+
+    private lateinit var delegate: AwaitDelegate
 
     init {
         orientation = VERTICAL
@@ -53,9 +52,10 @@ internal class AwaitView @JvmOverloads constructor(
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         if (delegate !is AwaitDelegate) throw IllegalArgumentException("Unsupported delegate type")
 
+        this.delegate = delegate
+
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-        imageLoader = getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
     }
@@ -92,8 +92,11 @@ internal class AwaitView @JvmOverloads constructor(
 
     private fun updateLogo(paymentMethodType: String?) {
         Logger.d(TAG, "updateLogo - $paymentMethodType")
-        paymentMethodType?.let {
-            imageLoader.load(it, binding.imageViewLogo)
+        paymentMethodType?.let { txVariant ->
+            binding.imageViewLogo.loadLogo(
+                environment = delegate.componentParams.environment,
+                txVariant = txVariant,
+            )
         }
     }
 

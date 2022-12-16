@@ -28,7 +28,6 @@ import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.InstallmentUtils
-import com.adyen.checkout.components.api.OldImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.isVisible
@@ -66,7 +65,6 @@ internal class CardView @JvmOverloads constructor(
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var imageLoader: OldImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
 
@@ -101,8 +99,6 @@ internal class CardView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-
-        imageLoader = OldImageLoader.getInstance(context, delegate.componentParams.environment)
 
         observeDelegate(delegate, coroutineScope)
 
@@ -744,7 +740,7 @@ internal class CardView @JvmOverloads constructor(
         binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
 
         if (cardListAdapter == null) {
-            cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
+            cardListAdapter = CardListAdapter()
             binding.recyclerViewCardList.adapter = cardListAdapter
         }
 
