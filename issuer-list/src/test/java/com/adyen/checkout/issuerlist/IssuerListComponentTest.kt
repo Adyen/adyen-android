@@ -15,8 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerListComponent
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
@@ -138,12 +137,4 @@ internal class IssuerListComponentTest(
             expectNoEvents()
         }
     }
-}
-
-private enum class TestComponentViewType : ComponentViewType {
-    VIEW_TYPE_1,
-    VIEW_TYPE_2;
-
-    override val viewProvider: ViewProvider
-        get() = throw IllegalStateException("Method should not be called in tests.")
 }
