@@ -18,7 +18,7 @@ import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
 
-fun <T : ModelObject> HttpClient.get(
+suspend fun <T : ModelObject> HttpClient.get(
     path: String,
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
@@ -33,7 +33,7 @@ fun <T : ModelObject> HttpClient.get(
     return responseSerializer.deserialize(resultJson)
 }
 
-fun <T : ModelObject> HttpClient.getList(
+suspend fun <T : ModelObject> HttpClient.getList(
     path: String,
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
@@ -48,7 +48,7 @@ fun <T : ModelObject> HttpClient.getList(
     return ModelUtils.deserializeOptList(resultJson, responseSerializer).orEmpty()
 }
 
-fun <T : ModelObject, R : ModelObject> HttpClient.post(
+suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     path: String,
     body: T,
     requestSerializer: ModelObject.Serializer<T>,

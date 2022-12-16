@@ -10,12 +10,14 @@ package com.adyen.checkout.core.api
 
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
+import kotlinx.coroutines.CancellationException
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -26,7 +28,11 @@ internal class OkHttpClient(
     private val defaultHeaders: Map<String, String> = emptyMap()
 ) : HttpClient {
 
-    override fun get(path: String, queryParameters: Map<String, String>, headers: Map<String, String>): ByteArray {
+    override suspend fun get(
+        path: String,
+        queryParameters: Map<String, String>,
+        headers: Map<String, String>
+    ): ByteArray {
         val request = Request.Builder()
             .headers(headers.combineToHeaders())
             .url(buildURL(path, queryParameters))
@@ -36,7 +42,7 @@ internal class OkHttpClient(
         return executeRequest(request)
     }
 
-    override fun post(
+    override suspend fun post(
         path: String,
         jsonBody: String,
         queryParameters: Map<String, String>,
@@ -63,30 +69,39 @@ internal class OkHttpClient(
     }
 
     private fun executeRequest(request: Request): ByteArray {
-        val response = client.newCall(request).execute()
+        val call = client.newCall(request)
 
-        if (response.isSuccessful) {
-            return response.body
-                ?.bytes()
-                ?: ByteArray(0)
-        } else {
-            val errorBody = try {
-                response.body?.string()
-                    ?.let { JSONObject(it) }
-                    ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
-            } catch (e: IOException) {
-                null
-            } catch (e: JSONException) {
-                null
-            } catch (e: ModelSerializationException) {
-                null
+        try {
+            val response = call.execute()
+
+            if (response.isSuccessful) {
+                return response.body
+                    ?.bytes()
+                    ?: ByteArray(0)
+            } else {
+                val errorBody = response.errorBody()
+                throw HttpException(response.code, response.message, errorBody)
             }
-            throw HttpException(response.code, response.message, errorBody)
+        } catch (e: CancellationException) {
+            call.cancel()
+            throw e
         }
     }
 
     private fun Map<String, String>.combineToHeaders() =
         (defaultHeaders + this).toHeaders()
+
+    private fun Response.errorBody(): ErrorResponseBody? = try {
+        body?.string()
+            ?.let { JSONObject(it) }
+            ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
+    } catch (e: IOException) {
+        null
+    } catch (e: JSONException) {
+        null
+    } catch (e: ModelSerializationException) {
+        null
+    }
 
     companion object {
         private val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
