@@ -1,3 +1,5 @@
+@file:Suppress("MaximumLineLength")
+
 package com.adyen.checkout.components.util
 
 import com.adyen.checkout.core.api.Environment
@@ -5,7 +7,9 @@ import java.util.regex.Pattern
 
 object ValidationUtils {
 
-    private const val EMAIL_REGEX = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+    @Suppress("ktlint:max-line-length", "MaxLineLength")
+    private const val EMAIL_REGEX =
+        "^(([a-zA-Z0-9!#\$%&'\\*\\+\\-\\/=\\?\\^_`\\{\\|\\}~]+(\\.[a-zA-Z0-9!#\$%&'\\*\\+\\-\\/=\\?\\^_`\\{\\|\\}~]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|((([a-zA-Z0-9]+[\\-]*)*[a-zA-Z0-9]+\\.)+[a-zA-Z]{2,}))$"
     private val EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE)
 
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
