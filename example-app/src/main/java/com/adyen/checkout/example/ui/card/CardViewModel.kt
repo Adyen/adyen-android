@@ -8,6 +8,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -34,6 +36,9 @@ internal class CardViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
 
+    private val _paymentMethodFlow = MutableStateFlow<PaymentMethod?>(null)
+    val paymentMethodFlow: Flow<PaymentMethod> = _paymentMethodFlow.filterNotNull()
+
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
 
@@ -42,11 +47,11 @@ internal class CardViewModel @Inject constructor(
 
     private var cardComponentState: CardComponentState? = null
 
-    fun onCreate() {
-        viewModelScope.launch { _cardViewState.emit(fetchPaymentMethods()) }
+    init {
+        viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    private suspend fun fetchPaymentMethods(): CardViewState = withContext(Dispatchers.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -62,7 +67,12 @@ internal class CardViewModel @Inject constructor(
             ?.paymentMethods
             ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-        if (cardPaymentMethod == null) CardViewState.Error else CardViewState.ShowComponent(cardPaymentMethod)
+        if (cardPaymentMethod == null) {
+            _cardViewState.emit(CardViewState.Error)
+        } else {
+            _paymentMethodFlow.emit(cardPaymentMethod)
+            _cardViewState.emit(CardViewState.ShowComponent)
+        }
     }
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {
