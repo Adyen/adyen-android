@@ -10,6 +10,5 @@ package com.adyen.checkout.example.ui.main
 
 internal sealed class MainViewState {
     object Loading : MainViewState()
-    data class Error(val message: String) : MainViewState()
     data class Result(val items: List<ComponentItem>) : MainViewState()
 }

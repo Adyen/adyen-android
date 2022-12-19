@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.viewState.collect(::onViewState) }
-                launch { viewModel.navigateTo.collect(::onNavigateTo) }
+                launch { viewModel.eventFlow.collect(::onMainEvent) }
             }
         }
     }
@@ -85,26 +85,22 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDropInResult(dropInResult: DropInResult?) {
-        if (dropInResult == null) return
-        when (dropInResult) {
-            is DropInResult.CancelledByUser -> Toast.makeText(this, "Canceled by user", Toast.LENGTH_SHORT).show()
-            is DropInResult.Error -> Toast.makeText(this, dropInResult.reason, Toast.LENGTH_SHORT).show()
-            is DropInResult.Finished -> Toast.makeText(this, dropInResult.result, Toast.LENGTH_SHORT).show()
-        }
-    }
+    override fun onDropInResult(dropInResult: DropInResult?) = viewModel.onDropInResult(dropInResult)
 
     private fun onViewState(viewState: MainViewState) {
         when (viewState) {
-            is MainViewState.Error -> {
-                setLoading(false)
-                Toast.makeText(this, viewState.message, Toast.LENGTH_SHORT).show()
-            }
             MainViewState.Loading -> setLoading(true)
             is MainViewState.Result -> {
                 setLoading(false)
                 componentItemAdapter?.items = viewState.items
             }
+        }
+    }
+
+    private fun onMainEvent(event: MainEvent) {
+        when (event) {
+            is MainEvent.NavigateTo -> onNavigateTo(event.destination)
+            is MainEvent.Toast -> Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
         }
     }
 
