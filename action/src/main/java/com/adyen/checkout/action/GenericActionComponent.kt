@@ -45,7 +45,7 @@ class GenericActionComponent internal constructor(
     }
 
     override fun removeObserver() {
-        delegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     override fun onCleared() {
