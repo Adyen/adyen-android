@@ -230,7 +230,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initShopperEmailInput() {
         val shopperEmailEditText = binding.editTextShopperEmail as? AdyenTextInputEditText
         shopperEmailEditText?.setOnChangeListener {
-            bacsDelegate.updateInputData { shopperEmail = it.toString() }
+            bacsDelegate.updateInputData { shopperEmail = it.toString().trim() }
             binding.textInputLayoutShopperEmail.hideError()
         }
         shopperEmailEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
