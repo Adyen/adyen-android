@@ -33,6 +33,10 @@ class RedirectComponent internal constructor(
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
+    init {
+        delegate.initialize(viewModelScope)
+    }
+
     override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
     }
