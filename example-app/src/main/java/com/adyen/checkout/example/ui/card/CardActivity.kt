@@ -47,12 +47,11 @@ class CardActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { cardViewModel.paymentMethodFlow.collect(::setupCardView) }
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
                 launch { cardViewModel.events.collect(::onCardEvent) }
             }
         }
-
-        cardViewModel.onCreate()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -77,8 +76,6 @@ class CardActivity : AppCompatActivity() {
                 binding.cardContainer.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
-
-                setupCardView(cardViewState.paymentMethod)
             }
             CardViewState.Error -> {
                 binding.errorView.isVisible = true
