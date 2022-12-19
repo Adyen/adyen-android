@@ -27,7 +27,6 @@ import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.api.Environment
@@ -154,11 +153,6 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     override fun removeObserver() = Unit
 
     override fun onCleared() = Unit
-}
-
-internal object TestComponentViewType : ComponentViewType {
-    override val viewProvider: ViewProvider
-        get() = throw IllegalStateException("This should not be called from unit tests")
 }
 
 private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

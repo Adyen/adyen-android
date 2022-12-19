@@ -9,8 +9,7 @@
 package com.adyen.checkout.components.extensions
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.test.TestComponentViewType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -25,14 +24,14 @@ internal class FlowExtensionsTest {
     fun `when merging view flows, then initial value of action view flow should be ignored`() = runTest {
         mergeViewFlows(
             scope = this,
-            paymentMethodViewFlow = flowOf(TestComponentViewType("test")),
+            paymentMethodViewFlow = flowOf(TestComponentViewType.VIEW_TYPE_1),
             genericActionViewFlow = flowOf(null),
         ).test {
             // Initial value of merged flow
             assertNull(awaitItem())
 
             // Initial value of paymentMethodViewFlow
-            assertEquals(TestComponentViewType("test"), awaitItem())
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
 
             // Assert initial value of genericActionViewFlow is not emitted
             ensureAllEventsConsumed()
@@ -43,20 +42,15 @@ internal class FlowExtensionsTest {
     fun `when merging view flows, then subsequent values should be emitted`() = runTest {
         mergeViewFlows(
             scope = this,
-            paymentMethodViewFlow = flowOf(TestComponentViewType("view 1"), TestComponentViewType("view 2")),
-            genericActionViewFlow = flowOf(null, TestComponentViewType("action 1")),
+            paymentMethodViewFlow = flowOf(TestComponentViewType.VIEW_TYPE_1, TestComponentViewType.VIEW_TYPE_2),
+            genericActionViewFlow = flowOf(null, TestComponentViewType.VIEW_TYPE_3),
         ).test {
             // Initial value of merged flow
             assertNull(awaitItem())
 
-            assertEquals(TestComponentViewType("view 1"), awaitItem())
-            assertEquals(TestComponentViewType("view 2"), awaitItem())
-            assertEquals(TestComponentViewType("action 1"), awaitItem())
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
+            assertEquals(TestComponentViewType.VIEW_TYPE_3, awaitItem())
         }
-    }
-
-    private data class TestComponentViewType(val name: String) : ComponentViewType {
-        override val viewProvider: ViewProvider
-            get() = throw IllegalStateException("This should not be called from unit tests")
     }
 }

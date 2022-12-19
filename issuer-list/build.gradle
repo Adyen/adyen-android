@@ -47,6 +47,7 @@ dependencies {
     implementation libraries.androidx.recyclerview
 
     //Tests
+    testImplementation project(':test-core')
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito

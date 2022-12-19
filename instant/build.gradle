@@ -37,6 +37,7 @@ dependencies {
     implementation libraries.material
 
     //Tests
+    testImplementation project(':test-core')
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines

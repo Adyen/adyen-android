@@ -20,6 +20,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
+import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -136,9 +137,9 @@ internal class DefaultGenericActionDelegateTest(
 
             assertNull(awaitItem())
 
-            testDelegate.viewFlow.tryEmit(TestComponentViewType)
+            testDelegate.viewFlow.tryEmit(TestComponentViewType.VIEW_TYPE_1)
 
-            assertEquals(TestComponentViewType, awaitItem())
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
         }
     }
 
