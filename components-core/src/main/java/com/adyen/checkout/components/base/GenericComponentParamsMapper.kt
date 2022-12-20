@@ -9,7 +9,6 @@
 package com.adyen.checkout.components.base
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
@@ -31,7 +30,7 @@ class GenericComponentParamsMapper(
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY
+            amount = amount
         )
     }
 

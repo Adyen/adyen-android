@@ -12,7 +12,6 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
@@ -48,7 +47,7 @@ internal class CardComponentParamsMapper(
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY,
+            amount = amount,
             isHolderNameRequired = isHolderNameRequired ?: false,
             supportedCardTypes = supportedCardTypes,
             shopperReference = shopperReference,

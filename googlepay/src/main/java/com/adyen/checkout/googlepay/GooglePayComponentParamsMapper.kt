@@ -46,7 +46,7 @@ internal class GooglePayComponentParamsMapper(
             allowedAuthMethods = getAvailableAuthMethods(),
             allowedCardNetworks = getAvailableCardNetworks(paymentMethod),
             googlePayEnvironment = getGooglePayEnvironment(),
-            amount = amount ?: DEFAULT_AMOUNT,
+            amount = if (amount.isEmpty) DEFAULT_AMOUNT else amount,
             totalPriceStatus = totalPriceStatus ?: DEFAULT_TOTAL_PRICE_STATUS,
             countryCode = countryCode,
             merchantInfo = merchantInfo,
