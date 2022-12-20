@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -39,20 +41,19 @@ internal class MainViewModel @Inject constructor(
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
 
-    private val _viewState =
-        MutableStateFlow<MainViewState>(MainViewState.Result(ComponentItemProvider.getComponentItems()))
+    private val _viewState = MutableStateFlow<MainViewState>(getComponentItemsViewState())
     val viewState: Flow<MainViewState> = _viewState
 
-    private val _navigateTo = MutableSharedFlow<MainNavigation>(extraBufferCapacity = 1)
-    val navigateTo: Flow<MainNavigation> = _navigateTo
+    private val _eventFlow = MutableSharedFlow<MainEvent>(extraBufferCapacity = 1)
+    val eventFlow: Flow<MainEvent> = _eventFlow
 
     fun onComponentEntryClick(entry: ComponentItem.Entry) {
         when (entry) {
-            ComponentItem.Entry.Card -> _navigateTo.tryEmit(MainNavigation.Card)
+            ComponentItem.Entry.Blik -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Blik))
+            ComponentItem.Entry.Card -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Card))
             ComponentItem.Entry.DropIn -> startDropInFlow()
             ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow()
             ComponentItem.Entry.DropInWithCustomSession -> startCustomSessionDropInFlow()
-            ComponentItem.Entry.Blik -> _navigateTo.tryEmit(MainNavigation.Blik)
         }
     }
 
@@ -64,9 +65,9 @@ internal class MainViewModel @Inject constructor(
             if (paymentMethods != null) {
                 _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
                 val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
-                _navigateTo.emit(MainNavigation.DropIn(paymentMethods, dropInConfiguration))
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropIn(paymentMethods, dropInConfiguration)))
             } else {
-                _viewState.emit(MainViewState.Error("Something went wrong while fetching payment methods"))
+                onError("Something went wrong while fetching payment methods")
             }
         }
     }
@@ -81,9 +82,9 @@ internal class MainViewModel @Inject constructor(
 
             if (session != null) {
                 _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
-                _navigateTo.emit(MainNavigation.DropInWithSession(session, dropInConfiguration))
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropInWithSession(session, dropInConfiguration)))
             } else {
-                _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
+                onError("Something went wrong while starting session")
             }
         }
     }
@@ -98,9 +99,11 @@ internal class MainViewModel @Inject constructor(
 
             if (session != null) {
                 _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
-                _navigateTo.emit(MainNavigation.DropInWithCustomSession(session, dropInConfiguration))
+                _eventFlow.tryEmit(
+                    MainEvent.NavigateTo(MainNavigation.DropInWithCustomSession(session, dropInConfiguration))
+                )
             } else {
-                _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
+                onError("Something went wrong while starting session")
             }
         }
     }
@@ -143,10 +146,27 @@ internal class MainViewModel @Inject constructor(
         return when (val result = CheckoutSessionProvider.createSession(sessionModel, dropInConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> {
-                _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
+                onError("Something went wrong while starting session")
                 null
             }
         }
+    }
+
+    private fun onError(message: String) {
+        _viewState.tryEmit(getComponentItemsViewState())
+        _eventFlow.tryEmit(MainEvent.Toast(message))
+    }
+
+    private fun getComponentItemsViewState() = MainViewState.Result(ComponentItemProvider.getComponentItems())
+
+    fun onDropInResult(dropInResult: DropInResult?) {
+        val message = when (dropInResult) {
+            is DropInResult.CancelledByUser -> "Canceled by user"
+            is DropInResult.Error -> dropInResult.reason ?: "DropInResult is error without reason"
+            is DropInResult.Finished -> dropInResult.result
+            null -> "DropInResult is null"
+        }
+        _eventFlow.tryEmit(MainEvent.Toast(message))
     }
 
     override fun onCleared() {
