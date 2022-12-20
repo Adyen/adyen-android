@@ -57,7 +57,7 @@ internal class DefaultBacsDirectDebitDelegate(
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
-    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
+    internal val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
@@ -208,7 +208,6 @@ internal class DefaultBacsDirectDebitDelegate(
         )
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {

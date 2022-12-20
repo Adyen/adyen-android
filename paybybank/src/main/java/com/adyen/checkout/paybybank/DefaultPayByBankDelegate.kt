@@ -55,7 +55,7 @@ internal class DefaultPayByBankDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = _componentStateFlow
 
-    private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow<ComponentViewType?>(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<PayByBankPaymentMethod>> = bufferedChannel()

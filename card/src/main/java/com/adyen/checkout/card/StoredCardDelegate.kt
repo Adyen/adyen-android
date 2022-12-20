@@ -89,7 +89,7 @@ internal class StoredCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _viewFlow = MutableStateFlow(CardComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<CardComponentState> = bufferedChannel()
@@ -400,7 +400,6 @@ internal class StoredCardDelegate(
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {

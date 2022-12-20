@@ -96,7 +96,7 @@ internal class DefaultCardDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private val _viewFlow = MutableStateFlow(CardComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<CardComponentState> = bufferedChannel()
@@ -691,7 +691,6 @@ internal class DefaultCardDelegate(
         }
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {

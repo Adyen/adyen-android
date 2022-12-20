@@ -55,7 +55,7 @@ internal class DefaultMBWayDelegate(
 
     override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
-    private val _viewFlow = MutableStateFlow(MbWayComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<MBWayPaymentMethod>> = bufferedChannel()
@@ -167,7 +167,6 @@ internal class DefaultMBWayDelegate(
         )
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {

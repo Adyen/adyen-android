@@ -76,7 +76,7 @@ internal class DefaultBcmcDelegate(
 
     override val outputData get() = _outputDataFlow.value
 
-    private val _viewFlow = MutableStateFlow(BcmcComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<CardPaymentMethod>> = bufferedChannel()
@@ -295,7 +295,6 @@ internal class DefaultBcmcDelegate(
         return CardType.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {

@@ -11,6 +11,7 @@ package com.adyen.checkout.components
 interface ButtonComponent {
 
     /**
+     * TODO: Update docs
      * Tells if the view interaction requires confirmation from the user to start the payment flow.
      * Confirmation usually is obtained by a "Pay" button the user need to press to start processing the payment.
      * If confirmation is not required, it means the view handles input in a way that the user has already expressed the
