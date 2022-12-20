@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -27,10 +28,6 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     private var _binding: FragmentGenericComponentBinding? = null
     private val binding: FragmentGenericComponentBinding get() = requireNotNull(_binding)
-
-    companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGenericComponentBinding.inflate(inflater, container, false)
@@ -53,7 +50,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         if (component is ViewableComponent) {
             binding.componentView.attach(component, viewLifecycleOwner)
 
-            if (binding.componentView.isConfirmationRequired) {
+            if ((component as? ButtonComponent)?.isConfirmationRequired() == true) {
                 setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
                 binding.componentView.requestFocus()
             }
@@ -77,5 +74,9 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -115,7 +115,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
         componentView.initView(delegate, coroutineScope, localizedContext)
 
-        if (isConfirmationRequired) {
+        if ((delegate as? ButtonDelegate)?.isConfirmationRequired() == true) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
                 // TODO check if setPaymentPendingInitialization has to be called on each event?
@@ -164,21 +164,6 @@ class AdyenComponentView @JvmOverloads constructor(
             text = localizedContext.getString(viewType.buttonTextResId)
         }
     }
-
-    /**
-     * Tells if the view interaction requires confirmation from the user to start the payment flow.
-     * Confirmation usually is obtained by a "Pay" button the user need to press to start processing the payment.
-     * If confirmation is not required, it means the view handles input in a way that the user has already expressed the
-     * desire to continue.
-     *
-     * Each type of view always returns the same value, so if the type of view is known, there is no need to check this
-     * method.
-     *
-     * @return If an update from the component attached to this View requires further user confirmation to continue or
-     * not.
-     */
-    val isConfirmationRequired: Boolean
-        get() = componentViewType is ButtonComponentViewType
 
     /**
      * Highlight and focus on the current validation errors for the user to take action.

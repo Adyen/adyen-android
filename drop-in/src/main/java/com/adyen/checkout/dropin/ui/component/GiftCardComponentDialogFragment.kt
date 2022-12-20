@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
+import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -30,9 +31,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
     private var _binding: FragmentGiftcardComponentBinding? = null
     private val binding: FragmentGiftcardComponentBinding get() = requireNotNull(_binding)
 
-    companion object : BaseCompanion<GiftCardComponentDialogFragment>(GiftCardComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
+    private val giftCardComponent: GiftCardComponent by lazy { component as GiftCardComponent }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGiftcardComponentBinding.inflate(inflater, container, false)
@@ -57,7 +56,7 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
 
         binding.giftCardView.attach(component, viewLifecycleOwner)
 
-        if (binding.giftCardView.isConfirmationRequired) {
+        if (giftCardComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.giftCardView.requestFocus()
         }
@@ -86,5 +85,9 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object : BaseCompanion<GiftCardComponentDialogFragment>(GiftCardComponentDialogFragment::class.java) {
+        private val TAG = LogUtil.getTag()
     }
 }

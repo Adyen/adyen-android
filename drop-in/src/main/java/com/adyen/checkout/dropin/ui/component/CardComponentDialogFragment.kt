@@ -26,6 +26,8 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
     private var _binding: FragmentCardComponentBinding? = null
     private val binding: FragmentCardComponentBinding get() = requireNotNull(_binding)
 
+    private val cardComponent: CardComponent by lazy { component as CardComponent }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCardComponentBinding.inflate(inflater, container, false)
         return binding.root
@@ -44,7 +46,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         binding.cardView.attach(component as CardComponent, viewLifecycleOwner)
 
-        if (binding.cardView.isConfirmationRequired) {
+        if (cardComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         }
