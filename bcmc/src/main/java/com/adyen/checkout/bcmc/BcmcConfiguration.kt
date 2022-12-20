@@ -10,6 +10,8 @@ package com.adyen.checkout.bcmc
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.components.base.ButtonConfiguration
+import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -27,20 +29,24 @@ class BcmcConfiguration private constructor(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
     val isHolderNameRequired: Boolean?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration {
+) : Configuration, ButtonConfiguration {
 
     /**
      * Builder to create a [BcmcConfiguration].
      */
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<BcmcConfiguration, Builder> {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<BcmcConfiguration, Builder>,
+        ButtonConfigurationBuilder {
 
         private var isHolderNameRequired: Boolean? = null
         private var showStorePaymentField: Boolean? = null
         private var shopperReference: String? = null
+        private var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Constructor for Builder with default values.
@@ -108,6 +114,18 @@ class BcmcConfiguration private constructor(
         }
 
         /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible Is submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
+        /**
          * Build [BcmcConfiguration] object from [BcmcConfiguration.Builder] inputs.
          *
          * @return [BcmcConfiguration]
@@ -122,6 +140,7 @@ class BcmcConfiguration private constructor(
                 isHolderNameRequired = isHolderNameRequired,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

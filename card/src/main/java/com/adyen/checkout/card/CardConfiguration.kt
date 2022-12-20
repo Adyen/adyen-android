@@ -11,6 +11,8 @@ import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.base.ButtonConfiguration
+import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -29,6 +31,7 @@ class CardConfiguration private constructor(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
     val isHolderNameRequired: Boolean?,
     val supportedCardTypes: List<CardType>?,
     val shopperReference: String?,
@@ -40,19 +43,22 @@ class CardConfiguration private constructor(
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration {
+) : Configuration, ButtonConfiguration {
 
     /**
      * Builder to create a [CardConfiguration].
      */
     @Suppress("TooManyFunctions")
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder> {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder>,
+        ButtonConfigurationBuilder {
         private var supportedCardTypes: List<CardType>? = null
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null
         private var shopperReference: String? = null
         private var isHideCvc: Boolean? = null
         private var isHideCvcStoredCard: Boolean? = null
+        private var isSubmitButtonVisible: Boolean? = null
         private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
         private var kcpAuthVisibility: KCPAuthVisibility? = null
         private var installmentConfiguration: InstallmentConfiguration? = null
@@ -218,6 +224,18 @@ class CardConfiguration private constructor(
         }
 
         /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible Is submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
+        /**
          * Build [CardConfiguration] object from [CardConfiguration.Builder] inputs.
          *
          * @return [CardConfiguration]
@@ -230,6 +248,7 @@ class CardConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
                 isHolderNameRequired = holderNameRequired,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 supportedCardTypes = supportedCardTypes,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = isStorePaymentFieldVisible,

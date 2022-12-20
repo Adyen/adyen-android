@@ -24,6 +24,7 @@ class TestIssuerListConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     override val viewType: IssuerListViewType?,
+    override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
 
@@ -49,6 +50,7 @@ class TestIssuerListConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
                 viewType = viewType,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 hideIssuerLogos = hideIssuerLogos,
             )
         }

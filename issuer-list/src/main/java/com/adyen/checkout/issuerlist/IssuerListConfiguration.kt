@@ -9,11 +9,13 @@ package com.adyen.checkout.issuerlist
 
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.base.ButtonConfiguration
+import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
-abstract class IssuerListConfiguration : Configuration {
+abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
 
     abstract val viewType: IssuerListViewType?
     abstract val hideIssuerLogos: Boolean?
@@ -21,10 +23,13 @@ abstract class IssuerListConfiguration : Configuration {
     abstract class IssuerListBuilder<
         IssuerListConfigurationT : IssuerListConfiguration,
         IssuerListBuilderT : IssuerListBuilder<IssuerListConfigurationT, IssuerListBuilderT>
-        > : ActionHandlingPaymentMethodConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT> {
+        > :
+        ActionHandlingPaymentMethodConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT>,
+        ButtonConfigurationBuilder {
 
         protected open var viewType: IssuerListViewType? = null
         protected open var hideIssuerLogos: Boolean? = null
+        protected open var isSubmitButtonVisible: Boolean? = null
 
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -60,6 +65,19 @@ abstract class IssuerListConfiguration : Configuration {
          */
         fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilderT {
             this.hideIssuerLogos = hideIssuerLogos
+            @Suppress("UNCHECKED_CAST")
+            return this as IssuerListBuilderT
+        }
+
+        /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible Is submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): IssuerListBuilderT {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
             @Suppress("UNCHECKED_CAST")
             return this as IssuerListBuilderT
         }

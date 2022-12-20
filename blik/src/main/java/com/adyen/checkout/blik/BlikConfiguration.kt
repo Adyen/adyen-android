@@ -10,6 +10,8 @@ package com.adyen.checkout.blik
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.components.base.ButtonConfiguration
+import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -17,19 +19,25 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
+@Suppress("LongParameterList")
 class BlikConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration {
+) : Configuration, ButtonConfiguration {
 
     /**
      * Builder to create a [BlikConfiguration].
      */
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<BlikConfiguration, Builder> {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<BlikConfiguration, Builder>,
+        ButtonConfigurationBuilder {
+
+        private var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Constructor for Builder with default values.
@@ -57,6 +65,18 @@ class BlikConfiguration private constructor(
             clientKey
         )
 
+        /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible Is submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
         override fun buildInternal(): BlikConfiguration {
             return BlikConfiguration(
                 shopperLocale = shopperLocale,
@@ -64,6 +84,7 @@ class BlikConfiguration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

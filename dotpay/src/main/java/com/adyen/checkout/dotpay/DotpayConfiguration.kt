@@ -25,6 +25,7 @@ class DotpayConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     override val viewType: IssuerListViewType?,
+    override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
@@ -69,6 +70,7 @@ class DotpayConfiguration private constructor(
                 amount = amount,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
