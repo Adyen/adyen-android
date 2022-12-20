@@ -9,6 +9,7 @@
 package com.adyen.checkout.issuerlist.utils
 
 import android.content.Context
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -21,6 +22,7 @@ class TestIssuerListConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
     override val viewType: IssuerListViewType?,
     override val hideIssuerLogos: Boolean?,
 ) : IssuerListConfiguration() {
@@ -45,6 +47,7 @@ class TestIssuerListConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

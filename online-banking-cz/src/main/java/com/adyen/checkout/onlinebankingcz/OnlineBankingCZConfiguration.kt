@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -22,6 +23,7 @@ class OnlineBankingCZConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -59,6 +61,7 @@ class OnlineBankingCZConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

@@ -2,6 +2,8 @@ package com.adyen.checkout.components.base
 
 import android.content.Context
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -26,6 +28,7 @@ abstract class BaseConfigurationBuilder<
 ) {
 
     protected var isAnalyticsEnabled: Boolean? = null
+    protected var amount: Amount = Amount.EMPTY
 
     init {
         if (!ValidationUtils.isClientKeyValid(clientKey)) {
@@ -59,6 +62,18 @@ abstract class BaseConfigurationBuilder<
      */
     fun setAnalyticsEnabled(isAnalyticsEnabled: Boolean): BuilderT {
         this.isAnalyticsEnabled = isAnalyticsEnabled
+        @Suppress("UNCHECKED_CAST")
+        return this as BuilderT
+    }
+
+    /**
+     * TODO docs
+     */
+    fun setAmount(amount: Amount): BuilderT {
+        if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
+            throw CheckoutException("Currency is not valid.")
+        }
+        this.amount = amount
         @Suppress("UNCHECKED_CAST")
         return this as BuilderT
     }

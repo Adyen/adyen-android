@@ -13,6 +13,7 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -27,6 +28,7 @@ class CardConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
     val isHolderNameRequired: Boolean?,
     val supportedCardTypes: List<CardType>?,
     val shopperReference: String?,
@@ -226,6 +228,7 @@ class CardConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
                 isHolderNameRequired = holderNameRequired,
                 supportedCardTypes = supportedCardTypes,
                 shopperReference = shopperReference,
