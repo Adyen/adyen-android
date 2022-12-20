@@ -115,13 +115,14 @@ internal class GooglePayComponentParamsMapper(
 
     private fun GooglePayComponentParams.override(overrideComponentParams: ComponentParams?): GooglePayComponentParams {
         if (overrideComponentParams == null) return this
+        val amount = if (overrideComponentParams.amount.isEmpty) DEFAULT_AMOUNT else overrideComponentParams.amount
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            amount = amount,
         )
     }
 

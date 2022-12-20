@@ -44,7 +44,7 @@ class GenericComponentParamsMapper(
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount
+            amount = overrideComponentParams.amount,
         )
     }
 }
