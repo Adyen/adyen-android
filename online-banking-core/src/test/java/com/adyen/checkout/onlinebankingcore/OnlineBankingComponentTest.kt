@@ -138,4 +138,10 @@ internal class OnlineBankingComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(onlineBankingDelegate).isConfirmationRequired()
+    }
 }

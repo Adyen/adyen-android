@@ -133,4 +133,10 @@ internal class BlikComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(blikDelegate).isConfirmationRequired()
+    }
 }

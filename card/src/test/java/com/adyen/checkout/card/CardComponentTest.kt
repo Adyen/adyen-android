@@ -129,4 +129,10 @@ internal class CardComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(cardDelegate).isConfirmationRequired()
+    }
 }

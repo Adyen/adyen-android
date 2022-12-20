@@ -131,4 +131,10 @@ internal class GiftCardComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(giftCardDelegate).isConfirmationRequired()
+    }
 }

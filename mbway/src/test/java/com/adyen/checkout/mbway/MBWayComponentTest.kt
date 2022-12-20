@@ -133,4 +133,10 @@ internal class MBWayComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(mbWayDelegate).isConfirmationRequired()
+    }
 }
