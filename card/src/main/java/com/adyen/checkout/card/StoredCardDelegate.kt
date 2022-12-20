@@ -30,6 +30,7 @@ import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -88,7 +89,8 @@ internal class StoredCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
+    private val _viewFlow = MutableStateFlow(CardComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<CardComponentState> = bufferedChannel()
     override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
@@ -397,6 +399,9 @@ internal class StoredCardDelegate(
     private fun getPaymentMethodId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
+
+    @Suppress("USELESS_IS_CHECK")
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {
         removeObserver()

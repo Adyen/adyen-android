@@ -21,6 +21,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -50,7 +51,8 @@ internal class StoredBlikDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
+    private val _viewFlow = MutableStateFlow(BlikComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<BlikPaymentMethod>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitChannel.receiveAsFlow()
@@ -129,6 +131,9 @@ internal class StoredBlikDelegate(
     }
 
     override fun requiresInput(): Boolean = false
+
+    @Suppress("USELESS_IS_CHECK")
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {
         removeObserver()

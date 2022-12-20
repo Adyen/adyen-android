@@ -22,6 +22,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
@@ -54,7 +55,8 @@ internal class DefaultMBWayDelegate(
 
     override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
+    private val _viewFlow = MutableStateFlow(MbWayComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<MBWayPaymentMethod>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = submitChannel.receiveAsFlow()
@@ -149,6 +151,10 @@ internal class DefaultMBWayDelegate(
         )
     }
 
+    private fun componentStateChanged(componentState: PaymentComponentState<MBWayPaymentMethod>) {
+        _componentStateFlow.tryEmit(componentState)
+    }
+
     override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
 
     override fun onSubmit() {
@@ -161,12 +167,11 @@ internal class DefaultMBWayDelegate(
         )
     }
 
+    @Suppress("USELESS_IS_CHECK")
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
+
     override fun onCleared() {
         removeObserver()
-    }
-
-    private fun componentStateChanged(componentState: PaymentComponentState<MBWayPaymentMethod>) {
-        _componentStateFlow.tryEmit(componentState)
     }
 
     companion object {

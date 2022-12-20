@@ -10,4 +10,6 @@ interface ButtonDelegate {
     val submitFlow: Flow<PaymentComponentState<out PaymentMethodDetails>>
 
     fun onSubmit()
+
+    fun isConfirmationRequired(): Boolean
 }
