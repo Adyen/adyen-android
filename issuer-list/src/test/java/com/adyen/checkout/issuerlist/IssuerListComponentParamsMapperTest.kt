@@ -54,7 +54,7 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .setHideIssuerLogos(true)
             .setViewType(IssuerListViewType.SPINNER_VIEW)
-            .setSubmitButtonEnabled(false)
+            .setSubmitButtonVisible(false)
             .build()
 
         val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)

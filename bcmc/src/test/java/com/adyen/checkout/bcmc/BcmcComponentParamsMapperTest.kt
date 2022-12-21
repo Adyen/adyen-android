@@ -56,7 +56,7 @@ internal class BcmcComponentParamsMapperTest {
             .setShopperReference(shopperReference)
             .setHolderNameRequired(true)
             .setShowStorePaymentField(true)
-            .setSubmitButtonEnabled(false)
+            .setSubmitButtonVisible(false)
             .build()
 
         val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)

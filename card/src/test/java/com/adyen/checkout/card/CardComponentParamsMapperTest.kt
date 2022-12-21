@@ -53,7 +53,7 @@ internal class CardComponentParamsMapperTest {
             .setShowStorePaymentField(false)
             .setHideCvc(true)
             .setHideCvcStoredCard(true)
-            .setSubmitButtonEnabled(false)
+            .setSubmitButtonVisible(false)
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
             .setInstallmentConfigurations(installmentConfiguration)
