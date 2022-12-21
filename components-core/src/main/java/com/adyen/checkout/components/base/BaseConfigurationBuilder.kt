@@ -70,8 +70,11 @@ abstract class BaseConfigurationBuilder<
      * TODO docs
      */
     fun setAmount(amount: Amount): BuilderT {
-        if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
-            throw CheckoutException("Currency is not valid.")
+        if (!CheckoutCurrency.isSupported(amount.currency)) {
+            throw CheckoutException("Currency code is not valid.")
+        }
+        if (amount.value < 0) {
+            throw CheckoutException("Value cannot be less than 0.")
         }
         this.amount = amount
         @Suppress("UNCHECKED_CAST")
