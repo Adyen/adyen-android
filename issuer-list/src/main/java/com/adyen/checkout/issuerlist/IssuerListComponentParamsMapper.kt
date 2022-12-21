@@ -33,6 +33,7 @@ class IssuerListComponentParamsMapper(
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
             amount = amount,
+            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
         )

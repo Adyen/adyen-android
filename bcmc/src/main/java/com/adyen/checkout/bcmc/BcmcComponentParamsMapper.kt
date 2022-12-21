@@ -30,6 +30,7 @@ internal class BcmcComponentParamsMapper(
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
             amount = amount,
+            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             isHolderNameRequired = isHolderNameRequired ?: false,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,

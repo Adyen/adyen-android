@@ -11,7 +11,7 @@ package com.adyen.checkout.onlinebankingcore
 import android.content.Context
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
+import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -65,7 +65,7 @@ internal class DefaultOnlineBankingDelegateTest(
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
             termsAndConditionsUrl = TEST_URL,
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
             submitHandler = SubmitHandler(),

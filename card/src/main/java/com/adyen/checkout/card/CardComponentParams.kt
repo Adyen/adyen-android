@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -23,6 +24,7 @@ internal data class CardComponentParams(
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean,
     val isHolderNameRequired: Boolean,
     val supportedCardTypes: List<CardType>,
     val shopperReference: String?,
@@ -33,4 +35,4 @@ internal data class CardComponentParams(
     val kcpAuthVisibility: KCPAuthVisibility,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration,
-) : ComponentParams
+) : ComponentParams, ButtonParams

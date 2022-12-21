@@ -21,8 +21,8 @@ import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
+import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -39,7 +39,7 @@ class GiftCardComponentProvider(
     overrideComponentParams: ComponentParams? = null
 ) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

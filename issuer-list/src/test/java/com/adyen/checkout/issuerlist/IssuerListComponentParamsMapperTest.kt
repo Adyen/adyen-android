@@ -38,7 +38,8 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = false,
-            amount = Amount.EMPTY
+            amount = Amount.EMPTY,
+            isSubmitButtonVisible = true
         )
 
         assertEquals(expected, params)
@@ -53,6 +54,7 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .setHideIssuerLogos(true)
             .setViewType(IssuerListViewType.SPINNER_VIEW)
+            .setSubmitButtonEnabled(false)
             .build()
 
         val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
@@ -65,7 +67,8 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
-            amount = Amount.EMPTY
+            amount = Amount.EMPTY,
+            isSubmitButtonVisible = false
         )
 
         assertEquals(expected, params)
@@ -109,7 +112,8 @@ internal class IssuerListComponentParamsMapperTest {
             amount = Amount(
                 currency = "XCD",
                 value = 4_00L
-            )
+            ),
+            isSubmitButtonVisible = true
         )
 
         assertEquals(expected, params)

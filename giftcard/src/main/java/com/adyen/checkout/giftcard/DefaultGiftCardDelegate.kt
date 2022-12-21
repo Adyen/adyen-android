@@ -12,7 +12,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
@@ -46,7 +46,7 @@ internal class DefaultGiftCardDelegate(
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
-    override val componentParams: GenericComponentParams,
+    override val componentParams: ButtonComponentParams,
     private val cardEncrypter: CardEncrypter,
     private val submitHandler: SubmitHandler
 ) : GiftCardDelegate {

@@ -16,11 +16,12 @@ import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Parcelize
-data class GenericComponentParams(
+data class ButtonComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
-) : ComponentParams
+    override val isSubmitButtonVisible: Boolean,
+) : ComponentParams, ButtonParams

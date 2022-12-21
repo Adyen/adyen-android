@@ -37,7 +37,8 @@ internal class BcmcComponentParamsMapperTest {
             isHolderNameRequired = false,
             shopperReference = null,
             isStorePaymentFieldVisible = false,
-            amount = Amount.EMPTY
+            amount = Amount.EMPTY,
+            isSubmitButtonVisible = true
         )
 
         assertEquals(expected, params)
@@ -55,6 +56,7 @@ internal class BcmcComponentParamsMapperTest {
             .setShopperReference(shopperReference)
             .setHolderNameRequired(true)
             .setShowStorePaymentField(true)
+            .setSubmitButtonEnabled(false)
             .build()
 
         val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
@@ -68,7 +70,8 @@ internal class BcmcComponentParamsMapperTest {
             isHolderNameRequired = true,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
-            amount = Amount.EMPTY
+            amount = Amount.EMPTY,
+            isSubmitButtonVisible = false
         )
 
         assertEquals(expected, params)
@@ -111,7 +114,8 @@ internal class BcmcComponentParamsMapperTest {
             amount = Amount(
                 currency = "USD",
                 value = 25_00L
-            )
+            ),
+            isSubmitButtonVisible = true
         )
 
         assertEquals(expected, params)
