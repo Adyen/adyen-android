@@ -134,10 +134,4 @@ internal class PayByBankComponentTest(
             expectNoEvents()
         }
     }
-
-    @Test
-    fun `when isConfirmationRequired, then delegate is called`() {
-        component.isConfirmationRequired()
-        verify(payByBankDelegate).isConfirmationRequired()
-    }
 }

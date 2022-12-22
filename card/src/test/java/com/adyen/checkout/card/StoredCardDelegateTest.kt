@@ -293,6 +293,38 @@ internal class StoredCardDelegateTest(
         }
     }
 
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        verify(analyticsRepository).sendAnalyticsEvent()
+    }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         cardEncrypter: CardEncrypter = this.cardEncrypter,
@@ -425,12 +457,6 @@ internal class StoredCardDelegateTest(
             panLength = panLength,
             isSelected = isSelected,
         )
-    }
-
-    @Test
-    fun `when delegate is initialized then analytics event is sent`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).sendAnalyticsEvent()
     }
 
     companion object {

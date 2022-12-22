@@ -19,6 +19,7 @@ import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+@Suppress("LongParameterList")
 @Parcelize
 class OnlineBankingCZConfiguration private constructor(
     override val shopperLocale: Locale,
@@ -30,7 +31,8 @@ class OnlineBankingCZConfiguration private constructor(
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
 
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingCZConfiguration, Builder>,
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingCZConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null

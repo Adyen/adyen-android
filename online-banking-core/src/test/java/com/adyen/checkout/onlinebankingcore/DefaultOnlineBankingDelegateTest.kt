@@ -43,33 +43,15 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val context: Context,
+    @Mock private val pdfOpener: PdfOpener,
 ) {
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
-    @Mock
-    private lateinit var context: Context
-
-    @Mock
-    private lateinit var pdfOpener: PdfOpener
-
     @BeforeEach
     fun setup() {
-        val configuration = TestOnlineBankingConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
-        delegate = DefaultOnlineBankingDelegate(
-            observerRepository = PaymentObserverRepository(),
-            pdfOpener = pdfOpener,
-            paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository,
-            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-            termsAndConditionsUrl = TEST_URL,
-            paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
-            submitHandler = SubmitHandler(),
-        )
+        delegate = createOnlineBankingDelegate()
     }
 
     @Nested
@@ -164,6 +146,51 @@ internal class DefaultOnlineBankingDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createOnlineBankingDelegate(
+                configuration = getDefaultTestOnlineBankingConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createOnlineBankingDelegate(
+                configuration = getDefaultTestOnlineBankingConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createOnlineBankingDelegate(
+        configuration: TestOnlineBankingConfiguration = getDefaultTestOnlineBankingConfigurationBuilder().build()
+    ) = DefaultOnlineBankingDelegate(
+        observerRepository = PaymentObserverRepository(),
+        pdfOpener = pdfOpener,
+        paymentMethod = PaymentMethod(),
+        analyticsRepository = analyticsRepository,
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        termsAndConditionsUrl = TEST_URL,
+        paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
+        submitHandler = SubmitHandler(),
+    )
+
+    private fun getDefaultTestOnlineBankingConfigurationBuilder() = TestOnlineBankingConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_URL = "any-url"
