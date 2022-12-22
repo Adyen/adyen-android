@@ -310,8 +310,14 @@ internal class DefaultCardDelegate(
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             componentMode = ComponentMode.DEFAULT,
+            isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes)
         )
     }
+
+    private fun isCardListVisible(
+        cardBrands: List<CardListItem>,
+        detectedCardTypes: List<DetectedCardType>
+    ): Boolean = cardBrands.isNotEmpty() && detectedCardTypes.isEmpty()
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN

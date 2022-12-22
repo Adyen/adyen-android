@@ -185,6 +185,65 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
+        fun `When a card brand is detected, isCardListVisible should be false`() = runTest {
+            val supportedCardTypes = listOf(CardType.VISA)
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .build()
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.updateComponentState(createOutputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
+                with(expectMostRecentItem()) {
+                    assertFalse(isCardListVisible)
+                }
+            }
+        }
+
+        @Test
+        fun `When a card brand is not detected, isCardListVisible should be true`() = runTest {
+            val supportedCardTypes = listOf(CardType.VISA)
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .build()
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            detectCardTypeRepository.detectionResult = TestDetectCardTypeRepository.TestDetectedCardType.EMPTY
+
+            delegate.outputDataFlow.test {
+                delegate.updateComponentState(createOutputData(detectedCardTypes = emptyList()))
+                delegate.updateInputData { /* Empty to trigger an update */ }
+                with(expectMostRecentItem()) {
+                    assertTrue(isCardListVisible)
+                }
+            }
+        }
+
+        @Test
+        fun `When the supported cardlist is empty, isCardListVisible should be true`() = runTest {
+            val supportedCardTypes = emptyList<CardType>()
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .build()
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            detectCardTypeRepository.detectionResult = TestDetectCardTypeRepository.TestDetectedCardType.EMPTY
+
+            delegate.outputDataFlow.test {
+                delegate.updateComponentState(createOutputData(detectedCardTypes = emptyList()))
+                delegate.updateInputData { /* Empty to trigger an update */ }
+                with(expectMostRecentItem()) {
+                    assertTrue(isCardListVisible)
+                }
+            }
+        }
+
+        @Test
         fun `detect card type repository returns supported cards, then output data should contain them`() = runTest {
             val supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
             delegate = createCardDelegate(
@@ -341,7 +400,7 @@ internal class DefaultCardDelegateTest(
 
                 with(expectMostRecentItem()) {
                     assertTrue(isValid)
-                    assertEquals(createOutputData(), this)
+                    assertEquals(createOutputData(isCardListVisible = false), this)
                 }
             }
         }
@@ -460,6 +519,7 @@ internal class DefaultCardDelegateTest(
                     stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                     kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
                     cardBrands = cardBrands,
+                    isCardListVisible = false
                 )
 
                 with(expectMostRecentItem()) {
@@ -810,6 +870,7 @@ internal class DefaultCardDelegateTest(
         isDualBranded: Boolean = false,
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
         cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true, Environment.TEST)),
+        isCardListVisible: Boolean = true
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -837,6 +898,7 @@ internal class DefaultCardDelegateTest(
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             componentMode = ComponentMode.DEFAULT,
+            isCardListVisible = isCardListVisible
         )
     }
 

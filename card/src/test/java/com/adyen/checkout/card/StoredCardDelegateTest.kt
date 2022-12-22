@@ -407,6 +407,7 @@ internal class StoredCardDelegateTest(
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
         cardBrands: List<CardListItem> = emptyList(),
+        isCardListVisible: Boolean = false
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -434,6 +435,7 @@ internal class StoredCardDelegateTest(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,
+            isCardListVisible = isCardListVisible
         )
     }
 

@@ -15,6 +15,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DETECTED_LOCALLY
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DUAL_BRANDED
+import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.EMPTY
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.ERROR
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.FETCHED_FROM_NETWORK
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +48,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
             DETECTED_LOCALLY -> getDetectedCardTypesLocal(supportedCardTypes)
             FETCHED_FROM_NETWORK -> getDetectedCardTypesNetwork(supportedCardTypes)
             DUAL_BRANDED -> getDetectedCardTypesDualBranded(supportedCardTypes)
+            EMPTY -> emptyList()
         } ?: return
 
         _detectedCardTypesFlow.tryEmit(detectedCardTypes)
@@ -57,6 +59,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
         DETECTED_LOCALLY,
         FETCHED_FROM_NETWORK,
         DUAL_BRANDED,
+        EMPTY,
     }
 
     fun getDetectedCardTypesLocal(supportedCardTypes: List<CardType>): List<DetectedCardType> {
