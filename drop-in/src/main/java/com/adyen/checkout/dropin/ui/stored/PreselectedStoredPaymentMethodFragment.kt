@@ -11,17 +11,24 @@ package com.adyen.checkout.dropin.ui.stored
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.ui.PaymentComponentUIState
+import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -33,14 +40,15 @@ import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.viewModelsFactory
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredPaymentViewModel
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 private val TAG = LogUtil.getTag()
 private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
+@Suppress("TooManyFunctions")
 internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
@@ -65,10 +73,37 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
         component =
             getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-        component.observe(viewLifecycleOwner, storedPaymentViewModel::onPaymentComponentEvent)
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         _binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    private fun observeUIState() {
+        val uiStateDelegate = component.delegate as? UIStateDelegate
+
+        if (uiStateDelegate == null) {
+            Log.e(TAG, "Delegate is not type of UIStateDelegate")
+            return
+        }
+
+        uiStateDelegate.uiStateFlow
+            .onEach {
+                setPaymentPendingInitialization(it is PaymentComponentUIState.Loading)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
+        when (event) {
+            is PaymentComponentEvent.StateChanged -> {
+                // no ops
+            }
+            is PaymentComponentEvent.Error -> handleError(event.error)
+            is PaymentComponentEvent.ActionDetails -> {
+                throw IllegalStateException("This event should not be used in drop-in")
+            }
+            is PaymentComponentEvent.Submit -> protocol.requestPaymentsCall(event.state)
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -79,6 +114,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         binding.storedPaymentMethodItem.root.setBackgroundColor(android.R.color.transparent)
         observeState()
         observe()
+        observeUIState()
 
         if (component.requiresInput()) {
             binding.payButton.setText(R.string.continue_button)
@@ -106,17 +142,18 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun observeState() {
-        storedPaymentViewModel.componentFragmentState.observe(viewLifecycleOwner) {
+        storedPaymentViewModel.componentFragmentState.onEach {
             Logger.v(TAG, "state: $it")
-            setPaymentPendingInitialization(it is AwaitingComponentInitialization)
             when (it) {
                 is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
-                is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
-                is PaymentError -> handleError(it.componentError)
+                is PreselectedStoredState.Submit -> {
+                    (component as? ButtonComponent)?.submit()
+                        ?: throw CheckoutException("Component must be of type ButtonComponent.")
+                }
                 else -> { // do nothing
                 }
             }
-        }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun setPaymentPendingInitialization(pending: Boolean) {
@@ -130,9 +167,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun observe() {
-        storedPaymentViewModel.storedPaymentLiveData.observe(
-            viewLifecycleOwner
-        ) {
+        storedPaymentViewModel.storedPaymentLiveData.onEach {
             binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!it.isRemovable)
             when (it) {
                 is StoredCardModel -> {
@@ -155,7 +190,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     )
                 }
             }
-        }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun showRemoveStoredPaymentDialog() {
