@@ -30,6 +30,8 @@ import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.components.util.CurrencyUtils
+import com.adyen.checkout.components.util.isEmpty
+import com.adyen.checkout.components.util.isZero
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope

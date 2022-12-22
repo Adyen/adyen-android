@@ -25,6 +25,7 @@ import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
@@ -70,6 +71,7 @@ internal class TestActionDelegate :
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
         override val isAnalyticsEnabled: Boolean? = null
+        override val amount: Amount = Amount.EMPTY
 
         override fun describeContents(): Int {
             throw NotImplementedError("This method shouldn't be used in tests")

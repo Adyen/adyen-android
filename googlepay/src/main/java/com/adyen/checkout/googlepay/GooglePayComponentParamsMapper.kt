@@ -12,6 +12,7 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.isEmpty
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -46,7 +47,7 @@ internal class GooglePayComponentParamsMapper(
             allowedAuthMethods = getAvailableAuthMethods(),
             allowedCardNetworks = getAvailableCardNetworks(paymentMethod),
             googlePayEnvironment = getGooglePayEnvironment(),
-            amount = amount ?: DEFAULT_AMOUNT,
+            amount = if (amount.isEmpty) DEFAULT_AMOUNT else amount,
             totalPriceStatus = totalPriceStatus ?: DEFAULT_TOTAL_PRICE_STATUS,
             countryCode = countryCode,
             merchantInfo = merchantInfo,
@@ -115,13 +116,14 @@ internal class GooglePayComponentParamsMapper(
 
     private fun GooglePayComponentParams.override(overrideComponentParams: ComponentParams?): GooglePayComponentParams {
         if (overrideComponentParams == null) return this
+        val amount = if (overrideComponentParams.amount.isEmpty) DEFAULT_AMOUNT else overrideComponentParams.amount
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            amount = amount,
         )
     }
 

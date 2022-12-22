@@ -242,6 +242,71 @@ internal class GooglePayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when amount is not set in parent configuration and google pay configuration then params amount should have 0 USD DEFAULT_VALUE`() {
+        val googlePayConfiguration = getGooglePayConfigurationBuilder().build()
+
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        val overrideParams = GenericComponentParams(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
+            amount = Amount.EMPTY
+        )
+
+        val params = GooglePayComponentParamsMapper(overrideParams).mapToParams(googlePayConfiguration, PaymentMethod())
+
+        val expected = getGooglePayComponentParams(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when parent configuration is set with empty amount then params amount should have 0 USD DEFAULT_VALUE`() {
+        // Google Pay Config is set with an amount which will be overridden by parent configuration
+        val googlePayConfiguration = getGooglePayConfigurationBuilder()
+            .setAmount(
+                Amount(
+                    currency = "TRY",
+                    value = 40_00L
+                )
+            )
+            .build()
+
+        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
+        // ComponentParams class can work
+        // parent configuration overrides amount to be Amount.EMPTY
+        val overrideParams = GenericComponentParams(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
+            amount = Amount.EMPTY
+        )
+
+        val params = GooglePayComponentParamsMapper(overrideParams).mapToParams(googlePayConfiguration, PaymentMethod())
+
+        val expected = getGooglePayComponentParams(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1,
+            isAnalyticsEnabled = true,
+            isCreatedByDropIn = false,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun getGooglePayConfigurationBuilder() = GooglePayConfiguration.Builder(
         shopperLocale = Locale.US, environment = Environment.TEST, clientKey = TEST_CLIENT_KEY_1
     ).setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)

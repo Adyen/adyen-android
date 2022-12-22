@@ -24,6 +24,7 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.repository.OrderStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.util.isEmpty
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

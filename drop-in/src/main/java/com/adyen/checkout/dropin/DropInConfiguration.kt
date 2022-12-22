@@ -16,14 +16,10 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.base.AmountConfiguration
-import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
 import com.adyen.checkout.dropin.service.DropInService
@@ -62,7 +58,7 @@ class DropInConfiguration private constructor(
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
-) : Configuration, AmountConfiguration {
+) : Configuration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
         if (availablePaymentConfigs.containsKey(paymentMethod)) {
@@ -77,12 +73,10 @@ class DropInConfiguration private constructor(
      */
     @Suppress("unused", "TooManyFunctions")
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder>,
-        AmountConfigurationBuilder {
+        ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder> {
 
         private val availablePaymentConfigs = HashMap<String, Configuration>()
 
-        private var amount: Amount = Amount.EMPTY
         private var showPreselectedStoredPaymentMethod: Boolean = true
         private var skipListWhenSinglePaymentMethod: Boolean = false
         private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
@@ -113,14 +107,6 @@ class DropInConfiguration private constructor(
             environment,
             clientKey
         )
-
-        override fun setAmount(amount: Amount): Builder {
-            if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
-                throw CheckoutException("Currency is not valid.")
-            }
-            this.amount = amount
-            return this
-        }
 
         /**
          * When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.

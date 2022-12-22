@@ -2,7 +2,9 @@ package com.adyen.checkout.components.base
 
 import android.content.Context
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.ValidationUtils
+import com.adyen.checkout.components.util.validate
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.LocaleUtil
@@ -26,6 +28,7 @@ abstract class BaseConfigurationBuilder<
 ) {
 
     protected var isAnalyticsEnabled: Boolean? = null
+    protected var amount: Amount = Amount.EMPTY
 
     init {
         if (!ValidationUtils.isClientKeyValid(clientKey)) {
@@ -59,6 +62,20 @@ abstract class BaseConfigurationBuilder<
      */
     fun setAnalyticsEnabled(isAnalyticsEnabled: Boolean): BuilderT {
         this.isAnalyticsEnabled = isAnalyticsEnabled
+        @Suppress("UNCHECKED_CAST")
+        return this as BuilderT
+    }
+
+    /**
+     * Sets the amount of the transaction.
+     *
+     * Default is [Amount.EMPTY].
+     *
+     * @param amount Amount of the transaction.
+     */
+    open fun setAmount(amount: Amount): BuilderT {
+        amount.validate()
+        this.amount = amount
         @Suppress("UNCHECKED_CAST")
         return this as BuilderT
     }

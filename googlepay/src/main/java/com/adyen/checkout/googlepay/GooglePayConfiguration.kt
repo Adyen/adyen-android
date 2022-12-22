@@ -12,12 +12,9 @@ package com.adyen.checkout.googlepay
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.AmountConfiguration
-import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.model.BillingAddressParameters
@@ -36,7 +33,7 @@ class GooglePayConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
-    override val amount: Amount?,
+    override val amount: Amount,
     val totalPriceStatus: String?,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,
@@ -50,18 +47,16 @@ class GooglePayConfiguration private constructor(
     val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration, AmountConfiguration {
+) : Configuration {
 
     /**
      * Builder to create a [GooglePayConfiguration].
      */
     @Suppress("TooManyFunctions")
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder>,
-        AmountConfigurationBuilder {
+        ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder> {
         private var merchantAccount: String? = null
         private var googlePayEnvironment: Int? = null
-        private var amount: Amount? = null
         private var merchantInfo: MerchantInfo? = null
         private var countryCode: String? = null
         private var allowedAuthMethods: List<String>? = null
@@ -136,24 +131,6 @@ class GooglePayConfiguration private constructor(
 
         private fun isGooglePayEnvironmentValid(environment: Int): Boolean =
             environment == WalletConstants.ENVIRONMENT_TEST || environment == WalletConstants.ENVIRONMENT_PRODUCTION
-
-        /**
-         * Sets the amount of the transaction.
-         *
-         * Default is 0 USD.
-         *
-         * Check the totalPrice field in the
-         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
-         * for more details.
-         *
-         */
-        override fun setAmount(amount: Amount): Builder {
-            if (!isSupported(amount.currency) || amount.value < 0) {
-                throw CheckoutException("Currency is not valid.")
-            }
-            this.amount = amount
-            return this
-        }
 
         /**
          * Sets the information about the merchant requesting the payment.
@@ -325,6 +302,21 @@ class GooglePayConfiguration private constructor(
         fun setTotalPriceStatus(totalPriceStatus: String): Builder {
             this.totalPriceStatus = totalPriceStatus
             return this
+        }
+
+        /**
+         * Sets the amount of the transaction.
+         *
+         * Default is 0 USD.
+         *
+         * Check the totalPrice field in the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         *
+         * @param amount Amount of the transaction.
+         */
+        override fun setAmount(amount: Amount): Builder {
+            return super.setAmount(amount)
         }
 
         override fun buildInternal(): GooglePayConfiguration {

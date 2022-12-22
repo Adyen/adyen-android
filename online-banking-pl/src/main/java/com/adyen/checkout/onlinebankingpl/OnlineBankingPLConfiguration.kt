@@ -10,6 +10,7 @@ package com.adyen.checkout.onlinebankingpl
 
 import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -23,6 +24,7 @@ class OnlineBankingPLConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
     override val viewType: IssuerListViewType?,
     override val hideIssuerLogos: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
@@ -62,6 +64,7 @@ class OnlineBankingPLConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),

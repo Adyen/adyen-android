@@ -11,13 +11,9 @@ package com.adyen.checkout.bacs
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.AmountConfiguration
-import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -26,16 +22,13 @@ class BacsDirectDebitConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val amount: Amount?,
+    override val amount: Amount,
     override val isAnalyticsEnabled: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration, AmountConfiguration {
+) : Configuration {
 
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder>,
-        AmountConfigurationBuilder {
-
-        internal var amount: Amount? = null
+        ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -72,14 +65,6 @@ class BacsDirectDebitConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
-        }
-
-        override fun setAmount(amount: Amount): Builder {
-            if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
-                throw CheckoutException("Currency is not valid.")
-            }
-            this.amount = amount
-            return this
         }
     }
 }
