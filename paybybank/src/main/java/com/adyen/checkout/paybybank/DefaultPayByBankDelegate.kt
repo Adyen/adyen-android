@@ -21,10 +21,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -42,7 +38,6 @@ internal class DefaultPayByBankDelegate(
     private val paymentMethod: PaymentMethod,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler,
 ) : PayByBankDelegate {
 
     private val inputData = PayByBankInputData()
@@ -60,12 +55,6 @@ internal class DefaultPayByBankDelegate(
 
     private val submitChannel: Channel<PaymentComponentState<PayByBankPaymentMethod>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = submitChannel.receiveAsFlow()
-
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
 
     init {
         val hasIssuers = paymentMethod.issuers?.isNotEmpty() == true
@@ -191,18 +180,8 @@ internal class DefaultPayByBankDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = uiEventChannel,
-            uiStateChannel = _uiStateFlow
-        )
+        submitChannel.trySend(state)
     }
-
-    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
-
-    // Pay by bank should not show a button as the entries navigate to the next step.
-    override fun shouldShowSubmitButton(): Boolean = false
 
     override fun onCleared() {
         removeObserver()
