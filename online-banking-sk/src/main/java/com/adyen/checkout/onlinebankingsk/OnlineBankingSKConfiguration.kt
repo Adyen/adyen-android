@@ -11,6 +11,8 @@ package com.adyen.checkout.onlinebankingsk
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.components.base.ButtonConfiguration
+import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -24,10 +26,15 @@ class OnlineBankingSKConfiguration private constructor(
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration {
+) : Configuration,
+    ButtonConfiguration {
 
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingSKConfiguration, Builder> {
+    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingSKConfiguration, Builder>,
+        ButtonConfigurationBuilder {
+
+        private var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Constructor for Builder with default values.
@@ -55,6 +62,11 @@ class OnlineBankingSKConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
         override fun buildInternal(): OnlineBankingSKConfiguration {
             return OnlineBankingSKConfiguration(
                 shopperLocale = shopperLocale,
@@ -62,6 +74,7 @@ class OnlineBankingSKConfiguration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
