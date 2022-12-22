@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -37,6 +38,7 @@ class GiftCardComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<GiftCardComponentState>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -64,6 +66,8 @@ class GiftCardComponent internal constructor(
         giftCardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
+
+    override fun isConfirmationRequired(): Boolean = giftCardDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

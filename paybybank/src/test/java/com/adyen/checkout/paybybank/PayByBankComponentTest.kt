@@ -101,20 +101,21 @@ internal class PayByBankComponentTest(
     }
 
     @Test
-    fun `when pay by bank delegate view flow emits a value then component view flow should match that value`() = runTest {
-        val payByBankDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
-        whenever(payByBankDelegate.viewFlow) doReturn payByBankDelegateViewFlow
-        component = PayByBankComponent(payByBankDelegate, genericActionDelegate, actionHandlingComponent)
+    fun `when pay by bank delegate view flow emits a value then component view flow should match that value`() =
+        runTest {
+            val payByBankDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
+            whenever(payByBankDelegate.viewFlow) doReturn payByBankDelegateViewFlow
+            component = PayByBankComponent(payByBankDelegate, genericActionDelegate, actionHandlingComponent)
 
-        component.viewFlow.test {
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+            component.viewFlow.test {
+                assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
 
-            payByBankDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
+                payByBankDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+                assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
 
-            expectNoEvents()
+                expectNoEvents()
+            }
         }
-    }
 
     @Test
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
@@ -132,5 +133,11 @@ internal class PayByBankComponentTest(
 
             expectNoEvents()
         }
+    }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(payByBankDelegate).isConfirmationRequired()
     }
 }

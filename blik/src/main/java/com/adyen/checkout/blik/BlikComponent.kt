@@ -14,6 +14,7 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
@@ -39,6 +40,7 @@ class BlikComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<BlikPaymentMethod>>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -70,6 +72,8 @@ class BlikComponent internal constructor(
     override fun requiresInput(): Boolean {
         return blikDelegate.requiresInput()
     }
+
+    override fun isConfirmationRequired(): Boolean = blikDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

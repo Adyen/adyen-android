@@ -1,15 +1,14 @@
-package com.adyen.checkout.components.ui
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 20/12/2022.
+ */
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import kotlinx.coroutines.flow.Flow
+package com.adyen.checkout.components
 
-// TODO docs
-interface ButtonDelegate {
-
-    val submitFlow: Flow<PaymentComponentState<out PaymentMethodDetails>>
-
-    fun onSubmit()
+interface ButtonComponent {
 
     /**
      * TODO: Update docs

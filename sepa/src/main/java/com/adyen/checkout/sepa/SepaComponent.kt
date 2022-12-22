@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -39,6 +40,7 @@ class SepaComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<SepaPaymentMethod>>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -66,6 +68,8 @@ class SepaComponent internal constructor(
         sepaDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
+
+    override fun isConfirmationRequired(): Boolean = sepaDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

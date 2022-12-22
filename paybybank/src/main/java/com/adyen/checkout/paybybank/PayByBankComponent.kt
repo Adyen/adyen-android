@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -36,6 +37,7 @@ class PayByBankComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<PayByBankPaymentMethod>>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -63,6 +65,8 @@ class PayByBankComponent internal constructor(
         payByBankDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
+
+    override fun isConfirmationRequired(): Boolean = payByBankDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

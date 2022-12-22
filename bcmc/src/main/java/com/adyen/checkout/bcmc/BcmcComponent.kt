@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -40,6 +41,7 @@ class BcmcComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<PaymentComponentState<CardPaymentMethod>>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -67,6 +69,8 @@ class BcmcComponent internal constructor(
         bcmcDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
+
+    override fun isConfirmationRequired(): Boolean = bcmcDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

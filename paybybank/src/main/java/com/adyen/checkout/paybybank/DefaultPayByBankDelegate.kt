@@ -24,6 +24,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -54,7 +55,7 @@ internal class DefaultPayByBankDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = _componentStateFlow
 
-    private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow<ComponentViewType?>(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<PayByBankPaymentMethod>> = bufferedChannel()
@@ -197,6 +198,8 @@ internal class DefaultPayByBankDelegate(
             uiStateChannel = _uiStateFlow
         )
     }
+
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {
         removeObserver()

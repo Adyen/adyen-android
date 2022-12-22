@@ -15,6 +15,7 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
+import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -38,6 +39,7 @@ class BacsDirectDebitComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent<BacsDirectDebitComponentState>,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -93,6 +95,8 @@ class BacsDirectDebitComponent internal constructor(
     fun handleBackPress(): Boolean {
         return bacsDelegate.handleBackPress()
     }
+
+    override fun isConfirmationRequired(): Boolean = bacsDelegate.isConfirmationRequired()
 
     override fun onCleared() {
         super.onCleared()

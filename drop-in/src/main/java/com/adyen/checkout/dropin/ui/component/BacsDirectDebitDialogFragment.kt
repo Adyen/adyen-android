@@ -51,7 +51,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
-        if (binding.bacsView.isConfirmationRequired) {
+        if (bacsDirectDebitComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.bacsView.requestFocus()
         }

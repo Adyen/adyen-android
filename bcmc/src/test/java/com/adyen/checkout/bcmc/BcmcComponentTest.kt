@@ -133,4 +133,10 @@ internal class BcmcComponentTest(
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(bcmcDelegate).isConfirmationRequired()
+    }
 }

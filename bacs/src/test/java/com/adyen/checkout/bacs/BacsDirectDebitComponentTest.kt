@@ -143,4 +143,10 @@ internal class BacsDirectDebitComponentTest(
         component.setInputMode()
         verify(bacsDirectDebitDelegate).setMode(BacsDirectDebitMode.INPUT)
     }
+
+    @Test
+    fun `when isConfirmationRequired, then delegate is called`() {
+        component.isConfirmationRequired()
+        verify(bacsDirectDebitDelegate).isConfirmationRequired()
+    }
 }

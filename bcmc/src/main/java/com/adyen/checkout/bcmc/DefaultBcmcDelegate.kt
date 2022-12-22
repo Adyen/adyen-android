@@ -30,6 +30,7 @@ import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -75,7 +76,8 @@ internal class DefaultBcmcDelegate(
 
     override val outputData get() = _outputDataFlow.value
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val submitChannel: Channel<PaymentComponentState<CardPaymentMethod>> = bufferedChannel()
     override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitChannel.receiveAsFlow()
@@ -292,6 +294,8 @@ internal class DefaultBcmcDelegate(
         if (cardNumber.isNullOrEmpty()) return false
         return CardType.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
     }
+
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {
         removeObserver()

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -56,7 +57,7 @@ internal class DefaultBacsDirectDebitDelegate(
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
-    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
+    internal val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
@@ -206,6 +207,8 @@ internal class DefaultBacsDirectDebitDelegate(
             mode = outputData.mode
         )
     }
+
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun onCleared() {
         removeObserver()
