@@ -24,4 +24,13 @@ interface ButtonComponent {
      * not.
      */
     fun isConfirmationRequired(): Boolean
+
+    /**
+     * Triggers submit action manually.
+     *
+     * You can call this function to trigger a payment submission if the component
+     * is ready to make the payment. It will first validate the input
+     * form and highlight validation errors if any.
+     */
+    fun submit()
 }
