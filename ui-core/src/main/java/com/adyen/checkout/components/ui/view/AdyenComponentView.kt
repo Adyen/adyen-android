@@ -145,7 +145,7 @@ class AdyenComponentView @JvmOverloads constructor(
     }
 
     private fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = !pending
+        binding.payButton.isVisible = binding.payButton.isVisible && !pending
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 
