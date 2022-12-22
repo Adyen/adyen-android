@@ -53,6 +53,7 @@ internal class CardComponentParamsMapperTest {
             .setShowStorePaymentField(false)
             .setHideCvc(true)
             .setHideCvcStoredCard(true)
+            .setSubmitButtonVisible(false)
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
             .setInstallmentConfigurations(installmentConfiguration)
@@ -69,6 +70,7 @@ internal class CardComponentParamsMapperTest {
             supportedCardTypes = listOf(CardType.DINERS, CardType.MAESTRO),
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
+            isSubmitButtonVisible = false,
             isHideCvc = true,
             isHideCvcStoredCard = true,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
@@ -191,6 +193,7 @@ internal class CardComponentParamsMapperTest {
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         isHolderNameRequired: Boolean = false,
+        isSubmitButtonVisible: Boolean = true,
         supportedCardTypes: List<CardType> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = true,
@@ -207,6 +210,7 @@ internal class CardComponentParamsMapperTest {
         isAnalyticsEnabled = isAnalyticsEnabled,
         isCreatedByDropIn = isCreatedByDropIn,
         isHolderNameRequired = isHolderNameRequired,
+        isSubmitButtonVisible = isSubmitButtonVisible,
         supportedCardTypes = supportedCardTypes,
         shopperReference = shopperReference,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,

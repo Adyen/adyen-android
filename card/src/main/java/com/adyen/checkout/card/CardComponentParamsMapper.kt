@@ -49,6 +49,7 @@ internal class CardComponentParamsMapper(
             isCreatedByDropIn = false,
             amount = amount,
             isHolderNameRequired = isHolderNameRequired ?: false,
+            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             supportedCardTypes = supportedCardTypes,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,

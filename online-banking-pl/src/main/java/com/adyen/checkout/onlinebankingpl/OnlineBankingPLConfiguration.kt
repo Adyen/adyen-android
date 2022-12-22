@@ -26,6 +26,7 @@ class OnlineBankingPLConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     override val viewType: IssuerListViewType?,
+    override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
@@ -66,6 +67,7 @@ class OnlineBankingPLConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
                 viewType = viewType,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 hideIssuerLogos = hideIssuerLogos,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )

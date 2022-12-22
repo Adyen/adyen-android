@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -24,7 +25,8 @@ data class BcmcComponentParams(
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean,
     val isHolderNameRequired: Boolean,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean,
-) : ComponentParams
+) : ComponentParams, ButtonParams

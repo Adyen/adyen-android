@@ -13,7 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
-    override val componentParams: GenericComponentParams,
+    override val componentParams: ButtonComponentParams,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler,
 ) : MBWayDelegate {

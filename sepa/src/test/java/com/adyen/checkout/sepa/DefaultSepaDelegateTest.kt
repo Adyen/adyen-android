@@ -2,7 +2,7 @@ package com.adyen.checkout.sepa
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
+import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -42,7 +42,7 @@ internal class DefaultSepaDelegateTest(
         delegate = DefaultSepaDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler()
         )

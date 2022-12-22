@@ -9,6 +9,7 @@
 package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -24,6 +25,7 @@ data class IssuerListComponentParams(
     override val isAnalyticsEnabled: Boolean,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean,
     val viewType: IssuerListViewType,
     val hideIssuerLogos: Boolean,
-) : ComponentParams
+) : ComponentParams, ButtonParams

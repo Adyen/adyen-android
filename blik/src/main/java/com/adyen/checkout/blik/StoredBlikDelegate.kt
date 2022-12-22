@@ -12,7 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
-    override val componentParams: GenericComponentParams,
+    override val componentParams: ButtonComponentParams,
     val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler

@@ -17,7 +17,7 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.GenericComponentParams
+import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
@@ -256,7 +256,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         }
     }
 
-    private fun setAmountConsentSwitchText(componentParams: GenericComponentParams) {
+    private fun setAmountConsentSwitchText(componentParams: ButtonComponentParams) {
         if (!componentParams.amount.isEmpty) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 componentParams.amount,

@@ -10,7 +10,7 @@ package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
+import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -59,7 +59,7 @@ internal class DefaultGiftCardDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             publicKeyRepository = publicKeyRepository,
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler(),

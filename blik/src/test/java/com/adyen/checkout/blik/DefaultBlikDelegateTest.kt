@@ -10,7 +10,7 @@ package com.adyen.checkout.blik
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
+import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
@@ -50,7 +50,7 @@ internal class DefaultBlikDelegateTest(
         ).build()
         delegate = DefaultBlikDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler()
