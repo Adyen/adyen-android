@@ -73,7 +73,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     ILS(2),
     INR(2),
     IQD(3),
-    ISK(0),
+    ISK(2),
     JMD(2),
     JOD(3),
     JPY(0),
