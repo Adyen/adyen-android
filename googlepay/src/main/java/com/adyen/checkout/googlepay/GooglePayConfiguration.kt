@@ -304,6 +304,21 @@ class GooglePayConfiguration private constructor(
             return this
         }
 
+        /**
+         * Sets the amount of the transaction.
+         *
+         * Default is 0 USD.
+         *
+         * Check the totalPrice field in the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         *
+         * @param amount Amount of the transaction.
+         */
+        override fun setAmount(amount: Amount): Builder {
+            return super.setAmount(amount)
+        }
+
         override fun buildInternal(): GooglePayConfiguration {
             return GooglePayConfiguration(
                 shopperLocale = shopperLocale,

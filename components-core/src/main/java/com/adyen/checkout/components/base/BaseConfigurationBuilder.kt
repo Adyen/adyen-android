@@ -3,8 +3,8 @@ package com.adyen.checkout.components.base
 import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.ValidationUtils
+import com.adyen.checkout.components.util.validate
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.LocaleUtil
@@ -67,15 +67,14 @@ abstract class BaseConfigurationBuilder<
     }
 
     /**
-     * TODO docs
+     * Sets the amount of the transaction.
+     *
+     * Default is [Amount.EMPTY].
+     *
+     * @param amount Amount of the transaction.
      */
-    fun setAmount(amount: Amount): BuilderT {
-        if (!CheckoutCurrency.isSupported(amount.currency)) {
-            throw CheckoutException("Currency code is not valid.")
-        }
-        if (amount.value < 0) {
-            throw CheckoutException("Value cannot be less than 0.")
-        }
+    open fun setAmount(amount: Amount): BuilderT {
+        amount.validate()
         this.amount = amount
         @Suppress("UNCHECKED_CAST")
         return this as BuilderT

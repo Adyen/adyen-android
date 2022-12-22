@@ -9,6 +9,7 @@
 package com.adyen.checkout.giftcard.util
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.isEmpty
 import kotlin.math.min
 
 object GiftCardBalanceUtils {

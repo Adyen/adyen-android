@@ -7,7 +7,8 @@
  */
 package com.adyen.checkout.components.model.payments
 
-import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.EMPTY_CURRENCY
+import com.adyen.checkout.components.util.EMPTY_VALUE
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
@@ -21,15 +22,7 @@ data class Amount(
     var value: Long = 0L,
 ) : ModelObject() {
 
-    val isEmpty: Boolean
-        get() = currency == EMPTY_CURRENCY || value == EMPTY_VALUE
-
-    val isZero: Boolean
-        get() = CheckoutCurrency.isSupported(currency) && value == 0L
-
     companion object {
-        private const val EMPTY_CURRENCY = "NONE"
-        private const val EMPTY_VALUE = -1L
         private const val CURRENCY = "currency"
         private const val VALUE = "value"
 
