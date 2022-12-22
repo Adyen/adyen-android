@@ -693,6 +693,8 @@ internal class DefaultCardDelegate(
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
+    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null

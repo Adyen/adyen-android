@@ -297,6 +297,8 @@ internal class DefaultBcmcDelegate(
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
+    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
     override fun onCleared() {
         removeObserver()
     }

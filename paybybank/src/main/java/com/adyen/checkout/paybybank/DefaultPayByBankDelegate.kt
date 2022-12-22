@@ -201,6 +201,9 @@ internal class DefaultPayByBankDelegate(
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
+    // Pay by bank should not show a button as the entries navigate to the next step.
+    override fun shouldShowSubmitButton(): Boolean = false
+
     override fun onCleared() {
         removeObserver()
     }
