@@ -8,23 +8,16 @@
 
 package com.adyen.checkout.dropin.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.mapStoredModel
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.Idle
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
@@ -36,93 +29,30 @@ internal class PreselectedStoredPaymentViewModel(
         private val TAG = LogUtil.getTag()
     }
 
-    private val storedPaymentMethodMutableLiveData: MutableLiveData<StoredPaymentMethodModel> = MutableLiveData()
-    val storedPaymentLiveData: LiveData<StoredPaymentMethodModel> = storedPaymentMethodMutableLiveData
-
-    private val componentFragmentStateMutable = MutableLiveData<PreselectedStoredState>(Idle)
-    val componentFragmentState: LiveData<PreselectedStoredState> = componentFragmentStateMutable
-
-    private var componentState: PaymentComponentState<*>? = null
-    private var lastComponentError: ComponentError? = null
-
-    init {
-        storedPaymentMethodMutableLiveData.value = storedPaymentMethod.mapStoredModel(
+    private val storedPaymentMethodMutableLiveData = MutableStateFlow(
+        storedPaymentMethod.mapStoredModel(
             dropInConfiguration.isRemovingStoredPaymentMethodsEnabled,
             dropInConfiguration.environment,
         )
-    }
+    )
+    val storedPaymentLiveData: Flow<StoredPaymentMethodModel> = storedPaymentMethodMutableLiveData
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> componentStateChanged(event.state)
-            is PaymentComponentEvent.Error -> componentErrorOccurred(event.error)
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> {
-                // TODO improve after COAND-691
-            }
-        }
-    }
-
-    private fun componentStateChanged(componentState: PaymentComponentState<*>) {
-        val fragmentState = componentFragmentStateMutable.value
-        Logger.v(
-            TAG,
-            "componentStateChanged - componentState.isReady: ${componentState.isReady} - " +
-                "fragmentState: $fragmentState"
-        )
-        this.componentState = componentState
-        if (!componentRequiresInput && componentState.isReady && fragmentState is AwaitingComponentInitialization) {
-            val state = RequestPayment(componentState)
-            Logger.v(TAG, "componentStateChanged - setting fragment state $state")
-            componentFragmentStateMutable.value = state
-        }
-    }
+    private val componentFragmentStateMutable = MutableStateFlow<PreselectedStoredState>(Idle)
+    val componentFragmentState: Flow<PreselectedStoredState> = componentFragmentStateMutable
 
     fun payButtonClicked() {
-        val fragmentState = componentFragmentStateMutable.value
-        val componentState = componentState
-        Logger.v(
-            TAG,
-            "payButtonClicked - componentState.isReady: ${componentState?.isReady} - " +
-                "fragmentState: $fragmentState"
-        )
-        // check whether an error has occurred already before Pay was clicked
-        val componentError = lastComponentError
-        val state = when {
-            componentRequiresInput -> ShowStoredPaymentDialog
-            componentError != null -> PaymentError(componentError)
-            componentState?.isReady == true -> RequestPayment(componentState)
-            else -> AwaitingComponentInitialization
+        if (componentRequiresInput) {
+            componentFragmentStateMutable.tryEmit(ShowStoredPaymentDialog)
+            return
         }
-        Logger.v(TAG, "payButtonClicked - setting fragment state $state")
-        componentFragmentStateMutable.value = state
-    }
-
-    private fun componentErrorOccurred(componentError: ComponentError) {
-        lastComponentError = componentError
-        val fragmentState = componentFragmentStateMutable.value
-        val componentState = componentState
-        Logger.v(
-            TAG,
-            "componentErrorOccurred - componentState.isReady: ${componentState?.isReady} - " +
-                "fragmentState: $fragmentState"
-        )
-        if (fragmentState is AwaitingComponentInitialization) {
-            val state = PaymentError(componentError)
-            Logger.v(TAG, "componentErrorOccurred - setting fragment state $state")
-            componentFragmentStateMutable.value = state
-        }
+        componentFragmentStateMutable.tryEmit(PreselectedStoredState.Submit)
     }
 }
 
 sealed class PreselectedStoredState {
     object Idle : PreselectedStoredState()
     object ShowStoredPaymentDialog : PreselectedStoredState()
-    object AwaitingComponentInitialization : PreselectedStoredState()
-    class RequestPayment(val componentState: PaymentComponentState<*>) : PreselectedStoredState()
-    class PaymentError(val componentError: ComponentError) : PreselectedStoredState()
+    object Submit : PreselectedStoredState()
 
     override fun toString(): String = this::class.simpleName ?: ""
 }

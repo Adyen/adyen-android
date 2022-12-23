@@ -31,6 +31,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -148,5 +149,19 @@ internal class BacsDirectDebitComponentTest(
     fun `when isConfirmationRequired, then delegate is called`() {
         component.isConfirmationRequired()
         verify(bacsDirectDebitDelegate).isConfirmationRequired()
+    }
+
+    @Test
+    fun `when submit is called and active delegate is the payment delegate, then delegate onSubmit is called`() {
+        whenever(component.delegate).thenReturn(bacsDirectDebitDelegate)
+        component.submit()
+        verify(bacsDirectDebitDelegate).onSubmit()
+    }
+
+    @Test
+    fun `when submit is called and active delegate is the action delegate, then delegate onSubmit is not called`() {
+        whenever(component.delegate).thenReturn(genericActionDelegate)
+        component.submit()
+        verify(bacsDirectDebitDelegate, never()).onSubmit()
     }
 }

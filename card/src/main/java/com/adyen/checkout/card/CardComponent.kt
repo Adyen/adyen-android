@@ -22,6 +22,7 @@ import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -77,6 +78,10 @@ class CardComponent internal constructor(
     override fun requiresInput() = cardDelegate.requiresInput()
 
     override fun isConfirmationRequired(): Boolean = cardDelegate.isConfirmationRequired()
+
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.toActionCallback
+import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
@@ -64,6 +65,10 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     }
 
     override fun isConfirmationRequired(): Boolean = onlineBankingDelegate.isConfirmationRequired()
+
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+    }
 
     override fun onCleared() {
         super.onCleared()
