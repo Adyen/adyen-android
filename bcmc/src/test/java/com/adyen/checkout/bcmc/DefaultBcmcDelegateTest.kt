@@ -47,7 +47,6 @@ internal class DefaultBcmcDelegateTest(
 
     private lateinit var testPublicKeyRepository: TestPublicKeyRepository
     private lateinit var cardEncrypter: TestCardEncrypter
-    private lateinit var configuration: BcmcConfiguration
     private lateinit var cardValidationMapper: CardValidationMapper
     private lateinit var delegate: DefaultBcmcDelegate
 
@@ -55,22 +54,8 @@ internal class DefaultBcmcDelegateTest(
     fun setup() {
         testPublicKeyRepository = TestPublicKeyRepository()
         cardEncrypter = TestCardEncrypter()
-        configuration = BcmcConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
         cardValidationMapper = CardValidationMapper()
-        delegate = DefaultBcmcDelegate(
-            observerRepository = PaymentObserverRepository(),
-            paymentMethod = PaymentMethod(),
-            publicKeyRepository = testPublicKeyRepository,
-            componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
-            cardValidationMapper = cardValidationMapper,
-            cardEncrypter = cardEncrypter,
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
-        )
+        delegate = createBcmcDelegate()
     }
 
     @Test
@@ -302,6 +287,32 @@ internal class DefaultBcmcDelegateTest(
         verify(analyticsRepository).sendAnalyticsEvent()
     }
 
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createBcmcDelegate(
+                configuration = getDefaultBcmcConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createBcmcDelegate(
+                configuration = getDefaultBcmcConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
     private fun createOutputData(
         cardNumber: FieldState<String>,
         expiryDate: FieldState<ExpiryDate>,
@@ -315,6 +326,25 @@ internal class DefaultBcmcDelegateTest(
             isStoredPaymentMethodEnable
         )
     }
+
+    private fun createBcmcDelegate(
+        configuration: BcmcConfiguration = getDefaultBcmcConfigurationBuilder().build()
+    ) = DefaultBcmcDelegate(
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = PaymentMethod(),
+        publicKeyRepository = testPublicKeyRepository,
+        componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
+        cardValidationMapper = cardValidationMapper,
+        cardEncrypter = cardEncrypter,
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler(),
+    )
+
+    private fun getDefaultBcmcConfigurationBuilder() = BcmcConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

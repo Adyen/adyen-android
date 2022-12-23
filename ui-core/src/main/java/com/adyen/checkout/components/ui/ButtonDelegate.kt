@@ -25,4 +25,6 @@ interface ButtonDelegate {
      * not.
      */
     fun isConfirmationRequired(): Boolean
+
+    fun shouldShowSubmitButton(): Boolean
 }

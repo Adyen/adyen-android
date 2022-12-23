@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -34,18 +35,7 @@ internal class DefaultSepaDelegateTest(
 
     @BeforeEach
     fun before() {
-        val configuration = SepaConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
-        delegate = DefaultSepaDelegate(
-            observerRepository = PaymentObserverRepository(),
-            paymentMethod = PaymentMethod(),
-            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler()
-        )
+        delegate = createSepaDelegate()
     }
 
     @Nested
@@ -94,6 +84,48 @@ internal class DefaultSepaDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createSepaDelegate(
+                configuration = getDefaultSepaConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            Assertions.assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createSepaDelegate(
+                configuration = getDefaultSepaConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createSepaDelegate(
+        configuration: SepaConfiguration = getDefaultSepaConfigurationBuilder().build()
+    ) = DefaultSepaDelegate(
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = PaymentMethod(),
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler()
+    )
+
+    private fun getDefaultSepaConfigurationBuilder() = SepaConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

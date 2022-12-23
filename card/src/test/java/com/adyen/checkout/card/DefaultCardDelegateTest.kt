@@ -706,6 +706,32 @@ internal class DefaultCardDelegateTest(
         verify(analyticsRepository).sendAnalyticsEvent()
     }
 
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,

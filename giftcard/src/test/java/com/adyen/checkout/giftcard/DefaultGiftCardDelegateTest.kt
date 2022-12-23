@@ -50,20 +50,7 @@ internal class DefaultGiftCardDelegateTest(
     fun before() {
         cardEncrypter = TestCardEncrypter()
         publicKeyRepository = TestPublicKeyRepository()
-        val configuration = GiftCardConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
-        delegate = DefaultGiftCardDelegate(
-            observerRepository = PaymentObserverRepository(),
-            paymentMethod = PaymentMethod(),
-            publicKeyRepository = publicKeyRepository,
-            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-            cardEncrypter = cardEncrypter,
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
-        )
+        delegate = createGiftCardDelegate()
     }
 
     @Test
@@ -151,6 +138,50 @@ internal class DefaultGiftCardDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createGiftCardDelegate(
+                configuration = getDefaultGiftCardConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createGiftCardDelegate(
+                configuration = getDefaultGiftCardConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createGiftCardDelegate(
+        configuration: GiftCardConfiguration = getDefaultGiftCardConfigurationBuilder().build()
+    ) = DefaultGiftCardDelegate(
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = PaymentMethod(),
+        publicKeyRepository = publicKeyRepository,
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        cardEncrypter = cardEncrypter,
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler(),
+    )
+
+    private fun getDefaultGiftCardConfigurationBuilder() = GiftCardConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

@@ -45,18 +45,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = BacsDirectDebitConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
-        delegate = DefaultBacsDirectDebitDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler()
-        )
+        delegate = createBacsDelegate()
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -429,6 +418,48 @@ internal class DefaultBacsDirectDebitDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createBacsDelegate(
+                configuration = getDefaultBacsConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createBacsDelegate(
+                configuration = getDefaultBacsConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createBacsDelegate(
+        configuration: BacsDirectDebitConfiguration = getDefaultBacsConfigurationBuilder().build()
+    ) = DefaultBacsDirectDebitDelegate(
+        observerRepository = PaymentObserverRepository(),
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        paymentMethod = PaymentMethod(),
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler()
+    )
+
+    private fun getDefaultBacsConfigurationBuilder() = BacsDirectDebitConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

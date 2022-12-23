@@ -117,7 +117,8 @@ class AdyenComponentView @JvmOverloads constructor(
 
         componentView.initView(delegate, coroutineScope, localizedContext)
 
-        if ((delegate as? ButtonDelegate)?.isConfirmationRequired() == true) {
+        val buttonDelegate = (delegate as? ButtonDelegate)
+        if (buttonDelegate?.isConfirmationRequired() == true) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
                 // TODO check if setPaymentPendingInitialization has to be called on each event?
@@ -133,9 +134,9 @@ class AdyenComponentView @JvmOverloads constructor(
                 }
             }?.launchIn(coroutineScope)
 
-            binding.payButton.isVisible = true
+            binding.payButton.isVisible = buttonDelegate.shouldShowSubmitButton()
             binding.payButton.setOnClickListener {
-                (delegate as? ButtonDelegate)?.onSubmit()
+                buttonDelegate.onSubmit()
             }
         } else {
             binding.payButton.isVisible = false
@@ -144,7 +145,7 @@ class AdyenComponentView @JvmOverloads constructor(
     }
 
     private fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = !pending
+        binding.payButton.isVisible = binding.payButton.isVisible && !pending
         if (pending) binding.progressBar.show() else binding.progressBar.hide()
     }
 

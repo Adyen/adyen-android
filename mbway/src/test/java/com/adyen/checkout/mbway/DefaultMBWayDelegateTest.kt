@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -37,15 +38,12 @@ internal class DefaultMBWayDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
-    private val configuration =
-        MBWayConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
-    private val delegate = DefaultMBWayDelegate(
-        observerRepository = PaymentObserverRepository(),
-        paymentMethod = PaymentMethod(),
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-        analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler(),
-    )
+    private lateinit var delegate: DefaultMBWayDelegate
+
+    @BeforeEach
+    fun beforeEach() {
+        delegate = createMBWayDelegate()
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -168,6 +166,48 @@ internal class DefaultMBWayDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createMBWayDelegate(
+                configuration = getDefaultMBWayConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createMBWayDelegate(
+                configuration = getDefaultMBWayConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createMBWayDelegate(
+        configuration: MBWayConfiguration = getDefaultMBWayConfigurationBuilder().build()
+    ) = DefaultMBWayDelegate(
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = PaymentMethod(),
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler(),
+    )
+
+    private fun getDefaultMBWayConfigurationBuilder() = MBWayConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

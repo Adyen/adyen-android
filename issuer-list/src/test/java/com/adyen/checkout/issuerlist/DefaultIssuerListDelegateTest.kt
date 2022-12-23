@@ -41,24 +41,11 @@ internal class DefaultIssuerListDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
-    private val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
-        shopperLocale = Locale.US,
-        environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY_1
-    )
-        .build()
-
     private lateinit var delegate: DefaultIssuerListDelegate<*>
 
     @BeforeEach
     fun beforeEach() {
-        delegate = DefaultIssuerListDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler()
-        ) { TestIssuerPaymentMethod() }
+        delegate = createIssuerListDelegate()
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -191,6 +178,50 @@ internal class DefaultIssuerListDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createIssuerListDelegate(
+                configuration = getDefaultTestIssuerListConfigurationBuilder()
+                    .setViewType(IssuerListViewType.SPINNER_VIEW)
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createIssuerListDelegate(
+                configuration = getDefaultTestIssuerListConfigurationBuilder()
+                    .setViewType(IssuerListViewType.SPINNER_VIEW)
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createIssuerListDelegate(
+        configuration: TestIssuerListConfiguration = getDefaultTestIssuerListConfigurationBuilder().build()
+    ) = DefaultIssuerListDelegate(
+        observerRepository = PaymentObserverRepository(),
+        componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
+        paymentMethod = PaymentMethod(),
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler()
+    ) { TestIssuerPaymentMethod() }
+
+    private fun getDefaultTestIssuerListConfigurationBuilder() = TestIssuerListConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY_1
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

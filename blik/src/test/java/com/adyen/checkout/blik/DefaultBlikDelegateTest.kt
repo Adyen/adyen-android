@@ -43,18 +43,7 @@ internal class DefaultBlikDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = BlikConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
-        delegate = DefaultBlikDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler()
-        )
+        delegate = createBlikDelegate()
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -175,6 +164,48 @@ internal class DefaultBlikDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createBlikDelegate(
+                configuration = getDefaultBlikConfigurationBuilder()
+                    .setSubmitButtonVisible(false)
+                    .build()
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createBlikDelegate(
+                configuration = getDefaultBlikConfigurationBuilder()
+                    .setSubmitButtonVisible(true)
+                    .build()
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    private fun createBlikDelegate(
+        configuration: BlikConfiguration = getDefaultBlikConfigurationBuilder().build()
+    ) = DefaultBlikDelegate(
+        observerRepository = PaymentObserverRepository(),
+        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        paymentMethod = PaymentMethod(),
+        analyticsRepository = analyticsRepository,
+        submitHandler = SubmitHandler()
+    )
+
+    private fun getDefaultBlikConfigurationBuilder() = BlikConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
