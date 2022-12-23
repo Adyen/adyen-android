@@ -57,13 +57,13 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
         }
 
         /**
-         * Sets whether the logos should be shows next to the issuers name.
+         * Sets whether the logos should be shown next to the issuers name.
          *
          * Default is false.
          *
          * @param hideIssuerLogos if issuer logos should be hidden or not.
          */
-        fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilderT {
+        open fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilderT {
             this.hideIssuerLogos = hideIssuerLogos
             @Suppress("UNCHECKED_CAST")
             return this as IssuerListBuilderT
