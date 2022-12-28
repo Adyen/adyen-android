@@ -22,6 +22,7 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.ui.util.PayButtonFormatter
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -137,11 +138,15 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private fun updateButtonState(buttonState: ButtonState) {
         setPaymentPendingInitialization(buttonState is ButtonState.Loading)
         when (buttonState) {
-            is ButtonState.TextOnly -> {
+            is ButtonState.ContinueButton -> {
                 binding.payButton.setText(buttonState.labelResId)
             }
-            is ButtonState.TextWithAmount -> {
-                binding.payButton.text = getString(buttonState.labelResId, buttonState.amountString)
+            is ButtonState.PayButton -> {
+                binding.payButton.text = PayButtonFormatter.getPayButtonText(
+                    amount = buttonState.amount,
+                    locale = buttonState.shopperLocale,
+                    localizedContext = requireContext(),
+                )
             }
             is ButtonState.Loading -> {
                 // already handled
