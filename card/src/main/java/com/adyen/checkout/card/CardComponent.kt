@@ -75,8 +75,6 @@ class CardComponent internal constructor(
         genericActionDelegate.removeObserver()
     }
 
-    override fun requiresInput() = cardDelegate.requiresInput()
-
     override fun isConfirmationRequired(): Boolean = cardDelegate.isConfirmationRequired()
 
     override fun submit() {

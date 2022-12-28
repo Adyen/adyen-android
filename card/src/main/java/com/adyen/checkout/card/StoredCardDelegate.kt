@@ -307,10 +307,6 @@ internal class StoredCardDelegate(
         return componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
 
-    override fun requiresInput(): Boolean {
-        return !componentParams.isHideCvcStoredCard
-    }
-
     private fun mapComponentState(
         encryptedCard: EncryptedCard,
         cardNumber: String,

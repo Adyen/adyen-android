@@ -29,7 +29,5 @@ interface CardDelegate :
 
     val exceptionFlow: Flow<CheckoutException>
 
-    fun requiresInput(): Boolean
-
     fun updateInputData(update: CardInputData.() -> Unit)
 }

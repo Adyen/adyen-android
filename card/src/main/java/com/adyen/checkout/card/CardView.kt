@@ -717,9 +717,7 @@ internal class CardView @JvmOverloads constructor(
         binding.textInputLayoutPostalCode.isVisible = false
         binding.addressFormInput.isVisible = false
 
-        if (cardDelegate.requiresInput()) {
-            binding.textInputLayoutSecurityCode.editText?.requestFocus()
-        }
+        binding.textInputLayoutSecurityCode.takeIf { isVisible }?.requestFocus()
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {

@@ -25,11 +25,4 @@ interface PaymentComponent<ComponentStateT : PaymentComponentState<*>> : Compone
 
     // TODO documentation
     fun removeObserver()
-
-    /**
-     * Checks if the component in its current configuration needs any input from the user to make the /payments call.
-     *
-     * @return If there is required user input or not.
-     */
-    fun requiresInput(): Boolean = true
 }

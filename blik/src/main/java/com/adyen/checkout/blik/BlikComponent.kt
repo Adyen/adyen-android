@@ -70,10 +70,6 @@ class BlikComponent internal constructor(
         genericActionDelegate.removeObserver()
     }
 
-    override fun requiresInput(): Boolean {
-        return blikDelegate.requiresInput()
-    }
-
     override fun isConfirmationRequired(): Boolean = blikDelegate.isConfirmationRequired()
 
     override fun submit() {

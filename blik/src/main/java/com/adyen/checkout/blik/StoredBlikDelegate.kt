@@ -130,8 +130,6 @@ internal class StoredBlikDelegate(
         )
     }
 
-    override fun requiresInput(): Boolean = false
-
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible

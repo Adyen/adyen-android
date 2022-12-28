@@ -502,10 +502,6 @@ internal class DefaultCardDelegate(
         return componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW
     }
 
-    override fun requiresInput(): Boolean {
-        return true
-    }
-
     private fun getHolderNameUIState(): InputFieldUIState {
         return if (isHolderNameRequired()) InputFieldUIState.REQUIRED else InputFieldUIState.HIDDEN
     }
