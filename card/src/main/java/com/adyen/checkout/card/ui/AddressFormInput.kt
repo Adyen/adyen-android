@@ -46,6 +46,8 @@ class AddressFormInput @JvmOverloads constructor(
 
     private lateinit var delegate: AddressDelegate
 
+    private var currentSpec: AddressSpecification? = null
+
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
 
@@ -120,6 +122,7 @@ class AddressFormInput @JvmOverloads constructor(
                     }
                     populateFormFields(AddressSpecification.fromString(selectedCountryCode))
                 }
+                textInputLayoutCountry?.hideError()
             }
         }
     }
@@ -140,8 +143,17 @@ class AddressFormInput @JvmOverloads constructor(
         this.localizedContext = localizedContext
     }
 
+    @Suppress("LongMethod")
     internal fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
         var isErrorFocused = isErrorFocusedPreviously
+        val countryValidation = delegate.addressOutputData.country.validation
+        if (countryValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutCountry?.requestFocus()
+            }
+            textInputLayoutCountry?.showError(localizedContext.getString(countryValidation.reason))
+        }
         val streetValidation = delegate.addressOutputData.street.validation
         if (streetValidation is Validation.Invalid) {
             if (!isErrorFocused) {
@@ -188,19 +200,21 @@ class AddressFormInput @JvmOverloads constructor(
                 @Suppress("UNUSED_VALUE")
                 isErrorFocused = true
                 textInputLayoutProvinceTerritory?.requestFocus()
+                textInputLayoutState?.requestFocus()
             }
             textInputLayoutProvinceTerritory?.showError(localizedContext.getString(provinceTerritoryValidation.reason))
+            textInputLayoutState?.showError(localizedContext.getString(provinceTerritoryValidation.reason))
         }
     }
 
     private fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
-        countryList.firstOrNull { it.selected }?.let {
-            val selectedSpecification = AddressSpecification.fromString(it.code)
-            if (formContainer.childCount == 0) {
-                autoCompleteTextViewCountry.setText(it.name)
-                populateFormFields(selectedSpecification)
-            }
+        val selectedCountry = countryList.firstOrNull { it.selected }
+        val selectedSpecification = AddressSpecification.fromString(selectedCountry?.code)
+        if (selectedSpecification != currentSpec) {
+            currentSpec = selectedSpecification
+            autoCompleteTextViewCountry.setText(selectedCountry?.name)
+            populateFormFields(selectedSpecification)
         }
     }
 
@@ -408,6 +422,7 @@ class AddressFormInput @JvmOverloads constructor(
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 delegate.updateAddressInputData { stateOrProvince = statesAdapter.getItem(position).code }
+                textInputLayoutState?.hideError()
             }
         }
     }
