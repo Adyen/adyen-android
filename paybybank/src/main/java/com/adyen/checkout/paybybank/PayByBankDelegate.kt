@@ -25,8 +25,6 @@ interface PayByBankDelegate :
 
     val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>>
 
-    val submitFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>>
-
     fun getIssuers(): List<IssuerModel>
 
     fun updateInputData(update: PayByBankInputData.() -> Unit)

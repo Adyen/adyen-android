@@ -13,6 +13,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Handles all the logic in payment components
@@ -20,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 interface PaymentComponentDelegate<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     > : ComponentDelegate {
+
+    val submitFlow: Flow<ComponentStateT>
 
     fun getPaymentMethodType(): String
 
