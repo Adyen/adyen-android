@@ -161,8 +161,6 @@ internal class DefaultBlikDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun requiresInput(): Boolean = true
-
     override fun onCleared() {
         removeObserver()
     }

@@ -24,14 +24,11 @@ import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.databinding.AdyenComponentViewBinding
-import com.adyen.checkout.components.util.CurrencyUtils
-import com.adyen.checkout.components.util.isEmpty
-import com.adyen.checkout.components.util.isZero
+import com.adyen.checkout.components.ui.util.PayButtonFormatter
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -154,15 +151,13 @@ class AdyenComponentView @JvmOverloads constructor(
         componentParams: ComponentParams,
         localizedContext: Context
     ) {
-        if (viewType is AmountButtonComponentViewType && !componentParams.amount.isEmpty) {
-            text = if (componentParams.amount.isZero) {
-                localizedContext.getString(R.string.confirm_preauthorization)
-            } else {
-                localizedContext.getString(
-                    R.string.pay_button_with_value,
-                    CurrencyUtils.formatAmount(componentParams.amount, componentParams.shopperLocale)
-                )
-            }
+        if (viewType is AmountButtonComponentViewType) {
+            text = PayButtonFormatter.getPayButtonText(
+                amount = componentParams.amount,
+                locale = componentParams.shopperLocale,
+                localizedContext = localizedContext,
+                emptyAmountStringResId = viewType.buttonTextResId
+            )
         } else if (viewType is ButtonComponentViewType) {
             text = localizedContext.getString(viewType.buttonTextResId)
         }
