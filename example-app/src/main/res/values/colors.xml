@@ -16,7 +16,6 @@
     <color name="text_color">@color/color_adyen_dark</color>
 
     <color name="color_white">#FFFFFF</color>
-    <color name="color_transparent">#00000000</color>
     <color name="color_adyen_green">#0abf53</color>
     <color name="color_adyen_dark">#00112c</color>
 

@@ -22,7 +22,7 @@
         <item name="android:textColorTertiary">@color/text_color_primary</item>
         <item name="android:textColorLink">@color/textColorLink</item>
         <item name="android:statusBarColor">@color/color_background</item>
-        <item name="android:navigationBarColor">@color/color_transparent</item>
+        <item name="android:navigationBarColor">@color/color_background</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">
             @bool/has_light_system_bars
         </item>
