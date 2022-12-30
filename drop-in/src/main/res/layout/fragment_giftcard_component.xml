@@ -10,8 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/standard_margin">
+    android:orientation="vertical">
 
     <include
         layout="@layout/bottom_sheet_indicator"
@@ -29,8 +28,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingBottom="@dimen/standard_margin">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
