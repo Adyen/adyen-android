@@ -32,6 +32,9 @@ class DefaultActionHandlingComponent(
     override fun handleAction(action: Action, activity: Activity) {
         activeDelegate = genericActionDelegate
         genericActionDelegate.handleAction(action, activity)
+        // genericActionDelegate.delegate is set when calling genericActionDelegate.handleAction, so we set the more
+        // specific delegate here as soon as we can.
+        activeDelegate = genericActionDelegate.delegate
     }
 
     override fun handleIntent(intent: Intent) {
