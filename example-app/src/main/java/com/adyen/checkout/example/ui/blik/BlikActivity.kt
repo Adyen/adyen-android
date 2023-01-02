@@ -126,6 +126,11 @@ class BlikActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        blikComponent = null
+    }
+
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
