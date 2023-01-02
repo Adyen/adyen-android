@@ -43,6 +43,7 @@ data class CardOutputData(
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
     val componentMode: ComponentMode,
+    val isCardListVisible: Boolean
 ) : OutputData {
 
     override val isValid: Boolean

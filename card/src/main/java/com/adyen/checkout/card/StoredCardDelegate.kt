@@ -202,6 +202,7 @@ internal class StoredCardDelegate(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,
+            isCardListVisible = false
         )
     }
 

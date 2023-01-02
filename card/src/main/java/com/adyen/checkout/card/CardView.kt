@@ -183,7 +183,7 @@ internal class CardView @JvmOverloads constructor(
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
-        setCardList(cardOutputData.cardBrands)
+        setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -734,15 +734,15 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setCardList(cards: List<CardListItem>) {
-        binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
-
-        if (cardListAdapter == null) {
-            cardListAdapter = CardListAdapter()
-            binding.recyclerViewCardList.adapter = cardListAdapter
+    private fun setCardList(cards: List<CardListItem>, isCardListVisible: Boolean) {
+        binding.recyclerViewCardList.isVisible = isCardListVisible
+        if (isCardListVisible) {
+            if (cardListAdapter == null) {
+                cardListAdapter = CardListAdapter()
+                binding.recyclerViewCardList.adapter = cardListAdapter
+            }
+            cardListAdapter?.submitList(cards)
         }
-
-        cardListAdapter?.submitList(cards)
     }
 
     private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {
