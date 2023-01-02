@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
@@ -150,13 +149,6 @@ class BlikViewModel @Inject constructor(
         when (action.type) {
             "await" -> _blikViewState.value = BlikViewState.Await(action)
             else -> _events.emit(BlikEvent.Unsupported)
-        }
-    }
-
-    fun onActionComponentEvent(event: ActionComponentEvent) {
-        when (event) {
-            is ActionComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
-            is ActionComponentEvent.Error -> onComponentError(event.error)
         }
     }
 
