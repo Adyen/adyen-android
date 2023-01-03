@@ -6,15 +6,15 @@
  * Created by oscars on 7/11/2022.
  */
 
-package com.adyen.checkout.example.ui.card
+package com.adyen.checkout.example.ui.bacs
 
 import com.adyen.checkout.components.model.payments.response.Action
 
-internal sealed class CardEvent {
+internal sealed class BacsEvent {
 
-    data class PaymentResult(val result: String) : CardEvent()
+    data class PaymentResult(val result: String) : BacsEvent()
 
-    data class AdditionalAction(val action: Action) : CardEvent()
+    data class AdditionalAction(val action: Action) : BacsEvent()
 
-    object Invalid : CardEvent()
+    object Invalid : BacsEvent()
 }

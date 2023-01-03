@@ -1,7 +1,7 @@
 package com.adyen.checkout.example.ui.configuration
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.AddressConfiguration
@@ -68,8 +68,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     fun getBlikConfiguration(): BlikConfiguration =
         BlikConfiguration.Builder(shopperLocale, environment, clientKey).build()
 
-    fun getAwaitConfiguration(): AwaitConfiguration =
-        AwaitConfiguration.Builder(shopperLocale, environment, clientKey).build()
+    fun getBacsConfiguration(): BacsDirectDebitConfiguration =
+        BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
         0 -> AddressConfiguration.None
