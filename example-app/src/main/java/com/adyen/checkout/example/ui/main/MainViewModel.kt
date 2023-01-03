@@ -49,6 +49,7 @@ internal class MainViewModel @Inject constructor(
 
     fun onComponentEntryClick(entry: ComponentItem.Entry) {
         when (entry) {
+            ComponentItem.Entry.Bacs -> { TODO() }
             ComponentItem.Entry.Blik -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Blik))
             ComponentItem.Entry.Card -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Card))
             ComponentItem.Entry.DropIn -> startDropInFlow()
