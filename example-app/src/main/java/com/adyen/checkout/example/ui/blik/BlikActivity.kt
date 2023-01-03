@@ -17,9 +17,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityBlikBinding
@@ -31,11 +29,15 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class BlikActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityBlikBinding
+
     private val blikViewModel: BlikViewModel by viewModels()
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
+
+    private var blikComponent: BlikComponent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,28 +70,20 @@ class BlikActivity : AppCompatActivity() {
             BlikViewState.Loading -> {
                 binding.progressIndicator.isVisible = true
                 binding.errorView.isVisible = false
-                binding.blikView.isVisible = false
+                binding.componentView.isVisible = false
             }
             is BlikViewState.ShowComponent -> {
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
-                binding.blikView.isVisible = true
+                binding.componentView.isVisible = true
 
                 setupBlikView(blikViewState.paymentMethod)
             }
-            is BlikViewState.Await -> {
+            is BlikViewState.Action -> {
                 binding.progressIndicator.isVisible = false
-                binding.blikView.isVisible = true
+                binding.componentView.isVisible = true
                 binding.errorView.isVisible = false
-                val awaitComponent = AwaitComponent.PROVIDER.get(
-                    this,
-                    application,
-                    checkoutConfigurationProvider.getAwaitConfiguration()
-                ).apply {
-                    observe(this@BlikActivity, ::onActionComponentEvent)
-                    handleAction(blikViewState.action, this@BlikActivity)
-                }
-                binding.blikView.attach(awaitComponent, this)
+                blikComponent?.handleAction(blikViewState.action, this)
             }
             is BlikViewState.Error -> {
                 binding.errorView.isVisible = true
@@ -106,31 +100,32 @@ class BlikActivity : AppCompatActivity() {
             checkoutConfigurationProvider.getBlikConfiguration(),
             application
         )
-        binding.blikView.attach(blikComponent, this)
+
+        this.blikComponent = blikComponent
+
+        binding.componentView.attach(blikComponent, this)
         blikComponent.observe(this, blikViewModel::onPaymentComponentEvent)
     }
 
     private fun onBlikEvent(event: BlikEvent) {
         when (event) {
             BlikEvent.Invalid -> {
-                binding.blikView.highlightValidationErrors()
+                binding.componentView.highlightValidationErrors()
             }
             is BlikEvent.PaymentResult -> {
                 onPaymentResult(event.result)
             }
-            is BlikEvent.Unsupported -> {
-                Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
-            }
         }
-    }
-
-    private fun onActionComponentEvent(event: ActionComponentEvent) {
-        blikViewModel.onActionComponentEvent(event)
     }
 
     private fun onPaymentResult(result: String) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        blikComponent = null
     }
 
     companion object {
