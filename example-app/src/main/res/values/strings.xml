@@ -6,8 +6,11 @@
     <string name="drop_in_with_session_entry">Start with session</string>
     <string name="drop_in_with_session_custom_entry">Start with custom session</string>
     <string name="components_title">Components</string>
-    <string name="bacs_component_entry">BACS (using bottom sheet)</string>
     <string name="card_component_entry">Card</string>
+
+    <string name="bacs_component_entry">BACS (using bottom sheet)</string>
+    <string name="bacs_country_error">Your country code must be GB</string>
+    <string name="bacs_currency_error">Your currency code must be GBP</string>
 
     <string name="blik_component_entry">Blik</string>
     <string name="blik_component_await">Waiting for approval</string>

@@ -19,7 +19,9 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -34,6 +36,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,6 +60,17 @@ internal class BacsViewModel @Inject constructor(
     }
 
     private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+        val validationError = if (keyValueStorage.getAmount().currency != CheckoutCurrency.GBP.name) {
+            BacsViewState.Error(R.string.bacs_currency_error)
+        } else if (keyValueStorage.getCountry() != Locale.UK.country) {
+            BacsViewState.Error(R.string.bacs_country_error)
+        } else null
+
+        validationError?.let {
+            _viewState.emit(it)
+            return@withContext
+        }
+
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -73,7 +87,7 @@ internal class BacsViewModel @Inject constructor(
             ?.firstOrNull { BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (paymentMethod == null) {
-            _viewState.emit(BacsViewState.Error)
+            _viewState.emit(BacsViewState.Error(R.string.error_dialog_title))
         } else {
             _paymentMethodFlow.emit(paymentMethod)
             _viewState.emit(BacsViewState.ShowComponent)

@@ -88,8 +88,9 @@ class BacsFragment : BottomSheetDialogFragment() {
 
     private fun onViewState(state: BacsViewState) {
         when (state) {
-            BacsViewState.Error -> {
+            is BacsViewState.Error -> {
                 binding.errorView.isVisible = true
+                binding.errorView.setText(state.message)
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = false
             }
