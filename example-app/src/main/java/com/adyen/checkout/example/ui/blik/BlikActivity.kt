@@ -79,7 +79,7 @@ class BlikActivity : AppCompatActivity() {
 
                 setupBlikView(blikViewState.paymentMethod)
             }
-            is BlikViewState.Await -> {
+            is BlikViewState.Action -> {
                 binding.progressIndicator.isVisible = false
                 binding.componentView.isVisible = true
                 binding.errorView.isVisible = false
@@ -114,9 +114,6 @@ class BlikActivity : AppCompatActivity() {
             }
             is BlikEvent.PaymentResult -> {
                 onPaymentResult(event.result)
-            }
-            is BlikEvent.Unsupported -> {
-                Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
             }
         }
     }

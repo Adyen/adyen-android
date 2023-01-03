@@ -138,18 +138,11 @@ class BlikViewModel @Inject constructor(
             when {
                 json.has("action") -> {
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
-                    handleAction(action)
+                    _blikViewState.value = BlikViewState.Action(action)
                 }
                 else -> _events.emit(BlikEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
             }
         } ?: _events.emit(BlikEvent.PaymentResult("Failed"))
-    }
-
-    private suspend fun handleAction(action: Action) {
-        when (action.type) {
-            "await" -> _blikViewState.value = BlikViewState.Await(action)
-            else -> _events.emit(BlikEvent.Unsupported)
-        }
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {

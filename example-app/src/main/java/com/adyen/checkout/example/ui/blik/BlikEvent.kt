@@ -12,7 +12,5 @@ sealed class BlikEvent {
 
     data class PaymentResult(val result: String) : BlikEvent()
 
-    object Unsupported : BlikEvent()
-
     object Invalid : BlikEvent()
 }
