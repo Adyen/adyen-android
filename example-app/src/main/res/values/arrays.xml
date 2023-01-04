@@ -20,6 +20,16 @@
         <item>"2"</item>
     </array>
 
+    <array name="instant_payment_method_type_entries">
+        <item>"Paypal"</item>
+        <item>"Klarna"</item>
+    </array>
+
+    <array name="instant_payment_method_type_values">
+        <item>"paypal"</item>
+        <item>"klarna"</item>
+    </array>
+
     <array name="night_theme_entries">
         <item>@string/night_theme_system</item>
         <item>@string/night_theme_day</item>

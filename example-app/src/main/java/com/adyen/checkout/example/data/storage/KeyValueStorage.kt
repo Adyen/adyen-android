@@ -15,6 +15,7 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.extensions.get
 
+@Suppress("TooManyFunctions")
 interface KeyValueStorage {
     fun getShopperReference(): String
     fun getAmount(): Amount
@@ -26,8 +27,10 @@ interface KeyValueStorage {
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
     fun isAddressFormEnabled(): Int
+    fun getInstantPaymentMethodType(): String
 }
 
+@Suppress("TooManyFunctions")
 internal class DefaultKeyValueStorage(
     private val appContext: Context,
     private val sharedPreferences: SharedPreferences
@@ -85,6 +88,14 @@ internal class DefaultKeyValueStorage(
             .toInt()
     }
 
+    override fun getInstantPaymentMethodType(): String {
+        return sharedPreferences.get(
+            appContext,
+            R.string.instant_payment_method_type_key,
+            DEFAULT_INSTANT_PAYMENT_METHOD
+        )
+    }
+
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
         private const val DEFAULT_LOCALE = "en-US"
@@ -94,5 +105,6 @@ internal class DefaultKeyValueStorage(
         private const val DEFAULT_EXECUTE_3D = false
         private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
         private const val DEFAULT_ENABLE_ADDRESS_FORM = "0"
+        private const val DEFAULT_INSTANT_PAYMENT_METHOD = "paypal"
     }
 }

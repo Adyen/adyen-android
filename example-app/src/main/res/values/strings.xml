@@ -17,6 +17,8 @@
     <string name="blik_component_image_description">Blik Logo</string>
     <string name="blik_title">Blik</string>
 
+    <string name="instant_component_entry">Instant</string>
+
     <string name="settings">Settings</string>
     <string name="merchant_information">Merchant Information</string>
     <string name="merchant_account_key">merchant_account</string>
@@ -41,6 +43,9 @@
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
     <string name="enable_card_address_form_key">enable_card_address_form</string>
     <string name="enable_card_address_form_title">Enable card address form</string>
+    <string name="instant_payment_method_type_key">instant_payment_method_type</string>
+    <string name="instant_payment_method_type_title">Instant Payment Method Type</string>
+
     <string name="night_theme_title">Theme</string>
     <!-- Should be same as DefaultNightThemeRepository.PREF_KEY_NIGHT_THEME -->
     <string name="night_theme_key">night_theme_key</string>

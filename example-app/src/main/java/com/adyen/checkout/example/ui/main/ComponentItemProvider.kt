@@ -13,5 +13,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Bacs,
         ComponentItem.Entry.Blik,
         ComponentItem.Entry.Card,
+        ComponentItem.Entry.Instant,
     )
 }
