@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
@@ -19,7 +20,9 @@ data class AddressOutputData(
     val apartmentSuite: FieldState<String>,
     val city: FieldState<String>,
     val country: FieldState<String>,
-    val isOptional: Boolean
+    val isOptional: Boolean,
+    val countryOptions: List<AddressListItem>,
+    val stateOptions: List<AddressListItem>
 ) : OutputData {
     override val isValid: Boolean
         get() = postalCode.validation.isValid() &&

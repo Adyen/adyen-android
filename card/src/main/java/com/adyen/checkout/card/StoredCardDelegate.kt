@@ -201,8 +201,6 @@ internal class StoredCardDelegate(
             isKCPAuthRequired = false,
             addressUIState = AddressFormUIState.NONE,
             installmentOptions = emptyList(),
-            countryOptions = emptyList(),
-            stateOptions = emptyList(),
             cardBrands = emptyList(),
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
@@ -412,6 +410,7 @@ internal class StoredCardDelegate(
     }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        // no ops
     }
 
     companion object {

@@ -7,9 +7,11 @@ import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.ui.AddressSpecification
+import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 
+@Suppress("LongParameterList")
 object AddressValidationUtils {
 
     /**
@@ -20,16 +22,33 @@ object AddressValidationUtils {
         addressFormUIState: AddressFormUIState,
         addressConfiguration: AddressConfiguration?,
         detectedCardType: DetectedCardType?,
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>,
     ): AddressOutputData {
         val isOptional = isOptional(addressConfiguration, detectedCardType)
         return when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> validateAddressInput(addressInputModel, isOptional)
-            AddressFormUIState.POSTAL_CODE -> validatePostalCode(addressInputModel, isOptional)
+            AddressFormUIState.FULL_ADDRESS -> validateAddressInput(
+                addressInputModel,
+                isOptional,
+                countryOptions,
+                stateOptions
+            )
+            AddressFormUIState.POSTAL_CODE -> validatePostalCode(
+                addressInputModel,
+                isOptional,
+                countryOptions,
+                stateOptions
+            )
             else -> makeValidEmptyAddressOutput(addressInputModel)
         }
     }
 
-    private fun validatePostalCode(addressInputModel: AddressInputModel, isOptional: Boolean): AddressOutputData {
+    private fun validatePostalCode(
+        addressInputModel: AddressInputModel,
+        isOptional: Boolean,
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>,
+    ): AddressOutputData {
         return with(addressInputModel) {
             AddressOutputData(
                 postalCode = validateAddressField(postalCode, !isOptional),
@@ -39,12 +58,19 @@ object AddressValidationUtils {
                 apartmentSuite = FieldState(apartmentSuite, Validation.Valid),
                 city = FieldState(city, Validation.Valid),
                 country = FieldState(country, Validation.Valid),
-                isOptional = isOptional
+                isOptional = isOptional,
+                countryOptions = countryOptions,
+                stateOptions = stateOptions
             )
         }
     }
 
-    private fun validateAddressInput(addressInputModel: AddressInputModel, isOptional: Boolean): AddressOutputData {
+    private fun validateAddressInput(
+        addressInputModel: AddressInputModel,
+        isOptional: Boolean,
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>,
+    ): AddressOutputData {
         val spec = AddressSpecification.fromString(addressInputModel.country)
         return with(addressInputModel) {
             AddressOutputData(
@@ -55,7 +81,9 @@ object AddressValidationUtils {
                 apartmentSuite = validateAddressField(apartmentSuite, spec.apartmentSuite.isRequired && !isOptional),
                 city = validateAddressField(city, spec.city.isRequired && !isOptional),
                 country = validateAddressField(country, spec.country.isRequired && !isOptional),
-                isOptional = isOptional
+                isOptional = isOptional,
+                countryOptions = countryOptions,
+                stateOptions = stateOptions
             )
         }
     }
@@ -73,7 +101,9 @@ object AddressValidationUtils {
                 apartmentSuite = FieldState(apartmentSuite, Validation.Valid),
                 city = FieldState(city, Validation.Valid),
                 country = FieldState(country, Validation.Valid),
-                isOptional = true
+                isOptional = true,
+                countryOptions = emptyList(),
+                stateOptions = emptyList()
             )
         }
     }

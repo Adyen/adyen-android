@@ -250,8 +250,8 @@ internal class DefaultCardDelegate(
 
     private fun updateOutputData(
         detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
-        countryOptions: List<AddressListItem> = outputData.countryOptions,
-        stateOptions: List<AddressListItem> = outputData.stateOptions,
+        countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
+        stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
     ) {
         val newOutputData = createOutputData(detectedCardTypes, countryOptions, stateOptions)
         _outputDataFlow.tryEmit(newOutputData)
@@ -306,7 +306,13 @@ internal class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(inputData.address, addressFormUIState, reliableSelectedCard),
+            addressState = validateAddress(
+                inputData.address,
+                addressFormUIState,
+                reliableSelectedCard,
+                updatedCountryOptions,
+                updatedStateOptions
+            ),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
@@ -322,8 +328,6 @@ internal class DefaultCardDelegate(
                 cardType = selectedOrFirstCardType?.cardType,
                 isCardTypeReliable = isReliable
             ),
-            countryOptions = updatedCountryOptions,
-            stateOptions = updatedStateOptions,
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
@@ -504,13 +508,17 @@ internal class DefaultCardDelegate(
     private fun validateAddress(
         addressInputModel: AddressInputModel,
         addressFormUIState: AddressFormUIState,
-        detectedCardType: DetectedCardType?
+        detectedCardType: DetectedCardType?,
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>
     ): AddressOutputData {
         return AddressValidationUtils.validateAddressInput(
             addressInputModel,
             addressFormUIState,
             componentParams.addressConfiguration,
-            detectedCardType
+            detectedCardType,
+            countryOptions,
+            stateOptions
         )
     }
 

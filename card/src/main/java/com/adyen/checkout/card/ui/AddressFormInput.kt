@@ -29,6 +29,8 @@ import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * AddressFormInput to be used in [CardComponent].
@@ -43,7 +45,6 @@ class AddressFormInput @JvmOverloads constructor(
     private lateinit var localizedContext: Context
 
     private lateinit var delegate: AddressDelegate
-    private var coroutineScope: CoroutineScope? = null
 
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
@@ -125,7 +126,14 @@ class AddressFormInput @JvmOverloads constructor(
 
     internal fun attachDelegate(delegate: AddressDelegate, coroutineScope: CoroutineScope) {
         this.delegate = delegate
-        this.coroutineScope = coroutineScope
+        subscribeCountryAndStateList(coroutineScope)
+    }
+
+    private fun subscribeCountryAndStateList(coroutineScope: CoroutineScope) {
+        delegate.addressOutputDataFlow.onEach { addressOutputData ->
+            updateCountries(addressOutputData.countryOptions)
+            updateStates(addressOutputData.stateOptions)
+        }.launchIn(coroutineScope)
     }
 
     internal fun initLocalizedContext(localizedContext: Context) {
@@ -185,7 +193,7 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun updateCountries(countryList: List<AddressListItem>) {
+    private fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
             val selectedSpecification = AddressSpecification.fromString(it.code)
@@ -196,7 +204,7 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun updateStates(stateList: List<AddressListItem>) {
+    private fun updateStates(stateList: List<AddressListItem>) {
         statesAdapter.setItems(stateList)
         stateList.firstOrNull { it.selected }?.let {
             autoCompleteTextViewState?.setText(it.name)

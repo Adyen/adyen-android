@@ -25,7 +25,6 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
-import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.base.ComponentDelegate
@@ -180,8 +179,6 @@ internal class CardView @JvmOverloads constructor(
         handleHolderNameUIState(cardOutputData.holderNameUIState)
         setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
         updateInstallments(cardOutputData)
-        updateCountries(cardOutputData.countryOptions)
-        updateStates(cardOutputData.stateOptions)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
     }
@@ -550,17 +547,7 @@ internal class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
-        if (cardDelegate is DefaultCardDelegate) {
-            (cardDelegate as? DefaultCardDelegate)?.let { binding.addressFormInput.attachDelegate(it, coroutineScope) }
-        }
-    }
-
-    private fun updateCountries(countryOptions: List<AddressListItem>) {
-        binding.addressFormInput.updateCountries(countryOptions)
-    }
-
-    private fun updateStates(stateOptions: List<AddressListItem>) {
-        binding.addressFormInput.updateStates(stateOptions)
+        binding.addressFormInput.attachDelegate(cardDelegate, coroutineScope)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {

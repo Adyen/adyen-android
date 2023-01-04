@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.card
 
-
+import androidx.annotation.RestrictTo
 import kotlinx.coroutines.flow.Flow
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AddressDelegate {
     val addressOutputData: AddressOutputData
     val addressOutputDataFlow: Flow<AddressOutputData>

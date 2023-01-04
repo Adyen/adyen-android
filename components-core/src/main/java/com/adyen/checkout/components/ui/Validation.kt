@@ -22,5 +22,5 @@ sealed class Validation {
     /**
      * Field is not valid.
      */
-    class Invalid(@StringRes val reason: Int, val showErrorWhileEditing: Boolean = false) : Validation()
+    data class Invalid(@StringRes val reason: Int, val showErrorWhileEditing: Boolean = false) : Validation()
 }
