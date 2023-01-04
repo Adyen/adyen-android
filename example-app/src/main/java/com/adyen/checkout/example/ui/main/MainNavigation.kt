@@ -22,6 +22,8 @@ internal sealed class MainNavigation {
 
     object Instant : MainNavigation()
 
+    object CardWithSession : MainNavigation()
+
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val dropInConfiguration: DropInConfiguration

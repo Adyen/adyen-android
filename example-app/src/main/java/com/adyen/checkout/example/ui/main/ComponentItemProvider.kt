@@ -14,5 +14,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Blik,
         ComponentItem.Entry.Card,
         ComponentItem.Entry.Instant,
+        ComponentItem.Entry.CardWithSession,
     )
 }

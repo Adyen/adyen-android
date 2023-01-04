@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -37,6 +38,8 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
+import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
@@ -103,6 +106,73 @@ class CardComponentProvider(
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
             )
         }
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
+    }
+
+    @Suppress("LongParameterList")
+    fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: CardConfiguration,
+        application: Application,
+        defaultArgs: Bundle?,
+        key: String?,
+    ): CardComponent {
+        assertSupported(paymentMethod)
+
+        val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val binLookupService = BinLookupService(httpClient)
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+        val publicKeyService = PublicKeyService(httpClient)
+        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
+        val addressService = AddressService(httpClient)
+        val addressRepository = DefaultAddressRepository(addressService)
+        val cardValidationMapper = CardValidationMapper()
+        val analyticsService = AnalyticsService(httpClient)
+        val analyticsRepository = DefaultAnalyticsRepository(
+            packageName = application.packageName,
+            locale = componentParams.shopperLocale,
+            source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+            analyticsService = analyticsService,
+            analyticsMapper = AnalyticsMapper(),
+        )
+
+        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val cardDelegate = DefaultCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                publicKeyRepository = publicKeyRepository,
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                analyticsRepository = analyticsRepository,
+                addressRepository = addressRepository,
+                detectCardTypeRepository = detectCardTypeRepository,
+                cardValidationMapper = cardValidationMapper,
+                cardEncrypter = cardEncrypter,
+                genericEncrypter = genericEncrypter,
+                submitHandler = SubmitHandler()
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            CardComponent(
+                cardDelegate = cardDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+            )
+        }
+
+        val sessionHandler = SessionHandler(checkoutSession)
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
     }
 

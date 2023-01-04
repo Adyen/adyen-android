@@ -25,5 +25,6 @@ data class SessionRequest(
     val reference: String,
     val lineItems: List<Item>,
     val threeDS2RequestData: ThreeDS2RequestDataRequest?,
-    val shopperEmail: String?
+    val shopperEmail: String?,
+    val allowedPaymentMethods: List<String>?,
 )
