@@ -87,7 +87,12 @@ class BlikActivity : AppCompatActivity() {
             }
             is BlikViewState.Error -> {
                 binding.errorView.isVisible = true
-                binding.errorView.text = getString(blikViewState.stringId)
+                val errorMessage = if (blikViewState.arg != null) {
+                    getString(blikViewState.stringId, blikViewState.arg)
+                } else {
+                    getString(blikViewState.stringId)
+                }
+                binding.errorView.text = errorMessage
                 binding.progressIndicator.isVisible = false
             }
         }

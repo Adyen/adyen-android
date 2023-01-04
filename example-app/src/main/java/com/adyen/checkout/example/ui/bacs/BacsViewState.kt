@@ -16,5 +16,5 @@ internal sealed class BacsViewState {
 
     object ShowComponent : BacsViewState()
 
-    data class Error(@StringRes val message: Int) : BacsViewState()
+    data class Error(@StringRes val message: Int, val arg: String? = null) : BacsViewState()
 }

@@ -61,10 +61,12 @@ internal class BacsViewModel @Inject constructor(
 
     private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
         val validationError = if (keyValueStorage.getAmount().currency != CheckoutCurrency.GBP.name) {
-            BacsViewState.Error(R.string.bacs_currency_error)
+            BacsViewState.Error(R.string.currency_code_error, CheckoutCurrency.GBP.name)
         } else if (keyValueStorage.getCountry() != Locale.UK.country) {
-            BacsViewState.Error(R.string.bacs_country_error)
-        } else null
+            BacsViewState.Error(R.string.country_code_error, Locale.UK.country)
+        } else {
+            null
+        }
 
         validationError?.let {
             _viewState.emit(it)

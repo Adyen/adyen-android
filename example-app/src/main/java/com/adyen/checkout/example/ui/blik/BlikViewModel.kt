@@ -60,9 +60,9 @@ class BlikViewModel @Inject constructor(
 
     private suspend fun fetchPaymentMethods(): BlikViewState = withContext(Dispatchers.IO) {
         if (keyValueStorage.getAmount().currency != CheckoutCurrency.PLN.name) {
-            return@withContext BlikViewState.Error(R.string.blik_currency_error)
+            return@withContext BlikViewState.Error(R.string.currency_code_error, CheckoutCurrency.PLN.name)
         } else if (keyValueStorage.getCountry() != POLAND_COUNTRY_CODE) {
-            return@withContext BlikViewState.Error(R.string.blik_country_error)
+            return@withContext BlikViewState.Error(R.string.country_code_error, POLAND_COUNTRY_CODE)
         }
 
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(

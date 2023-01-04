@@ -101,7 +101,12 @@ class BacsFragment : BottomSheetDialogFragment() {
         when (state) {
             is BacsViewState.Error -> {
                 binding.errorView.isVisible = true
-                binding.errorView.setText(state.message)
+                val errorMessage = if (state.arg != null) {
+                    getString(state.message, state.arg)
+                } else {
+                    getString(state.message)
+                }
+                binding.errorView.text = errorMessage
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = false
             }
