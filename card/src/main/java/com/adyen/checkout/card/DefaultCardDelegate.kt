@@ -56,10 +56,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
@@ -83,6 +86,15 @@ internal class DefaultCardDelegate(
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
+
+    override val addressOutputData: AddressOutputData
+        get() = outputData.addressState
+
+    override val addressOutputDataFlow: Flow<AddressOutputData> by lazy {
+        outputDataFlow.map {
+            it.addressState
+        }.stateIn(coroutineScope, SharingStarted.Lazily, outputData.addressState)
+    }
 
     override val outputData: CardOutputData
         get() = _outputDataFlow.value
@@ -175,6 +187,12 @@ internal class DefaultCardDelegate(
     override fun updateInputData(update: CardInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
+    }
+
+    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        updateInputData {
+            this.address.update()
+        }
     }
 
     private fun onInputDataChanged() {

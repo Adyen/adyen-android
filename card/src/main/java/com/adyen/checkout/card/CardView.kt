@@ -109,7 +109,7 @@ internal class CardView @JvmOverloads constructor(
         initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
         initPostalCodeInput()
-        initAddressFormInput()
+        initAddressFormInput(coroutineScope)
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentSelected = isChecked }
@@ -549,8 +549,10 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun initAddressFormInput() {
-        binding.addressFormInput.attachDelegate(cardDelegate)
+    private fun initAddressFormInput(coroutineScope: CoroutineScope) {
+        if (cardDelegate is DefaultCardDelegate) {
+            (cardDelegate as? DefaultCardDelegate)?.let { binding.addressFormInput.attachDelegate(it, coroutineScope) }
+        }
     }
 
     private fun updateCountries(countryOptions: List<AddressListItem>) {

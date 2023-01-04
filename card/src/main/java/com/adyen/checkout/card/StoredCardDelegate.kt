@@ -83,6 +83,11 @@ internal class StoredCardDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
+    override val addressOutputData: AddressOutputData
+        get() = _outputDataFlow.value.addressState
+    override val addressOutputDataFlow: Flow<AddressOutputData>
+        get() = MutableStateFlow(_outputDataFlow.value.addressState)
+
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
 
@@ -404,6 +409,9 @@ internal class StoredCardDelegate(
     override fun onCleared() {
         removeObserver()
         coroutineScope = null
+    }
+
+    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
     }
 
     companion object {

@@ -19,7 +19,8 @@ interface CardDelegate :
     PaymentComponentDelegate<CardComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UIStateDelegate {
+    UIStateDelegate,
+    AddressDelegate {
 
     val outputData: CardOutputData
 
