@@ -27,6 +27,7 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
+import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
@@ -106,10 +107,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
-            MainNavigation.Card -> {
-                val intent = Intent(this, CardActivity::class.java)
-                startActivity(intent)
-            }
             is MainNavigation.DropIn -> {
                 DropIn.startPayment(
                     this,
@@ -136,8 +133,13 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     ExampleSessionsDropInService::class.java
                 )
             }
+            is MainNavigation.Bacs -> BacsFragment.show(supportFragmentManager)
             is MainNavigation.Blik -> {
                 val intent = Intent(this, BlikActivity::class.java)
+                startActivity(intent)
+            }
+            MainNavigation.Card -> {
+                val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
             }
         }

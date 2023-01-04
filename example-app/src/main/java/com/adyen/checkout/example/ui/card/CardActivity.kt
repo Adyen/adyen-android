@@ -103,7 +103,7 @@ class CardActivity : AppCompatActivity() {
     private fun onCardEvent(event: CardEvent) {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
-            is CardEvent.AdditionalAction -> onAdditionalAction(event.action)
+            is CardEvent.AdditionalAction -> onAction(event.action)
             CardEvent.Invalid -> binding.cardView.highlightValidationErrors()
         }
     }
@@ -111,16 +111,6 @@ class CardActivity : AppCompatActivity() {
     private fun onPaymentResult(result: String) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         finish()
-    }
-
-    private fun onAdditionalAction(cardAction: CardAction) {
-        when (cardAction) {
-            is CardAction.Redirect -> onAction(cardAction.action)
-            is CardAction.ThreeDS2 -> onAction(cardAction.action)
-            CardAction.Unsupported -> {
-                Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun onAction(action: Action) {

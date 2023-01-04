@@ -20,5 +20,5 @@ sealed class BlikViewState {
 
     data class Action(val action: ActionResponse) : BlikViewState()
 
-    class Error(@StringRes val stringId: Int) : BlikViewState()
+    class Error(@StringRes val stringId: Int, val arg: String? = null) : BlikViewState()
 }

@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.example.ui.card
 
+import com.adyen.checkout.components.model.payments.response.Action
+
 internal sealed class CardEvent {
 
     data class PaymentResult(val result: String) : CardEvent()
 
-    data class AdditionalAction(val action: CardAction) : CardEvent()
+    data class AdditionalAction(val action: Action) : CardEvent()
 
     object Invalid : CardEvent()
 }

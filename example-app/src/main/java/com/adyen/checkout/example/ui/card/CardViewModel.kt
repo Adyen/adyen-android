@@ -45,8 +45,6 @@ internal class CardViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
-    private var cardComponentState: CardComponentState? = null
-
     init {
         viewModelScope.launch { fetchPaymentMethods() }
     }
@@ -77,15 +75,11 @@ internal class CardViewModel @Inject constructor(
 
     fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {
         when (event) {
-            is PaymentComponentEvent.StateChanged -> onCardComponentState(event.state)
+            is PaymentComponentEvent.StateChanged -> Unit
             is PaymentComponentEvent.Error -> onComponentError(event.error)
             is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
             is PaymentComponentEvent.Submit -> makePayment(event.state.data)
         }
-    }
-
-    private fun onCardComponentState(state: CardComponentState) {
-        cardComponentState = state
     }
 
     private fun makePayment(data: PaymentComponentData<*>) {
@@ -123,13 +117,7 @@ internal class CardViewModel @Inject constructor(
     }
 
     private suspend fun handleAction(action: Action) {
-        val cardAction = when (action.type) {
-            "redirect" -> CardAction.Redirect(action)
-            "threeDS2" -> CardAction.ThreeDS2(action)
-            else -> CardAction.Unsupported
-        }
-
-        _events.emit(CardEvent.AdditionalAction(cardAction))
+        _events.emit(CardEvent.AdditionalAction(action))
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
