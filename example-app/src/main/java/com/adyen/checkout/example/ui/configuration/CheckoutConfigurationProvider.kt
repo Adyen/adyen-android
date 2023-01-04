@@ -15,6 +15,7 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import java.util.Locale
 import javax.inject.Inject
@@ -70,6 +71,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     fun getBacsConfiguration(): BacsDirectDebitConfiguration =
         BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).build()
+
+    fun getInstantConfiguration(): InstantPaymentConfiguration =
+        InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey).build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
         0 -> AddressConfiguration.None

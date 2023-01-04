@@ -69,6 +69,13 @@
             android:title="@string/enable_card_address_form_title"
             app:useSimpleSummaryProvider="true" />
 
+        <DropDownPreference
+            android:entries="@array/instant_payment_method_type_entries"
+            android:entryValues="@array/instant_payment_method_type_values"
+            android:key="@string/instant_payment_method_type_key"
+            android:title="@string/instant_payment_method_type_title"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/app_title">

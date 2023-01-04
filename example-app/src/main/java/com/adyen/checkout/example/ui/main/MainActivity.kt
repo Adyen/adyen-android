@@ -31,6 +31,7 @@ import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
+import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -141,6 +142,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             MainNavigation.Card -> {
                 val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
+            }
+            is MainNavigation.Instant -> {
+                InstantFragment.show(supportFragmentManager)
             }
         }
     }
