@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.bacs
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.example.databinding.FragmentBacsBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -69,6 +71,15 @@ class BacsFragment : BottomSheetDialogFragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { onEvent(it) }
             .launchIn(lifecycleScope)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : BottomSheetDialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                if (bacsComponent?.handleBackPress() == true) return
+                super.onBackPressed()
+            }
+        }
     }
 
     private fun setupBacsComponent(paymentMethod: PaymentMethod) {
