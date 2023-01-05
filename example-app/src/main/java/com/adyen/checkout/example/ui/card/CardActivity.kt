@@ -104,7 +104,6 @@ class CardActivity : AppCompatActivity() {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
-            CardEvent.Invalid -> binding.cardView.highlightValidationErrors()
         }
     }
 

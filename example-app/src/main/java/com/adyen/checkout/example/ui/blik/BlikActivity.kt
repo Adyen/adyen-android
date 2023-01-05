@@ -114,12 +114,7 @@ class BlikActivity : AppCompatActivity() {
 
     private fun onBlikEvent(event: BlikEvent) {
         when (event) {
-            BlikEvent.Invalid -> {
-                binding.componentView.highlightValidationErrors()
-            }
-            is BlikEvent.PaymentResult -> {
-                onPaymentResult(event.result)
-            }
+            is BlikEvent.PaymentResult -> onPaymentResult(event.result)
         }
     }
 

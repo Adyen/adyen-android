@@ -126,7 +126,6 @@ class BacsFragment : BottomSheetDialogFragment() {
     private fun onEvent(event: BacsEvent) {
         when (event) {
             is BacsEvent.AdditionalAction -> bacsComponent?.handleAction(event.action, requireActivity())
-            BacsEvent.Invalid -> binding.componentView.highlightValidationErrors()
             is BacsEvent.PaymentResult -> onPaymentResult(event.result)
         }
     }

@@ -15,6 +15,4 @@ internal sealed class BacsEvent {
     data class PaymentResult(val result: String) : BacsEvent()
 
     data class AdditionalAction(val action: Action) : BacsEvent()
-
-    object Invalid : BacsEvent()
 }

@@ -83,9 +83,6 @@ class InstantFragment : BottomSheetDialogFragment() {
             is InstantEvent.AdditionalAction -> {
                 onAction(event.action)
             }
-            InstantEvent.Invalid -> {
-                // no ops
-            }
             is InstantEvent.PaymentResult -> {
                 onPaymentResult(event.result)
             }
