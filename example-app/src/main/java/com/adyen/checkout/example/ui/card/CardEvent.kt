@@ -15,6 +15,4 @@ internal sealed class CardEvent {
     data class PaymentResult(val result: String) : CardEvent()
 
     data class AdditionalAction(val action: Action) : CardEvent()
-
-    object Invalid : CardEvent()
 }

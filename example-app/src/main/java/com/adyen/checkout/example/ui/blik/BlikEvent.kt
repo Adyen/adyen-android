@@ -11,6 +11,4 @@ package com.adyen.checkout.example.ui.blik
 sealed class BlikEvent {
 
     data class PaymentResult(val result: String) : BlikEvent()
-
-    object Invalid : BlikEvent()
 }
