@@ -20,7 +20,6 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.example.ui.main.MainActivity.Companion.RETURN_URL_EXTRA
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
@@ -132,7 +131,7 @@ internal class MainViewModel @Inject constructor(
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                redirectUrl = savedStateHandle.get<String>(RETURN_URL_EXTRA)
+                redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
                     ?: throw IllegalStateException("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail()
             )
