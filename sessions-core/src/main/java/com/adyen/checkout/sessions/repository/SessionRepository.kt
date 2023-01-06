@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.sessions.repository
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -27,22 +28,15 @@ import com.adyen.checkout.sessions.model.payments.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SessionRepository(
     private val sessionService: SessionService,
     private val clientKey: String,
-    sessionModel: SessionModel,
 ) {
 
-    private val _sessionFlow = MutableStateFlow(sessionModel)
-    val sessionFlow: Flow<SessionModel> = _sessionFlow
-
-    private val sessionModel: SessionModel get() = _sessionFlow.value
-
     suspend fun setupSession(
+        sessionModel: SessionModel,
         order: OrderRequest?
     ): Result<SessionSetupResponse> = runSuspendCatching {
         val request = SessionSetupRequest(sessionModel.sessionData.orEmpty(), order)
@@ -50,12 +44,11 @@ class SessionRepository(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
+        )
     }
 
     suspend fun submitPayment(
+        sessionModel: SessionModel,
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
         val request = SessionPaymentsRequest(sessionModel.sessionData.orEmpty(), paymentComponentData)
@@ -63,12 +56,11 @@ class SessionRepository(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
+        )
     }
 
     suspend fun submitDetails(
+        sessionModel: SessionModel,
         actionComponentData: ActionComponentData
     ): Result<SessionDetailsResponse> = runSuspendCatching {
         val request = SessionDetailsRequest(
@@ -80,12 +72,11 @@ class SessionRepository(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
+        )
     }
 
     suspend fun checkBalance(
+        sessionModel: SessionModel,
         paymentMethodDetails: PaymentMethodDetails
     ): Result<SessionBalanceResponse> = runSuspendCatching {
         val request = SessionBalanceRequest(sessionModel.sessionData.orEmpty(), paymentMethodDetails)
@@ -93,23 +84,20 @@ class SessionRepository(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
+        )
     }
 
-    suspend fun createOrder(): Result<SessionOrderResponse> = runSuspendCatching {
+    suspend fun createOrder(sessionModel: SessionModel): Result<SessionOrderResponse> = runSuspendCatching {
         val request = SessionOrderRequest(sessionModel.sessionData.orEmpty())
         sessionService.createOrder(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
+        )
     }
 
     suspend fun cancelOrder(
+        sessionModel: SessionModel,
         order: OrderRequest
     ): Result<SessionCancelOrderResponse> = runSuspendCatching {
         val request = SessionCancelOrderRequest(sessionModel.sessionData.orEmpty(), order)
@@ -117,12 +105,6 @@ class SessionRepository(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey
-        ).also {
-            updateSessionData(it.sessionData)
-        }
-    }
-
-    private fun updateSessionData(sessionData: String) {
-        _sessionFlow.update { it.copy(sessionData = sessionData) }
+        )
     }
 }

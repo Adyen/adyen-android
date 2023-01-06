@@ -104,6 +104,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                savedStateHandle = savedStateHandle,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -168,12 +169,14 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                savedStateHandle = savedStateHandle,
             )
         }
 
-        val sessionHandler = SessionHandler(checkoutSession)
-
-        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also {
+            val sessionHandler = SessionHandler(checkoutSession, it.savedStateHandle)
+            it.observe(lifecycleOwner, sessionHandler::onPaymentComponentEvent)
+        }
     }
 
     override fun get(
@@ -224,6 +227,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                savedStateHandle = savedStateHandle,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]

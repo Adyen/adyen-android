@@ -8,6 +8,23 @@
 
 package com.adyen.checkout.sessions
 
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SessionHandler(
     private val checkoutSession: CheckoutSession,
-)
+    private val savedStateHandle: SavedStateHandle,
+) {
+
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
+        Logger.e(TAG, "Event received $event") // TODO sessions: remove
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+    }
+}

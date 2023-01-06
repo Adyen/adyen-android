@@ -12,17 +12,15 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
-import com.adyen.checkout.components.status.api.StatusResponseUtils.RESULT_REFUSED
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.api.SessionService
+import com.adyen.checkout.sessions.interactor.SessionCallResult
+import com.adyen.checkout.sessions.interactor.SessionInteractor
 import com.adyen.checkout.sessions.model.SessionModel
-import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -31,7 +29,7 @@ import org.json.JSONObject
 @Suppress("TooManyFunctions")
 open class SessionDropInService : DropInService(), SessionDropInServiceInterface {
 
-    private lateinit var sessionRepository: SessionRepository
+    private lateinit var sessionInteractor: SessionInteractor
 
     var isFlowTakenOver: Boolean = false
         private set
@@ -44,15 +42,18 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
     ) {
         val httpClient = HttpClientFactory.getHttpClient(environment)
         val sessionService = SessionService(httpClient)
-        sessionRepository = SessionRepository(
-            sessionService = sessionService,
-            clientKey = clientKey,
-            sessionModel = sessionModel
+        sessionInteractor = SessionInteractor(
+            sessionRepository = SessionRepository(
+                sessionService = sessionService,
+                clientKey = clientKey,
+            ),
+            sessionModel = sessionModel,
+            isFlowTakenOver = isFlowTakenOver,
         )
         this.isFlowTakenOver = isFlowTakenOver
 
         launch {
-            sessionRepository.sessionFlow
+            sessionInteractor.sessionFlow
                 .mapNotNull { it.sessionData }
                 .collect { sendSessionDataChangedResult(it) }
         }
@@ -64,248 +65,158 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         emitResult(result)
     }
 
-    private fun sendFlowTakenOverUpdatedResult(isFlowTakenOver: Boolean) {
-        Logger.d(TAG, "Sending isFlowTakenOver updated result - $isFlowTakenOver")
-        val result = SessionDropInServiceResult.SessionTakenOverUpdated(isFlowTakenOver)
-        emitResult(result)
-    }
-
-    private fun sendSessionSetupResult(sessionDropInServiceResult: SessionDropInServiceResult) {
-        Logger.d(TAG, "Sending session setup result")
-        emitResult(sessionDropInServiceResult)
-    }
-
-    private fun makePaymentsCallInternal(paymentComponentState: PaymentComponentState<*>) {
-        launch {
-            sessionRepository.submitPayment(paymentComponentState.data)
-                .fold(
-                    onSuccess = { response ->
-                        val action = response.action
-                        val result = when {
-                            response.isRefused() -> DropInServiceResult.Error(reason = response.resultCode)
-                            action != null -> DropInServiceResult.Action(action)
-                            response.order.isNonFullyPaid() -> {
-                                updatePaymentMethods(response.order)
-                                null
-                            }
-                            else -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
-                        }
-                        result?.let { sendResult(result) }
-                    },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(reason = it.message)
-                        sendResult(result)
-                    }
-                )
-        }
-    }
-
-    protected open fun makePaymentsCallMerchant(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ): Boolean {
-        return false
-    }
-
     final override fun onPaymentsCallRequested(
         paymentComponentState: PaymentComponentState<*>,
         paymentComponentJson: JSONObject
     ) {
-        checkIfCallWasHandled(
-            merchantCall = { makePaymentsCallMerchant(paymentComponentState, paymentComponentJson) },
-            internalCall = { makePaymentsCallInternal(paymentComponentState) },
-            merchantMethodName = ::makePaymentsCallMerchant.name
-        )
+        launch {
+            val result = sessionInteractor.onPaymentsCallRequested(
+                paymentComponentState,
+                { makePaymentsCallMerchant(it, paymentComponentJson) },
+                ::makePaymentsCallMerchant.name,
+            )
+
+            val dropInServiceResult = when (result) {
+                is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
+                is SessionCallResult.Payments.Error -> DropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.resultCode)
+                is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.order)
+                is SessionCallResult.Payments.TakenOver -> {
+                    sendFlowTakenOverUpdatedResult()
+                    return@launch
+                }
+            }
+
+            sendResult(dropInServiceResult)
+        }
     }
-
-    private fun SessionPaymentsResponse.isRefused() = resultCode.equals(other = RESULT_REFUSED, ignoreCase = true)
-
-    private fun OrderResponse?.isNonFullyPaid() = (this?.remainingAmount?.value ?: 0) > 0
 
     final override fun onDetailsCallRequested(
         actionComponentData: ActionComponentData,
         actionComponentJson: JSONObject
     ) {
-        checkIfCallWasHandled(
-            merchantCall = { makeDetailsCallMerchant(actionComponentData, actionComponentJson) },
-            internalCall = { makeDetailsCallInternal(actionComponentData) },
-            merchantMethodName = ::makeDetailsCallMerchant.name
-        )
-    }
-
-    private fun makeDetailsCallInternal(actionComponentData: ActionComponentData) {
         launch {
-            sessionRepository.submitDetails(actionComponentData)
-                .fold(
-                    onSuccess = { response ->
-                        val result = when (val action = response.action) {
-                            null -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
-                            else -> DropInServiceResult.Action(action)
-                        }
-                        sendResult(result)
-                    },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(reason = it.message)
-                        sendResult(result)
-                    }
-                )
-        }
-    }
+            val result = sessionInteractor.onDetailsCallRequested(
+                actionComponentData,
+                { makeDetailsCallMerchant(it, actionComponentJson) },
+                ::makeDetailsCallMerchant.name
+            )
 
-    protected open fun makeDetailsCallMerchant(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ): Boolean {
-        return false
+            val dropInServiceResult = when (result) {
+                is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
+                is SessionCallResult.Details.Error -> DropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.resultCode)
+                SessionCallResult.Details.TakenOver -> {
+                    sendFlowTakenOverUpdatedResult()
+                    return@launch
+                }
+            }
+
+            sendResult(dropInServiceResult)
+        }
     }
 
     final override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
-        checkIfCallWasHandled(
-            merchantCall = { makeCheckBalanceCallMerchant(paymentMethodData) },
-            internalCall = { makeCheckBalanceCallInternal(paymentMethodData) },
-            merchantMethodName = ::makeCheckBalanceCallMerchant.name
-        )
-    }
-
-    private fun makeCheckBalanceCallInternal(paymentMethodData: PaymentMethodDetails) {
         launch {
-            sessionRepository.checkBalance(paymentMethodData)
-                .fold(
-                    onSuccess = { response ->
-                        val result = if (response.balance.value <= 0) {
-                            BalanceDropInServiceResult.Error(reason = "Not enough balance")
-                        } else {
-                            val balanceResult = BalanceResult(response.balance, response.transactionLimit)
-                            BalanceDropInServiceResult.Balance(balanceResult)
-                        }
-                        sendBalanceResult(result)
-                    },
-                    onFailure = {
-                        val result = BalanceDropInServiceResult.Error(reason = it.message)
-                        sendBalanceResult(result)
-                    }
-                )
+            val result = sessionInteractor.checkBalance(
+                paymentMethodData,
+                ::makeCheckBalanceCallMerchant,
+                ::makeCheckBalanceCallMerchant.name,
+            )
+
+            val dropInServiceResult = when (result) {
+                is SessionCallResult.Balance.Error -> BalanceDropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Balance.Successful -> BalanceDropInServiceResult.Balance(result.balanceResult)
+                SessionCallResult.Balance.TakenOver -> {
+                    sendFlowTakenOverUpdatedResult()
+                    return@launch
+                }
+            }
+
+            sendBalanceResult(dropInServiceResult)
         }
     }
 
-    protected open fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean {
-        return false
-    }
-
     final override fun createOrder() {
-        checkIfCallWasHandled(
-            merchantCall = { makeCreateOrderMerchant() },
-            internalCall = { makeCreateOrderInternal() },
-            merchantMethodName = ::makeCreateOrderMerchant.name
-        )
-    }
-
-    protected open fun makeCreateOrderMerchant(): Boolean {
-        return false
-    }
-
-    private fun makeCreateOrderInternal() {
         launch {
-            sessionRepository.createOrder()
-                .fold(
-                    onSuccess = { response ->
-                        val order = OrderResponse(
-                            pspReference = response.pspReference,
-                            orderData = response.orderData,
-                            reference = null,
-                            amount = null,
-                            remainingAmount = null,
-                            expiresAt = null,
-                        )
-                        sendOrderResult(OrderDropInServiceResult.OrderCreated(order))
-                    },
-                    onFailure = {
-                        val result = OrderDropInServiceResult.Error(reason = it.message)
-                        sendOrderResult(result)
-                    }
-                )
+            val result = sessionInteractor.createOrder(
+                ::makeCreateOrderMerchant,
+                ::makeCreateOrderMerchant.name
+            )
+
+            val dropInServiceResult = when (result) {
+                is SessionCallResult.CreateOrder.Error -> OrderDropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.CreateOrder.Successful -> OrderDropInServiceResult.OrderCreated(result.order)
+                SessionCallResult.CreateOrder.TakenOver -> {
+                    sendFlowTakenOverUpdatedResult()
+                    return@launch
+                }
+            }
+
+            sendOrderResult(dropInServiceResult)
         }
     }
 
     final override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
-        checkIfCallWasHandled(
-            merchantCall = { makeCancelOrderCallMerchant(order, shouldUpdatePaymentMethods) },
-            internalCall = { makeCancelOrderCallInternal(order, shouldUpdatePaymentMethods) },
-            merchantMethodName = ::makeCancelOrderCallMerchant.name
-        )
-    }
-
-    private fun makeCancelOrderCallInternal(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
         launch {
-            sessionRepository.cancelOrder(order)
-                .fold(
-                    onSuccess = {
-                        if (shouldUpdatePaymentMethods) {
-                            updatePaymentMethods()
-                        }
-                    },
-                    onFailure = {
-                        val result = SessionDropInServiceResult.Error(reason = it.message)
-                        sendSessionSetupResult(result)
-                    }
-                )
+            val result = sessionInteractor.cancelOrder(
+                order,
+                { makeCancelOrderCallMerchant(it, shouldUpdatePaymentMethods) },
+                ::makeCancelOrderCallMerchant.name
+            )
+
+            val dropInServiceResult = when (result) {
+                is SessionCallResult.CancelOrder.Error -> DropInServiceResult.Error(reason = result.reason)
+                SessionCallResult.CancelOrder.Successful -> {
+                    if (!shouldUpdatePaymentMethods) return@launch
+                    updatePaymentMethods()
+                }
+                SessionCallResult.CancelOrder.TakenOver -> {
+                    sendFlowTakenOverUpdatedResult()
+                    return@launch
+                }
+            }
+
+            sendResult(dropInServiceResult)
         }
     }
 
-    protected open fun makeCancelOrderCallMerchant(order: OrderRequest, shouldUpdatePaymentMethods: Boolean): Boolean {
-        return false
-    }
-
-    private fun updatePaymentMethods(order: OrderResponse? = null) {
-        launch {
-            val orderRequest = order?.let {
-                OrderRequest(
-                    pspReference = order.pspReference,
-                    orderData = order.orderData
-                )
-            }
-
-            sessionRepository.setupSession(orderRequest)
-                .fold(
-                    onSuccess = { response ->
-                        val paymentMethods = response.paymentMethods
-                        val result = if (paymentMethods != null) {
-                            DropInServiceResult.Update(paymentMethods, order)
-                        } else {
-                            DropInServiceResult.Error(reason = "Payment methods should not be null")
-                        }
-                        sendResult(result)
-                    },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(reason = it.message)
-                        sendResult(result)
-                    }
-                )
+    private suspend fun updatePaymentMethods(order: OrderResponse? = null): DropInServiceResult {
+        return when (val result = sessionInteractor.updatePaymentMethods(order)) {
+            is SessionCallResult.UpdatePaymentMethods.Successful -> DropInServiceResult.Update(
+                result.paymentMethods,
+                result.order
+            )
+            is SessionCallResult.UpdatePaymentMethods.Error -> DropInServiceResult.Error(reason = result.reason)
         }
     }
 
-    private fun checkIfCallWasHandled(
-        merchantCall: () -> Boolean,
-        internalCall: () -> Unit,
-        merchantMethodName: String
-    ) {
-        val callWasHandled = merchantCall()
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException(
-                    "Sessions flow was already taken over in a" +
-                        " previous call, $merchantMethodName should be implemented"
-                )
-            } else {
-                internalCall()
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+    private fun sendFlowTakenOverUpdatedResult() {
+        if (isFlowTakenOver) return
+        isFlowTakenOver = true
+        Logger.d(TAG, "Flow was taken over, sending update to drop-in")
+        val result = SessionDropInServiceResult.SessionTakenOverUpdated(true)
+        emitResult(result)
     }
+
+    protected open fun makePaymentsCallMerchant(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject
+    ): Boolean = false
+
+    protected open fun makeDetailsCallMerchant(
+        actionComponentData: ActionComponentData,
+        actionComponentJson: JSONObject
+    ): Boolean = false
+
+    protected open fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean = false
+
+    protected open fun makeCreateOrderMerchant(): Boolean = false
+
+    protected open fun makeCancelOrderCallMerchant(
+        order: OrderRequest,
+        shouldUpdatePaymentMethods: Boolean
+    ): Boolean = false
 
     companion object {
         private val TAG = LogUtil.getTag()

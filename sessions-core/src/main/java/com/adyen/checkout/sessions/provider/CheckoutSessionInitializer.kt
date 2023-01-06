@@ -19,15 +19,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal class CheckoutSessionInitializer(
-    sessionModel: SessionModel,
+    private val sessionModel: SessionModel,
     configuration: Configuration,
 ) {
     private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
     private val sessionService = SessionService(httpClient)
-    private val sessionRepository = SessionRepository(sessionService, configuration.clientKey, sessionModel)
+    private val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
 
     suspend fun setupSession(): CheckoutSessionResult {
-        sessionRepository.setupSession(null).fold(
+        sessionRepository.setupSession(
+            sessionModel = sessionModel,
+            order = null
+        ).fold(
             onSuccess = {
                 return CheckoutSessionResult.Success(CheckoutSession(it))
             },
