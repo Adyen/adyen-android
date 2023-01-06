@@ -15,16 +15,27 @@
     android:layout_height="wrap_content"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+    <TextView
+        android:id="@+id/textView_paymentInProgress_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textAppearance="@style/AdyenCheckout.TextAppearance.Primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="A payment process is still active" />
+
     <ProgressBar
         android:id="@+id/progressBar_paymentInProgress"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
         android:indeterminateTint="?android:attr/colorPrimary"
         app:layout_constraintEnd_toStartOf="@id/textView_paymentInProgress_description"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textView_paymentInProgress_title" />
 
     <TextView
         android:id="@+id/textView_paymentInProgress_description"
@@ -35,18 +46,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
         app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress"
-        tools:text="Waiting for confirmation" />
+        tools:text="Awaiting completion..." />
 
     <Button
         android:id="@+id/button_paymentInProgress_abort"
         style="@style/AdyenCheckout.Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar_paymentInProgress"
-        tools:text="I'm too broke" />
+        tools:text="Cancel active process" />
 
 </merge>

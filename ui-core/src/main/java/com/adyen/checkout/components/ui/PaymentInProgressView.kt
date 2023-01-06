@@ -49,8 +49,9 @@ class PaymentInProgressView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         with(binding) {
             // TODO: Use string resources when we have final design
-            textViewPaymentInProgressDescription.text = "Waiting for confirmation"
-            buttonPaymentInProgressAbort.text = "I'm too broke"
+            textViewPaymentInProgressTitle.text = "A payment process is still active"
+            textViewPaymentInProgressDescription.text = "Awaiting completion..."
+            buttonPaymentInProgressAbort.text = "Cancel active process"
         }
     }
 
