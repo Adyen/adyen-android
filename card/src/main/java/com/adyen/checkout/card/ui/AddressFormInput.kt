@@ -16,8 +16,8 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.adyen.checkout.card.AddressDelegate
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardDelegate
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.extensions.hideError
@@ -28,6 +28,9 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * AddressFormInput to be used in [CardComponent].
@@ -41,7 +44,7 @@ class AddressFormInput @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    private lateinit var delegate: CardDelegate
+    private lateinit var delegate: AddressDelegate
 
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
@@ -110,10 +113,10 @@ class AddressFormInput @JvmOverloads constructor(
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val selectedCountryCode = countryAdapter.getItem(position).code
-                if (delegate.outputData.addressState.country.value != selectedCountryCode) {
-                    delegate.updateInputData {
-                        address.reset()
-                        address.country = selectedCountryCode
+                if (delegate.addressOutputData.country.value != selectedCountryCode) {
+                    delegate.updateAddressInputData {
+                        reset()
+                        country = selectedCountryCode
                     }
                     populateFormFields(AddressSpecification.fromString(selectedCountryCode))
                 }
@@ -121,8 +124,16 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun attachDelegate(delegate: CardDelegate) {
+    internal fun attachDelegate(delegate: AddressDelegate, coroutineScope: CoroutineScope) {
         this.delegate = delegate
+        subscribeCountryAndStateList(coroutineScope)
+    }
+
+    private fun subscribeCountryAndStateList(coroutineScope: CoroutineScope) {
+        delegate.addressOutputDataFlow.onEach { addressOutputData ->
+            updateCountries(addressOutputData.countryOptions)
+            updateStates(addressOutputData.stateOptions)
+        }.launchIn(coroutineScope)
     }
 
     internal fun initLocalizedContext(localizedContext: Context) {
@@ -131,7 +142,7 @@ class AddressFormInput @JvmOverloads constructor(
 
     internal fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
         var isErrorFocused = isErrorFocusedPreviously
-        val streetValidation = delegate.outputData.addressState.street.validation
+        val streetValidation = delegate.addressOutputData.street.validation
         if (streetValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -139,7 +150,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutStreet?.showError(localizedContext.getString(streetValidation.reason))
         }
-        val houseNumberValidation = delegate.outputData.addressState.houseNumberOrName.validation
+        val houseNumberValidation = delegate.addressOutputData.houseNumberOrName.validation
         if (houseNumberValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -147,7 +158,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutHouseNumber?.showError(localizedContext.getString(houseNumberValidation.reason))
         }
-        val apartmentSuiteValidation = delegate.outputData.addressState.apartmentSuite.validation
+        val apartmentSuiteValidation = delegate.addressOutputData.apartmentSuite.validation
         if (apartmentSuiteValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -155,7 +166,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutApartmentSuite?.showError(localizedContext.getString(apartmentSuiteValidation.reason))
         }
-        val postalCodeValidation = delegate.outputData.addressState.postalCode.validation
+        val postalCodeValidation = delegate.addressOutputData.postalCode.validation
         if (postalCodeValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -163,7 +174,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutPostalCode?.showError(localizedContext.getString(postalCodeValidation.reason))
         }
-        val cityValidation = delegate.outputData.addressState.city.validation
+        val cityValidation = delegate.addressOutputData.city.validation
         if (cityValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -171,7 +182,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutCity?.showError(localizedContext.getString(cityValidation.reason))
         }
-        val provinceTerritoryValidation = delegate.outputData.addressState.stateOrProvince.validation
+        val provinceTerritoryValidation = delegate.addressOutputData.stateOrProvince.validation
         if (provinceTerritoryValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 @Suppress("UNUSED_VALUE")
@@ -182,7 +193,7 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun updateCountries(countryList: List<AddressListItem>) {
+    private fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
             val selectedSpecification = AddressSpecification.fromString(it.code)
@@ -193,13 +204,13 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun updateStates(stateList: List<AddressListItem>) {
+    private fun updateStates(stateList: List<AddressListItem>) {
         statesAdapter.setItems(stateList)
         stateList.firstOrNull { it.selected }?.let {
             autoCompleteTextViewState?.setText(it.name)
-            val didStateChange = delegate.outputData.addressState.stateOrProvince.value != it.code
+            val didStateChange = delegate.addressOutputData.stateOrProvince.value != it.code
             if (didStateChange) {
-                delegate.updateInputData { address.stateOrProvince = it.code }
+                delegate.updateAddressInputData { stateOrProvince = it.code }
             }
         }
     }
@@ -227,37 +238,37 @@ class AddressFormInput @JvmOverloads constructor(
         initCountryInput(addressSpecification.country.styleResId)
         initStreetInput(
             styleResId = addressSpecification.street.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initHouseNumberInput(
             styleResId = addressSpecification.houseNumber.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initApartmentSuiteInput(
             styleResId = addressSpecification.apartmentSuite.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initPostalCodeInput(
             styleResId = addressSpecification.postalCode.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initCityInput(
             styleResId = addressSpecification.city.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initProvinceTerritoryInput(
             styleResId = addressSpecification.stateProvince.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
         initStatesInput(
             styleResId = addressSpecification.stateProvince.getStyleResId(
-                isOptional = delegate.outputData.addressState.isOptional
+                isOptional = delegate.addressOutputData.isOptional
             )
         )
     }
@@ -279,13 +290,13 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initStreetInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextStreet?.apply {
-            setText(delegate.outputData.addressState.street.value)
+            setText(delegate.addressOutputData.street.value)
             setOnChangeListener {
-                delegate.updateInputData { address.street = it.toString() }
+                delegate.updateAddressInputData { street = it.toString() }
                 textInputLayoutStreet?.hideError()
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.street.validation
+                val validation = delegate.addressOutputData.street.validation
                 if (hasFocus) {
                     textInputLayoutStreet?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -298,13 +309,13 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initHouseNumberInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
-            setText(delegate.outputData.addressState.houseNumberOrName.value)
+            setText(delegate.addressOutputData.houseNumberOrName.value)
             setOnChangeListener {
-                delegate.updateInputData { address.houseNumberOrName = it.toString() }
+                delegate.updateAddressInputData { houseNumberOrName = it.toString() }
                 textInputLayoutHouseNumber?.hideError()
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.houseNumberOrName.validation
+                val validation = delegate.addressOutputData.houseNumberOrName.validation
                 if (hasFocus) {
                     textInputLayoutHouseNumber?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -317,12 +328,12 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initApartmentSuiteInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextApartmentSuite?.apply {
-            setText(delegate.outputData.addressState.apartmentSuite.value)
+            setText(delegate.addressOutputData.apartmentSuite.value)
             setOnChangeListener {
-                delegate.updateInputData { address.apartmentSuite = it.toString() }
+                delegate.updateAddressInputData { apartmentSuite = it.toString() }
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.apartmentSuite.validation
+                val validation = delegate.addressOutputData.apartmentSuite.validation
                 if (hasFocus) {
                     textInputLayoutApartmentSuite?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -335,13 +346,13 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initPostalCodeInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextPostalCode?.apply {
-            setText(delegate.outputData.addressState.postalCode.value)
+            setText(delegate.addressOutputData.postalCode.value)
             setOnChangeListener {
-                delegate.updateInputData { address.postalCode = it.toString() }
+                delegate.updateAddressInputData { postalCode = it.toString() }
                 textInputLayoutPostalCode?.hideError()
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.postalCode.validation
+                val validation = delegate.addressOutputData.postalCode.validation
                 if (hasFocus) {
                     textInputLayoutPostalCode?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -354,13 +365,13 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initCityInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextCity?.apply {
-            setText(delegate.outputData.addressState.city.value)
+            setText(delegate.addressOutputData.city.value)
             setOnChangeListener {
-                delegate.updateInputData { address.city = it.toString() }
+                delegate.updateAddressInputData { city = it.toString() }
                 textInputLayoutCity?.hideError()
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.city.validation
+                val validation = delegate.addressOutputData.city.validation
                 if (hasFocus) {
                     textInputLayoutCity?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -373,13 +384,13 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initProvinceTerritoryInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextProvinceTerritory?.apply {
-            setText(delegate.outputData.addressState.stateOrProvince.value)
+            setText(delegate.addressOutputData.stateOrProvince.value)
             setOnChangeListener {
-                delegate.updateInputData { address.stateOrProvince = it.toString() }
+                delegate.updateAddressInputData { stateOrProvince = it.toString() }
                 textInputLayoutProvinceTerritory?.hideError()
             }
             onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val validation = delegate.outputData.addressState.stateOrProvince.validation
+                val validation = delegate.addressOutputData.stateOrProvince.validation
                 if (hasFocus) {
                     textInputLayoutProvinceTerritory?.hideError()
                 } else if (validation is Validation.Invalid) {
@@ -396,13 +407,13 @@ class AddressFormInput @JvmOverloads constructor(
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                delegate.updateInputData { address.stateOrProvince = statesAdapter.getItem(position).code }
+                delegate.updateAddressInputData { stateOrProvince = statesAdapter.getItem(position).code }
             }
         }
     }
 
     fun updateAddressHint(isOptional: Boolean) {
-        val spec = AddressSpecification.fromString(delegate.outputData.addressState.country.value)
+        val spec = AddressSpecification.fromString(delegate.addressOutputData.country.value)
 
         val streetStyleResId = spec.street.getStyleResId(isOptional)
         streetStyleResId?.let {

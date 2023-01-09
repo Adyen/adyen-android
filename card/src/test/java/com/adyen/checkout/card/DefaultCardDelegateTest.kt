@@ -171,6 +171,55 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
+        fun `When the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
+            val addressConfiguration = AddressConfiguration.FullAddress()
+            val countryOptions = AddressFormUtils.initializeCountryOptions(
+                addressConfiguration = addressConfiguration,
+                countryList = TestAddressRepository.COUNTRIES
+            )
+
+            val expectedCountries = AddressFormUtils.markAddressListItemSelected(
+                list = countryOptions,
+                code = null,
+            )
+
+            delegate = createCardDelegate(
+                configuration = getDefaultCardConfigurationBuilder()
+                    .setAddressConfiguration(addressConfiguration)
+                    .build()
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val addressInputModel =
+                AddressInputModel(
+                    postalCode = "34220",
+                    street = "Street Name",
+                    stateOrProvince = "province",
+                    houseNumberOrName = "44",
+                    apartmentSuite = "aparment",
+                    city = "Istanbul",
+                    country = "Turkey"
+                )
+
+            delegate.addressOutputDataFlow.test {
+                delegate.updateInputData {
+                    address = addressInputModel
+                }
+                with(expectMostRecentItem()) {
+                    assertEquals(addressInputModel.postalCode, postalCode.value)
+                    assertEquals(addressInputModel.street, street.value)
+                    assertEquals(addressInputModel.stateOrProvince, stateOrProvince.value)
+                    assertEquals(addressInputModel.houseNumberOrName, houseNumberOrName.value)
+                    assertEquals(addressInputModel.apartmentSuite, apartmentSuite.value)
+                    assertEquals(addressInputModel.city, city.value)
+                    assertEquals(addressInputModel.country, country.value)
+                    assertEquals(expectedCountries, countryOptions)
+                    assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES))
+                }
+            }
+        }
+
+        @Test
         fun `detect card type repository returns error, then output data should not have detected cards`() = runTest {
             detectCardTypeRepository.detectionResult = TestDetectCardTypeRepository.TestDetectedCardType.ERROR
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -466,25 +515,6 @@ internal class DefaultCardDelegateTest(
                     }
                 }
 
-                val expectedAddressOutputData = createAddressOutputData(
-                    postalCode = FieldState("1011 DJ", Validation.Valid),
-                    street = FieldState("Simon Carmiggeltstraat", Validation.Valid),
-                    stateOrProvince = FieldState("North Holland", Validation.Valid),
-                    houseNumberOrName = FieldState("6", Validation.Valid),
-                    apartmentSuite = FieldState("apt", Validation.Valid),
-                    city = FieldState("Amsterdam", Validation.Valid),
-                    country = FieldState("Netherlands", Validation.Valid),
-                    isOptional = false
-                )
-
-                val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
-
-                val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
-                    installmentConfiguration,
-                    expectedDetectedCardTypes.first().cardType,
-                    true
-                )
-
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     addressConfiguration = addressConfiguration,
                     countryList = TestAddressRepository.COUNTRIES
@@ -493,6 +523,27 @@ internal class DefaultCardDelegateTest(
                 val expectedCountries = AddressFormUtils.markAddressListItemSelected(
                     list = countryOptions,
                     code = null,
+                )
+
+                val expectedAddressOutputData = createAddressOutputData(
+                    postalCode = FieldState("1011 DJ", Validation.Valid),
+                    street = FieldState("Simon Carmiggeltstraat", Validation.Valid),
+                    stateOrProvince = FieldState("North Holland", Validation.Valid),
+                    houseNumberOrName = FieldState("6", Validation.Valid),
+                    apartmentSuite = FieldState("apt", Validation.Valid),
+                    city = FieldState("Amsterdam", Validation.Valid),
+                    country = FieldState("Netherlands", Validation.Valid),
+                    isOptional = false,
+                    countryOptions = expectedCountries,
+                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
+                )
+
+                val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
+
+                val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
+                    installmentConfiguration,
+                    expectedDetectedCardTypes.first().cardType,
+                    true
                 )
 
                 val expectedOutputData = createOutputData(
@@ -515,8 +566,6 @@ internal class DefaultCardDelegateTest(
                     isKCPAuthRequired = true,
                     addressUIState = AddressFormUIState.FULL_ADDRESS,
                     installmentOptions = expectedInstallmentOptions,
-                    countryOptions = expectedCountries,
-                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                     kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
                     cardBrands = cardBrands,
                     isCardListVisible = false
@@ -706,8 +755,6 @@ internal class DefaultCardDelegateTest(
                         isKCPAuthRequired = false,
                         addressUIState = addressUIState,
                         installmentOptions = listOf(installmentModel),
-                        countryOptions = emptyList(),
-                        stateOptions = emptyList(),
                         cardBrands = listOf(
                             CardListItem(CardType.VISA, false, Environment.TEST),
                             CardListItem(CardType.MASTERCARD, false, Environment.TEST),
@@ -865,8 +912,6 @@ internal class DefaultCardDelegateTest(
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
         installmentOptions: List<InstallmentModel> = emptyList(),
-        countryOptions: List<AddressListItem> = emptyList(),
-        stateOptions: List<AddressListItem> = emptyList(),
         isDualBranded: Boolean = false,
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
         cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true, Environment.TEST)),
@@ -892,8 +937,6 @@ internal class DefaultCardDelegateTest(
             isKCPAuthRequired = isKCPAuthRequired,
             addressUIState = addressUIState,
             installmentOptions = installmentOptions,
-            countryOptions = countryOptions,
-            stateOptions = stateOptions,
             cardBrands = cardBrands,
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
@@ -932,7 +975,9 @@ internal class DefaultCardDelegateTest(
         apartmentSuite: FieldState<String> = FieldState("", Validation.Valid),
         city: FieldState<String> = FieldState("", Validation.Valid),
         country: FieldState<String> = FieldState("", Validation.Valid),
-        isOptional: Boolean = true
+        isOptional: Boolean = true,
+        countryOptions: List<AddressListItem> = emptyList(),
+        stateOptions: List<AddressListItem> = emptyList()
     ): AddressOutputData {
         return AddressOutputData(
             postalCode = postalCode,
@@ -942,7 +987,9 @@ internal class DefaultCardDelegateTest(
             apartmentSuite = apartmentSuite,
             city = city,
             country = country,
-            isOptional = isOptional
+            isOptional = isOptional,
+            countryOptions = countryOptions,
+            stateOptions = stateOptions
         )
     }
 

@@ -13,7 +13,6 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
@@ -404,8 +403,6 @@ internal class StoredCardDelegateTest(
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
         installmentOptions: List<InstallmentModel> = emptyList(),
-        countryOptions: List<AddressListItem> = emptyList(),
-        stateOptions: List<AddressListItem> = emptyList(),
         cardBrands: List<CardListItem> = emptyList(),
         isCardListVisible: Boolean = false
     ): CardOutputData {
@@ -429,8 +426,6 @@ internal class StoredCardDelegateTest(
             isKCPAuthRequired = isKCPAuthRequired,
             addressUIState = addressUIState,
             installmentOptions = installmentOptions,
-            countryOptions = countryOptions,
-            stateOptions = stateOptions,
             cardBrands = cardBrands,
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,

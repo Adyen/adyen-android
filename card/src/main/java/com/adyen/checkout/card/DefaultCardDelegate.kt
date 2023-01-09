@@ -56,10 +56,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
@@ -83,6 +86,15 @@ internal class DefaultCardDelegate(
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
+
+    override val addressOutputData: AddressOutputData
+        get() = outputData.addressState
+
+    override val addressOutputDataFlow: Flow<AddressOutputData> by lazy {
+        outputDataFlow.map {
+            it.addressState
+        }.stateIn(coroutineScope, SharingStarted.Lazily, outputData.addressState)
+    }
 
     override val outputData: CardOutputData
         get() = _outputDataFlow.value
@@ -177,6 +189,12 @@ internal class DefaultCardDelegate(
         onInputDataChanged()
     }
 
+    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        updateInputData {
+            this.address.update()
+        }
+    }
+
     private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
         detectCardTypeRepository.detectCardType(
@@ -232,8 +250,8 @@ internal class DefaultCardDelegate(
 
     private fun updateOutputData(
         detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
-        countryOptions: List<AddressListItem> = outputData.countryOptions,
-        stateOptions: List<AddressListItem> = outputData.stateOptions,
+        countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
+        stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
     ) {
         val newOutputData = createOutputData(detectedCardTypes, countryOptions, stateOptions)
         _outputDataFlow.tryEmit(newOutputData)
@@ -288,7 +306,13 @@ internal class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(inputData.address, addressFormUIState, reliableSelectedCard),
+            addressState = validateAddress(
+                inputData.address,
+                addressFormUIState,
+                reliableSelectedCard,
+                updatedCountryOptions,
+                updatedStateOptions
+            ),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
@@ -304,8 +328,6 @@ internal class DefaultCardDelegate(
                 cardType = selectedOrFirstCardType?.cardType,
                 isCardTypeReliable = isReliable
             ),
-            countryOptions = updatedCountryOptions,
-            stateOptions = updatedStateOptions,
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
@@ -486,13 +508,17 @@ internal class DefaultCardDelegate(
     private fun validateAddress(
         addressInputModel: AddressInputModel,
         addressFormUIState: AddressFormUIState,
-        detectedCardType: DetectedCardType?
+        detectedCardType: DetectedCardType?,
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>
     ): AddressOutputData {
         return AddressValidationUtils.validateAddressInput(
             addressInputModel,
             addressFormUIState,
             componentParams.addressConfiguration,
-            detectedCardType
+            detectedCardType,
+            countryOptions,
+            stateOptions
         )
     }
 
