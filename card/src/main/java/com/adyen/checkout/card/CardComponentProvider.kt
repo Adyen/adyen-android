@@ -13,6 +13,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
@@ -40,6 +41,10 @@ import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.api.SessionService
+import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
@@ -110,7 +115,7 @@ class CardComponentProvider(
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
     }
 
-    @Suppress("LongParameterList")
+    @Suppress("LongParameterList", "LongMethod")
     fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -173,9 +178,25 @@ class CardComponentProvider(
             )
         }
 
-        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also {
-            val sessionHandler = SessionHandler(checkoutSession, it.savedStateHandle)
-            it.observe(lifecycleOwner, sessionHandler::onPaymentComponentEvent)
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = component.savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = configuration.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+            val sessionHandler = SessionHandler(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+                coroutineScope = component.viewModelScope
+            )
+            component.observe(lifecycleOwner, sessionHandler::onPaymentComponentEvent)
         }
     }
 

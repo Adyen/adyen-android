@@ -194,7 +194,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
     private fun sendFlowTakenOverUpdatedResult() {
         if (isFlowTakenOver) return
         isFlowTakenOver = true
-        Logger.d(TAG, "Flow was taken over, sending update to drop-in")
+        Logger.i(TAG, "Flow was taken over, sending update to drop-in")
         val result = SessionDropInServiceResult.SessionTakenOverUpdated(true)
         emitResult(result)
     }
