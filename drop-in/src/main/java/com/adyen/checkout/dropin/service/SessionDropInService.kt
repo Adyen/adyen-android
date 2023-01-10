@@ -78,7 +78,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
-                is SessionCallResult.Payments.Error -> DropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Payments.Error -> DropInServiceResult.Error(reason = result.throwable.message)
                 is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.resultCode)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.order)
                 is SessionCallResult.Payments.TakenOver -> {
@@ -104,7 +104,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
-                is SessionCallResult.Details.Error -> DropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Details.Error -> DropInServiceResult.Error(reason = result.throwable.message)
                 is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.resultCode)
                 SessionCallResult.Details.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
@@ -125,7 +125,8 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
             )
 
             val dropInServiceResult = when (result) {
-                is SessionCallResult.Balance.Error -> BalanceDropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.Balance.Error ->
+                    BalanceDropInServiceResult.Error(reason = result.throwable.message)
                 is SessionCallResult.Balance.Successful -> BalanceDropInServiceResult.Balance(result.balanceResult)
                 SessionCallResult.Balance.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
@@ -145,7 +146,8 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
             )
 
             val dropInServiceResult = when (result) {
-                is SessionCallResult.CreateOrder.Error -> OrderDropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.CreateOrder.Error ->
+                    OrderDropInServiceResult.Error(reason = result.throwable.message)
                 is SessionCallResult.CreateOrder.Successful -> OrderDropInServiceResult.OrderCreated(result.order)
                 SessionCallResult.CreateOrder.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
@@ -166,7 +168,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
             )
 
             val dropInServiceResult = when (result) {
-                is SessionCallResult.CancelOrder.Error -> DropInServiceResult.Error(reason = result.reason)
+                is SessionCallResult.CancelOrder.Error -> DropInServiceResult.Error(reason = result.throwable.message)
                 SessionCallResult.CancelOrder.Successful -> {
                     if (!shouldUpdatePaymentMethods) return@launch
                     updatePaymentMethods()
@@ -187,7 +189,8 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                 result.paymentMethods,
                 result.order
             )
-            is SessionCallResult.UpdatePaymentMethods.Error -> DropInServiceResult.Error(reason = result.reason)
+            is SessionCallResult.UpdatePaymentMethods.Error ->
+                DropInServiceResult.Error(reason = result.throwable.message)
         }
     }
 

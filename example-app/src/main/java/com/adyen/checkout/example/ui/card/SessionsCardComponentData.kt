@@ -10,8 +10,10 @@ package com.adyen.checkout.example.ui.card
 
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionComponentCallback
 
 internal data class SessionsCardComponentData(
     val checkoutSession: CheckoutSession,
     val paymentMethod: PaymentMethod,
+    val callback: SessionComponentCallback
 )

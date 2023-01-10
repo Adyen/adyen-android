@@ -40,6 +40,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
@@ -84,6 +85,7 @@ class CardComponentProvider(
         application: Application,
         defaultArgs: Bundle?,
         key: String?,
+        callback: SessionComponentCallback
     ): CardComponent {
         return createCardComponent(
             savedStateRegistryOwner = savedStateRegistryOwner,
@@ -111,7 +113,8 @@ class CardComponentProvider(
             val sessionHandler = SessionHandler(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                coroutineScope = component.viewModelScope
+                coroutineScope = component.viewModelScope,
+                sessionComponentCallback = callback
             )
             component.observe(lifecycleOwner, sessionHandler::onPaymentComponentEvent)
         }

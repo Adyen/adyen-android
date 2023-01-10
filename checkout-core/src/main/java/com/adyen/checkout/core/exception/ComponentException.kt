@@ -7,7 +7,5 @@
  */
 package com.adyen.checkout.core.exception
 
-open class ComponentException : CheckoutException {
-    constructor(errorMessage: String) : super(errorMessage)
-    constructor(errorMessage: String, cause: Throwable?) : super(errorMessage, cause)
-}
+open class ComponentException(errorMessage: String, cause: Throwable? = null) :
+    CheckoutException(errorMessage, cause)

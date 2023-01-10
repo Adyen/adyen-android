@@ -63,7 +63,12 @@ class SessionInteractor(
                     val action = response.action
                     return when {
                         response.isRefusedInPartialPaymentFlow() -> {
-                            SessionCallResult.Payments.Error(reason = response.resultCode)
+                            SessionCallResult.Payments.Error(
+                                // TODO: Use more specific exceptions
+                                throwable = CheckoutException(
+                                    errorMessage = "Payment is refused while making a partial payment."
+                                )
+                            )
                         }
                         action != null -> SessionCallResult.Payments.Action(action)
                         response.order.isNonFullyPaid() -> SessionCallResult.Payments.NotFullyPaidOrder(response.order)
@@ -71,7 +76,7 @@ class SessionInteractor(
                     }
                 },
                 onFailure = {
-                    return SessionCallResult.Payments.Error(reason = it.message)
+                    return SessionCallResult.Payments.Error(throwable = it)
                 }
             )
     }
@@ -108,7 +113,7 @@ class SessionInteractor(
                     }
                 },
                 onFailure = {
-                    return SessionCallResult.Details.Error(reason = it.message)
+                    return SessionCallResult.Details.Error(throwable = it)
                 }
             )
     }
@@ -134,14 +139,18 @@ class SessionInteractor(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
                     return if (response.balance.value <= 0) {
-                        SessionCallResult.Balance.Error(reason = "Not enough balance")
+                        SessionCallResult.Balance.Error(
+                            throwable = CheckoutException(
+                                errorMessage = "Not enough balance"
+                            )
+                        )
                     } else {
                         val balanceResult = BalanceResult(response.balance, response.transactionLimit)
                         SessionCallResult.Balance.Successful(balanceResult)
                     }
                 },
                 onFailure = {
-                    return SessionCallResult.Balance.Error(reason = it.message)
+                    return SessionCallResult.Balance.Error(throwable = it)
                 }
             )
     }
@@ -175,7 +184,7 @@ class SessionInteractor(
                     return SessionCallResult.CreateOrder.Successful(order)
                 },
                 onFailure = {
-                    return SessionCallResult.CreateOrder.Error(reason = it.message)
+                    return SessionCallResult.CreateOrder.Error(throwable = it)
                 }
             )
     }
@@ -204,7 +213,7 @@ class SessionInteractor(
                     return SessionCallResult.CancelOrder.Successful
                 },
                 onFailure = {
-                    return SessionCallResult.CancelOrder.Error(reason = it.message)
+                    return SessionCallResult.CancelOrder.Error(throwable = it)
                 }
             )
     }
@@ -226,11 +235,15 @@ class SessionInteractor(
                     return if (paymentMethods != null) {
                         SessionCallResult.UpdatePaymentMethods.Successful(paymentMethods, order)
                     } else {
-                        SessionCallResult.UpdatePaymentMethods.Error(reason = "Payment methods should not be null")
+                        SessionCallResult.UpdatePaymentMethods.Error(
+                            throwable = CheckoutException(
+                                errorMessage = "Payment methods should not be null"
+                            )
+                        )
                     }
                 },
                 onFailure = {
-                    return SessionCallResult.UpdatePaymentMethods.Error(reason = it.message)
+                    return SessionCallResult.UpdatePaymentMethods.Error(throwable = it)
                 }
             )
     }

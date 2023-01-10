@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.card
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentProvider
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
@@ -55,8 +57,7 @@ class SessionsCardActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { cardViewModel.sessionsCardComponentDataFlow.collect(::setupCardView) }
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
-                // TODO sessions: re-add later
-                // launch { cardViewModel.events.collect(::onCardEvent) }
+                launch { cardViewModel.events.collect(::onCardEvent) }
             }
         }
     }
@@ -104,11 +105,28 @@ class SessionsCardActivity : AppCompatActivity() {
             application = application,
             defaultArgs = null,
             key = null,
+            callback = sessionsCardComponentData.callback
         )
 
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
+    }
+
+    private fun onCardEvent(event: CardEvent) {
+        when (event) {
+            is CardEvent.PaymentResult -> onPaymentResult(event.result)
+            is CardEvent.AdditionalAction -> onAction(event.action)
+        }
+    }
+
+    private fun onAction(action: Action) {
+        cardComponent?.handleAction(action, this)
+    }
+
+    private fun onPaymentResult(result: String) {
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     override fun onDestroy() {

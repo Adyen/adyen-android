@@ -21,32 +21,32 @@ interface SessionCallResult {
         data class Finished(val resultCode: String) : Payments()
         data class NotFullyPaidOrder(val order: OrderResponse?) : Payments()
         data class Action(val action: ActionResponse) : Payments()
-        data class Error(val reason: String?) : Payments()
+        data class Error(val throwable: Throwable) : Payments()
         object TakenOver : Payments()
     }
 
     sealed class Details : SessionCallResult {
         data class Finished(val resultCode: String) : Details()
         data class Action(val action: ActionResponse) : Details()
-        data class Error(val reason: String?) : Details()
+        data class Error(val throwable: Throwable) : Details()
         object TakenOver : Details()
     }
 
     sealed class Balance : SessionCallResult {
         data class Successful(val balanceResult: BalanceResult) : Balance()
-        data class Error(val reason: String?) : Balance()
+        data class Error(val throwable: Throwable) : Balance()
         object TakenOver : Balance()
     }
 
     sealed class CreateOrder : SessionCallResult {
         data class Successful(val order: OrderResponse) : CreateOrder()
-        data class Error(val reason: String?) : CreateOrder()
+        data class Error(val throwable: Throwable) : CreateOrder()
         object TakenOver : CreateOrder()
     }
 
     sealed class CancelOrder : SessionCallResult {
         object Successful : CancelOrder()
-        data class Error(val reason: String?) : CancelOrder()
+        data class Error(val throwable: Throwable) : CancelOrder()
         object TakenOver : CancelOrder()
     }
 
@@ -56,6 +56,6 @@ interface SessionCallResult {
             val order: OrderResponse?,
         ) : UpdatePaymentMethods()
 
-        data class Error(val reason: String?) : UpdatePaymentMethods()
+        data class Error(val throwable: Throwable) : UpdatePaymentMethods()
     }
 }
