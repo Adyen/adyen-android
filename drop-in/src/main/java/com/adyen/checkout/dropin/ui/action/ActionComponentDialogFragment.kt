@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -164,7 +165,13 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
                 Logger.e(TAG, exception.message.orEmpty(), exception)
-                requestPermissionLauncher.launch(requiredPermission)
+                // TODO: translation
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Request storage permission")
+                    .setMessage("In order to save this image to your device, you need to enable storage permission")
+                    .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
+                    .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
             else -> {
                 Logger.e(TAG, componentError.errorMessage)
