@@ -131,7 +131,7 @@ class ExampleFullAsyncDropInService : DropInService() {
                 Logger.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
             }
-            isRefused(jsonResponse) -> {
+            isRefusedInPartialPaymentFlow(jsonResponse) -> {
                 Logger.d(TAG, "Refused")
                 DropInServiceResult.Error(reason = "Refused")
             }
@@ -157,6 +157,9 @@ class ExampleFullAsyncDropInService : DropInService() {
             }
         }
     }
+
+    private fun isRefusedInPartialPaymentFlow(jsonResponse: JSONObject) =
+        isRefused(jsonResponse) && isNonFullyPaidOrder(jsonResponse)
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
         return jsonResponse.getStringOrNull("resultCode")

@@ -62,7 +62,9 @@ class SessionInteractor(
 
                     val action = response.action
                     return when {
-                        response.isRefused() -> SessionCallResult.Payments.Error(reason = response.resultCode)
+                        response.isRefusedInPartialPaymentFlow() -> {
+                            SessionCallResult.Payments.Error(reason = response.resultCode)
+                        }
                         action != null -> SessionCallResult.Payments.Action(action)
                         response.order.isNonFullyPaid() -> SessionCallResult.Payments.NotFullyPaidOrder(response.order)
                         else -> SessionCallResult.Payments.Finished(response.resultCode.orEmpty())
@@ -73,6 +75,8 @@ class SessionInteractor(
                 }
             )
     }
+
+    private fun SessionPaymentsResponse.isRefusedInPartialPaymentFlow() = isRefused() && order.isNonFullyPaid()
 
     private fun SessionPaymentsResponse.isRefused() =
         resultCode.equals(other = StatusResponseUtils.RESULT_REFUSED, ignoreCase = true)
