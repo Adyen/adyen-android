@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -53,6 +54,7 @@ internal class CardComponentTest(
             cardDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            SavedStateHandle(),
         )
     }
 
@@ -101,7 +103,7 @@ internal class CardComponentTest(
     fun `when card delegate view flow emits a value then component view flow should match that value`() = runTest {
         val cardDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(cardDelegate.viewFlow) doReturn cardDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent)
+        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, SavedStateHandle())
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -117,7 +119,7 @@ internal class CardComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent)
+        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, SavedStateHandle())
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

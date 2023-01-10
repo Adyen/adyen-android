@@ -10,8 +10,10 @@ package com.adyen.checkout.card
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
@@ -37,6 +39,12 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
+import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.api.SessionService
+import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
@@ -46,6 +54,71 @@ class CardComponentProvider(
     private val componentParamsMapper = CardComponentParamsMapper(overrideComponentParams)
 
     override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: CardConfiguration,
+        application: Application,
+        defaultArgs: Bundle?,
+        key: String?,
+    ): CardComponent {
+        return createCardComponent(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            paymentMethod = paymentMethod,
+            configuration = configuration,
+            application = application,
+            defaultArgs = defaultArgs,
+            key = key,
+        )
+    }
+
+    @Suppress("LongParameterList", "LongMethod")
+    fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: CardConfiguration,
+        application: Application,
+        defaultArgs: Bundle?,
+        key: String?,
+    ): CardComponent {
+        return createCardComponent(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            paymentMethod = paymentMethod,
+            configuration = configuration,
+            application = application,
+            defaultArgs = defaultArgs,
+            key = key,
+        ).also { component ->
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = component.savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = configuration.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+            val sessionHandler = SessionHandler(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+                coroutineScope = component.viewModelScope
+            )
+            component.observe(lifecycleOwner, sessionHandler::onPaymentComponentEvent)
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private fun createCardComponent(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
@@ -101,6 +174,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                savedStateHandle = savedStateHandle,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
@@ -154,6 +228,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                savedStateHandle = savedStateHandle,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]

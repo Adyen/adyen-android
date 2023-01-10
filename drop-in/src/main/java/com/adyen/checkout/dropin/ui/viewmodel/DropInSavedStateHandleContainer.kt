@@ -19,11 +19,11 @@ import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.data.SessionDetails
-import com.adyen.checkout.dropin.data.mapToDetails
 import com.adyen.checkout.dropin.ui.order.OrderModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.data.SessionDetails
+import com.adyen.checkout.sessions.data.mapToDetails
 
 internal class DropInSavedStateHandleContainer(
     override val savedStateHandle: SavedStateHandle,

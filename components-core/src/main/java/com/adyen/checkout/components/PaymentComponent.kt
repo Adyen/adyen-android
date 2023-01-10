@@ -20,9 +20,9 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  */
 interface PaymentComponent<ComponentStateT : PaymentComponentState<*>> : Component {
 
-    // TODO documentation
+    // TODO sessions: remove this and make it internal inside the components
     fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
 
-    // TODO documentation
+    // TODO sessions: remove this and make it internal inside the components
     fun removeObserver()
 }

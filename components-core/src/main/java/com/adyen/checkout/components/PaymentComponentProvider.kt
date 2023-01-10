@@ -40,7 +40,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*>, Configurati
      */
     @Throws(CheckoutException::class)
     fun <T> get(
-        owner: T,
+        owner: T, // TODO sessions: change this into fragment and activity to get the correct lifecycle in the fragment
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
@@ -72,6 +72,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*>, Configurati
     fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        // TODO sessions: add lifecycle owner
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,

@@ -41,7 +41,7 @@ internal class DefaultInstantPaymentDelegate(
         MutableStateFlow(createComponentState())
 
     private val submitChannel: Channel<PaymentComponentState<PaymentMethodDetails>> = bufferedChannel()
-    private val submitFlow: Flow<PaymentComponentState<PaymentMethodDetails>> = submitChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<PaymentMethodDetails>> = submitChannel.receiveAsFlow()
 
     init {
         submitChannel.trySend(componentStateFlow.value)

@@ -31,9 +31,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class DefaultGooglePayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -47,14 +50,27 @@ internal class DefaultGooglePayDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
+    private val submitChannel: Channel<GooglePayComponentState> = bufferedChannel()
+    override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
+
     override fun initialize(coroutineScope: CoroutineScope) {
         sendAnalyticsEvent(coroutineScope)
+
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
     }
 
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
         Logger.v(TAG, "sendAnalyticsEvent")
         coroutineScope.launch {
             analyticsRepository.sendAnalyticsEvent()
+        }
+    }
+
+    private fun onState(state: GooglePayComponentState) {
+        if (state.isValid) {
+            submitChannel.trySend(state)
         }
     }
 
@@ -66,7 +82,7 @@ internal class DefaultGooglePayDelegate(
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

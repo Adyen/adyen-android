@@ -17,5 +17,6 @@ internal sealed class ComponentItem {
         object Blik : Entry(R.string.blik_component_entry)
         object Card : Entry(R.string.card_component_entry)
         object Instant : Entry(R.string.instant_component_entry)
+        object CardWithSession : Entry(R.string.card_component_with_session_entry)
     }
 }

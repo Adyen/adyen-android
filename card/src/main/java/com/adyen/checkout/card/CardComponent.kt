@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
@@ -36,7 +37,8 @@ import kotlinx.coroutines.flow.Flow
 class CardComponent internal constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
-    private val actionHandlingComponent: DefaultActionHandlingComponent
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val savedStateHandle: SavedStateHandle,
 ) :
     ViewModel(),
     PaymentComponent<CardComponentState>,

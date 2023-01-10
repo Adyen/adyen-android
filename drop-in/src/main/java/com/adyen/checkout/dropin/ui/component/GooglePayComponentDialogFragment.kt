@@ -87,7 +87,7 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
     private fun onPaymentComponentEvent(event: PaymentComponentEvent<GooglePayComponentState>) {
         when (event) {
             is PaymentComponentEvent.StateChanged -> {
-                if (event.state.isValid) protocol.requestPaymentsCall(event.state)
+                // no ops
             }
             is PaymentComponentEvent.Error -> {
                 handleError(event.error)
@@ -96,7 +96,7 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
                 throw IllegalStateException("This event should not be used in drop-in")
             }
             is PaymentComponentEvent.Submit -> {
-                // no ops
+                protocol.requestPaymentsCall(event.state)
             }
         }
     }
