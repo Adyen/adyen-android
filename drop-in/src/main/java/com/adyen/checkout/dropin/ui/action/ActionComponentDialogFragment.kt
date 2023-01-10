@@ -57,6 +57,7 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
+                // TODO: translation
                 requireContext().toast("permission is not granted")
             }
         }
@@ -162,7 +163,7 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             }
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
-                Logger.e(TAG, "$requiredPermission permission is not granted", exception)
+                Logger.e(TAG, exception.message.orEmpty(), exception)
                 requestPermissionLauncher.launch(requiredPermission)
             }
             else -> {

@@ -43,6 +43,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -74,6 +75,9 @@ internal class DefaultQRCodeDelegate(
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    private val eventChannel: Channel<QrCodeUIEvent> = bufferedChannel()
+    override val eventFlow: Flow<QrCodeUIEvent> = eventChannel.receiveAsFlow()
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -269,16 +273,21 @@ internal class DefaultQRCodeDelegate(
     )
 
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    override suspend fun downloadQRImage(): Result<Unit> {
+    override fun downloadQRImage() {
         val date: Long = System.currentTimeMillis()
         val imageName = String.format(IMAGE_NAME, date)
         val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
-        return fileDownloader.download(
-            outputData.qrImageUrl.orEmpty(),
-            imageName,
-            imageDirectory,
-            MIME_TYPE
-        )
+        coroutineScope.launch {
+            fileDownloader.download(
+                outputData.qrImageUrl.orEmpty(),
+                imageName,
+                imageDirectory,
+                MIME_TYPE
+            ).fold(
+                onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
+                onFailure = { e -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(e)) }
+            )
+        }
     }
 
     companion object {

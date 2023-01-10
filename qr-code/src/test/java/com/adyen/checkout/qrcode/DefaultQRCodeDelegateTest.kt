@@ -23,13 +23,13 @@ import com.adyen.checkout.components.test.TestRedirectHandler
 import com.adyen.checkout.components.test.TestStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.FileDownloader
 import com.adyen.checkout.qrcode.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -210,7 +210,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals(awaitItem(), QrCodeComponentViewType.SIMPLE_QR_CODE)
+                assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
             }
         }
 
@@ -226,7 +226,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals(awaitItem(), QrCodeComponentViewType.FULL_QR_CODE)
+                assertEquals(QrCodeComponentViewType.FULL_QR_CODE, awaitItem())
             }
         }
     }
@@ -294,14 +294,36 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `download qr image successfully`(): Unit = runBlocking {
-        val expectedResult = Result.success(Unit)
-        whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn expectedResult
+    fun `test download qr image with successful result`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-        val actualResult = delegate.downloadQRImage()
+        delegate.eventFlow.test {
+            val result = Result.success(Unit)
+            whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn result
+            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Success
 
-        assertEquals(expectedResult.isSuccess, actualResult.isSuccess)
-        verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString()).isSuccess
+            delegate.downloadQRImage()
+
+            assertEquals(expectedResult, expectMostRecentItem())
+            verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString())
+        }
+    }
+
+    @Test
+    fun `test download qr image with failure result`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.eventFlow.test {
+            val throwable = CheckoutException("error")
+            val result = Result.failure<Unit>(throwable)
+            whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn result
+            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Failure(throwable)
+
+            delegate.downloadQRImage()
+
+            assertEquals(expectedResult, expectMostRecentItem())
+            verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString())
+        }
     }
 
     companion object {

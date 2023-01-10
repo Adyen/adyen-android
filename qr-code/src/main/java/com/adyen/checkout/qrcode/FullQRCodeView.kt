@@ -16,7 +16,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.annotation.RequiresPermission
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -39,7 +38,6 @@ import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
@@ -78,13 +76,13 @@ internal class FullQRCodeView @JvmOverloads constructor(
             ) {
                 delegate.onError(
                     PermissionException(
-                        errorMessage = "storage permission is not granted",
+                        errorMessage = "$requiredPermission permission is not granted",
                         requiredPermission = requiredPermission
                     )
                 )
                 return@setOnClickListener
             }
-            saveQrImage(coroutineScope)
+            delegate.downloadQRImage()
         }
     }
 
@@ -99,6 +97,10 @@ internal class FullQRCodeView @JvmOverloads constructor(
 
         delegate.timerFlow
             .onEach { onTimerTick(it) }
+            .launchIn(coroutineScope)
+
+        delegate.eventFlow
+            .onEach { handleEventFlow(it) }
             .launchIn(coroutineScope)
     }
 
@@ -170,13 +172,17 @@ internal class FullQRCodeView @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    private fun saveQrImage(coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
-            delegate.downloadQRImage().fold(
-                onSuccess = { context.toast("qr code downloaded successfully") },
-                onFailure = { e -> Logger.e(TAG, "download file failed", e) }
-            )
+    private fun handleEventFlow(event: QrCodeUIEvent) {
+        when (event) {
+            QrCodeUIEvent.QrImageDownloadResult.Success -> {
+                // TODO: add translation
+                context.toast("Downloading image succeeded")
+            }
+            is QrCodeUIEvent.QrImageDownloadResult.Failure -> {
+                // TODO: add translation
+                context.toast("Downloading image failed")
+                Logger.e(TAG, "download file failed", event.throwable)
+            }
         }
     }
 
