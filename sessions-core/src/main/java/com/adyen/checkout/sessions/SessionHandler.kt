@@ -60,7 +60,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
     private fun onPaymentsCallRequested(
         paymentComponentState: T,
     ) {
-        coroutineScope.launch {
+        coroutineScope.launchWithLoadingState {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
                 sessionComponentCallback::onSubmit,
@@ -86,7 +86,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
     private fun onDetailsCallRequested(
         actionComponentData: ActionComponentData
     ) {
-        coroutineScope.launch {
+        coroutineScope.launchWithLoadingState {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
                 sessionComponentCallback::onAdditionalDetails,
@@ -107,7 +107,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
     }
 
     private fun checkBalance(paymentMethodData: PaymentMethodDetails) {
-        coroutineScope.launch {
+        coroutineScope.launchWithLoadingState {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
                 sessionComponentCallback::onBalanceCheck,
@@ -126,7 +126,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
     }
 
     private fun createOrder() {
-        coroutineScope.launch {
+        coroutineScope.launchWithLoadingState {
             val result = sessionInteractor.createOrder(
                 sessionComponentCallback::onOrderRequest,
                 sessionComponentCallback::onOrderRequest.name
@@ -145,7 +145,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
     }
 
     private fun cancelOrder(order: OrderRequest) {
-        coroutineScope.launch {
+        coroutineScope.launchWithLoadingState {
             val result = sessionInteractor.cancelOrder(
                 order,
                 sessionComponentCallback::onOrderCancel,
@@ -161,6 +161,14 @@ class SessionHandler<T : PaymentComponentState<*>>(
                     setFlowTakenOver()
                 }
             }
+        }
+    }
+
+    private fun CoroutineScope.launchWithLoadingState(block: suspend CoroutineScope.() -> Unit) {
+        launch {
+            sessionComponentCallback.onLoading(true)
+            block()
+            sessionComponentCallback.onLoading(false)
         }
     }
 

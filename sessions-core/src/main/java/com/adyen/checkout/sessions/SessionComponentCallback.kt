@@ -29,4 +29,6 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> {
     fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
     fun onOrderRequest(): Boolean = false
     fun onOrderCancel(orderRequest: OrderRequest): Boolean = false
+
+    fun onLoading(isLoading: Boolean) = Unit
 }

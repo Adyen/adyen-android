@@ -50,8 +50,6 @@ internal class SessionsCardViewModel @Inject constructor(
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
 
-    // TODO sessions: re-add later
-
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
@@ -131,6 +129,17 @@ internal class SessionsCardViewModel @Inject constructor(
 
     private fun onComponentError(error: ComponentError) {
         viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+    }
+
+    override fun onLoading(isLoading: Boolean) {
+        val state = if (isLoading) {
+            Logger.d(TAG, "Show loading")
+            CardViewState.Loading
+        } else {
+            Logger.d(TAG, "Don't show loading")
+            CardViewState.ShowComponent
+        }
+        _cardViewState.tryEmit(state)
     }
 
     companion object {
