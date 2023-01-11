@@ -174,4 +174,29 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
+    <style name="AdyenCheckout.PaymentInProgressView.TitleTextView" parent="AdyenCheckout">
+        <item name="android:text">@string/paymentInProgressView_title</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:textAppearance">@style/AdyenCheckout.TextAppearance.Primary</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.ProgressBar" parent="AdyenCheckout">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginTop">48dp</item>
+        <item name="android:indeterminateTint">?android:attr/colorPrimary</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.DescriptionTextView" parent="AdyenCheckout">
+        <item name="android:text">@string/paymentInProgressView_loadingText</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.CancelButton" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:text">@string/paymentInProgressView_cancelButton</item>
+        <item name="android:layout_marginTop">48dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
 </resources>

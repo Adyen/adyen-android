@@ -10,4 +10,8 @@
     <string name="pay_button">%%payButton%%</string>
     <string name="pay_button_with_value">%%payAmountFormat%%</string>
     <string name="confirm_preauthorization">%%confirmPreauthorization%%</string>
+
+    <string name="paymentInProgressView_title">%%redirect.intermediateScreen.title%%</string>
+    <string name="paymentInProgressView_loadingText">%%redirect.intermediateScreen.loadingText%%</string>
+    <string name="paymentInProgressView_cancelButton">%%storedPaymentMethod.disable.cancelButton%%</string>
 </resources>

@@ -10,4 +10,8 @@
     <string name="pay_button">Заплатить</string>
     <string name="pay_button_with_value">Заплатить %s</string>
     <string name="confirm_preauthorization">Подтвердить предавторизацию</string>
+
+    <string name="paymentInProgressView_title">Проведение оплаты не закончено</string>
+    <string name="paymentInProgressView_loadingText">В ожидании завершения…</string>
+    <string name="paymentInProgressView_cancelButton">Отменить</string>
 </resources>

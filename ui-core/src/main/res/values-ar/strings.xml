@@ -10,4 +10,8 @@
     <string name="pay_button">دفع</string>
     <string name="pay_button_with_value">دفع %s</string>
     <string name="confirm_preauthorization">تأكيد التفويض المسبق</string>
+
+    <string name="paymentInProgressView_title">عملية دفع لا تزال نشطة</string>
+    <string name="paymentInProgressView_loadingText">في انتظار الاكتمال…</string>
+    <string name="paymentInProgressView_cancelButton">إلغاء</string>
 </resources>

@@ -10,4 +10,8 @@
     <string name="pay_button">Betaal</string>
     <string name="pay_button_with_value">%s betalen</string>
     <string name="confirm_preauthorization">Preautorisatie bevestigen</string>
+
+    <string name="paymentInProgressView_title">Er is nog een lopend betalingsproces</string>
+    <string name="paymentInProgressView_loadingText">In afwachting van voltooiing…</string>
+    <string name="paymentInProgressView_cancelButton">Annuleren</string>
 </resources>
