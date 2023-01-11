@@ -11,7 +11,7 @@ package com.adyen.checkout.card
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed class AddressFieldPolicyParams : AddressFieldPolicy {
+internal sealed class AddressFieldPolicyParams : AddressFieldPolicy {
     /**
      * Address form fields will be required.
      */

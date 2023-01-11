@@ -1,5 +1,6 @@
 package com.adyen.checkout.card.util
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.AddressOutputData
@@ -10,6 +11,7 @@ import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 
 @Suppress("LongParameterList")
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AddressValidationUtils {
 
     /**

@@ -11,8 +11,8 @@ package com.adyen.checkout.card.util
 import com.adyen.checkout.card.AddressParams
 import com.adyen.checkout.card.AddressFieldPolicyParams
 
-object CardAddressValidationUtils {
-
+internal object CardAddressValidationUtils {
+    //  TODO check it after ACH implementation
     fun isAddressOptional(addressParams: AddressParams, cardType: String?): Boolean {
         return when (addressParams) {
             is AddressParams.FullAddress -> {

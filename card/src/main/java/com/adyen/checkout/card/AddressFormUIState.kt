@@ -1,5 +1,8 @@
 package com.adyen.checkout.card
 
+import androidx.annotation.RestrictTo
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class AddressFormUIState {
     NONE, POSTAL_CODE, FULL_ADDRESS;
 

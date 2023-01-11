@@ -10,12 +10,14 @@ package com.adyen.checkout.card
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
+import androidx.annotation.RestrictTo
 
 /**
  * Configuration class for Address Form in Address View. This class can be used define the
  * visibility of the address form.
  */
 @Parcelize
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class AddressParams : Parcelable {
 
     /**
