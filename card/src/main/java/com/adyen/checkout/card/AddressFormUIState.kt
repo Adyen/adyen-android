@@ -7,15 +7,15 @@ enum class AddressFormUIState {
         /**
          * Get visibility state of the address form.
          *
-         * @param addressConfiguration Configuration object for address form.
+         * @param addressParams Configuration object for address form.
          *
          * @return Visibility state of the address form.
          */
-        fun fromAddressConfiguration(addressConfiguration: AddressConfiguration): AddressFormUIState {
-            return when (addressConfiguration) {
-                is AddressConfiguration.FullAddress -> FULL_ADDRESS
-                is AddressConfiguration.PostalCode -> POSTAL_CODE
-                is AddressConfiguration.None -> NONE
+        fun fromAddressParams(addressParams: AddressParams): AddressFormUIState {
+            return when (addressParams) {
+                is AddressParams.FullAddress -> FULL_ADDRESS
+                is AddressParams.PostalCode -> POSTAL_CODE
+                is AddressParams.None -> NONE
             }
         }
     }

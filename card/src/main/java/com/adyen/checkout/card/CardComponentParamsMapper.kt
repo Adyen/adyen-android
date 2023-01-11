@@ -58,7 +58,7 @@ internal class CardComponentParamsMapper(
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
             installmentConfiguration = installmentConfiguration,
-            addressConfiguration = addressConfiguration ?: AddressConfiguration.None
+            addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None
         )
     }
 
@@ -108,6 +108,38 @@ internal class CardComponentParamsMapper(
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )
+    }
+
+    private fun AddressConfiguration.mapToAddressParam(): AddressParams {
+        return when (this) {
+            is AddressConfiguration.FullAddress -> {
+                AddressParams.FullAddress(
+                    defaultCountryCode,
+                    supportedCountryCodes,
+                    addressFieldPolicy.mapToAddressParamFieldPolicy()
+                )
+            }
+            AddressConfiguration.None -> {
+                AddressParams.None
+            }
+            is AddressConfiguration.PostalCode -> {
+                AddressParams.PostalCode(addressFieldPolicy.mapToAddressParamFieldPolicy())
+            }
+        }
+    }
+
+    private fun AddressConfiguration.CardAddressFieldPolicy.mapToAddressParamFieldPolicy(): AddressFieldPolicy {
+        return when (this) {
+            is AddressConfiguration.CardAddressFieldPolicy.Optional -> {
+                AddressFieldPolicyParams.Optional
+            }
+            is AddressConfiguration.CardAddressFieldPolicy.OptionalForCardTypes -> {
+                AddressFieldPolicyParams.OptionalForCardTypes(brands)
+            }
+            is AddressConfiguration.CardAddressFieldPolicy.Required -> {
+                AddressFieldPolicyParams.Required
+            }
+        }
     }
 
     companion object {

@@ -20,6 +20,7 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
+import com.adyen.checkout.card.util.CardAddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
@@ -131,7 +132,7 @@ internal class DefaultCardDelegate(
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
-        if (componentParams.addressConfiguration is AddressConfiguration.FullAddress) {
+        if (componentParams.addressParams is AddressParams.FullAddress) {
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
@@ -226,7 +227,7 @@ internal class DefaultCardDelegate(
             .onEach { countries ->
                 Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
-                    addressConfiguration = componentParams.addressConfiguration,
+                    addressParams = componentParams.addressParams,
                     countryList = countries
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
@@ -292,7 +293,7 @@ internal class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        val addressFormUIState = AddressFormUIState.fromAddressConfiguration(componentParams.addressConfiguration)
+        val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
         return CardOutputData(
             cardNumberState = validateCardNumber(
@@ -512,13 +513,18 @@ internal class DefaultCardDelegate(
         countryOptions: List<AddressListItem>,
         stateOptions: List<AddressListItem>
     ): AddressOutputData {
+        val isOptional =
+            CardAddressValidationUtils.isAddressOptional(
+                addressParams = componentParams.addressParams,
+                cardType = detectedCardType?.cardType?.txVariant
+            )
+
         return AddressValidationUtils.validateAddressInput(
             addressInputModel,
             addressFormUIState,
-            componentParams.addressConfiguration,
-            detectedCardType,
             countryOptions,
-            stateOptions
+            stateOptions,
+            isOptional
         )
     }
 
