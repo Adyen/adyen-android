@@ -85,7 +85,7 @@ class CardComponentProvider(
         application: Application,
         defaultArgs: Bundle?,
         key: String?,
-        callback: SessionComponentCallback
+        callback: SessionComponentCallback<CardComponentState>
     ): CardComponent {
         return createCardComponent(
             savedStateRegistryOwner = savedStateRegistryOwner,

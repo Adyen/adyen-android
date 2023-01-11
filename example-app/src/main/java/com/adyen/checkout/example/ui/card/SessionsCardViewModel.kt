@@ -11,6 +11,7 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
@@ -41,7 +42,7 @@ internal class SessionsCardViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
-) : ViewModel(), SessionComponentCallback {
+) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
     private val _sessionsCardComponentDataFlow = MutableStateFlow<SessionsCardComponentData?>(null)
     val sessionsCardComponentDataFlow: Flow<SessionsCardComponentData> = _sessionsCardComponentDataFlow.filterNotNull()

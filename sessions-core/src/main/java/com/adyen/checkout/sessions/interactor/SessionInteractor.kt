@@ -39,9 +39,9 @@ class SessionInteractor(
 
     private val sessionModel: SessionModel get() = _sessionFlow.value
 
-    suspend fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
-        merchantCall: (PaymentComponentState<*>) -> Boolean,
+    suspend fun <T : PaymentComponentState<*>> onPaymentsCallRequested(
+        paymentComponentState: T,
+        merchantCall: (T) -> Boolean,
         merchantCallName: String,
     ): SessionCallResult.Payments {
         return checkIfCallWasHandled(
@@ -255,20 +255,20 @@ class SessionInteractor(
         takenOverFactory: () -> T
     ): T {
         val callWasHandled = merchantCall()
-        if (!callWasHandled) {
+        return if (!callWasHandled) {
             if (isFlowTakenOver) {
                 throw CheckoutException(
                     "Sessions flow was already taken over in a" +
                         " previous call, $merchantMethodName should be implemented"
                 )
             } else {
-                return internalCall()
+                internalCall()
             }
         } else {
             if (!isFlowTakenOver) {
                 isFlowTakenOver = true
             }
-            return takenOverFactory()
+            takenOverFactory()
         }
     }
 

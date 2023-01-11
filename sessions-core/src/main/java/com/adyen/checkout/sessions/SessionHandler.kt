@@ -15,7 +15,6 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -25,15 +24,14 @@ import com.adyen.checkout.sessions.interactor.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("TooManyFunctions")
-class SessionHandler(
+class SessionHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
     private val coroutineScope: CoroutineScope,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
-    private val sessionComponentCallback: SessionComponentCallback
+    private val sessionComponentCallback: SessionComponentCallback<T>
 ) {
 
     init {
@@ -44,7 +42,7 @@ class SessionHandler(
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
         Logger.v(TAG, "Event received $event")
         when (event) {
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data)
@@ -60,15 +58,13 @@ class SessionHandler(
     }
 
     private fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentState: T,
     ) {
-        val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
-
         coroutineScope.launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
-                { makePaymentsCallMerchant(it, paymentComponentJson) },
-                ::makePaymentsCallMerchant.name,
+                sessionComponentCallback::onSubmit,
+                sessionComponentCallback::onSubmit.name,
             )
 
             when (result) {
@@ -90,13 +86,11 @@ class SessionHandler(
     private fun onDetailsCallRequested(
         actionComponentData: ActionComponentData
     ) {
-        val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-
         coroutineScope.launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
-                { makeDetailsCallMerchant(it, actionComponentJson) },
-                ::makeDetailsCallMerchant.name
+                sessionComponentCallback::onAdditionalDetails,
+                sessionComponentCallback::onAdditionalDetails.name
             )
 
             when (result) {
@@ -116,8 +110,8 @@ class SessionHandler(
         coroutineScope.launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
-                ::makeCheckBalanceCallMerchant,
-                ::makeCheckBalanceCallMerchant.name,
+                sessionComponentCallback::onBalanceCheck,
+                sessionComponentCallback::onBalanceCheck.name,
             )
             when (result) {
                 is SessionCallResult.Balance.Error -> onSessionError(result.throwable)
@@ -134,8 +128,8 @@ class SessionHandler(
     private fun createOrder() {
         coroutineScope.launch {
             val result = sessionInteractor.createOrder(
-                ::makeCreateOrderMerchant,
-                ::makeCreateOrderMerchant.name
+                sessionComponentCallback::onOrderRequest,
+                sessionComponentCallback::onOrderRequest.name
             )
 
             when (result) {
@@ -150,12 +144,12 @@ class SessionHandler(
         }
     }
 
-    private fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    private fun cancelOrder(order: OrderRequest) {
         coroutineScope.launch {
             val result = sessionInteractor.cancelOrder(
                 order,
-                { makeCancelOrderCallMerchant(it, shouldUpdatePaymentMethods) },
-                ::makeCancelOrderCallMerchant.name
+                sessionComponentCallback::onOrderCancel,
+                sessionComponentCallback::onOrderCancel.name
             )
 
             when (result) {
@@ -170,8 +164,9 @@ class SessionHandler(
         }
     }
 
-    private fun onState(state: PaymentComponentState<*>) {
+    private fun onState(state: T) {
         // TODO sessions: provide merchants with state
+        sessionComponentCallback.onStateChanged(state)
     }
 
     private fun onComponentError(error: ComponentError) {
@@ -196,30 +191,6 @@ class SessionHandler(
         sessionSavedStateHandleContainer.isFlowTakenOver = true
         Logger.i(TAG, "Flow was taken over.")
     }
-
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun makePaymentsCallMerchant(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ): Boolean = false
-
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun makeDetailsCallMerchant(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ): Boolean = false
-
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean = false
-
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun makeCreateOrderMerchant(): Boolean = false
-
-    @Suppress("FunctionOnlyReturningConstant")
-    private fun makeCancelOrderCallMerchant(
-        order: OrderRequest,
-        shouldUpdatePaymentMethods: Boolean
-    ): Boolean = false
 
     companion object {
         private val TAG = LogUtil.getTag()
