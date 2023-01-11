@@ -17,48 +17,40 @@
 
     <TextView
         android:id="@+id/textView_paymentInProgress_title"
+        style="@style/AdyenCheckout.PaymentInProgressView.TitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textAppearance="@style/AdyenCheckout.TextAppearance.Primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="A payment process is still active" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar_paymentInProgress"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
-        android:indeterminateTint="?android:attr/colorPrimary"
+        style="@style/AdyenCheckout.PaymentInProgressView.ProgressBar"
         app:layout_constraintEnd_toStartOf="@id/textView_paymentInProgress_description"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_paymentInProgress_title" />
+        app:layout_constraintTop_toBottomOf="@id/textView_paymentInProgress_title"
+        tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_paymentInProgress_description"
+        style="@style/AdyenCheckout.PaymentInProgressView.DescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
         app:layout_constraintBottom_toBottomOf="@id/progressBar_paymentInProgress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
-        app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress"
-        tools:text="Awaiting completion…" />
+        app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress" />
 
     <Button
-        android:id="@+id/button_paymentInProgress_abort"
-        style="@style/AdyenCheckout.Button.Secondary"
+        android:id="@+id/button_paymentInProgress_cancel"
+        style="@style/AdyenCheckout.PaymentInProgressView.CancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar_paymentInProgress"
-        tools:text="Cancel active process" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_paymentInProgress" />
 
 </merge>

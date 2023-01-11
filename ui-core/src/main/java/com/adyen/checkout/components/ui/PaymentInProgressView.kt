@@ -16,6 +16,7 @@ import androidx.annotation.RestrictTo
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.databinding.ViewPaymentInProgressBinding
 import com.adyen.checkout.core.exception.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -40,18 +41,25 @@ class PaymentInProgressView @JvmOverloads constructor(
 
         initLocalizedStrings(localizedContext)
 
-        binding.buttonPaymentInProgressAbort.setOnClickListener {
+        binding.buttonPaymentInProgressCancel.setOnClickListener {
             delegate.onError(CancellationException("Payment in progress was cancelled"))
         }
     }
 
-    @Suppress("SetTextI18n", "UNUSED_PARAMETER")
     private fun initLocalizedStrings(localizedContext: Context) {
         with(binding) {
-            // TODO: Use string resources when we have final design
-            textViewPaymentInProgressTitle.text = "A payment process is still active"
-            textViewPaymentInProgressDescription.text = "Awaiting completion..."
-            buttonPaymentInProgressAbort.text = "Cancel active process"
+            textViewPaymentInProgressTitle.setLocalizedTextFromStyle(
+                R.style.AdyenCheckout_PaymentInProgressView_TitleTextView,
+                localizedContext
+            )
+            textViewPaymentInProgressDescription.setLocalizedTextFromStyle(
+                R.style.AdyenCheckout_PaymentInProgressView_DescriptionTextView,
+                localizedContext
+            )
+            buttonPaymentInProgressCancel.setLocalizedTextFromStyle(
+                R.style.AdyenCheckout_PaymentInProgressView_CancelButton,
+                localizedContext
+            )
         }
     }
 
