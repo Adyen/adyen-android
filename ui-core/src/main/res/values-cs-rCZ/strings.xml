@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Proces zpracování platby je stále aktivní</string>
     <string name="paymentInProgressView_loadingText">Čeká se na dokončení…</string>
-    <string name="paymentInProgressView_cancelButton">Zrušit aktivní proces</string>
+    <string name="paymentInProgressView_cancelButton">Zrušit</string>
 </resources>

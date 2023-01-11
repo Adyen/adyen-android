@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Postopek plačila je še vedno aktiven</string>
     <string name="paymentInProgressView_loadingText">Čakanje na dokončanje …</string>
-    <string name="paymentInProgressView_cancelButton">Prekliči aktivni postopek</string>
+    <string name="paymentInProgressView_cancelButton">Prekliči</string>
 </resources>

@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Maksuprosessi on edelleen aktiivinen</string>
     <string name="paymentInProgressView_loadingText">Odottaa valmistumista…</string>
-    <string name="paymentInProgressView_cancelButton">Peruuta aktiivinen prosessi</string>
+    <string name="paymentInProgressView_cancelButton">Peruuta</string>
 </resources>

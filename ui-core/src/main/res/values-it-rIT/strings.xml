@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Una procedura di pagamento è ancora in corso</string>
     <string name="paymentInProgressView_loadingText">In attesa di completamento…</string>
-    <string name="paymentInProgressView_cancelButton">Annulla procedura attiva</string>
+    <string name="paymentInProgressView_cancelButton">Cancella</string>
 </resources>

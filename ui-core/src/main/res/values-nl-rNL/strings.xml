@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Er is nog een lopend betalingsproces</string>
     <string name="paymentInProgressView_loadingText">In afwachting van voltooiing…</string>
-    <string name="paymentInProgressView_cancelButton">Annuleer lopend proces</string>
+    <string name="paymentInProgressView_cancelButton">Annuleren</string>
 </resources>

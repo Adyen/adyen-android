@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Un processus de paiement est encore actif</string>
     <string name="paymentInProgressView_loadingText">En attente d\'achèvement…</string>
-    <string name="paymentInProgressView_cancelButton">Annuler le processus actif</string>
+    <string name="paymentInProgressView_cancelButton">Annuler</string>
 </resources>

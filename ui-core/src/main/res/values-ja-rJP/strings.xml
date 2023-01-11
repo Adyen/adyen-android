@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">支払プロセスがまだ有効です</string>
     <string name="paymentInProgressView_loadingText">完了を待っています…</string>
-    <string name="paymentInProgressView_cancelButton">有効なプロセスをキャンセル</string>
+    <string name="paymentInProgressView_cancelButton">キャンセル</string>
 </resources>

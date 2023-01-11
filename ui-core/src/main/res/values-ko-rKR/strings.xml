@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">결제 프로세스가 아직 활성 상태입니다.</string>
     <string name="paymentInProgressView_loadingText">완료 대기 중…</string>
-    <string name="paymentInProgressView_cancelButton">활성 프로세스 취소</string>
+    <string name="paymentInProgressView_cancelButton">취소</string>
 </resources>

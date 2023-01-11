@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Проведение оплаты не закончено</string>
     <string name="paymentInProgressView_loadingText">В ожидании завершения…</string>
-    <string name="paymentInProgressView_cancelButton">Отменить проведение оплаты</string>
+    <string name="paymentInProgressView_cancelButton">Отменить</string>
 </resources>

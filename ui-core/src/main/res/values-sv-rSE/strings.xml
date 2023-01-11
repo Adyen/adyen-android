@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">En betalningsprocess pågår</string>
     <string name="paymentInProgressView_loadingText">Väntar på slutförande…</string>
-    <string name="paymentInProgressView_cancelButton">Avbryt pågående process</string>
+    <string name="paymentInProgressView_cancelButton">Avbryt</string>
 </resources>

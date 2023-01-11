@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Még aktív egy fizetési folyamat</string>
     <string name="paymentInProgressView_loadingText">Befejezésre vár…</string>
-    <string name="paymentInProgressView_cancelButton">Aktív folyamat megszakítása</string>
+    <string name="paymentInProgressView_cancelButton">Mégse</string>
 </resources>

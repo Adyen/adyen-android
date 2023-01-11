@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">A payment process is still active</string>
     <string name="paymentInProgressView_loadingText">Awaiting completion…</string>
-    <string name="paymentInProgressView_cancelButton">Cancel active process</string>
+    <string name="paymentInProgressView_cancelButton">Cancel</string>
 </resources>

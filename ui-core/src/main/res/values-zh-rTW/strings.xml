@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">仍在處理付款程序</string>
     <string name="paymentInProgressView_loadingText">正在等待完成……</string>
-    <string name="paymentInProgressView_cancelButton">取消已啟用程序</string>
+    <string name="paymentInProgressView_cancelButton">取消</string>
 </resources>

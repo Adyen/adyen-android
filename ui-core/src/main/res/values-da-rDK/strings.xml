@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">En betalingsproces er stadig aktiv</string>
     <string name="paymentInProgressView_loadingText">Afventer fuldførelse …</string>
-    <string name="paymentInProgressView_cancelButton">Annuller aktiv proces</string>
+    <string name="paymentInProgressView_cancelButton">Annuller</string>
 </resources>

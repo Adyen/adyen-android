@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">付款流程仍处于活动状态</string>
     <string name="paymentInProgressView_loadingText">正在等待完成…</string>
-    <string name="paymentInProgressView_cancelButton">取消活动进程</string>
+    <string name="paymentInProgressView_cancelButton">取消</string>
 </resources>

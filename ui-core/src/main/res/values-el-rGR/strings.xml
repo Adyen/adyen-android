@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Μια διεργασία πληρωμής είναι ακόμη ενεργή</string>
     <string name="paymentInProgressView_loadingText">Αναμονή για ολοκλήρωση…</string>
-    <string name="paymentInProgressView_cancelButton">Ακύρωση ενεργής διαδικασίας</string>
+    <string name="paymentInProgressView_cancelButton">Άκυρο</string>
 </resources>

@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">%%redirect.intermediateScreen.title%%</string>
     <string name="paymentInProgressView_loadingText">%%redirect.intermediateScreen.loadingText%%</string>
-    <string name="paymentInProgressView_cancelButton">%%redirect.intermediateScreen.cancelButton%%</string>
+    <string name="paymentInProgressView_cancelButton">%%storedPaymentMethod.disable.cancelButton%%</string>
 </resources>

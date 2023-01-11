@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">عملية دفع لا تزال نشطة</string>
     <string name="paymentInProgressView_loadingText">في انتظار الاكتمال…</string>
-    <string name="paymentInProgressView_cancelButton">إلغاء العملية النشطة</string>
+    <string name="paymentInProgressView_cancelButton">إلغاء</string>
 </resources>

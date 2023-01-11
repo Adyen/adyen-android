@@ -13,5 +13,5 @@
 
     <string name="paymentInProgressView_title">Un proces de plată este încă activ</string>
     <string name="paymentInProgressView_loadingText">Se așteaptă finalizarea…</string>
-    <string name="paymentInProgressView_cancelButton">Anulați procesul activ</string>
+    <string name="paymentInProgressView_cancelButton">Anulare</string>
 </resources>
