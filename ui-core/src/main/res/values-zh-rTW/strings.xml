@@ -10,4 +10,8 @@
     <string name="pay_button">支付</string>
     <string name="pay_button_with_value">支付 %s</string>
     <string name="confirm_preauthorization">確認預先授權</string>
+
+    <string name="paymentInProgressView_title">仍在處理付款程序</string>
+    <string name="paymentInProgressView_loadingText">正在等待完成……</string>
+    <string name="paymentInProgressView_cancelButton">取消已啟用程序</string>
 </resources>

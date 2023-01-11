@@ -10,4 +10,8 @@
     <string name="pay_button">Plătiți</string>
     <string name="pay_button_with_value">Plătiți %s</string>
     <string name="confirm_preauthorization">Confirmați preautorizarea</string>
+
+    <string name="paymentInProgressView_title">Un proces de plată este încă activ</string>
+    <string name="paymentInProgressView_loadingText">Se așteaptă finalizarea…</string>
+    <string name="paymentInProgressView_cancelButton">Anulați procesul activ</string>
 </resources>

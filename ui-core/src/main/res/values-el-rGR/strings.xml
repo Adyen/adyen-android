@@ -10,4 +10,8 @@
     <string name="pay_button">Πληρωμή</string>
     <string name="pay_button_with_value">Πληρωμή %s</string>
     <string name="confirm_preauthorization">Επιβεβαίωση προεξουσιοδότησης</string>
+
+    <string name="paymentInProgressView_title">Μια διεργασία πληρωμής είναι ακόμη ενεργή</string>
+    <string name="paymentInProgressView_loadingText">Αναμονή για ολοκλήρωση…</string>
+    <string name="paymentInProgressView_cancelButton">Ακύρωση ενεργής διαδικασίας</string>
 </resources>

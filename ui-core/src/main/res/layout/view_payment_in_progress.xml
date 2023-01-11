@@ -46,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
         app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress"
-        tools:text="Awaiting completion..." />
+        tools:text="Awaiting completion…" />
 
     <Button
         android:id="@+id/button_paymentInProgress_abort"

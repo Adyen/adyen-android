@@ -10,4 +10,8 @@
     <string name="pay_button">Betala</string>
     <string name="pay_button_with_value">Betala %s</string>
     <string name="confirm_preauthorization">Bekräfta förauktorisering</string>
+
+    <string name="paymentInProgressView_title">En betalningsprocess pågår</string>
+    <string name="paymentInProgressView_loadingText">Väntar på slutförande…</string>
+    <string name="paymentInProgressView_cancelButton">Avbryt pågående process</string>
 </resources>

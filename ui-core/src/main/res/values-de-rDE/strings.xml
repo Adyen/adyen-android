@@ -10,4 +10,8 @@
     <string name="pay_button">Zahlen</string>
     <string name="pay_button_with_value">%s zahlen</string>
     <string name="confirm_preauthorization">Vorautorisierung bestätigen</string>
+
+    <string name="paymentInProgressView_title">Ein Bezahlvorgang ist noch aktiv</string>
+    <string name="paymentInProgressView_loadingText">Abschluss abwarten …</string>
+    <string name="paymentInProgressView_cancelButton">Aktiven Prozess abbrechen</string>
 </resources>

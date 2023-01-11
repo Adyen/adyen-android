@@ -10,4 +10,8 @@
     <string name="pay_button">Fizetés</string>
     <string name="pay_button_with_value">Fizetendő: %s</string>
     <string name="confirm_preauthorization">Előzetes meghatalmazás jóváhagyása</string>
+
+    <string name="paymentInProgressView_title">Még aktív egy fizetési folyamat</string>
+    <string name="paymentInProgressView_loadingText">Befejezésre vár…</string>
+    <string name="paymentInProgressView_cancelButton">Aktív folyamat megszakítása</string>
 </resources>

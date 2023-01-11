@@ -10,4 +10,8 @@
     <string name="pay_button">Betal</string>
     <string name="pay_button_with_value">Betal %s</string>
     <string name="confirm_preauthorization">Bekreft forhåndsgodkjenning</string>
+
+    <string name="paymentInProgressView_title">Det er en betalingsprosess som fortsatt er aktiv</string>
+    <string name="paymentInProgressView_loadingText">Venter på fullførelse …</string>
+    <string name="paymentInProgressView_cancelButton">Avbryt den aktive prosessen</string>
 </resources>

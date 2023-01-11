@@ -10,4 +10,8 @@
     <string name="pay_button">Platiti</string>
     <string name="pay_button_with_value">Platiti %s</string>
     <string name="confirm_preauthorization">Potvrdite prethodno odobrenje</string>
+
+    <string name="paymentInProgressView_title">Postupak je plaćanja još uvijek aktivan</string>
+    <string name="paymentInProgressView_loadingText">Čeka se završetak…</string>
+    <string name="paymentInProgressView_cancelButton">Otkaži aktivan postupak</string>
 </resources>

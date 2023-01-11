@@ -10,4 +10,8 @@
     <string name="pay_button">Zaplatit</string>
     <string name="pay_button_with_value">Zaplatit %s</string>
     <string name="confirm_preauthorization">Potvrdit předautorizaci</string>
+
+    <string name="paymentInProgressView_title">Proces zpracování platby je stále aktivní</string>
+    <string name="paymentInProgressView_loadingText">Čeká se na dokončení…</string>
+    <string name="paymentInProgressView_cancelButton">Zrušit aktivní proces</string>
 </resources>
