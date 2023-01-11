@@ -37,6 +37,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -79,6 +81,10 @@ internal class DefaultGiftCardDelegate(
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
@@ -196,6 +202,17 @@ internal class DefaultGiftCardDelegate(
             isReady = true,
             lastFourDigits = lastDigits,
         )
+    }
+
+    private fun onState(state: GiftCardComponentState) {
+        val uiState = _uiStateFlow.value
+        if (uiState == PaymentComponentUIState.Loading) {
+            if (state.isValid) {
+                submitChannel.trySend(state)
+            } else {
+                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
+            }
+        }
     }
 
     override fun onSubmit() {
