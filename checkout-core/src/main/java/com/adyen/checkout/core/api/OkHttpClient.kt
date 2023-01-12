@@ -75,12 +75,16 @@ internal class OkHttpClient(
             val response = call.execute()
 
             if (response.isSuccessful) {
-                return response.body
+                val bytes = response.body
                     ?.bytes()
                     ?: ByteArray(0)
+                response.body?.close()
+                return bytes
             } else {
                 val errorBody = response.errorBody()
-                throw HttpException(response.code, response.message, errorBody)
+                val exception = HttpException(response.code, response.message, errorBody)
+                response.body?.close()
+                throw exception
             }
         } catch (e: CancellationException) {
             call.cancel()
