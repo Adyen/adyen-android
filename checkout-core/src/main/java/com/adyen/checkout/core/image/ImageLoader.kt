@@ -79,6 +79,8 @@ class DefaultImageLoader(context: Context) : ImageLoader {
                     onError(HttpException(response.code, response.message, null))
                 }
             }
+
+            response.body?.close()
         } catch (e: CancellationException) {
             call.cancel()
         } catch (e: IOException) {
