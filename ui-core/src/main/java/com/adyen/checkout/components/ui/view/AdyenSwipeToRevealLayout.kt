@@ -169,14 +169,14 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
      * gestures are detected.
      */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onDown(e: MotionEvent?): Boolean {
+        override fun onDown(e: MotionEvent): Boolean {
             isDragging = false
             return true
         }
 
         override fun onScroll(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             distanceX: Float,
             distanceY: Float
         ): Boolean {
@@ -188,8 +188,8 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
         }
 
         override fun onFling(
-            e1: MotionEvent?,
-            e2: MotionEvent?,
+            e1: MotionEvent,
+            e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
@@ -415,6 +415,7 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     /**
      * Remove [UnderlayListener] that's been set using [setUnderlayListener].
      */
+    @Suppress("unused")
     fun removeUnderlayListener() {
         this.underlayListener = null
     }
