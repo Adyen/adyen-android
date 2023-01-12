@@ -75,6 +75,7 @@ class BacsFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : BottomSheetDialog(requireContext(), theme) {
+            @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
             override fun onBackPressed() {
                 if (bacsComponent?.handleBackPress() == true) return
                 super.onBackPressed()

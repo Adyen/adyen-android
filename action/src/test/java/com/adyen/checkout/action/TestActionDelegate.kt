@@ -77,7 +77,7 @@ internal class TestActionDelegate :
             throw NotImplementedError("This method shouldn't be used in tests")
         }
 
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
+        override fun writeToParcel(dest: Parcel, flags: Int) {
             throw NotImplementedError("This method shouldn't be used in tests")
         }
     }

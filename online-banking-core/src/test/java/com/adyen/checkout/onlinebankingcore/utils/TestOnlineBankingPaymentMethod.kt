@@ -16,7 +16,7 @@ internal class TestOnlineBankingPaymentMethod(
     override var type: String? = "type"
 ) : IssuerListPaymentMethod() {
 
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
+    override fun writeToParcel(p0: Parcel, p1: Int) {
         // no need for implementation
     }
 }
