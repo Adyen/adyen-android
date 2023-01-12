@@ -63,10 +63,11 @@ class RoundCornerImageView @JvmOverloads constructor(
 
     private fun applyAttrs(typedArrayAttrs: TypedArray) {
         try {
-            strokeColor = typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_strokeColor, DEFAULT_STROKE_COLOR)
+            strokeColor =
+                typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_adyenStrokeColor, DEFAULT_STROKE_COLOR)
             strokeWidth =
-                typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_strokeWidth, DEFAULT_STROKE_WIDTH)
-            radius = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_radius, DEFAULT_RADIUS)
+                typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_adyenStrokeWidth, DEFAULT_STROKE_WIDTH)
+            radius = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_adyenRadius, DEFAULT_RADIUS)
         } finally {
             typedArrayAttrs.recycle()
         }
