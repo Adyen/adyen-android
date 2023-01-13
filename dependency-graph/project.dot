@@ -1,0 +1,191 @@
+digraph {
+  graph [label="adyen-android\n ",labelloc=t,fontsize=30,ranksep=1.4];
+  node [style=filled, fillcolor="#bbbbbb"];
+  rankdir=TB;
+
+  # Projects
+
+  ":3ds2" [fillcolor="#baffc9"];
+  ":action" [fillcolor="#baffc9"];
+  ":await" [fillcolor="#baffc9"];
+  ":bacs" [fillcolor="#baffc9"];
+  ":bcmc" [fillcolor="#baffc9"];
+  ":blik" [fillcolor="#baffc9"];
+  ":card" [fillcolor="#baffc9"];
+  ":checkout-core" [fillcolor="#baffc9"];
+  ":components-core" [fillcolor="#baffc9"];
+  ":cse" [fillcolor="#baffc9"];
+  ":dotpay" [fillcolor="#baffc9"];
+  ":drop-in" [fillcolor="#baffc9"];
+  ":entercash" [fillcolor="#baffc9"];
+  ":eps" [fillcolor="#baffc9"];
+  ":example-app" [fillcolor="#baffc9"];
+  ":giftcard" [fillcolor="#baffc9"];
+  ":googlepay" [fillcolor="#baffc9"];
+  ":ideal" [fillcolor="#baffc9"];
+  ":instant" [fillcolor="#baffc9"];
+  ":issuer-list" [fillcolor="#baffc9"];
+  ":mbway" [fillcolor="#baffc9"];
+  ":molpay" [fillcolor="#baffc9"];
+  ":online-banking-core" [fillcolor="#baffc9"];
+  ":online-banking-cz" [fillcolor="#baffc9"];
+  ":online-banking-pl" [fillcolor="#baffc9"];
+  ":online-banking-sk" [fillcolor="#baffc9"];
+  ":openbanking" [fillcolor="#baffc9"];
+  ":paybybank" [fillcolor="#baffc9"];
+  ":qr-code" [fillcolor="#baffc9"];
+  ":redirect" [fillcolor="#baffc9"];
+  ":sepa" [fillcolor="#baffc9"];
+  ":sessions-core" [fillcolor="#baffc9"];
+  ":test-core" [fillcolor="#baffc9"];
+  ":ui-core" [fillcolor="#baffc9"];
+  ":voucher" [fillcolor="#baffc9"];
+  ":wechatpay" [fillcolor="#baffc9"];
+
+  {rank = same;}
+
+  # Dependencies
+
+  ":3ds2" -> ":ui-core"
+  ":3ds2" -> ":3ds2"
+  ":3ds2" -> ":test-core" [style=dotted]
+  ":action" -> ":3ds2"
+  ":action" -> ":await"
+  ":action" -> ":qr-code"
+  ":action" -> ":redirect"
+  ":action" -> ":wechatpay"
+  ":action" -> ":voucher"
+  ":action" -> ":action"
+  ":action" -> ":test-core" [style=dotted]
+  ":await" -> ":ui-core"
+  ":await" -> ":await"
+  ":await" -> ":test-core" [style=dotted]
+  ":bacs" -> ":action"
+  ":bacs" -> ":ui-core"
+  ":bacs" -> ":bacs"
+  ":bacs" -> ":test-core" [style=dotted]
+  ":bcmc" -> ":action"
+  ":bcmc" -> ":card"
+  ":bcmc" -> ":bcmc"
+  ":bcmc" -> ":test-core" [style=dotted]
+  ":blik" -> ":action"
+  ":blik" -> ":ui-core"
+  ":blik" -> ":blik"
+  ":blik" -> ":test-core" [style=dotted]
+  ":card" -> ":action"
+  ":card" -> ":cse"
+  ":card" -> ":ui-core"
+  ":card" -> ":sessions-core"
+  ":card" -> ":card"
+  ":card" -> ":test-core" [style=dotted]
+  ":checkout-core" -> ":checkout-core"
+  ":components-core" -> ":checkout-core"
+  ":components-core" -> ":components-core"
+  ":components-core" -> ":test-core" [style=dotted]
+  ":cse" -> ":checkout-core"
+  ":cse" -> ":cse"
+  ":dotpay" -> ":action"
+  ":dotpay" -> ":issuer-list"
+  ":dotpay" -> ":dotpay"
+  ":drop-in" -> ":action"
+  ":drop-in" -> ":bacs"
+  ":drop-in" -> ":bcmc"
+  ":drop-in" -> ":blik"
+  ":drop-in" -> ":card"
+  ":drop-in" -> ":dotpay"
+  ":drop-in" -> ":entercash"
+  ":drop-in" -> ":eps"
+  ":drop-in" -> ":giftcard"
+  ":drop-in" -> ":googlepay"
+  ":drop-in" -> ":ideal"
+  ":drop-in" -> ":instant"
+  ":drop-in" -> ":mbway"
+  ":drop-in" -> ":molpay"
+  ":drop-in" -> ":online-banking-cz"
+  ":drop-in" -> ":online-banking-pl"
+  ":drop-in" -> ":online-banking-sk"
+  ":drop-in" -> ":openbanking"
+  ":drop-in" -> ":paybybank"
+  ":drop-in" -> ":sepa"
+  ":drop-in" -> ":sessions-core"
+  ":drop-in" -> ":drop-in"
+  ":drop-in" -> ":test-core" [style=dotted]
+  ":entercash" -> ":action"
+  ":entercash" -> ":issuer-list"
+  ":entercash" -> ":entercash"
+  ":eps" -> ":action"
+  ":eps" -> ":issuer-list"
+  ":eps" -> ":eps"
+  ":example-app" -> ":example-app"
+  ":example-app" -> ":drop-in" [style=dotted]
+  ":giftcard" -> ":action"
+  ":giftcard" -> ":cse"
+  ":giftcard" -> ":ui-core"
+  ":giftcard" -> ":giftcard"
+  ":giftcard" -> ":test-core" [style=dotted]
+  ":googlepay" -> ":action"
+  ":googlepay" -> ":components-core"
+  ":googlepay" -> ":googlepay"
+  ":googlepay" -> ":test-core" [style=dotted]
+  ":ideal" -> ":action"
+  ":ideal" -> ":issuer-list"
+  ":ideal" -> ":ideal"
+  ":instant" -> ":action"
+  ":instant" -> ":components-core"
+  ":instant" -> ":instant"
+  ":instant" -> ":test-core" [style=dotted]
+  ":issuer-list" -> ":action"
+  ":issuer-list" -> ":ui-core"
+  ":issuer-list" -> ":issuer-list"
+  ":issuer-list" -> ":test-core" [style=dotted]
+  ":mbway" -> ":action"
+  ":mbway" -> ":ui-core"
+  ":mbway" -> ":mbway"
+  ":mbway" -> ":test-core" [style=dotted]
+  ":molpay" -> ":action"
+  ":molpay" -> ":issuer-list"
+  ":molpay" -> ":molpay"
+  ":online-banking-core" -> ":action"
+  ":online-banking-core" -> ":ui-core"
+  ":online-banking-core" -> ":online-banking-core"
+  ":online-banking-core" -> ":test-core" [style=dotted]
+  ":online-banking-cz" -> ":action"
+  ":online-banking-cz" -> ":online-banking-core"
+  ":online-banking-cz" -> ":online-banking-cz"
+  ":online-banking-pl" -> ":action"
+  ":online-banking-pl" -> ":issuer-list"
+  ":online-banking-pl" -> ":online-banking-pl"
+  ":online-banking-sk" -> ":action"
+  ":online-banking-sk" -> ":online-banking-core"
+  ":online-banking-sk" -> ":online-banking-sk"
+  ":openbanking" -> ":action"
+  ":openbanking" -> ":issuer-list"
+  ":openbanking" -> ":openbanking"
+  ":paybybank" -> ":action"
+  ":paybybank" -> ":components-core"
+  ":paybybank" -> ":issuer-list"
+  ":paybybank" -> ":paybybank"
+  ":paybybank" -> ":test-core" [style=dotted]
+  ":qr-code" -> ":ui-core"
+  ":qr-code" -> ":qr-code"
+  ":qr-code" -> ":test-core" [style=dotted]
+  ":redirect" -> ":ui-core"
+  ":redirect" -> ":redirect"
+  ":redirect" -> ":test-core" [style=dotted]
+  ":sepa" -> ":action"
+  ":sepa" -> ":ui-core"
+  ":sepa" -> ":sepa"
+  ":sepa" -> ":test-core" [style=dotted]
+  ":sessions-core" -> ":components-core"
+  ":sessions-core" -> ":sessions-core"
+  ":sessions-core" -> ":test-core" [style=dotted]
+  ":test-core" -> ":test-core"
+  ":ui-core" -> ":components-core"
+  ":ui-core" -> ":ui-core"
+  ":voucher" -> ":ui-core"
+  ":voucher" -> ":voucher"
+  ":voucher" -> ":test-core" [style=dotted]
+  ":wechatpay" -> ":ui-core"
+  ":wechatpay" -> ":wechatpay"
+  ":wechatpay" -> ":test-core" [style=dotted]
+}
