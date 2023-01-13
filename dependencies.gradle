@@ -19,7 +19,7 @@ ext {
     version_name = "4.9.1"
 
     // Build Script
-    android_gradle_plugin_version = '7.3.1'
+    android_gradle_plugin_version = '7.4.0'
     kotlin_version = '1.7.22'
     detekt_gradle_plugin_version = "1.22.0"
     dokka_version = "1.7.20"
