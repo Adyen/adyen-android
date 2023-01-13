@@ -286,7 +286,7 @@ internal class StoredCardDelegateTest(
                     assertNull(encryptedPassword)
                     assertNull(fundingSource)
                     assertNull(brand)
-                    assertEquals("2.2.10", threeDS2SdkVersion)
+                    assertEquals("2.2.11", threeDS2SdkVersion)
                 }
             }
         }
