@@ -1,3 +1,4 @@
+// From: https://github.com/tfcporciuncula/readme-graph/blob/master/gradle/projectDependencyGraph.gradle
 task dependencyGraph {
     doLast {
         def dot = new File(rootProject.rootDir, 'dependency-graph/project.dot')
