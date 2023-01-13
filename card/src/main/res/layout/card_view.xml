@@ -50,8 +50,8 @@
                 <com.adyen.checkout.components.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView_primary"
                     style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                    app:strokeColor="@color/stroke_color"
-                    app:strokeWidth="0dp" />
+                    app:adyenStrokeColor="@color/stroke_color"
+                    app:adyenStrokeWidth="0dp" />
             </FrameLayout>
 
             <FrameLayout
@@ -65,8 +65,8 @@
                 <com.adyen.checkout.components.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView_secondary"
                     style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                    app:strokeColor="@color/stroke_color"
-                    app:strokeWidth="0dp" />
+                    app:adyenStrokeColor="@color/stroke_color"
+                    app:adyenStrokeWidth="0dp" />
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>

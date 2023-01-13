@@ -50,8 +50,8 @@
                     style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
                     android:layout_width="@dimen/brand_logo_width"
                     android:layout_height="@dimen/brand_logo_height"
-                    app:strokeColor="@color/stroke_color"
-                    app:strokeWidth="0dp" />
+                    app:adyenStrokeColor="@color/stroke_color"
+                    app:adyenStrokeWidth="0dp" />
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>
