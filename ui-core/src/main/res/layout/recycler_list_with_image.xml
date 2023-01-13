@@ -21,7 +21,7 @@
     <com.adyen.checkout.components.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo"
-        app:strokeColor="@color/stroke_color"/>
+        app:adyenStrokeColor="@color/stroke_color"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_title"
