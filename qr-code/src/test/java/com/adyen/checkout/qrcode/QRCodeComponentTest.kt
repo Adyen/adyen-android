@@ -80,7 +80,8 @@ internal class QRCodeComponentTest(
     }
 
     @Test
-    fun `when component is initialized then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for pix then view flow should match delegate view flow`() = runTest {
+        whenever(qrCodeDelegate.viewFlow) doReturn MutableStateFlow(QrCodeComponentViewType.SIMPLE_QR_CODE)
         component.viewFlow.test {
             assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
             expectNoEvents()
@@ -88,7 +89,16 @@ internal class QRCodeComponentTest(
     }
 
     @Test
-    fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
+    fun `when component is initialized for payNow then view flow should match delegate view flow`() = runTest {
+        whenever(qrCodeDelegate.viewFlow) doReturn MutableStateFlow(QrCodeComponentViewType.FULL_QR_CODE)
+        component.viewFlow.test {
+            assertEquals(QrCodeComponentViewType.FULL_QR_CODE, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when delegate view flow for pix emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(QrCodeComponentViewType.SIMPLE_QR_CODE)
         whenever(qrCodeDelegate.viewFlow) doReturn delegateViewFlow
         component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
@@ -103,6 +113,21 @@ internal class QRCodeComponentTest(
         }
     }
 
+    @Test
+    fun `when delegate view flow for payNow emits a value then component view flow should match that value`() = runTest {
+        val delegateViewFlow = MutableStateFlow(QrCodeComponentViewType.FULL_QR_CODE)
+        whenever(qrCodeDelegate.viewFlow) doReturn delegateViewFlow
+        component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
+
+        component.viewFlow.test {
+            assertEquals(QrCodeComponentViewType.FULL_QR_CODE, awaitItem())
+
+            delegateViewFlow.emit(QrCodeComponentViewType.REDIRECT)
+            assertEquals(QrCodeComponentViewType.REDIRECT, awaitItem())
+
+            expectNoEvents()
+        }
+    }
     @Test
     fun `when handleAction is called then handleAction in delegate is called`() {
         val action = QrCodeAction()

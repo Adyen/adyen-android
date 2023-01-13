@@ -107,7 +107,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `polling status is running, then output data will be emitted`() = runTest {
+        fun `polling status for pix is running, then output data will be emitted`() = runTest {
             statusRepository.pollingResults = listOf(
                 Result.success(StatusResponse(resultCode = "pending")),
                 Result.success(StatusResponse(resultCode = "finished")),
@@ -143,7 +143,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `polling is final, then details will be emitted`() = runTest {
+        fun `polling for pix is final, then details will be emitted`() = runTest {
             statusRepository.pollingResults = listOf(
                 Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
             )
@@ -162,7 +162,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `polling fails, then an error is propagated`() = runTest {
+        fun `polling for pix fails, then an error is propagated`() = runTest {
             val error = IOException("test")
             statusRepository.pollingResults = listOf(Result.failure(error))
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -180,7 +180,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `polling is final and payload is empty, then an error is propagated`() = runTest {
+        fun `polling for pix is final and payload is empty, then an error is propagated`() = runTest {
             statusRepository.pollingResults = listOf(
                 Result.success(StatusResponse(resultCode = "finished", payload = "")),
             )
@@ -211,6 +211,94 @@ internal class DefaultQRCodeDelegateTest(
                 )
 
                 assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
+            }
+        }
+
+        @Test
+        fun `polling status for payNow is running, then output data will be emitted`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "pending")),
+                Result.success(StatusResponse(resultCode = "finished")),
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(
+                        paymentMethodType = PaymentMethodTypes.PAY_NOW,
+                        qrCodeData = "qrData",
+                        paymentData = "paymentData"
+                    ),
+                    Activity(),
+                )
+
+                skipItems(1)
+
+                with(awaitItem()) {
+                    assertFalse(isValid)
+                    assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
+                    assertEquals("qrData", qrCodeData)
+                }
+
+                with(expectMostRecentItem()) {
+                    assertTrue(isValid)
+                    assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
+                    assertEquals("qrData", qrCodeData)
+                }
+            }
+        }
+
+        @Test
+        fun `polling for payNow is final, then details will be emitted`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.detailsFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        fun `polling for payNow is final and payload is empty, then an error is propagated`() = runTest {
+            statusRepository.pollingResults = listOf(
+                Result.success(StatusResponse(resultCode = "finished", payload = "")),
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.exceptionFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertTrue(awaitItem() is ComponentException)
+
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @Test
+        fun `polling for payNow fails, then an error is propagated`() = runTest {
+            val error = IOException("test")
+            statusRepository.pollingResults = listOf(Result.failure(error))
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.exceptionFlow.test {
+                delegate.handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    Activity(),
+                )
+
+                assertEquals(error, expectMostRecentItem().cause)
             }
         }
 
