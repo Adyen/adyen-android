@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 // TODO add docs
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class ActionComponentEvent : ComponentEvent {
     class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()
     class Error(val error: ComponentError) : ActionComponentEvent()

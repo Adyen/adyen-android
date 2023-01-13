@@ -14,6 +14,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
@@ -29,12 +30,15 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 class SessionHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
-    private val coroutineScope: CoroutineScope,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
     private val sessionComponentCallback: SessionComponentCallback<T>
-) {
+) : ComponentEventHandler<T> {
 
-    init {
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
         coroutineScope.launch {
             sessionInteractor.sessionFlow
                 .mapNotNull { it.sessionData }
@@ -42,7 +46,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
         Logger.v(TAG, "Event received $event")
         when (event) {
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data)
@@ -198,6 +202,10 @@ class SessionHandler<T : PaymentComponentState<*>>(
         if (sessionSavedStateHandleContainer.isFlowTakenOver == true) return
         sessionSavedStateHandleContainer.isFlowTakenOver = true
         Logger.i(TAG, "Flow was taken over.")
+    }
+
+    override fun onCleared() {
+        _coroutineScope = null
     }
 
     companion object {

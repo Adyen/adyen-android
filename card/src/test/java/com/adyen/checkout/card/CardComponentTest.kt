@@ -9,12 +9,12 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -41,6 +41,7 @@ internal class CardComponentTest(
     @Mock private val cardDelegate: CardDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<CardComponentState>,
 ) {
 
     private lateinit var component: CardComponent
@@ -54,7 +55,7 @@ internal class CardComponentTest(
             cardDelegate,
             genericActionDelegate,
             actionHandlingComponent,
-            SavedStateHandle(),
+            componentEventHandler,
         )
     }
 
@@ -62,6 +63,7 @@ internal class CardComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(cardDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -70,6 +72,7 @@ internal class CardComponentTest(
 
         verify(cardDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -103,7 +106,7 @@ internal class CardComponentTest(
     fun `when card delegate view flow emits a value then component view flow should match that value`() = runTest {
         val cardDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(cardDelegate.viewFlow) doReturn cardDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, SavedStateHandle())
+        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -119,7 +122,7 @@ internal class CardComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, SavedStateHandle())
+        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

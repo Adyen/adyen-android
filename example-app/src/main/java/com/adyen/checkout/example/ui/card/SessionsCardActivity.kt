@@ -105,7 +105,7 @@ class SessionsCardActivity : AppCompatActivity() {
             application = application,
             defaultArgs = null,
             key = null,
-            callback = sessionsCardComponentData.callback
+            componentCallback = sessionsCardComponentData.callback
         )
 
         this.cardComponent = cardComponent
