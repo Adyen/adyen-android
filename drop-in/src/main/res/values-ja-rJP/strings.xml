@@ -30,4 +30,7 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">はい、削除します</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">キャンセル</string>
     <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>
+    <string name="checkout_qr_code_permission_not_granted">権限が付与されていません</string>
+    <string name="checkout_qr_code_rationale_title_storage_permission">ストレージ権限をリクエスト</string>
+    <string name="checkout_qr_code_rationale_message_storage_permission">この画像をデバイスに保存するには、ストレージ権限を有効にする必要があります</string>
 </resources>

@@ -30,6 +30,9 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Yes, remove</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel</string>
     <string name="checkout_remove_stored_payment_method_body">Remove stored payment method</string>
+    <string name="checkout_qr_code_permission_not_granted">Permission is not granted</string>
+    <string name="checkout_qr_code_rationale_title_storage_permission">Request storage permission</string>
+    <string name="checkout_qr_code_rationale_message_storage_permission">In order to save this image to your device, you need to enable storage permission</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

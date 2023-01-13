@@ -58,8 +58,7 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
-                // TODO: translation
-                requireContext().toast("permission is not granted")
+                requireContext().toast(getString(R.string.checkout_qr_code_permission_not_granted))
             }
         }
 
@@ -165,10 +164,9 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
                 Logger.e(TAG, exception.message.orEmpty(), exception)
-                // TODO: translation
                 AlertDialog.Builder(requireContext())
-                    .setTitle("Request storage permission")
-                    .setMessage("In order to save this image to your device, you need to enable storage permission")
+                    .setTitle(R.string.checkout_qr_code_rationale_title_storage_permission)
+                    .setMessage(R.string.checkout_qr_code_rationale_message_storage_permission)
                     .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
                     .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()

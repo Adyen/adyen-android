@@ -30,4 +30,7 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, entfernen</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Abbrechen</string>
     <string name="checkout_remove_stored_payment_method_body">Gespeicherte Zahlungsmethode entfernen</string>
+    <string name="checkout_qr_code_permission_not_granted">Berechtigung nicht erteilt</string>
+    <string name="checkout_qr_code_rationale_title_storage_permission">Speicherberechtigung erforderlich</string>
+    <string name="checkout_qr_code_rationale_message_storage_permission">Um dieses Bild auf Ihrem Gerät zu speichern, müssen Sie uns Speicherberechtigung erteilen.</string>
 </resources>

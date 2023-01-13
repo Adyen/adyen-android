@@ -30,4 +30,7 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Tak, usuń</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anuluj</string>
     <string name="checkout_remove_stored_payment_method_body">Usuń zapisaną metodę płatności</string>
+    <string name="checkout_qr_code_permission_not_granted">Zezwolenie nie zostało udzielone</string>
+    <string name="checkout_qr_code_rationale_title_storage_permission">Zażądaj zezwolenia na przechowywanie</string>
+    <string name="checkout_qr_code_rationale_message_storage_permission">Aby zapisać ten obraz w urządzeniu, należy włączyć zezwolenie na przechowywanie</string>
 </resources>
