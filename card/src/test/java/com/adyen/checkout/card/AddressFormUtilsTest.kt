@@ -5,6 +5,7 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 @Suppress("MaxLineLength")
 internal class AddressFormUtilsTest {
@@ -49,7 +50,7 @@ internal class AddressFormUtilsTest {
     }
 
     @Test
-    fun markAddressListItemSelected_CodeNotProvided_ExpectFirstItemSelected() {
+    fun `when there's no item selected on address list and code not provided expect nothing selected`() {
         val input = listOf(
             AddressListItem(
                 name = "Canada",
@@ -71,7 +72,7 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = true
+                selected = false
             ),
             AddressListItem(
                 name = "United States",
@@ -88,7 +89,7 @@ internal class AddressFormUtilsTest {
     }
 
     @Test
-    fun markAddressListItemSelected_ListNotContainingItemWithGivenCode_ExpectFirstItemSelected() {
+    fun `when there's no item selected on address list and list not containing item with given code expect nothing selected`() {
         val input = listOf(
             AddressListItem(
                 name = "Canada",
@@ -110,7 +111,7 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = true
+                selected = false
             ),
             AddressListItem(
                 name = "United States",
@@ -146,7 +147,7 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
         )
     }
 
@@ -170,12 +171,12 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
         )
     }
 
     @Test
-    fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithoutDefaultCountryCode_ExpectListWithFirstItemSelected`() {
+    fun `initialize country options, address configuration is full address without default country code and locale with country that is not supported expect list with nothing selected`() {
         val addressParams = AddressParams.FullAddress(addressFieldPolicy = Required())
         val inputCountryList = listOf(
             AddressItem(
@@ -195,7 +196,7 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = true
+                selected = false
             ),
             AddressListItem(
                 name = "United States",
@@ -210,7 +211,47 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.GERMANY, addressParams, inputCountryList)
+        )
+    }
+
+    @Test
+    fun `when country options address configuration is full, address without default country code and locale with country that is supported expect list with locale country selected`() {
+        val addressParams = AddressParams.FullAddress(addressFieldPolicy = Required())
+        val inputCountryList = listOf(
+            AddressItem(
+                id = "CA",
+                name = "Canada"
+            ),
+            AddressItem(
+                id = "US",
+                name = "United States"
+            ),
+            AddressItem(
+                id = "GB",
+                name = "United Kingdom"
+            )
+        )
+        val expected = listOf(
+            AddressListItem(
+                name = "Canada",
+                code = "CA",
+                selected = false
+            ),
+            AddressListItem(
+                name = "United States",
+                code = "US",
+                selected = true
+            ),
+            AddressListItem(
+                name = "United Kingdom",
+                code = "GB",
+                selected = false
+            )
+        )
+        assertEquals(
+            expected,
+            AddressFormUtils.initializeCountryOptions(Locale.US, addressParams, inputCountryList)
         )
     }
 
@@ -250,7 +291,7 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
         )
     }
 
@@ -279,7 +320,7 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = true
+                selected = false
             ),
             AddressListItem(
                 name = "United Kingdom",
@@ -289,12 +330,12 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
         )
     }
 
     @Test
-    fun initializeStateOptions_ExpectListWithFirstItemSelected() {
+    fun `initialize state options expect list with nothing selected`() {
         val input = listOf(
             AddressItem(
                 id = "AL",
@@ -313,7 +354,7 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 code = "AL",
                 name = "Alabama",
-                selected = true
+                selected = false
             ),
             AddressListItem(
                 code = "MA",

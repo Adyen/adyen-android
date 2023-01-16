@@ -6,6 +6,7 @@ import com.adyen.checkout.card.AddressParams
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.model.payments.request.Address
+import java.util.Locale
 
 internal object AddressFormUtils {
 
@@ -23,9 +24,8 @@ internal object AddressFormUtils {
                 it.copy(selected = it.code == code)
             }
         } else {
-            list.mapIndexed { index, addressListItem ->
-                val isFirstItem = index == 0
-                addressListItem.copy(selected = isFirstItem)
+            list.map { addressListItem ->
+                addressListItem.copy(selected = false)
             }
         }
     }
@@ -44,6 +44,7 @@ internal object AddressFormUtils {
      * @return Country options.
      */
     fun initializeCountryOptions(
+        shopperLocale: Locale,
         addressParams: AddressParams?,
         countryList: List<AddressItem>
     ): List<AddressListItem> {
@@ -57,11 +58,29 @@ internal object AddressFormUtils {
                     countryList
                 }
 
-                val defaultCountryCode = addressParams.defaultCountryCode.orEmpty()
+                val defaultCountryCode = getInitialCountryCode(
+                    shopperLocale = shopperLocale,
+                    addressParams = addressParams
+                )
                 markAddressListItemSelected(mapToListItem(filteredCountryList), defaultCountryCode)
             }
             else -> emptyList()
         }
+    }
+
+    /**
+     * Get initial country code.
+     *
+     * @param shopperLocale Locale value from dropIn configuration or card component configuration.
+     * @param addressParams Full address params
+     *
+     * @return 2 digit string value of default supported country.
+     */
+    private fun getInitialCountryCode(
+        shopperLocale: Locale,
+        addressParams: AddressParams.FullAddress
+    ): String {
+        return addressParams.defaultCountryCode ?: shopperLocale.country.orEmpty()
     }
 
     /**
