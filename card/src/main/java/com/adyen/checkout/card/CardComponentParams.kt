@@ -34,5 +34,5 @@ internal data class CardComponentParams(
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
     val kcpAuthVisibility: KCPAuthVisibility,
     val installmentConfiguration: InstallmentConfiguration?,
-    val addressConfiguration: AddressConfiguration,
+    val addressParams: AddressParams,
 ) : ComponentParams, ButtonParams

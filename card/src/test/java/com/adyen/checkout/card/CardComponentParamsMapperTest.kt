@@ -41,6 +41,10 @@ internal class CardComponentParamsMapperTest {
             )
         )
         val addressConfiguration = AddressConfiguration.FullAddress(supportedCountryCodes = listOf("CA", "GB"))
+        val expectedAddressParams = AddressParams.FullAddress(
+            supportedCountryCodes = addressConfiguration.supportedCountryCodes,
+            addressFieldPolicy = AddressFieldPolicyParams.Required
+        )
 
         val cardConfiguration = CardConfiguration.Builder(
             shopperLocale = Locale.FRANCE,
@@ -76,7 +80,7 @@ internal class CardComponentParamsMapperTest {
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
             kcpAuthVisibility = KCPAuthVisibility.SHOW,
             installmentConfiguration = installmentConfiguration,
-            addressConfiguration = addressConfiguration
+            addressParams = expectedAddressParams
         )
 
         assertEquals(expected, params)
@@ -202,7 +206,7 @@ internal class CardComponentParamsMapperTest {
         socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
         kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentConfiguration: InstallmentConfiguration? = null,
-        addressConfiguration: AddressConfiguration = AddressConfiguration.None,
+        addressParams: AddressParams = AddressParams.None,
     ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -219,7 +223,7 @@ internal class CardComponentParamsMapperTest {
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         kcpAuthVisibility = kcpAuthVisibility,
         installmentConfiguration = installmentConfiguration,
-        addressConfiguration = addressConfiguration,
+        addressParams = addressParams,
         amount = amount
     )
 

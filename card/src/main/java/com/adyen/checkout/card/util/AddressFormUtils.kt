@@ -1,8 +1,8 @@
 package com.adyen.checkout.card.util
 
-import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressOutputData
+import com.adyen.checkout.card.AddressParams
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.model.payments.request.Address
@@ -31,33 +31,33 @@ internal object AddressFormUtils {
     }
 
     /**
-     * Initialize country options using [AddressConfiguration].
+     * Initialize country options using [AddressParams].
      *
-     * First filter if there's [AddressConfiguration.FullAddress.supportedCountryCodes] defined in the
-     * configuration. Then mark [AddressConfiguration.FullAddress.defaultCountryCode] as selected if it
+     * First filter if there's [AddressParams.FullAddress.supportedCountryCodes] defined in the
+     * configuration. Then mark [AddressParams.FullAddress.defaultCountryCode] as selected if it
      * is defined in configuration and exists in the filtered country list. Otherwise mark first item
      * in the list as selected.
      *
-     * @param addressConfiguration Configuration object.
+     * @param addressParams object.
      * @param countryList List of countries from API.
      *
      * @return Country options.
      */
     fun initializeCountryOptions(
-        addressConfiguration: AddressConfiguration?,
+        addressParams: AddressParams?,
         countryList: List<AddressItem>
     ): List<AddressListItem> {
-        return when (addressConfiguration) {
-            is AddressConfiguration.FullAddress -> {
-                val filteredCountryList = if (addressConfiguration.supportedCountryCodes.isNotEmpty()) {
+        return when (addressParams) {
+            is AddressParams.FullAddress -> {
+                val filteredCountryList = if (addressParams.supportedCountryCodes.isNotEmpty()) {
                     countryList.filter { countryItem ->
-                        addressConfiguration.supportedCountryCodes.any { it == countryItem.id }
+                        addressParams.supportedCountryCodes.any { it == countryItem.id }
                     }
                 } else {
                     countryList
                 }
 
-                val defaultCountryCode = addressConfiguration.defaultCountryCode.orEmpty()
+                val defaultCountryCode = addressParams.defaultCountryCode.orEmpty()
                 markAddressListItemSelected(mapToListItem(filteredCountryList), defaultCountryCode)
             }
             else -> emptyList()

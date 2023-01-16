@@ -1,17 +1,17 @@
 package com.adyen.checkout.card.util
 
-import com.adyen.checkout.card.AddressConfiguration
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 
 @Suppress("LongParameterList")
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AddressValidationUtils {
 
     /**
@@ -20,12 +20,10 @@ object AddressValidationUtils {
     fun validateAddressInput(
         addressInputModel: AddressInputModel,
         addressFormUIState: AddressFormUIState,
-        addressConfiguration: AddressConfiguration?,
-        detectedCardType: DetectedCardType?,
         countryOptions: List<AddressListItem>,
         stateOptions: List<AddressListItem>,
+        isOptional: Boolean,
     ): AddressOutputData {
-        val isOptional = isOptional(addressConfiguration, detectedCardType)
         return when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> validateAddressInput(
                 addressInputModel,
@@ -113,32 +111,6 @@ object AddressValidationUtils {
             FieldState(input, Validation.Valid)
         } else {
             FieldState(input, Validation.Invalid(R.string.checkout_address_form_field_not_valid))
-        }
-    }
-
-    private fun isOptional(addressConfiguration: AddressConfiguration?, detectedCardType: DetectedCardType?): Boolean {
-        return when (addressConfiguration) {
-            AddressConfiguration.None -> true
-            is AddressConfiguration.PostalCode -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
-            is AddressConfiguration.FullAddress -> isOptional(addressConfiguration.addressFieldPolicy, detectedCardType)
-            else -> true
-        }
-    }
-
-    private fun isOptional(
-        policy: AddressConfiguration.AddressFieldPolicy,
-        detectedCardType: DetectedCardType?
-    ): Boolean {
-        return when (policy) {
-            is AddressConfiguration.AddressFieldPolicy.Required -> false
-            is AddressConfiguration.AddressFieldPolicy.Optional -> true
-            is AddressConfiguration.AddressFieldPolicy.OptionalForCardTypes -> {
-                if (detectedCardType == null) {
-                    false
-                } else {
-                    policy.brands.contains(detectedCardType.cardType.txVariant)
-                }
-            }
         }
     }
 }

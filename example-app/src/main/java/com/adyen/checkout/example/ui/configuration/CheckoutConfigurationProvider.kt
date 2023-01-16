@@ -81,7 +81,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         else -> AddressConfiguration.FullAddress(
             defaultCountryCode = "NL",
             supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
-            addressFieldPolicy = AddressConfiguration.AddressFieldPolicy.OptionalForCardTypes(
+            addressFieldPolicy = AddressConfiguration.CardAddressFieldPolicy.OptionalForCardTypes(
                 brands = listOf("jcb")
             )
         )

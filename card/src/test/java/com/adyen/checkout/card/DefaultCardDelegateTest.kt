@@ -173,8 +173,9 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `When the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
             val addressConfiguration = AddressConfiguration.FullAddress()
+            val addressParams = AddressParams.FullAddress(addressFieldPolicy = AddressFieldPolicyParams.Required)
             val countryOptions = AddressFormUtils.initializeCountryOptions(
-                addressConfiguration = addressConfiguration,
+                addressParams = addressParams,
                 countryList = TestAddressRepository.COUNTRIES
             )
 
@@ -420,7 +421,6 @@ internal class DefaultCardDelegateTest(
 
             delegate.outputDataFlow.test {
                 delegate.updateInputData { /* Empty to trigger an update */ }
-
                 with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertTrue(cardNumberState.validation is Validation.Invalid)
@@ -469,6 +469,8 @@ internal class DefaultCardDelegateTest(
                 )
             )
             val addressConfiguration = AddressConfiguration.FullAddress()
+            val addressParams = AddressParams.FullAddress(addressFieldPolicy = AddressFieldPolicyParams.Required)
+
             delegate = createCardDelegate(
                 configuration = CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
                     .setHideCvc(true)
@@ -516,7 +518,7 @@ internal class DefaultCardDelegateTest(
                 }
 
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
-                    addressConfiguration = addressConfiguration,
+                    addressParams = addressParams,
                     countryList = TestAddressRepository.COUNTRIES
                 )
 

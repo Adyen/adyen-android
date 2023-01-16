@@ -127,8 +127,8 @@ internal class AddressFormUtilsTest {
     }
 
     @Test
-    fun initializeCountryOptions_AddressConfigurationIsNone_ExpectEmptyList() {
-        val addressConfiguration = AddressConfiguration.None
+    fun `when Country Options are initialized that a Address Params is null ,Expect Empty List`() {
+        val addressParams = AddressParams.None
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -146,13 +146,13 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressConfiguration, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
         )
     }
 
     @Test
-    fun initializeCountryOptions_AddressConfigurationIsPostalCode_ExpectEmptyList() {
-        val addressConfiguration = AddressConfiguration.PostalCode()
+    fun `when Country Options are initialized that a Address Params is PostalCode, Expect Empty List`() {
+        val addressParams = AddressParams.PostalCode(Required())
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -170,13 +170,13 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressConfiguration, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
         )
     }
 
     @Test
     fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithoutDefaultCountryCode_ExpectListWithFirstItemSelected`() {
-        val addressConfiguration = AddressConfiguration.FullAddress()
+        val addressParams = AddressParams.FullAddress(addressFieldPolicy = Required())
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -210,13 +210,13 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressConfiguration, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
         )
     }
 
     @Test
     fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithDefaultCountryCode_ExpectListWithItemHavingDefaultCountryCodeSelected`() {
-        val addressConfiguration = AddressConfiguration.FullAddress(defaultCountryCode = "GB")
+        val addressParams = AddressParams.FullAddress(defaultCountryCode = "GB", addressFieldPolicy = Required())
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -250,7 +250,7 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressConfiguration, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
         )
     }
 
@@ -259,8 +259,8 @@ internal class AddressFormUtilsTest {
      */
     @Test
     fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithSupportedCountryCodes_ExpectListFilteredBySupportedCountryCodes`() {
-        val addressConfiguration =
-            AddressConfiguration.FullAddress(supportedCountryCodes = listOf("CA", "GB"))
+        val addressParams =
+            AddressParams.FullAddress(supportedCountryCodes = listOf("CA", "GB"), addressFieldPolicy = Required())
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -289,7 +289,7 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(addressConfiguration, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(addressParams, inputCountryList)
         )
     }
 
