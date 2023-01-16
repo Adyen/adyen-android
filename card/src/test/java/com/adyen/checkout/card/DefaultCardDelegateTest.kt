@@ -11,6 +11,8 @@ package com.adyen.checkout.card
 import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
+import com.adyen.checkout.card.DefaultCardDelegate.Companion.BIN_VALUE_EXTENDED_LENGTH
+import com.adyen.checkout.card.DefaultCardDelegate.Companion.BIN_VALUE_LENGTH
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -669,7 +671,7 @@ internal class DefaultCardDelegateTest(
 
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
-                assertEquals(TEST_CARD_NUMBER.take(6), componentState.binValue)
+                assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
                 assertEquals(CardType.VISA, componentState.cardType)
 
                 val paymentComponentData = componentState.data
@@ -772,7 +774,7 @@ internal class DefaultCardDelegateTest(
 
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
-                assertEquals(TEST_CARD_NUMBER.take(6), componentState.binValue)
+                assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
                 assertEquals(CardType.VISA, componentState.cardType)
 
                 val paymentComponentData = componentState.data
@@ -805,6 +807,36 @@ internal class DefaultCardDelegateTest(
                     assertNull(storedPaymentMethodId)
                     assertEquals("2.2.11", threeDS2SdkVersion)
                 }
+            }
+        }
+
+        @Test
+        fun `card number is less than 16 digits, then the binValue should be 6 digits`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(
+                    createOutputData(cardNumberState = FieldState("12345678901234", Validation.Valid))
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertEquals(BIN_VALUE_LENGTH, componentState.binValue.length)
+            }
+        }
+
+        @Test
+        fun `card number is more than 16 digits, then the binValue should be 8 digits`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(
+                    createOutputData(cardNumberState = FieldState("1234567890123456", Validation.Valid))
+                )
+
+                val componentState = expectMostRecentItem()
+
+                assertEquals(BIN_VALUE_EXTENDED_LENGTH, componentState.binValue.length)
             }
         }
     }
