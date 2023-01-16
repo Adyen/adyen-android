@@ -14,13 +14,16 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.card.util.AddressValidationUtils
+import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.AddressFormUIState
+import com.adyen.checkout.components.ui.AddressInputModel
+import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler

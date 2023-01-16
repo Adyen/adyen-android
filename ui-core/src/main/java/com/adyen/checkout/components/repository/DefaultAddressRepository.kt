@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 5/8/2022.
+ * Created by onurk on 13/1/2023.
  */
 
-package com.adyen.checkout.card.repository
+package com.adyen.checkout.components.repository
 
-import com.adyen.checkout.card.api.AddressService
-import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.card.ui.AddressSpecification
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.api.AddressService
+import com.adyen.checkout.components.api.model.AddressItem
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.ui.AddressSpecification
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
@@ -22,8 +23,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
-
-internal class DefaultAddressRepository(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultAddressRepository(
     private val addressService: AddressService,
 ) : AddressRepository {
 

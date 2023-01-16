@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.components.ui.AddressFieldPolicy
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

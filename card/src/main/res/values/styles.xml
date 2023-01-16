@@ -78,107 +78,6 @@
         <item name="android:maxLength">2</item>
     </style>
 
-    <style name="AdyenCheckout.Card.StreetInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_street_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.StreetInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_street_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.AddressInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_address_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.AddressInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_address_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.HouseNumberInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_house_number_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.HouseNumberInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_house_number_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_card_postal_code_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.PostalCodeInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_card_postal_code_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ZipCodeInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_zip_code_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ZipCodeInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_zip_code_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.CityInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_city_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.CityInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_city_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.CityTownInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_city_town_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.CityTownInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_city_town_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ApartmentSuiteInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_apartment_suite_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ApartmentSuiteInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_apartment_suite_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ProvinceTerritoryInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_province_territory_hint</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.Card.ProvinceTerritoryInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_province_territory_hint_optional</item>
-        <item name="android:inputType">textPostalAddress</item>
-    </style>
-
-    <style name="AdyenCheckout.DropdownTextInputLayout.CountryInput" parent="AdyenCheckout.DropdownTextInputLayout">
-        <item name="android:hint">@string/checkout_address_form_country_hint</item>
-    </style>
-
-    <style name="AdyenCheckout.DropdownTextInputLayout.StatesInput" parent="AdyenCheckout.DropdownTextInputLayout">
-        <item name="android:hint">@string/checkout_address_form_states_hint</item>
-    </style>
-
-    <style name="AdyenCheckout.DropdownTextInputLayout.ProvinceTerritoryInput" parent="AdyenCheckout.DropdownTextInputLayout">
-        <item name="android:hint">@string/checkout_address_form_province_territory_hint</item>
-    </style>
 
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
@@ -195,11 +94,4 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <style name="AdyenCheckout.AddressForm.HeaderTextAppearance" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:alpha">0.5</item>
-        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
-        <item name="android:text">@string/checkout_address_form_billing_address_title</item>
-    </style>
 </resources>

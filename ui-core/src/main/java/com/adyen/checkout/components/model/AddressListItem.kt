@@ -6,7 +6,7 @@
  * Created by ozgur on 24/3/2022.
  */
 
-package com.adyen.checkout.card.ui.model
+package com.adyen.checkout.components.model
 
 import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 

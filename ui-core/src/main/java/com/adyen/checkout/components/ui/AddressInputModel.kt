@@ -6,7 +6,7 @@
  * Created by ozgur on 8/3/2022.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.components.ui
 
 data class AddressInputModel(
     var postalCode: String = "",

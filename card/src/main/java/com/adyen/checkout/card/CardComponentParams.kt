@@ -12,6 +12,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 import kotlinx.parcelize.Parcelize

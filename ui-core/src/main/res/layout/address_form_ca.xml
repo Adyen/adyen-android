@@ -3,7 +3,7 @@
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by ozgur on 8/3/2022.
+  ~ Created by onurk on 13/1/2023.
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_street"
-            style="@style/AdyenCheckout.Card.AddressInput"
+            style="@style/AdyenCheckout.AddressInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_apartmentSuite"
             android:nextFocusForward="@id/editText_apartmentSuite"
@@ -36,7 +36,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_apartmentSuite"
-            style="@style/AdyenCheckout.Card.ApartmentSuiteInput"
+            style="@style/AdyenCheckout.ApartmentSuiteInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_city"
             android:nextFocusForward="@id/editText_city"
@@ -51,7 +51,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
-            style="@style/AdyenCheckout.Card.CityInput"
+            style="@style/AdyenCheckout.CityInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_postalCode"
             android:nextFocusForward="@id/editText_postalCode"
@@ -66,7 +66,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
-            style="@style/AdyenCheckout.Card.PostalCodeInput"
+            style="@style/AdyenCheckout.PostalCodeInput"
             android:autofillHints="postalCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>

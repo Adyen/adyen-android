@@ -9,6 +9,7 @@ package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.ui.AddressInputModel
 
 data class CardInputData(
     var cardNumber: String = "",

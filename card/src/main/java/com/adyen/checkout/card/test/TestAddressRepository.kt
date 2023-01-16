@@ -9,8 +9,8 @@
 package com.adyen.checkout.card.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.card.repository.AddressRepository
+import com.adyen.checkout.components.api.model.AddressItem
+import com.adyen.checkout.components.repository.AddressRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

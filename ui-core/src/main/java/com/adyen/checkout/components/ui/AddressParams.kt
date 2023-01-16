@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 6/1/2023.
+ * Created by onurk on 13/1/2023.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.components.ui
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable

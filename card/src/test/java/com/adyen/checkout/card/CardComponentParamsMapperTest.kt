@@ -13,6 +13,7 @@ import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -148,7 +148,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
-            style="@style/AdyenCheckout.Card.PostalCodeInput"
+            style="@style/AdyenCheckout.PostalCodeInput"
             android:autofillHints="postalCode"
             android:nextFocusDown="@id/editText_socialSecurityNumber"
             android:nextFocusForward="@id/editText_socialSecurityNumber"
@@ -219,7 +219,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.adyen.checkout.card.ui.AddressFormInput
+    <com.adyen.checkout.components.ui.view.address.AddressFormInput
         android:id="@+id/addressFormInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

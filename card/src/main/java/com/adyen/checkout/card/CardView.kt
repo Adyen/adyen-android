@@ -34,6 +34,7 @@ import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.image.loadLogo
+import com.adyen.checkout.components.ui.AddressFormUIState
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.FieldState
@@ -133,7 +134,7 @@ internal class CardView @JvmOverloads constructor(
             localizedContext
         )
         binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_PostalCodeInput,
+            R.style.AdyenCheckout_PostalCodeInput,
             localizedContext
         )
         binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(
@@ -679,9 +680,9 @@ internal class CardView @JvmOverloads constructor(
             AddressFormUIState.FULL_ADDRESS -> binding.addressFormInput.updateAddressHint(isOptional)
             AddressFormUIState.POSTAL_CODE -> {
                 val postalCodeStyleResId = if (isOptional) {
-                    R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+                    R.style.AdyenCheckout_PostalCodeInput_Optional
                 } else {
-                    R.style.AdyenCheckout_Card_PostalCodeInput
+                    R.style.AdyenCheckout_PostalCodeInput
                 }
                 binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
             }

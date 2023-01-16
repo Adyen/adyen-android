@@ -1,8 +1,18 @@
-package com.adyen.checkout.card
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by onurk on 13/1/2023.
+ */
 
-import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.card.ui.model.AddressListItem
-import com.adyen.checkout.card.util.AddressFormUtils
+package com.adyen.checkout.components.ui.util
+
+import com.adyen.checkout.components.api.model.AddressItem
+import com.adyen.checkout.components.model.AddressListItem
+import com.adyen.checkout.components.ui.AddressFormUIState
+import com.adyen.checkout.components.ui.AddressParams
+import com.adyen.checkout.components.ui.Required
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

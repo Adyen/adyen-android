@@ -12,6 +12,8 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.ui.AddressFormUIState
+import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 

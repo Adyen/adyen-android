@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 9/8/2022.
+ * Created by onurk on 13/1/2023.
  */
 
-package com.adyen.checkout.card.repository
+package com.adyen.checkout.components.repository
 
-import com.adyen.checkout.card.api.model.AddressItem
+import com.adyen.checkout.components.api.model.AddressItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import java.util.Locale
