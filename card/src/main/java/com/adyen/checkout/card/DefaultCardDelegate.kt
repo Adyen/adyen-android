@@ -374,7 +374,12 @@ internal class DefaultCardDelegate(
             detectedCardTypes = outputData.detectedCardTypes
         )?.cardType
 
-        val binValue = cardNumber.take(BIN_VALUE_LENGTH)
+        val binValue =
+            if (outputData.cardNumberState.validation.isValid() && cardNumber.length >= EXTENDED_CARD_NUMBER_LENGTH) {
+                cardNumber.take(BIN_VALUE_EXTENDED_LENGTH)
+            } else {
+                cardNumber.take(BIN_VALUE_LENGTH)
+            }
 
         val publicKey = publicKey
 
@@ -737,7 +742,13 @@ internal class DefaultCardDelegate(
     companion object {
         private val TAG = LogUtil.getTag()
         private const val DEBIT_FUNDING_SOURCE = "debit"
-        private const val BIN_VALUE_LENGTH = 6
+
+        @VisibleForTesting
+        internal const val BIN_VALUE_LENGTH = 6
+
+        @VisibleForTesting
+        internal const val BIN_VALUE_EXTENDED_LENGTH = 8
+        private const val EXTENDED_CARD_NUMBER_LENGTH = 16
         private const val LAST_FOUR_LENGTH = 4
     }
 }
