@@ -45,6 +45,8 @@ import kotlinx.coroutines.launch
 private val TAG = LogUtil.getTag()
 
 private const val BIN_VALUE_LENGTH = 6
+private const val BIN_VALUE_EXTENDED_LENGTH = 8
+private const val EXTENDED_CARD_NUMBER_LENGTH = 16
 private const val LAST_FOUR_LENGTH = 4
 private const val SINGLE_CARD_LIST_SIZE = 1
 
@@ -339,7 +341,14 @@ class CardComponent private constructor(
 
         val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
 
-        val binValue = cardNumber.take(BIN_VALUE_LENGTH)
+        val binValue = if (
+            stateOutputData.cardNumberState.validation.isValid() &&
+            cardNumber.length >= EXTENDED_CARD_NUMBER_LENGTH
+        ) {
+            cardNumber.take(BIN_VALUE_EXTENDED_LENGTH)
+        } else {
+            cardNumber.take(BIN_VALUE_LENGTH)
+        }
 
         val publicKey = publicKey
 
