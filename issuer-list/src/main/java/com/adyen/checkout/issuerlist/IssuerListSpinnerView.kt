@@ -20,7 +20,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
 import kotlinx.coroutines.CoroutineScope
 
-@Suppress("TooManyFunctions")
 internal class IssuerListSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

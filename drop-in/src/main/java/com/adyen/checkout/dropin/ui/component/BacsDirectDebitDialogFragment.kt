@@ -25,7 +25,6 @@ import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-@Suppress("TooManyFunctions")
 internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private var _binding: FragmentBacsDirectDebitComponentBinding? = null

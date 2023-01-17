@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.ui.stored
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -72,7 +71,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         return binding.root
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")

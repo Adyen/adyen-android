@@ -71,7 +71,6 @@ class ExampleDropInService : DropInService() {
         return handleResponse(paymentsRepository.detailsRequest(actionComponentJson))
     }
 
-    @Suppress("NestedBlockDepth")
     private fun handleResponse(detailsResponse: JSONObject?): DropInServiceResult {
         return if (detailsResponse != null) {
             if (detailsResponse.has("action")) {

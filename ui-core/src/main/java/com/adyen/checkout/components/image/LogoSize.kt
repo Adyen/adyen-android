@@ -11,7 +11,6 @@ package com.adyen.checkout.components.image
 /**
  * The logo size.
  */
-@Suppress("unused")
 enum class LogoSize {
     /**
      * Size for small logos (height: 26dp).

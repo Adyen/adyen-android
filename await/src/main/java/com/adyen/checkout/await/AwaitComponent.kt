@@ -21,7 +21,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("TooManyFunctions")
 class AwaitComponent internal constructor(
     override val delegate: AwaitDelegate,
 ) : ViewModel(),

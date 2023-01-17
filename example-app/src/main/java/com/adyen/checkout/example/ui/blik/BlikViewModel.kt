@@ -39,7 +39,6 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
-@Suppress("TooManyFunctions")
 class BlikViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
