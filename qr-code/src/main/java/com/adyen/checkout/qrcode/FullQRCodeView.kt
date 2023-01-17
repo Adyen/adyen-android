@@ -175,12 +175,10 @@ internal class FullQRCodeView @JvmOverloads constructor(
     private fun handleEventFlow(event: QrCodeUIEvent) {
         when (event) {
             QrCodeUIEvent.QrImageDownloadResult.Success -> {
-                // TODO: add translation
-                context.toast("Downloading image succeeded")
+                context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_succeeded))
             }
             is QrCodeUIEvent.QrImageDownloadResult.Failure -> {
-                // TODO: add translation
-                context.toast("Downloading image failed")
+                context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_failed))
                 Logger.e(TAG, "download file failed", event.throwable)
             }
         }

@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Pořiďte snímek obrazovky nebo uložte QR kód, otevřete bankovní aplikaci a nahrajte QR kód pro ověření údajů a dokončení platby.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Tento QR kód je platný pro %s</string>
     <string name="checkout_qr_code_save_button">Uložit jako obrázek</string>
+    <string name="checkout_qr_code_download_image_succeeded">Obrázek se podařilo stáhnout</string>
+    <string name="checkout_qr_code_download_image_failed">Obrázek se nepodařilo stáhnout</string>
 </resources>

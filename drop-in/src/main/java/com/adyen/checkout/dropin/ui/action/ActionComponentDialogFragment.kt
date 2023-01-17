@@ -58,7 +58,9 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
-                requireContext().toast(getString(R.string.checkout_qr_code_permission_not_granted))
+                requireContext().toast(getString(R.string.checkout_permission_not_granted))
+            } else {
+                // TODO: trigger download image flow when user accept storage permission after checking permission type
             }
         }
 
@@ -164,9 +166,11 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
                 Logger.e(TAG, exception.message.orEmpty(), exception)
+                // TODO: checkout_rationale_title_storage_permission and checkout_rationale_message_storage_permission
+                // TODO: can be reused based on required permission
                 AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.checkout_qr_code_rationale_title_storage_permission)
-                    .setMessage(R.string.checkout_qr_code_rationale_message_storage_permission)
+                    .setTitle(R.string.checkout_rationale_title_storage_permission)
+                    .setMessage(R.string.checkout_rationale_message_storage_permission)
                     .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
                     .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()

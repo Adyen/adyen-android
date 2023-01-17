@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Erstellen Sie einen Screenshot oder speichern Sie den QR-Code, öffnen Sie Ihre Bankanwendung und laden Sie den QR-Code hoch, um die Details zu verifizieren und die Zahlung abzuschließen.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Dieser QR-Code gilt für %s</string>
     <string name="checkout_qr_code_save_button">Als Bild speichern</string>
+    <string name="checkout_qr_code_download_image_succeeded">Herunterladen des Bildes erfolgreich</string>
+    <string name="checkout_qr_code_download_image_failed">Herunterladen des Bildes fehlgeschlagen</string>
 </resources>

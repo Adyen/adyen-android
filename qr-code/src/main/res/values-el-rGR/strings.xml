@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Τραβήξτε ένα στιγμιότυπο οθόνης ή αποθηκεύστε τον κωδικό QR, ανοίξτε την εφαρμογή τραπεζικής σας και ανεβάστε τον κωδικό QR για επαλήθευση των στοιχείων και ολοκλήρωση της πληρωμής.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Αυτός ο κωδικός QR ισχύει για %s</string>
     <string name="checkout_qr_code_save_button">Αποθήκευση ως εικόνας</string>
+    <string name="checkout_qr_code_download_image_succeeded">Η εικόνα λήφθηκε επιτυχώς</string>
+    <string name="checkout_qr_code_download_image_failed">Η λήψη της εικόνας απέτυχε</string>
 </resources>

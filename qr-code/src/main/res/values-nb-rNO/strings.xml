@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Ta et skjermbilde eller lagre QR-koden, åpne bankappen din og last opp QR-koden for å verifisere opplysningene og fullføre betalingen.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Denne QR-koden er gyldig i %s</string>
     <string name="checkout_qr_code_save_button">Lagre som bilde</string>
+    <string name="checkout_qr_code_download_image_succeeded">Bildet er lastet ned</string>
+    <string name="checkout_qr_code_download_image_failed">Nedlastingen av bildet mislyktes</string>
 </resources>

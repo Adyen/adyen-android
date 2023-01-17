@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Faça uma captura de tela ou salve o QR code, abra o aplicativo do seu banco, carregue o QR code para verificar as informações e finalize o pagamento.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Este QR code é válido para %s</string>
     <string name="checkout_qr_code_save_button">Salvar como imagem</string>
+    <string name="checkout_qr_code_download_image_succeeded">A imagem foi baixada</string>
+    <string name="checkout_qr_code_download_image_failed">Não foi possível baixar imagem</string>
 </resources>

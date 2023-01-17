@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">التقط لقطة شاشة أو احفظ رمز الاستجابة السريعة، وافتح تطبيقك المصرفي وحمِّل رمز الاستجابة السريعة للتحقق من التفاصيل وإتمام الدفع.</string>
     <string name="checkout_qr_code_pay_now_timer_text">رمز الاستجابة السريعة هذا صالح لـ %s</string>
     <string name="checkout_qr_code_save_button">حفظ كصورة</string>
+    <string name="checkout_qr_code_download_image_succeeded">نجح تنزيل الصورة</string>
+    <string name="checkout_qr_code_download_image_failed">فشل تنزيل الصورة</string>
 </resources>

@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Сделайте снимок экрана или сохраните QR-код, откройте банковское приложение и загрузите QR-код, чтобы подтвердить данные и завершить платеж.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Данный QR-код действителен в течение %s</string>
     <string name="checkout_qr_code_save_button">Сохранить как изображение</string>
+    <string name="checkout_qr_code_download_image_succeeded">Изображение загружено</string>
+    <string name="checkout_qr_code_download_image_failed">Сбой загрузки изображения</string>
 </resources>

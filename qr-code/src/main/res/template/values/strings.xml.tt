@@ -17,4 +17,6 @@
     <string name="checkout_qr_code_pay_now">%%promptPay.instructionMessage%%</string>
     <string name="checkout_qr_code_pay_now_timer_text">%%promptPay.timerExpirationMessage%%</string>
     <string name="checkout_qr_code_save_button">%%voucher.saveImage%%</string>
+    <string name="checkout_qr_code_download_image_succeeded">%%payNow.downloadImageSuccess%%</string>
+    <string name="checkout_qr_code_download_image_failed">%%payNow.downloadImageFailed%%</string>
 </resources>

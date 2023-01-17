@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Zrób zrzut ekranu lub zapisz kod QR, otwórz aplikację bankową i prześlij kod QR, aby zweryfikować szczegóły i dokończyć płatność.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Okres ważności kodu QR: %s</string>
     <string name="checkout_qr_code_save_button">Zapisz jako obraz</string>
+    <string name="checkout_qr_code_download_image_succeeded">Pomyślnie pobrano obraz</string>
+    <string name="checkout_qr_code_download_image_failed">Pobieranie obrazu nie powiodło się</string>
 </resources>

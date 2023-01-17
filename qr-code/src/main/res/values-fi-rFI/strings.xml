@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">Ota kuvakaappaus tai tallenna QR-koodi, avaa pankkisovelluksesi ja lataa QR-koodi, jolla varmistat tiedot, jonka jälkeen voit suorittaa maksun loppuun.</string>
     <string name="checkout_qr_code_pay_now_timer_text">Tämä QR-koodi on voimassa %s</string>
     <string name="checkout_qr_code_save_button">Tallenna kuvana</string>
+    <string name="checkout_qr_code_download_image_succeeded">Kuvan lataaminen onnistui</string>
+    <string name="checkout_qr_code_download_image_failed">Kuvan lataaminen epäonnistui</string>
 </resources>

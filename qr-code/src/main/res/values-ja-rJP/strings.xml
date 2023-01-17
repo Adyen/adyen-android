@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">スクリーンショットを撮影するかQRコードを保存して、バンキングアプリケーションを開き、QRコードをアップロードして、詳細を確認し、支払いを完了します。</string>
     <string name="checkout_qr_code_pay_now_timer_text">このQRコードは%s有効です</string>
     <string name="checkout_qr_code_save_button">画像として保存</string>
+    <string name="checkout_qr_code_download_image_succeeded">画像のダウンロードに成功しました</string>
+    <string name="checkout_qr_code_download_image_failed">画像のダウンロードに失敗しました</string>
 </resources>

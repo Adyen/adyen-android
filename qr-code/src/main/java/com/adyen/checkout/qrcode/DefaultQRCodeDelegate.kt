@@ -48,7 +48,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,

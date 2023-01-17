@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">截屏或保存二维码，打开您的银行应用程序并上传二维码以验证详细信息并完成付款。</string>
     <string name="checkout_qr_code_pay_now_timer_text">此二维码有效期为 %s</string>
     <string name="checkout_qr_code_save_button">另存为图片</string>
+    <string name="checkout_qr_code_download_image_succeeded">下载图片成功</string>
+    <string name="checkout_qr_code_download_image_failed">下载图片失败</string>
 </resources>

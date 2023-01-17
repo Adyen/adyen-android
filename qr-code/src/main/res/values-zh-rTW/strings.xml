@@ -15,4 +15,6 @@
     <string name="checkout_qr_code_pay_now">擷取螢幕畫面或儲存 QR 代碼，開啟您的銀行應用程式並上傳 QR 代碼以驗證詳細資料並完成付款。</string>
     <string name="checkout_qr_code_pay_now_timer_text">此 QR 代碼對 %s 有效</string>
     <string name="checkout_qr_code_save_button">儲存為圖像</string>
+    <string name="checkout_qr_code_download_image_succeeded">已成功下載影像</string>
+    <string name="checkout_qr_code_download_image_failed">無法下載影像</string>
 </resources>
