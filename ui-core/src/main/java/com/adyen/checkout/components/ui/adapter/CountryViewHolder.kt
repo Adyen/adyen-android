@@ -6,11 +6,11 @@
  * Created by josephj on 16/12/2020.
  */
 
-package com.adyen.checkout.mbway.country
+package com.adyen.checkout.components.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.mbway.R
-import com.adyen.checkout.mbway.databinding.CountryViewBinding
+import com.adyen.checkout.components.ui.R
+import com.adyen.checkout.components.ui.databinding.CountryViewBinding
 
 class CountryViewHolder(private val binding: CountryViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -18,7 +18,7 @@ class CountryViewHolder(private val binding: CountryViewBinding) : RecyclerView.
         with(binding) {
             textViewFlag.text = country.emoji
             textViewCountry.text = root.context.getString(
-                R.string.checkout_mbway_country_name_format,
+                R.string.checkout_country_name_format,
                 country.countryName,
                 country.callingCode
             )

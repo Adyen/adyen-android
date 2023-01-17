@@ -19,12 +19,12 @@ import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.adapter.CountryAdapter
+import com.adyen.checkout.components.ui.adapter.CountryModel
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.mbway.country.CountryAdapter
-import com.adyen.checkout.mbway.country.CountryModel
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import kotlinx.coroutines.CoroutineScope
 

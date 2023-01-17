@@ -89,9 +89,6 @@ object PaymentMethodTypes {
             BCMC,
             DOTPAY,
             ECONTEXT_SEVEN_ELEVEN,
-            ECONTEXT_ATM,
-            ECONTEXT_STORES,
-            ECONTEXT_ONLINE,
             ENTERCASH,
             EPS,
             GIFTCARD,
@@ -154,6 +151,9 @@ object PaymentMethodTypes {
             DRAGONPAY_OTC_BANKING,
             DRAGONPAY_OTC_NON_BANKING,
             DRAGONPAY_OTC_PHILIPPINES,
+            ECONTEXT_ATM,
+            ECONTEXT_STORES,
+            ECONTEXT_ONLINE,
         )
     )
 }

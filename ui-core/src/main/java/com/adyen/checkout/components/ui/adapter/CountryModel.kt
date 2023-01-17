@@ -6,7 +6,7 @@
  * Created by josephj on 16/12/2020.
  */
 
-package com.adyen.checkout.mbway.country
+package com.adyen.checkout.components.ui.adapter
 
 data class CountryModel(
     val isoCode: String,

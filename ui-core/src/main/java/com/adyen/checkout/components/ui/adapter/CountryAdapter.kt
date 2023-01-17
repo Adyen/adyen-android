@@ -6,7 +6,7 @@
  * Created by josephj on 16/12/2020.
  */
 
-package com.adyen.checkout.mbway.country
+package com.adyen.checkout.components.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import com.adyen.checkout.mbway.databinding.CountryViewBinding
+import com.adyen.checkout.components.ui.databinding.CountryViewBinding
 
 // We need context to inflate the views and localizedContext to fetch the strings
 // Do not remove localizedContext! It's not used at the moment, however it is kept to prevent usage of context

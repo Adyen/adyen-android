@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 8/6/2022.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.EContext" />
+
+    <style name="AdyenCheckout.EContext.FirstNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">First Name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.EContext.LastNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Last Name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.EContext.MobileNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Phone Number</item>
+        <item name="android:inputType">phone</item>
+    </style>
+
+    <style name="AdyenCheckout.EContext.EmailAddressInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">E-mail Address</item>
+        <item name="android:inputType">text|textEmailAddress</item>
+    </style>
+</resources>
