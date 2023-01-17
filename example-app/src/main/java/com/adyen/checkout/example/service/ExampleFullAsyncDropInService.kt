@@ -255,7 +255,6 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
     private fun handleOrderResponse(jsonResponse: JSONObject?): OrderDropInServiceResult {
         return if (jsonResponse != null) {
             when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
@@ -283,7 +282,6 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
     private fun handleCancelOrderResponse(
         jsonResponse: JSONObject?,
         shouldUpdatePaymentMethods: Boolean

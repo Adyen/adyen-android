@@ -52,7 +52,6 @@ abstract class PaymentMethodDetails : ModelObject() {
             }
         }
 
-        @Suppress("ComplexMethod")
         fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
             val serializer = when (paymentMethodType) {
                 IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER

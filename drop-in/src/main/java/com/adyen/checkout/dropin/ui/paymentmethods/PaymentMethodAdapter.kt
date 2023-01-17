@@ -32,7 +32,6 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHODS_NOTE
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 
-@SuppressWarnings("TooManyFunctions")
 internal class PaymentMethodAdapter @JvmOverloads constructor(
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
     private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,

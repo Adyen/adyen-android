@@ -34,7 +34,6 @@ import com.adyen.checkout.dropin.ui.stored.mapStoredModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@Suppress("TooManyFunctions")
 internal class PaymentMethodsListViewModel(
     private val application: Application,
     private val paymentMethods: List<PaymentMethod>,

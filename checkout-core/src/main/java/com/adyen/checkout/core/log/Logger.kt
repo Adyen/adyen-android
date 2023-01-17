@@ -113,7 +113,6 @@ object Logger {
         }
     }
 
-    @Suppress("ComplexMethod")
     private fun logToLogcat(@LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
         if (logcatLevel > logLevel) {
             return

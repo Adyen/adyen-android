@@ -135,7 +135,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     return builder.build() as T
 }
 
-@Suppress("ComplexMethod", "LongMethod")
+@Suppress("LongMethod")
 internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
@@ -353,7 +353,7 @@ internal fun getComponentFor(
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("ComplexMethod", "LongMethod")
+@Suppress("LongMethod")
 internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,

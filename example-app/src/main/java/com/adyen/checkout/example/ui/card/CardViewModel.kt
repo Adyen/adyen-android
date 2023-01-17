@@ -27,7 +27,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
