@@ -6,11 +6,10 @@
  * Created by ozgur on 8/3/2022.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.components.ui
 
-import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.FieldState
 
 data class AddressOutputData(
     val postalCode: FieldState<String>,

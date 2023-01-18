@@ -14,4 +14,32 @@
     <string name="paymentInProgressView_title">Det er en betalingsprosess som fortsatt er aktiv</string>
     <string name="paymentInProgressView_loadingText">Venter på fullførelse …</string>
     <string name="paymentInProgressView_cancelButton">Avbryt</string>
+
+    <string name="checkout_address_form_field_not_valid">Ugyldige inndata</string>
+
+    <string name="checkout_address_form_billing_address_title">Faktureringsadresse</string>
+    <string name="checkout_address_form_street_hint">Gate</string>
+    <string name="checkout_address_form_address_hint">Adresse</string>
+    <string name="checkout_address_form_house_number_hint">Husnummer</string>
+    <string name="checkout_address_form_apartment_suite_hint">Leilighet/suite</string>
+    <string name="checkout_address_form_city_hint">Poststed</string>
+    <string name="checkout_address_form_country_hint">Land</string>
+    <string name="checkout_address_form_states_hint">Delstat</string>
+    <string name="checkout_address_postal_code_hint">Postnummer</string>
+    <string name="checkout_address_form_zip_code_hint">Postnummer</string>
+    <string name="checkout_address_form_province_territory_hint">Provins eller territorium</string>
+    <string name="checkout_address_form_city_town_hint">By</string>
+
+    <string name="checkout_address_form_street_hint_optional">Gate (valgfritt)</string>
+    <string name="checkout_address_form_address_hint_optional">Adresse (valgfritt)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Husnummer (valgfritt)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Leilighet/suite (valgfritt)</string>
+    <string name="checkout_address_form_city_hint_optional"> Poststed (valgfritt)</string>
+    <string name="checkout_address_form_country_hint_optional">Land (valgfritt)</string>
+    <string name="checkout_address_form_states_hint_optional">Delstat (valgfritt)</string>
+    <string name="checkout_address_postal_code_hint_optional">Postnummer (valgfritt)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valgfritt)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valgfritt)</string>
+    <string name="checkout_address_form_city_town_hint_optional">By (valgfritt)</string>
+
 </resources>

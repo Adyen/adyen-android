@@ -1,12 +1,21 @@
-package com.adyen.checkout.card.api
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by onurk on 13/1/2023.
+ */
 
-import com.adyen.checkout.card.api.model.AddressItem
+package com.adyen.checkout.components.api
+
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.api.model.AddressItem
 import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.getList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
-internal class AddressService(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class AddressService(
     private val httpClient: HttpClient,
 ) {
     suspend fun getCountries(

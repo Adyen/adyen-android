@@ -1,16 +1,14 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 31/10/2022.
- *
+ * Created by onurk on 17/1/2023.
  */
 
-package com.adyen.checkout.card.ui
+package com.adyen.checkout.components.ui
 
 import androidx.annotation.StyleRes
-import com.adyen.checkout.card.R
 
 /**
  * Specification for address form alternatives depending on the country.
@@ -29,28 +27,28 @@ enum class AddressSpecification(
     BR(
         street = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_StreetInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_StreetInput_Optional
+            styleResId = R.style.AdyenCheckout_StreetInput,
+            optionalStyleResId = R.style.AdyenCheckout_StreetInput_Optional
         ),
         houseNumber = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_HouseNumberInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_HouseNumberInput_Optional
+            styleResId = R.style.AdyenCheckout_HouseNumberInput,
+            optionalStyleResId = R.style.AdyenCheckout_HouseNumberInput_Optional
         ),
         apartmentSuite = AddressFieldSpec(
             isRequired = false,
-            styleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput_Optional
+            styleResId = R.style.AdyenCheckout_ApartmentSuiteInput,
+            optionalStyleResId = R.style.AdyenCheckout_ApartmentSuiteInput_Optional
         ),
         postalCode = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_PostalCodeInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+            styleResId = R.style.AdyenCheckout_PostalCodeInput,
+            optionalStyleResId = R.style.AdyenCheckout_PostalCodeInput_Optional
         ),
         city = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_CityInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_CityInput_Optional
+            styleResId = R.style.AdyenCheckout_CityInput,
+            optionalStyleResId = R.style.AdyenCheckout_CityInput_Optional
         ),
         stateProvince = AddressFieldSpec(
             isRequired = true,
@@ -68,8 +66,8 @@ enum class AddressSpecification(
     CA(
         street = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_AddressInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_AddressInput_Optional
+            styleResId = R.style.AdyenCheckout_AddressInput,
+            optionalStyleResId = R.style.AdyenCheckout_AddressInput_Optional
         ),
         houseNumber = AddressFieldSpec(
             isRequired = false,
@@ -78,22 +76,22 @@ enum class AddressSpecification(
         ),
         apartmentSuite = AddressFieldSpec(
             isRequired = false,
-            styleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput_Optional
+            styleResId = R.style.AdyenCheckout_ApartmentSuiteInput,
+            optionalStyleResId = R.style.AdyenCheckout_ApartmentSuiteInput_Optional
         ),
         postalCode = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_PostalCodeInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+            styleResId = R.style.AdyenCheckout_PostalCodeInput,
+            optionalStyleResId = R.style.AdyenCheckout_PostalCodeInput_Optional
         ),
         city = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_CityInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_CityInput_Optional
+            styleResId = R.style.AdyenCheckout_CityInput,
+            optionalStyleResId = R.style.AdyenCheckout_CityInput_Optional
         ),
         stateProvince = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_ProvinceTerritoryInput,
+            styleResId = R.style.AdyenCheckout_ProvinceTerritoryInput,
             optionalStyleResId = null
         ),
         country = AddressFieldSpec(
@@ -107,13 +105,13 @@ enum class AddressSpecification(
     GB(
         street = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_StreetInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_StreetInput_Optional
+            styleResId = R.style.AdyenCheckout_StreetInput,
+            optionalStyleResId = R.style.AdyenCheckout_StreetInput_Optional
         ),
         houseNumber = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_HouseNumberInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_HouseNumberInput_Optional
+            styleResId = R.style.AdyenCheckout_HouseNumberInput,
+            optionalStyleResId = R.style.AdyenCheckout_HouseNumberInput_Optional
         ),
         apartmentSuite = AddressFieldSpec(
             isRequired = false,
@@ -122,13 +120,13 @@ enum class AddressSpecification(
         ),
         postalCode = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_PostalCodeInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+            styleResId = R.style.AdyenCheckout_PostalCodeInput,
+            optionalStyleResId = R.style.AdyenCheckout_PostalCodeInput_Optional
         ),
         city = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_CityTownInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_CityTownInput_Optional
+            styleResId = R.style.AdyenCheckout_CityTownInput,
+            optionalStyleResId = R.style.AdyenCheckout_CityTownInput_Optional
         ),
         stateProvince = AddressFieldSpec(
             isRequired = false,
@@ -146,8 +144,8 @@ enum class AddressSpecification(
     US(
         street = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_AddressInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_AddressInput_Optional
+            styleResId = R.style.AdyenCheckout_AddressInput,
+            optionalStyleResId = R.style.AdyenCheckout_AddressInput_Optional
         ),
         houseNumber = AddressFieldSpec(
             isRequired = false,
@@ -156,18 +154,18 @@ enum class AddressSpecification(
         ),
         apartmentSuite = AddressFieldSpec(
             isRequired = false,
-            styleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput_Optional
+            styleResId = R.style.AdyenCheckout_ApartmentSuiteInput,
+            optionalStyleResId = R.style.AdyenCheckout_ApartmentSuiteInput_Optional
         ),
         postalCode = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_ZipCodeInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ZipCodeInput_Optional
+            styleResId = R.style.AdyenCheckout_ZipCodeInput,
+            optionalStyleResId = R.style.AdyenCheckout_ZipCodeInput_Optional
         ),
         city = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_CityInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_CityInput_Optional
+            styleResId = R.style.AdyenCheckout_CityInput,
+            optionalStyleResId = R.style.AdyenCheckout_CityInput_Optional
         ),
         stateProvince = AddressFieldSpec(
             isRequired = true,
@@ -185,33 +183,33 @@ enum class AddressSpecification(
     DEFAULT(
         street = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_StreetInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_StreetInput_Optional
+            styleResId = R.style.AdyenCheckout_StreetInput,
+            optionalStyleResId = R.style.AdyenCheckout_StreetInput_Optional
         ),
         houseNumber = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_HouseNumberInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_HouseNumberInput_Optional
+            styleResId = R.style.AdyenCheckout_HouseNumberInput,
+            optionalStyleResId = R.style.AdyenCheckout_HouseNumberInput_Optional
         ),
         apartmentSuite = AddressFieldSpec(
             isRequired = false,
-            styleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ApartmentSuiteInput_Optional
+            styleResId = R.style.AdyenCheckout_ApartmentSuiteInput,
+            optionalStyleResId = R.style.AdyenCheckout_ApartmentSuiteInput_Optional
         ),
         postalCode = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_PostalCodeInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_PostalCodeInput_Optional
+            styleResId = R.style.AdyenCheckout_PostalCodeInput,
+            optionalStyleResId = R.style.AdyenCheckout_PostalCodeInput_Optional
         ),
         city = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_CityInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_CityInput_Optional
+            styleResId = R.style.AdyenCheckout_CityInput,
+            optionalStyleResId = R.style.AdyenCheckout_CityInput_Optional
         ),
         stateProvince = AddressFieldSpec(
             isRequired = true,
-            styleResId = R.style.AdyenCheckout_Card_ProvinceTerritoryInput,
-            optionalStyleResId = R.style.AdyenCheckout_Card_ProvinceTerritoryInput_Optional
+            styleResId = R.style.AdyenCheckout_ProvinceTerritoryInput,
+            optionalStyleResId = R.style.AdyenCheckout_ProvinceTerritoryInput_Optional
         ),
         country = AddressFieldSpec(
             isRequired = true,

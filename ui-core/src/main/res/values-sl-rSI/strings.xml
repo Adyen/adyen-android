@@ -14,4 +14,32 @@
     <string name="paymentInProgressView_title">Postopek plačila je še vedno aktiven</string>
     <string name="paymentInProgressView_loadingText">Čakanje na dokončanje …</string>
     <string name="paymentInProgressView_cancelButton">Prekliči</string>
+
+    <string name="checkout_address_form_field_not_valid">Neveljaven vnos</string>
+
+    <string name="checkout_address_form_billing_address_title">Naslov za račun</string>
+    <string name="checkout_address_form_street_hint">Ulica</string>
+    <string name="checkout_address_form_address_hint">Naslov</string>
+    <string name="checkout_address_form_house_number_hint">Hišna številka</string>
+    <string name="checkout_address_form_apartment_suite_hint">Št. apartmaja/stanovanja</string>
+    <string name="checkout_address_form_city_hint">Mesto</string>
+    <string name="checkout_address_form_country_hint">Država</string>
+    <string name="checkout_address_form_states_hint">Država</string>
+    <string name="checkout_address_postal_code_hint">Poštna številka</string>
+    <string name="checkout_address_form_zip_code_hint">Poštna številka</string>
+    <string name="checkout_address_form_province_territory_hint">Območje ali ozemlje</string>
+    <string name="checkout_address_form_city_town_hint">Mesto</string>
+
+    <string name="checkout_address_form_street_hint_optional">Ulica (neobvezno)</string>
+    <string name="checkout_address_form_address_hint_optional">Naslov (neobvezno)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Hišna številka (neobvezno)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Št. apartmaja/stanovanja (neobvezno)</string>
+    <string name="checkout_address_form_city_hint_optional"> Kraj (neobvezno)</string>
+    <string name="checkout_address_form_country_hint_optional">Država (neobvezno)</string>
+    <string name="checkout_address_form_states_hint_optional">Država (neobvezno)</string>
+    <string name="checkout_address_postal_code_hint_optional">Poštna številka (neobvezno)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Poštna številka (neobvezno)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Območje ali ozemlje (neobvezno)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Mesto (neobvezno)</string>
+
 </resources>

@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.ui.AddressDelegate
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate

@@ -6,7 +6,7 @@
  * Created by onurk on 3/1/2023.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.components.ui
 
 import androidx.annotation.RestrictTo
 import kotlinx.coroutines.flow.Flow

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 16/9/2022.
+ * Created by onurk on 13/1/2023.
  */
 
-package com.adyen.checkout.card.ui
+package com.adyen.checkout.components.ui.view.address
 
 import android.content.Context
 import android.util.AttributeSet
@@ -16,14 +16,14 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.adyen.checkout.card.AddressDelegate
-import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.R
-import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.extensions.showError
+import com.adyen.checkout.components.model.AddressListItem
+import com.adyen.checkout.components.ui.AddressDelegate
+import com.adyen.checkout.components.ui.AddressSpecification
+import com.adyen.checkout.components.ui.R
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 /**
- * AddressFormInput to be used in [CardComponent].
+ * AddressFormInput to be used in other modules.
  */
 @Suppress("TooManyFunctions")
 class AddressFormInput @JvmOverloads constructor(
@@ -127,7 +127,7 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    internal fun attachDelegate(delegate: AddressDelegate, coroutineScope: CoroutineScope) {
+    fun attachDelegate(delegate: AddressDelegate, coroutineScope: CoroutineScope) {
         this.delegate = delegate
         subscribeCountryAndStateList(coroutineScope)
     }
@@ -139,12 +139,12 @@ class AddressFormInput @JvmOverloads constructor(
         }.launchIn(coroutineScope)
     }
 
-    internal fun initLocalizedContext(localizedContext: Context) {
+    fun initLocalizedContext(localizedContext: Context) {
         this.localizedContext = localizedContext
     }
 
     @Suppress("LongMethod")
-    internal fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
+    fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
         var isErrorFocused = isErrorFocusedPreviously
         val countryValidation = delegate.addressOutputData.country.validation
         if (countryValidation is Validation.Invalid) {

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.util
 
-import com.adyen.checkout.card.AddressParams
+import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.card.AddressFieldPolicyParams
 
 internal object CardAddressValidationUtils {
