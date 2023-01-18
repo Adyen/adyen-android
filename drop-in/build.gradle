@@ -47,6 +47,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(':3ds2')
     api project(':ach')
     api project(':action')
     api project(':bacs')
@@ -75,6 +76,7 @@ dependencies {
     api project(':seven-eleven')
     api project(':sessions-core')
     api project(':upi')
+    api project(':wechatpay')
 
     // Dependencies
     implementation libraries.androidx.recyclerview

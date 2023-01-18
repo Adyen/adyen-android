@@ -30,6 +30,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -95,7 +96,7 @@ internal class DefaultGenericActionDelegate(
         // Initially handleAction is called with a fingerprint action then with a challenge action.
         // During this whole flow the same transaction instance should be used for both fingerprint and challenge.
         // Therefore we are making sure the same delegate persists when handleAction is called again.
-        if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
+        if (isOld3DS2Flow(action)) {
             Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
         } else {
             val delegate = actionDelegateProvider.getDelegate(
@@ -115,6 +116,10 @@ internal class DefaultGenericActionDelegate(
         }
 
         delegate.handleAction(action, activity)
+    }
+
+    private fun isOld3DS2Flow(action: Action): Boolean {
+        return runCompileOnly { _delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction } ?: false
     }
 
     private fun observeExceptions(delegate: ActionDelegate) {

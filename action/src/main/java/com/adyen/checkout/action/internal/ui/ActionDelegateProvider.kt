@@ -28,6 +28,7 @@ import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -56,6 +57,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             is QrCodeAction -> {
                 QRCodeComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -63,6 +65,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             is RedirectAction -> {
                 RedirectComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -70,6 +73,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             is BaseThreeds2Action -> {
                 Adyen3DS2ComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -77,6 +81,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             is VoucherAction -> {
                 VoucherComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -84,6 +89,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             is SdkAction<*> -> {
                 WeChatPayActionComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
@@ -91,6 +97,7 @@ internal class ActionDelegateProvider(
                     application
                 )
             }
+
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
     }
@@ -109,16 +116,42 @@ internal class ActionDelegateProvider(
         val clientKey = configuration.clientKey
 
         val builder: BaseConfigurationBuilder<*, *> = when (T::class) {
-            AwaitConfiguration::class -> AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
-            RedirectConfiguration::class -> RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
-            QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
-            Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
-            WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(
+            runCompileOnly { AwaitConfiguration::class } -> AwaitConfiguration.Builder(
                 shopperLocale,
                 environment,
                 clientKey
             )
-            VoucherConfiguration::class -> VoucherConfiguration.Builder(shopperLocale, environment, clientKey)
+
+            runCompileOnly { RedirectConfiguration::class } -> RedirectConfiguration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
+            runCompileOnly { QRCodeConfiguration::class } -> QRCodeConfiguration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
+            runCompileOnly { Adyen3DS2Configuration::class } -> Adyen3DS2Configuration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
+            runCompileOnly { WeChatPayActionConfiguration::class } -> WeChatPayActionConfiguration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
+            runCompileOnly { VoucherConfiguration::class } -> VoucherConfiguration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
             else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
         }
 
