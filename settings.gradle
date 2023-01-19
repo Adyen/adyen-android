@@ -38,4 +38,5 @@ include ':3ds2',
         ':test-core',
         ':ui-core',
         ':voucher',
-        ':wechatpay'
+        ':wechatpay',
+        ':ach'

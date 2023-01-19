@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Conto bancario</string>
+    <string name="checkout_ach_bank_account_holder_name">Nome del titolare del conto</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Nome del titolare del conto non valido</string>
+    <string name="checkout_ach_bank_account_number">Numero di conto</string>
+    <string name="checkout_ach_bank_account_number_invalid">Numero di conto non valido</string>
+    <string name="checkout_ach_bank_account_location">Codice ABA</string>
+    <string name="checkout_ach_bank_account_location_invalid">Codice ABA non valido</string>
+</resources>

@@ -39,6 +39,7 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val PAY_BY_BANK = "paybybank"
+    const val ACH = "ach"
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
@@ -109,6 +110,7 @@ object PaymentMethodTypes {
             ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL,
             PIX,
+            ACH
         )
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(

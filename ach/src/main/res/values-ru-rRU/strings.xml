@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Банковский счет</string>
+    <string name="checkout_ach_bank_account_holder_name">Имя владельца карты</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Недействительное имя владельца карты</string>
+    <string name="checkout_ach_bank_account_number">Номер счета</string>
+    <string name="checkout_ach_bank_account_number_invalid">Недействительный номер счета</string>
+    <string name="checkout_ach_bank_account_location">Маршрутный номер ABA</string>
+    <string name="checkout_ach_bank_account_location_invalid">Недействительный маршрутный номер ABA</string>
+</resources>
