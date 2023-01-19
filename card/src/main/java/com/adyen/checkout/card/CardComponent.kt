@@ -84,6 +84,14 @@ class CardComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    // TODO sessions: Move it to the PaymentComponent interface
+    fun setInteractionAllowed(isInteractionAllowed: Boolean) {
+        (delegate as? CardDelegate)?.setInteractionAllowed(isInteractionAllowed) ?: Logger.e(
+            TAG,
+            "Payment component is not interactable, ignoring."
+        )
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

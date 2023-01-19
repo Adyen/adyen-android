@@ -22,16 +22,16 @@ class SubmitHandler {
         state: T,
         submitChannel: Channel<T>,
         uiEventChannel: Channel<PaymentComponentUIEvent>?,
-        uiStateChannel: MutableStateFlow<PaymentComponentUIState>?
+        uiStateFlow: MutableStateFlow<PaymentComponentUIState>?
     ) {
         when {
             !state.isInputValid -> uiEventChannel?.trySend(PaymentComponentUIEvent.InvalidUI)
             state.isValid -> {
                 submitChannel.trySend(state)
-                uiStateChannel?.tryEmit(PaymentComponentUIState.Idle)
+                uiStateFlow?.tryEmit(PaymentComponentUIState.Idle)
             }
-            !state.isReady -> uiStateChannel?.tryEmit(PaymentComponentUIState.Loading)
-            else -> uiStateChannel?.tryEmit(PaymentComponentUIState.Idle)
+            !state.isReady -> uiStateFlow?.tryEmit(PaymentComponentUIState.Blocked)
+            else -> uiStateFlow?.tryEmit(PaymentComponentUIState.Idle)
         }
     }
 }

@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentUIState {
-    object Loading : PaymentComponentUIState()
+    object Blocked : PaymentComponentUIState()
     object Idle : PaymentComponentUIState()
 }
 

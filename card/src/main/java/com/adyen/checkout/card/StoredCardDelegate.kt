@@ -175,6 +175,16 @@ internal class StoredCardDelegate(
         onInputDataChanged()
     }
 
+    override fun setInteractionAllowed(isInteractionAllowed: Boolean) {
+        _uiStateFlow.tryEmit(
+            if (isInteractionAllowed) {
+                PaymentComponentUIState.Idle
+            } else {
+                PaymentComponentUIState.Blocked // TODO should be blocked
+            }
+        )
+    }
+
     private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
 
@@ -276,7 +286,7 @@ internal class StoredCardDelegate(
 
     private fun onState(state: CardComponentState) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
+        if (uiState == PaymentComponentUIState.Blocked) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
@@ -291,7 +301,7 @@ internal class StoredCardDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

@@ -10,6 +10,7 @@ package com.adyen.checkout.components.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
@@ -20,6 +21,8 @@ import com.adyen.checkout.components.Component
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.extensions.createLocalizedContext
+import com.adyen.checkout.components.extensions.hideKeyboard
+import com.adyen.checkout.components.extensions.resetFocus
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
@@ -49,6 +52,12 @@ class AdyenComponentView @JvmOverloads constructor(
         LayoutInflater.from(context),
         this
     )
+
+    /**
+     * Indicates if user interaction is blocked.
+     */
+    @Volatile
+    private var isInteractionBlocked = false
 
     private var componentView: ComponentView? = null
     private var componentViewType: ComponentViewType? = null
@@ -118,11 +127,7 @@ class AdyenComponentView @JvmOverloads constructor(
         if (buttonDelegate?.isConfirmationRequired() == true) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
-                // TODO check if setPaymentPendingInitialization has to be called on each event?
-                when (it) {
-                    PaymentComponentUIState.Idle -> setPaymentPendingInitialization(false)
-                    PaymentComponentUIState.Loading -> setPaymentPendingInitialization(true)
-                }
+                setInteractionBlocked(it is PaymentComponentUIState.Blocked)
             }?.launchIn(coroutineScope)
 
             uiStateDelegate?.uiEventFlow?.onEach {
@@ -141,9 +146,15 @@ class AdyenComponentView @JvmOverloads constructor(
         }
     }
 
-    private fun setPaymentPendingInitialization(pending: Boolean) {
-        binding.payButton.isVisible = binding.payButton.isVisible && !pending
-        if (pending) binding.progressBar.show() else binding.progressBar.hide()
+    private fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        this.isInteractionBlocked = isInteractionBlocked
+
+        binding.payButton.isEnabled = !isInteractionBlocked
+
+        if (isInteractionBlocked) {
+            resetFocus()
+            hideKeyboard()
+        }
     }
 
     private fun Button.setText(
@@ -169,6 +180,11 @@ class AdyenComponentView @JvmOverloads constructor(
      */
     fun highlightValidationErrors() {
         componentView?.highlightValidationErrors()
+    }
+
+    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        if (isInteractionBlocked) return true
+        return super.onInterceptTouchEvent(ev)
     }
 
     companion object {

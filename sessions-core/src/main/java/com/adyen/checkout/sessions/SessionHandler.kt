@@ -177,7 +177,6 @@ class SessionHandler<T : PaymentComponentState<*>>(
     }
 
     private fun onState(state: T) {
-        // TODO sessions: provide merchants with state
         sessionComponentCallback.onStateChanged(state)
     }
 

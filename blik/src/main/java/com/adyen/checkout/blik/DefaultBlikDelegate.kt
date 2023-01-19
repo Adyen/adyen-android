@@ -153,7 +153,7 @@ internal class DefaultBlikDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

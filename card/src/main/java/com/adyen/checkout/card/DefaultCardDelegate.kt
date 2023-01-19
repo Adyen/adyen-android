@@ -200,6 +200,16 @@ internal class DefaultCardDelegate(
         }
     }
 
+    override fun setInteractionAllowed(isInteractionAllowed: Boolean) {
+        _uiStateFlow.tryEmit(
+            if (isInteractionAllowed) {
+                PaymentComponentUIState.Idle
+            } else {
+                PaymentComponentUIState.Blocked // TODO should be blocked
+            }
+        )
+    }
+
     private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
         detectCardTypeRepository.detectCardType(
@@ -360,7 +370,7 @@ internal class DefaultCardDelegate(
 
     private fun onState(state: CardComponentState) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
+        if (uiState == PaymentComponentUIState.Blocked) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
@@ -443,7 +453,7 @@ internal class DefaultCardDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 
