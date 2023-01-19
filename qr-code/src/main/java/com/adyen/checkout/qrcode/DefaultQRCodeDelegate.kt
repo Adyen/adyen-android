@@ -11,6 +11,7 @@ package com.adyen.checkout.qrcode
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -196,7 +197,8 @@ internal class DefaultQRCodeDelegate(
 
         var qrImageUrl: String? = null
         if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
-            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, action.qrCodeData)
+            val encodedQrCodeData = Uri.encode(action.qrCodeData)
+            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, encodedQrCodeData)
         }
 
         val outputData = QRCodeOutputData(
