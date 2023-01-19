@@ -26,7 +26,6 @@ import com.adyen.checkout.components.extensions.resetFocus
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -127,7 +126,7 @@ class AdyenComponentView @JvmOverloads constructor(
         if (buttonDelegate?.isConfirmationRequired() == true) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
-                setInteractionBlocked(it is PaymentComponentUIState.Blocked)
+                setInteractionBlocked(it.isInteractionBlocked())
             }?.launchIn(coroutineScope)
 
             uiStateDelegate?.uiEventFlow?.onEach {

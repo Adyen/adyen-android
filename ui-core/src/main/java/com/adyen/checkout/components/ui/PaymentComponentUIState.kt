@@ -12,8 +12,24 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentUIState {
+    /**
+     * User interaction is blocked because the component is being submitted.
+     */
     object Blocked : PaymentComponentUIState()
+
+    /**
+     * Intermediate state after a submit was requested but the component is not yet ready.
+     */
+    object PendingSubmit : PaymentComponentUIState()
+
+    /**
+     * User can interact with the component and fill the input fields.
+     */
     object Idle : PaymentComponentUIState()
+
+    fun isInteractionBlocked(): Boolean {
+        return this is Blocked || this is PendingSubmit
+    }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
