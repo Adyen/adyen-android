@@ -100,6 +100,9 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
+import com.adyen.checkout.payeasy.PayEasyComponent
+import com.adyen.checkout.payeasy.PayEasyComponentProvider
+import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
@@ -261,6 +264,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey = clientKey
         )
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> PayByBankConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+        PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> PayEasyConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -578,6 +586,16 @@ internal fun getComponentFor(
                 configuration = payByBankConfig,
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
+            )
+        }
+        PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val payEasyConfiguration: PayEasyConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            PayEasyComponentProvider(dropInParams).get(
+                owner = fragment,
+                paymentMethod = paymentMethod,
+                configuration = payEasyConfiguration,
+                application = fragment.requireApplication()
             )
         }
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
