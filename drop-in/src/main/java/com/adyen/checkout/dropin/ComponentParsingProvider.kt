@@ -103,6 +103,9 @@ import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.seveneleven.SevenElevenComponent
+import com.adyen.checkout.seveneleven.SevenElevenComponentProvider
+import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
@@ -263,6 +266,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey = clientKey
         )
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SepaConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+        SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SevenElevenConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -580,6 +588,16 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+            )
+        }
+        SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val sevenElevenConfiguration: SevenElevenConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            SevenElevenComponentProvider(dropInParams).get(
+                owner = fragment,
+                paymentMethod = paymentMethod,
+                configuration = sevenElevenConfiguration,
+                application = fragment.requireApplication()
             )
         }
         else -> {
