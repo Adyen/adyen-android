@@ -30,6 +30,5 @@ android {
 }
 
 dependencies {
-    api project(':action')
     api project(':econtext')
 }
