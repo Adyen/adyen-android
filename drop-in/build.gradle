@@ -51,6 +51,7 @@ dependencies {
     api project(':bcmc')
     api project(':blik')
     api project(':card')
+    api project(':convenience-stores-jp')
     api project(':dotpay')
     api project(':entercash')
     api project(':eps')

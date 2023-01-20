@@ -53,6 +53,9 @@ import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMeth
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentProvider
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -194,6 +197,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
+        ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
+            ConvenienceStoresJPConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> DotpayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -440,6 +449,16 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
                 componentCallback = componentCallback as ComponentCallback<CardComponentState>,
+            )
+        }
+        ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            ConvenienceStoresJPComponentProvider(dropInParams).get(
+                owner = fragment,
+                paymentMethod = paymentMethod,
+                configuration = convenienceStoresJPConfiguration,
+                application = fragment.requireApplication(),
             )
         }
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
