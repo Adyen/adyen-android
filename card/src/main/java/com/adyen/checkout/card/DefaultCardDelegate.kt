@@ -199,14 +199,8 @@ internal class DefaultCardDelegate(
         }
     }
 
-    override fun setInteractionAllowed(isInteractionAllowed: Boolean) {
-        _uiStateFlow.tryEmit(
-            if (isInteractionAllowed) {
-                PaymentComponentUIState.Idle
-            } else {
-                PaymentComponentUIState.Blocked
-            }
-        )
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(_uiStateFlow, isInteractionBlocked)
     }
 
     private fun onInputDataChanged() {

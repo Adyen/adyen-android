@@ -85,8 +85,8 @@ class CardComponent internal constructor(
     }
 
     // TODO sessions: Move it to the PaymentComponent interface
-    fun setInteractionAllowed(isInteractionAllowed: Boolean) {
-        (delegate as? CardDelegate)?.setInteractionAllowed(isInteractionAllowed) ?: Logger.e(
+    fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? CardDelegate)?.setInteractionBlocked(isInteractionBlocked) ?: Logger.e(
             TAG,
             "Payment component is not interactable, ignoring."
         )

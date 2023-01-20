@@ -21,9 +21,14 @@ import kotlinx.coroutines.flow.onEach
 // TODO docs
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SubmitHandler {
+    // override val savedStateHandle: SavedStateHandle = SavedStateHandle()
+    // : SavedStateHandleContainer {
+
+    private var isInteractionBlocked: Boolean? = null // by SavedStateHandleProperty(IS_INTERACTION_BLOCKED)
 
     // TODO sessions: move all submit channels and flows here and mirror them in the delegates
     // private val submitChannel: Channel<CardComponentState> = bufferedChannel()
+    // private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
 
     fun <T : PaymentComponentState<out PaymentMethodDetails>> initialize(
         coroutineScope: CoroutineScope,
@@ -31,13 +36,16 @@ class SubmitHandler {
         submitChannel: Channel<T>,
         uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
     ) {
+        isInteractionBlocked?.let {
+            setInteractionBlocked(uiStateFlow, it)
+        }
         componentStateFlow.onEach { state ->
             val uiState = uiStateFlow.value
             if (uiState == PaymentComponentUIState.PendingSubmit) {
                 if (state.isValid) {
                     submit(submitChannel, state, uiStateFlow)
                 } else {
-                    uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
+                    emitUIState(uiStateFlow, PaymentComponentUIState.Idle)
                 }
             }
         }.launchIn(coroutineScope)
@@ -51,11 +59,9 @@ class SubmitHandler {
     ) {
         when {
             !state.isInputValid -> uiEventChannel.trySend(PaymentComponentUIEvent.InvalidUI)
-            state.isValid -> {
-                submit(submitChannel, state, uiStateFlow)
-            }
-            !state.isReady -> uiStateFlow.tryEmit(PaymentComponentUIState.PendingSubmit)
-            else -> uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
+            state.isValid -> submit(submitChannel, state, uiStateFlow)
+            !state.isReady -> emitUIState(uiStateFlow, PaymentComponentUIState.PendingSubmit)
+            else -> emitUIState(uiStateFlow, PaymentComponentUIState.Idle)
         }
     }
 
@@ -65,6 +71,31 @@ class SubmitHandler {
         uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
     ) {
         submitChannel.trySend(state)
-        uiStateFlow.tryEmit(PaymentComponentUIState.Blocked)
+        emitUIState(uiStateFlow, PaymentComponentUIState.Blocked)
+    }
+
+    private fun emitUIState(
+        uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
+        uiState: PaymentComponentUIState,
+    ) {
+        if (isInteractionBlocked != null) return
+        uiStateFlow.tryEmit(uiState)
+    }
+
+    fun setInteractionBlocked(
+        uiStateFlow: MutableStateFlow<PaymentComponentUIState>, // remove after uiStateFlow becomes a property
+        isInteractionBlocked: Boolean,
+    ) {
+        this.isInteractionBlocked = isInteractionBlocked
+        val uiState = if (isInteractionBlocked) {
+            PaymentComponentUIState.Blocked
+        } else {
+            PaymentComponentUIState.Idle
+        }
+        uiStateFlow.tryEmit(uiState)
+    }
+
+    companion object {
+        private const val IS_INTERACTION_BLOCKED = "IS_INTERACTION_BLOCKED"
     }
 }

@@ -33,5 +33,5 @@ interface CardDelegate :
 
     fun updateInputData(update: CardInputData.() -> Unit)
 
-    fun setInteractionAllowed(isInteractionAllowed: Boolean)
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
