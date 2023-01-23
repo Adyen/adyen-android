@@ -7,8 +7,7 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
@@ -32,10 +31,10 @@ internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel() {
+) : ViewModel(), ComponentCallback<CardComponentState> {
 
-    private val _paymentMethodFlow = MutableStateFlow<PaymentMethod?>(null)
-    val paymentMethodFlow: Flow<PaymentMethod> = _paymentMethodFlow.filterNotNull()
+    private val _cardComponentDataFlow = MutableStateFlow<CardComponentData?>(null)
+    val cardComponentDataFlow: Flow<CardComponentData> = _cardComponentDataFlow.filterNotNull()
 
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
@@ -66,19 +65,30 @@ internal class CardViewModel @Inject constructor(
         if (cardPaymentMethod == null) {
             _cardViewState.emit(CardViewState.Error)
         } else {
-            _paymentMethodFlow.emit(cardPaymentMethod)
+            _cardComponentDataFlow.emit(
+                CardComponentData(
+                    paymentMethod = cardPaymentMethod,
+                    callback = this@CardViewModel,
+                )
+            )
             _cardViewState.emit(CardViewState.ShowComponent)
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<CardComponentState>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> Unit
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
-            is PaymentComponentEvent.Submit -> makePayment(event.state.data)
-        }
+    override fun onSubmit(state: CardComponentState) {
+        makePayment(state.data)
     }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        sendPaymentDetails(actionComponentData)
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
+    }
+
+    // no ops
+    override fun onStateChanged(state: CardComponentState) = Unit
 
     private fun makePayment(data: PaymentComponentData<*>) {
         _cardViewState.value = CardViewState.Loading

@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.components
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 // TODO add docs
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> : ComponentEvent {
     class StateChanged<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val state: ComponentStateT

@@ -11,7 +11,10 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -20,11 +23,13 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
 import com.adyen.checkout.sessions.provider.CheckoutSessionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -37,7 +42,7 @@ internal class SessionsCardViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
-) : ViewModel() {
+) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
     private val _sessionsCardComponentDataFlow = MutableStateFlow<SessionsCardComponentData?>(null)
     val sessionsCardComponentDataFlow: Flow<SessionsCardComponentData> = _sessionsCardComponentDataFlow.filterNotNull()
@@ -45,11 +50,8 @@ internal class SessionsCardViewModel @Inject constructor(
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
 
-    // TODO sessions: re-add later
-    /*
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
-    */
 
     private val cardConfiguration = checkoutConfigurationProvider.getCardConfiguration()
 
@@ -72,7 +74,13 @@ internal class SessionsCardViewModel @Inject constructor(
             return
         }
 
-        _sessionsCardComponentDataFlow.emit(SessionsCardComponentData(checkoutSession, paymentMethod))
+        _sessionsCardComponentDataFlow.emit(
+            SessionsCardComponentData(
+                checkoutSession = checkoutSession,
+                paymentMethod = paymentMethod,
+                callback = this
+            )
+        )
         _cardViewState.emit(CardViewState.ShowComponent)
     }
 
@@ -105,6 +113,33 @@ internal class SessionsCardViewModel @Inject constructor(
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }
+    }
+
+    override fun onAction(action: Action) {
+        viewModelScope.launch { _events.emit(CardEvent.AdditionalAction(action)) }
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
+    }
+
+    override fun onFinished(resultCode: String) {
+        viewModelScope.launch { _events.emit(CardEvent.PaymentResult(resultCode)) }
+    }
+
+    private fun onComponentError(error: ComponentError) {
+        viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+    }
+
+    override fun onLoading(isLoading: Boolean) {
+        val state = if (isLoading) {
+            Logger.d(TAG, "Show loading")
+            CardViewState.Loading
+        } else {
+            Logger.d(TAG, "Don't show loading")
+            CardViewState.ShowComponent
+        }
+        _cardViewState.tryEmit(state)
     }
 
     companion object {

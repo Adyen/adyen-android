@@ -206,7 +206,7 @@ internal class DefaultGiftCardDelegate(
 
     private fun onState(state: GiftCardComponentState) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
+        if (uiState == PaymentComponentUIState.Blocked) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
@@ -221,7 +221,7 @@ internal class DefaultGiftCardDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.api
 
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import kotlinx.coroutines.CancellationException
 import okhttp3.Headers.Companion.toHeaders

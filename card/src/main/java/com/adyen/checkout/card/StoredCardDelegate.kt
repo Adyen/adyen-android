@@ -14,7 +14,6 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
@@ -33,6 +32,7 @@ import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -175,6 +175,10 @@ internal class StoredCardDelegate(
         onInputDataChanged()
     }
 
+    override fun setInteractionBlocked(isInteractionAllowed: Boolean) {
+        // no ops
+    }
+
     private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
 
@@ -276,7 +280,7 @@ internal class StoredCardDelegate(
 
     private fun onState(state: CardComponentState) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
+        if (uiState == PaymentComponentUIState.Blocked) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
@@ -291,7 +295,7 @@ internal class StoredCardDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

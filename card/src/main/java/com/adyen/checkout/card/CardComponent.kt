@@ -9,7 +9,6 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
@@ -21,6 +20,7 @@ import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ButtonDelegate
@@ -38,7 +38,7 @@ class CardComponent internal constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val savedStateHandle: SavedStateHandle,
+    internal val componentEventHandler: ComponentEventHandler<CardComponentState>,
 ) :
     ViewModel(),
     PaymentComponent<CardComponentState>,
@@ -57,6 +57,7 @@ class CardComponent internal constructor(
     init {
         cardDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
     override fun observe(
@@ -83,11 +84,20 @@ class CardComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    // TODO sessions: Move it to the PaymentComponent interface
+    fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? CardDelegate)?.setInteractionBlocked(isInteractionBlocked) ?: Logger.e(
+            TAG,
+            "Payment component is not interactable, ignoring."
+        )
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         cardDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {

@@ -165,7 +165,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 
