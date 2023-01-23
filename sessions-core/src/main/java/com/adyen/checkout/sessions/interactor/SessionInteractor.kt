@@ -64,14 +64,8 @@ class SessionInteractor(
 
                     val action = response.action
                     return when {
-                        response.isRefusedInPartialPaymentFlow() -> {
-                            SessionCallResult.Payments.Error(
-                                // TODO: Use more specific exceptions
-                                throwable = CheckoutException(
-                                    errorMessage = "Payment is refused while making a partial payment."
-                                )
-                            )
-                        }
+                        response.isRefusedInPartialPaymentFlow() ->
+                            SessionCallResult.Payments.RefusedPartialPayment(response.mapToSessionPaymentResult())
                         action != null -> SessionCallResult.Payments.Action(action)
                         response.order.isNonFullyPaid() -> SessionCallResult.Payments.NotFullyPaidOrder(response.order)
                         else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())

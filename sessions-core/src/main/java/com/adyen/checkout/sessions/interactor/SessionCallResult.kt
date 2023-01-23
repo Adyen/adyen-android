@@ -23,6 +23,7 @@ interface SessionCallResult {
         data class NotFullyPaidOrder(val order: OrderResponse?) : Payments()
         data class Action(val action: ActionResponse) : Payments()
         data class Error(val throwable: Throwable) : Payments()
+        data class RefusedPartialPayment(val result: SessionPaymentResult) : Payments()
         object TakenOver : Payments()
     }
 
