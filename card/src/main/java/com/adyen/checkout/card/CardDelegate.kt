@@ -32,4 +32,6 @@ interface CardDelegate :
     val exceptionFlow: Flow<CheckoutException>
 
     fun updateInputData(update: CardInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

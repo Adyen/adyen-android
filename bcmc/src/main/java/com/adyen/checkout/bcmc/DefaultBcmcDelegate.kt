@@ -232,7 +232,7 @@ internal class DefaultBcmcDelegate(
 
     private fun onState(state: PaymentComponentState<CardPaymentMethod>) {
         val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
+        if (uiState == PaymentComponentUIState.Blocked) {
             if (state.isValid) {
                 submitChannel.trySend(state)
             } else {
@@ -292,7 +292,7 @@ internal class DefaultBcmcDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

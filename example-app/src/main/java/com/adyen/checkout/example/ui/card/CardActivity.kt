@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.card.CardComponentProvider
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -51,7 +51,7 @@ class CardActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { cardViewModel.paymentMethodFlow.collect(::setupCardView) }
+                launch { cardViewModel.cardComponentDataFlow.collect(::setupCardView) }
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
                 launch { cardViewModel.events.collect(::onCardEvent) }
             }
@@ -97,12 +97,18 @@ class CardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCardView(paymentMethod: PaymentMethod) {
-        val cardComponent = CardComponent.PROVIDER.get(
-            this,
-            paymentMethod,
-            checkoutConfigurationProvider.getCardConfiguration(),
-            application,
+    private fun setupCardView(cardComponentData: CardComponentData) {
+        // TODO sessions: change back to CardComponent.PROVIDER
+        val cardComponent = CardComponentProvider().get(
+            savedStateRegistryOwner = this,
+            viewModelStoreOwner = this,
+            lifecycleOwner = this,
+            paymentMethod = cardComponentData.paymentMethod,
+            configuration = checkoutConfigurationProvider.getCardConfiguration(),
+            application = application,
+            defaultArgs = null,
+            key = null,
+            componentCallback = cardComponentData.callback
         )
         authenticationLauncher?.let {
             cardComponent.initDelegatedAuthentication(it)
@@ -111,8 +117,6 @@ class CardActivity : AppCompatActivity() {
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
-
-        cardComponent.observe(this, cardViewModel::onPaymentComponentEvent)
     }
 
     private fun onCardEvent(event: CardEvent) {

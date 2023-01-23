@@ -17,12 +17,8 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
-import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.ui.util.AddressFormUtils
-import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardAddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
@@ -32,10 +28,12 @@ import com.adyen.checkout.card.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.AddressFormUIState
@@ -48,6 +46,8 @@ import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.util.AddressFormUtils
+import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -134,9 +134,8 @@ internal class DefaultCardDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
-        componentStateFlow.onEach {
-            onState(it)
-        }.launchIn(coroutineScope)
+        // TODO SESSIONS: apply to all delegates
+        submitHandler.initialize(coroutineScope, componentStateFlow, submitChannel, _uiStateFlow)
 
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey()
@@ -236,6 +235,10 @@ internal class DefaultCardDelegate(
         updateInputData {
             this.address.update()
         }
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(_uiStateFlow, isInteractionBlocked)
     }
 
     private fun onInputDataChanged() {
@@ -396,17 +399,6 @@ internal class DefaultCardDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    private fun onState(state: CardComponentState) {
-        val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
-            if (state.isValid) {
-                submitChannel.trySend(state)
-            } else {
-                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
-            }
-        }
-    }
-
     @Suppress("ReturnCount")
     private fun createComponentState(
         outputData: CardOutputData = this.outputData
@@ -481,7 +473,7 @@ internal class DefaultCardDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 

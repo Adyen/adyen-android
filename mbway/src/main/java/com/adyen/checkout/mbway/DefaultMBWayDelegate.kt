@@ -163,7 +163,7 @@ internal class DefaultMBWayDelegate(
             state = state,
             submitChannel = submitChannel,
             uiEventChannel = uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            uiStateFlow = _uiStateFlow
         )
     }
 
