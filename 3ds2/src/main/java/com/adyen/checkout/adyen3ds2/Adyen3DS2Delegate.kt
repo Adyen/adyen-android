@@ -18,7 +18,8 @@ interface Adyen3DS2Delegate :
     ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    DAProvidingDelegate {
 
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

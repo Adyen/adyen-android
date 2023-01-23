@@ -116,6 +116,7 @@ internal class CardViewModel @Inject constructor(
 
     private suspend fun handleAction(action: Action) {
         _events.emit(CardEvent.AdditionalAction(action))
+        _cardViewState.tryEmit(CardViewState.ShowComponent)
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {

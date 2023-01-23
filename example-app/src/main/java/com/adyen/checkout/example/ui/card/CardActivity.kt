@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
@@ -30,6 +31,7 @@ class CardActivity : AppCompatActivity() {
     private val cardViewModel: CardViewModel by viewModels()
 
     private var cardComponent: CardComponent? = null
+    private var authenticationLauncher: AuthenticationLauncher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,8 @@ class CardActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        initAuthenticationLauncher()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -60,6 +64,14 @@ class CardActivity : AppCompatActivity() {
         val data = intent.data
         if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
             cardComponent?.handleIntent(intent)
+        }
+    }
+
+    private fun initAuthenticationLauncher() {
+        try {
+            authenticationLauncher = AuthenticationLauncher(this)
+        } catch (e: Throwable) {
+            // ignore as Adyen Authentication SDK is not added to the project
         }
     }
 
@@ -92,6 +104,9 @@ class CardActivity : AppCompatActivity() {
             checkoutConfigurationProvider.getCardConfiguration(),
             application,
         )
+        authenticationLauncher?.let {
+            cardComponent.initDelegatedAuthentication(it)
+        }
 
         this.cardComponent = cardComponent
 

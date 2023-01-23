@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by temirlan on 8/12/2022.
+ */
+
+package com.adyen.checkout.adyen3ds2.model
+
+sealed class DARegistrationResult {
+    class RegistrationSuccessful(val sdkOutput: String) : DARegistrationResult()
+    object NotNow : DARegistrationResult()
+    object Timeout : DARegistrationResult()
+}

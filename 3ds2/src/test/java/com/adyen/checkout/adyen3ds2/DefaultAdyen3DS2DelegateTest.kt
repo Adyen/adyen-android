@@ -45,6 +45,7 @@ import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
@@ -62,6 +63,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
@@ -97,8 +99,10 @@ internal class DefaultAdyen3DS2DelegateTest(
             defaultDispatcher = dispatcher,
             embeddedRequestorAppUrl = "embeddedRequestorAppUrl",
             base64Encoder = base64Encoder,
+            delegatedAuthentication = DelegatedAuthentication(SavedStateHandle()),
             application = Application(),
         )
+        delegate.initialize(coroutineScope = TestScope())
     }
 
     @Nested
@@ -444,7 +448,13 @@ internal class DefaultAdyen3DS2DelegateTest(
         @Test
         fun `completed, then details are emitted`() = runTest {
             val details = JSONObject("{}")
-            whenever(adyen3DS2Serializer.createChallengeDetails(any())) doReturn details
+            whenever(
+                adyen3DS2Serializer.createChallengeDetails(
+                    any(),
+                    eq(null),
+                    eq(null)
+                )
+            ) doReturn details
 
             delegate.detailsFlow.test {
                 delegate.completed(TestCompletionEvent())
@@ -460,7 +470,13 @@ internal class DefaultAdyen3DS2DelegateTest(
         @Test
         fun `completed and creating details fails, then an error is emitted`() = runTest {
             val error = ComponentException("test")
-            whenever(adyen3DS2Serializer.createChallengeDetails(any())) doAnswer { throw error }
+            whenever(
+                adyen3DS2Serializer.createChallengeDetails(
+                    any(),
+                    eq(null),
+                    eq(null)
+                )
+            ) doAnswer { throw error }
 
             delegate.exceptionFlow.test {
                 delegate.completed(TestCompletionEvent())

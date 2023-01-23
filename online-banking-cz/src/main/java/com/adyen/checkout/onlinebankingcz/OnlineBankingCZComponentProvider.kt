@@ -86,6 +86,7 @@ class OnlineBankingCZComponentProvider(
                     delegate = onlineBankingDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(
+                        savedStateHandle,
                         genericActionDelegate,
                         onlineBankingDelegate
                     ),

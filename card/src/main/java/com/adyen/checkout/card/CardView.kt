@@ -94,7 +94,9 @@ internal class CardView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is CardDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        //TODO (Auth) discuss. In case of restoring the state after process kill the view may receive
+        // not only CardDelegate as a parameter because CardComponent viewFlow is merged. See CardComponent viewFlow
+        if (delegate !is CardDelegate) return
         cardDelegate = delegate
 
         this.localizedContext = localizedContext

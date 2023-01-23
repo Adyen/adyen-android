@@ -11,6 +11,7 @@ package com.adyen.checkout.action
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.threeds2.customization.UiCustomization
 
@@ -48,4 +49,12 @@ interface ActionHandlingComponent {
      * @param uiCustomization The customization object.
      */
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
+
+    /**
+     * Set an [AuthenticationLauncher] object for enabling Delegated Authentication feature.
+     * Needs to be set before handling any action to perform Delegated Authentication.
+     *
+     * @param authenticationLauncher Adyen authentication launcher object.
+     */
+    fun initDelegatedAuthentication(authenticationLauncher: AuthenticationLauncher)
 }

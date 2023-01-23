@@ -77,7 +77,11 @@ class PayByBankComponentProvider(
                 PayByBankComponent(
                     payByBankDelegate = payByBankDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
+                    actionHandlingComponent = DefaultActionHandlingComponent(
+                        savedStateHandle,
+                        genericActionDelegate,
+                        payByBankDelegate
+                    ),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]

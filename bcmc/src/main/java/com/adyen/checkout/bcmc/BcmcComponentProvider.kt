@@ -77,7 +77,8 @@ class BcmcComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(),
+                application = application
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -89,7 +90,11 @@ class BcmcComponentProvider(
             BcmcComponent(
                 bcmcDelegate = bcmcDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(
+                    savedStateHandle,
+                    genericActionDelegate,
+                    bcmcDelegate
+                ),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]

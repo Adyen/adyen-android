@@ -68,6 +68,10 @@ dependencies {
     api project(':sepa')
     api project(':sessions-core')
 
+    // Delegated Authentication
+    // If Authentication SDK is present.
+    compileOnly libraries.adyenAuthentication
+
     // Dependencies
     implementation libraries.androidx.recyclerview
     implementation libraries.material

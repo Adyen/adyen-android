@@ -18,22 +18,33 @@ class ChallengeResult private constructor(val isAuthenticated: Boolean, val payl
         private const val KEY_TRANSACTION_STATUS = "transStatus"
         private const val KEY_AUTHORISATION_TOKEN = "authorisationToken"
         private const val VALUE_TRANSACTION_STATUS = "Y"
+        private const val KEY_DELEGATED_AUTHENTICATION_SDK_OUTPUT = "delegatedAuthenticationSDKOutput"
+        private const val KEY_DELETE_DELEGATED_AUTHENTICATION_CREDENTIALS = "deleteDelegatedAuthenticationCredentials"
 
         /**
          * Constructs the object base in the result from te 3DS2 SDK.
          *
          * @param completionEvent The result from the 3DS2 SDK.
          * @param authorisationToken The authorisationToken from the API.
+         * @param delegatedAuthenticationSdkOutput Adyen Authentication SDK output after credentials registration.
+         * @param deleteDelegatedAuthenticationCredentials The field used to indicate whether it's needed to delete the credentials.
          * @return The filled object with the content needed for the details response.
          * @throws JSONException In case parsing fails.
          */
         @Throws(JSONException::class)
-        fun from(completionEvent: CompletionEvent, authorisationToken: String? = null): ChallengeResult {
+        fun from(
+            completionEvent: CompletionEvent,
+            authorisationToken: String? = null,
+            delegatedAuthenticationSdkOutput: String? = null,
+            deleteDelegatedAuthenticationCredentials: Boolean? = null
+        ): ChallengeResult {
             val transactionStatus = completionEvent.transactionStatus
             val isAuthenticated = VALUE_TRANSACTION_STATUS == transactionStatus
             val jsonObject = JSONObject()
             jsonObject.put(KEY_TRANSACTION_STATUS, transactionStatus)
             jsonObject.putOpt(KEY_AUTHORISATION_TOKEN, authorisationToken)
+            jsonObject.putOpt(KEY_DELEGATED_AUTHENTICATION_SDK_OUTPUT, delegatedAuthenticationSdkOutput)
+            jsonObject.putOpt(KEY_DELETE_DELEGATED_AUTHENTICATION_CREDENTIALS, deleteDelegatedAuthenticationCredentials)
             val payload = AndroidBase64Encoder().encode(jsonObject.toString())
             return ChallengeResult(isAuthenticated, payload)
         }

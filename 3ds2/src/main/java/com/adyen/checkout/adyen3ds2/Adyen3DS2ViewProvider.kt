@@ -10,6 +10,8 @@ package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.adyen3ds2.ui.DAAuthenticationView
+import com.adyen.checkout.adyen3ds2.ui.DARegistrationView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
@@ -23,11 +25,19 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        Adyen3DS2ComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
+        is Adyen3DS2ComponentViewType -> {
+            when (viewType) {
+                Adyen3DS2ComponentViewType.DA_REGISTRATION -> DARegistrationView(context, attrs, defStyleAttr)
+                Adyen3DS2ComponentViewType.DA_AUTHENTICATION -> DAAuthenticationView(context, attrs, defStyleAttr)
+                Adyen3DS2ComponentViewType.REDIRECT -> PaymentInProgressView(context, attrs, defStyleAttr)
+            }
+        }
         else -> throw IllegalStateException("Unsupported view type")
     }
 }
 
-internal object Adyen3DS2ComponentViewType : ComponentViewType {
+internal enum class Adyen3DS2ComponentViewType : ComponentViewType {
+    DA_REGISTRATION, DA_AUTHENTICATION, REDIRECT;
+
     override val viewProvider: ViewProvider = Adyen3DS2ViewProvider
 }

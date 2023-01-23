@@ -12,6 +12,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
@@ -53,6 +54,16 @@ class Adyen3DS2Component internal constructor(
      */
     fun setUiCustomization(uiCustomization: UiCustomization?) {
         delegate.set3DS2UICustomization(uiCustomization)
+    }
+
+    /**
+     * Set an [AuthenticationLauncher] object for enabling Delegated Authentication feature.
+     * Needs to be set before handling any action to perform Delegated Authentication.
+     *
+     * @param authenticationLauncher Adyen authentication launcher object.
+     */
+    fun initDelegatedAuthentication(authenticationLauncher: AuthenticationLauncher) {
+        delegate.initAdyenAuthentication(authenticationLauncher)
     }
 
     override fun handleAction(action: Action, activity: Activity) {

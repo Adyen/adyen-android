@@ -33,10 +33,18 @@ class Adyen3DS2Serializer {
     }
 
     @Throws(ComponentException::class)
-    fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
+    fun createChallengeDetails(
+        completionEvent: CompletionEvent,
+        delegatedAuthenticationSdkOutput: String? = null,
+        deleteDelegatedAuthenticationCredentials: Boolean? = null
+    ): JSONObject {
         val challengeDetails = JSONObject()
         try {
-            val challengeResult = ChallengeResult.from(completionEvent)
+            val challengeResult = ChallengeResult.from(
+                completionEvent = completionEvent,
+                delegatedAuthenticationSdkOutput = delegatedAuthenticationSdkOutput,
+                deleteDelegatedAuthenticationCredentials = deleteDelegatedAuthenticationCredentials
+            )
             challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.payload)
         } catch (e: JSONException) {
             throw ComponentException("Failed to create challenge details", e)
@@ -47,11 +55,18 @@ class Adyen3DS2Serializer {
     @Throws(ComponentException::class)
     fun createThreeDsResultDetails(
         completionEvent: CompletionEvent,
-        authorisationToken: String
+        authorisationToken: String,
+        delegatedAuthenticationSdkOutput: String? = null,
+        deleteDelegatedAuthenticationCredentials: Boolean? = null
     ): JSONObject {
         val threeDsDetails = JSONObject()
         try {
-            val challengeResult = ChallengeResult.from(completionEvent, authorisationToken)
+            val challengeResult = ChallengeResult.from(
+                completionEvent = completionEvent,
+                authorisationToken = authorisationToken,
+                delegatedAuthenticationSdkOutput = delegatedAuthenticationSdkOutput,
+                deleteDelegatedAuthenticationCredentials = deleteDelegatedAuthenticationCredentials
+            )
             threeDsDetails.put(THREEDS_RESULT_KEY, challengeResult.payload)
         } catch (e: JSONException) {
             throw ComponentException("Failed to create ThreeDS Result details", e)

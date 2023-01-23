@@ -161,7 +161,8 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(),
+                application = application
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -173,7 +174,11 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(
+                    savedStateHandle,
+                    genericActionDelegate,
+                    cardDelegate
+                ),
                 savedStateHandle = savedStateHandle,
             )
         }
@@ -215,7 +220,8 @@ class CardComponentProvider(
                 analyticsRepository = analyticsRepository,
                 cardEncrypter = cardEncrypter,
                 publicKeyRepository = publicKeyRepository,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(),
+                application = application
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -227,7 +233,11 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(
+                    savedStateHandle,
+                    genericActionDelegate,
+                    cardDelegate
+                ),
                 savedStateHandle = savedStateHandle,
             )
         }

@@ -41,6 +41,10 @@ dependencies {
     api project(':wechatpay')
     api project(':voucher')
 
+    // Delegated Authentication
+    // If Authentication SDK is present.
+    compileOnly libraries.adyenAuthentication
+
     //Tests
     testImplementation project(':test-core')
     testImplementation testLibraries.json

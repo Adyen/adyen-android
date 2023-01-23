@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.action.GenericActionConfiguration
@@ -50,10 +51,12 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val action: Action by arguments(ACTION)
     private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
+    private var authenticationLauncher: AuthenticationLauncher? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate")
+        initAuthenticationLauncher()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -74,6 +77,9 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
                 requireActivity().application,
                 actionConfiguration
             )
+            authenticationLauncher?.let {
+                actionComponent.initDelegatedAuthentication(it)
+            }
 
             if (shouldFinishWithAction()) {
                 binding.buttonFinish.apply {
@@ -87,6 +93,30 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             binding.componentView.attach(actionComponent, viewLifecycleOwner)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
+        }
+    }
+
+    private fun initAuthenticationLauncher() {
+        authenticationLauncher = try {
+            AuthenticationLauncher(this)
+        } catch (e: ClassNotFoundException) {
+            Logger.e(
+                TAG,
+                "authenticationLauncher is not initialized because Authentication SDK is not present in project."
+            )
+            null
+        } catch (e: NoClassDefFoundError) {
+            Logger.e(
+                TAG,
+                "authenticationLauncher is not initialized because Authentication SDK is not present in project."
+            )
+            null
+        } catch (e: IncompatibleClassChangeError) {
+            Logger.e(
+                TAG,
+                "authenticationLauncher is not initialized because Authentication SDK version is incompatible with compiled version"
+            )
+            null
         }
     }
 

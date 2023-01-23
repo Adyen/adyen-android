@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.bcmc
 
+import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.authentication.AdyenAuthentication
+import com.adyen.authentication.AvailabilityResult
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
@@ -22,6 +25,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
@@ -60,7 +64,8 @@ internal class DefaultBcmcDelegate(
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandler,
+    private val application: Application
 ) : BcmcDelegate {
 
     private val inputData = BcmcInputData()
@@ -89,6 +94,7 @@ internal class DefaultBcmcDelegate(
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
 
     private var publicKey: String? = null
+    private var delegatedAuthenticationData: DelegatedAuthenticationData? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         componentStateFlow.onEach {
@@ -97,6 +103,7 @@ internal class DefaultBcmcDelegate(
 
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
+        fetchDelegatedAuthenticationData(coroutineScope)
     }
 
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
@@ -123,6 +130,37 @@ internal class DefaultBcmcDelegate(
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
+        }
+    }
+
+    private fun fetchDelegatedAuthenticationData(coroutineScope: CoroutineScope) {
+        Logger.d(TAG, "fetchDelegatedAuthenticationData")
+        coroutineScope.launch {
+            delegatedAuthenticationData = try {
+                val availabilityResult = AdyenAuthentication.checkAvailability(application)
+                val sdkOutput = (availabilityResult as? AvailabilityResult.Available)?.sdkOutput
+                sdkOutput?.let {
+                    DelegatedAuthenticationData(it)
+                }
+            } catch (e: ClassNotFoundException) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                )
+                null
+            } catch (e: NoClassDefFoundError) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                )
+                null
+            } catch (e: Throwable) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                )
+                null
+            }
         }
     }
 
@@ -242,6 +280,7 @@ internal class DefaultBcmcDelegate(
             paymentMethod = cardPaymentMethod
             storePaymentMethod = outputData.isStoredPaymentMethodEnabled
             shopperReference = componentParams.shopperReference
+            delegatedAuthenticationData = this@DefaultBcmcDelegate.delegatedAuthenticationData
         }
 
         return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)

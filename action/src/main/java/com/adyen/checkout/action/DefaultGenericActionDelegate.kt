@@ -9,9 +9,11 @@
 package com.adyen.checkout.action
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
@@ -47,6 +49,7 @@ internal class DefaultGenericActionDelegate(
     private val configuration: GenericActionConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
+    private val application: Application
 ) : GenericActionDelegate {
 
     private var _delegate: ActionDelegate? = null
@@ -65,10 +68,17 @@ internal class DefaultGenericActionDelegate(
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
     private var uiCustomization: UiCustomization? = null
+    private var authenticationLauncher: AuthenticationLauncher? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
         _coroutineScope = coroutineScope
+
+        // Restoring the state after process kill
+        val activeAction = savedStateHandle.get<Action>(ACTIVE_ACTION)
+        activeAction?.let {
+            initDelegate(activeAction, application)
+        }
     }
 
     override fun observe(
@@ -100,25 +110,31 @@ internal class DefaultGenericActionDelegate(
         if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
             Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
         } else {
-            val delegate = actionDelegateProvider.getDelegate(
-                action = action,
-                configuration = configuration,
-                savedStateHandle = savedStateHandle,
-                application = activity.application
-            )
-            this._delegate = delegate
-            Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
-
-            delegate.initialize(coroutineScope)
-
-            set3DS2UICustomizationInDelegate(delegate)
-
-            observeDetails(delegate)
-            observeExceptions(delegate)
-            observeViewFlow(delegate)
+            savedStateHandle[ACTIVE_ACTION] = action
+            initDelegate(action, activity.application)
         }
 
         delegate.handleAction(action, activity)
+    }
+
+    private fun initDelegate(action: Action, application: Application) {
+        val delegate = actionDelegateProvider.getDelegate(
+            action = action,
+            configuration = configuration,
+            savedStateHandle = savedStateHandle,
+            application = application
+        )
+        this._delegate = delegate
+        Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
+
+        delegate.initialize(coroutineScope)
+
+        set3DS2UICustomizationInDelegate(delegate)
+        initDelegatedAuthenticationInDelegate(delegate)
+
+        observeDetails(delegate)
+        observeExceptions(delegate)
+        observeViewFlow(delegate)
     }
 
     private fun observeExceptions(delegate: ActionDelegate) {
@@ -149,12 +165,25 @@ internal class DefaultGenericActionDelegate(
         set3DS2UICustomizationInDelegate(_delegate)
     }
 
+    override fun initDelegatedAuthentication(authenticationLauncher: AuthenticationLauncher) {
+        this.authenticationLauncher = authenticationLauncher
+        initDelegatedAuthenticationInDelegate(_delegate)
+    }
+
     private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate?) {
         if (delegate !is Adyen3DS2Delegate) return
         if (uiCustomization != null) {
             Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")
         }
         delegate.set3DS2UICustomization(uiCustomization)
+    }
+
+    private fun initDelegatedAuthenticationInDelegate(delegate: ActionDelegate?) {
+        if (delegate !is Adyen3DS2Delegate) return
+        authenticationLauncher?.let {
+            Logger.d(TAG, "Initialising AdyenAuthentication on 3DS2 delegate")
+            delegate.initAdyenAuthentication(it)
+        }
     }
 
     override fun handleIntent(intent: Intent) {
@@ -190,5 +219,7 @@ internal class DefaultGenericActionDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private const val ACTIVE_ACTION = "dgac_active_action"
     }
 }

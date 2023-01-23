@@ -46,7 +46,7 @@ internal class Adyen3DS2ComponentTest(
     fun before() {
         Logger.setLogcatLevel(Logger.NONE)
 
-        whenever(adyen3DS2Delegate.viewFlow) doReturn MutableStateFlow(Adyen3DS2ComponentViewType)
+        whenever(adyen3DS2Delegate.viewFlow) doReturn MutableStateFlow(Adyen3DS2ComponentViewType.REDIRECT)
         component = Adyen3DS2Component(adyen3DS2Delegate)
     }
 
@@ -82,7 +82,7 @@ internal class Adyen3DS2ComponentTest(
     @Test
     fun `when component is initialized then view flow should match delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertEquals(Adyen3DS2ComponentViewType, awaitItem())
+            assertEquals(Adyen3DS2ComponentViewType.REDIRECT, awaitItem())
             expectNoEvents()
         }
     }

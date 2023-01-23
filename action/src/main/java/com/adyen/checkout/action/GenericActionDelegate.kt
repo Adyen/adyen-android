@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.action
 
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
@@ -23,6 +24,8 @@ interface GenericActionDelegate :
     val delegate: ActionDelegate
 
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
+
+    fun initDelegatedAuthentication(authenticationLauncher: AuthenticationLauncher)
 
     fun refreshStatus()
 }

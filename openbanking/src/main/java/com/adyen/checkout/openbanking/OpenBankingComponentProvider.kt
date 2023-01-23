@@ -81,7 +81,11 @@ class OpenBankingComponentProvider(
                 OpenBankingComponent(
                     delegate = issuerListDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, issuerListDelegate),
+                    actionHandlingComponent = DefaultActionHandlingComponent(
+                        savedStateHandle,
+                        genericActionDelegate,
+                        issuerListDelegate
+                    ),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, OpenBankingComponent::class.java]

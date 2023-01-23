@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.card
 
+import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.authentication.AdyenAuthentication
+import com.adyen.authentication.AvailabilityResult
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -31,6 +34,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
@@ -82,12 +86,14 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandler,
+    private val application: Application
 ) : CardDelegate {
 
     private val inputData: CardInputData = CardInputData()
 
     private var publicKey: String? = null
+    private var delegatedAuthenticationData: DelegatedAuthenticationData? = null
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
@@ -134,6 +140,7 @@ internal class DefaultCardDelegate(
 
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey()
+        fetchDelegatedAuthenticationData()
         subscribeToDetectedCardTypes()
 
         if (componentParams.addressParams is AddressParams.FullAddress) {
@@ -186,6 +193,31 @@ internal class DefaultCardDelegate(
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
+        }
+    }
+
+    private fun fetchDelegatedAuthenticationData() {
+        Logger.d(TAG, "fetchDelegatedAuthenticationData")
+        coroutineScope.launch {
+            delegatedAuthenticationData = try {
+                val availabilityResult = AdyenAuthentication.checkAvailability(application)
+                val sdkOutput = (availabilityResult as? AvailabilityResult.Available)?.sdkOutput
+                sdkOutput?.let {
+                    DelegatedAuthenticationData(it)
+                }
+            } catch (e: ClassNotFoundException) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                )
+                null
+            } catch (e: NoClassDefFoundError) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                )
+                null
+            }
         }
     }
 
@@ -717,6 +749,7 @@ internal class DefaultCardDelegate(
             if (isInstallmentsRequired(stateOutputData)) {
                 installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
             }
+            delegatedAuthenticationData = this@DefaultCardDelegate.delegatedAuthenticationData
         }
     }
 

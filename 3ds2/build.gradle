@@ -32,6 +32,10 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -41,8 +45,13 @@ dependencies {
     // Checkout
     api project(':ui-core')
 
+    // Delegated Authentication
+    // If Authentication SDK is present.
+    compileOnly libraries.adyenAuthentication
+
     // Dependencies
     api libraries.adyen3ds2
+    implementation libraries.material
 
     //Tests
     testImplementation project(':test-core')
@@ -50,4 +59,5 @@ dependencies {
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines
+    testImplementation libraries.adyenAuthentication
 }

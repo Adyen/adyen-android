@@ -21,7 +21,8 @@ data class ChallengeToken(
     var acsTransID: String? = null,
     var acsURL: String? = null,
     var messageVersion: String? = null,
-    var threeDSServerTransID: String? = null
+    var threeDSServerTransID: String? = null,
+    val delegatedAuthenticationSdkInput: String? = null
 ) : ModelObject() {
 
     companion object {
@@ -31,6 +32,7 @@ data class ChallengeToken(
         private const val ACS_URL = "acsURL"
         private const val MESSAGE_VERSION = "messageVersion"
         private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
+        private const val DELEGATED_AUTHENTICATION_SDK_INPUT = "delegatedAuthenticationSDKInput"
 
         @JvmField
         val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {
@@ -43,6 +45,7 @@ data class ChallengeToken(
                         putOpt(ACS_URL, modelObject.acsURL)
                         putOpt(MESSAGE_VERSION, modelObject.messageVersion)
                         putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                        putOpt(DELEGATED_AUTHENTICATION_SDK_INPUT, modelObject.delegatedAuthenticationSdkInput)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ChallengeToken::class.java, e)
@@ -57,7 +60,8 @@ data class ChallengeToken(
                         acsTransID = jsonObject.getStringOrNull(ACS_TRANS_ID),
                         acsURL = jsonObject.getStringOrNull(ACS_URL),
                         messageVersion = jsonObject.getStringOrNull(MESSAGE_VERSION),
-                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
+                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID),
+                        delegatedAuthenticationSdkInput = jsonObject.getStringOrNull(DELEGATED_AUTHENTICATION_SDK_INPUT)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ChallengeToken::class.java, e)

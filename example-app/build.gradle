@@ -64,6 +64,8 @@ dependencies {
     implementation project(':drop-in')
 //    implementation "com.adyen.checkout:drop-in:4.9.1"
 
+    implementation libraries.adyenAuthentication
+
     // Dependencies
     implementation libraries.kotlinCoroutines
 

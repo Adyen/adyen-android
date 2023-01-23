@@ -78,6 +78,7 @@ class InstantPaymentComponentProvider(
                     instantPaymentDelegate = instantPaymentDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(
+                        savedStateHandle,
                         genericActionDelegate,
                         instantPaymentDelegate
                     ),

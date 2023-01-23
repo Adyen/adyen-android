@@ -86,7 +86,11 @@ class GiftCardComponentProvider(
             GiftCardComponent(
                 giftCardDelegate = giftCardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, giftCardDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(
+                    savedStateHandle,
+                    genericActionDelegate,
+                    giftCardDelegate
+                ),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]

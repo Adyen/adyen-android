@@ -19,7 +19,8 @@ data class FingerprintToken(
     val directoryServerId: String? = null,
     val directoryServerPublicKey: String? = null,
     val threeDSServerTransID: String? = null,
-    val threeDSMessageVersion: String? = null
+    val threeDSMessageVersion: String? = null,
+    val delegatedAuthenticationSdkInput: String? = null
 ) : ModelObject() {
 
     companion object {
@@ -27,6 +28,7 @@ data class FingerprintToken(
         private const val DIRECTORY_SERVER_PUBLIC_KEY = "directoryServerPublicKey"
         private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
         private const val THREEDS_MESSAGE_VERSION = "threeDSMessageVersion"
+        private const val DELEGATED_AUTHENTICATION_SDK_INPUT = "delegatedAuthenticationSDKInput"
 
         @JvmField
         val SERIALIZER: Serializer<FingerprintToken> = object : Serializer<FingerprintToken> {
@@ -37,6 +39,7 @@ data class FingerprintToken(
                         putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
                         putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
                         putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
+                        putOpt(DELEGATED_AUTHENTICATION_SDK_INPUT, modelObject.delegatedAuthenticationSdkInput)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(FingerprintToken::class.java, e)
@@ -49,7 +52,8 @@ data class FingerprintToken(
                         directoryServerId = jsonObject.getStringOrNull(DIRECTORY_SERVER_ID),
                         directoryServerPublicKey = jsonObject.getStringOrNull(DIRECTORY_SERVER_PUBLIC_KEY),
                         threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID),
-                        threeDSMessageVersion = jsonObject.getStringOrNull(THREEDS_MESSAGE_VERSION)
+                        threeDSMessageVersion = jsonObject.getStringOrNull(THREEDS_MESSAGE_VERSION),
+                        delegatedAuthenticationSdkInput = jsonObject.getStringOrNull(DELEGATED_AUTHENTICATION_SDK_INPUT)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(FingerprintToken::class.java, e)
