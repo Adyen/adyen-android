@@ -42,15 +42,13 @@ import javax.inject.Inject
  * This is just an example on how to make networkModule calls on the [DropInService].
  * You should make the calls to your own servers and have additional data or processing if necessary.
  *
- * This class implements [onPaymentsCallRequested] and [onDetailsCallRequested] which provide more
- * freedom in handling the API calls, managing threads and checking component states.
- *
- * In addition, it handles the partial payment flow (gift cards) by implementing [checkBalance],
- * [createOrder] and [cancelOrder].
+ * In addition, it handles the partial payment flow (gift cards) by implementing [onBalanceCheck],
+ * [onOrderRequest] and [onOrderCancel] and it handles the stored payment method removal flow by
+ * implementing [removeStoredPaymentMethod].
  */
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
-class ExampleFullAsyncDropInService : DropInService() {
+class ExampleAdvancedDropInService : DropInService() {
 
     companion object {
         private val TAG = LogUtil.getTag()
