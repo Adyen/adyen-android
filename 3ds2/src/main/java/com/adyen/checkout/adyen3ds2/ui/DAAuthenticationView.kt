@@ -58,72 +58,57 @@ internal class DAAuthenticationView @JvmOverloads constructor(
         this.localizedContext = localizedContext
 
         val adyenAuthentication = delegate.getAdyenAuthentication()
-        if (adyenAuthentication == null) {
-            Logger.w(TAG, "Couldn't perform DA authentication flow: adyenAuthentication is null")
-            delegate.onAuthenticationFailed(getActivity(context))
-            return
-        }
         val sdkInput = delegate.getAuthenticationSdkInput()
-        if (sdkInput == null) {
-            Logger.w(TAG, "Couldn't perform DA authentication: sdkInput is null")
-            delegate.onAuthenticationFailed(getActivity(context))
-            return
-        }
         val activity = getActivity(context) as? FragmentActivity
-        if (activity == null) {
-            Logger.w(TAG, "Couldn't perform DA authentication flow: activity is not FragmentActivity or null")
-            delegate.onAuthenticationFailed(activity)
-            return
-        }
+        when {
+            adyenAuthentication == null -> {
+                Logger.w(TAG, "Couldn't perform DA authentication flow: adyenAuthentication is null")
+                delegate.onAuthenticationFailed(getActivity(context))
+            }
+            sdkInput == null -> {
+                Logger.w(TAG, "Couldn't perform DA authentication: sdkInput is null")
+                delegate.onAuthenticationFailed(getActivity(context))
+            }
+            activity == null -> {
+                Logger.w(TAG, "Couldn't perform DA authentication flow: activity is not FragmentActivity or null")
+                delegate.onAuthenticationFailed(activity)
+            }
+            else -> {
+                setLocalizedStrings(localizedContext)
+                collectTimerUpdates(activity, coroutineScope, delegate)
 
-        binding.tvTitle.text = localizedContext.getString(R.string.checkout_3ds2_da_authentication_title)
-        binding.tvDescription.text = localizedContext.getString(R.string.checkout_3ds2_da_authentication_description)
-        binding.btnAuthorise.text = localizedContext.getString(R.string.checkout_3ds2_da_authentication_positive_button)
-        binding.btnAuthoriseDifferently.text = localizedContext.getString(
-            R.string.checkout_3ds2_da_authentication_negative_button
-        )
-        binding.tvRemoveCredentials.text = localizedContext.getString(
-            R.string.checkout_3ds2_da_authentication_remove_credentials
-        )
-
-        binding.btnAuthorise.setOnClickListener {
-            coroutineScope.launch {
-                when (val authenticationResult = adyenAuthentication.authenticate(sdkInput)) {
-                    is AuthenticationResult.AuthenticationSuccessful -> {
-                        val result = DAAuthenticationResult.AuthenticationSuccessful(authenticationResult.sdkOutput)
-                        delegate.onAuthenticationResult(result, activity)
-                    }
-                    is AuthenticationResult.AuthenticationError -> {
-                        delegate.onAuthenticationFailed(activity)
-                    }
-                    is AuthenticationResult.Error -> {
-                        delegate.onAuthenticationFailed(activity)
-                    }
-                    else -> {
-                        delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
+                binding.btnAuthorise.setOnClickListener {
+                    coroutineScope.launch {
+                        when (val authenticationResult = adyenAuthentication.authenticate(sdkInput)) {
+                            is AuthenticationResult.AuthenticationSuccessful -> {
+                                val result =
+                                    DAAuthenticationResult.AuthenticationSuccessful(authenticationResult.sdkOutput)
+                                delegate.onAuthenticationResult(result, activity)
+                            }
+                            is AuthenticationResult.AuthenticationError -> {
+                                delegate.onAuthenticationFailed(activity)
+                            }
+                            is AuthenticationResult.Error -> {
+                                delegate.onAuthenticationFailed(activity)
+                            }
+                            else -> {
+                                delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
+                            }
+                        }
                     }
                 }
-            }
-        }
 
-        binding.btnAuthoriseDifferently.setOnClickListener {
-            delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
-        }
-
-        applyTextSpans()
-        binding.tvRemoveCredentials.setOnClickListener {
-            showRemoveCredentialsDialog(activity) {
-                delegate.onAuthenticationResult(DAAuthenticationResult.RemoveCredentials, activity)
-            }
-        }
-
-        coroutineScope.launch {
-            delegate.getAuthenticationTimerFlow().collect {
-                withContext(Dispatchers.Main) {
-                    setTimerData(it)
+                binding.btnAuthoriseDifferently.setOnClickListener {
+                    delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
                 }
-                if (it.millisUntilFinished == 0L) {
-                    delegate.onAuthenticationResult(DAAuthenticationResult.Timeout, activity)
+
+                binding.tvRemoveCredentials.setOnClickListener {
+                    showRemoveCredentialsDialog(activity) {
+                        delegate.onAuthenticationResult(
+                            DAAuthenticationResult.RemoveCredentials,
+                            activity
+                        )
+                    }
                 }
             }
         }
@@ -133,15 +118,20 @@ internal class DAAuthenticationView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() = Unit
 
-    private fun getActivity(context: Context): Activity? {
-        return when (context) {
-            is Activity -> context
-            is ContextWrapper -> getActivity(context.baseContext)
-            else -> null
-        }
+    private fun setLocalizedStrings(localizedContext: Context) {
+        binding.tvTitle.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_authentication_title)
+        binding.tvDescription.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_authentication_description)
+        binding.btnAuthorise.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_authentication_positive_button)
+        binding.btnAuthoriseDifferently.text = localizedContext.getString(
+            R.string.checkout_3ds2_da_authentication_negative_button
+        )
+        setRemoveCredentialsLocalizedText(localizedContext)
     }
 
-    private fun applyTextSpans() {
+    private fun setRemoveCredentialsLocalizedText(localizedContext: Context) {
         val removeCredentialsText = localizedContext.getText(
             R.string.checkout_3ds2_da_authentication_remove_credentials
         ) as SpannedString
@@ -168,6 +158,33 @@ internal class DAAuthenticationView @JvmOverloads constructor(
         binding.tvRemoveCredentials.text = removeCredentialsStringBuilder
     }
 
+    private fun collectTimerUpdates(activity: Activity, coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
+        coroutineScope.launch {
+            delegate.getAuthenticationTimerFlow().collect {
+                withContext(Dispatchers.Main) {
+                    setTimerData(it)
+                }
+                if (it.millisUntilFinished == 0L) {
+                    delegate.onAuthenticationResult(DAAuthenticationResult.Timeout, activity)
+                }
+            }
+        }
+    }
+
+    private fun setTimerData(timerData: TimerData) {
+        val minutes = timerData.millisUntilFinished.milliseconds.inWholeMinutes
+        val seconds = timerData.millisUntilFinished.milliseconds.inWholeSeconds % 1.minutes.inWholeSeconds
+
+        val timeLeftString = localizedContext.getString(
+            R.string.checkout_3ds2_time_left_to_approve,
+            minutes,
+            seconds
+        )
+
+        binding.tvTimeLeft.text = timeLeftString
+        binding.lpiProgress.progress = timerData.progress
+    }
+
     private fun showRemoveCredentialsDialog(context: Context, onPositiveClick: () -> Unit) {
         val onClickListener = DialogInterface.OnClickListener { dialog, which ->
             when (which) {
@@ -190,18 +207,12 @@ internal class DAAuthenticationView @JvmOverloads constructor(
             .show()
     }
 
-    private fun setTimerData(timerData: TimerData) {
-        val minutes = timerData.millisUntilFinished.milliseconds.inWholeMinutes
-        val seconds = timerData.millisUntilFinished.milliseconds.inWholeSeconds % 1.minutes.inWholeSeconds
-
-        val timeLeftString = localizedContext.getString(
-            R.string.checkout_3ds2_time_left_to_approve,
-            minutes,
-            seconds
-        )
-
-        binding.tvTimeLeft.text = timeLeftString
-        binding.lpiProgress.progress = timerData.progress
+    private fun getActivity(context: Context): Activity? {
+        return when (context) {
+            is Activity -> context
+            is ContextWrapper -> getActivity(context.baseContext)
+            else -> null
+        }
     }
 
     companion object {

@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
+@Suppress("TooManyFunctions")
 internal class DelegatedAuthentication(
     private val savedStateHandle: SavedStateHandle
 ) {
@@ -77,13 +78,16 @@ internal class DelegatedAuthentication(
             AdyenAuthentication.hasCredential(application, sdkInput)
         } catch (e: ClassNotFoundException) {
             Logger.e(TAG, "hasCredential not executed because Authentication SDK is not present in project.")
-            return null
+            null
         } catch (e: NoClassDefFoundError) {
             Logger.e(TAG, "hasCredential not executed because Authentication SDK is not present in project.")
-            return null
-        } catch (e: Throwable) {
-            Logger.e(TAG, "hasCredential not executed because of unexpected exception.")
-            return null
+            null
+        } catch (e: IncompatibleClassChangeError) {
+            Logger.e(
+                TAG,
+                "hasCredential not executed because Authentication SDK version is incompatible with compiled version."
+            )
+            null
         }
         Logger.d(TAG, "hasDACredential: $hasDACredential")
         return hasDACredential
@@ -143,7 +147,7 @@ internal class DelegatedAuthentication(
 
     private fun publishTimerUpdate(millisUntilFinished: Long) {
         currentMillisUntilFinished = millisUntilFinished
-        val progressPercentage = (millisUntilFinished.toDouble() / DEFAULT_TIMEOUT_IN_MILLIS) * 100
+        val progressPercentage = (millisUntilFinished.toDouble() / DEFAULT_TIMEOUT_IN_MILLIS) * HUNDRED
         val progress = progressPercentage.toInt()
         val timerData = TimerData(millisUntilFinished, progress)
         _timeoutTimerFlow.tryEmit(timerData)
@@ -153,6 +157,7 @@ internal class DelegatedAuthentication(
         private val TAG = LogUtil.getTag()
 
         private val DEFAULT_TIMEOUT_IN_MILLIS = 90.seconds.inWholeMilliseconds
+        private const val HUNDRED = 100
 
         private const val REGISTRATION_SDK_INPUT = "da_registration_sdk_input"
         private const val AUTHENTICATION_SDK_INPUT = "da_authentication_sdk_input"

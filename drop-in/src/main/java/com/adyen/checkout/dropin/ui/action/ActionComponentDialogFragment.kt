@@ -117,12 +117,6 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
                 "authenticationLauncher is not initialized because Authentication SDK version is incompatible with compiled version"
             )
             null
-        } catch (e: Throwable) {
-            Logger.e(
-                TAG,
-                "authenticationLauncher is not initialized because of unexpected exception"
-            )
-            null
         }
     }
 

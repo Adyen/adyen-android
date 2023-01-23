@@ -216,10 +216,10 @@ internal class DefaultCardDelegate(
                     "delegatedAuthenticationData not set because Authentication SDK is not present in project."
                 )
                 null
-            } catch (e: Throwable) {
+            } catch (e: IncompatibleClassChangeError) {
                 Logger.e(
                     TAG,
-                    "delegatedAuthenticationData not set because of unexpected exception"
+                    "delegatedAuthenticationData not set because Authentication SDK version is incompatible with compiled version."
                 )
                 null
             }

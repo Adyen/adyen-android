@@ -48,47 +48,65 @@ internal class DARegistrationView @JvmOverloads constructor(
         this.localizedContext = localizedContext
 
         val adyenAuthentication = delegate.getAdyenAuthentication()
-        if (adyenAuthentication == null) {
-            Logger.w(TAG, "Couldn't perform DA registration flow: adyenAuthentication is null")
-            delegate.onRegistrationFailed()
-            return
-        }
         val sdkInput = delegate.getRegistrationSdkInput()
-        if (sdkInput == null) {
-            Logger.w(TAG, "Couldn't perform DA registration flow: sdkInput is null")
-            delegate.onRegistrationFailed()
-            return
-        }
+        when {
+            adyenAuthentication == null -> {
+                Logger.w(TAG, "Couldn't perform DA registration flow: adyenAuthentication is null")
+                delegate.onRegistrationFailed()
+            }
+            sdkInput == null -> {
+                Logger.w(TAG, "Couldn't perform DA registration flow: sdkInput is null")
+                delegate.onRegistrationFailed()
+            }
+            else -> {
+                setLocalizedStrings(localizedContext)
+                collectTimerUpdates(coroutineScope, delegate)
 
-        binding.tvTitle.text = localizedContext.getString(R.string.checkout_3ds2_da_registration_title)
-        binding.tvDescription.text = localizedContext.getString(R.string.checkout_3ds2_da_registration_description)
-        binding.btnEnable.text = localizedContext.getString(R.string.checkout_3ds2_da_registration_positive_button)
-        binding.btnNotNow.text = localizedContext.getString(R.string.checkout_3ds2_da_registration_negative_button)
-
-        binding.btnEnable.setOnClickListener {
-            coroutineScope.launch {
-                when (val registrationResult = adyenAuthentication.register(sdkInput)) {
-                    is AuthenticationResult.RegistrationSuccessful -> {
-                        val result = DARegistrationResult.RegistrationSuccessful(registrationResult.sdkOutput)
-                        delegate.onRegistrationResult(result)
-                    }
-                    is AuthenticationResult.AuthenticationError -> {
-                        delegate.onRegistrationFailed()
-                    }
-                    is AuthenticationResult.Error -> {
-                        delegate.onRegistrationFailed()
-                    }
-                    else -> {
-                        delegate.onRegistrationResult(DARegistrationResult.NotNow)
+                binding.btnEnable.setOnClickListener {
+                    coroutineScope.launch {
+                        when (val registrationResult = adyenAuthentication.register(sdkInput)) {
+                            is AuthenticationResult.RegistrationSuccessful -> {
+                                val result =
+                                    DARegistrationResult.RegistrationSuccessful(registrationResult.sdkOutput)
+                                delegate.onRegistrationResult(result)
+                            }
+                            is AuthenticationResult.AuthenticationError -> {
+                                delegate.onRegistrationFailed()
+                            }
+                            is AuthenticationResult.Error -> {
+                                delegate.onRegistrationFailed()
+                            }
+                            else -> {
+                                delegate.onRegistrationResult(DARegistrationResult.NotNow)
+                            }
+                        }
                     }
                 }
+
+                binding.btnNotNow.setOnClickListener {
+                    delegate.onRegistrationResult(DARegistrationResult.NotNow)
+                }
+
             }
         }
+    }
 
-        binding.btnNotNow.setOnClickListener {
-            delegate.onRegistrationResult(DARegistrationResult.NotNow)
-        }
+    override fun getView(): View = this
 
+    override fun highlightValidationErrors() = Unit
+
+    private fun setLocalizedStrings(localizedContext: Context) {
+        binding.tvTitle.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_registration_title)
+        binding.tvDescription.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_registration_description)
+        binding.btnEnable.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_registration_positive_button)
+        binding.btnNotNow.text =
+            localizedContext.getString(R.string.checkout_3ds2_da_registration_negative_button)
+    }
+
+    private fun collectTimerUpdates(coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
         coroutineScope.launch {
             delegate.getAuthenticationTimerFlow().collect {
                 withContext(Dispatchers.Main) {
@@ -100,10 +118,6 @@ internal class DARegistrationView @JvmOverloads constructor(
             }
         }
     }
-
-    override fun getView(): View = this
-
-    override fun highlightValidationErrors() = Unit
 
     private fun setTimerData(timerData: TimerData) {
         val minutes = timerData.millisUntilFinished.milliseconds.inWholeMinutes

@@ -27,7 +27,7 @@ class ChallengeResult private constructor(val isAuthenticated: Boolean, val payl
          * @param completionEvent The result from the 3DS2 SDK.
          * @param authorisationToken The authorisationToken from the API.
          * @param delegatedAuthenticationSdkOutput Adyen Authentication SDK output after credentials registration.
-         * @param deleteDelegatedAuthenticationCredentials The field used to indicate whether it's needed to delete the credentials.
+         * @param deleteDelegatedAuthenticationCredentials The field is used to delete the DA credentials.
          * @return The filled object with the content needed for the details response.
          * @throws JSONException In case parsing fails.
          */
