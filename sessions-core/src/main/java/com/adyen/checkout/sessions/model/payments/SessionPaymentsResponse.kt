@@ -22,7 +22,8 @@ data class SessionPaymentsResponse(
     val status: String?,
     val resultCode: String?,
     val action: Action?,
-    val order: OrderResponse?
+    val order: OrderResponse?,
+    val sessionResult: String?,
 ) : ModelObject() {
 
     companion object {
@@ -31,6 +32,7 @@ data class SessionPaymentsResponse(
         private const val RESULT_CODE = "resultCode"
         private const val ACTION = "action"
         private const val ORDER = "order"
+        private const val SESSION_RESULT = "sessionResult"
 
         @JvmField
         val SERIALIZER: Serializer<SessionPaymentsResponse> = object : Serializer<SessionPaymentsResponse> {
@@ -42,6 +44,7 @@ data class SessionPaymentsResponse(
                         putOpt(RESULT_CODE, modelObject.resultCode)
                         putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
                         putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
+                        putOpt(SESSION_RESULT, modelObject.sessionResult)
                     } catch (e: JSONException) {
                         throw ModelSerializationException(SessionPaymentsResponse::class.java, e)
                     }
@@ -54,7 +57,8 @@ data class SessionPaymentsResponse(
                     status = jsonObject.optString(STATUS),
                     resultCode = jsonObject.optString(RESULT_CODE),
                     action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
-                    order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderResponse.SERIALIZER)
+                    order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderResponse.SERIALIZER),
+                    sessionResult = jsonObject.optString(SESSION_RESULT),
                 )
             }
         }

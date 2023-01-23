@@ -20,7 +20,8 @@ data class SessionDetailsResponse(
     val sessionData: String,
     val status: String?,
     val resultCode: String?,
-    val action: Action?
+    val action: Action?,
+    val sessionResult: String?,
 ) : ModelObject() {
 
     companion object {
@@ -28,6 +29,7 @@ data class SessionDetailsResponse(
         private const val STATUS = "status"
         private const val RESULT_CODE = "resultCode"
         private const val ACTION = "action"
+        private const val SESSION_RESULT = "sessionResult"
 
         @JvmField
         val SERIALIZER: Serializer<SessionDetailsResponse> = object : Serializer<SessionDetailsResponse> {
@@ -38,6 +40,7 @@ data class SessionDetailsResponse(
                         putOpt(STATUS, modelObject.status)
                         putOpt(RESULT_CODE, modelObject.resultCode)
                         putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
+                        putOpt(SESSION_RESULT, modelObject.sessionResult)
                     } catch (e: JSONException) {
                         throw ModelSerializationException(SessionDetailsResponse::class.java, e)
                     }
@@ -49,7 +52,8 @@ data class SessionDetailsResponse(
                     sessionData = jsonObject.optString(SESSION_DATA),
                     status = jsonObject.optString(STATUS),
                     resultCode = jsonObject.optString(RESULT_CODE),
-                    action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER)
+                    action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
+                    sessionResult = jsonObject.optString(SESSION_RESULT),
                 )
             }
         }

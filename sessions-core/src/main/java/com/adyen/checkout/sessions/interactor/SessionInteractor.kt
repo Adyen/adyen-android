@@ -19,6 +19,8 @@ import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sessions.model.SessionModel
+import com.adyen.checkout.sessions.model.SessionPaymentResult
+import com.adyen.checkout.sessions.model.payments.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
@@ -72,7 +74,7 @@ class SessionInteractor(
                         }
                         action != null -> SessionCallResult.Payments.Action(action)
                         response.order.isNonFullyPaid() -> SessionCallResult.Payments.NotFullyPaidOrder(response.order)
-                        else -> SessionCallResult.Payments.Finished(response.resultCode.orEmpty())
+                        else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
                     }
                 },
                 onFailure = {
@@ -108,7 +110,7 @@ class SessionInteractor(
                     updateSessionData(response.sessionData)
 
                     return when (val action = response.action) {
-                        null -> SessionCallResult.Details.Finished(response.resultCode.orEmpty())
+                        null -> SessionCallResult.Details.Finished(response.mapToSessionPaymentResult())
                         else -> SessionCallResult.Details.Action(action)
                     }
                 },
@@ -275,6 +277,21 @@ class SessionInteractor(
     private fun updateSessionData(sessionData: String) {
         _sessionFlow.update { it.copy(sessionData = sessionData) }
     }
+
+    private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionResult = sessionResult,
+        sessionData = sessionData,
+        resultCode = resultCode,
+        order = order,
+    )
+
+    private fun SessionDetailsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionResult = sessionResult,
+        sessionData = sessionData,
+        resultCode = resultCode,
+        // TODO SESSIONS: check if we need to pass an order
+        order = null,
+    )
 
     companion object {
         private val TAG = LogUtil.getTag()
