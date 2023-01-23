@@ -157,7 +157,7 @@ internal class DefaultBcmcDelegate(
             } catch (e: Throwable) {
                 Logger.e(
                     TAG,
-                    "delegatedAuthenticationData not set because Authentication SDK is not present in project."
+                    "delegatedAuthenticationData not set because of unexpected exception"
                 )
                 null
             }

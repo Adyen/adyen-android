@@ -32,7 +32,6 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
-@Suppress("TooManyFunctions")
 internal class DAAuthenticationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

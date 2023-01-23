@@ -81,6 +81,9 @@ internal class DelegatedAuthentication(
         } catch (e: NoClassDefFoundError) {
             Logger.e(TAG, "hasCredential not executed because Authentication SDK is not present in project.")
             return null
+        } catch (e: Throwable) {
+            Logger.e(TAG, "hasCredential not executed because of unexpected exception.")
+            return null
         }
         Logger.d(TAG, "hasDACredential: $hasDACredential")
         return hasDACredential

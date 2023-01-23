@@ -217,6 +217,12 @@ internal class DefaultCardDelegate(
                     "delegatedAuthenticationData not set because Authentication SDK is not present in project."
                 )
                 null
+            } catch (e: Throwable) {
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because of unexpected exception"
+                )
+                null
             }
         }
     }
