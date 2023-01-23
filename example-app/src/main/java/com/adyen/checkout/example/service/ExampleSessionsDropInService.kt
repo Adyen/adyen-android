@@ -12,6 +12,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -42,7 +43,6 @@ class ExampleSessionsDropInService : SessionDropInService() {
 
     override fun makePaymentsCallMerchant(
         paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
     ): Boolean {
         return if (
             paymentComponentState.data.paymentMethod is BlikPaymentMethod ||
@@ -52,6 +52,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 Logger.d(TAG, "onPaymentsCallRequested")
 
                 // Check out the documentation of this method on the parent DropInService class
+                val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
                 val paymentRequest = createPaymentRequest(
                     paymentComponentData = paymentComponentJson,
                     shopperReference = keyValueStorage.getShopperReference(),
@@ -67,7 +68,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
                 val response = paymentsRepository.paymentsRequestAsync(paymentRequest)
 
-                val result = handleResponse(response) ?: return@launch
+                val result = handleResponse(response)
                 sendResult(result)
             }
             true
@@ -78,7 +79,6 @@ class ExampleSessionsDropInService : SessionDropInService() {
 
     override fun makeDetailsCallMerchant(
         actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
     ): Boolean {
         return if (isFlowTakenOver) {
             launch(Dispatchers.IO) {
@@ -88,7 +88,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                     ActionComponentData.SERIALIZER.serialize(actionComponentData)
                 )
 
-                val result = handleResponse(response) ?: return@launch
+                val result = handleResponse(response)
                 sendResult(result)
             }
             true
@@ -97,7 +97,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
         }
     }
 
-    private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult? {
+    private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult {
         return when {
             jsonResponse == null -> {
                 Logger.e(TAG, "FAILED")

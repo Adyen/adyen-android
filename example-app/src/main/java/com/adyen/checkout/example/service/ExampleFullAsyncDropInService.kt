@@ -13,6 +13,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
@@ -66,7 +67,6 @@ class ExampleFullAsyncDropInService : DropInService() {
 
     override fun onPaymentsCallRequested(
         paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
@@ -74,6 +74,7 @@ class ExampleFullAsyncDropInService : DropInService() {
             checkPaymentState(paymentComponentState)
             checkAdditionalData()
 
+            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
@@ -112,9 +113,11 @@ class ExampleFullAsyncDropInService : DropInService() {
         // read bundle and handle it
     }
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
+    override fun onDetailsCallRequested(actionComponentData: ActionComponentData) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
+
+            val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
 
             Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
@@ -171,7 +174,7 @@ class ExampleFullAsyncDropInService : DropInService() {
     }
 
     private fun isNonFullyPaidOrder(jsonResponse: JSONObject): Boolean {
-        return jsonResponse.has("order") && getOrderFromResponse(jsonResponse).remainingAmount?.value ?: 0 > 0
+        return jsonResponse.has("order") && (getOrderFromResponse(jsonResponse).remainingAmount?.value ?: 0) > 0
     }
 
     private fun getOrderFromResponse(jsonResponse: JSONObject): OrderResponse {
@@ -306,7 +309,6 @@ class ExampleFullAsyncDropInService : DropInService() {
 
     override fun removeStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
-        storedPaymentMethodJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
             val request = createRemoveStoredPaymentMethodRequest(

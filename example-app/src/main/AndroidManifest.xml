@@ -93,9 +93,6 @@
         </activity>
 
         <service
-            android:name=".service.ExampleDropInService"
-            android:exported="false" />
-        <service
             android:name=".service.ExampleAsyncDropInService"
             android:exported="false" />
         <service

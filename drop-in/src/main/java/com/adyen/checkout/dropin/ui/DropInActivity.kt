@@ -42,8 +42,8 @@ import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
+import com.adyen.checkout.dropin.service.BaseDropInService
 import com.adyen.checkout.dropin.service.BaseDropInServiceResult
-import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
@@ -111,7 +111,7 @@ internal class DropInActivity :
 
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
             Logger.d(TAG, "onServiceConnected")
-            val dropInBinder = binder as? DropInService.DropInBinder ?: return
+            val dropInBinder = binder as? BaseDropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
 
             dropInViewModel.onDropInServiceConnected()
@@ -234,7 +234,7 @@ internal class DropInActivity :
     }
 
     private fun startDropInService() {
-        val bound = DropInService.startService(
+        val bound = BaseDropInService.startService(
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
@@ -258,7 +258,7 @@ internal class DropInActivity :
 
     private fun stopDropInService() {
         if (serviceBound) {
-            DropInService.stopService(
+            BaseDropInService.stopService(
                 context = this,
                 merchantService = dropInViewModel.serviceComponentName,
                 connection = serviceConnection,

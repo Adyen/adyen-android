@@ -12,6 +12,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -54,14 +55,14 @@ class ExampleAsyncDropInService : DropInService() {
     lateinit var keyValueStorage: KeyValueStorage
 
     override fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
+        paymentComponentState: PaymentComponentState<*>
     ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(paymentComponentState)
 
+            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
@@ -92,9 +93,11 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
+    override fun onDetailsCallRequested(actionComponentData: ActionComponentData) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
+
+            val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
 
             Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
@@ -134,7 +137,6 @@ class ExampleAsyncDropInService : DropInService() {
 
     override fun removeStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
-        storedPaymentMethodJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
             val request = createRemoveStoredPaymentMethodRequest(

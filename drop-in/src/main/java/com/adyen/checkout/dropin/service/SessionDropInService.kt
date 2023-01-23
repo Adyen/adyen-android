@@ -24,10 +24,9 @@ import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
-open class SessionDropInService : DropInService(), SessionDropInServiceInterface {
+open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface {
 
     private lateinit var sessionInteractor: SessionInteractor
 
@@ -65,14 +64,11 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         emitResult(result)
     }
 
-    final override fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
-                { makePaymentsCallMerchant(it, paymentComponentJson) },
+                ::makePaymentsCallMerchant,
                 ::makePaymentsCallMerchant.name,
             )
 
@@ -91,14 +87,11 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun onDetailsCallRequested(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ) {
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
-                { makeDetailsCallMerchant(it, actionComponentJson) },
+                ::makeDetailsCallMerchant,
                 ::makeDetailsCallMerchant.name
             )
 
@@ -116,7 +109,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
+    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
@@ -138,7 +131,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun createOrder() {
+    override fun requestOrdersCall() {
         launch {
             val result = sessionInteractor.createOrder(
                 ::makeCreateOrderMerchant,
@@ -159,7 +152,8 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        val shouldUpdatePaymentMethods = !isDropInCancelledByUser
         launch {
             val result = sessionInteractor.cancelOrder(
                 order,
@@ -202,15 +196,9 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         emitResult(result)
     }
 
-    protected open fun makePaymentsCallMerchant(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ): Boolean = false
+    protected open fun makePaymentsCallMerchant(paymentComponentState: PaymentComponentState<*>): Boolean = false
 
-    protected open fun makeDetailsCallMerchant(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ): Boolean = false
+    protected open fun makeDetailsCallMerchant(actionComponentData: ActionComponentData): Boolean = false
 
     protected open fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean = false
 
