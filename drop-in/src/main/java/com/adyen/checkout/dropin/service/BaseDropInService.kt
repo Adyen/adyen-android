@@ -17,15 +17,10 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,7 +33,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class BaseDropInService : Service(), CoroutineScope, DropInServiceInterface {
+abstract class BaseDropInService : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropInServiceContract {
 
     private val coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
@@ -86,60 +81,22 @@ abstract class BaseDropInService : Service(), CoroutineScope, DropInServiceInter
         super.onDestroy()
     }
 
-    /**
-     * Allow asynchronously sending the results of the payments/ and payments/details/ network
-     * calls.
-     *
-     * Call this method when using [onPaymentsCallRequested] and [onDetailsCallRequested] with a
-     * [DropInServiceResult] depending on the response of the corresponding network call.
-     * Check the subclasses of [DropInServiceResult] for more information.
-     *
-     * @param result the result of the network request.
-     */
-    protected fun sendResult(result: DropInServiceResult) {
+    override fun sendResult(result: DropInServiceResult) {
         Logger.d(TAG, "dispatching DropInServiceResult")
         emitResult(result)
     }
 
-    /**
-     * Allow asynchronously sending the results of the paymentMethods/balance/ network call.
-     *
-     * Call this method when using [checkBalance] with a [BalanceDropInServiceResult] depending
-     * on the response of the corresponding network call.
-     * Check the subclasses of [BalanceDropInServiceResult] for more information.
-     *
-     * @param result the result of the network request.
-     */
-    protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
+    override fun sendBalanceResult(result: BalanceDropInServiceResult) {
         Logger.d(TAG, "dispatching BalanceDropInServiceResult")
         emitResult(result)
     }
 
-    /**
-     * Allow asynchronously sending the results of the orders/ network call.
-     *
-     * Call this method when using [createOrder] with a [OrderDropInServiceResult] depending
-     * on the response of the corresponding network call.
-     * Check the subclasses of [OrderDropInServiceResult] for more information.
-     *
-     * @param result the result of the network request.
-     */
-    protected fun sendOrderResult(result: OrderDropInServiceResult) {
+    override fun sendOrderResult(result: OrderDropInServiceResult) {
         Logger.d(TAG, "dispatching OrderDropInServiceResult")
         emitResult(result)
     }
 
-    /**
-     * Allow asynchronously sending the results of the Recurring/ network call.
-     *
-     * Call this method after making a network call to remove a stored payment method
-     * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
-     * depending on the response of the corresponding network call.
-     * Check the subclasses of [RecurringDropInServiceResult] for more information.
-     *
-     * @param result the result of the network request.
-     */
-    protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
+    override fun sendRecurringResult(result: RecurringDropInServiceResult) {
         Logger.d(TAG, "dispatching RecurringDropInServiceResult")
         emitResult(result)
     }
@@ -160,33 +117,7 @@ abstract class BaseDropInService : Service(), CoroutineScope, DropInServiceInter
         removeStoredPaymentMethod(storedPaymentMethod)
     }
 
-    /**
-     * Only applicable to removing stored payment methods.
-     *
-     * In this method you should make the network call to tell your server to make a call to the
-     * Recurring/<version_number>/disable endpoint. This method is called when the user initiates
-     * removing a stored payment method using the remove button.
-     *
-     * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
-     * in the field [StoredPaymentMethod.id].
-     *
-     * Asynchronous handling: since this method runs on the main thread, you should make sure the
-     * Recurring/<version>/disable call and any other long running operation is made on a background thread.
-     *
-     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
-     * to be thrown.
-     *
-     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
-     */
-    open fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        throw NotImplementedError("Method removeStoredPaymentMethod is not implemented")
-    }
-
-    /**
-     * Gets the additional data that was set when starting drop-in using
-     * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
-     */
-    protected fun getAdditionalData(): Bundle? {
+    override fun getAdditionalData(): Bundle? {
         return additionalData
     }
 
@@ -194,7 +125,7 @@ abstract class BaseDropInService : Service(), CoroutineScope, DropInServiceInter
 
         private val serviceRef: WeakReference<BaseDropInService> = WeakReference(service)
 
-        fun getService(): DropInServiceInterface? = serviceRef.get()
+        fun getService(): BaseDropInServiceInterface? = serviceRef.get()
     }
 
     companion object {
@@ -252,14 +183,4 @@ abstract class BaseDropInService : Service(), CoroutineScope, DropInServiceInter
             context.unbindService(connection)
         }
     }
-}
-
-internal interface DropInServiceInterface {
-    suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
-    fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
-    fun requestDetailsCall(actionComponentData: ActionComponentData)
-    fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
-    fun requestOrdersCall()
-    fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
-    fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
 }

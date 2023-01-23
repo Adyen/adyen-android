@@ -65,16 +65,16 @@ class ExampleFullAsyncDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
+    override fun onSubmit(
+        state: PaymentComponentState<*>,
     ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
-            checkPaymentState(paymentComponentState)
+            checkPaymentState(state)
             checkAdditionalData()
 
-            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(state.data)
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
@@ -113,7 +113,7 @@ class ExampleFullAsyncDropInService : DropInService() {
         // read bundle and handle it
     }
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData) {
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
 
@@ -211,11 +211,11 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
+    override fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "checkBalance")
 
-            val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodData)
+            val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodDetails)
             Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
 
             val request = createBalanceRequest(
@@ -245,7 +245,7 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    override fun createOrder() {
+    override fun onOrderRequest() {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "createOrder")
 
@@ -273,10 +273,10 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    override fun onOrderCancel(orderRequest: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "cancelOrder")
-            val orderJson = OrderRequest.SERIALIZER.serialize(order)
+            val orderJson = OrderRequest.SERIALIZER.serialize(orderRequest)
             val request = createCancelOrderRequest(
                 orderJson,
                 keyValueStorage.getMerchantAccount()

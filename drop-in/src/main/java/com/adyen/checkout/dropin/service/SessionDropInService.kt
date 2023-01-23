@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface {
+open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
     private lateinit var sessionInteractor: SessionInteractor
 
@@ -68,8 +68,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
-                ::makePaymentsCallMerchant,
-                ::makePaymentsCallMerchant.name,
+                ::onSubmit,
+                ::onSubmit.name,
             )
 
             val dropInServiceResult = when (result) {
@@ -91,8 +91,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
-                ::makeDetailsCallMerchant,
-                ::makeDetailsCallMerchant.name
+                ::onAdditionalDetails,
+                ::onAdditionalDetails.name
             )
 
             val dropInServiceResult = when (result) {
@@ -113,8 +113,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
-                ::makeCheckBalanceCallMerchant,
-                ::makeCheckBalanceCallMerchant.name,
+                ::onBalanceCheck,
+                ::onBalanceCheck.name,
             )
 
             val dropInServiceResult = when (result) {
@@ -134,8 +134,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
     override fun requestOrdersCall() {
         launch {
             val result = sessionInteractor.createOrder(
-                ::makeCreateOrderMerchant,
-                ::makeCreateOrderMerchant.name
+                ::onOrderRequest,
+                ::onOrderRequest.name
             )
 
             val dropInServiceResult = when (result) {
@@ -157,8 +157,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         launch {
             val result = sessionInteractor.cancelOrder(
                 order,
-                { makeCancelOrderCallMerchant(it, shouldUpdatePaymentMethods) },
-                ::makeCancelOrderCallMerchant.name
+                { onOrderCancel(it, shouldUpdatePaymentMethods) },
+                ::onOrderCancel.name
             )
 
             val dropInServiceResult = when (result) {
@@ -196,29 +196,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         emitResult(result)
     }
 
-    protected open fun makePaymentsCallMerchant(paymentComponentState: PaymentComponentState<*>): Boolean = false
-
-    protected open fun makeDetailsCallMerchant(actionComponentData: ActionComponentData): Boolean = false
-
-    protected open fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean = false
-
-    protected open fun makeCreateOrderMerchant(): Boolean = false
-
-    protected open fun makeCancelOrderCallMerchant(
-        order: OrderRequest,
-        shouldUpdatePaymentMethods: Boolean
-    ): Boolean = false
-
     companion object {
         private val TAG = LogUtil.getTag()
     }
-}
-
-internal interface SessionDropInServiceInterface : DropInServiceInterface {
-    fun initialize(
-        sessionModel: SessionModel,
-        clientKey: String,
-        environment: Environment,
-        isFlowTakenOver: Boolean
-    )
 }

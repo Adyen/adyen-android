@@ -54,15 +54,15 @@ class ExampleAsyncDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>
+    override fun onSubmit(
+        state: PaymentComponentState<*>
     ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
-            checkPaymentState(paymentComponentState)
+            checkPaymentState(state)
 
-            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+            val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(state.data)
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
@@ -93,7 +93,7 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData) {
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
 

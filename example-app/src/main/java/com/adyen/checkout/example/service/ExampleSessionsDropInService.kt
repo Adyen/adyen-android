@@ -41,18 +41,18 @@ class ExampleSessionsDropInService : SessionDropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun makePaymentsCallMerchant(
-        paymentComponentState: PaymentComponentState<*>,
+    override fun onSubmit(
+        state: PaymentComponentState<*>,
     ): Boolean {
         return if (
-            paymentComponentState.data.paymentMethod is BlikPaymentMethod ||
-            paymentComponentState is CardComponentState
+            state.data.paymentMethod is BlikPaymentMethod ||
+            state is CardComponentState
         ) {
             launch(Dispatchers.IO) {
                 Logger.d(TAG, "onPaymentsCallRequested")
 
                 // Check out the documentation of this method on the parent DropInService class
-                val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+                val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(state.data)
                 val paymentRequest = createPaymentRequest(
                     paymentComponentData = paymentComponentJson,
                     shopperReference = keyValueStorage.getShopperReference(),
@@ -77,7 +77,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
         }
     }
 
-    override fun makeDetailsCallMerchant(
+    override fun onAdditionalDetails(
         actionComponentData: ActionComponentData,
     ): Boolean {
         return if (isFlowTakenOver) {

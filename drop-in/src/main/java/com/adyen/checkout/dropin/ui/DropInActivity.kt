@@ -44,7 +44,7 @@ import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.BaseDropInService
 import com.adyen.checkout.dropin.service.BaseDropInServiceResult
-import com.adyen.checkout.dropin.service.DropInServiceInterface
+import com.adyen.checkout.dropin.service.BaseDropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
@@ -97,7 +97,7 @@ internal class DropInActivity :
 
     private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
 
-    private var dropInService: DropInServiceInterface? = null
+    private var dropInService: BaseDropInServiceInterface? = null
     private var serviceBound: Boolean = false
 
     // these queues exist for when a call is requested before the service is bound
