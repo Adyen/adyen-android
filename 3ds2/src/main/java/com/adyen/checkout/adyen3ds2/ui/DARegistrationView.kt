@@ -86,7 +86,6 @@ internal class DARegistrationView @JvmOverloads constructor(
                 binding.btnNotNow.setOnClickListener {
                     delegate.onRegistrationResult(DARegistrationResult.NotNow)
                 }
-
             }
         }
     }
