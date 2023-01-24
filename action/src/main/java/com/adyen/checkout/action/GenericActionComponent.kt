@@ -42,11 +42,11 @@ class GenericActionComponent internal constructor(
         genericActionDelegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback)
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         genericActionDelegate.removeObserver()
     }
 

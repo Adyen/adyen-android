@@ -36,11 +36,11 @@ class VoucherComponent internal constructor(
         delegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         delegate.removeObserver()
     }
 
