@@ -62,6 +62,7 @@ dependencies {
     api project(':mbway')
     api project(':molpay')
     api project(':online-banking-cz')
+    api project(':online-banking-jp')
     api project(':online-banking-pl')
     api project(':online-banking-sk')
     api project(':openbanking')

@@ -91,6 +91,9 @@ import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentProvider
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
@@ -251,6 +254,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         )
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingCZConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
+        OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
+            OnlineBankingJPConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
@@ -561,6 +570,16 @@ internal fun getComponentFor(
                 configuration = onlineBankingCZConfig,
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
+            )
+        }
+        OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val onlineBankingJPConfig: OnlineBankingJPConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            OnlineBankingJPComponentProvider(dropInParams).get(
+                owner = fragment,
+                paymentMethod = paymentMethod,
+                configuration = onlineBankingJPConfig,
+                application = fragment.requireApplication(),
             )
         }
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
