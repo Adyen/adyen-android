@@ -25,7 +25,7 @@ import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
+import com.adyen.checkout.example.service.ExampleAdvancedDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     dropInLauncher,
                     navigation.paymentMethodsApiResponse,
                     navigation.dropInConfiguration,
-                    ExampleFullAsyncDropInService::class.java,
+                    ExampleAdvancedDropInService::class.java,
                 )
             }
             is MainNavigation.DropInWithSession -> {
