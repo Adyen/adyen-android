@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -36,6 +37,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class VoucherComponentTest(
     @Mock private val voucherDelegate: VoucherDelegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: VoucherComponent
@@ -45,7 +47,7 @@ internal class VoucherComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType)
-        component = VoucherComponent(voucherDelegate)
+        component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -89,7 +91,7 @@ internal class VoucherComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(voucherDelegate.viewFlow) doReturn delegateViewFlow
-        component = VoucherComponent(voucherDelegate)
+        component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

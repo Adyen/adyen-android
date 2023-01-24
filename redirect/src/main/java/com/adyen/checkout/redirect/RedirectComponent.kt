@@ -16,6 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -25,7 +26,8 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
 class RedirectComponent internal constructor(
-    override val delegate: RedirectDelegate
+    override val delegate: RedirectDelegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,

@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -38,6 +39,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class Adyen3DS2ComponentTest(
     @Mock private val adyen3DS2Delegate: Adyen3DS2Delegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: Adyen3DS2Component
@@ -47,7 +49,7 @@ internal class Adyen3DS2ComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(adyen3DS2Delegate.viewFlow) doReturn MutableStateFlow(Adyen3DS2ComponentViewType)
-        component = Adyen3DS2Component(adyen3DS2Delegate)
+        component = Adyen3DS2Component(adyen3DS2Delegate, actionComponentEventHandler)
     }
 
     @Test
@@ -91,7 +93,7 @@ internal class Adyen3DS2ComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(adyen3DS2Delegate.viewFlow) doReturn delegateViewFlow
-        component = Adyen3DS2Component(adyen3DS2Delegate)
+        component = Adyen3DS2Component(adyen3DS2Delegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

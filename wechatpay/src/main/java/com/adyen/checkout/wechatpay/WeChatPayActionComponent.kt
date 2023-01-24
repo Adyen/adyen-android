@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 
 class WeChatPayActionComponent internal constructor(
     override val delegate: WeChatDelegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,

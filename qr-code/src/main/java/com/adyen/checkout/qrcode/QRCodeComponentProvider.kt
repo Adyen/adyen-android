@@ -11,12 +11,15 @@ package com.adyen.checkout.qrcode
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -36,20 +39,13 @@ class QRCodeComponentProvider(
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
-    override fun <T> get(
-        owner: T,
-        application: Application,
-        configuration: QRCodeConfiguration,
-        key: String?,
-    ): QRCodeComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null, key)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: QRCodeConfiguration,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String?,
     ): QRCodeComponent {
@@ -57,9 +53,13 @@ class QRCodeComponentProvider(
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
                 delegate = qrCodeDelegate,
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory)[key, QRCodeComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            }
     }
 
     override fun getDelegate(

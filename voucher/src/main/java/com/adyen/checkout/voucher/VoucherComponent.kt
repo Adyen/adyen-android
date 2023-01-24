@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.Flow
 
 class VoucherComponent internal constructor(
     override val delegate: VoucherDelegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     ViewableComponent {

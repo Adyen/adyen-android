@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -36,6 +37,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class AwaitComponentTest(
     @Mock private val awaitDelegate: AwaitDelegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: AwaitComponent
@@ -45,7 +47,7 @@ internal class AwaitComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(awaitDelegate.viewFlow) doReturn MutableStateFlow(AwaitComponentViewType)
-        component = AwaitComponent(awaitDelegate)
+        component = AwaitComponent(awaitDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -89,7 +91,7 @@ internal class AwaitComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(awaitDelegate.viewFlow) doReturn delegateViewFlow
-        component = AwaitComponent(awaitDelegate)
+        component = AwaitComponent(awaitDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

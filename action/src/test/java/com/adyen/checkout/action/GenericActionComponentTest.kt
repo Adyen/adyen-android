@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -37,6 +38,7 @@ internal class GenericActionComponentTest(
     @Mock private val actionDelegate: ActionDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: GenericActionComponent
@@ -47,7 +49,7 @@ internal class GenericActionComponentTest(
 
         whenever(genericActionDelegate.delegate) doReturn actionDelegate
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
-        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent)
+        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent, actionComponentEventHandler)
     }
 
     @Test
@@ -96,7 +98,7 @@ internal class GenericActionComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn delegateViewFlow
-        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent)
+        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
