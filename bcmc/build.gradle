@@ -61,4 +61,5 @@ dependencies {
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines
+    testImplementation libraries.adyenAuthentication
 }

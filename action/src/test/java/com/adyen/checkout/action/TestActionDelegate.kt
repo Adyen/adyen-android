@@ -12,8 +12,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.authentication.AdyenAuthentication
+import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
+import com.adyen.checkout.adyen3ds2.model.DARegistrationResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
@@ -38,6 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import java.util.Locale
 
 internal class TestActionDelegate :
@@ -153,6 +158,24 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     ) = Unit
 
     override fun removeObserver() = Unit
+
+    override fun initAdyenAuthentication(authenticationLauncher: AuthenticationLauncher) = Unit
+
+    override fun getAdyenAuthentication(): AdyenAuthentication? = null
+
+    override fun getRegistrationSdkInput(): String? = null
+
+    override fun onRegistrationResult(result: DARegistrationResult) = Unit
+
+    override fun onRegistrationFailed() = Unit
+
+    override fun getAuthenticationSdkInput(): String? = null
+
+    override fun onAuthenticationResult(result: DAAuthenticationResult, activity: Activity) = Unit
+
+    override fun onAuthenticationFailed(activity: Activity?) = Unit
+
+    override fun getAuthenticationTimerFlow(): Flow<TimerData> = flowOf()
 
     override fun onCleared() = Unit
 }

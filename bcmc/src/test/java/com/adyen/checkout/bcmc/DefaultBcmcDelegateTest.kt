@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bcmc
 
+import android.app.Application
 import app.cash.turbine.test
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
@@ -338,6 +339,7 @@ internal class DefaultBcmcDelegateTest(
         cardEncrypter = cardEncrypter,
         analyticsRepository = analyticsRepository,
         submitHandler = SubmitHandler(),
+        application = Application()
     )
 
     private fun getDefaultBcmcConfigurationBuilder() = BcmcConfiguration.Builder(

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import android.app.Application
 import app.cash.turbine.test
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -342,6 +343,7 @@ internal class StoredCardDelegateTest(
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler(),
+            application = Application()
         )
     }
 

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import android.app.Application
 import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
@@ -923,6 +924,7 @@ internal class DefaultCardDelegateTest(
             genericEncrypter = genericEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler(),
+            application = Application()
         )
     }
 

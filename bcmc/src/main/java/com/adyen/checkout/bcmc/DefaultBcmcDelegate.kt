@@ -160,6 +160,13 @@ internal class DefaultBcmcDelegate(
                     "delegatedAuthenticationData not set because Authentication SDK version is incompatible with compiled version."
                 )
                 null
+            } catch (e: NullPointerException) {
+                // Thrown only during tests running
+                Logger.e(
+                    TAG,
+                    "delegatedAuthenticationData not set because the application context is null."
+                )
+                null
             }
         }
     }
