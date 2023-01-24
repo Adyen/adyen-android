@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.IntentHandlingComponent
@@ -23,7 +24,8 @@ import kotlinx.coroutines.flow.Flow
 
 class GenericActionComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
-    private val actionHandlingComponent: ActionHandlingComponent
+    private val actionHandlingComponent: ActionHandlingComponent,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     ViewableComponent,
@@ -40,11 +42,11 @@ class GenericActionComponent internal constructor(
         genericActionDelegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback)
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         genericActionDelegate.removeObserver()
     }
 

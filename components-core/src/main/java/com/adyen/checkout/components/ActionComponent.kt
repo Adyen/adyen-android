@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import android.app.Activity
-import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.model.payments.response.Action
 
 /**
@@ -19,12 +18,6 @@ import com.adyen.checkout.components.model.payments.response.Action
  * Result on the [ActionComponentData] if populated can be considered valid to be sent back to the payments/details/ API
  */
 interface ActionComponent : Component {
-
-    // TODO documentation
-    fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit)
-
-    // TODO documentation
-    fun removeObserver()
 
     /**
      * Provide the action from the API response that needs to be handled.

@@ -9,14 +9,19 @@ package com.adyen.checkout.components
 
 import android.app.Application
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.annotation.RestrictTo
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 
+// TODO SESSIONS: DOCS
 interface ActionComponentProvider<
     ComponentT : ActionComponent,
     ConfigurationT : Configuration,
@@ -26,9 +31,43 @@ interface ActionComponentProvider<
     /**
      * Get an [ActionComponent].
      *
-     * @param owner         The Activity or Fragment to associate the lifecycle.
+     * @param fragment      The Fragment to associate the lifecycle.
      * @param application   Your main application class.
      * @param configuration The Configuration of the component.
+     * @param callback      Th callback to handle events from the [ActionComponent].
+     * @param key           The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    operator fun get(
+        fragment: Fragment,
+        application: Application,
+        configuration: ConfigurationT,
+        callback: ActionComponentCallback,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = fragment,
+            viewModelStoreOwner = fragment,
+            lifecycleOwner = fragment.viewLifecycleOwner,
+            application = application,
+            configuration = configuration,
+            callback = callback,
+            defaultArgs = null,
+            key = key
+        )
+    }
+
+    /**
+     * Get an [ActionComponent].
+     *
+     * @param activity      The Activity to associate the lifecycle.
+     * @param application   Your main application class.
+     * @param configuration The Configuration of the component.
+     * @param callback      The callback to handle events from the [ActionComponent].
      * @param key           The key to use to identify the [ActionComponent].
      *
      * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
@@ -37,11 +76,23 @@ interface ActionComponentProvider<
      * @return The Component
      */
     operator fun <T> get(
-        owner: T,
+        activity: ComponentActivity,
         application: Application,
         configuration: ConfigurationT,
+        callback: ActionComponentCallback,
         key: String? = null,
-    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = activity,
+            viewModelStoreOwner = activity,
+            lifecycleOwner = activity,
+            application = application,
+            configuration = configuration,
+            callback = callback,
+            defaultArgs = null,
+            key = key
+        )
+    }
 
     /**
      * Get an [ActionComponent].
@@ -64,8 +115,10 @@ interface ActionComponentProvider<
     operator fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: ConfigurationT,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String? = null,
     ): ComponentT

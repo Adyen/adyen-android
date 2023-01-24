@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.SdkData
 import com.adyen.checkout.components.test.TestComponentViewType
@@ -38,6 +39,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class WeChatPayActionComponentTest(
     @Mock private val weChatDelegate: WeChatDelegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: WeChatPayActionComponent
@@ -47,7 +49,7 @@ internal class WeChatPayActionComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(weChatDelegate.viewFlow) doReturn MutableStateFlow(WeChatComponentViewType)
-        component = WeChatPayActionComponent(weChatDelegate)
+        component = WeChatPayActionComponent(weChatDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -91,7 +93,7 @@ internal class WeChatPayActionComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(weChatDelegate.viewFlow) doReturn delegateViewFlow
-        component = WeChatPayActionComponent(weChatDelegate)
+        component = WeChatPayActionComponent(weChatDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -37,6 +38,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class RedirectComponentTest(
     @Mock private val redirectDelegate: RedirectDelegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: RedirectComponent
@@ -46,7 +48,7 @@ internal class RedirectComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(redirectDelegate.viewFlow) doReturn MutableStateFlow(RedirectComponentViewType)
-        component = RedirectComponent(redirectDelegate)
+        component = RedirectComponent(redirectDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -90,7 +92,7 @@ internal class RedirectComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(redirectDelegate.viewFlow) doReturn delegateViewFlow
-        component = RedirectComponent(redirectDelegate)
+        component = RedirectComponent(redirectDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

@@ -11,12 +11,15 @@ package com.adyen.checkout.voucher
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -32,30 +35,27 @@ class VoucherComponentProvider(
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
-    override fun <T> get(
-        owner: T,
-        application: Application,
-        configuration: VoucherConfiguration,
-        key: String?,
-    ): VoucherComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null, key)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: VoucherConfiguration,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String?,
     ): VoucherComponent {
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
-                voucherDelegate,
+                delegate = voucherDelegate,
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, voucherFactory)[key, VoucherComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            }
     }
 
     override fun getDelegate(

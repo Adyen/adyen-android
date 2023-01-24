@@ -11,12 +11,15 @@ package com.adyen.checkout.redirect
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -32,30 +35,28 @@ class RedirectComponentProvider(
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
-    override fun <T> get(
-        owner: T,
-        application: Application,
-        configuration: RedirectConfiguration,
-        key: String?,
-    ): RedirectComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null, key)
-    }
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: RedirectConfiguration,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String?,
     ): RedirectComponent {
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
-                redirectDelegate
+                delegate = redirectDelegate,
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
             )
         }
         return ViewModelProvider(viewModelStoreOwner, redirectFactory)[key, RedirectComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            }
     }
 
     override fun getDelegate(

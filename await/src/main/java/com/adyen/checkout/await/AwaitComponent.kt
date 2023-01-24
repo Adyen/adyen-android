@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 
 class AwaitComponent internal constructor(
     override val delegate: AwaitDelegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     ViewableComponent {
@@ -33,11 +35,11 @@ class AwaitComponent internal constructor(
         delegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         delegate.removeObserver()
     }
 
