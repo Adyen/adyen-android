@@ -15,6 +15,5 @@ data class SessionPaymentResult(
     val sessionResult: String?,
     val sessionData: String,
     val resultCode: String?,
-    // TODO SESSIONS: check if we can return this to the merchant
     val order: OrderResponse?,
 )

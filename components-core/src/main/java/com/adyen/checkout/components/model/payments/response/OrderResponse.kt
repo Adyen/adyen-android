@@ -19,19 +19,15 @@ import org.json.JSONObject
 data class OrderResponse(
     val pspReference: String,
     val orderData: String,
-    val reference: String?,
     val amount: Amount?,
     val remainingAmount: Amount?,
-    val expiresAt: String?
 ) : ModelObject() {
 
     companion object {
         private const val PSP_REFERENCE = "pspReference"
         private const val ORDER_DATA = "orderData"
-        private const val REFERENCE = "reference"
         private const val AMOUNT = "amount"
         private const val REMAINING_AMOUNT = "remainingAmount"
-        private const val EXPIRES_AT = "expiresAt"
 
         @JvmField
         val SERIALIZER: Serializer<OrderResponse> = object : Serializer<OrderResponse> {
@@ -40,13 +36,11 @@ data class OrderResponse(
                     try {
                         putOpt(PSP_REFERENCE, modelObject.pspReference)
                         putOpt(ORDER_DATA, modelObject.orderData)
-                        putOpt(REFERENCE, modelObject.reference)
                         putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
                         putOpt(
                             REMAINING_AMOUNT,
                             ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER)
                         )
-                        putOpt(EXPIRES_AT, modelObject.expiresAt)
                     } catch (e: JSONException) {
                         throw ModelSerializationException(OrderResponse::class.java, e)
                     }
@@ -57,13 +51,11 @@ data class OrderResponse(
                 return OrderResponse(
                     pspReference = jsonObject.optString(PSP_REFERENCE, ""),
                     orderData = jsonObject.optString(ORDER_DATA, ""),
-                    reference = jsonObject.optString(REFERENCE, ""),
                     amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                     remainingAmount = ModelUtils.deserializeOpt(
                         jsonObject.optJSONObject(REMAINING_AMOUNT),
                         Amount.SERIALIZER
                     ),
-                    expiresAt = jsonObject.optString(EXPIRES_AT, "")
                 )
             }
         }
