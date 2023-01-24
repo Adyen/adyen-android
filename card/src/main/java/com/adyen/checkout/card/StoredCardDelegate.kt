@@ -11,6 +11,7 @@ package com.adyen.checkout.card
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -65,9 +66,9 @@ internal class StoredCardDelegate(
     private val submitHandler: SubmitHandler
 ) : CardDelegate {
 
-    private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
+    private val noCvcBrands: Set<CardType> = hashSetOf(CardType(cardBrand = CardBrand.BCMC))
 
-    private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
+    private val cardType = CardType(txVariant = storedPaymentMethod.brand.orEmpty())
     private val storedDetectedCardTypes = DetectedCardType(
         cardType,
         isReliable = true,

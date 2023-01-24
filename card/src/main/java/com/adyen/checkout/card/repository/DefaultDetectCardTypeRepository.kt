@@ -12,6 +12,7 @@ import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.components.channel.bufferedChannel
@@ -179,7 +180,7 @@ internal class DefaultDetectCardTypeRepository(
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse.brands.orEmpty().mapNotNull { brandResponse ->
             if (brandResponse.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(brandResponse.brand)
+            val cardType = CardType(txVariant = brandResponse.brand)
             DetectedCardType(
                 cardType = cardType,
                 isReliable = true,
@@ -196,7 +197,7 @@ internal class DefaultDetectCardTypeRepository(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType.BCMC)
+        private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType(cardBrand = CardBrand.BCMC))
 
         private const val REQUIRED_BIN_SIZE = 11
     }

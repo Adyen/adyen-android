@@ -10,6 +10,7 @@ package com.adyen.checkout.card.test
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
@@ -63,7 +64,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
     }
 
     fun getDetectedCardTypesLocal(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardType = CardType.VISA
+        val cardType = CardType(cardBrand = CardBrand.VISA)
         return listOf(
             DetectedCardType(
                 cardType = cardType,
@@ -78,7 +79,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
     }
 
     fun getDetectedCardTypesNetwork(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardType = CardType.MASTERCARD
+        val cardType = CardType(cardBrand = CardBrand.MASTERCARD)
         return listOf(
             DetectedCardType(
                 cardType = cardType,
@@ -93,8 +94,8 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
     }
 
     fun getDetectedCardTypesDualBranded(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardTypeFirst = CardType.BCMC
-        val cardTypeSecond = CardType.MAESTRO
+        val cardTypeFirst = CardType(cardBrand = CardBrand.BCMC)
+        val cardTypeSecond = CardType(cardBrand = CardBrand.MAESTRO)
         return listOf(
             DetectedCardType(
                 cardType = cardTypeFirst,

@@ -7,10 +7,34 @@
  */
 package com.adyen.checkout.card.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.regex.Pattern
 
+@Parcelize
+data class CardType constructor(val txVariant: String) : Parcelable {
+
+    /**
+     * Use this constructor when defining the supported card brand predefined inside [CardBrand] enum
+     * inside your component
+     */
+    constructor(cardBrand: CardBrand) : this(txVariant = cardBrand.txVariant)
+
+    companion object {
+        /**
+         * Estimate all potential [CardTypes][CardType] for a given card number.
+         *
+         * @param cardNumber The potential card number.
+         * @return All matching [CardTypes][CardType] if the number was valid, otherwise an empty [List].
+         */
+        fun estimate(cardNumber: String): List<CardType> {
+            return CardBrand.values().filter { it.isEstimateFor(cardNumber) }.map { CardType(cardBrand = it) }
+        }
+    }
+}
+
 @Suppress("unused", "SpellCheckingInspection")
-enum class CardType(var txVariant: String, private val mPattern: Pattern) {
+enum class CardBrand(val txVariant: String, private val mPattern: Pattern) {
 
     AMERICAN_EXPRESS("amex", Pattern.compile("^3[47][0-9]{0,13}$")),
     ARGENCARD("argencard", Pattern.compile("^(50)(1)\\d*$")),
@@ -51,39 +75,25 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
     TROY("troy", Pattern.compile("^(97)(9)\\d*$")),
     UATP("uatp", Pattern.compile("^1[0-9]{0,14}$")),
     VISA("visa", Pattern.compile("^4[0-9]{0,18}$")),
-    VISADANKORT("visadankort", Pattern.compile("^(4571)[0-9]{0,12}$")),
-
-    // UNKNOWN type is used for txVariants that are valid but not accounted for in this enum
-    UNKNOWN("", Pattern.compile("([1-9])+"));
+    VISADANKORT("visadankort", Pattern.compile("^(4571)[0-9]{0,12}$"));
 
     companion object {
 
         /**
-         * Estimate all potential [CardTypes][CardType] for a given card number.
-         *
-         * @param cardNumber The potential card number.
-         * @return All matching [CardTypes][CardType] if the number was valid, otherwise an empty [List].
+         * Get [CardBrand] from the brand name as it appears in the Checkout API.
          */
-        fun estimate(cardNumber: String): List<CardType> {
-            return values().filter { it.isEstimateFor(cardNumber) }
-        }
-
-        /**
-         * Get CardType from the brand name as it appears in the Checkout API.
-         */
-        fun getByBrandName(brand: String): CardType {
+        fun getByBrandName(brand: String): CardBrand? {
             return values().firstOrNull { it.txVariant == brand }
-                ?: UNKNOWN.apply { txVariant = brand }
         }
     }
 
     /**
-     * Returns whether a given card number is estimated for this [CardType].
+     * Returns whether a given card number is estimated for this [CardBrand].
      *
      * @param cardNumber The card number to make an estimation for.
-     * @return Whether the [CardType] is an estimation for a given card number.
+     * @return Whether the [CardBrand] is an estimation for a given card number.
      */
-    private fun isEstimateFor(cardNumber: String): Boolean {
+    internal fun isEstimateFor(cardNumber: String): Boolean {
         val normalizedCardNumber = cardNumber.replace("\\s".toRegex(), "")
         val matcher = mPattern.matcher(normalizedCardNumber)
         return matcher.matches() || matcher.hitEnd()
