@@ -23,8 +23,8 @@ import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @SuppressWarnings("TooManyFunctions")
-internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
+internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), ActionComponentCallback {
 
     private var _binding: FragmentGenericActionComponentBinding? = null
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
@@ -75,7 +75,8 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
             actionComponent = GenericActionComponentProvider(componentParams).get(
                 this,
                 requireActivity().application,
-                actionConfiguration
+                actionConfiguration,
+                this
             )
             authenticationLauncher?.let {
                 actionComponent.initDelegatedAuthentication(it)
@@ -88,12 +89,19 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
                 }
             }
 
-            actionComponent.observe(viewLifecycleOwner, ::onActionComponentEvent)
-
             binding.componentView.attach(actionComponent, viewLifecycleOwner)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        onActionComponentDataChanged(actionComponentData)
+    }
+
+    override fun onError(componentError: ComponentError) {
+        Logger.d(TAG, "onError")
+        handleError(componentError)
     }
 
     private fun initAuthenticationLauncher() {
@@ -118,13 +126,6 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
                     "Authentication SDK version is incompatible with compiled version"
             )
             null
-        }
-    }
-
-    private fun onActionComponentEvent(event: ActionComponentEvent) {
-        when (event) {
-            is ActionComponentEvent.ActionDetails -> onActionComponentDataChanged(event.data)
-            is ActionComponentEvent.Error -> onError(event.error)
         }
     }
 
@@ -171,13 +172,6 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
         Logger.d(TAG, "onActionComponentDataChanged")
         if (actionComponentData != null) {
             protocol.requestDetailsCall(actionComponentData)
-        }
-    }
-
-    private fun onError(error: ComponentError?) {
-        Logger.d(TAG, "onError")
-        if (error != null) {
-            handleError(error)
         }
     }
 

@@ -36,7 +36,7 @@ ext {
     coroutines_version = "1.6.4"
     fragment_version = "1.5.5"
     lifecycle_version = "2.5.1"
-    material_version = "1.7.0"
+    material_version = "1.8.0"
     recyclerview_version = "1.2.1"
 
     // Adyen Dependencies

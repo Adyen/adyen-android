@@ -12,21 +12,23 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SessionCallResult {
 
     sealed class Payments : SessionCallResult {
-        data class Finished(val resultCode: String) : Payments()
-        data class NotFullyPaidOrder(val order: OrderResponse?) : Payments()
+        data class Finished(val result: SessionPaymentResult) : Payments()
+        data class NotFullyPaidOrder(val result: SessionPaymentResult) : Payments()
         data class Action(val action: ActionResponse) : Payments()
         data class Error(val throwable: Throwable) : Payments()
+        data class RefusedPartialPayment(val result: SessionPaymentResult) : Payments()
         object TakenOver : Payments()
     }
 
     sealed class Details : SessionCallResult {
-        data class Finished(val resultCode: String) : Details()
+        data class Finished(val result: SessionPaymentResult) : Details()
         data class Action(val action: ActionResponse) : Details()
         data class Error(val throwable: Throwable) : Details()
         object TakenOver : Details()

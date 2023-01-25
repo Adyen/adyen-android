@@ -24,10 +24,9 @@ import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
-open class SessionDropInService : DropInService(), SessionDropInServiceInterface {
+open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
     private lateinit var sessionInteractor: SessionInteractor
 
@@ -65,22 +64,22 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         emitResult(result)
     }
 
-    final override fun onPaymentsCallRequested(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
-                { makePaymentsCallMerchant(it, paymentComponentJson) },
-                ::makePaymentsCallMerchant.name,
+                ::onSubmit,
+                ::onSubmit.name,
             )
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
-                is SessionCallResult.Payments.Error -> DropInServiceResult.Error(reason = result.throwable.message)
-                is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.resultCode)
-                is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.order)
+                is SessionCallResult.Payments.Error ->
+                    DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
+                is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
+                is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
+                is SessionCallResult.Payments.RefusedPartialPayment ->
+                    DropInServiceResult.Error(reason = "Payment is refused while making a partial payment.")
                 is SessionCallResult.Payments.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
                     return@launch
@@ -91,21 +90,19 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun onDetailsCallRequested(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ) {
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
-                { makeDetailsCallMerchant(it, actionComponentJson) },
-                ::makeDetailsCallMerchant.name
+                ::onAdditionalDetails,
+                ::onAdditionalDetails.name
             )
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
-                is SessionCallResult.Details.Error -> DropInServiceResult.Error(reason = result.throwable.message)
-                is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.resultCode)
+                is SessionCallResult.Details.Error ->
+                    DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
+                is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
                 SessionCallResult.Details.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
                     return@launch
@@ -116,12 +113,12 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
+    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
-                ::makeCheckBalanceCallMerchant,
-                ::makeCheckBalanceCallMerchant.name,
+                ::onBalanceCheck,
+                ::onBalanceCheck.name,
             )
 
             val dropInServiceResult = when (result) {
@@ -138,16 +135,16 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun createOrder() {
+    override fun requestOrdersCall() {
         launch {
             val result = sessionInteractor.createOrder(
-                ::makeCreateOrderMerchant,
-                ::makeCreateOrderMerchant.name
+                ::onOrderRequest,
+                ::onOrderRequest.name
             )
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.CreateOrder.Error ->
-                    OrderDropInServiceResult.Error(reason = result.throwable.message)
+                    OrderDropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
                 is SessionCallResult.CreateOrder.Successful -> OrderDropInServiceResult.OrderCreated(result.order)
                 SessionCallResult.CreateOrder.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
@@ -159,16 +156,18 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    final override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        val shouldUpdatePaymentMethods = !isDropInCancelledByUser
         launch {
             val result = sessionInteractor.cancelOrder(
                 order,
-                { makeCancelOrderCallMerchant(it, shouldUpdatePaymentMethods) },
-                ::makeCancelOrderCallMerchant.name
+                { onOrderCancel(it, shouldUpdatePaymentMethods) },
+                ::onOrderCancel.name
             )
 
             val dropInServiceResult = when (result) {
-                is SessionCallResult.CancelOrder.Error -> DropInServiceResult.Error(reason = result.throwable.message)
+                is SessionCallResult.CancelOrder.Error ->
+                    DropInServiceResult.Error(reason = result.throwable.message)
                 SessionCallResult.CancelOrder.Successful -> {
                     if (!shouldUpdatePaymentMethods) return@launch
                     updatePaymentMethods()
@@ -190,7 +189,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                 result.order
             )
             is SessionCallResult.UpdatePaymentMethods.Error ->
-                DropInServiceResult.Error(reason = result.throwable.message)
+                DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
         }
     }
 
@@ -202,35 +201,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         emitResult(result)
     }
 
-    protected open fun makePaymentsCallMerchant(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ): Boolean = false
-
-    protected open fun makeDetailsCallMerchant(
-        actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
-    ): Boolean = false
-
-    protected open fun makeCheckBalanceCallMerchant(paymentMethodData: PaymentMethodDetails): Boolean = false
-
-    protected open fun makeCreateOrderMerchant(): Boolean = false
-
-    protected open fun makeCancelOrderCallMerchant(
-        order: OrderRequest,
-        shouldUpdatePaymentMethods: Boolean
-    ): Boolean = false
-
     companion object {
         private val TAG = LogUtil.getTag()
     }
-}
-
-internal interface SessionDropInServiceInterface : DropInServiceInterface {
-    fun initialize(
-        sessionModel: SessionModel,
-        clientKey: String,
-        environment: Environment,
-        isFlowTakenOver: Boolean
-    )
 }

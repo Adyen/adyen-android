@@ -11,6 +11,7 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -18,7 +19,9 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -42,20 +45,13 @@ class Adyen3DS2ComponentProvider(
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 
-    override fun <T> get(
-        owner: T,
-        application: Application,
-        configuration: Adyen3DS2Configuration,
-        key: String?,
-    ): Adyen3DS2Component where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null, key)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: Adyen3DS2Configuration,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String?,
     ): Adyen3DS2Component {
@@ -64,9 +60,13 @@ class Adyen3DS2ComponentProvider(
 
             Adyen3DS2Component(
                 delegate = adyen3DS2Delegate,
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory)[key, Adyen3DS2Component::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            }
     }
 
     override fun getDelegate(

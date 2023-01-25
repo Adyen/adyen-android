@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentEvent
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -36,6 +37,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class QRCodeComponentTest(
     @Mock private val qrCodeDelegate: QRCodeDelegate,
+    @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
     private lateinit var component: QRCodeComponent
@@ -45,7 +47,7 @@ internal class QRCodeComponentTest(
         Logger.setLogcatLevel(Logger.NONE)
 
         whenever(qrCodeDelegate.viewFlow) doReturn MutableStateFlow(QrCodeComponentViewType.QR_CODE)
-        component = QRCodeComponent(qrCodeDelegate)
+        component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -89,7 +91,7 @@ internal class QRCodeComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(QrCodeComponentViewType.QR_CODE)
         whenever(qrCodeDelegate.viewFlow) doReturn delegateViewFlow
-        component = QRCodeComponent(qrCodeDelegate)
+        component = QRCodeComponent(qrCodeDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(QrCodeComponentViewType.QR_CODE, awaitItem())

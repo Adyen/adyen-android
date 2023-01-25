@@ -16,6 +16,7 @@ import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.Flow
 
 class Adyen3DS2Component internal constructor(
     override val delegate: Adyen3DS2Delegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,
@@ -38,11 +40,11 @@ class Adyen3DS2Component internal constructor(
         delegate.initialize(viewModelScope)
     }
 
-    override fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
         delegate.observe(lifecycleOwner, viewModelScope, callback)
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         delegate.removeObserver()
     }
 

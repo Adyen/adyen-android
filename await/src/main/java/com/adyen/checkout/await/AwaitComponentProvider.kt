@@ -11,12 +11,15 @@ package com.adyen.checkout.await
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -39,20 +42,13 @@ class AwaitComponentProvider(
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
 
-    override fun <T> get(
-        owner: T,
-        application: Application,
-        configuration: AwaitConfiguration,
-        key: String?,
-    ): AwaitComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, application, configuration, null, key)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         application: Application,
         configuration: AwaitConfiguration,
+        callback: ActionComponentCallback,
         defaultArgs: Bundle?,
         key: String?,
     ): AwaitComponent {
@@ -60,9 +56,12 @@ class AwaitComponentProvider(
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,
+                DefaultActionComponentEventHandler(callback)
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java].also { component ->
+            component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+        }
     }
 
     override fun getDelegate(

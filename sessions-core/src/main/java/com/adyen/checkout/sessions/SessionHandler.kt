@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.interactor.SessionCallResult
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -76,10 +77,9 @@ class SessionHandler<T : PaymentComponentState<*>>(
                     sessionComponentCallback.onAction(result.action)
                 }
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable)
-                is SessionCallResult.Payments.Finished -> onFinished(result.resultCode)
-                is SessionCallResult.Payments.NotFullyPaidOrder -> {
-                    // TODO sessions: handle with gift card
-                }
+                is SessionCallResult.Payments.Finished -> onFinished(result.result)
+                is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result)
+                is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(result.result)
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -102,7 +102,7 @@ class SessionHandler<T : PaymentComponentState<*>>(
                     sessionComponentCallback.onAction(result.action)
                 }
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable)
-                is SessionCallResult.Details.Finished -> onFinished(result.resultCode)
+                is SessionCallResult.Details.Finished -> onFinished(result.result)
                 SessionCallResult.Details.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -192,9 +192,9 @@ class SessionHandler<T : PaymentComponentState<*>>(
         )
     }
 
-    private fun onFinished(resultCode: String) {
-        Log.d(TAG, "Finished: $resultCode")
-        sessionComponentCallback.onFinished(resultCode)
+    private fun onFinished(result: SessionPaymentResult) {
+        Log.d(TAG, "Finished: ${result.resultCode}")
+        sessionComponentCallback.onFinished(result)
     }
 
     private fun setFlowTakenOver() {

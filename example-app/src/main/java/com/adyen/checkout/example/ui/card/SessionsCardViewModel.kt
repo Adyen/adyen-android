@@ -25,6 +25,7 @@ import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.model.SessionModel
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
 import com.adyen.checkout.sessions.provider.CheckoutSessionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -123,8 +124,8 @@ internal class SessionsCardViewModel @Inject constructor(
         onComponentError(componentError)
     }
 
-    override fun onFinished(resultCode: String) {
-        viewModelScope.launch { _events.emit(CardEvent.PaymentResult(resultCode)) }
+    override fun onFinished(result: SessionPaymentResult) {
+        viewModelScope.launch { _events.emit(CardEvent.PaymentResult(result.resultCode.orEmpty())) }
     }
 
     private fun onComponentError(error: ComponentError) {

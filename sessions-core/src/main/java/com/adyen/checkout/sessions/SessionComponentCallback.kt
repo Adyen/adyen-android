@@ -14,13 +14,14 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 
 // BIG TODO SESSIONS: docs
 interface SessionComponentCallback<T : PaymentComponentState<*>> {
     // Generic events
     fun onStateChanged(state: T) = Unit
     fun onAction(action: Action)
-    fun onFinished(resultCode: String)
+    fun onFinished(result: SessionPaymentResult)
     fun onError(componentError: ComponentError)
 
     // API events
