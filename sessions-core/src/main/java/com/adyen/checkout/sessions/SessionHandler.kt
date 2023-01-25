@@ -78,9 +78,8 @@ class SessionHandler<T : PaymentComponentState<*>>(
                 }
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result)
-                is SessionCallResult.Payments.NotFullyPaidOrder -> {
-                    // TODO sessions: handle with gift card
-                }
+                is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result)
+                is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(result.result)
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }

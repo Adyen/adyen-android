@@ -67,7 +67,8 @@ class SessionInteractor(
                         response.isRefusedInPartialPaymentFlow() ->
                             SessionCallResult.Payments.RefusedPartialPayment(response.mapToSessionPaymentResult())
                         action != null -> SessionCallResult.Payments.Action(action)
-                        response.order.isNonFullyPaid() -> SessionCallResult.Payments.NotFullyPaidOrder(response.order)
+                        response.order.isNonFullyPaid() ->
+                            SessionCallResult.Payments.NotFullyPaidOrder(response.mapToSessionPaymentResult())
                         else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
                     }
                 },
@@ -172,10 +173,8 @@ class SessionInteractor(
                     val order = OrderResponse(
                         pspReference = response.pspReference,
                         orderData = response.orderData,
-                        reference = null,
                         amount = null,
                         remainingAmount = null,
-                        expiresAt = null,
                     )
                     return SessionCallResult.CreateOrder.Successful(order)
                 },
@@ -283,8 +282,7 @@ class SessionInteractor(
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,
-        // TODO SESSIONS: check if we need to pass an order
-        order = null,
+        order = order,
     )
 
     companion object {

@@ -77,7 +77,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
                 is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
-                is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.order)
+                is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(reason = "Payment is refused while making a partial payment.")
                 is SessionCallResult.Payments.TakenOver -> {
