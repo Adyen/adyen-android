@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Förnamn</string>
+    <string name="checkout_econtext_last_name_hint">Efternamn</string>
+    <string name="checkout_econtext_phone_number_hint">Telefonnummer</string>
+    <string name="checkout_econtext_shopper_email_hint">E-postadress</string>
+
+    <string name="checkout_econtext_first_name_invalid">Förnamnet är inte giltigt</string>
+    <string name="checkout_econtext_last_name_invalid">Efternamnet är inte giltigt</string>
+    <string name="checkout_econtext_phone_number_invalid">Ogiltigt telefonnummer</string>
+    <string name="checkout_econtext_shopper_email_invalid">Ogiltig e-postadress</string>
+</resources>

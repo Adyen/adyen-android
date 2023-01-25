@@ -10,22 +10,22 @@
     <style name="AdyenCheckout.EContext" />
 
     <style name="AdyenCheckout.EContext.FirstNameInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">First Name</item>
+        <item name="android:hint">@string/checkout_econtext_first_name_hint</item>
         <item name="android:inputType">text|textPersonName|textCapWords</item>
     </style>
 
     <style name="AdyenCheckout.EContext.LastNameInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">Last Name</item>
+        <item name="android:hint">@string/checkout_econtext_last_name_hint</item>
         <item name="android:inputType">text|textPersonName|textCapWords</item>
     </style>
 
-    <style name="AdyenCheckout.EContext.MobileNumberInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">Phone Number</item>
+    <style name="AdyenCheckout.EContext.PhoneNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_econtext_phone_number_hint</item>
         <item name="android:inputType">phone</item>
     </style>
 
-    <style name="AdyenCheckout.EContext.EmailAddressInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">E-mail Address</item>
+    <style name="AdyenCheckout.EContext.ShopperEmailInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_econtext_shopper_email_hint</item>
         <item name="android:inputType">text|textEmailAddress</item>
     </style>
 </resources>

@@ -90,8 +90,8 @@ class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
 
     private fun createOutputData(): EContextOutputData {
         return EContextOutputData(
-            firstNameState = validateNameField(inputData.firstName),
-            lastNameState = validateNameField(inputData.lastName),
+            firstNameState = validateFirstName(inputData.firstName),
+            lastNameState = validateLastName(inputData.lastName),
             phoneNumberState = validatePhoneNumber(inputData.mobileNumber),
             emailAddressState = validateEmailAddress(inputData.emailAddress)
         )
@@ -121,20 +121,29 @@ class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
         return PaymentComponentState(paymentComponentData, isInputValid, true)
     }
 
-    private fun validateNameField(input: String): FieldState<String> {
-        val validation = if (input.isNotBlank()) {
+    private fun validateFirstName(firstName: String): FieldState<String> {
+        val validation = if (firstName.isNotBlank()) {
             Validation.Valid
         } else {
-            Validation.Invalid(android.R.string.copy) // TODO translations
+            Validation.Invalid(R.string.checkout_econtext_first_name_invalid)
         }
-        return FieldState(input, validation)
+        return FieldState(firstName, validation)
+    }
+
+    private fun validateLastName(lastName: String): FieldState<String> {
+        val validation = if (lastName.isNotBlank()) {
+            Validation.Valid
+        } else {
+            Validation.Invalid(R.string.checkout_econtext_last_name_invalid)
+        }
+        return FieldState(lastName, validation)
     }
 
     private fun validatePhoneNumber(phoneNumber: String): FieldState<String> {
         val validation = if (phoneNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(phoneNumber)) {
             Validation.Valid
         } else {
-            Validation.Invalid(android.R.string.copy) // TODO translations
+            Validation.Invalid(R.string.checkout_econtext_phone_number_invalid)
         }
         return FieldState(phoneNumber, validation)
     }
@@ -143,7 +152,7 @@ class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
         val validation = if (emailAddress.isNotEmpty() && ValidationUtils.isEmailValid(emailAddress)) {
             Validation.Valid
         } else {
-            Validation.Invalid(android.R.string.copy) // TODO translations
+            Validation.Invalid(R.string.checkout_econtext_shopper_email_invalid)
         }
         return FieldState(emailAddress, validation)
     }

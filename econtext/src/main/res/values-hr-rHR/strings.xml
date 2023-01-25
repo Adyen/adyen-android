@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Ime</string>
+    <string name="checkout_econtext_last_name_hint">Prezime</string>
+    <string name="checkout_econtext_phone_number_hint">Telefonski broj</string>
+    <string name="checkout_econtext_shopper_email_hint">Adresa e-pošte</string>
+
+    <string name="checkout_econtext_first_name_invalid">Ime nije valjano</string>
+    <string name="checkout_econtext_last_name_invalid">Prezime nije valjano</string>
+    <string name="checkout_econtext_phone_number_invalid">Nevažeći telefonski broj</string>
+    <string name="checkout_econtext_shopper_email_invalid">Nevažeća adresa e-pošte</string>
+</resources>

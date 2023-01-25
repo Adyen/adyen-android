@@ -109,11 +109,11 @@ class EContextView @JvmOverloads constructor(
             localizedContext
         )
         binding.textInputLayoutMobileNumber.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_EContext_MobileNumberInput,
+            R.style.AdyenCheckout_EContext_PhoneNumberInput,
             localizedContext
         )
         binding.textInputLayoutEmailAddress.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_EContext_EmailAddressInput,
+            R.style.AdyenCheckout_EContext_ShopperEmailInput,
             localizedContext
         )
     }

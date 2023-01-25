@@ -69,7 +69,7 @@
 
             <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_mobileNumber"
-                style="@style/AdyenCheckout.EContext.MobileNumberInput"
+                style="@style/AdyenCheckout.EContext.PhoneNumberInput"
                 android:autofillHints="phoneNational"
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -83,7 +83,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_emailAddress"
-            style="@style/AdyenCheckout.EContext.EmailAddressInput"
+            style="@style/AdyenCheckout.EContext.ShopperEmailInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>
