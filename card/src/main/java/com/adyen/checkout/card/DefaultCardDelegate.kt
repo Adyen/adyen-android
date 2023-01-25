@@ -74,7 +74,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList", "TooManyFunctions")
+@Suppress("LongParameterList", "TooManyFunctions", "LargeClass")
 internal class DefaultCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
@@ -195,6 +195,7 @@ internal class DefaultCardDelegate(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun fetchDelegatedAuthenticationData() {
         Logger.d(TAG, "fetchDelegatedAuthenticationData")
         coroutineScope.launch {
@@ -219,7 +220,8 @@ internal class DefaultCardDelegate(
             } catch (e: IncompatibleClassChangeError) {
                 Logger.e(
                     TAG,
-                    "delegatedAuthenticationData not set because Authentication SDK version is incompatible with compiled version."
+                    "delegatedAuthenticationData not set because " +
+                        "Authentication SDK version is incompatible with compiled version."
                 )
                 null
             } catch (e: NullPointerException) {

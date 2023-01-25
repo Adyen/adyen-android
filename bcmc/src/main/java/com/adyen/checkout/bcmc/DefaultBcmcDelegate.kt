@@ -133,6 +133,7 @@ internal class DefaultBcmcDelegate(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun fetchDelegatedAuthenticationData(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "fetchDelegatedAuthenticationData")
         coroutineScope.launch {
@@ -157,7 +158,8 @@ internal class DefaultBcmcDelegate(
             } catch (e: IncompatibleClassChangeError) {
                 Logger.e(
                     TAG,
-                    "delegatedAuthenticationData not set because Authentication SDK version is incompatible with compiled version."
+                    "delegatedAuthenticationData not set because " +
+                        "Authentication SDK version is incompatible with compiled version."
                 )
                 null
             } catch (e: NullPointerException) {

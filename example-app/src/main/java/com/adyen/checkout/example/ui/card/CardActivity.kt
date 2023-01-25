@@ -67,6 +67,7 @@ class CardActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun initAuthenticationLauncher() {
         try {
             authenticationLauncher = AuthenticationLauncher(this)
