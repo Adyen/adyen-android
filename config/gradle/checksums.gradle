@@ -36,7 +36,7 @@ if (!hasProperty("checksums")) {
         "androidx.browser:browser:1.4.0:8b6dfac591dd4b320351218bae97040e:MD5",
 
         // Google
-        "com.google.android.material:material:1.7.0:038a5afbf1e535e60c58d19ff296a283:MD5",
+        "com.google.android.material:material:1.8.0:be66d71684f2b388946239a6771f5b0f:MD5",
         "com.google.android.gms:play-services-wallet:19.1.0:3dc5c1194f1bc98ccb98b88633b50b52:MD5",
 
         // WeChatPay
