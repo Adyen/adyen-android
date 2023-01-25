@@ -34,7 +34,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.DefaultAddressRepository
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -143,7 +143,7 @@ class CardComponentProvider(
         defaultArgs: Bundle?,
         key: String?,
         componentCallback: ComponentCallback<CardComponentState>,
-        order: OrderRequest? = null,
+        order: Order? = null,
     ): CardComponent {
         assertSupported(paymentMethod)
 

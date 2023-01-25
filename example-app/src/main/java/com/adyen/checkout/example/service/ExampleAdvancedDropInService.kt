@@ -12,7 +12,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
@@ -180,11 +180,11 @@ class ExampleAdvancedDropInService : DropInService() {
         return OrderResponse.SERIALIZER.deserialize(orderJSON)
     }
 
-    private fun fetchPaymentMethods(order: OrderResponse? = null) {
+    private fun fetchPaymentMethods(orderResponse: OrderResponse? = null) {
         Logger.d(TAG, "fetchPaymentMethods")
         launch(Dispatchers.IO) {
-            val orderRequest = order?.let {
-                OrderRequest(
+            val order = orderResponse?.let {
+                Order(
                     pspReference = it.pspReference,
                     orderData = it.orderData
                 )
@@ -196,11 +196,11 @@ class ExampleAdvancedDropInService : DropInService() {
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                order = orderRequest
+                order = order
             )
             val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
             val result = if (paymentMethods != null) {
-                DropInServiceResult.Update(paymentMethods, order)
+                DropInServiceResult.Update(paymentMethods, orderResponse)
             } else {
                 Logger.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
@@ -271,10 +271,10 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    override fun onOrderCancel(orderRequest: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    override fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "cancelOrder")
-            val orderJson = OrderRequest.SERIALIZER.serialize(orderRequest)
+            val orderJson = Order.SERIALIZER.serialize(order)
             val request = createCancelOrderRequest(
                 orderJson,
                 keyValueStorage.getMerchantAccount()

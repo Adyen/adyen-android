@@ -45,3 +45,5 @@ data class OrderRequest(
         }
     }
 }
+
+typealias Order = OrderRequest
