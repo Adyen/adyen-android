@@ -80,7 +80,14 @@ class EContextView @JvmOverloads constructor(
                 }
                 binding.textInputLayoutLastName.error = localizedContext.getString(lastNameValidation.reason)
             }
-            // TODO phone number highlight validation error
+            val phoneNumberValidation = it.phoneNumberState.validation
+            if (phoneNumberValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.editTextMobileNumber.requestFocus()
+                }
+                binding.textInputLayoutMobileNumber.error = localizedContext.getString(phoneNumberValidation.reason)
+            }
             val emailAddressValidation = it.emailAddressState.validation
             if (emailAddressValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
