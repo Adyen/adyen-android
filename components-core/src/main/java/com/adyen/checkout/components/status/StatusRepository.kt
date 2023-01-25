@@ -30,11 +30,9 @@ import java.util.concurrent.TimeUnit
 
 interface StatusRepository {
 
-    fun poll(paymentData: String): Flow<Result<StatusResponse>>
+    fun poll(paymentData: String, maxPollingDuration: Long): Flow<Result<StatusResponse>>
 
     fun refreshStatus(paymentData: String)
-
-    fun getMaxPollingDuration(): Long
 }
 
 class DefaultStatusRepository constructor(
@@ -46,7 +44,7 @@ class DefaultStatusRepository constructor(
 
     private val refreshFlow: MutableSharedFlow<String> = MutableSharedFlow(extraBufferCapacity = 1)
 
-    override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
+    override fun poll(paymentData: String, maxPollingDuration: Long): Flow<Result<StatusResponse>> {
         val startTime = System.currentTimeMillis()
 
         val pollingFlow = flow {
@@ -58,7 +56,7 @@ class DefaultStatusRepository constructor(
                     currentCoroutineContext().cancel()
                 }
 
-                if (!updateDelay(startTime)) {
+                if (!updateDelay(startTime, maxPollingDuration)) {
                     emit(Result.failure(IllegalStateException("Max polling time has been exceeded.")))
                     currentCoroutineContext().cancel()
                 }
@@ -82,14 +80,14 @@ class DefaultStatusRepository constructor(
     /**
      * @return Returns if the delay time was updated. If not, that means the max polling time has been exceeded.
      */
-    private fun updateDelay(startTime: Long): Boolean {
+    private fun updateDelay(startTime: Long, maxPollingDuration: Long): Boolean {
         val elapsedTime = System.currentTimeMillis() - startTime
         return when {
             elapsedTime <= POLLING_THRESHOLD -> {
                 delay = POLLING_DELAY_FAST
                 true
             }
-            elapsedTime <= getMaxPollingDuration() -> {
+            elapsedTime <= maxPollingDuration -> {
                 delay = POLLING_DELAY_SLOW
                 true
             }
@@ -102,12 +100,9 @@ class DefaultStatusRepository constructor(
         refreshFlow.tryEmit(paymentData)
     }
 
-    override fun getMaxPollingDuration(): Long = MAX_POLLING_DURATION_MILLIS
-
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(60)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(60)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(120)

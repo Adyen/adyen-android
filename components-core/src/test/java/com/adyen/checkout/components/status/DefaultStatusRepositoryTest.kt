@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
@@ -43,7 +44,7 @@ internal class DefaultStatusRepositoryTest(
         whenever(statusService.checkStatus(any(), any())) doReturn response
 
         statusRepository
-            .poll("paymentData")
+            .poll("paymentData", DEFAULT_MAX_POLLING_DURATION)
             .test {
                 val expected = Result.success(response)
                 assertEquals(expected, awaitItem())
@@ -60,7 +61,7 @@ internal class DefaultStatusRepositoryTest(
             .doReturn(StatusResponse(resultCode = "final"), refreshResponse)
 
         statusRepository
-            .poll("paymentData")
+            .poll("paymentData", DEFAULT_MAX_POLLING_DURATION)
             .test {
                 skipItems(1)
 
@@ -71,5 +72,9 @@ internal class DefaultStatusRepositoryTest(
 
                 cancelAndIgnoreRemainingEvents()
             }
+    }
+
+    companion object {
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(10)
     }
 }

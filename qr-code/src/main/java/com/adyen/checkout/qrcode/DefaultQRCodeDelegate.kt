@@ -85,9 +85,11 @@ internal class DefaultQRCodeDelegate(
 
     private var statusPollingJob: Job? = null
 
-    init {
+    private var maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
+
+    private fun attachStatusTimer() {
         statusCountDownTimer.attach(
-            millisInFuture = statusRepository.getMaxPollingDuration(),
+            millisInFuture = maxPollingDurationMillis,
             countDownInterval = STATUS_POLLING_INTERVAL_MILLIS
         ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
@@ -95,7 +97,7 @@ internal class DefaultQRCodeDelegate(
     @VisibleForTesting
     internal fun onTimerTick(millisUntilFinished: Long) {
         val progressPercentage =
-            (HUNDRED * millisUntilFinished / statusRepository.getMaxPollingDuration()).toInt()
+            (HUNDRED * millisUntilFinished / maxPollingDurationMillis).toInt()
         _timerFlow.tryEmit(TimerData(millisUntilFinished, progressPercentage))
     }
 
@@ -147,14 +149,21 @@ internal class DefaultQRCodeDelegate(
         }
 
         val viewType = when (action.paymentMethodType) {
-            PaymentMethodTypes.PAY_NOW -> QrCodeComponentViewType.FULL_QR_CODE
-            else -> QrCodeComponentViewType.SIMPLE_QR_CODE
+            PaymentMethodTypes.PAY_NOW -> {
+                maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
+                QrCodeComponentViewType.FULL_QR_CODE
+            }
+            else -> {
+                maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
+                QrCodeComponentViewType.SIMPLE_QR_CODE
+            }
         }
         _viewFlow.tryEmit(viewType)
 
         // Notify UI to get the logo.
         createOutputData(null, action)
 
+        attachStatusTimer()
         startStatusPolling(paymentData, action)
         statusCountDownTimer.start()
     }
@@ -171,7 +180,7 @@ internal class DefaultQRCodeDelegate(
 
     private fun startStatusPolling(paymentData: String, action: QrCodeAction) {
         statusPollingJob?.cancel()
-        statusPollingJob = statusRepository.poll(paymentData)
+        statusPollingJob = statusRepository.poll(paymentData, maxPollingDurationMillis)
             .onEach { onStatus(it, action) }
             .launchIn(coroutineScope)
     }
@@ -300,6 +309,8 @@ internal class DefaultQRCodeDelegate(
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
+        private val PAY_NOW_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
         private const val HUNDRED = 100
 
         private const val IMAGE_NAME = "paynow-qr-code-%s.png"
