@@ -135,12 +135,14 @@ internal class BacsDirectDebitComponentTest(
 
     @Test
     fun `when setConfirmationMode is called then delegate setMode is called`() {
+        whenever(actionHandlingComponent.activeDelegate) doReturn bacsDirectDebitDelegate
         component.setConfirmationMode()
         verify(bacsDirectDebitDelegate).setMode(BacsDirectDebitMode.CONFIRMATION)
     }
 
     @Test
     fun `when setInputMode is called then delegate setMode is called`() {
+        whenever(actionHandlingComponent.activeDelegate) doReturn bacsDirectDebitDelegate
         component.setInputMode()
         verify(bacsDirectDebitDelegate).setMode(BacsDirectDebitMode.INPUT)
     }
