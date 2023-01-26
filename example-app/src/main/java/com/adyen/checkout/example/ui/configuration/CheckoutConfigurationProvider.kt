@@ -50,6 +50,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .add3ds2ActionConfiguration(get3DS2Configuration())
             .addRedirectActionConfiguration(getRedirectConfiguration())
             .setEnableRemovingStoredPaymentMethods(true)
+            .setShowPreselectedStoredPaymentMethod(false) // TODO SESSIONS: remove
 
         try {
             dropInConfigurationBuilder.setAmount(amount)

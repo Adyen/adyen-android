@@ -18,7 +18,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentProvider
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -94,18 +93,13 @@ class SessionsCardActivity : AppCompatActivity() {
     }
 
     private fun setupCardView(sessionsCardComponentData: SessionsCardComponentData) {
-        // TODO sessions: change back to CardComponent.PROVIDER
-        val cardComponent = CardComponentProvider().get(
-            savedStateRegistryOwner = this,
-            viewModelStoreOwner = this,
-            lifecycleOwner = this,
+        val cardComponent = CardComponent.PROVIDER.get(
+            activity = this,
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getCardConfiguration(),
             application = application,
-            defaultArgs = null,
-            key = null,
-            componentCallback = sessionsCardComponentData.callback
+            componentCallback = sessionsCardComponentData.callback,
         )
 
         this.cardComponent = cardComponent

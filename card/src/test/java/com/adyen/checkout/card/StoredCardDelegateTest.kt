@@ -15,10 +15,10 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -27,8 +27,9 @@ import com.adyen.checkout.components.ui.AddressInputModel
 import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.CardEncrypter
@@ -56,6 +57,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
@@ -265,6 +267,7 @@ internal class StoredCardDelegateTest(
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
                     assertFalse(storePaymentMethod)
+                    assertEquals(TEST_ORDER, order)
                     assertNull(shopperReference)
                     assertNull(socialSecurityNumber)
                     assertNull(billingAddress)
@@ -272,7 +275,6 @@ internal class StoredCardDelegateTest(
                     assertNull(amount)
                     assertNull(dateOfBirth)
                     assertNull(deliveryAddress)
-                    assertNull(order)
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
@@ -328,12 +330,41 @@ internal class StoredCardDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         cardEncrypter: CardEncrypter = this.cardEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
+        order: OrderRequest? = TEST_ORDER,
     ): StoredCardDelegate {
         return StoredCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -342,7 +373,8 @@ internal class StoredCardDelegateTest(
             componentParams = CardComponentParamsMapper(null).mapToParamsStored(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandlerOld(),
+            submitHandler = submitHandler,
+            order = order,
         )
     }
 
@@ -471,5 +503,6 @@ internal class StoredCardDelegateTest(
         private const val TEST_SECURITY_CODE = "737"
         private const val TEST_STORED_PM_ID = "1337"
         private val TEST_CARD_TYPE = CardType(cardBrand = CardBrand.MASTERCARD)
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

@@ -84,7 +84,7 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-    private val submitHandler: SubmitHandler,
+    private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
 
     private val inputData: CardInputData = CardInputData()
@@ -118,20 +118,14 @@ internal class DefaultCardDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<CardComponentState> = bufferedChannel()
-    override val submitFlow: Flow<CardComponentState> = submitChannel.receiveAsFlow()
-
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+    override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
-        // TODO SESSIONS: apply to all delegates
-        submitHandler.initialize(coroutineScope, componentStateFlow, submitChannel, _uiStateFlow)
+        submitHandler.initialize(coroutineScope, componentStateFlow)
 
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey()
@@ -202,7 +196,7 @@ internal class DefaultCardDelegate(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        submitHandler.setInteractionBlocked(_uiStateFlow, isInteractionBlocked)
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     private fun onInputDataChanged() {
@@ -433,12 +427,7 @@ internal class DefaultCardDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state = state)
     }
 
     // Validation
