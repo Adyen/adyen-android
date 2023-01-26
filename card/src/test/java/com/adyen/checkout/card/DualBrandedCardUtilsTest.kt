@@ -1,6 +1,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.util.DualBrandedCardUtils
@@ -19,7 +20,7 @@ internal class DualBrandedCardUtilsTest {
     fun testDualBrandSortingSingleItemList() {
         val detectedCards = listOf(
             DetectedCardType(
-                cardType = CardType.CARTEBANCAIRE,
+                cardType = CardType(cardBrand = CardBrand.CARTEBANCAIRE),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -35,7 +36,7 @@ internal class DualBrandedCardUtilsTest {
     fun testDualBrandVisaAndCarteBancaire() {
         val detectedCards = listOf(
             DetectedCardType(
-                cardType = CardType.CARTEBANCAIRE,
+                cardType = CardType(cardBrand = CardBrand.CARTEBANCAIRE),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -44,7 +45,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.VISA,
+                cardType = CardType(cardBrand = CardBrand.VISA),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -56,7 +57,7 @@ internal class DualBrandedCardUtilsTest {
 
         val sortedCards = listOf(
             DetectedCardType(
-                cardType = CardType.VISA,
+                cardType = CardType(cardBrand = CardBrand.VISA),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -65,7 +66,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.CARTEBANCAIRE,
+                cardType = CardType(cardBrand = CardBrand.CARTEBANCAIRE),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -82,7 +83,7 @@ internal class DualBrandedCardUtilsTest {
     fun testDualBrandVisaAndCarteBancaireAlreadySorted() {
         val detectedCards = listOf(
             DetectedCardType(
-                cardType = CardType.VISA,
+                cardType = CardType(cardBrand = CardBrand.VISA),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -91,7 +92,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.CARTEBANCAIRE,
+                cardType = CardType(cardBrand = CardBrand.CARTEBANCAIRE),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -103,7 +104,7 @@ internal class DualBrandedCardUtilsTest {
 
         val sortedCards = listOf(
             DetectedCardType(
-                cardType = CardType.VISA,
+                cardType = CardType(cardBrand = CardBrand.VISA),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -112,7 +113,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.CARTEBANCAIRE,
+                cardType = CardType(cardBrand = CardBrand.CARTEBANCAIRE),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -129,7 +130,7 @@ internal class DualBrandedCardUtilsTest {
     fun testDualBrandPlccAndMasterCard() {
         val detectedCards = listOf(
             DetectedCardType(
-                cardType = CardType.MASTERCARD,
+                cardType = CardType(cardBrand = CardBrand.MASTERCARD),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -138,7 +139,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.UNKNOWN.apply { txVariant = "plcc_mastercard" },
+                cardType = CardType(txVariant = "plcc_mastercard"),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -150,7 +151,7 @@ internal class DualBrandedCardUtilsTest {
 
         val sortedCards = listOf(
             DetectedCardType(
-                cardType = CardType.UNKNOWN.apply { txVariant = "plcc_mastercard" },
+                cardType = CardType(txVariant = "plcc_mastercard"),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -159,7 +160,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.MASTERCARD,
+                cardType = CardType(cardBrand = CardBrand.MASTERCARD),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -176,7 +177,7 @@ internal class DualBrandedCardUtilsTest {
     fun testDualBrandPlccAndMasterCardAlreadySorted() {
         val detectedCards = listOf(
             DetectedCardType(
-                cardType = CardType.UNKNOWN.apply { txVariant = "plcc_mastercard" },
+                cardType = CardType(txVariant = "plcc_mastercard"),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -185,7 +186,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.MASTERCARD,
+                cardType = CardType(cardBrand = CardBrand.MASTERCARD),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -197,7 +198,7 @@ internal class DualBrandedCardUtilsTest {
 
         val sortedCards = listOf(
             DetectedCardType(
-                cardType = CardType.UNKNOWN.apply { txVariant = "plcc_mastercard" },
+                cardType = CardType(txVariant = "plcc_mastercard"),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
@@ -206,7 +207,7 @@ internal class DualBrandedCardUtilsTest {
                 panLength = null,
             ),
             DetectedCardType(
-                cardType = CardType.MASTERCARD,
+                cardType = CardType(cardBrand = CardBrand.MASTERCARD),
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,

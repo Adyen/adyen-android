@@ -80,7 +80,7 @@ internal class CardComponentParamsMapper(
             paymentMethod.brands.orEmpty().isNotEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from API brands")
                 paymentMethod.brands.orEmpty().map {
-                    CardType.getByBrandName(it)
+                    CardType(txVariant = it)
                 }
             }
             else -> {

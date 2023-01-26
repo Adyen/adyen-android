@@ -15,20 +15,21 @@ import app.cash.turbine.testIn
 import com.adyen.checkout.card.DefaultCardDelegate.Companion.BIN_VALUE_EXTENDED_LENGTH
 import com.adyen.checkout.card.DefaultCardDelegate.Companion.BIN_VALUE_LENGTH
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.test.TestAddressRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository
-import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -40,6 +41,7 @@ import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.CardEncrypter
@@ -264,7 +266,7 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `When a card brand is detected, isCardListVisible should be false`() = runTest {
-            val supportedCardTypes = listOf(CardType.VISA)
+            val supportedCardTypes = listOf(CardType(cardBrand = CardBrand.VISA))
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
@@ -283,7 +285,7 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `When a card brand is not detected, isCardListVisible should be true`() = runTest {
-            val supportedCardTypes = listOf(CardType.VISA)
+            val supportedCardTypes = listOf(CardType(cardBrand = CardBrand.VISA))
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
@@ -323,7 +325,11 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `detect card type repository returns supported cards, then output data should contain them`() = runTest {
-            val supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+            val supportedCardTypes = listOf(
+                CardType(cardBrand = CardBrand.VISA),
+                CardType(cardBrand = CardBrand.MASTERCARD),
+                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+            )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
@@ -349,7 +355,10 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `detect card type repository returns unsupported cards, then output data should filter them`() = runTest {
-            val supportedCardTypes = listOf(CardType.VISA, CardType.AMERICAN_EXPRESS)
+            val supportedCardTypes = listOf(
+                CardType(cardBrand = CardBrand.VISA),
+                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+            )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
@@ -375,7 +384,10 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `detect card type repository returns dual branded cards, then output data should be good`() = runTest {
-            val supportedCardTypes = listOf(CardType.BCMC, CardType.MAESTRO)
+            val supportedCardTypes = listOf(
+                CardType(cardBrand = CardBrand.BCMC),
+                CardType(cardBrand = CardBrand.MAESTRO)
+            )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
@@ -486,9 +498,9 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `input data with custom config is valid, then output data should be good`() = runTest {
             val cardBrands = listOf(
-                CardListItem(CardType.VISA, true, Environment.TEST),
-                CardListItem(CardType.MASTERCARD, false, Environment.TEST),
-                CardListItem(CardType.AMERICAN_EXPRESS, false, Environment.TEST)
+                CardListItem(CardType(cardBrand = CardBrand.VISA), true, Environment.TEST),
+                CardListItem(CardType(cardBrand = CardBrand.MASTERCARD), false, Environment.TEST),
+                CardListItem(CardType(cardBrand = CardBrand.AMERICAN_EXPRESS), false, Environment.TEST)
             )
             val supportedCardTypes = cardBrands.map { it.cardType }
             val installmentConfiguration = InstallmentConfiguration(
@@ -700,7 +712,7 @@ internal class DefaultCardDelegateTest(
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
-                assertEquals(CardType.VISA, componentState.cardType)
+                assertEquals(CardType(cardBrand = CardBrand.VISA), componentState.cardType)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -767,7 +779,7 @@ internal class DefaultCardDelegateTest(
                     createDetectedCardType(),
                     createDetectedCardType().copy(
                         isSelected = true,
-                        cardType = CardType.VISA
+                        cardType = CardType(cardBrand = CardBrand.VISA)
                     )
                 )
 
@@ -788,9 +800,9 @@ internal class DefaultCardDelegateTest(
                         addressUIState = addressUIState,
                         installmentOptions = listOf(installmentModel),
                         cardBrands = listOf(
-                            CardListItem(CardType.VISA, false, Environment.TEST),
-                            CardListItem(CardType.MASTERCARD, false, Environment.TEST),
-                            CardListItem(CardType.AMERICAN_EXPRESS, false, Environment.TEST)
+                            CardListItem(CardType(cardBrand = CardBrand.VISA), false, Environment.TEST),
+                            CardListItem(CardType(cardBrand = CardBrand.MASTERCARD), false, Environment.TEST),
+                            CardListItem(CardType(cardBrand = CardBrand.AMERICAN_EXPRESS), false, Environment.TEST)
                         ),
                     )
                 )
@@ -803,7 +815,7 @@ internal class DefaultCardDelegateTest(
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
-                assertEquals(CardType.VISA, componentState.cardType)
+                assertEquals(CardType(cardBrand = CardBrand.VISA), componentState.cardType)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -831,7 +843,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals("12", encryptedPassword)
                     assertEquals("funding_source_1", fundingSource)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
-                    assertEquals(CardType.VISA.txVariant, brand)
+                    assertEquals(CardBrand.VISA.txVariant, brand)
                     assertNull(storedPaymentMethodId)
                     assertEquals("2.2.11", threeDS2SdkVersion)
                 }
@@ -911,10 +923,12 @@ internal class DefaultCardDelegateTest(
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        order: OrderRequest? = null,
     ): DefaultCardDelegate {
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = paymentMethod,
+            order = order,
             publicKeyRepository = publicKeyRepository,
             componentParams = CardComponentParamsMapper(null).mapToParamsDefault(configuration, paymentMethod),
             cardEncrypter = cardEncrypter,
@@ -931,7 +945,7 @@ internal class DefaultCardDelegateTest(
     private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
         return CardConfiguration
             .Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setSupportedCardTypes(CardType.VISA)
+            .setSupportedCardTypes(CardType(cardBrand = CardBrand.VISA))
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -951,7 +965,11 @@ internal class DefaultCardDelegateTest(
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
             .setShowStorePaymentField(false)
-            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+            .setSupportedCardTypes(
+                CardType(cardBrand = CardBrand.VISA),
+                CardType(cardBrand = CardBrand.MASTERCARD),
+                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+            )
     }
 
     private fun createOutputData(
@@ -970,14 +988,20 @@ internal class DefaultCardDelegateTest(
         holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
         showStorePaymentField: Boolean = true,
         detectedCardTypes: List<DetectedCardType> =
-            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType.VISA)),
+            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType(cardBrand = CardBrand.VISA))),
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
         installmentOptions: List<InstallmentModel> = emptyList(),
         isDualBranded: Boolean = false,
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
-        cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true, Environment.TEST)),
+        cardBrands: List<CardListItem> = listOf(
+            CardListItem(
+                CardType(cardBrand = CardBrand.VISA),
+                true,
+                Environment.TEST
+            )
+        ),
         isCardListVisible: Boolean = true
     ): CardOutputData {
         return CardOutputData(
@@ -1009,7 +1033,7 @@ internal class DefaultCardDelegateTest(
     }
 
     private fun createDetectedCardType(
-        cardType: CardType = CardType.MASTERCARD,
+        cardType: CardType = CardType(cardBrand = CardBrand.MASTERCARD),
         isReliable: Boolean = true,
         enableLuhnCheck: Boolean = true,
         cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,

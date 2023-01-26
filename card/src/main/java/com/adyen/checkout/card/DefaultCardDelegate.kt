@@ -31,6 +31,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.AddressRepository
@@ -80,6 +81,7 @@ internal class DefaultCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: CardComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
@@ -738,12 +740,14 @@ internal class DefaultCardDelegate(
 
     private fun makePaymentComponentData(
         cardPaymentMethod: CardPaymentMethod,
-        stateOutputData: CardOutputData
+        stateOutputData: CardOutputData,
     ): PaymentComponentData<CardPaymentMethod> {
-        return PaymentComponentData<CardPaymentMethod>().apply {
-            paymentMethod = cardPaymentMethod
-            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable
-            shopperReference = componentParams.shopperReference
+        return PaymentComponentData(
+            paymentMethod = cardPaymentMethod,
+            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable,
+            shopperReference = componentParams.shopperReference,
+            order = order,
+        ).apply {
             if (isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
             }

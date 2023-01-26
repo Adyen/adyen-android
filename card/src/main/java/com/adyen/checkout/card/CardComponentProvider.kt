@@ -34,6 +34,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.DefaultAddressRepository
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -94,6 +95,7 @@ class CardComponentProvider(
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
+                order = null, // TODO use argument when all providers are refactored
                 analyticsRepository = analyticsRepository,
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
@@ -146,6 +148,7 @@ class CardComponentProvider(
         defaultArgs: Bundle?,
         key: String?,
         componentCallback: ComponentCallback<CardComponentState>,
+        order: Order? = null,
     ): CardComponent {
         assertSupported(paymentMethod)
 
@@ -175,6 +178,7 @@ class CardComponentProvider(
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
+                order = order,
                 analyticsRepository = analyticsRepository,
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
@@ -250,6 +254,7 @@ class CardComponentProvider(
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
+                order = checkoutSession.order,
                 analyticsRepository = analyticsRepository,
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,

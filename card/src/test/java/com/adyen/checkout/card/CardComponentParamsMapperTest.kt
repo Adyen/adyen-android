@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.GenericComponentParams
@@ -53,7 +54,7 @@ internal class CardComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2
         )
             .setHolderNameRequired(true)
-            .setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
+            .setSupportedCardTypes(CardType(cardBrand = CardBrand.DINERS), CardType(cardBrand = CardBrand.MAESTRO))
             .setShopperReference(shopperReference)
             .setShowStorePaymentField(false)
             .setHideCvc(true)
@@ -72,7 +73,10 @@ internal class CardComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
             isHolderNameRequired = true,
-            supportedCardTypes = listOf(CardType.DINERS, CardType.MAESTRO),
+            supportedCardTypes = listOf(
+                CardType(cardBrand = CardBrand.DINERS),
+                CardType(cardBrand = CardBrand.MAESTRO)
+            ),
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
             isSubmitButtonVisible = false,
@@ -125,15 +129,20 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when supported card types are set in the card configuration then they should be used in the params`() {
         val cardConfiguration = getCardConfigurationBuilder()
-            .setSupportedCardTypes(CardType.MAESTRO, CardType.BCMC)
+            .setSupportedCardTypes(CardType(cardBrand = CardBrand.MAESTRO), CardType(cardBrand = CardBrand.BCMC))
             .build()
 
-        val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
+        val paymentMethod = PaymentMethod(
+            brands = listOf(
+                CardBrand.VISA.txVariant,
+                CardBrand.MASTERCARD.txVariant
+            )
+        )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(CardType.MAESTRO, CardType.BCMC)
+            supportedCardTypes = listOf(CardType(cardBrand = CardBrand.MAESTRO), CardType(cardBrand = CardBrand.BCMC))
         )
 
         assertEquals(expected, params)
@@ -143,12 +152,17 @@ internal class CardComponentParamsMapperTest {
     fun `when there are any restricted card brand in payment method,they are removed from the params`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
         val paymentMethod =
-            PaymentMethod(brands = listOf(RestrictedCardType.NYCE.txVariant, CardType.MASTERCARD.txVariant))
+            PaymentMethod(
+                brands = listOf(
+                    RestrictedCardType.NYCE.txVariant,
+                    CardBrand.MASTERCARD.txVariant
+                )
+            )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(CardType.MASTERCARD)
+            supportedCardTypes = listOf(CardType(cardBrand = CardBrand.MASTERCARD))
         )
 
         assertEquals(expected, params)
@@ -159,12 +173,20 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val paymentMethod = PaymentMethod(brands = listOf(CardType.VISA.txVariant, CardType.MASTERCARD.txVariant))
+        val paymentMethod = PaymentMethod(
+            brands = listOf(
+                CardBrand.VISA.txVariant,
+                CardBrand.MASTERCARD.txVariant
+            )
+        )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD)
+            supportedCardTypes = listOf(
+                CardType(cardBrand = CardBrand.VISA),
+                CardType(cardBrand = CardBrand.MASTERCARD)
+            )
         )
 
         assertEquals(expected, params)

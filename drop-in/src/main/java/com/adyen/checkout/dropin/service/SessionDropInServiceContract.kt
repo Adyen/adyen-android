@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin.service
 
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 // TODO SESSIONS: docs
@@ -19,5 +19,5 @@ interface SessionDropInServiceContract {
     fun onAdditionalDetails(actionComponentData: ActionComponentData): Boolean = false
     fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
     fun onOrderRequest(): Boolean = false
-    fun onOrderCancel(orderRequest: OrderRequest, shouldUpdatePaymentMethods: Boolean): Boolean = false
+    fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean): Boolean = false
 }

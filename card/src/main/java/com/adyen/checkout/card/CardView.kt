@@ -20,6 +20,7 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -291,7 +292,7 @@ internal class CardView @JvmOverloads constructor(
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
             // TODO: 29/01/2021 get this logic from OutputData
-            val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
+            val isAmex = detectedCardTypes.any { it.cardType == CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 
             if (detectedCardTypes.size == 1 &&

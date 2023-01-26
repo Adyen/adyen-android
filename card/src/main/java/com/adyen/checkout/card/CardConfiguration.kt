@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 import android.content.Context
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.ButtonConfiguration
 import com.adyen.checkout.components.base.ButtonConfigurationBuilder
@@ -265,9 +266,9 @@ class CardConfiguration private constructor(
 
     companion object {
         val DEFAULT_SUPPORTED_CARDS_LIST: List<CardType> = listOf(
-            CardType.VISA,
-            CardType.AMERICAN_EXPRESS,
-            CardType.MASTERCARD
+            CardType(cardBrand = CardBrand.VISA),
+            CardType(cardBrand = CardBrand.AMERICAN_EXPRESS),
+            CardType(cardBrand = CardBrand.MASTERCARD)
         )
     }
 }

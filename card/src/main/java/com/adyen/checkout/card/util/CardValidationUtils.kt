@@ -9,6 +9,7 @@ package com.adyen.checkout.card.util
 
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -128,8 +129,9 @@ object CardValidationUtils {
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
             cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
-            cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
-            cardType?.cardType != CardType.AMERICAN_EXPRESS &&
+            cardType?.cardType == CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) &&
+                length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
+            cardType?.cardType != CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) &&
                 length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState
         }

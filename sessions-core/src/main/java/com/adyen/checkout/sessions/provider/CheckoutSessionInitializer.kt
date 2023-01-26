@@ -9,6 +9,7 @@
 package com.adyen.checkout.sessions.provider
 
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.sessions.CheckoutSession
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
     configuration: Configuration,
+    private val order: Order?,
 ) {
     private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
     private val sessionService = SessionService(httpClient)
@@ -29,10 +31,10 @@ internal class CheckoutSessionInitializer(
     suspend fun setupSession(): CheckoutSessionResult {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
-            order = null
+            order = order,
         ).fold(
             onSuccess = {
-                return CheckoutSessionResult.Success(CheckoutSession(it))
+                return CheckoutSessionResult.Success(CheckoutSession(it, order))
             },
             onFailure = {
                 return CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))
