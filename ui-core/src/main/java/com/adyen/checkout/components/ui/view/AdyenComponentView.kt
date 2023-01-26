@@ -36,6 +36,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.lang.ref.WeakReference
 
 /**
  * A View that can display input and fill in details for a Component.
@@ -59,7 +60,8 @@ class AdyenComponentView @JvmOverloads constructor(
     private var isInteractionBlocked = false
 
     private var componentView: ComponentView? = null
-    private var componentViewType: ComponentViewType? = null
+
+    private var attachedComponent = WeakReference<Component?>(null)
 
     init {
         isVisible = isInEditMode
@@ -76,6 +78,10 @@ class AdyenComponentView @JvmOverloads constructor(
         component: T,
         lifecycleOwner: LifecycleOwner
     ) where T : ViewableComponent, T : Component {
+        if (component == attachedComponent.get()) return
+
+        attachedComponent = WeakReference(component)
+
         component.viewFlow
             .onEach { componentViewType ->
                 binding.frameLayoutComponentContainer.removeAllViews()
@@ -110,7 +116,6 @@ class AdyenComponentView @JvmOverloads constructor(
     ) {
         val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
-        this.componentViewType = viewType
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 

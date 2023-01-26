@@ -76,7 +76,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return whether the view was successfully changed.
      */
     fun setConfirmationMode(): Boolean {
-        return bacsDelegate.setMode(BacsDirectDebitMode.CONFIRMATION)
+        return (delegate as? BacsDirectDebitDelegate)?.setMode(BacsDirectDebitMode.CONFIRMATION) ?: false
     }
 
     /**
@@ -85,7 +85,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return whether the view was successfully changed.
      */
     fun setInputMode(): Boolean {
-        return bacsDelegate.setMode(BacsDirectDebitMode.INPUT)
+        return (delegate as? BacsDirectDebitDelegate)?.setMode(BacsDirectDebitMode.INPUT) ?: false
     }
 
     /**
@@ -94,7 +94,7 @@ class BacsDirectDebitComponent internal constructor(
      * @return Whether back press has been handled or not.
      */
     fun handleBackPress(): Boolean {
-        return bacsDelegate.handleBackPress()
+        return (delegate as? BacsDirectDebitDelegate)?.handleBackPress() ?: false
     }
 
     override fun isConfirmationRequired(): Boolean = bacsDelegate.isConfirmationRequired()
