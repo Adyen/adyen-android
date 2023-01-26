@@ -71,6 +71,7 @@ dependencies {
     api project(':sepa')
     api project(':seven-eleven')
     api project(':sessions-core')
+    api project(':ach')
 
     // Dependencies
     implementation libraries.androidx.recyclerview

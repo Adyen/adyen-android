@@ -12,6 +12,9 @@ package com.adyen.checkout.dropin
 
 import android.app.Application
 import androidx.fragment.app.Fragment
+import com.adyen.checkout.ach.AchComponent
+import com.adyen.checkout.ach.AchComponentProvider
+import com.adyen.checkout.ach.AchConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
@@ -301,6 +304,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey = clientKey
         )
         SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SevenElevenConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+        AchComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> AchConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -661,6 +669,16 @@ internal fun getComponentFor(
                 configuration = sevenElevenConfiguration,
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<SevenElevenPaymentMethod>>,
+            )
+        }
+        AchComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val achConfiguration: AchConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            AchComponentProvider(dropInParams).get(
+                owner = fragment,
+                paymentMethod = paymentMethod,
+                configuration = achConfiguration,
+                application = fragment.requireApplication(),
             )
         }
         else -> {

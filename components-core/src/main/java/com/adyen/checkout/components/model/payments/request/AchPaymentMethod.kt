@@ -18,15 +18,15 @@ import org.json.JSONObject
 @Parcelize
 data class AchPaymentMethod(
     override var type: String? = null,
-    var bankAccountNumber: String? = null,
-    var bankLocationId: String? = null,
+    var encryptedBankAccountNumber: String? = null,
+    var encryptedBankLocationId: String? = null,
     var ownerName: String? = null,
 ) : PaymentMethodDetails() {
 
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.ACH
-        private const val BANK_ACCOUNT_NUMBER = "bankAccountNumber"
-        private const val BANK_LOCATION_ID = "bankLocationId"
+        private const val ENCRYPTED_BANK_ACCOUNT_NUMBER = "encryptedBankAccountNumber"
+        private const val ENCRYPTED_BANK_LOCATION_ID = "encryptedBankLocationId"
         private const val OWNER_NAME = "ownerName"
 
         @JvmField
@@ -35,8 +35,8 @@ data class AchPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
-                        putOpt(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
-                        putOpt(BANK_LOCATION_ID, modelObject.bankLocationId)
+                        putOpt(ENCRYPTED_BANK_ACCOUNT_NUMBER, modelObject.encryptedBankAccountNumber)
+                        putOpt(ENCRYPTED_BANK_LOCATION_ID, modelObject.encryptedBankLocationId)
                         putOpt(OWNER_NAME, modelObject.ownerName)
                     }
                 } catch (e: JSONException) {
@@ -47,8 +47,8 @@ data class AchPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): AchPaymentMethod {
                 return AchPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
-                    bankAccountNumber = jsonObject.getStringOrNull(BANK_ACCOUNT_NUMBER),
-                    bankLocationId = jsonObject.getStringOrNull(BANK_LOCATION_ID),
+                    encryptedBankAccountNumber = jsonObject.getStringOrNull(ENCRYPTED_BANK_ACCOUNT_NUMBER),
+                    encryptedBankLocationId = jsonObject.getStringOrNull(ENCRYPTED_BANK_LOCATION_ID),
                     ownerName = jsonObject.getStringOrNull(OWNER_NAME),
                 )
             }

@@ -32,6 +32,7 @@ android {
 dependencies {
     api project(':action')
     api project(':ui-core')
+    api project(':cse')
 
     // Dependencies
     implementation libraries.material
