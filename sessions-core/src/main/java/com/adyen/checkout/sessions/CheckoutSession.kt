@@ -9,11 +9,13 @@
 package com.adyen.checkout.sessions
 
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 
 // TODO docs
 data class CheckoutSession(
-    val sessionSetupResponse: SessionSetupResponse
+    val sessionSetupResponse: SessionSetupResponse,
+    val order: Order?,
 ) {
     fun getPaymentMethod(paymentMethodType: String): PaymentMethod? {
         return sessionSetupResponse.paymentMethods?.paymentMethods.orEmpty().firstOrNull {

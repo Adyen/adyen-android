@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin.service
 
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 // TODO SESSIONS: check docs
@@ -157,8 +157,8 @@ interface DropInServiceContract {
      * orders/cancel/ endpoint. This method is called during a partial payment, when the user removes
      * their already paid gift cards either by using the remove button or cancelling Drop-in.
      *
-     * We provide [order], an [OrderRequest] object that contains a non-serialized version of the order
-     * to be cancelled. Use [OrderRequest.SERIALIZER] to serialize it to a [JSONObject].
+     * We provide [order], an [Order] object that contains a non-serialized version of the order
+     * to be cancelled. Use [Order.SERIALIZER] to serialize it to a [JSONObject].
      *
      * The [shouldUpdatePaymentMethods] flag indicates the next step you should take after the API call
      * is made:
@@ -178,7 +178,7 @@ interface DropInServiceContract {
      * @param order The data from order being cancelled.
      * @param shouldUpdatePaymentMethods indicates whether payment methods should be re-fetched and passed to Drop-in.
      */
-    fun onOrderCancel(orderRequest: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+    fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
         throw NotImplementedError("Method onOrderCancel is not implemented.")
     }
 }

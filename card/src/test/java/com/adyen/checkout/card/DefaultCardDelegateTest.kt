@@ -18,17 +18,17 @@ import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.test.TestAddressRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository
-import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.card.ui.model.CardListItem
-import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
+import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
@@ -40,6 +40,7 @@ import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.CardEncrypter
@@ -921,10 +922,12 @@ internal class DefaultCardDelegateTest(
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        order: OrderRequest? = null,
     ): DefaultCardDelegate {
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = paymentMethod,
+            order = order,
             publicKeyRepository = publicKeyRepository,
             componentParams = CardComponentParamsMapper(null).mapToParamsDefault(configuration, paymentMethod),
             cardEncrypter = cardEncrypter,

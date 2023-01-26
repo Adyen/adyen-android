@@ -9,6 +9,7 @@
 package com.adyen.checkout.sessions.provider
 
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.sessions.model.SessionModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -18,8 +19,9 @@ object CheckoutSessionProvider {
     suspend fun createSession(
         sessionModel: SessionModel,
         configuration: Configuration,
+        order: Order? = null,
     ): CheckoutSessionResult {
-        return CheckoutSessionInitializer(sessionModel, configuration).setupSession()
+        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession()
     }
 
     // TODO docs
@@ -28,8 +30,9 @@ object CheckoutSessionProvider {
         coroutineScope: CoroutineScope,
         sessionModel: SessionModel,
         configuration: Configuration,
+        order: Order? = null,
         callback: (CheckoutSessionResult) -> Unit
     ) {
-        CheckoutSessionInitializer(sessionModel, configuration).setupSession(coroutineScope, callback)
+        CheckoutSessionInitializer(sessionModel, configuration, order).setupSession(coroutineScope, callback)
     }
 }
