@@ -92,7 +92,7 @@ class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
         return EContextOutputData(
             firstNameState = validateFirstName(inputData.firstName),
             lastNameState = validateLastName(inputData.lastName),
-            phoneNumberState = validatePhoneNumber(inputData.mobileNumber),
+            phoneNumberState = validatePhoneNumber(inputData.mobileNumber, inputData.countryCode),
             emailAddressState = validateEmailAddress(inputData.emailAddress)
         )
     }
@@ -139,13 +139,15 @@ class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
         return FieldState(lastName, validation)
     }
 
-    private fun validatePhoneNumber(phoneNumber: String): FieldState<String> {
-        val validation = if (phoneNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(phoneNumber)) {
+    private fun validatePhoneNumber(phoneNumber: String, countryCode: String): FieldState<String> {
+        val sanitizedNumber = phoneNumber.trimStart('0')
+        val fullPhoneNumber = countryCode + sanitizedNumber
+        val validation = if (fullPhoneNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(fullPhoneNumber)) {
             Validation.Valid
         } else {
             Validation.Invalid(R.string.checkout_econtext_phone_number_invalid)
         }
-        return FieldState(phoneNumber, validation)
+        return FieldState(fullPhoneNumber, validation)
     }
 
     private fun validateEmailAddress(emailAddress: String): FieldState<String> {
