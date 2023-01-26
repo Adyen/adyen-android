@@ -140,6 +140,7 @@ class AdyenComponentView @JvmOverloads constructor(
                 buttonDelegate.onSubmit()
             }
         } else {
+            setInteractionBlocked(false)
             binding.payButton.isVisible = false
             binding.payButton.setOnClickListener(null)
         }
