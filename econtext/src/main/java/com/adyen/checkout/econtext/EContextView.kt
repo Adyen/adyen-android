@@ -36,7 +36,6 @@ class EContextView @JvmOverloads constructor(
 
     private val binding: EcontextViewBinding = EcontextViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val eContextInputData = EContextInputData()
     private var countryAdapter: CountryAdapter? = null
 
     private lateinit var localizedContext: Context
@@ -191,7 +190,7 @@ class EContextView @JvmOverloads constructor(
         val mobileNumberEditText = binding.editTextMobileNumber as? AdyenTextInputEditText
         mobileNumberEditText?.setOnChangeListener {
             delegate.updateInputData {
-                eContextInputData.mobileNumber = it.toString()
+                mobileNumber = it.toString()
             }
             binding.textInputLayoutMobileNumber.error = null
         }
@@ -209,7 +208,7 @@ class EContextView @JvmOverloads constructor(
         val emailAddressEditText = binding.editTextEmailAddress as? AdyenTextInputEditText
         emailAddressEditText?.setOnChangeListener {
             delegate.updateInputData {
-                eContextInputData.emailAddress = it.toString()
+                emailAddress = it.toString()
             }
             binding.textInputLayoutEmailAddress.error = null
         }
