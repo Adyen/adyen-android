@@ -10,7 +10,7 @@ package com.adyen.checkout.onlinebankingcz
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
@@ -30,7 +30,7 @@ class OnlineBankingCZComponent internal constructor(
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<
+        val PROVIDER: PaymentComponentProviderOld<
             OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration
             > = OnlineBankingCZComponentProvider()
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_CZ)

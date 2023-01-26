@@ -14,9 +14,9 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
@@ -37,7 +37,7 @@ class GiftCardComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<GiftCardComponentState>,
+    PaymentComponentOld<GiftCardComponentState>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -85,7 +85,8 @@ class GiftCardComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<GiftCardComponent, GiftCardConfiguration> =
+            GiftCardComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GIFTCARD)

@@ -15,10 +15,10 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.StoredPaymentComponentProviderOld
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
@@ -39,7 +39,7 @@ class BlikComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<BlikPaymentMethod>>,
+    PaymentComponentOld<PaymentComponentState<BlikPaymentMethod>>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -87,7 +87,7 @@ class BlikComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
+        val PROVIDER: StoredPaymentComponentProviderOld<BlikComponent, BlikConfiguration> = BlikComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BLIK)

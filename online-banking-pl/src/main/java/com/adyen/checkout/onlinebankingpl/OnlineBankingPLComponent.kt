@@ -10,7 +10,7 @@ package com.adyen.checkout.onlinebankingpl
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -31,7 +31,7 @@ class OnlineBankingPLComponent internal constructor(
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
+        val PROVIDER: PaymentComponentProviderOld<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
             OnlineBankingPLComponentProvider()
 
         @JvmField

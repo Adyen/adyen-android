@@ -16,7 +16,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -43,7 +43,7 @@ private val TAG = LogUtil.getTag()
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
+) : PaymentComponentProviderOld<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
     private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams)

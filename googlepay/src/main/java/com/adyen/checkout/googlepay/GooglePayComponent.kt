@@ -15,9 +15,9 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.toActionCallback
@@ -37,7 +37,7 @@ class GooglePayComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<GooglePayComponentState>,
+    PaymentComponentOld<GooglePayComponentState>,
     ActivityResultHandlingComponent,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -95,7 +95,7 @@ class GooglePayComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> =
+        val PROVIDER: PaymentComponentProviderOld<GooglePayComponent, GooglePayConfiguration> =
             GooglePayComponentProvider()
 
         @JvmField

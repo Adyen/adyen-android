@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.exception.CheckoutException
@@ -46,7 +46,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun attachComponent(component: PaymentComponent<*>) {
+    private fun attachComponent(component: PaymentComponentOld<*>) {
         if (component is ViewableComponent) {
             binding.componentView.attach(component, viewLifecycleOwner)
 

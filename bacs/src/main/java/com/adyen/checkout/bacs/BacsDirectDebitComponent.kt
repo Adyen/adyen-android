@@ -16,9 +16,9 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
@@ -38,7 +38,7 @@ class BacsDirectDebitComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<BacsDirectDebitComponentState>,
+    PaymentComponentOld<BacsDirectDebitComponentState>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -114,7 +114,7 @@ class BacsDirectDebitComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
+        val PROVIDER: PaymentComponentProviderOld<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
             BacsDirectDebitComponentProvider()
 
         @JvmField

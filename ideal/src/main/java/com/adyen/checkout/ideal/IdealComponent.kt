@@ -9,7 +9,7 @@ package com.adyen.checkout.ideal
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.ideal.IdealComponent.Companion.PROVIDER
@@ -34,6 +34,6 @@ class IdealComponent internal constructor(
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.IDEAL)
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<IdealComponent, IdealConfiguration> = IdealComponentProvider()
     }
 }

@@ -10,7 +10,7 @@ package com.adyen.checkout.onlinebankingsk
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
@@ -31,7 +31,7 @@ class OnlineBankingSKComponent internal constructor(
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_SK)
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<
+        val PROVIDER: PaymentComponentProviderOld<
             OnlineBankingComponent<OnlineBankingSKPaymentMethod>, OnlineBankingSKConfiguration
             > = OnlineBankingSKComponentProvider()
     }

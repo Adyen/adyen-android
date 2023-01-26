@@ -22,11 +22,10 @@ import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentProvider
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
@@ -306,7 +305,7 @@ internal fun getPaymentMethodAvailabilityCheck(
 }
 
 /**
- * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
+ * Provides a [PaymentComponentOld] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
  *
  * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param storedPaymentMethod The stored payment method to be parsed.
@@ -317,10 +316,10 @@ internal fun getComponentFor(
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<*> {
+): PaymentComponentOld<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
-        CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+        /*CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
             CardComponentProvider(dropInParams).get(
@@ -329,7 +328,7 @@ internal fun getComponentFor(
                 configuration = cardConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val blikConfig: BlikConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
@@ -347,7 +346,7 @@ internal fun getComponentFor(
 }
 
 /**
- * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
+ * Provides a [PaymentComponentOld] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
  *
  * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param paymentMethod The payment method to be parsed.
@@ -359,7 +358,7 @@ internal fun getComponentFor(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
-): PaymentComponent<*> {
+): PaymentComponentOld<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -392,7 +391,7 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             CardComponentProvider(dropInParams).get(
@@ -401,7 +400,7 @@ internal fun getComponentFor(
                 configuration = cardConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

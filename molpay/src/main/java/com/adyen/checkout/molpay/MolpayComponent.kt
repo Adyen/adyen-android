@@ -9,7 +9,7 @@ package com.adyen.checkout.molpay
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -31,7 +31,7 @@ class MolpayComponent internal constructor(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(

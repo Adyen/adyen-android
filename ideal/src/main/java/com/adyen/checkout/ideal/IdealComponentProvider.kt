@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
@@ -36,7 +36,7 @@ import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IdealComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : PaymentComponentProvider<IdealComponent, IdealConfiguration> {
+) : PaymentComponentProviderOld<IdealComponent, IdealConfiguration> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(overrideComponentParams)
 

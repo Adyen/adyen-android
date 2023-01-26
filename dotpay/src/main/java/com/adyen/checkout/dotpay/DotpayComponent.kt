@@ -9,7 +9,7 @@ package com.adyen.checkout.dotpay
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
@@ -30,7 +30,7 @@ class DotpayComponent internal constructor(
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = DotpayComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<DotpayComponent, DotpayConfiguration> = DotpayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)

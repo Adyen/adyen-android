@@ -16,7 +16,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.card.CardValidationMapper
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
@@ -37,7 +37,7 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
+) : PaymentComponentProviderOld<BcmcComponent, BcmcConfiguration> {
 
     private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams)
 

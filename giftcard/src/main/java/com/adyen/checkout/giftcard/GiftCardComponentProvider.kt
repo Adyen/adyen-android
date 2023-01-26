@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
@@ -37,7 +37,7 @@ import com.adyen.checkout.cse.DefaultGenericEncrypter
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GiftCardComponentProvider(
     overrideComponentParams: ComponentParams? = null
-) : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
+) : PaymentComponentProviderOld<GiftCardComponent, GiftCardConfiguration> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
 

@@ -9,7 +9,7 @@ package com.adyen.checkout.openbanking
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -30,7 +30,7 @@ class OpenBankingComponent internal constructor(
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> =
+        val PROVIDER: PaymentComponentProviderOld<OpenBankingComponent, OpenBankingConfiguration> =
             OpenBankingComponentProvider()
 
         @JvmField

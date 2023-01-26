@@ -14,9 +14,9 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
@@ -39,7 +39,7 @@ class SepaComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<SepaPaymentMethod>>,
+    PaymentComponentOld<PaymentComponentState<SepaPaymentMethod>>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -87,7 +87,7 @@ class SepaComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<SepaComponent, SepaConfiguration> = SepaComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SEPA)

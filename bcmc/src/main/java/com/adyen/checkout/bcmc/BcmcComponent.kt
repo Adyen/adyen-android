@@ -17,9 +17,9 @@ import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.mergeViewFlows
@@ -41,7 +41,7 @@ class BcmcComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<CardPaymentMethod>>,
+    PaymentComponentOld<PaymentComponentState<CardPaymentMethod>>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -89,7 +89,7 @@ class BcmcComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
+        val PROVIDER: PaymentComponentProviderOld<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BCMC)

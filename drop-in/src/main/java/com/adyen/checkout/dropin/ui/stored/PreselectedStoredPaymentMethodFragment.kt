@@ -18,7 +18,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.ui.util.PayButtonFormatter
@@ -56,7 +56,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private val storedPaymentMethod: StoredPaymentMethod by arguments(STORED_PAYMENT_KEY)
-    private lateinit var component: PaymentComponent<*>
+    private lateinit var component: PaymentComponentOld<*>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         if (storedPaymentMethod.type.isNullOrEmpty()) {

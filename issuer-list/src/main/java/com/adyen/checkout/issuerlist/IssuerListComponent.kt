@@ -14,7 +14,7 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentOld
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
@@ -36,7 +36,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<IssuerListPaymentMethodT>>,
+    PaymentComponentOld<PaymentComponentState<IssuerListPaymentMethodT>>,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
