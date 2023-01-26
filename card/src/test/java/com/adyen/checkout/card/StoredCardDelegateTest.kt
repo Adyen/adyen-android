@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 
 import app.cash.turbine.test
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -174,7 +175,7 @@ internal class StoredCardDelegateTest(
         fun `security code is empty with a no cvc card, then output data should be valid`() = runTest {
             delegate = createCardDelegate(
                 storedPaymentMethod = getStoredPaymentMethod(
-                    brand = CardType.BCMC.txVariant,
+                    brand = CardBrand.BCMC.txVariant,
                 )
             )
 
@@ -258,7 +259,7 @@ internal class StoredCardDelegateTest(
                     assertTrue(isValid)
                     assertEquals(TEST_CARD_LAST_FOUR, lastFourDigits)
                     assertEquals("", binValue)
-                    assertEquals(CardType.MASTERCARD, cardType)
+                    assertEquals(CardType(cardBrand = CardBrand.MASTERCARD), cardType)
                 }
 
                 val paymentComponentData = componentState.data
@@ -383,7 +384,11 @@ internal class StoredCardDelegateTest(
             .setHolderNameRequired(true)
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+            .setSupportedCardTypes(
+                CardType(cardBrand = CardBrand.VISA),
+                CardType(cardBrand = CardBrand.MASTERCARD),
+                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+            )
     }
 
     private fun createOutputData(
@@ -465,6 +470,6 @@ internal class StoredCardDelegateTest(
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
         private const val TEST_STORED_PM_ID = "1337"
-        private val TEST_CARD_TYPE = CardType.MASTERCARD
+        private val TEST_CARD_TYPE = CardType(cardBrand = CardBrand.MASTERCARD)
     }
 }
