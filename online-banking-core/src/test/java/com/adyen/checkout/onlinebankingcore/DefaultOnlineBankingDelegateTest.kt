@@ -15,7 +15,7 @@ import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
 import kotlinx.coroutines.CoroutineScope
@@ -183,7 +183,7 @@ internal class DefaultOnlineBankingDelegateTest(
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         termsAndConditionsUrl = TEST_URL,
         paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
-        submitHandler = SubmitHandler(),
+        submitHandler = SubmitHandlerOld(),
     )
 
     private fun getDefaultTestOnlineBankingConfigurationBuilder() = TestOnlineBankingConfiguration.Builder(

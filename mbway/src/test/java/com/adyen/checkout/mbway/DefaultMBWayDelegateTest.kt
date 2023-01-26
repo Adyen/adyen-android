@@ -13,7 +13,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -200,7 +200,7 @@ internal class DefaultMBWayDelegateTest(
         paymentMethod = PaymentMethod(),
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler(),
+        submitHandler = SubmitHandlerOld(),
     )
 
     private fun getDefaultMBWayConfigurationBuilder() = MBWayConfiguration.Builder(

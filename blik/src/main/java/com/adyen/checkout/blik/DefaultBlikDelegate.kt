@@ -21,7 +21,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -40,7 +40,7 @@ internal class DefaultBlikDelegate(
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandlerOld
 ) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()

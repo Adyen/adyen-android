@@ -38,7 +38,7 @@ import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -936,7 +936,7 @@ internal class DefaultCardDelegateTest(
             cardValidationMapper = cardValidationMapper,
             genericEncrypter = genericEncrypter,
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+            submitHandler = SubmitHandlerOld(),
         )
     }
 

@@ -14,7 +14,7 @@ import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.IssuerModel
@@ -57,7 +57,7 @@ internal class DefaultPayByBankDelegateTest(
             componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+            submitHandler = SubmitHandlerOld(),
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -148,7 +148,7 @@ internal class DefaultPayByBankDelegateTest(
                 issuers = emptyList()
             ),
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+            submitHandler = SubmitHandlerOld(),
         )
         delegate.viewFlow.test {
             assertEquals(null, expectMostRecentItem())
@@ -166,7 +166,7 @@ internal class DefaultPayByBankDelegateTest(
                 )
             ),
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+            submitHandler = SubmitHandlerOld(),
         )
         delegate.viewFlow.test {
             assertEquals(PayByBankComponentViewType, expectMostRecentItem())

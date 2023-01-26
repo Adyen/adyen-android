@@ -13,7 +13,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -198,7 +198,7 @@ internal class DefaultBlikDelegateTest(
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         paymentMethod = PaymentMethod(),
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler()
+        submitHandler = SubmitHandlerOld()
     )
 
     private fun getDefaultBlikConfigurationBuilder() = BlikConfiguration.Builder(

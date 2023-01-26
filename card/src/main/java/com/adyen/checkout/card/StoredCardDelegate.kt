@@ -31,7 +31,7 @@ import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
@@ -63,7 +63,7 @@ internal class StoredCardDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandlerOld
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType(cardBrand = CardBrand.BCMC))

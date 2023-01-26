@@ -84,7 +84,7 @@ internal class DefaultCardDelegate(
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
     private val genericEncrypter: GenericEncrypter,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandler,
 ) : CardDelegate {
 
     private val inputData: CardInputData = CardInputData()

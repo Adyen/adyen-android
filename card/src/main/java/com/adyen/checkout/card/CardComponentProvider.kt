@@ -38,7 +38,7 @@ import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.DefaultAddressRepository
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
@@ -102,7 +102,7 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandlerOld()
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -180,7 +180,7 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandlerOld()
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -251,7 +251,7 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandlerOld()
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -326,7 +326,7 @@ class CardComponentProvider(
                 analyticsRepository = analyticsRepository,
                 cardEncrypter = cardEncrypter,
                 publicKeyRepository = publicKeyRepository,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandlerOld()
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(

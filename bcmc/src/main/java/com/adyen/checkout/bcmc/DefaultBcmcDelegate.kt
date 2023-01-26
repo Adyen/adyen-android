@@ -28,7 +28,7 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -60,7 +60,7 @@ internal class DefaultBcmcDelegate(
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandlerOld
 ) : BcmcDelegate {
 
     private val inputData = BcmcInputData()

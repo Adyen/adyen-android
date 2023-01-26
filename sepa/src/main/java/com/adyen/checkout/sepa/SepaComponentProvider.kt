@@ -27,7 +27,7 @@ import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
+import com.adyen.checkout.components.ui.SubmitHandlerOld
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 
@@ -67,7 +67,7 @@ class SepaComponentProvider(
                     componentParams = componentParams,
                     paymentMethod = paymentMethod,
                     analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(),
+                    submitHandler = SubmitHandlerOld(),
                 )
 
                 val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
