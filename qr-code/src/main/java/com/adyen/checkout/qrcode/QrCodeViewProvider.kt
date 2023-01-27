@@ -22,17 +22,16 @@ internal object QrCodeViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentView {
-        return when (viewType) {
-            QrCodeComponentViewType.QR_CODE -> QrCodeView(context, attrs, defStyleAttr)
-            QrCodeComponentViewType.REDIRECT -> PaymentInProgressView(context, attrs, defStyleAttr)
-            else -> throw IllegalArgumentException("Unsupported view type")
-        }
+    ): ComponentView = when (viewType) {
+        QrCodeComponentViewType.SIMPLE_QR_CODE -> SimpleQRCodeView(context, attrs, defStyleAttr)
+        QrCodeComponentViewType.FULL_QR_CODE -> FullQRCodeView(context, attrs, defStyleAttr)
+        QrCodeComponentViewType.REDIRECT -> PaymentInProgressView(context, attrs, defStyleAttr)
+        else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
 
 internal enum class QrCodeComponentViewType : ComponentViewType {
-    QR_CODE, REDIRECT;
+    SIMPLE_QR_CODE, FULL_QR_CODE, REDIRECT;
 
     override val viewProvider: ViewProvider = QrCodeViewProvider
 }

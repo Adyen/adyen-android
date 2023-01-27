@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -24,9 +26,11 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionComponentCallback
+import com.adyen.checkout.components.extensions.toast
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -50,6 +54,15 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     private val action: Action by arguments(ACTION)
     private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (!isGranted) {
+                requireContext().toast(getString(R.string.checkout_permission_not_granted))
+            } else {
+                // TODO: trigger download image flow when user accept storage permission after checking permission type
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,10 +158,22 @@ internal class ActionComponentDialogFragment : DropInBottomSheetDialogFragment()
     }
 
     private fun handleError(componentError: ComponentError) {
-        when (componentError.exception) {
+        when (val exception = componentError.exception) {
             is CancellationException -> {
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
+            }
+            is PermissionException -> {
+                val requiredPermission = exception.requiredPermission
+                Logger.e(TAG, exception.message.orEmpty(), exception)
+                // TODO: checkout_rationale_title_storage_permission and checkout_rationale_message_storage_permission
+                // TODO: can be reused based on required permission
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.checkout_rationale_title_storage_permission)
+                    .setMessage(R.string.checkout_rationale_message_storage_permission)
+                    .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
+                    .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
             else -> {
                 Logger.e(TAG, componentError.errorMessage)

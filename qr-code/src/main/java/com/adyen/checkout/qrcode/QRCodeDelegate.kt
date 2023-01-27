@@ -14,6 +14,7 @@ import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import kotlinx.coroutines.flow.Flow
 
 interface QRCodeDelegate :
     ActionDelegate,
@@ -21,4 +22,9 @@ interface QRCodeDelegate :
     ViewableDelegate<QRCodeOutputData>,
     IntentHandlingDelegate,
     StatusPollingDelegate,
-    ViewProvidingDelegate
+    ViewProvidingDelegate {
+
+    val eventFlow: Flow<QrCodeUIEvent>
+
+    fun downloadQRImage()
+}

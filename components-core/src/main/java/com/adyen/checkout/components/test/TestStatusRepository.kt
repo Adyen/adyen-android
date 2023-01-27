@@ -13,7 +13,6 @@ import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import java.util.concurrent.TimeUnit
 
 /**
  * Test implementation of [StatusRepository]. This class should never be used in not test code as it does not actuall
@@ -25,11 +24,9 @@ class TestStatusRepository : StatusRepository {
 
     var pollingResults: List<Result<StatusResponse>> = emptyList()
 
-    override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
+    override fun poll(paymentData: String, maxPollingDuration: Long): Flow<Result<StatusResponse>> {
         return pollingResults.asFlow()
     }
 
     override fun refreshStatus(paymentData: String) = Unit
-
-    override fun getMaxPollingDuration(): Long = TimeUnit.MINUTES.toMillis(10)
 }

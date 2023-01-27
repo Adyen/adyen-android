@@ -31,6 +31,7 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.util.FileDownloader
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
@@ -82,6 +83,7 @@ class QRCodeComponentProvider(
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
+            fileDownloader = FileDownloader(application)
         )
     }
 

@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.qrcode
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
+import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ActionComponentData
@@ -32,6 +35,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.FileDownloader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -40,11 +44,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
@@ -52,6 +57,7 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
+    private val fileDownloader: FileDownloader
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -71,14 +77,19 @@ internal class DefaultQRCodeDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
+    private val eventChannel: Channel<QrCodeUIEvent> = bufferedChannel()
+    override val eventFlow: Flow<QrCodeUIEvent> = eventChannel.receiveAsFlow()
+
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private var statusPollingJob: Job? = null
 
-    init {
+    private var maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
+
+    private fun attachStatusTimer() {
         statusCountDownTimer.attach(
-            millisInFuture = statusRepository.getMaxPollingDuration(),
+            millisInFuture = maxPollingDurationMillis,
             countDownInterval = STATUS_POLLING_INTERVAL_MILLIS
         ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
@@ -86,7 +97,7 @@ internal class DefaultQRCodeDelegate(
     @VisibleForTesting
     internal fun onTimerTick(millisUntilFinished: Long) {
         val progressPercentage =
-            (HUNDRED * millisUntilFinished / statusRepository.getMaxPollingDuration()).toInt()
+            (HUNDRED * millisUntilFinished / maxPollingDurationMillis).toInt()
         _timerFlow.tryEmit(TimerData(millisUntilFinished, progressPercentage))
     }
 
@@ -137,11 +148,22 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        _viewFlow.tryEmit(QrCodeComponentViewType.QR_CODE)
+        val viewType = when (action.paymentMethodType) {
+            PaymentMethodTypes.PAY_NOW -> {
+                maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
+                QrCodeComponentViewType.FULL_QR_CODE
+            }
+            else -> {
+                maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
+                QrCodeComponentViewType.SIMPLE_QR_CODE
+            }
+        }
+        _viewFlow.tryEmit(viewType)
 
         // Notify UI to get the logo.
         createOutputData(null, action)
 
+        attachStatusTimer()
         startStatusPolling(paymentData, action)
         statusCountDownTimer.start()
     }
@@ -158,7 +180,7 @@ internal class DefaultQRCodeDelegate(
 
     private fun startStatusPolling(paymentData: String, action: QrCodeAction) {
         statusPollingJob?.cancel()
-        statusPollingJob = statusRepository.poll(paymentData)
+        statusPollingJob = statusRepository.poll(paymentData, maxPollingDurationMillis)
             .onEach { onStatus(it, action) }
             .launchIn(coroutineScope)
     }
@@ -181,7 +203,19 @@ internal class DefaultQRCodeDelegate(
 
     private fun createOutputData(statusResponse: StatusResponse?, action: QrCodeAction) {
         val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
-        val outputData = QRCodeOutputData(isValid, action.paymentMethodType, action.qrCodeData)
+
+        var qrImageUrl: String? = null
+        if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
+            val encodedQrCodeData = Uri.encode(action.qrCodeData)
+            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, encodedQrCodeData)
+        }
+
+        val outputData = QRCodeOutputData(
+            isValid = isValid,
+            paymentMethodType = action.paymentMethodType,
+            qrCodeData = action.qrCodeData,
+            qrImageUrl = qrImageUrl
+        )
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -249,14 +283,38 @@ internal class DefaultQRCodeDelegate(
         qrCodeData = null
     )
 
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    override fun downloadQRImage() {
+        val date: Long = System.currentTimeMillis()
+        val imageName = String.format(IMAGE_NAME, date)
+        val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
+        coroutineScope.launch {
+            fileDownloader.download(
+                outputData.qrImageUrl.orEmpty(),
+                imageName,
+                imageDirectory,
+                MIME_TYPE
+            ).fold(
+                onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
+                onFailure = { e -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(e)) }
+            )
+        }
+    }
+
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
+        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX, PaymentMethodTypes.PAY_NOW)
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
+        private val PAY_NOW_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
         private const val HUNDRED = 100
+
+        private const val IMAGE_NAME = "paynow-qr-code-%s.png"
+        private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
+        private const val MIME_TYPE = "image/png"
     }
 }

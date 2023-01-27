@@ -30,4 +30,7 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, șterge</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anulare</string>
     <string name="checkout_remove_stored_payment_method_body">Ștergeți metoda de plată memorată</string>
+    <string name="checkout_permission_not_granted">Nu se acordă permisiunea</string>
+    <string name="checkout_rationale_title_storage_permission">Solicitați permisiunea de stocare</string>
+    <string name="checkout_rationale_message_storage_permission">Pentru a salva această imagine pe dispozitivul dvs., trebuie să activați permisiunea de stocare</string>
 </resources>
