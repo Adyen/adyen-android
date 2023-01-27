@@ -8,6 +8,7 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
+import androidx.annotation.DrawableRes
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
@@ -21,13 +22,17 @@ class Adyen3DS2Configuration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
-    override val amount: Amount
+    override val amount: Amount,
+    @DrawableRes val merchantLogo: Int?
 ) : Configuration {
 
     /**
      * Builder to create a [Adyen3DS2Configuration].
      */
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
+
+        @DrawableRes
+        private var merchantLogo: Int? = null
 
         /**
          * Constructor for Builder with default values.
@@ -55,6 +60,19 @@ class Adyen3DS2Configuration private constructor(
             clientKey
         )
 
+
+        /**
+         * Set the merchant logo that will be shown for Delegated Authentication.
+         * If not set or null - default icon will be shown.
+         *
+         * @param merchantLogo The drawable resource id of the merchant logo
+         * @return [Adyen3DS2Configuration.Builder]
+         */
+        fun setMerchantLogo(@DrawableRes merchantLogo: Int?): Builder {
+            this.merchantLogo = merchantLogo
+            return this
+        }
+
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(
                 shopperLocale = shopperLocale,
@@ -62,6 +80,7 @@ class Adyen3DS2Configuration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
+                merchantLogo = merchantLogo
             )
         }
     }

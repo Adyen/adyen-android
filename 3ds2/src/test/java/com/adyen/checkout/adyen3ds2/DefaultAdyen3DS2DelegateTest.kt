@@ -99,7 +99,10 @@ internal class DefaultAdyen3DS2DelegateTest(
             defaultDispatcher = dispatcher,
             embeddedRequestorAppUrl = "embeddedRequestorAppUrl",
             base64Encoder = base64Encoder,
-            delegatedAuthentication = DelegatedAuthentication(SavedStateHandle()),
+            delegatedAuthentication = DelegatedAuthentication(
+                SavedStateHandle(),
+                configuration.merchantLogo
+            ),
             application = Application(),
         )
         delegate.initialize(coroutineScope = TestScope())

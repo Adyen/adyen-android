@@ -82,7 +82,7 @@ class Adyen3DS2ComponentProvider(
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
         val redirectHandler = DefaultRedirectHandler()
         val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
-        val delegatedAuthentication = DelegatedAuthentication(savedStateHandle)
+        val delegatedAuthentication = DelegatedAuthentication(savedStateHandle, configuration.merchantLogo)
         return DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,

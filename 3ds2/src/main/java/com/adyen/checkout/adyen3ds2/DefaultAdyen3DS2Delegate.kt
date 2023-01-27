@@ -96,6 +96,8 @@ internal class DefaultAdyen3DS2Delegate(
     private val _viewFlow = MutableStateFlow<ComponentViewType?>(Adyen3DS2ComponentViewType.REDIRECT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
+    override val authenticationTimerFlow: Flow<TimerData> = delegatedAuthentication.timeoutTimerFlow
+
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
@@ -619,7 +621,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
-    override fun getAuthenticationTimerFlow(): Flow<TimerData> = delegatedAuthentication.timeoutTimerFlow
+    override fun getMerchantLogo(): Int? = delegatedAuthentication.merchantLogo
 
     private fun closeTransaction() {
         currentTransaction?.close()

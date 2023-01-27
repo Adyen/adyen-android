@@ -9,6 +9,7 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Activity
+import androidx.annotation.DrawableRes
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
@@ -17,6 +18,8 @@ import com.adyen.checkout.components.status.model.TimerData
 import kotlinx.coroutines.flow.Flow
 
 interface DAProvidingDelegate {
+
+    val authenticationTimerFlow: Flow<TimerData>
 
     fun initAdyenAuthentication(authenticationLauncher: AuthenticationLauncher)
 
@@ -34,5 +37,6 @@ interface DAProvidingDelegate {
 
     fun onAuthenticationFailed(activity: Activity?)
 
-    fun getAuthenticationTimerFlow(): Flow<TimerData>
+    @DrawableRes
+    fun getMerchantLogo(): Int?
 }

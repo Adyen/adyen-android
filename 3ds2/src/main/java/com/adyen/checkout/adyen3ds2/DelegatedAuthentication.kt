@@ -11,6 +11,7 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Application
 import android.content.Context
 import android.os.CountDownTimer
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
@@ -27,7 +28,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions")
 internal class DelegatedAuthentication(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    @DrawableRes val merchantLogo: Int?
 ) {
 
     private var adyenAuthentication: AdyenAuthentication? = null

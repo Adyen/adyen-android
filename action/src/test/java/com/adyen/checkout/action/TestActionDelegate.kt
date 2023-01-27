@@ -135,6 +135,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(extraBufferCapacity = 1)
 
+    override val authenticationTimerFlow: Flow<TimerData> = flowOf()
+
     var uiCustomization: UiCustomization? = null
 
     var handleActionCalled = false
@@ -175,7 +177,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override fun onAuthenticationFailed(activity: Activity?) = Unit
 
-    override fun getAuthenticationTimerFlow(): Flow<TimerData> = flowOf()
+    override fun getMerchantLogo(): Int? = null
 
     override fun onCleared() = Unit
 }

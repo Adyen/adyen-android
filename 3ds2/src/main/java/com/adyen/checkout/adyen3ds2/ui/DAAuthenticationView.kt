@@ -77,6 +77,10 @@ internal class DAAuthenticationView @JvmOverloads constructor(
                 setLocalizedStrings(localizedContext)
                 collectTimerUpdates(activity, coroutineScope, delegate)
 
+                delegate.getMerchantLogo()?.let {
+                    binding.ivLogo.setImageResource(it)
+                }
+
                 binding.btnAuthorise.setOnClickListener {
                     coroutineScope.launch {
                         when (val authenticationResult = adyenAuthentication.authenticate(sdkInput)) {
@@ -160,7 +164,7 @@ internal class DAAuthenticationView @JvmOverloads constructor(
 
     private fun collectTimerUpdates(activity: Activity, coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
         coroutineScope.launch {
-            delegate.getAuthenticationTimerFlow().collect {
+            delegate.authenticationTimerFlow.collect {
                 withContext(Dispatchers.Main) {
                     setTimerData(it)
                 }

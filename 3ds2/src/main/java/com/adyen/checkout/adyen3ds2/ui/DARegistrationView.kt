@@ -107,7 +107,7 @@ internal class DARegistrationView @JvmOverloads constructor(
 
     private fun collectTimerUpdates(coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
         coroutineScope.launch {
-            delegate.getAuthenticationTimerFlow().collect {
+            delegate.authenticationTimerFlow.collect {
                 withContext(Dispatchers.Main) {
                     setTimerData(it)
                 }
