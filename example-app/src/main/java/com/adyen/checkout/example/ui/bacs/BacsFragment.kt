@@ -21,7 +21,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.example.databinding.FragmentBacsBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
@@ -57,7 +56,7 @@ class BacsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.paymentMethodFlow
+        viewModel.bacsComponentDataFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { setupBacsComponent(it) }
             .launchIn(lifecycleScope)
@@ -83,19 +82,18 @@ class BacsFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun setupBacsComponent(paymentMethod: PaymentMethod) {
+    private fun setupBacsComponent(bacsComponentData: BacsComponentData) {
         val bacsComponent = BacsDirectDebitComponent.PROVIDER.get(
-            this,
-            paymentMethod,
-            checkoutConfigurationProvider.getBacsConfiguration(),
-            requireActivity().application,
+            fragment = this,
+            paymentMethod = bacsComponentData.paymentMethod,
+            configuration = checkoutConfigurationProvider.getBacsConfiguration(),
+            application = requireActivity().application,
+            componentCallback = bacsComponentData.callback
         )
 
         this.bacsComponent = bacsComponent
 
         binding.componentView.attach(bacsComponent, viewLifecycleOwner)
-
-        bacsComponent.observe(viewLifecycleOwner, viewModel::onPaymentComponentEvent)
     }
 
     private fun onViewState(state: BacsViewState) {

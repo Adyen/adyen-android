@@ -12,9 +12,10 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
@@ -39,6 +40,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultBacsDirectDebitDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
 ) {
 
     private lateinit var delegate: DefaultBacsDirectDebitDelegate
@@ -379,8 +381,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = true,
                         mode = BacsDirectDebitMode.INPUT,
-
-                        )
+                    )
                 )
 
                 with(expectMostRecentItem()) {
@@ -408,6 +409,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
                 with(expectMostRecentItem()) {
                     assertTrue(isInputValid)
                     assertTrue(isValid)
+                    assertEquals(TEST_ORDER, data.order)
                 }
             }
         }
@@ -445,14 +447,43 @@ internal class DefaultBacsDirectDebitDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createBacsDelegate(
-        configuration: BacsDirectDebitConfiguration = getDefaultBacsConfigurationBuilder().build()
+        configuration: BacsDirectDebitConfiguration = getDefaultBacsConfigurationBuilder().build(),
+        order: OrderRequest? = TEST_ORDER,
     ) = DefaultBacsDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         paymentMethod = PaymentMethod(),
+        order = order,
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandlerOld()
+        submitHandler = submitHandler
     )
 
     private fun getDefaultBacsConfigurationBuilder() = BacsDirectDebitConfiguration.Builder(
@@ -463,5 +494,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

@@ -34,4 +34,6 @@ interface BacsDirectDebitDelegate :
     fun updateInputData(update: BacsDirectDebitInputData.() -> Unit)
 
     fun handleBackPress(): Boolean
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

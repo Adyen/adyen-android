@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -46,7 +45,8 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
 
-        bacsDirectDebitComponent.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
+        // Keeping generic component to use the observer from the BaseComponentDialogFragment
+        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
@@ -56,7 +56,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<BacsDirectDebitComponentState>) {
+    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
         when (event) {
             is PaymentComponentEvent.StateChanged -> {
                 // no ops

@@ -13,7 +13,6 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcComponentProvider
@@ -361,16 +360,16 @@ internal fun getComponentFor(
 ): PaymentComponentOld<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
-        BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val bacsConfiguration: BacsDirectDebitConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            BacsDirectDebitComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = bacsConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val bacsConfiguration: BacsDirectDebitConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            BacsDirectDebitComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = bacsConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
