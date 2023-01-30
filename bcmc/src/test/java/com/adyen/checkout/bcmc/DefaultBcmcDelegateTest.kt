@@ -12,12 +12,15 @@ import app.cash.turbine.test
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.test.TestCardEncrypter
@@ -43,6 +46,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultBcmcDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>,
 ) {
 
     private lateinit var testPublicKeyRepository: TestPublicKeyRepository
@@ -276,6 +280,7 @@ internal class DefaultBcmcDelegateTest(
                 with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertTrue(isInputValid)
+                    assertEquals(TEST_ORDER, data.order)
                 }
             }
         }
@@ -313,6 +318,33 @@ internal class DefaultBcmcDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createOutputData(
         cardNumber: FieldState<String>,
         expiryDate: FieldState<ExpiryDate>,
@@ -332,12 +364,13 @@ internal class DefaultBcmcDelegateTest(
     ) = DefaultBcmcDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
+        order = TEST_ORDER,
         publicKeyRepository = testPublicKeyRepository,
         componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
         cardValidationMapper = cardValidationMapper,
         cardEncrypter = cardEncrypter,
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandlerOld(),
+        submitHandler = submitHandler,
     )
 
     private fun getDefaultBcmcConfigurationBuilder() = BcmcConfiguration.Builder(
@@ -350,5 +383,6 @@ internal class DefaultBcmcDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CARD_NUMBER = "5555444433331111"
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

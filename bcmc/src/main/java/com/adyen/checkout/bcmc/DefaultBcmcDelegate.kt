@@ -22,13 +22,14 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -53,12 +54,13 @@ import kotlinx.coroutines.launch
 internal class DefaultBcmcDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
-    private val submitHandler: SubmitHandlerOld
+    private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>
 ) : BcmcDelegate {
 
     private val inputData = BcmcInputData()
@@ -77,18 +79,16 @@ internal class DefaultBcmcDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<PaymentComponentState<CardPaymentMethod>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitHandler.submitFlow
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
@@ -190,7 +190,9 @@ internal class DefaultBcmcDelegate(
     private fun createComponentState(
         outputData: BcmcOutputData = this.outputData
     ): PaymentComponentState<CardPaymentMethod> {
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
+        val paymentComponentData = PaymentComponentData<CardPaymentMethod>(
+            order = order,
+        )
 
         val publicKey = publicKey
 
@@ -232,12 +234,7 @@ internal class DefaultBcmcDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state)
     }
 
     private fun encryptCardData(
@@ -281,6 +278,10 @@ internal class DefaultBcmcDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()

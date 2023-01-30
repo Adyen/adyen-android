@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
-import com.adyen.checkout.bcmc.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentProvider
@@ -370,16 +369,16 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val bcmcConfiguration: BcmcConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            BcmcComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = bcmcConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val bcmcConfiguration: BcmcConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            BcmcComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = bcmcConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val blikConfiguration: BlikConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

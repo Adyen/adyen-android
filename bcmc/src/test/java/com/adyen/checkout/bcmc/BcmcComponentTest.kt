@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -43,6 +44,7 @@ internal class BcmcComponentTest(
     @Mock private val bcmcDelegate: BcmcDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<CardPaymentMethod>>,
 ) {
 
     private lateinit var component: BcmcComponent
@@ -56,6 +58,7 @@ internal class BcmcComponentTest(
             bcmcDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -64,6 +67,7 @@ internal class BcmcComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(bcmcDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -72,6 +76,7 @@ internal class BcmcComponentTest(
 
         verify(bcmcDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -105,7 +110,7 @@ internal class BcmcComponentTest(
     fun `when bcmc delegate view flow emits a value then component view flow should match that value`() = runTest {
         val bcmcDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(bcmcDelegate.viewFlow) doReturn bcmcDelegateViewFlow
-        component = BcmcComponent(bcmcDelegate, genericActionDelegate, actionHandlingComponent)
+        component = BcmcComponent(bcmcDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -121,7 +126,7 @@ internal class BcmcComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = BcmcComponent(bcmcDelegate, genericActionDelegate, actionHandlingComponent)
+        component = BcmcComponent(bcmcDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
