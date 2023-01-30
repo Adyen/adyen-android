@@ -13,7 +13,7 @@ import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationResult
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
-import com.adyen.checkout.adyen3ds2.databinding.ViewDelegatedAuthenticationBinding
+import com.adyen.checkout.adyen3ds2.databinding.DelegatedAuthenticationViewBinding
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
@@ -38,8 +38,8 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
     ),
     ComponentView {
 
-    private val binding: ViewDelegatedAuthenticationBinding =
-        ViewDelegatedAuthenticationBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: DelegatedAuthenticationViewBinding =
+        DelegatedAuthenticationViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
@@ -64,8 +64,10 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
                 delegate.onAuthenticationFailed(activity)
             }
             activity == null -> {
-                Logger.w(TAG, "Couldn't perform Delegated Authentication: " +
-                    "activity is not FragmentActivity or null")
+                Logger.w(
+                    TAG,
+                    "Couldn't perform Delegated Authentication: activity is not FragmentActivity or null"
+                )
                 delegate.onAuthenticationFailed(activity)
             }
             else -> {
@@ -83,21 +85,21 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
 
     private fun setMerchantLogoIfProvided(delegate: Adyen3DS2Delegate) {
         delegate.getMerchantLogo()?.let {
-            binding.ivLogo.setImageResource(it)
+            binding.imageViewLogo.setImageResource(it)
         }
     }
 
     private fun setLocalizedStrings() {
-        binding.tvTitle.text =
+        binding.textViewTitle.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_title)
-        binding.tvDescription.text =
+        binding.textViewDescription.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_description)
-        binding.btnAuthorise.text =
+        binding.buttonAuthorise.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_positive_button)
-        binding.btnAuthoriseDifferently.text =
+        binding.buttonApproveDifferently.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_negative_button)
 
-        binding.tvRemoveCredentials.setLocalizedTextFromStyle(
+        binding.textViewRemoveCredentials.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_DelegatedAuthentication_OptOutTextView,
             localizedContext,
             formatHyperLink = true
@@ -129,8 +131,8 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
             seconds
         )
 
-        binding.tvTimeLeft.text = timeLeftString
-        binding.lpiProgress.progress = timerData.progress
+        binding.textViewTimeLeft.text = timeLeftString
+        binding.progressIndicator.progress = timerData.progress
     }
 
     private fun setOnClickListeners(
@@ -140,7 +142,7 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
         adyenAuthentication: AdyenAuthentication,
         sdkInput: String
     ) {
-        binding.btnAuthorise.setOnClickListener {
+        binding.buttonAuthorise.setOnClickListener {
             coroutineScope.launch {
                 val authenticationResult = adyenAuthentication.authenticate(sdkInput)
                 when (authenticationResult) {
@@ -163,11 +165,11 @@ internal class DelegatedAuthenticationView @JvmOverloads constructor(
             }
         }
 
-        binding.btnAuthoriseDifferently.setOnClickListener {
+        binding.buttonApproveDifferently.setOnClickListener {
             delegate.onAuthenticationResult(DelegatedAuthenticationResult.SkippedByUser, activity)
         }
 
-        binding.tvRemoveCredentials.setOnClickListener {
+        binding.textViewRemoveCredentials.setOnClickListener {
             showRemoveCredentialsDialog(activity) {
                 delegate.onAuthenticationResult(
                     DelegatedAuthenticationResult.RemoveCredentials,

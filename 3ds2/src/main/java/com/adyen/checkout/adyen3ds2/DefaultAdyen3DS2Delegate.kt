@@ -484,16 +484,14 @@ internal class DefaultAdyen3DS2Delegate(
         currentSdkTransactionId = completionEvent.sdkTransactionID
         currentTransactionStatus = completionEvent.transactionStatus
 
-        coroutineScope.launch(defaultDispatcher) {
-            if (delegatedAuthentication.isRegistrationInitiated()) {
-                delegatedAuthentication.startTimer(coroutineScope)
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
-                // The flow is interrupted by Delegated Authentication
-                // completeChallengeFlow will be called after DA registration
-                return@launch
-            }
-            completeChallengeFlow(null)
+        if (delegatedAuthentication.isRegistrationInitiated()) {
+            delegatedAuthentication.startTimer(coroutineScope)
+            _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
+            // The flow is interrupted by Delegated Authentication
+            // completeChallengeFlow will be called after DA registration
+            return
         }
+        completeChallengeFlow(null)
     }
 
     private fun completeChallengeFlow(delegatedAuthenticationSdkOutput: String?) {

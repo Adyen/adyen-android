@@ -9,7 +9,7 @@ import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationResult
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
-import com.adyen.checkout.adyen3ds2.databinding.ViewDelegatedAuthenticationRegistrationBinding
+import com.adyen.checkout.adyen3ds2.databinding.DelegatedAuthenticationRegistrationViewBinding
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.status.model.TimerData
@@ -33,8 +33,8 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
     ),
     ComponentView {
 
-    private val binding: ViewDelegatedAuthenticationRegistrationBinding =
-        ViewDelegatedAuthenticationRegistrationBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: DelegatedAuthenticationRegistrationViewBinding =
+        DelegatedAuthenticationRegistrationViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
@@ -70,13 +70,13 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
     override fun highlightValidationErrors() = Unit
 
     private fun setLocalizedStrings() {
-        binding.tvTitle.text =
+        binding.textViewTitle.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_title)
-        binding.tvDescription.text =
+        binding.textViewDescription.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_description)
-        binding.btnEnable.text =
+        binding.buttonEnable.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_positive_button)
-        binding.btnNotNow.text =
+        binding.buttonNotNow.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_negative_button)
     }
 
@@ -101,8 +101,8 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
             seconds
         )
 
-        binding.tvTimeLeft.text = timeLeftString
-        binding.lpiProgress.progress = timerData.progress
+        binding.textViewTimeLeft.text = timeLeftString
+        binding.progressIndicator.progress = timerData.progress
     }
 
     private fun setOnClickListeners(
@@ -111,7 +111,7 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
         adyenAuthentication: AdyenAuthentication,
         sdkInput: String
     ) {
-        binding.btnEnable.setOnClickListener {
+        binding.buttonEnable.setOnClickListener {
             coroutineScope.launch {
                 val registrationResult = adyenAuthentication.register(sdkInput)
                 when (registrationResult) {
@@ -134,7 +134,7 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
             }
         }
 
-        binding.btnNotNow.setOnClickListener {
+        binding.buttonNotNow.setOnClickListener {
             delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
         }
     }

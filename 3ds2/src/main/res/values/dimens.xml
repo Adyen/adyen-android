@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by temirlan on 30/1/2023.
+  -->
+
+<resources>
+    <dimen name="delegated_authentication_progress_track_width">150dp</dimen>
+    <dimen name="delegated_authentication_progress_track_height">4dp</dimen>
+    <dimen name="delegated_authentication_progress_track_radius">10dp</dimen>
+</resources>

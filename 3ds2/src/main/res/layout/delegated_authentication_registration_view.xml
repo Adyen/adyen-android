@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/imageView_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="44dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_adyen_fingerprint"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/textView_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textSize="20sp"
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_title" />
+
+    <TextView
+        android:id="@+id/textView_description"
+        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="@dimen/standard_half_margin"
+        android:gravity="center"
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_description" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        style="@style/AdyenCheckout.DelegatedAuthentication.ProgressIndicator"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp" />
+
+    <TextView
+        android:id="@+id/textView_timeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:gravity="center"
+        android:textColor="@color/delegatedAuthenticationTimerTextColor"
+        android:textSize="12sp"
+        tools:text="@string/checkout_3ds2_time_left_to_enable" />
+
+    <Button
+        android:id="@+id/button_enable"
+        style="@style/AdyenCheckout.Button.Colored"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="24dp"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_positive_button" />
+
+    <Button
+        android:id="@+id/button_notNow"
+        style="@style/AdyenCheckout.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:layout_marginBottom="24dp"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_negative_button" />
+
+</merge>

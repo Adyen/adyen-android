@@ -45,7 +45,6 @@ import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.json.JSONException
 import org.json.JSONObject
@@ -105,7 +104,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             ),
             application = Application(),
         )
-        delegate.initialize(coroutineScope = TestScope())
     }
 
     @Nested

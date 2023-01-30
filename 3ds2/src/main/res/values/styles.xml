@@ -10,10 +10,17 @@
 
     <style name="AdyenCheckout.DelegatedAuthentication" />
 
+    <style name="AdyenCheckout.DelegatedAuthentication.ProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="android:layout_width">@dimen/delegated_authentication_progress_track_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="indicatorColor">@color/delegatedAuthenticationProgressIndicatorColor</item>
+        <item name="trackColor">@color/delegatedAuthenticationProgressTrackColor</item>
+        <item name="trackThickness">@dimen/delegated_authentication_progress_track_height</item>
+        <item name="trackCornerRadius">@dimen/delegated_authentication_progress_track_radius</item>
+    </style>
+
     <style name="AdyenCheckout.DelegatedAuthentication.OptOutTextView">
-        <item name="android:text">
-            @string/checkout_3ds2_delegated_authentication_remove_credentials
-        </item>
+        <item name="android:text">@string/checkout_3ds2_delegated_authentication_remove_credentials</item>
     </style>
 
 </resources>
