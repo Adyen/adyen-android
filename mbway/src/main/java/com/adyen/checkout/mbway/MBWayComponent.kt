@@ -14,11 +14,11 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.toActionCallback
@@ -29,6 +29,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -38,8 +39,9 @@ class MBWayComponent internal constructor(
     private val mbWayDelegate: MBWayDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<MBWayPaymentMethod>>,
 ) : ViewModel(),
-    PaymentComponentOld<PaymentComponentState<MBWayPaymentMethod>>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -55,9 +57,10 @@ class MBWayComponent internal constructor(
     init {
         mbWayDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
     ) {
@@ -65,7 +68,7 @@ class MBWayComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         mbWayDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -76,18 +79,27 @@ class MBWayComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? MBWayDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         mbWayDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProviderOld<MBWayComponent, MBWayConfiguration> = MBWayComponentProvider()
+        val PROVIDER: SessionPaymentComponentProvider<
+            MBWayComponent,
+            MBWayConfiguration,
+            PaymentComponentState<MBWayPaymentMethod>> = MBWayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.MB_WAY)

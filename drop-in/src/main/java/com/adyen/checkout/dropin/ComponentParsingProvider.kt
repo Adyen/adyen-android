@@ -54,7 +54,6 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
-import com.adyen.checkout.mbway.MBWayComponentProvider
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentProvider
@@ -464,16 +463,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }*/
-        MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val mbWayConfiguration: MBWayConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            MBWayComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = mbWayConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val mbWayConfiguration: MBWayConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            MBWayComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = mbWayConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

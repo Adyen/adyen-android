@@ -182,6 +182,7 @@ class GooglePayComponentProvider(
                 componentEventHandler = sessionHandler,
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
