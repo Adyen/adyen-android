@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -43,6 +44,7 @@ internal class SepaComponentTest(
     @Mock private val sepaDelegate: SepaDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>,
 ) {
 
     private lateinit var component: SepaComponent
@@ -56,6 +58,7 @@ internal class SepaComponentTest(
             sepaDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -64,6 +67,7 @@ internal class SepaComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(sepaDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -72,6 +76,7 @@ internal class SepaComponentTest(
 
         verify(sepaDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -105,7 +110,7 @@ internal class SepaComponentTest(
     fun `when sepa delegate view flow emits a value then component view flow should match that value`() = runTest {
         val sepaDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(sepaDelegate.viewFlow) doReturn sepaDelegateViewFlow
-        component = SepaComponent(sepaDelegate, genericActionDelegate, actionHandlingComponent)
+        component = SepaComponent(sepaDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -121,7 +126,7 @@ internal class SepaComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = SepaComponent(sepaDelegate, genericActionDelegate, actionHandlingComponent)
+        component = SepaComponent(sepaDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

@@ -77,7 +77,6 @@ import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.sepa.SepaComponent
-import com.adyen.checkout.sepa.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -539,16 +538,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val sepaConfiguration: SepaConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            SepaComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = sepaConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val sepaConfiguration: SepaConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            SepaComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = sepaConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }

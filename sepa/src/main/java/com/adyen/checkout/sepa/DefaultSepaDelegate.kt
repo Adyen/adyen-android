@@ -6,24 +6,22 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -31,8 +29,9 @@ internal class DefaultSepaDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandlerOld,
+    private val submitHandler: SubmitHandler<PaymentComponentState<SepaPaymentMethod>>,
 ) : SepaDelegate {
 
     private val inputData: SepaInputData = SepaInputData()
@@ -48,16 +47,12 @@ internal class DefaultSepaDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<PaymentComponentState<SepaPaymentMethod>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = submitChannel.receiveAsFlow()
-
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
     }
 
@@ -121,7 +116,10 @@ internal class DefaultSepaDelegate(
             ownerName = outputData.ownerNameField.value,
             iban = outputData.ibanNumberField.value
         )
-        val paymentComponentData = PaymentComponentData(paymentMethod)
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = paymentMethod,
+            order = order
+        )
         return PaymentComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
@@ -131,17 +129,16 @@ internal class DefaultSepaDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state = state)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()
