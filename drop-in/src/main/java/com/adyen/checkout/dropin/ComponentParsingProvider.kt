@@ -74,7 +74,6 @@ import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybank.PayByBankComponent
-import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
@@ -528,16 +527,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val payByBankConfig: PayByBankConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            PayByBankComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = payByBankConfig,
-                application = fragment.requireApplication(),
-            )
-        }
+//        PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val payByBankConfig: PayByBankConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            PayByBankComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = payByBankConfig,
+//                application = fragment.requireApplication(),
+//            )
+//        }
 //        SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val sepaConfiguration: SepaConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

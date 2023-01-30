@@ -14,11 +14,11 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.toActionCallback
@@ -27,14 +27,16 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 class PayByBankComponent internal constructor(
     private val payByBankDelegate: PayByBankDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>,
 ) : ViewModel(),
-    PaymentComponentOld<PaymentComponentState<PayByBankPaymentMethod>>,
+    PaymentComponent,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
@@ -49,9 +51,10 @@ class PayByBankComponent internal constructor(
     init {
         payByBankDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
     ) {
@@ -59,9 +62,14 @@ class PayByBankComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         payByBankDelegate.removeObserver()
         genericActionDelegate.removeObserver()
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? PayByBankDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {
@@ -69,14 +77,18 @@ class PayByBankComponent internal constructor(
         Logger.d(TAG, "onCleared")
         payByBankDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProviderOld<PayByBankComponent, PayByBankConfiguration> =
-            PayByBankComponentProvider()
+        val PROVIDER: SessionPaymentComponentProvider<
+            PayByBankComponent,
+            PayByBankConfiguration,
+            PaymentComponentState<PayByBankPaymentMethod>
+            > = PayByBankComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.PAY_BY_BANK)

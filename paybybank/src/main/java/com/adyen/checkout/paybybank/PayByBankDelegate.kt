@@ -32,4 +32,6 @@ interface PayByBankDelegate :
     fun updateInputData(update: PayByBankInputData.() -> Unit)
 
     fun onSubmit()
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
