@@ -10,9 +10,10 @@ package com.adyen.checkout.dropin.ui.viewmodel
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -30,7 +31,7 @@ internal class PreselectedStoredPaymentViewModel(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val amount: Amount,
     private val dropInConfiguration: DropInConfiguration,
-) : ViewModel() {
+) : ViewModel(), ComponentCallback<PaymentComponentState<*>> {
 
     private val _uiStateFlow = MutableStateFlow(getInitialUIState())
     val uiStateFlow: Flow<PreselectedStoredState> = _uiStateFlow
@@ -51,24 +52,23 @@ internal class PreselectedStoredPaymentViewModel(
         )
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                componentState = event.state
-                val buttonState = getButtonState(event.state)
-                val newState = _uiStateFlow.value.copy(buttonState = buttonState)
-                _uiStateFlow.tryEmit(newState)
-            }
-            is PaymentComponentEvent.Error -> {
-                eventsChannel.trySend(PreselectedStoredEvent.ShowError(event.error))
-            }
-            is PaymentComponentEvent.Submit -> {
-                eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(event.state))
-            }
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-        }
+    override fun onSubmit(state: PaymentComponentState<*>) {
+        eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(state))
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        throw IllegalStateException("This event should not be used in drop-in")
+    }
+
+    override fun onError(componentError: ComponentError) {
+        eventsChannel.trySend(PreselectedStoredEvent.ShowError(componentError))
+    }
+
+    override fun onStateChanged(state: PaymentComponentState<*>) {
+        componentState = state
+        val buttonState = getButtonState(state)
+        val newState = _uiStateFlow.value.copy(buttonState = buttonState)
+        _uiStateFlow.tryEmit(newState)
     }
 
     private fun getButtonState(state: PaymentComponentState<*>): ButtonState {

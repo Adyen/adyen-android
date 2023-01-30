@@ -14,8 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentOld
-import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -46,7 +45,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun attachComponent(component: PaymentComponentOld<*>) {
+    private fun attachComponent(component: PaymentComponent) {
         if (component is ViewableComponent) {
             binding.componentView.attach(component, viewLifecycleOwner)
 
@@ -54,20 +53,6 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
                 setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
                 binding.componentView.requestFocus()
             }
-        }
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
-    }
-
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

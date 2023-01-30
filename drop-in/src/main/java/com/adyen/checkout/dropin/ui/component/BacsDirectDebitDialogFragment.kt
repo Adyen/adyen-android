@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
@@ -45,27 +44,11 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
 
-        // Keeping generic component to use the observer from the BaseComponentDialogFragment
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
-
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
         if (bacsDirectDebitComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.bacsView.requestFocus()
-        }
-    }
-
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

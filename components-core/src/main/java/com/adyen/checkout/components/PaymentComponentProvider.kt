@@ -34,16 +34,16 @@ interface PaymentComponentProvider<
     ComponentProvider<ComponentT> {
 
     /**
-     * Get a [PaymentComponentOld].
+     * Get a [PaymentComponent].
      *
      * @param owner         The Activity or Fragment to associate the lifecycle.
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
-     * @param key           The key to use to identify the [PaymentComponentOld].
+     * @param key           The key to use to identify the [PaymentComponent].
      * @param application   The [Application] instance used to handle actions with.
      *
-     * NOTE: By default only one [PaymentComponentOld] will be created per lifecycle. Use [key] in case you need to
-     * instantiate multiple [PaymentComponentOld]s in the same lifecycle.
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
      *
      * @return The Component
      */
@@ -96,7 +96,7 @@ interface PaymentComponentProvider<
     }
 
     /**
-     * Get a [PaymentComponentOld].
+     * Get a [PaymentComponent].
      *
      * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
@@ -105,11 +105,11 @@ interface PaymentComponentProvider<
      * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in
      *                                [ViewModel] if there is no previously saved state or previously saved state misses
      *                                a value by such key
-     * @param key                     The key to use to identify the [PaymentComponentOld].
+     * @param key                     The key to use to identify the [PaymentComponent].
      * @param application   The [Application] instance used to handle actions with.
      *
-     * NOTE: By default only one [PaymentComponentOld] will be created per lifecycle. Use [key] in case you need to
-     * instantiate multiple [PaymentComponentOld]s in the same lifecycle.
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
      *
      * @return The Component
      */

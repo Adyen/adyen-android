@@ -18,8 +18,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -34,7 +35,10 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import kotlinx.coroutines.launch
 
-internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment() {
+@Suppress("TooManyFunctions")
+internal class GooglePayComponentDialogFragment :
+    DropInBottomSheetDialogFragment(),
+    ComponentCallback<GooglePayComponentState> {
 
     private val googlePayViewModel: GooglePayViewModel by viewModels()
 
@@ -50,20 +54,6 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
             navigatedFromPreselected = it.getBoolean(NAVIGATED_FROM_PRESELECTED, false)
         }
 
-        try {
-            component = getComponentFor(
-                this,
-                paymentMethod,
-                dropInViewModel.dropInConfiguration,
-                dropInViewModel.amount
-            ) as GooglePayComponent
-        } catch (e: CheckoutException) {
-            handleError(ComponentError(e))
-            return
-        } catch (e: ClassCastException) {
-            throw CheckoutException("Component is not GooglePayComponent")
-        }
-
         googlePayViewModel.fragmentLoaded()
     }
 
@@ -74,31 +64,43 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-        // TODO SESSIONS: handle observing the component
-//        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 googlePayViewModel.eventsFlow.collect { handleEvent(it) }
             }
         }
+
+        loadComponent()
     }
 
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<GooglePayComponentState>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> {
-                handleError(event.error)
-            }
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> {
-                protocol.requestPaymentsCall(event.state)
-            }
+    private fun loadComponent() {
+        try {
+            component = getComponentFor(
+                fragment = this,
+                paymentMethod = paymentMethod,
+                dropInConfiguration = dropInViewModel.dropInConfiguration,
+                amount = dropInViewModel.amount,
+                componentCallback = this
+            ) as GooglePayComponent
+        } catch (e: CheckoutException) {
+            handleError(ComponentError(e))
+            return
+        } catch (e: ClassCastException) {
+            throw CheckoutException("Component is not GooglePayComponent")
         }
+    }
+
+    override fun onSubmit(state: GooglePayComponentState) {
+        protocol.requestPaymentsCall(state)
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        throw IllegalStateException("This event should not be used in drop-in")
+    }
+
+    override fun onError(componentError: ComponentError) {
+        handleError(componentError)
     }
 
     private fun handleEvent(event: GooglePayFragmentEvent) {

@@ -13,56 +13,95 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
+import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardComponentProvider
+import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
+import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
+import com.adyen.checkout.dotpay.DotpayComponentProvider
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.entercash.EntercashComponent
+import com.adyen.checkout.entercash.EntercashComponentProvider
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSComponent
+import com.adyen.checkout.eps.EPSComponentProvider
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardComponentProvider
+import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
+import com.adyen.checkout.ideal.IdealComponentProvider
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.InstantPaymentComponent
+import com.adyen.checkout.instant.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
+import com.adyen.checkout.mbway.MBWayComponentProvider
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
+import com.adyen.checkout.molpay.MolpayComponentProvider
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
+import com.adyen.checkout.openbanking.OpenBankingComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybank.PayByBankComponent
+import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.sepa.SepaComponent
+import com.adyen.checkout.sepa.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -288,41 +327,44 @@ internal fun getPaymentMethodAvailabilityCheck(
 }
 
 /**
- * Provides a [PaymentComponentOld] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
+ * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
  *
  * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param storedPaymentMethod The stored payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
+@Suppress("UNCHECKED_CAST")
 internal fun getComponentFor(
     fragment: Fragment,
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
-    amount: Amount
-): PaymentComponentOld<*> {
+    amount: Amount,
+    componentCallback: ComponentCallback<*>,
+): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    @Suppress("UNREACHABLE_CODE")
     return when {
-        /*CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+        CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
             CardComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<CardComponentState>,
             )
-        }*/
-//        BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
-//            val blikConfig: BlikConfiguration =
-//                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
-//            BlikComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                storedPaymentMethod = storedPaymentMethod,
-//                configuration = blikConfig,
-//                application = fragment.requireApplication(),
-//            )
-//        }
+        }
+        BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+            val blikConfig: BlikConfiguration =
+                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
+            BlikComponentProvider(dropInParams).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                configuration = blikConfig,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+            )
+        }
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
@@ -330,211 +372,237 @@ internal fun getComponentFor(
 }
 
 /**
- * Provides a [PaymentComponentOld] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
+ * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
  *
  * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("LongMethod")
+@Suppress("LongMethod", "UNCHECKED_CAST")
 internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
-    amount: Amount
-): PaymentComponentOld<*> {
+    amount: Amount,
+    componentCallback: ComponentCallback<*>,
+): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
-//        BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val bacsConfiguration: BacsDirectDebitConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            BacsDirectDebitComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = bacsConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-//        BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val bcmcConfiguration: BcmcConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            BcmcComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = bcmcConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-//        BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val blikConfiguration: BlikConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            BlikComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = blikConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-        /*CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val bacsConfiguration: BacsDirectDebitConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            BacsDirectDebitComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = bacsConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<BacsDirectDebitComponentState>,
+            )
+        }
+        BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val bcmcConfiguration: BcmcConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            BcmcComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = bcmcConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<CardPaymentMethod>>,
+            )
+        }
+        BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val blikConfiguration: BlikConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            BlikComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = blikConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+            )
+        }
+        CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             CardComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<CardComponentState>,
             )
-        }*/
-        /*DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             DotpayComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<DotpayPaymentMethod>>,
             )
         }
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val entercashConfig: EntercashConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             EntercashComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<EntercashPaymentMethod>>,
             )
         }
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val epsConfig: EPSConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             EPSComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<EPSPaymentMethod>>,
             )
-        }*/
-//        GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val giftcardConfiguration: GiftCardConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            GiftCardComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = giftcardConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-//        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val googlePayConfiguration: GooglePayConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            GooglePayComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = googlePayConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-        /*IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val giftcardConfiguration: GiftCardConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            GiftCardComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = giftcardConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<GiftCardComponentState>,
+            )
+        }
+        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val googlePayConfiguration: GooglePayConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            GooglePayComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = googlePayConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<GooglePayComponentState>,
+            )
+        }
+        IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             IdealComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<IdealPaymentMethod>>,
             )
-        }*/
-        /*InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             InstantPaymentComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = instantPaymentConfiguration,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
             )
-        }*/
-//        MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val mbWayConfiguration: MBWayConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            MBWayComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = mbWayConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-        /*MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val mbWayConfiguration: MBWayConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            MBWayComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = mbWayConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
+            )
+        }
+        MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             MolpayComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MolpayPaymentMethod>>,
             )
-        }*/
-//        OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            OnlineBankingCZComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = onlineBankingCZConfig,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-        /*OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            OnlineBankingCZComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = onlineBankingCZConfig,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
+            )
+        }
+        OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             OnlineBankingPLComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<OnlineBankingPLPaymentMethod>>,
             )
-        }*/
-//        OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            OnlineBankingSKComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = onlineBankingSKConfig,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-        /*OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        }
+        OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            OnlineBankingSKComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = onlineBankingSKConfig,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<OnlineBankingSKPaymentMethod>>,
+            )
+        }
+        OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             OpenBankingComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
                 application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<OpenBankingPaymentMethod>>,
             )
-        }*/
-//        PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val payByBankConfig: PayByBankConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            PayByBankComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = payByBankConfig,
-//                application = fragment.requireApplication(),
-//            )
-//        }
-//        SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-//            val sepaConfiguration: SepaConfiguration =
-//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-//            SepaComponentProvider(dropInParams).get(
-//                owner = fragment,
-//                paymentMethod = paymentMethod,
-//                configuration = sepaConfiguration,
-//                application = fragment.requireApplication(),
-//            )
-//        }
+        }
+        PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val payByBankConfig: PayByBankConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            PayByBankComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = payByBankConfig,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
+            )
+        }
+        SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val sepaConfiguration: SepaConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            SepaComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = sepaConfiguration,
+                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+            )
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }

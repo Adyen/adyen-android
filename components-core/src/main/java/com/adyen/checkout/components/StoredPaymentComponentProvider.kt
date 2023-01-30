@@ -27,7 +27,7 @@ interface StoredPaymentComponentProvider<
     PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     /**
-     * Get a [PaymentComponentOld] with a stored payment method.
+     * Get a [PaymentComponent] with a stored payment method.
      *
      * @param owner               The Activity or Fragment to associate the lifecycle.
      * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
@@ -86,7 +86,7 @@ interface StoredPaymentComponentProvider<
     }
 
     /**
-     * Get a [PaymentComponentOld] with a stored payment method.
+     * Get a [PaymentComponent] with a stored payment method.
      *
      * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
