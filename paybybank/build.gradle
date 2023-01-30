@@ -9,6 +9,7 @@ ext.mavenArtifactId = "paybybank"
 ext.mavenArtifactName = "Adyen Pay by Bank component"
 ext.mavenArtifactDescription = "Adyen Checkout Pay by Bank component client for Adyen's Checkout API."
 
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version
