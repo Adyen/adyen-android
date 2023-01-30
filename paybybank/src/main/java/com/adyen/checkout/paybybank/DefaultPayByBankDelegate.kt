@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class DefaultPayByBankDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -137,9 +138,12 @@ internal class DefaultPayByBankDelegate(
         _componentStateFlow.tryEmit(createComponentState(outputData))
     }
 
-    private fun createComponentState(outputData: PayByBankOutputData = this.outputData): PaymentComponentState<PayByBankPaymentMethod> {
+    private fun createComponentState(
+        outputData: PayByBankOutputData = this.outputData
+    ): PaymentComponentState<PayByBankPaymentMethod> {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
-            type = getPaymentMethodType(), issuer = outputData.selectedIssuer?.id ?: ""
+            type = getPaymentMethodType(),
+            issuer = outputData.selectedIssuer?.id.orEmpty()
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -147,7 +151,9 @@ internal class DefaultPayByBankDelegate(
         )
 
         return PaymentComponentState(
-            data = paymentComponentData, isInputValid = outputData.isValid, isReady = true
+            data = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = true
         )
     }
 
@@ -160,7 +166,9 @@ internal class DefaultPayByBankDelegate(
             paymentMethod = payByBankPaymentMethod
         )
         return PaymentComponentState(
-            data = paymentComponentData, isInputValid = true, isReady = true
+            data = paymentComponentData,
+            isInputValid = true,
+            isReady = true
         )
     }
 

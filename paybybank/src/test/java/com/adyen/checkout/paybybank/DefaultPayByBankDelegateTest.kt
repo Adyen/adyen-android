@@ -155,7 +155,6 @@ internal class DefaultPayByBankDelegateTest(
         }
     }
 
-
     @Test
     fun `when issuers is not empty in paymentMethod then viewFlow should emit PayByBankComponentViewType`() = runTest {
         delegate = DefaultPayByBankDelegate(
@@ -179,7 +178,6 @@ internal class DefaultPayByBankDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
     }
-
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

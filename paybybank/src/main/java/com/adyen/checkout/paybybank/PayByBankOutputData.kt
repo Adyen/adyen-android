@@ -14,6 +14,6 @@ import com.adyen.checkout.issuerlist.IssuerModel
 data class PayByBankOutputData(
     val selectedIssuer: IssuerModel?,
     val issuers: List<IssuerModel>,
-): OutputData {
+) : OutputData {
     override val isValid: Boolean = selectedIssuer != null
 }
