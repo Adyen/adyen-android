@@ -10,6 +10,8 @@ package com.adyen.checkout.onlinebankingcore.utils
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
@@ -17,11 +19,18 @@ internal class TestOnlineBankingComponent internal constructor(
     delegate: OnlineBankingDelegate<TestOnlineBankingPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<TestOnlineBankingPaymentMethod>>
 ) : OnlineBankingComponent<TestOnlineBankingPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler
 ) {
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? OnlineBankingDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
+    }
+
     override fun onCleared() {
         super.onCleared()
     }

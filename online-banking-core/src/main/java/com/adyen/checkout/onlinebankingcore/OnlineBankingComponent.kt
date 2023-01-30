@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.onlinebankingcore
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,10 +15,11 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.toActionCallback
@@ -32,8 +34,10 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     private val onlineBankingDelegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    val componentEventHandler: ComponentEventHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
 ) : ViewModel(),
-    PaymentComponentOld<PaymentComponentState<IssuerListPaymentMethodT>>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -49,9 +53,11 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     init {
         onlineBankingDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
     ) {
@@ -59,7 +65,8 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun removeObserver() {
         onlineBankingDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -75,6 +82,7 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
         Logger.d(TAG, "onCleared")
         onlineBankingDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {

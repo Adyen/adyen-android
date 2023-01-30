@@ -60,13 +60,11 @@ import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentProvider
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
-import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
-import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentProvider
@@ -486,16 +484,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            OnlineBankingCZComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = onlineBankingCZConfig,
-                application = fragment.requireApplication(),
-            )
-        }
+//        OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            OnlineBankingCZComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = onlineBankingCZConfig,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -506,16 +504,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            OnlineBankingSKComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = onlineBankingSKConfig,
-                application = fragment.requireApplication(),
-            )
-        }
+//        OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            OnlineBankingSKComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = onlineBankingSKConfig,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
