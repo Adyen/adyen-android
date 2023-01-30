@@ -15,6 +15,8 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
+import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -28,40 +30,24 @@ import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions")
 internal class DelegatedAuthentication(
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     @DrawableRes val merchantLogo: Int?
-) {
+) : SavedStateHandleContainer {
 
     private var adyenAuthentication: AdyenAuthentication? = null
 
-    private var pendingRegistrationSdkInput: String?
-        get() = savedStateHandle[REGISTRATION_SDK_INPUT]
-        set(value) {
-            savedStateHandle[REGISTRATION_SDK_INPUT] = value
-        }
-    private var pendingAuthenticationSdkInput: String?
-        get() = savedStateHandle[AUTHENTICATION_SDK_INPUT]
-        set(value) {
-            savedStateHandle[AUTHENTICATION_SDK_INPUT] = value
-        }
+    private var pendingRegistrationSdkInput: String? by SavedStateHandleProperty(REGISTRATION_SDK_INPUT)
+    private var pendingAuthenticationSdkInput: String? by SavedStateHandleProperty(AUTHENTICATION_SDK_INPUT)
 
     private var countDownTimer: CountDownTimer? = null
-    internal var isTimerStarted: Boolean
-        get() = savedStateHandle[IS_TIMER_STARTED] ?: false
-        private set(value) {
-            savedStateHandle[IS_TIMER_STARTED] = value
-        }
-    private var currentMillisUntilFinished: Long
-        get() = savedStateHandle[MILLIS_UNTIL_FINISHED] ?: DEFAULT_TIMEOUT_IN_MILLIS
-        set(value) {
-            savedStateHandle[MILLIS_UNTIL_FINISHED] = value
-        }
+    internal var isTimerStarted: Boolean? by SavedStateHandleProperty(IS_TIMER_STARTED)
+    private var currentMillisUntilFinished: Long? by SavedStateHandleProperty(MILLIS_UNTIL_FINISHED)
 
     private var _timeoutTimerFlow = MutableStateFlow<TimerData?>(null)
     internal var timeoutTimerFlow = _timeoutTimerFlow.filterNotNull()
 
     fun initialize(coroutineScope: CoroutineScope) {
-        if (isTimerStarted) {
+        if (isTimerStarted == true) {
             startTimer(coroutineScope)
         }
     }
@@ -97,9 +83,10 @@ internal class DelegatedAuthentication(
 
     internal fun startTimer(coroutineScope: CoroutineScope) {
         isTimerStarted = true
-        publishTimerUpdate(currentMillisUntilFinished)
+        val millisUntilFinished = currentMillisUntilFinished ?: DEFAULT_TIMEOUT_IN_MILLIS
+        publishTimerUpdate(millisUntilFinished)
         coroutineScope.launch(Dispatchers.Main) {
-            countDownTimer = object : CountDownTimer(currentMillisUntilFinished, 500.milliseconds.inWholeMilliseconds) {
+            countDownTimer = object : CountDownTimer(millisUntilFinished, 500.milliseconds.inWholeMilliseconds) {
                 override fun onTick(millisUntilFinished: Long) = publishTimerUpdate(millisUntilFinished)
 
                 override fun onFinish() = publishTimerUpdate(0)

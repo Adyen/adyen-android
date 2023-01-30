@@ -28,6 +28,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.handler.RedirectHandler
@@ -106,39 +107,15 @@ internal class DefaultAdyen3DS2Delegate(
     private var currentTransaction: Transaction? = null
 
     //region Identify shopper completion parameters
-    private var currentSubmitFingerprintAutomatically: Boolean?
-        get() = savedStateHandle[SUBMIT_FINGERPRINT_AUTOMATICALLY]
-        set(value) {
-            savedStateHandle[SUBMIT_FINGERPRINT_AUTOMATICALLY] = value
-        }
-    private var currentFingerprintJson: String?
-        get() = savedStateHandle[FINGERPRINT_JSON]
-        set(value) {
-            savedStateHandle[FINGERPRINT_JSON] = value
-        }
+    private var submitFingerprintAutomatically: Boolean? by SavedStateHandleProperty(SUBMIT_FINGERPRINT_AUTOMATICALLY)
+    private var currentFingerprintJson: String? by SavedStateHandleProperty(FINGERPRINT_JSON)
     //endregion
 
     //region 3DS2 flow completion parameters
-    private var authorizationToken: String?
-        get() = savedStateHandle[AUTHORIZATION_TOKEN_KEY]
-        set(value) {
-            savedStateHandle[AUTHORIZATION_TOKEN_KEY] = value
-        }
-    private var currentSdkTransactionId: String?
-        get() = savedStateHandle[SDK_TRANSACTION_ID]
-        set(value) {
-            savedStateHandle[SDK_TRANSACTION_ID] = value
-        }
-    private var currentTransactionStatus: String?
-        get() = savedStateHandle[TRANSACTION_STATUS]
-        set(value) {
-            savedStateHandle[TRANSACTION_STATUS] = value
-        }
-    private var removeDACredentials: Boolean?
-        get() = savedStateHandle[REMOVE_DA_CREDENTIALS]
-        set(value) {
-            savedStateHandle[REMOVE_DA_CREDENTIALS] = value
-        }
+    private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
+    private var currentSdkTransactionId: String? by SavedStateHandleProperty(SDK_TRANSACTION_ID)
+    private var currentTransactionStatus: String? by SavedStateHandleProperty(TRANSACTION_STATUS)
+    private var removeDACredentials: Boolean? by SavedStateHandleProperty(REMOVE_DA_CREDENTIALS)
     //endregion
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -147,10 +124,10 @@ internal class DefaultAdyen3DS2Delegate(
         // Restoring UI state after process kill
         val isDATimerStarted = delegatedAuthentication.isTimerStarted
         when {
-            delegatedAuthentication.isRegistrationInitiated() && isDATimerStarted -> {
+            delegatedAuthentication.isRegistrationInitiated() && isDATimerStarted == true -> {
                 _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_REGISTRATION)
             }
-            delegatedAuthentication.isAuthenticationInitiated() && isDATimerStarted -> {
+            delegatedAuthentication.isAuthenticationInitiated() && isDATimerStarted == true -> {
                 _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_AUTHENTICATION)
             }
             else -> {
@@ -248,7 +225,7 @@ internal class DefaultAdyen3DS2Delegate(
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
 
         // We need to keep this parameter to be able to complete the transaction after process kill
-        currentSubmitFingerprintAutomatically = submitFingerprintAutomatically
+        this.submitFingerprintAutomatically = submitFingerprintAutomatically
 
         val decodedFingerprintToken = base64Encoder.decode(encodedFingerprintToken)
 
@@ -340,7 +317,7 @@ internal class DefaultAdyen3DS2Delegate(
             currentFingerprintJson ?: "",
             delegatedAuthenticationSdkOutput
         )
-        if (currentSubmitFingerprintAutomatically == true) {
+        if (submitFingerprintAutomatically == true) {
             submitFingerprintAutomatically(activity, encodedFingerprint)
         } else {
             emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
@@ -627,7 +604,7 @@ internal class DefaultAdyen3DS2Delegate(
         currentTransaction?.close()
         currentTransaction = null
         currentFingerprintJson = null
-        currentSubmitFingerprintAutomatically = null
+        submitFingerprintAutomatically = null
         currentSdkTransactionId = null
         currentTransactionStatus = null
         cleanUp3DS2()
