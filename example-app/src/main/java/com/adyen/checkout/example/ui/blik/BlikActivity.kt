@@ -18,7 +18,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityBlikBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -77,7 +76,7 @@ class BlikActivity : AppCompatActivity() {
                 binding.errorView.isVisible = false
                 binding.componentView.isVisible = true
 
-                setupBlikView(blikViewState.paymentMethod)
+                setupBlikView(blikViewState.componentData)
             }
             is BlikViewState.Action -> {
                 binding.progressIndicator.isVisible = false
@@ -98,18 +97,18 @@ class BlikActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupBlikView(paymentMethod: PaymentMethod) {
+    private fun setupBlikView(componentData: BlikComponentData) {
         val blikComponent = BlikComponent.PROVIDER.get(
-            this,
-            paymentMethod,
-            checkoutConfigurationProvider.getBlikConfiguration(),
-            application
+            activity = this,
+            paymentMethod = componentData.paymentMethod,
+            configuration = checkoutConfigurationProvider.getBlikConfiguration(),
+            application = application,
+            componentCallback = componentData.callback
         )
 
         this.blikComponent = blikComponent
 
         binding.componentView.attach(blikComponent, this)
-        blikComponent.observe(this, blikViewModel::onPaymentComponentEvent)
     }
 
     private fun onBlikEvent(event: BlikEvent) {

@@ -17,7 +17,6 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.blik.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
@@ -314,6 +313,7 @@ internal fun getComponentFor(
     amount: Amount
 ): PaymentComponentOld<*> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
+    @Suppress("UNREACHABLE_CODE")
     return when {
         /*CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
@@ -325,16 +325,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }*/
-        BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
-            val blikConfig: BlikConfiguration =
-                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
-            BlikComponentProvider(dropInParams).get(
-                owner = fragment,
-                storedPaymentMethod = storedPaymentMethod,
-                configuration = blikConfig,
-                application = fragment.requireApplication(),
-            )
-        }
+//        BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+//            val blikConfig: BlikConfiguration =
+//                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
+//            BlikComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                storedPaymentMethod = storedPaymentMethod,
+//                configuration = blikConfig,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
@@ -377,16 +377,16 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val blikConfiguration: BlikConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            BlikComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = blikConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val blikConfiguration: BlikConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            BlikComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = blikConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         /*CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

@@ -14,24 +14,22 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -39,8 +37,9 @@ internal class DefaultBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandlerOld
+    private val submitHandler: SubmitHandler<PaymentComponentState<BlikPaymentMethod>>,
 ) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()
@@ -57,20 +56,18 @@ internal class DefaultBlikDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<PaymentComponentState<BlikPaymentMethod>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitHandler.submitFlow
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     init {
         updateComponentState(outputData)
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
     }
 
@@ -137,7 +134,8 @@ internal class DefaultBlikDelegate(
         )
 
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = paymentMethod
+            paymentMethod = paymentMethod,
+            order = order,
         )
 
         return PaymentComponentState(
@@ -149,17 +147,16 @@ internal class DefaultBlikDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()
