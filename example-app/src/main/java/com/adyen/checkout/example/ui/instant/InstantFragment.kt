@@ -20,7 +20,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.FragmentInstantBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -58,23 +57,23 @@ class InstantFragment : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { instantViewModel.paymentMethodFlow.collect(::setupInstantComponent) }
+                launch { instantViewModel.instantComponentDataFlow.collect(::setupInstantComponent) }
                 launch { instantViewModel.events.collect(::onEvent) }
                 launch { instantViewModel.instantViewState.collect(::onViewState) }
             }
         }
     }
 
-    private fun setupInstantComponent(paymentMethod: PaymentMethod) {
+    private fun setupInstantComponent(componentData: InstantComponentData) {
         val instantPaymentComponent = InstantPaymentComponent.PROVIDER.get(
             this,
-            paymentMethod,
+            componentData.paymentMethod,
             checkoutConfigurationProvider.getInstantConfiguration(),
             requireActivity().application,
+            componentData.callback,
         )
 
         this.instantPaymentComponent = instantPaymentComponent
-        instantPaymentComponent.observe(viewLifecycleOwner, instantViewModel::onPaymentComponentEvent)
         binding.componentView.attach(instantPaymentComponent, viewLifecycleOwner)
     }
 

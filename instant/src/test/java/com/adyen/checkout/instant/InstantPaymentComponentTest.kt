@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -43,6 +44,7 @@ internal class InstantPaymentComponentTest(
     @Mock private val instantPaymentDelegate: InstantPaymentDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<PaymentMethodDetails>>,
 ) {
 
     private lateinit var component: InstantPaymentComponent
@@ -55,6 +57,7 @@ internal class InstantPaymentComponentTest(
             instantPaymentDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -63,6 +66,7 @@ internal class InstantPaymentComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(instantPaymentDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -71,6 +75,7 @@ internal class InstantPaymentComponentTest(
 
         verify(instantPaymentDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -104,7 +109,12 @@ internal class InstantPaymentComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = InstantPaymentComponent(instantPaymentDelegate, genericActionDelegate, actionHandlingComponent)
+        component = InstantPaymentComponent(
+            instantPaymentDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

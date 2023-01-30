@@ -13,9 +13,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
@@ -40,10 +39,10 @@ internal class InstantViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel() {
+) : ViewModel(), ComponentCallback<PaymentComponentState<PaymentMethodDetails>> {
 
-    private val _paymentMethodFlow = MutableStateFlow<PaymentMethod?>(null)
-    val paymentMethodFlow: Flow<PaymentMethod> = _paymentMethodFlow.filterNotNull()
+    private val _instantComponentDataFlow = MutableStateFlow<InstantComponentData?>(null)
+    val instantComponentDataFlow: Flow<InstantComponentData> = _instantComponentDataFlow.filterNotNull()
 
     private val _instantViewState = MutableStateFlow<InstantViewState>(InstantViewState.Loading)
     val instantViewState: Flow<InstantViewState> = _instantViewState
@@ -74,26 +73,26 @@ internal class InstantViewModel @Inject constructor(
         if (paymentMethod == null) {
             _instantViewState.emit(InstantViewState.Error)
         } else {
-            _paymentMethodFlow.emit(paymentMethod)
+            _instantComponentDataFlow.emit(
+                InstantComponentData(
+                    paymentMethod = paymentMethod,
+                    callback = this@InstantViewModel,
+                )
+            )
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<PaymentMethodDetails>>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> {
-                onComponentError(event.error)
-            }
-            is PaymentComponentEvent.ActionDetails -> {
-                sendPaymentDetails(event.data)
-            }
-            is PaymentComponentEvent.Submit -> {
-                makePayment(event.state.data)
-                _instantViewState.tryEmit(InstantViewState.Loading)
-            }
-        }
+    override fun onSubmit(state: PaymentComponentState<PaymentMethodDetails>) {
+        makePayment(state.data)
+        _instantViewState.tryEmit(InstantViewState.Loading)
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        sendPaymentDetails(actionComponentData)
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
     }
 
     private fun makePayment(data: PaymentComponentData<*>) {

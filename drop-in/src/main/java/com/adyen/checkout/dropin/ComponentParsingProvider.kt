@@ -52,7 +52,6 @@ import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealComponentProvider
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.InstantPaymentComponent
-import com.adyen.checkout.instant.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayComponentProvider
@@ -457,7 +456,7 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             InstantPaymentComponentProvider(dropInParams).get(
@@ -466,7 +465,7 @@ internal fun getComponentFor(
                 configuration = instantPaymentConfiguration,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val mbWayConfiguration: MBWayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
