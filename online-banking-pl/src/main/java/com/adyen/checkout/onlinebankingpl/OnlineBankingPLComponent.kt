@@ -10,12 +10,14 @@ package com.adyen.checkout.onlinebankingpl
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProviderOld
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PROVIDER
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -24,15 +26,20 @@ class OnlineBankingPLComponent internal constructor(
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingPLPaymentMethod>>,
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProviderOld<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
-            OnlineBankingPLComponentProvider()
+        val PROVIDER: SessionPaymentComponentProvider<
+            OnlineBankingPLComponent,
+            OnlineBankingPLConfiguration,
+            PaymentComponentState<OnlineBankingPLPaymentMethod>
+            > = OnlineBankingPLComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_PL)

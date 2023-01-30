@@ -33,4 +33,6 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
     fun getIssuers(): List<IssuerModel>
 
     fun updateInputData(update: IssuerListInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

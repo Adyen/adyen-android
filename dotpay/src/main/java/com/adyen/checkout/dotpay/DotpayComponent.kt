@@ -9,12 +9,14 @@ package com.adyen.checkout.dotpay
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProviderOld
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -23,14 +25,20 @@ class DotpayComponent internal constructor(
     delegate: IssuerListDelegate<DotpayPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<DotpayPaymentMethod>>,
 ) : IssuerListComponent<DotpayPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProviderOld<DotpayComponent, DotpayConfiguration> = DotpayComponentProvider()
+        val PROVIDER: SessionPaymentComponentProvider<
+            DotpayComponent,
+            DotpayConfiguration,
+            PaymentComponentState<DotpayPaymentMethod>
+            > = DotpayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)

@@ -34,13 +34,10 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
-import com.adyen.checkout.dotpay.DotpayComponentProvider
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.entercash.EntercashComponent
-import com.adyen.checkout.entercash.EntercashComponentProvider
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSComponent
-import com.adyen.checkout.eps.EPSComponentProvider
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardConfiguration
@@ -48,24 +45,20 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
-import com.adyen.checkout.ideal.IdealComponentProvider
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
-import com.adyen.checkout.molpay.MolpayComponentProvider
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
-import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
-import com.adyen.checkout.openbanking.OpenBankingComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankConfiguration
@@ -392,7 +385,7 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }*/
-        DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             DotpayComponentProvider(dropInParams).get(
@@ -421,7 +414,7 @@ internal fun getComponentFor(
                 configuration = epsConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
 //        GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val giftcardConfiguration: GiftCardConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -442,7 +435,7 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             IdealComponentProvider(dropInParams).get(
@@ -451,7 +444,7 @@ internal fun getComponentFor(
                 configuration = idealConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
         /*InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -472,7 +465,7 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             MolpayComponentProvider(dropInParams).get(
@@ -481,7 +474,7 @@ internal fun getComponentFor(
                 configuration = molpayConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
 //        OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -492,7 +485,7 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             OnlineBankingPLComponentProvider(dropInParams).get(
@@ -501,7 +494,7 @@ internal fun getComponentFor(
                 configuration = onlineBankingPLConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
 //        OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -512,7 +505,7 @@ internal fun getComponentFor(
 //                application = fragment.requireApplication(),
 //            )
 //        }
-        OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+        /*OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             OpenBankingComponentProvider(dropInParams).get(
@@ -521,7 +514,7 @@ internal fun getComponentFor(
                 configuration = openBankingConfig,
                 application = fragment.requireApplication(),
             )
-        }
+        }*/
 //        PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val payByBankConfig: PayByBankConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

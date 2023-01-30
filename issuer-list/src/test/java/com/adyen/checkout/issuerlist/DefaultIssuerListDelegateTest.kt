@@ -9,10 +9,12 @@
 package com.adyen.checkout.issuerlist
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
@@ -39,9 +41,10 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultIssuerListDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<TestIssuerPaymentMethod>>,
 ) {
 
-    private lateinit var delegate: DefaultIssuerListDelegate<*>
+    private lateinit var delegate: DefaultIssuerListDelegate<TestIssuerPaymentMethod>
 
     @BeforeEach
     fun beforeEach() {
@@ -121,6 +124,7 @@ internal class DefaultIssuerListDelegateTest(
                 )
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertEquals(TEST_ORDER, data.order)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
@@ -142,8 +146,9 @@ internal class DefaultIssuerListDelegateTest(
             observerRepository = PaymentObserverRepository(),
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
+            order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandlerOld()
+            submitHandler = submitHandler,
         ) { TestIssuerPaymentMethod() }
 
         delegate.viewFlow.test {
@@ -165,8 +170,9 @@ internal class DefaultIssuerListDelegateTest(
             observerRepository = PaymentObserverRepository(),
             componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
             paymentMethod = PaymentMethod(),
+            order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandlerOld()
+            submitHandler = submitHandler,
         ) { TestIssuerPaymentMethod() }
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
@@ -207,14 +213,42 @@ internal class DefaultIssuerListDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createIssuerListDelegate(
         configuration: TestIssuerListConfiguration = getDefaultTestIssuerListConfigurationBuilder().build()
     ) = DefaultIssuerListDelegate(
         observerRepository = PaymentObserverRepository(),
         componentParams = IssuerListComponentParamsMapper(null).mapToParams(configuration),
         paymentMethod = PaymentMethod(),
+        order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandlerOld()
+        submitHandler = submitHandler,
     ) { TestIssuerPaymentMethod() }
 
     private fun getDefaultTestIssuerListConfigurationBuilder() = TestIssuerListConfiguration.Builder(
@@ -225,5 +259,6 @@ internal class DefaultIssuerListDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

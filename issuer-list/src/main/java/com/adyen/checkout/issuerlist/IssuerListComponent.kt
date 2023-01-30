@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.issuerlist
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,10 +15,11 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.toActionCallback
@@ -35,8 +37,10 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    val componentEventHandler: ComponentEventHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
 ) : ViewModel(),
-    PaymentComponentOld<PaymentComponentState<IssuerListPaymentMethodT>>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -52,9 +56,11 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     init {
         issuerListDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
     ) {
@@ -62,7 +68,8 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun removeObserver() {
         issuerListDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -73,11 +80,17 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? IssuerListDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         issuerListDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
