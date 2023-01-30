@@ -8,27 +8,12 @@
 
 <resources>
 
-    <style name="DAMaterialAlertDialogTheme">
-        <item name="materialAlertDialogTitleTextStyle">@style/DAAlertDialog.Title</item>
-        <item name="buttonBarPositiveButtonStyle">@style/DAAlertDialog.Button.Positive</item>
-        <item name="buttonBarNegativeButtonStyle">@style/DAAlertDialog.Button.Negative</item>
+    <style name="AdyenCheckout.DelegatedAuthentication" />
+
+    <style name="AdyenCheckout.DelegatedAuthentication.OptOutTextView">
+        <item name="android:text">
+            @string/checkout_3ds2_delegated_authentication_remove_credentials
+        </item>
     </style>
 
-    <style name="DAAlertDialog.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textSize">20sp</item>
-        <item name="fontFamily">sans-serif-medium</item>
-    </style>
-
-    <style name="DAAlertDialog.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="backgroundTint">?attr/colorPrimary</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="DAAlertDialog.Button.Negative" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="backgroundTint">@android:color/transparent</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
 </resources>

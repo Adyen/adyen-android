@@ -5,10 +5,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationResult
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
-import com.adyen.checkout.adyen3ds2.databinding.ViewDaRegistrationBinding
+import com.adyen.checkout.adyen3ds2.databinding.ViewDelegatedAuthenticationRegistrationBinding
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.status.model.TimerData
@@ -16,9 +17,7 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
@@ -34,8 +33,8 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
     ),
     ComponentView {
 
-    private val binding: ViewDaRegistrationBinding =
-        ViewDaRegistrationBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: ViewDelegatedAuthenticationRegistrationBinding =
+        ViewDelegatedAuthenticationRegistrationBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
@@ -51,42 +50,17 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
         val sdkInput = delegate.getRegistrationSdkInput()
         when {
             adyenAuthentication == null -> {
-                Logger.w(TAG, "Couldn't perform DA registration flow: adyenAuthentication is null")
+                Logger.w(TAG, "Couldn't perform Delegated Authentication: adyenAuthentication is null")
                 delegate.onRegistrationFailed()
             }
             sdkInput == null -> {
-                Logger.w(TAG, "Couldn't perform DA registration flow: sdkInput is null")
+                Logger.w(TAG, "Couldn't perform Delegated Authentication: sdkInput is null")
                 delegate.onRegistrationFailed()
             }
             else -> {
-                setLocalizedStrings(localizedContext)
+                setLocalizedStrings()
                 collectTimerUpdates(coroutineScope, delegate)
-
-                binding.btnEnable.setOnClickListener {
-                    coroutineScope.launch {
-                        when (val registrationResult = adyenAuthentication.register(sdkInput)) {
-                            is AuthenticationResult.RegistrationSuccessful -> {
-                                val result = DelegatedAuthenticationRegistrationResult.RegistrationSuccessful(
-                                    registrationResult.sdkOutput
-                                )
-                                delegate.onRegistrationResult(result)
-                            }
-                            is AuthenticationResult.AuthenticationError -> {
-                                delegate.onRegistrationFailed()
-                            }
-                            is AuthenticationResult.Error -> {
-                                delegate.onRegistrationFailed()
-                            }
-                            else -> {
-                                delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
-                            }
-                        }
-                    }
-                }
-
-                binding.btnNotNow.setOnClickListener {
-                    delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
-                }
+                setOnClickListeners(coroutineScope, delegate, adyenAuthentication, sdkInput)
             }
         }
     }
@@ -95,7 +69,7 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
 
     override fun highlightValidationErrors() = Unit
 
-    private fun setLocalizedStrings(localizedContext: Context) {
+    private fun setLocalizedStrings() {
         binding.tvTitle.text =
             localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_title)
         binding.tvDescription.text =
@@ -109,9 +83,7 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
     private fun collectTimerUpdates(coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
         coroutineScope.launch {
             delegate.authenticationTimerFlow.collect {
-                withContext(Dispatchers.Main) {
-                    setTimerData(it)
-                }
+                setTimerData(it)
                 if (it.millisUntilFinished == 0L) {
                     delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.Timeout)
                 }
@@ -131,6 +103,40 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
 
         binding.tvTimeLeft.text = timeLeftString
         binding.lpiProgress.progress = timerData.progress
+    }
+
+    private fun setOnClickListeners(
+        coroutineScope: CoroutineScope,
+        delegate: Adyen3DS2Delegate,
+        adyenAuthentication: AdyenAuthentication,
+        sdkInput: String
+    ) {
+        binding.btnEnable.setOnClickListener {
+            coroutineScope.launch {
+                val registrationResult = adyenAuthentication.register(sdkInput)
+                when (registrationResult) {
+                    is AuthenticationResult.RegistrationSuccessful -> {
+                        val result = DelegatedAuthenticationRegistrationResult.RegistrationSuccessful(
+                            registrationResult.sdkOutput
+                        )
+                        delegate.onRegistrationResult(result)
+                    }
+                    is AuthenticationResult.AuthenticationError -> {
+                        delegate.onRegistrationFailed()
+                    }
+                    is AuthenticationResult.Error -> {
+                        delegate.onRegistrationFailed()
+                    }
+                    else -> {
+                        delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
+                    }
+                }
+            }
+        }
+
+        binding.btnNotNow.setOnClickListener {
+            delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
+        }
     }
 
     companion object {

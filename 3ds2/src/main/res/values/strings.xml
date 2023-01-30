@@ -10,7 +10,7 @@
     <string name="checkout_3ds2_delegated_authentication_description">To make sure it’s you, approve this transaction with your biometrics to complete your purchase.</string>
     <string name="checkout_3ds2_delegated_authentication_positive_button">Use biometrics</string>
     <string name="checkout_3ds2_delegated_authentication_negative_button">Approve differently</string>
-    <string name="checkout_3ds2_delegated_authentication_remove_credentials">Opt out any time by <annotation link="regular">removing your credentials.</annotation></string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials">Opt out any time by %#removing your credentials.%#</string>
     <string name="checkout_3ds2_time_left_to_approve">You have %02d:%02d to approve</string>
 
     <string name="checkout_3ds2_delegated_authentication_remove_credentials_title">Remove credentials?</string>
