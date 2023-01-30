@@ -14,10 +14,10 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponentOld
+import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ButtonDelegate
@@ -27,6 +27,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -36,8 +37,9 @@ class GiftCardComponent internal constructor(
     private val giftCardDelegate: GiftCardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<GiftCardComponentState>,
 ) : ViewModel(),
-    PaymentComponentOld<GiftCardComponentState>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -53,9 +55,10 @@ class GiftCardComponent internal constructor(
     init {
         giftCardDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GiftCardComponentState>) -> Unit
     ) {
@@ -63,7 +66,7 @@ class GiftCardComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         giftCardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -74,19 +77,27 @@ class GiftCardComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? GiftCardDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         giftCardDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProviderOld<GiftCardComponent, GiftCardConfiguration> =
-            GiftCardComponentProvider()
+        val PROVIDER: SessionPaymentComponentProvider<
+            GiftCardComponent,
+            GiftCardConfiguration,
+            GiftCardComponentState> = GiftCardComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GIFTCARD)

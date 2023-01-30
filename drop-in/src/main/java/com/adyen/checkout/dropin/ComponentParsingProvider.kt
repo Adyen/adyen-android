@@ -43,7 +43,6 @@ import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSComponentProvider
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardComponent
-import com.adyen.checkout.giftcard.GiftCardComponentProvider
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
@@ -423,16 +422,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val giftcardConfiguration: GiftCardConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            GiftCardComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = giftcardConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val giftcardConfiguration: GiftCardConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            GiftCardComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = giftcardConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
 //        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
 //            val googlePayConfiguration: GooglePayConfiguration =
 //                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

@@ -16,12 +16,13 @@ import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
 import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandlerOld
+import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -44,11 +45,12 @@ import kotlinx.coroutines.launch
 internal class DefaultGiftCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: ButtonComponentParams,
     private val cardEncrypter: CardEncrypter,
-    private val submitHandler: SubmitHandlerOld
+    private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -67,18 +69,16 @@ internal class DefaultGiftCardDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<GiftCardComponentState> = bufferedChannel()
-    override val submitFlow: Flow<GiftCardComponentState> = submitChannel.receiveAsFlow()
+    override val submitFlow: Flow<GiftCardComponentState> = submitHandler.submitFlow
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     private var publicKey: String? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
@@ -154,7 +154,9 @@ internal class DefaultGiftCardDelegate(
     private fun createComponentState(
         outputData: GiftCardOutputData = this.outputData
     ): GiftCardComponentState {
-        val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
+        val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>(
+            order = order,
+        )
 
         val publicKey = publicKey ?: return GiftCardComponentState(
             paymentComponentData = paymentComponentData,
@@ -200,12 +202,7 @@ internal class DefaultGiftCardDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state)
     }
 
     private fun encryptCard(
@@ -228,6 +225,10 @@ internal class DefaultGiftCardDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()

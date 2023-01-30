@@ -14,6 +14,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -41,6 +42,7 @@ internal class GiftCardComponentTest(
     @Mock private val giftCardDelegate: GiftCardDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<GiftCardComponentState>,
 ) {
 
     private lateinit var component: GiftCardComponent
@@ -51,9 +53,10 @@ internal class GiftCardComponentTest(
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
         component = GiftCardComponent(
-            giftCardDelegate,
-            genericActionDelegate,
-            actionHandlingComponent,
+            giftCardDelegate = giftCardDelegate,
+            genericActionDelegate = genericActionDelegate,
+            actionHandlingComponent = actionHandlingComponent,
+            componentEventHandler = componentEventHandler
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -62,6 +65,7 @@ internal class GiftCardComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(giftCardDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -70,6 +74,7 @@ internal class GiftCardComponentTest(
 
         verify(giftCardDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -103,7 +108,12 @@ internal class GiftCardComponentTest(
     fun `when gift card delegate view flow emits a value then component view flow should match that value`() = runTest {
         val giftCardDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(giftCardDelegate.viewFlow) doReturn giftCardDelegateViewFlow
-        component = GiftCardComponent(giftCardDelegate, genericActionDelegate, actionHandlingComponent)
+        component = GiftCardComponent(
+            giftCardDelegate = giftCardDelegate,
+            genericActionDelegate = genericActionDelegate,
+            actionHandlingComponent = actionHandlingComponent,
+            componentEventHandler = componentEventHandler
+        )
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -119,7 +129,12 @@ internal class GiftCardComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = GiftCardComponent(giftCardDelegate, genericActionDelegate, actionHandlingComponent)
+        component = GiftCardComponent(
+            giftCardDelegate = giftCardDelegate,
+            genericActionDelegate = genericActionDelegate,
+            actionHandlingComponent = actionHandlingComponent,
+            componentEventHandler = componentEventHandler
+        )
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
