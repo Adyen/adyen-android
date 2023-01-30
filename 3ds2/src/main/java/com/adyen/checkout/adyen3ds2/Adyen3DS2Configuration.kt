@@ -60,9 +60,8 @@ class Adyen3DS2Configuration private constructor(
             clientKey
         )
 
-
         /**
-         * Set the merchant logo that will be shown for Delegated Authentication.
+         * Set the merchant logo that will be shown during Delegated Authentication.
          * If not set or null - default icon will be shown.
          *
          * @param merchantLogo The drawable resource id of the merchant logo

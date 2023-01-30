@@ -10,8 +10,8 @@ package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.adyen3ds2.ui.DAAuthenticationView
-import com.adyen.checkout.adyen3ds2.ui.DARegistrationView
+import com.adyen.checkout.adyen3ds2.ui.DelegatedAuthenticationView
+import com.adyen.checkout.adyen3ds2.ui.DelegatedAuthenticationRegistrationView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
@@ -27,8 +27,17 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
     ): ComponentView = when (viewType) {
         is Adyen3DS2ComponentViewType -> {
             when (viewType) {
-                Adyen3DS2ComponentViewType.DA_REGISTRATION -> DARegistrationView(context, attrs, defStyleAttr)
-                Adyen3DS2ComponentViewType.DA_AUTHENTICATION -> DAAuthenticationView(context, attrs, defStyleAttr)
+                Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION ->
+                    DelegatedAuthenticationRegistrationView(
+                        context,
+                        attrs,
+                        defStyleAttr
+                    )
+                Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION -> DelegatedAuthenticationView(
+                    context,
+                    attrs,
+                    defStyleAttr
+                )
                 Adyen3DS2ComponentViewType.REDIRECT -> PaymentInProgressView(context, attrs, defStyleAttr)
             }
         }
@@ -37,7 +46,7 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
 }
 
 internal enum class Adyen3DS2ComponentViewType : ComponentViewType {
-    DA_REGISTRATION, DA_AUTHENTICATION, REDIRECT;
+    DELEGATED_AUTHENTICATION_REGISTRATION, DELEGATED_AUTHENTICATION, REDIRECT;
 
     override val viewProvider: ViewProvider = Adyen3DS2ViewProvider
 }

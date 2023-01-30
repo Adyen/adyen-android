@@ -17,9 +17,9 @@ class ChallengeResult private constructor(val isAuthenticated: Boolean, val payl
     companion object {
         private const val KEY_TRANSACTION_STATUS = "transStatus"
         private const val KEY_AUTHORISATION_TOKEN = "authorisationToken"
-        private const val VALUE_TRANSACTION_STATUS = "Y"
         private const val KEY_DELEGATED_AUTHENTICATION_SDK_OUTPUT = "delegatedAuthenticationSDKOutput"
         private const val KEY_DELETE_DELEGATED_AUTHENTICATION_CREDENTIALS = "deleteDelegatedAuthenticationCredentials"
+        private const val VALUE_TRANSACTION_STATUS = "Y"
 
         /**
          * Constructs the object base in the result from te 3DS2 SDK.
@@ -27,7 +27,7 @@ class ChallengeResult private constructor(val isAuthenticated: Boolean, val payl
          * @param completionEvent The result from the 3DS2 SDK.
          * @param authorisationToken The authorisationToken from the API.
          * @param delegatedAuthenticationSdkOutput Adyen Authentication SDK output after credentials registration.
-         * @param deleteDelegatedAuthenticationCredentials The field is used to delete the DA credentials.
+         * @param deleteDelegatedAuthenticationCredentials The flag used to delete delegated authentication credentials.
          * @return The filled object with the content needed for the details response.
          * @throws JSONException In case parsing fails.
          */

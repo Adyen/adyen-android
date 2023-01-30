@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="da_icon_color">#FFFFFF</color>
+    <color name="delegated_authentication_icon_color">#FFFFFF</color>
 </resources>

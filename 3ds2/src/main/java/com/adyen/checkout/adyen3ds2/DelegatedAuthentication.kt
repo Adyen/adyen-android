@@ -148,10 +148,10 @@ internal class DelegatedAuthentication(
         private val DEFAULT_TIMEOUT_IN_MILLIS = 90.seconds.inWholeMilliseconds
         private const val HUNDRED = 100
 
-        private const val REGISTRATION_SDK_INPUT = "da_registration_sdk_input"
-        private const val AUTHENTICATION_SDK_INPUT = "da_authentication_sdk_input"
+        private const val REGISTRATION_SDK_INPUT = "delegated_authentication_registration_sdk_input"
+        private const val AUTHENTICATION_SDK_INPUT = "delegated_authentication_sdk_input"
 
-        private const val MILLIS_UNTIL_FINISHED = "da_millis_until_finished"
-        private const val IS_TIMER_STARTED = "da_is_timer_started"
+        private const val MILLIS_UNTIL_FINISHED = "delegated_authentication_millis_until_finished"
+        private const val IS_TIMER_STARTED = "delegated_authentication_is_timer_started"
     }
 }

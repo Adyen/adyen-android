@@ -12,12 +12,12 @@ import android.app.Activity
 import androidx.annotation.DrawableRes
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
-import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
-import com.adyen.checkout.adyen3ds2.model.DARegistrationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.status.model.TimerData
 import kotlinx.coroutines.flow.Flow
 
-interface DAProvidingDelegate {
+interface DelegatedAuthenticationProvidingDelegate {
 
     val authenticationTimerFlow: Flow<TimerData>
 
@@ -27,13 +27,13 @@ interface DAProvidingDelegate {
 
     fun getRegistrationSdkInput(): String?
 
-    fun onRegistrationResult(result: DARegistrationResult)
+    fun onRegistrationResult(result: DelegatedAuthenticationRegistrationResult)
 
     fun onRegistrationFailed()
 
     fun getAuthenticationSdkInput(): String?
 
-    fun onAuthenticationResult(result: DAAuthenticationResult, activity: Activity)
+    fun onAuthenticationResult(result: DelegatedAuthenticationResult, activity: Activity)
 
     fun onAuthenticationFailed(activity: Activity?)
 

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="checkout_3ds2_da_registration_title">Safe and swift checkout!</string>
-    <string name="checkout_3ds2_da_registration_description">You can check out faster next time on this device using your biometrics.</string>
-    <string name="checkout_3ds2_da_registration_positive_button">Enable swift checkout</string>
-    <string name="checkout_3ds2_da_registration_negative_button">Not now</string>
+    <string name="checkout_3ds2_delegated_authentication_registration_title">Safe and swift checkout!</string>
+    <string name="checkout_3ds2_delegated_authentication_registration_description">You can check out faster next time on this device using your biometrics.</string>
+    <string name="checkout_3ds2_delegated_authentication_registration_positive_button">Enable swift checkout</string>
+    <string name="checkout_3ds2_delegated_authentication_registration_negative_button">Not now</string>
     <string name="checkout_3ds2_time_left_to_enable">You have %02d:%02d to enable</string>
 
-    <string name="checkout_3ds2_da_authentication_title">Approve transaction</string>
-    <string name="checkout_3ds2_da_authentication_description">To make sure it’s you, approve this transaction with your biometrics to complete your purchase.</string>
-    <string name="checkout_3ds2_da_authentication_positive_button">Use biometrics</string>
-    <string name="checkout_3ds2_da_authentication_negative_button">Approve differently</string>
-    <string name="checkout_3ds2_da_authentication_remove_credentials">Opt out any time by <annotation link="regular">removing your credentials.</annotation></string>
+    <string name="checkout_3ds2_delegated_authentication_title">Approve transaction</string>
+    <string name="checkout_3ds2_delegated_authentication_description">To make sure it’s you, approve this transaction with your biometrics to complete your purchase.</string>
+    <string name="checkout_3ds2_delegated_authentication_positive_button">Use biometrics</string>
+    <string name="checkout_3ds2_delegated_authentication_negative_button">Approve differently</string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials">Opt out any time by <annotation link="regular">removing your credentials.</annotation></string>
     <string name="checkout_3ds2_time_left_to_approve">You have %02d:%02d to approve</string>
 
-    <string name="checkout_3ds2_da_remove_credentials_title">Remove credentials?</string>
-    <string name="checkout_3ds2_da_remove_credentials_description">Are you sure you want to remove your credentials?</string>
-    <string name="checkout_3ds2_da_remove_credentials_positive_button">Remove</string>
-    <string name="checkout_3ds2_da_remove_credentials_negative_button">Cancel</string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials_title">Remove credentials?</string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials_description">Are you sure you want to remove your credentials?</string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials_positive_button">Remove</string>
+    <string name="checkout_3ds2_delegated_authentication_remove_credentials_negative_button">Cancel</string>
 </resources>

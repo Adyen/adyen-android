@@ -18,7 +18,7 @@ import com.adyen.authentication.AuthenticationResult
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
 import com.adyen.checkout.adyen3ds2.databinding.ViewDaAuthenticationBinding
-import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ComponentView
@@ -32,7 +32,7 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
-internal class DAAuthenticationView @JvmOverloads constructor(
+internal class DelegatedAuthenticationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -85,8 +85,9 @@ internal class DAAuthenticationView @JvmOverloads constructor(
                     coroutineScope.launch {
                         when (val authenticationResult = adyenAuthentication.authenticate(sdkInput)) {
                             is AuthenticationResult.AuthenticationSuccessful -> {
-                                val result =
-                                    DAAuthenticationResult.AuthenticationSuccessful(authenticationResult.sdkOutput)
+                                val result = DelegatedAuthenticationResult.AuthenticationSuccessful(
+                                    authenticationResult.sdkOutput
+                                )
                                 delegate.onAuthenticationResult(result, activity)
                             }
                             is AuthenticationResult.AuthenticationError -> {
@@ -96,20 +97,20 @@ internal class DAAuthenticationView @JvmOverloads constructor(
                                 delegate.onAuthenticationFailed(activity)
                             }
                             else -> {
-                                delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
+                                delegate.onAuthenticationResult(DelegatedAuthenticationResult.SkippedByUser, activity)
                             }
                         }
                     }
                 }
 
                 binding.btnAuthoriseDifferently.setOnClickListener {
-                    delegate.onAuthenticationResult(DAAuthenticationResult.NotNow, activity)
+                    delegate.onAuthenticationResult(DelegatedAuthenticationResult.SkippedByUser, activity)
                 }
 
                 binding.tvRemoveCredentials.setOnClickListener {
                     showRemoveCredentialsDialog(activity) {
                         delegate.onAuthenticationResult(
-                            DAAuthenticationResult.RemoveCredentials,
+                            DelegatedAuthenticationResult.RemoveCredentials,
                             activity
                         )
                     }
@@ -124,20 +125,20 @@ internal class DAAuthenticationView @JvmOverloads constructor(
 
     private fun setLocalizedStrings(localizedContext: Context) {
         binding.tvTitle.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_authentication_title)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_title)
         binding.tvDescription.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_authentication_description)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_description)
         binding.btnAuthorise.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_authentication_positive_button)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_positive_button)
         binding.btnAuthoriseDifferently.text = localizedContext.getString(
-            R.string.checkout_3ds2_da_authentication_negative_button
+            R.string.checkout_3ds2_delegated_authentication_negative_button
         )
         setRemoveCredentialsLocalizedText(localizedContext)
     }
 
     private fun setRemoveCredentialsLocalizedText(localizedContext: Context) {
         val removeCredentialsText = localizedContext.getText(
-            R.string.checkout_3ds2_da_authentication_remove_credentials
+            R.string.checkout_3ds2_delegated_authentication_remove_credentials
         ) as SpannedString
 
         val removeCredentialsStringBuilder = SpannableStringBuilder(removeCredentialsText)
@@ -169,7 +170,7 @@ internal class DAAuthenticationView @JvmOverloads constructor(
                     setTimerData(it)
                 }
                 if (it.millisUntilFinished == 0L) {
-                    delegate.onAuthenticationResult(DAAuthenticationResult.Timeout, activity)
+                    delegate.onAuthenticationResult(DelegatedAuthenticationResult.Timeout, activity)
                 }
             }
         }
@@ -197,14 +198,14 @@ internal class DAAuthenticationView @JvmOverloads constructor(
             dialog.dismiss()
         }
         MaterialAlertDialogBuilder(context, R.style.DAMaterialAlertDialogTheme)
-            .setTitle(localizedContext.getString(R.string.checkout_3ds2_da_remove_credentials_title))
-            .setMessage(localizedContext.getString(R.string.checkout_3ds2_da_remove_credentials_description))
+            .setTitle(localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_remove_credentials_title))
+            .setMessage(localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_remove_credentials_description))
             .setPositiveButton(
-                localizedContext.getString(R.string.checkout_3ds2_da_remove_credentials_positive_button),
+                localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_remove_credentials_positive_button),
                 onClickListener
             )
             .setNegativeButton(
-                localizedContext.getString(R.string.checkout_3ds2_da_remove_credentials_negative_button),
+                localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_remove_credentials_negative_button),
                 onClickListener
             )
             .create()

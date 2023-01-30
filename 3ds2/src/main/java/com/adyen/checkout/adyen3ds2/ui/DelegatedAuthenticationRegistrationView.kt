@@ -9,7 +9,7 @@ import com.adyen.authentication.AuthenticationResult
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
 import com.adyen.checkout.adyen3ds2.databinding.ViewDaRegistrationBinding
-import com.adyen.checkout.adyen3ds2.model.DARegistrationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ComponentView
@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
-internal class DARegistrationView @JvmOverloads constructor(
+internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -66,8 +66,9 @@ internal class DARegistrationView @JvmOverloads constructor(
                     coroutineScope.launch {
                         when (val registrationResult = adyenAuthentication.register(sdkInput)) {
                             is AuthenticationResult.RegistrationSuccessful -> {
-                                val result =
-                                    DARegistrationResult.RegistrationSuccessful(registrationResult.sdkOutput)
+                                val result = DelegatedAuthenticationRegistrationResult.RegistrationSuccessful(
+                                    registrationResult.sdkOutput
+                                )
                                 delegate.onRegistrationResult(result)
                             }
                             is AuthenticationResult.AuthenticationError -> {
@@ -77,14 +78,14 @@ internal class DARegistrationView @JvmOverloads constructor(
                                 delegate.onRegistrationFailed()
                             }
                             else -> {
-                                delegate.onRegistrationResult(DARegistrationResult.NotNow)
+                                delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
                             }
                         }
                     }
                 }
 
                 binding.btnNotNow.setOnClickListener {
-                    delegate.onRegistrationResult(DARegistrationResult.NotNow)
+                    delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.SkippedByUser)
                 }
             }
         }
@@ -96,13 +97,13 @@ internal class DARegistrationView @JvmOverloads constructor(
 
     private fun setLocalizedStrings(localizedContext: Context) {
         binding.tvTitle.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_registration_title)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_title)
         binding.tvDescription.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_registration_description)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_description)
         binding.btnEnable.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_registration_positive_button)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_positive_button)
         binding.btnNotNow.text =
-            localizedContext.getString(R.string.checkout_3ds2_da_registration_negative_button)
+            localizedContext.getString(R.string.checkout_3ds2_delegated_authentication_registration_negative_button)
     }
 
     private fun collectTimerUpdates(coroutineScope: CoroutineScope, delegate: Adyen3DS2Delegate) {
@@ -112,7 +113,7 @@ internal class DARegistrationView @JvmOverloads constructor(
                     setTimerData(it)
                 }
                 if (it.millisUntilFinished == 0L) {
-                    delegate.onRegistrationResult(DARegistrationResult.Timeout)
+                    delegate.onRegistrationResult(DelegatedAuthenticationRegistrationResult.Timeout)
                 }
             }
         }

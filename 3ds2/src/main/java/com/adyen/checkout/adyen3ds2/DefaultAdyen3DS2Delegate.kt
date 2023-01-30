@@ -19,8 +19,8 @@ import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken
-import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
-import com.adyen.checkout.adyen3ds2.model.DARegistrationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
@@ -115,7 +115,9 @@ internal class DefaultAdyen3DS2Delegate(
     private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
     private var currentSdkTransactionId: String? by SavedStateHandleProperty(SDK_TRANSACTION_ID)
     private var currentTransactionStatus: String? by SavedStateHandleProperty(TRANSACTION_STATUS)
-    private var removeDACredentials: Boolean? by SavedStateHandleProperty(REMOVE_DA_CREDENTIALS)
+    private var removeDelegatedAuthenticationCredentials: Boolean? by SavedStateHandleProperty(
+        REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS
+    )
     //endregion
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -125,10 +127,10 @@ internal class DefaultAdyen3DS2Delegate(
         val isDATimerStarted = delegatedAuthentication.isTimerStarted
         when {
             delegatedAuthentication.isRegistrationInitiated() && isDATimerStarted == true -> {
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_REGISTRATION)
+                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
             }
             delegatedAuthentication.isAuthenticationInitiated() && isDATimerStarted == true -> {
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_AUTHENTICATION)
+                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
             }
             else -> {
                 _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
@@ -296,7 +298,7 @@ internal class DefaultAdyen3DS2Delegate(
                 if (hasCredential == true) {
                     delegatedAuthentication.initAuthentication(delegatedAuthenticationSdkInput)
                     delegatedAuthentication.startTimer(coroutineScope)
-                    _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_AUTHENTICATION)
+                    _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
                     // The flow is interrupted by Delegated Authentication
                     // completeIdentifyShopper will be called after DA authentication
                     return@launch
@@ -312,7 +314,7 @@ internal class DefaultAdyen3DS2Delegate(
         removeDACredentials: Boolean? = null
     ) {
         _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
-        this.removeDACredentials = removeDACredentials
+        this.removeDelegatedAuthenticationCredentials = removeDACredentials
         val encodedFingerprint = createEncodedFingerprint(
             currentFingerprintJson ?: "",
             delegatedAuthenticationSdkOutput
@@ -485,7 +487,7 @@ internal class DefaultAdyen3DS2Delegate(
         coroutineScope.launch(defaultDispatcher) {
             if (delegatedAuthentication.isRegistrationInitiated()) {
                 delegatedAuthentication.startTimer(coroutineScope)
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DA_REGISTRATION)
+                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
                 // The flow is interrupted by Delegated Authentication
                 // completeChallengeFlow will be called after DA registration
                 return@launch
@@ -509,14 +511,14 @@ internal class DefaultAdyen3DS2Delegate(
                 adyen3DS2Serializer.createChallengeDetails(
                     completionEvent = completionEvent,
                     delegatedAuthenticationSdkOutput = delegatedAuthenticationSdkOutput,
-                    deleteDelegatedAuthenticationCredentials = removeDACredentials
+                    deleteDelegatedAuthenticationCredentials = removeDelegatedAuthenticationCredentials
                 )
             } else {
                 adyen3DS2Serializer.createThreeDsResultDetails(
                     completionEvent = completionEvent,
                     authorisationToken = token,
                     delegatedAuthenticationSdkOutput = delegatedAuthenticationSdkOutput,
-                    deleteDelegatedAuthenticationCredentials = removeDACredentials
+                    deleteDelegatedAuthenticationCredentials = removeDelegatedAuthenticationCredentials
                 )
             }
             emitDetails(details)
@@ -561,9 +563,9 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun getRegistrationSdkInput(): String? = delegatedAuthentication.getRegistrationSdkInput()
 
-    override fun onRegistrationResult(result: DARegistrationResult) {
+    override fun onRegistrationResult(result: DelegatedAuthenticationRegistrationResult) {
         delegatedAuthentication.completeRegistration()
-        val sdkOutput = (result as? DARegistrationResult.RegistrationSuccessful)?.sdkOutput
+        val sdkOutput = (result as? DelegatedAuthenticationRegistrationResult.RegistrationSuccessful)?.sdkOutput
         completeChallengeFlow(sdkOutput)
     }
 
@@ -574,11 +576,11 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun getAuthenticationSdkInput(): String? = delegatedAuthentication.getAuthenticationSdkInput()
 
-    override fun onAuthenticationResult(result: DAAuthenticationResult, activity: Activity) {
+    override fun onAuthenticationResult(result: DelegatedAuthenticationResult, activity: Activity) {
         delegatedAuthentication.completeAuthentication()
         coroutineScope.launch {
-            val sdkOutput = (result as? DAAuthenticationResult.AuthenticationSuccessful)?.sdkOutput
-            val removeDACredentials = result is DAAuthenticationResult.RemoveCredentials
+            val sdkOutput = (result as? DelegatedAuthenticationResult.AuthenticationSuccessful)?.sdkOutput
+            val removeDACredentials = result is DelegatedAuthenticationResult.RemoveCredentials
             completeIdentifyShopper(activity, sdkOutput, removeDACredentials)
         }
     }
@@ -637,7 +639,7 @@ internal class DefaultAdyen3DS2Delegate(
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val SDK_TRANSACTION_ID = "sdk_transaction_id"
         private const val TRANSACTION_STATUS = "transaction_status"
-        private const val REMOVE_DA_CREDENTIALS = "da_remove_credentials"
+        private const val REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS = "remove_delegated_authentication_credentials"
 
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"

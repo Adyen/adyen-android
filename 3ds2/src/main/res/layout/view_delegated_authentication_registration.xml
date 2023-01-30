@@ -26,7 +26,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:textSize="20sp"
-        tools:text="@string/checkout_3ds2_da_authentication_title" />
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_title" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -37,7 +37,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:textSize="14sp"
-        tools:text="@string/checkout_3ds2_da_authentication_description" />
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_description" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.4"
-            app:trackColor="@color/da_progress_track_color"
+            app:trackColor="@color/delegated_authentication_progress_track_color"
             app:trackCornerRadius="10dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -66,40 +66,29 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="@dimen/standard_margin"
         android:gravity="center"
+        android:textColor="@color/delegated_authentication_hint_text_color"
         android:textSize="12sp"
-        tools:text="@string/checkout_3ds2_time_left_to_approve" />
+        tools:text="@string/checkout_3ds2_time_left_to_enable" />
 
     <Button
-        android:id="@+id/btnAuthorise"
+        android:id="@+id/btnEnable"
         style="@style/AdyenCheckout.Button.Colored"
         android:layout_marginHorizontal="@dimen/standard_margin"
         android:layout_marginTop="24dp"
         android:textAllCaps="false"
         android:textSize="14sp"
-        tools:text="@string/checkout_3ds2_da_authentication_positive_button" />
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_positive_button" />
 
     <Button
-        android:id="@+id/btnAuthoriseDifferently"
+        android:id="@+id/btnNotNow"
         style="@style/AdyenCheckout.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_margin"
-        android:layout_marginBottom="@dimen/standard_margin"
+        android:layout_marginBottom="24dp"
         android:textAllCaps="false"
         android:textSize="14sp"
-        tools:text="@string/checkout_3ds2_da_authentication_negative_button" />
-
-    <TextView
-        android:id="@+id/tvRemoveCredentials"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:textColor="@color/da_hint_text_color"
-        android:textSize="12sp"
-        tools:text="@string/checkout_3ds2_da_authentication_remove_credentials" />
+        tools:text="@string/checkout_3ds2_delegated_authentication_registration_negative_button" />
 
 </merge>

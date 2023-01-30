@@ -11,8 +11,9 @@ package com.adyen.checkout.adyen3ds2.model
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class DARegistrationResult {
-    class RegistrationSuccessful(val sdkOutput: String) : DARegistrationResult()
-    object NotNow : DARegistrationResult()
-    object Timeout : DARegistrationResult()
+sealed class DelegatedAuthenticationResult {
+    class AuthenticationSuccessful(val sdkOutput: String) : DelegatedAuthenticationResult()
+    object SkippedByUser : DelegatedAuthenticationResult()
+    object RemoveCredentials : DelegatedAuthenticationResult()
+    object Timeout : DelegatedAuthenticationResult()
 }

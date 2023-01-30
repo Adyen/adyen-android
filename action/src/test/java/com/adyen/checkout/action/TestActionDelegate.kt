@@ -16,8 +16,8 @@ import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
-import com.adyen.checkout.adyen3ds2.model.DAAuthenticationResult
-import com.adyen.checkout.adyen3ds2.model.DARegistrationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
@@ -167,13 +167,13 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override fun getRegistrationSdkInput(): String? = null
 
-    override fun onRegistrationResult(result: DARegistrationResult) = Unit
+    override fun onRegistrationResult(result: DelegatedAuthenticationRegistrationResult) = Unit
 
     override fun onRegistrationFailed() = Unit
 
     override fun getAuthenticationSdkInput(): String? = null
 
-    override fun onAuthenticationResult(result: DAAuthenticationResult, activity: Activity) = Unit
+    override fun onAuthenticationResult(result: DelegatedAuthenticationResult, activity: Activity) = Unit
 
     override fun onAuthenticationFailed(activity: Activity?) = Unit
 
