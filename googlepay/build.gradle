@@ -37,6 +37,7 @@ dependencies {
     // Checkout
     api project(':action')
     api project(':components-core')
+    api project(':sessions-core')
 
     // Dependencies
     api libraries.playServicesWallet

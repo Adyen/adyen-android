@@ -436,16 +436,16 @@ internal fun getComponentFor(
                 application = fragment.requireApplication(),
             )
         }
-        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val googlePayConfiguration: GooglePayConfiguration =
-                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            GooglePayComponentProvider(dropInParams).get(
-                owner = fragment,
-                paymentMethod = paymentMethod,
-                configuration = googlePayConfiguration,
-                application = fragment.requireApplication(),
-            )
-        }
+//        GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+//            val googlePayConfiguration: GooglePayConfiguration =
+//                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+//            GooglePayComponentProvider(dropInParams).get(
+//                owner = fragment,
+//                paymentMethod = paymentMethod,
+//                configuration = googlePayConfiguration,
+//                application = fragment.requireApplication(),
+//            )
+//        }
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

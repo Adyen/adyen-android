@@ -74,7 +74,8 @@ internal class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
+        // TODO SESSIONS: handle observing the component
+//        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

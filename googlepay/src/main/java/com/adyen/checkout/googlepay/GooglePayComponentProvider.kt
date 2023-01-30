@@ -10,22 +10,25 @@ package com.adyen.checkout.googlepay
 import android.app.Application
 import android.os.Bundle
 import androidx.annotation.RestrictTo
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.PaymentComponentProviderOld
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
 import com.adyen.checkout.components.api.AnalyticsService
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.base.DefaultComponentEventHandler
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
@@ -33,6 +36,14 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.util.GooglePayUtils
+import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.SessionComponentCallback
+import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.api.SessionService
+import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.repository.SessionRepository
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.wallet.Wallet
@@ -43,7 +54,7 @@ private val TAG = LogUtil.getTag()
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : PaymentComponentProviderOld<GooglePayComponent, GooglePayConfiguration>,
+) : SessionPaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
     private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams)
@@ -51,10 +62,13 @@ class GooglePayComponentProvider(
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration,
         application: Application,
         defaultArgs: Bundle?,
+        componentCallback: ComponentCallback<GooglePayComponentState>,
+        order: Order?,
         key: String?,
     ): GooglePayComponent {
         assertSupported(paymentMethod)
@@ -74,6 +88,7 @@ class GooglePayComponentProvider(
             val googlePayDelegate = DefaultGooglePayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
+                order = order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
             )
@@ -84,13 +99,93 @@ class GooglePayComponentProvider(
                 application = application,
             )
 
+            val componentEventHandler = DefaultComponentEventHandler(componentCallback)
+
             GooglePayComponent(
                 googlePayDelegate = googlePayDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, googlePayDelegate),
+                componentEventHandler = componentEventHandler,
+            )
+        }
+
+        return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: GooglePayConfiguration,
+        application: Application,
+        defaultArgs: Bundle?,
+        componentCallback: SessionComponentCallback<GooglePayComponentState>,
+        key: String?
+    ): GooglePayComponent {
+        assertSupported(paymentMethod)
+
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val googlePayDelegate = DefaultGooglePayDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+
+            val sessionHandler = SessionHandler(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+                sessionComponentCallback = componentCallback
+            )
+
+            GooglePayComponent(
+                googlePayDelegate = googlePayDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, googlePayDelegate),
+                componentEventHandler = sessionHandler,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            }
     }
 
     override fun isAvailable(
