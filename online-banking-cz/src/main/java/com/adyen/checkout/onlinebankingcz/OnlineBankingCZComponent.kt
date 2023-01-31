@@ -43,11 +43,13 @@ class OnlineBankingCZComponent internal constructor(
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
 
         @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
+
+        @JvmField
         val PROVIDER: SessionPaymentComponentProvider<
             OnlineBankingComponent<OnlineBankingCZPaymentMethod>,
             OnlineBankingCZConfiguration,
             PaymentComponentState<OnlineBankingCZPaymentMethod>
             > = OnlineBankingCZComponentProvider()
-        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
     }
 }

@@ -42,6 +42,7 @@ class OnlineBankingSKComponent internal constructor(
 
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 
+        @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_SK)
 
         @JvmField
