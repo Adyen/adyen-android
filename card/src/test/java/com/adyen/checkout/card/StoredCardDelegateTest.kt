@@ -50,13 +50,16 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val application: Application
 ) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
@@ -336,6 +339,7 @@ internal class StoredCardDelegateTest(
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
     ): StoredCardDelegate {
+        whenever(application.applicationContext) doReturn application
         return StoredCardDelegate(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
@@ -344,7 +348,7 @@ internal class StoredCardDelegateTest(
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = SubmitHandler(),
-            application = Application()
+            application = application
         )
     }
 

@@ -46,11 +46,7 @@ class BcmcComponent internal constructor(
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    override val delegate: ComponentDelegate
-        get() = when (val delegate = actionHandlingComponent.activeDelegate) {
-            is GenericActionDelegate -> delegate.delegate
-            else -> delegate
-        }
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
     override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
         viewModelScope,

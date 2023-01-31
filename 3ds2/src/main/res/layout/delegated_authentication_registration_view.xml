@@ -8,24 +8,21 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
+        style="@style/AdyenCheckout.Image.Logo.Medium"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="44dp"
-        android:contentDescription="@null"
         android:src="@drawable/ic_adyen_fingerprint"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/textView_title"
+        style="@style/AdyenCheckout.TextAppearance.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:textSize="20sp"
+        android:gravity="center_horizontal"
         tools:text="@string/checkout_3ds2_delegated_authentication_registration_title" />
 
     <TextView
@@ -33,10 +30,10 @@
         style="@style/AdyenCheckout.TextAppearance.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="@dimen/standard_half_margin"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         tools:text="@string/checkout_3ds2_delegated_authentication_registration_description" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -47,14 +44,13 @@
 
     <TextView
         android:id="@+id/textView_timeLeft"
+        style="@style/AdyenCheckout.DelegatedAuthentication.TimerTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="@dimen/standard_margin"
-        android:gravity="center"
-        android:textColor="@color/delegatedAuthenticationTimerTextColor"
-        android:textSize="12sp"
+        android:gravity="center_horizontal"
         tools:text="@string/checkout_3ds2_time_left_to_enable" />
 
     <Button
@@ -63,7 +59,6 @@
         android:layout_marginHorizontal="@dimen/standard_margin"
         android:layout_marginTop="24dp"
         android:textAllCaps="false"
-        android:textSize="14sp"
         tools:text="@string/checkout_3ds2_delegated_authentication_registration_positive_button" />
 
     <Button
@@ -75,7 +70,6 @@
         android:layout_marginTop="@dimen/standard_margin"
         android:layout_marginBottom="24dp"
         android:textAllCaps="false"
-        android:textSize="14sp"
         tools:text="@string/checkout_3ds2_delegated_authentication_registration_negative_button" />
 
 </merge>

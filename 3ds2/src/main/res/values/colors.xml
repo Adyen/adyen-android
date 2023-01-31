@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="delegatedAuthenticationIconColor">#000000</color>
+    <color name="delegatedAuthenticationHintTextColor">#687282</color>
     <color name="delegatedAuthenticationTimerTextColor">#687282</color>
     <color name="delegatedAuthenticationProgressTrackColor">#E6E9EB</color>
     <color name="delegatedAuthenticationProgressIndicatorColor">#0075FF</color>

@@ -37,13 +37,16 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultBcmcDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val application: Application
 ) {
 
     private lateinit var testPublicKeyRepository: TestPublicKeyRepository
@@ -330,17 +333,20 @@ internal class DefaultBcmcDelegateTest(
 
     private fun createBcmcDelegate(
         configuration: BcmcConfiguration = getDefaultBcmcConfigurationBuilder().build()
-    ) = DefaultBcmcDelegate(
-        observerRepository = PaymentObserverRepository(),
-        paymentMethod = PaymentMethod(),
-        publicKeyRepository = testPublicKeyRepository,
-        componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
-        cardValidationMapper = cardValidationMapper,
-        cardEncrypter = cardEncrypter,
-        analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler(),
-        application = Application()
-    )
+    ): DefaultBcmcDelegate {
+        whenever(application.applicationContext) doReturn application
+        return DefaultBcmcDelegate(
+            observerRepository = PaymentObserverRepository(),
+            paymentMethod = PaymentMethod(),
+            publicKeyRepository = testPublicKeyRepository,
+            componentParams = BcmcComponentParamsMapper(null).mapToParams(configuration),
+            cardValidationMapper = cardValidationMapper,
+            cardEncrypter = cardEncrypter,
+            analyticsRepository = analyticsRepository,
+            submitHandler = SubmitHandler(),
+            application = application
+        )
+    }
 
     private fun getDefaultBcmcConfigurationBuilder() = BcmcConfiguration.Builder(
         Locale.US,

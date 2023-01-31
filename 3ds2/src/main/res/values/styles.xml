@@ -19,8 +19,15 @@
         <item name="trackCornerRadius">@dimen/delegated_authentication_progress_track_radius</item>
     </style>
 
+    <style name="AdyenCheckout.DelegatedAuthentication.TimerTextAppearance" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/delegatedAuthenticationTimerTextColor</item>
+    </style>
+
     <style name="AdyenCheckout.DelegatedAuthentication.OptOutTextView">
         <item name="android:text">@string/checkout_3ds2_delegated_authentication_remove_credentials</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/delegatedAuthenticationHintTextColor</item>
     </style>
 
 </resources>
