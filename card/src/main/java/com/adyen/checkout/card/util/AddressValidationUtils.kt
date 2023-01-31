@@ -103,7 +103,7 @@ object AddressValidationUtils {
                 if (detectedCardType == null) {
                     false
                 } else {
-                    policy.brands.contains(detectedCardType.cardType.txVariant)
+                    policy.brands.contains(detectedCardType.cardBrand.txVariant)
                 }
             }
         }

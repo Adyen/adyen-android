@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.CardBrand;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 
@@ -24,14 +24,14 @@ import java.util.List;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageViewHolder> {
 
-    private final List<CardType> mSupportedCards;
-    private List<CardType> mFilteredCards = Collections.emptyList();
+    private final List<CardBrand> mSupportedCards;
+    private List<CardBrand> mFilteredCards = Collections.emptyList();
     private final ImageLoader mImageLoader;
 
     private static final float ACTIVE = 1f;
     private static final float NOT_ACTIVE = 0.2f;
 
-    public CardListAdapter(@NonNull ImageLoader imageLoader, @NonNull List<CardType> supportedCards) {
+    public CardListAdapter(@NonNull ImageLoader imageLoader, @NonNull List<CardBrand> supportedCards) {
         mImageLoader = imageLoader;
         mSupportedCards = supportedCards;
     }
@@ -48,7 +48,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-        final CardType card = mSupportedCards.get(i);
+        final CardBrand card = mSupportedCards.get(i);
         imageViewHolder.mCardLogo.setAlpha(mFilteredCards.isEmpty() || mFilteredCards.contains(card) ? ACTIVE : NOT_ACTIVE);
         mImageLoader.load(card.getTxVariant(), imageViewHolder.mCardLogo);
     }
@@ -59,7 +59,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
     }
 
 
-    public void setFilteredCard(@NonNull List<CardType> filteredCards) {
+    public void setFilteredCard(@NonNull List<CardBrand> filteredCards) {
         this.mFilteredCards = filteredCards;
         notifyDataSetChanged();
     }

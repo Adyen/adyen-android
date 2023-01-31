@@ -271,11 +271,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             val firstDetectedCardType = detectedCardTypes.first()
 
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(firstDetectedCardType.cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+            mImageLoader?.load(firstDetectedCardType.cardBrand.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
             // TODO: 29/01/2021 get this logic from OutputData
-            val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
+            val isAmex = detectedCardTypes.any { it.cardBrand.cardType == CardType.AMERICAN_EXPRESS }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 
             if (detectedCardTypes.size == 1 &&
@@ -299,7 +299,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-                mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
+                mImageLoader?.load(it.cardBrand.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
                 initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
                 initBrandSelectionListeners()
             } ?: run {

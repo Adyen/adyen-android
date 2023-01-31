@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -219,23 +220,23 @@ class NewCardDelegate(
         if (cardNumber.isEmpty()) {
             return emptyList()
         }
-        val supportedCardTypes = cardConfiguration.supportedCardTypes
-        val estimateCardTypes = CardType.estimate(cardNumber)
-        return estimateCardTypes.map { localDetectedCard(it, supportedCardTypes) }
+        val supportedCardBrands = cardConfiguration.supportedCardBrands
+        val estimateCardBrands = CardType.estimate(cardNumber).map { CardBrand(it) }
+        return estimateCardBrands.map { localDetectedCard(it, supportedCardBrands) }
     }
 
-    private fun localDetectedCard(cardType: CardType, supportedCardTypes: List<CardType>): DetectedCardType {
+    private fun localDetectedCard(cardBrand: CardBrand, supportedCardBrands: List<CardBrand>): DetectedCardType {
         return DetectedCardType(
-            cardType,
+            cardBrand,
             isReliable = false,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                noCvcBrands.contains(cardBrand.cardType) -> Brand.FieldPolicy.HIDDEN
                 else -> Brand.FieldPolicy.REQUIRED
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             panLength = null,
-            isSupported = supportedCardTypes.contains(cardType),
+            isSupported = supportedCardBrands.contains(cardBrand),
         )
     }
 }

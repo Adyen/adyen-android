@@ -11,7 +11,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -101,30 +101,28 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
      * @return The Configuration object with possibly adjusted values.
      */
     private fun checkSupportedCardTypes(paymentMethod: PaymentMethod, cardConfiguration: CardConfiguration): CardConfiguration {
-        if (cardConfiguration.supportedCardTypes.isNotEmpty()) {
+        if (cardConfiguration.supportedCardBrands.isNotEmpty()) {
             return cardConfiguration
         }
 
         val brands = paymentMethod.brands
-        var supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
+        var supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST.map {
+            CardBrand(it)
+        }
 
-        // Get card types from brands in PaymentMethod object
+        // Get card brands from brands in PaymentMethod object
         if (!brands.isNullOrEmpty()) {
-            supportedCardTypes = arrayListOf()
+            supportedCardBrands = arrayListOf()
             for (brand in brands) {
-                val brandType = CardType.getByBrandName(brand)
-                if (brandType != null) {
-                    supportedCardTypes.add(brandType)
-                } else {
-                    Logger.e(TAG, "Failed to get card type for brand: $brand")
-                }
+                val cardBrand = CardBrand(brand)
+                supportedCardBrands.add(cardBrand)
             }
         } else {
             Logger.d(TAG, "Falling back to DEFAULT_SUPPORTED_CARDS_LIST")
         }
         @Suppress("SpreadOperator")
         return cardConfiguration.newBuilder()
-            .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+            .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
             .build()
     }
 }
