@@ -34,7 +34,7 @@ class MolpayComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(
+        val PAYMENT_METHOD_TYPES = listOf(
             PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,
             PaymentMethodTypes.MOLPAY_VIETNAM

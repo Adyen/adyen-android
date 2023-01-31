@@ -90,6 +90,6 @@ class BlikComponent internal constructor(
         val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BLIK)
     }
 }

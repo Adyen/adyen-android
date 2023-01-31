@@ -90,6 +90,6 @@ class MBWayComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = MBWayComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.MB_WAY)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.MB_WAY)
     }
 }

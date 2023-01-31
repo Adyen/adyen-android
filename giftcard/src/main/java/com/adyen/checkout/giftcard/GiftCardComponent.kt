@@ -88,6 +88,6 @@ class GiftCardComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GIFTCARD)
     }
 }

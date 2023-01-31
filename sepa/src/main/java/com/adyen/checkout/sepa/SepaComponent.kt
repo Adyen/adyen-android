@@ -90,6 +90,6 @@ class SepaComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SEPA)
     }
 }

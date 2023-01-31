@@ -33,6 +33,6 @@ class DotpayComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = DotpayComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.DOTPAY)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)
     }
 }

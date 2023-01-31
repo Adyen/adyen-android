@@ -31,7 +31,7 @@ class IdealComponent internal constructor(
 
     companion object {
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.IDEAL)
 
         @JvmField
         val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()

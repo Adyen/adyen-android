@@ -118,6 +118,6 @@ class BacsDirectDebitComponent internal constructor(
             BacsDirectDebitComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BACS)
     }
 }

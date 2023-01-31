@@ -35,6 +35,6 @@ class OnlineBankingPLComponent internal constructor(
             OnlineBankingPLComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_PL)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_PL)
     }
 }

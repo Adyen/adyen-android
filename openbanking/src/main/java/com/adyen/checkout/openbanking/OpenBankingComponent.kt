@@ -34,6 +34,6 @@ class OpenBankingComponent internal constructor(
             OpenBankingComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.OPEN_BANKING)
     }
 }
