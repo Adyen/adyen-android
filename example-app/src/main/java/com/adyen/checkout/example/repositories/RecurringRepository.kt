@@ -20,6 +20,9 @@ internal class RecurringRepositoryImpl(
     private val recurringApiService: RecurringApiService
 ) : RecurringRepository {
 
-    override suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): JSONObject? =
-        safeApiCall { recurringApiService.removeStoredPaymentMethodAsync(request) }
+    override suspend fun removeStoredPaymentMethod(
+        request: RemoveStoredPaymentMethodRequest
+    ): JSONObject? = safeApiCall {
+        recurringApiService.removeStoredPaymentMethodAsync(request)
+    }
 }

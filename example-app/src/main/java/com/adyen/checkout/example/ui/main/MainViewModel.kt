@@ -123,7 +123,7 @@ internal class MainViewModel @Inject constructor(
     )
 
     private suspend fun getSession(dropInConfiguration: DropInConfiguration): CheckoutSession? {
-        val sessionModel = paymentsRepository.getSessionAsync(
+        val sessionModel = paymentsRepository.createSession(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

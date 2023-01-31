@@ -86,7 +86,7 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
-        val sessionModel = paymentsRepository.getSessionAsync(
+        val sessionModel = paymentsRepository.createSession(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
