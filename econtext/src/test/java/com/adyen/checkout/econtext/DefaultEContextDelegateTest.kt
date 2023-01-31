@@ -9,9 +9,12 @@
 package com.adyen.checkout.econtext
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler
@@ -39,6 +42,7 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 internal class DefaultEContextDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<TestEContextPaymentMethod>>,
 ) {
 
     private lateinit var delegate: DefaultEContextDelegate<*>
@@ -150,6 +154,7 @@ internal class DefaultEContextDelegateTest(
                     assertEquals("lastName", data.paymentMethod?.lastName)
                     assertEquals("phoneNumber", data.paymentMethod?.telephoneNumber)
                     assertEquals("emailAddress", data.paymentMethod?.shopperEmail)
+                    assertEquals(TEST_ORDER, data.order)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
@@ -190,13 +195,15 @@ internal class DefaultEContextDelegateTest(
     }
 
     private fun createEContextDelegate(
-        configuration: TestEContextConfiguration = getDefaultTestEContextConfigurationBuilder().build()
+        configuration: TestEContextConfiguration = getDefaultTestEContextConfigurationBuilder().build(),
+        order: Order = TEST_ORDER
     ) = DefaultEContextDelegate(
         observerRepository = PaymentObserverRepository(),
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         paymentMethod = PaymentMethod(),
+        order = order,
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler()
+        submitHandler = submitHandler
     ) { TestEContextPaymentMethod() }
 
     private fun getDefaultTestEContextConfigurationBuilder() = TestEContextConfiguration.Builder(
@@ -207,5 +214,6 @@ internal class DefaultEContextDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

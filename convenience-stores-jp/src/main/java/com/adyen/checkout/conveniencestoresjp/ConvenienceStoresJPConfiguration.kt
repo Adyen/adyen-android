@@ -25,7 +25,7 @@ class ConvenienceStoresJPConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
-    internal val genericActionConfiguration: GenericActionConfiguration,
+    override val genericActionConfiguration: GenericActionConfiguration,
 ) : EContextConfiguration() {
 
     /**

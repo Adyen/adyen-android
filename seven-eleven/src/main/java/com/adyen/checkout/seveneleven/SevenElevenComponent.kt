@@ -10,7 +10,8 @@ package com.adyen.checkout.seveneleven
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.econtext.EContextComponent
@@ -19,18 +20,19 @@ import com.adyen.checkout.econtext.EContextDelegate
 class SevenElevenComponent internal constructor(
     delegate: EContextDelegate<SevenElevenPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
-    actionHandlingComponent: DefaultActionHandlingComponent
+    actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<SevenElevenPaymentMethod>>
 ) : EContextComponent<SevenElevenPaymentMethod>(
     delegate,
     genericActionDelegate,
-    actionHandlingComponent
+    actionHandlingComponent,
+    componentEventHandler
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<SevenElevenComponent, SevenElevenConfiguration> =
-            SevenElevenComponentProvider()
+        val PROVIDER = SevenElevenComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN)
     }
 }

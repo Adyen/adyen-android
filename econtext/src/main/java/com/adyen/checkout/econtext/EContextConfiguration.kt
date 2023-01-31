@@ -9,15 +9,19 @@
 package com.adyen.checkout.econtext
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.ButtonConfiguration
 import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
-@Suppress("UnnecessaryAbstractClass")
 abstract class EContextConfiguration : Configuration, ButtonConfiguration {
+
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    abstract val genericActionConfiguration: GenericActionConfiguration
 
     /**
      * Builder to create an [EContextConfiguration].

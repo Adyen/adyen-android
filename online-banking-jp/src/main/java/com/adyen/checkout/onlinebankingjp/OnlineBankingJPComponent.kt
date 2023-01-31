@@ -10,7 +10,8 @@ package com.adyen.checkout.onlinebankingjp
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.econtext.EContextComponent
@@ -19,18 +20,19 @@ import com.adyen.checkout.econtext.EContextDelegate
 class OnlineBankingJPComponent internal constructor(
     delegate: EContextDelegate<OnlineBankingJPPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
-    actionHandlingComponent: DefaultActionHandlingComponent
+    actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingJPPaymentMethod>>
 ) : EContextComponent<OnlineBankingJPPaymentMethod>(
     delegate,
     genericActionDelegate,
-    actionHandlingComponent
+    actionHandlingComponent,
+    componentEventHandler
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OnlineBankingJPComponent, OnlineBankingJPConfiguration> =
-            OnlineBankingJPComponentProvider()
+        val PROVIDER = OnlineBankingJPComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ECONTEXT_ONLINE)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ECONTEXT_ONLINE)
     }
 }

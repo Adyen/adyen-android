@@ -9,6 +9,7 @@
 package com.adyen.checkout.econtext
 
 import android.content.Context
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
@@ -21,7 +22,8 @@ class TestEContextConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
-    override val amount: Amount
+    override val amount: Amount,
+    override val genericActionConfiguration: GenericActionConfiguration
 ) : EContextConfiguration() {
 
     class Builder : EContextConfiguration.Builder<TestEContextConfiguration, Builder> {
@@ -46,6 +48,7 @@ class TestEContextConfiguration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
