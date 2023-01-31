@@ -34,13 +34,13 @@ class DotpayComponent internal constructor(
 ) {
     companion object {
         @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)
+
+        @JvmField
         val PROVIDER: SessionPaymentComponentProvider<
             DotpayComponent,
             DotpayConfiguration,
             PaymentComponentState<DotpayPaymentMethod>
             > = DotpayComponentProvider()
-
-        @JvmField
-        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)
     }
 }

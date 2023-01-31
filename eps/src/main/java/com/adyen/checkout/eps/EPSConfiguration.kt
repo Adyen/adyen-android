@@ -27,7 +27,7 @@ class EPSConfiguration private constructor(
     override val viewType: IssuerListViewType?,
     override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,
-    internal val genericActionConfiguration: GenericActionConfiguration,
+    override val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
     /**

@@ -26,6 +26,9 @@ internal class TestIssuerListComponent internal constructor(
     actionHandlingComponent,
     componentEventHandler,
 ) {
+
+    // This method is needed for testing purposes
+    @Suppress("RedundantOverride")
     override fun onCleared() {
         super.onCleared()
     }
