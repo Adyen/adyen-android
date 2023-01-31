@@ -87,7 +87,7 @@ class ExampleAdvancedDropInService : DropInService() {
             )
 
             Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
-            val response = paymentsRepository.paymentsRequestAsync(paymentRequest)
+            val response = paymentsRepository.makePaymentsRequest(paymentRequest)
 
             val result = handleResponse(response) ?: return@launch
             sendResult(result)
@@ -119,7 +119,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
             Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-            val response = paymentsRepository.detailsRequestAsync(actionComponentJson)
+            val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
 
             val result = handleResponse(response) ?: return@launch
             sendResult(result)
@@ -221,7 +221,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 keyValueStorage.getMerchantAccount()
             )
 
-            val response = paymentsRepository.balanceRequestAsync(request)
+            val response = paymentsRepository.getBalance(request)
             val result = handleBalanceResponse(response)
             sendBalanceResult(result)
         }
@@ -252,7 +252,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 keyValueStorage.getMerchantAccount()
             )
 
-            val response = paymentsRepository.createOrderAsync(paymentRequest)
+            val response = paymentsRepository.createOrder(paymentRequest)
 
             val result = handleOrderResponse(response)
             sendOrderResult(result)
@@ -279,7 +279,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 orderJson,
                 keyValueStorage.getMerchantAccount()
             )
-            val response = paymentsRepository.cancelOrderAsync(request)
+            val response = paymentsRepository.cancelOrder(request)
 
             val result = handleCancelOrderResponse(response, shouldUpdatePaymentMethods) ?: return@launch
             sendResult(result)

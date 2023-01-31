@@ -74,7 +74,7 @@ class ExampleDropInService : DropInService() {
             )
 
             Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
-            val response = paymentsRepository.paymentsRequestAsync(paymentRequest)
+            val response = paymentsRepository.makePaymentsRequest(paymentRequest)
 
             val result = handleResponse(response)
             sendResult(result)
@@ -98,7 +98,7 @@ class ExampleDropInService : DropInService() {
 
             Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-            val response = paymentsRepository.detailsRequestAsync(actionComponentJson)
+            val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
 
             val result = handleResponse(response)
             sendResult(result)
