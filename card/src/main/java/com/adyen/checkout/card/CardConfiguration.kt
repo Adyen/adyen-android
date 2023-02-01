@@ -96,11 +96,26 @@ class CardConfiguration private constructor(
          *
          * Defaults to [PaymentMethod.brands] if it exists, or [DEFAULT_SUPPORTED_CARDS_LIST] otherwise.
          *
+         * Use this method when adding supported types that are not inside the [CardType] enum.
+         *
          * @param supportCardBrands array of [CardBrand]
          * @return [CardConfiguration.Builder]
          */
         fun setSupportedCardTypes(vararg supportCardBrands: CardBrand): Builder {
             supportedCardBrands = listOf(*supportCardBrands)
+            return this
+        }
+
+        /**
+         * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
+         *
+         * Defaults to [PaymentMethod.brands] if it exists, or [DEFAULT_SUPPORTED_CARDS_LIST] otherwise.
+         *
+         * @param supportCardTypes array of [CardType]
+         * @return [CardConfiguration.Builder]
+         */
+        fun setSupportedCardTypes(vararg supportCardTypes: CardType): Builder {
+            supportedCardBrands = listOf(*supportCardTypes).map { CardBrand(cardType = it) }
             return this
         }
 
