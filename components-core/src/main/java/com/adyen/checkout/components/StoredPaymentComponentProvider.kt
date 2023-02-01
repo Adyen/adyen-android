@@ -24,8 +24,7 @@ interface StoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,
     ComponentStateT : PaymentComponentState<*>
-    > :
-    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
+    > {
 
     /**
      * Get a [PaymentComponent] with a stored payment method.

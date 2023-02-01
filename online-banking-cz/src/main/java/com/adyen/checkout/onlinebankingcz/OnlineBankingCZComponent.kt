@@ -18,7 +18,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 
 class OnlineBankingCZComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
@@ -46,10 +45,6 @@ class OnlineBankingCZComponent internal constructor(
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            OnlineBankingComponent<OnlineBankingCZPaymentMethod>,
-            OnlineBankingCZConfiguration,
-            PaymentComponentState<OnlineBankingCZPaymentMethod>
-            > = OnlineBankingCZComponentProvider()
+        val PROVIDER = OnlineBankingCZComponentProvider()
     }
 }

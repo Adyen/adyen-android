@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -47,11 +48,17 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PayByBankComponentProvider(
     overrideComponentParams: ComponentParams? = null
-) : SessionPaymentComponentProvider<
-    PayByBankComponent,
-    PayByBankConfiguration,
-    PaymentComponentState<PayByBankPaymentMethod>
-    > {
+) :
+    PaymentComponentProvider<
+        PayByBankComponent,
+        PayByBankConfiguration,
+        PaymentComponentState<PayByBankPaymentMethod>
+        >,
+    SessionPaymentComponentProvider<
+        PayByBankComponent,
+        PayByBankConfiguration,
+        PaymentComponentState<PayByBankPaymentMethod>
+        > {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
 

@@ -27,7 +27,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -103,10 +102,7 @@ class GooglePayComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            GooglePayComponent,
-            GooglePayConfiguration,
-            GooglePayComponentState> = GooglePayComponentProvider()
+        val PROVIDER = GooglePayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)

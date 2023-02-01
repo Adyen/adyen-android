@@ -28,7 +28,6 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -101,8 +100,7 @@ class CardComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> =
-            CardComponentProvider()
+        val PROVIDER = CardComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SCHEME)

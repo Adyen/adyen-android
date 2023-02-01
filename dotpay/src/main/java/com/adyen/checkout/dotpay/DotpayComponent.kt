@@ -16,7 +16,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -37,10 +36,6 @@ class DotpayComponent internal constructor(
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.DOTPAY)
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            DotpayComponent,
-            DotpayConfiguration,
-            PaymentComponentState<DotpayPaymentMethod>
-            > = DotpayComponentProvider()
+        val PROVIDER = DotpayComponentProvider()
     }
 }

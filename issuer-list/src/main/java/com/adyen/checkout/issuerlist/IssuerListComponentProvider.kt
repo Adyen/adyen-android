@@ -18,6 +18,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -54,7 +55,9 @@ abstract class IssuerListComponentProvider<
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams? = null,
     hideIssuerLogosDefaultValue: Boolean = false,
-) : SessionPaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>> {
+) :
+    PaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>>,
+    SessionPaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(
         overrideComponentParams = overrideComponentParams,

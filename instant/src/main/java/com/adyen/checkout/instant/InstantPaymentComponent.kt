@@ -18,7 +18,6 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -75,10 +74,6 @@ class InstantPaymentComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            InstantPaymentComponent,
-            InstantPaymentConfiguration,
-            PaymentComponentState<PaymentMethodDetails>
-            > = InstantPaymentComponentProvider()
+        val PROVIDER = InstantPaymentComponentProvider()
     }
 }

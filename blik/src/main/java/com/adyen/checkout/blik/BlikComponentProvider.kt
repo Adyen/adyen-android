@@ -17,7 +17,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
@@ -42,13 +44,18 @@ import com.adyen.checkout.sessions.SessionHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BlikComponentProvider(
     overrideComponentParams: ComponentParams? = null
-) : SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>> {
+) :
+    PaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
+    StoredPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
+    SessionPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
+    SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
 

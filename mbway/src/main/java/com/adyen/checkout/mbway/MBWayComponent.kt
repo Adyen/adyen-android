@@ -29,7 +29,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -96,10 +95,7 @@ class MBWayComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            MBWayComponent,
-            MBWayConfiguration,
-            PaymentComponentState<MBWayPaymentMethod>> = MBWayComponentProvider()
+        val PROVIDER = MBWayComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.MB_WAY)

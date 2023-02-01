@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.requireApplication
@@ -35,9 +34,7 @@ interface SessionStoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,
     ComponentStateT : PaymentComponentState<*>
-    > :
-    StoredPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
-    SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
+    > {
 
     @Suppress("LongParameterList")
     fun get(

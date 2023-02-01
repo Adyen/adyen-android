@@ -29,7 +29,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -96,11 +95,7 @@ class SepaComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            SepaComponent,
-            SepaConfiguration,
-            PaymentComponentState<SepaPaymentMethod>
-            > = SepaComponentProvider()
+        val PROVIDER = SepaComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SEPA)

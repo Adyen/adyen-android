@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -47,7 +48,9 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class MBWayComponentProvider(
     overrideComponentParams: ComponentParams? = null
-) : SessionPaymentComponentProvider<MBWayComponent, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>> {
+) :
+    PaymentComponentProvider<MBWayComponent, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>>,
+    SessionPaymentComponentProvider<MBWayComponent, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
 

@@ -18,6 +18,8 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
@@ -46,13 +48,18 @@ import com.adyen.checkout.sessions.SessionHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
+) :
+    PaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
     private val componentParamsMapper = CardComponentParamsMapper(overrideComponentParams)
 

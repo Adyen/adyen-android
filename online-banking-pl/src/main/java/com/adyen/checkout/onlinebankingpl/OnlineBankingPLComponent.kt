@@ -17,7 +17,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PROVIDER
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -35,11 +34,7 @@ class OnlineBankingPLComponent internal constructor(
 ) {
     companion object {
         @JvmField
-        val PROVIDER: SessionPaymentComponentProvider<
-            OnlineBankingPLComponent,
-            OnlineBankingPLConfiguration,
-            PaymentComponentState<OnlineBankingPLPaymentMethod>
-            > = OnlineBankingPLComponentProvider()
+        val PROVIDER = OnlineBankingPLComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_PL)

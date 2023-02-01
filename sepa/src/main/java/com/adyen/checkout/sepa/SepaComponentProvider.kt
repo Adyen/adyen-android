@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -47,7 +48,9 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SepaComponentProvider(
     overrideComponentParams: ComponentParams? = null
-) : SessionPaymentComponentProvider<SepaComponent, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>> {
+) :
+    PaymentComponentProvider<SepaComponent, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>>,
+    SessionPaymentComponentProvider<SepaComponent, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
 
