@@ -107,16 +107,18 @@ internal class DefaultAdyen3DS2Delegate(
     private var currentTransaction: Transaction? = null
 
     //region Identify shopper completion parameters
-    private var submitFingerprintAutomatically: Boolean? by SavedStateHandleProperty(SUBMIT_FINGERPRINT_AUTOMATICALLY)
-    private var currentFingerprintJson: String? by SavedStateHandleProperty(FINGERPRINT_JSON)
+    private var submitFingerprintAutomatically: Boolean? by SavedStateHandleProperty(
+        SUBMIT_FINGERPRINT_AUTOMATICALLY_KEY
+    )
+    private var currentEncodedFingerprintToken: String? by SavedStateHandleProperty(ENCODED_FINGERPRINT_TOKEN_KEY)
     //endregion
 
-    //region 3DS2 flow completion parameters
+    //region Challenge completion parameters
     private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
-    private var currentSdkTransactionId: String? by SavedStateHandleProperty(SDK_TRANSACTION_ID)
-    private var currentTransactionStatus: String? by SavedStateHandleProperty(TRANSACTION_STATUS)
+    private var currentSdkTransactionId: String? by SavedStateHandleProperty(SDK_TRANSACTION_ID_KEY)
+    private var currentTransactionStatus: String? by SavedStateHandleProperty(TRANSACTION_STATUS_KEY)
     private var removeDelegatedAuthenticationCredentials: Boolean? by SavedStateHandleProperty(
-        REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS
+        REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS_KEY
     )
     //endregion
 
@@ -124,12 +126,12 @@ internal class DefaultAdyen3DS2Delegate(
         _coroutineScope = coroutineScope
         delegatedAuthentication.initialize(coroutineScope)
         // Restoring UI state after process kill
-        val isDATimerStarted = delegatedAuthentication.isTimerStarted
+        val isDelegatedAuthenticationTimerStarted = delegatedAuthentication.isTimerStarted
         when {
-            delegatedAuthentication.isRegistrationInitiated() && isDATimerStarted == true -> {
+            delegatedAuthentication.isRegistrationInitiated() && isDelegatedAuthenticationTimerStarted == true -> {
                 _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
             }
-            delegatedAuthentication.isAuthenticationInitiated() && isDATimerStarted == true -> {
+            delegatedAuthentication.isAuthenticationInitiated() && isDelegatedAuthenticationTimerStarted == true -> {
                 _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
             }
             else -> {
@@ -226,21 +228,49 @@ internal class DefaultAdyen3DS2Delegate(
     ) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
 
-        // We need to keep this parameter to be able to complete the transaction after process kill
+        // We need to keep these parameters to be able to complete the transaction after process kill
+        this.currentEncodedFingerprintToken = encodedFingerprintToken
         this.submitFingerprintAutomatically = submitFingerprintAutomatically
 
-        val decodedFingerprintToken = base64Encoder.decode(encodedFingerprintToken)
+        val fingerprintToken = createFingerprintToken(encodedFingerprintToken)
 
-        val fingerprintJson: JSONObject = try {
-            JSONObject(decodedFingerprintToken)
-        } catch (e: JSONException) {
-            throw ComponentException("JSON parsing of FingerprintToken failed", e)
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
+            exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 
-        val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
+        coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
+            val delegatedAuthenticationSdkInput = fingerprintToken.delegatedAuthenticationSdkInput
+            if (delegatedAuthenticationSdkInput != null) {
+                val hasCredential = delegatedAuthentication.hasCredential(
+                    application,
+                    delegatedAuthenticationSdkInput
+                )
+                if (hasCredential == true) {
+                    delegatedAuthentication.initAuthentication(delegatedAuthenticationSdkInput)
+                    delegatedAuthentication.startTimer(coroutineScope)
+                    _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
+                    // The flow is interrupted by Delegated Authentication
+                    // completeIdentifyShopper will be called after Delegated Authentication
+                    return@launch
+                }
+            }
+            completeIdentifyShopper(activity)
+        }
+    }
+
+    private fun completeIdentifyShopper(
+        activity: Activity,
+        delegatedAuthenticationSdkOutput: String? = null,
+        removeDACredentials: Boolean? = null
+    ) {
+        _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
+        this.removeDelegatedAuthenticationCredentials = removeDACredentials
+
+        val fingerprintToken = currentEncodedFingerprintToken?.let { createFingerprintToken(it) }
         val configParameters = AdyenConfigParameters.Builder(
-            fingerprintToken.directoryServerId,
-            fingerprintToken.directoryServerPublicKey
+            fingerprintToken?.directoryServerId,
+            fingerprintToken?.directoryServerPublicKey
         ).build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -262,7 +292,7 @@ internal class DefaultAdyen3DS2Delegate(
 
             currentTransaction = try {
                 Logger.d(TAG, "create transaction")
-                if (fingerprintToken.threeDSMessageVersion != null) {
+                if (fingerprintToken?.threeDSMessageVersion != null) {
                     threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)
                 } else {
                     exceptionChannel.trySend(
@@ -286,51 +316,36 @@ internal class DefaultAdyen3DS2Delegate(
                 exceptionChannel.trySend(ComponentException("Failed to retrieve 3DS2 authentication parameters"))
                 return@launch
             }
-            // We need to keep this parameter to be able to complete the transaction after process kill
-            currentFingerprintJson = createFingerprintJson(authenticationRequestParameters)
-
-            val delegatedAuthenticationSdkInput = fingerprintToken.delegatedAuthenticationSdkInput
-            if (delegatedAuthenticationSdkInput != null) {
-                val hasCredential = delegatedAuthentication.hasCredential(
-                    application,
-                    delegatedAuthenticationSdkInput
-                )
-                if (hasCredential == true) {
-                    delegatedAuthentication.initAuthentication(delegatedAuthenticationSdkInput)
-                    delegatedAuthentication.startTimer(coroutineScope)
-                    _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
-                    // The flow is interrupted by Delegated Authentication
-                    // completeIdentifyShopper will be called after DA authentication
-                    return@launch
-                }
+            val encodedFingerprint = createEncodedFingerprint(
+                authenticationRequestParameters,
+                delegatedAuthenticationSdkOutput
+            )
+            if (submitFingerprintAutomatically == true) {
+                submitFingerprintAutomatically(activity, encodedFingerprint)
+            } else {
+                emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
             }
-            completeIdentifyShopper(activity)
         }
     }
 
-    private suspend fun completeIdentifyShopper(
-        activity: Activity,
-        delegatedAuthenticationSdkOutput: String? = null,
-        removeDACredentials: Boolean? = null
-    ) {
-        _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
-        this.removeDelegatedAuthenticationCredentials = removeDACredentials
-        val encodedFingerprint = createEncodedFingerprint(
-            currentFingerprintJson ?: "",
-            delegatedAuthenticationSdkOutput
-        )
-        if (submitFingerprintAutomatically == true) {
-            submitFingerprintAutomatically(activity, encodedFingerprint)
-        } else {
-            emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
+    private fun createFingerprintToken(encodedFingerprintToken: String): FingerprintToken {
+        val decodedFingerprintToken = base64Encoder.decode(encodedFingerprintToken)
+
+        val fingerprintJson: JSONObject = try {
+            JSONObject(decodedFingerprintToken)
+        } catch (e: JSONException) {
+            throw ComponentException("JSON parsing of FingerprintToken failed", e)
         }
+
+        return FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
     }
 
     @Throws(ComponentException::class)
-    private fun createFingerprintJson(
-        authenticationRequestParameters: AuthenticationRequestParameters
+    private fun createEncodedFingerprint(
+        authenticationRequestParameters: AuthenticationRequestParameters,
+        delegatedAuthenticationSdkOutput: String?
     ): String {
-        try {
+        return try {
             val fingerprintJson = JSONObject().apply {
                 with(authenticationRequestParameters) {
                     put("sdkAppID", sdkAppID)
@@ -339,23 +354,11 @@ internal class DefaultAdyen3DS2Delegate(
                     put("sdkReferenceNumber", sdkReferenceNumber)
                     put("sdkTransID", sdkTransactionID)
                     put("messageVersion", messageVersion)
+                    putOpt("delegatedAuthenticationSDKOutput", delegatedAuthenticationSdkOutput)
                 }
             }
-            return fingerprintJson.toString()
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create fingerprint json", e)
-        }
-    }
 
-    @Throws(ComponentException::class)
-    private fun createEncodedFingerprint(
-        fingerprintJson: String,
-        delegatedAuthenticationSdkOutput: String?
-    ): String {
-        try {
-            val json = JSONObject(fingerprintJson)
-            json.putOpt("delegatedAuthenticationSDKOutput", delegatedAuthenticationSdkOutput)
-            return base64Encoder.encode(json.toString())
+            base64Encoder.encode(fingerprintJson.toString())
         } catch (e: JSONException) {
             throw ComponentException("Failed to create encoded fingerprint", e)
         }
@@ -435,8 +438,14 @@ internal class DefaultAdyen3DS2Delegate(
 
         val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
+
         challengeToken.delegatedAuthenticationSdkInput?.let { sdkInput ->
-            coroutineScope.launch {
+            val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+                Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
+                exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
+            }
+
+            coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
                 if (delegatedAuthentication.hasCredential(activity.application, sdkInput) == false) {
                     delegatedAuthentication.initRegistration(sdkInput)
                 }
@@ -488,7 +497,7 @@ internal class DefaultAdyen3DS2Delegate(
             delegatedAuthentication.startTimer(coroutineScope)
             _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
             // The flow is interrupted by Delegated Authentication
-            // completeChallengeFlow will be called after DA registration
+            // completeChallengeFlow will be called after Delegated Authentication registration
             return
         }
         completeChallengeFlow(null)
@@ -576,25 +585,22 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun onAuthenticationResult(result: DelegatedAuthenticationResult, activity: Activity) {
         delegatedAuthentication.completeAuthentication()
-        coroutineScope.launch {
-            val sdkOutput = (result as? DelegatedAuthenticationResult.AuthenticationSuccessful)?.sdkOutput
-            val removeDACredentials = result is DelegatedAuthenticationResult.RemoveCredentials
-            completeIdentifyShopper(activity, sdkOutput, removeDACredentials)
-        }
+
+        val sdkOutput = (result as? DelegatedAuthenticationResult.AuthenticationSuccessful)?.sdkOutput
+        val removeDACredentials = result is DelegatedAuthenticationResult.RemoveCredentials
+        completeIdentifyShopper(activity, sdkOutput, removeDACredentials)
     }
 
     override fun onAuthenticationFailed(activity: Activity?) {
         delegatedAuthentication.completeAuthentication()
-        coroutineScope.launch {
-            if (activity != null) {
-                completeIdentifyShopper(activity)
-            } else {
-                exceptionChannel.trySend(
-                    ComponentException(
-                        "Failed to complete Delegated Authentication because Component View Activity is null"
-                    )
+        if (activity != null) {
+            completeIdentifyShopper(activity)
+        } else {
+            exceptionChannel.trySend(
+                ComponentException(
+                    "Failed to complete Delegated Authentication because Component View Activity is null"
                 )
-            }
+            )
         }
     }
 
@@ -603,7 +609,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun closeTransaction() {
         currentTransaction?.close()
         currentTransaction = null
-        currentFingerprintJson = null
+        currentEncodedFingerprintToken = null
         submitFingerprintAutomatically = null
         currentSdkTransactionId = null
         currentTransactionStatus = null
@@ -631,13 +637,14 @@ internal class DefaultAdyen3DS2Delegate(
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private const val FINGERPRINT_JSON = "3ds2_fingerprint_json"
-        private const val SUBMIT_FINGERPRINT_AUTOMATICALLY = "submit_fingerprint_automatically"
+        private const val ENCODED_FINGERPRINT_TOKEN_KEY = "encoded_fingerprint_token"
+        private const val SUBMIT_FINGERPRINT_AUTOMATICALLY_KEY = "submit_fingerprint_automatically"
 
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
-        private const val SDK_TRANSACTION_ID = "sdk_transaction_id"
-        private const val TRANSACTION_STATUS = "transaction_status"
-        private const val REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS = "remove_delegated_authentication_credentials"
+        private const val SDK_TRANSACTION_ID_KEY = "sdk_transaction_id"
+        private const val TRANSACTION_STATUS_KEY = "transaction_status"
+        private const val REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS_KEY =
+            "remove_delegated_authentication_credentials"
 
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"

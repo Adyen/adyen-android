@@ -220,6 +220,6 @@ internal class DefaultGenericActionDelegate(
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private const val ACTIVE_ACTION = "dgac_active_action"
+        private const val ACTIVE_ACTION = "default_generic_action_delegate_active_action"
     }
 }
