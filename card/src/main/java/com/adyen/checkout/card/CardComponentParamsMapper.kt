@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.RestrictedCardType
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -25,23 +25,23 @@ internal class CardComponentParamsMapper(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
     ): CardComponentParams {
-        val supportedCardTypes = cardConfiguration.getSupportedCardTypes(paymentMethod)
+        val supportedCardBrands = cardConfiguration.getSupportedCardBrands(paymentMethod)
         return cardConfiguration
-            .mapToParamsInternal(supportedCardTypes)
+            .mapToParamsInternal(supportedCardBrands)
             .override(overrideComponentParams)
     }
 
     fun mapToParamsStored(
         cardConfiguration: CardConfiguration,
     ): CardComponentParams {
-        val supportedCardTypes = cardConfiguration.getSupportedCardTypesStored()
+        val supportedCardBrands = cardConfiguration.getSupportedCardBrandsStored()
         return cardConfiguration
-            .mapToParamsInternal(supportedCardTypes)
+            .mapToParamsInternal(supportedCardBrands)
             .override(overrideComponentParams)
     }
 
     private fun CardConfiguration.mapToParamsInternal(
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
     ): CardComponentParams {
         return CardComponentParams(
             shopperLocale = shopperLocale,
@@ -52,7 +52,7 @@ internal class CardComponentParamsMapper(
             amount = amount,
             isHolderNameRequired = isHolderNameRequired ?: false,
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            supportedCardTypes = supportedCardTypes,
+            supportedCardBrands = supportedCardBrands,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
             isHideCvc = isHideCvc ?: false,
@@ -69,18 +69,18 @@ internal class CardComponentParamsMapper(
      * Priority is: Custom -> PaymentMethod.brands -> Default
      * remove restricted card type
      */
-    private fun CardConfiguration.getSupportedCardTypes(
+    private fun CardConfiguration.getSupportedCardBrands(
         paymentMethod: PaymentMethod
-    ): List<CardType> {
+    ): List<CardBrand> {
         return when {
-            !supportedCardTypes.isNullOrEmpty() -> {
+            !supportedCardBrands.isNullOrEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from configuration")
-                supportedCardTypes
+                supportedCardBrands
             }
             paymentMethod.brands.orEmpty().isNotEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from API brands")
                 paymentMethod.brands.orEmpty().map {
-                    CardType(txVariant = it)
+                    CardBrand(txVariant = it)
                 }
             }
             else -> {
@@ -90,11 +90,11 @@ internal class CardComponentParamsMapper(
         }.removeRestrictedCards()
     }
 
-    private fun CardConfiguration.getSupportedCardTypesStored(): List<CardType> {
-        return supportedCardTypes.orEmpty().removeRestrictedCards()
+    private fun CardConfiguration.getSupportedCardBrandsStored(): List<CardBrand> {
+        return supportedCardBrands.orEmpty().removeRestrictedCards()
     }
 
-    private fun List<CardType>.removeRestrictedCards(): List<CardType> {
+    private fun List<CardBrand>.removeRestrictedCards(): List<CardBrand> {
         return this.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
     }
 

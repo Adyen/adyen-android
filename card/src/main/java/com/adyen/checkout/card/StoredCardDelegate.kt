@@ -66,9 +66,9 @@ internal class StoredCardDelegate(
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
 
-    private val noCvcBrands: Set<CardType> = hashSetOf(CardType(cardBrand = CardBrand.BCMC))
+    private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 
-    private val cardType = CardType(txVariant = storedPaymentMethod.brand.orEmpty())
+    private val cardType = CardBrand(txVariant = storedPaymentMethod.brand.orEmpty())
     private val storedDetectedCardTypes = DetectedCardType(
         cardType,
         isReliable = true,
@@ -223,7 +223,7 @@ internal class StoredCardDelegate(
     ): CardComponentState {
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardType = outputData.detectedCardTypes.firstOrNull()?.cardType
+        val firstCardBrand = outputData.detectedCardTypes.firstOrNull()?.cardBrand
 
         val publicKey = publicKey
 
@@ -233,7 +233,7 @@ internal class StoredCardDelegate(
                 paymentComponentData = PaymentComponentData(),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
-                cardType = firstCardType,
+                cardBrand = firstCardBrand,
                 binValue = "",
                 lastFourDigits = null
             )
@@ -259,7 +259,7 @@ internal class StoredCardDelegate(
                 paymentComponentData = PaymentComponentData(),
                 isInputValid = false,
                 isReady = true,
-                cardType = firstCardType,
+                cardBrand = firstCardBrand,
                 binValue = "",
                 lastFourDigits = null
             )
@@ -268,7 +268,7 @@ internal class StoredCardDelegate(
         return mapComponentState(
             encryptedCard,
             cardNumber,
-            firstCardType,
+            firstCardBrand,
         )
     }
 
@@ -281,14 +281,14 @@ internal class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    private fun validateSecurityCode(securityCode: String, cardType: DetectedCardType): FieldState<String> {
-        return if (componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType.cardType)) {
+    private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
+        return if (componentParams.isHideCvcStoredCard || noCvcBrands.contains(detectedCardType.cardBrand)) {
             FieldState(
                 securityCode,
                 Validation.Valid
             )
         } else {
-            CardValidationUtils.validateSecurityCode(securityCode, cardType)
+            CardValidationUtils.validateSecurityCode(securityCode, detectedCardType)
         }
     }
 
@@ -299,7 +299,7 @@ internal class StoredCardDelegate(
     private fun mapComponentState(
         encryptedCard: EncryptedCard,
         cardNumber: String,
-        firstCardType: CardType?,
+        firstCardBrand: CardBrand?,
     ): CardComponentState {
         val cardPaymentMethod = CardPaymentMethod().apply {
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE
@@ -330,7 +330,7 @@ internal class StoredCardDelegate(
             paymentComponentData = paymentComponentData,
             isInputValid = true,
             isReady = true,
-            cardType = firstCardType,
+            cardBrand = firstCardBrand,
             binValue = "",
             lastFourDigits = lastFour
         )

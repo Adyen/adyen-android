@@ -13,7 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -272,7 +272,7 @@ internal class DefaultBcmcDelegate(
 
     override fun isCardNumberSupported(cardNumber: String?): Boolean {
         if (cardNumber.isNullOrEmpty()) return false
-        return CardType.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
+        return CardBrand.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType

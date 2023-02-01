@@ -266,10 +266,10 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `When a card brand is detected, isCardListVisible should be false`() = runTest {
-            val supportedCardTypes = listOf(CardType(cardBrand = CardBrand.VISA))
+            val supportedCardBrands = listOf(CardBrand(cardType = CardType.VISA))
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .build()
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -285,10 +285,10 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `When a card brand is not detected, isCardListVisible should be true`() = runTest {
-            val supportedCardTypes = listOf(CardType(cardBrand = CardBrand.VISA))
+            val supportedCardBrands = listOf(CardBrand(cardType = CardType.VISA))
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .build()
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -304,11 +304,11 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `When the supported cardlist is empty, isCardListVisible should be true`() = runTest {
-            val supportedCardTypes = emptyList<CardType>()
+        fun `When the supported card list is empty, isCardListVisible should be true`() = runTest {
+            val supportedCardBrands = emptyList<CardBrand>()
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .build()
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -325,14 +325,14 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `detect card type repository returns supported cards, then output data should contain them`() = runTest {
-            val supportedCardTypes = listOf(
-                CardType(cardBrand = CardBrand.VISA),
-                CardType(cardBrand = CardBrand.MASTERCARD),
-                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+            val supportedCardBrands = listOf(
+                CardBrand(cardType = CardType.VISA),
+                CardBrand(cardType = CardType.MASTERCARD),
+                CardBrand(cardType = CardType.AMERICAN_EXPRESS)
             )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .build()
             )
             detectCardTypeRepository.detectionResult =
@@ -343,8 +343,7 @@ internal class DefaultCardDelegateTest(
             delegate.outputDataFlow.test {
                 delegate.updateInputData { /* Empty to trigger an update */ }
 
-                val expectedDetectedCardTypes =
-                    detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
+                val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
 
                 with(expectMostRecentItem()) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
@@ -356,8 +355,8 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `detect card type repository returns unsupported cards, then output data should filter them`() = runTest {
             val supportedCardTypes = listOf(
-                CardType(cardBrand = CardBrand.VISA),
-                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
+                CardBrand(cardType = CardType.VISA),
+                CardBrand(cardType = CardType.AMERICAN_EXPRESS)
             )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
@@ -384,13 +383,13 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `detect card type repository returns dual branded cards, then output data should be good`() = runTest {
-            val supportedCardTypes = listOf(
-                CardType(cardBrand = CardBrand.BCMC),
-                CardType(cardBrand = CardBrand.MAESTRO)
+            val supportedCardBrands = listOf(
+                CardBrand(cardType = CardType.BCMC),
+                CardBrand(cardType = CardType.MAESTRO)
             )
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .build()
             )
             detectCardTypeRepository.detectionResult = TestDetectCardTypeRepository.TestDetectedCardType.DUAL_BRANDED
@@ -406,7 +405,7 @@ internal class DefaultCardDelegateTest(
                 }
 
                 val expectedDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-                    detectedCardTypes = detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardTypes),
+                    detectedCardTypes = detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardBrands),
                     selectedCardIndex = 1,
                 )
 
@@ -498,11 +497,11 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `input data with custom config is valid, then output data should be good`() = runTest {
             val cardBrands = listOf(
-                CardListItem(CardType(cardBrand = CardBrand.VISA), true, Environment.TEST),
-                CardListItem(CardType(cardBrand = CardBrand.MASTERCARD), false, Environment.TEST),
-                CardListItem(CardType(cardBrand = CardBrand.AMERICAN_EXPRESS), false, Environment.TEST)
+                CardListItem(CardBrand(cardType = CardType.VISA), true, Environment.TEST),
+                CardListItem(CardBrand(cardType = CardType.MASTERCARD), false, Environment.TEST),
+                CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST)
             )
-            val supportedCardTypes = cardBrands.map { it.cardType }
+            val supportedCardBrands = cardBrands.map { it.cardBrand }
             val installmentConfiguration = InstallmentConfiguration(
                 InstallmentOptions.DefaultInstallmentOptions(
                     maxInstallments = 3,
@@ -521,7 +520,7 @@ internal class DefaultCardDelegateTest(
                     .setHolderNameRequired(true)
                     .setAddressConfiguration(addressConfiguration)
                     .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
                     .setShowStorePaymentField(false)
                     .build()
             )
@@ -582,11 +581,11 @@ internal class DefaultCardDelegateTest(
                     stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
                 )
 
-                val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
+                val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
 
                 val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
                     installmentConfiguration,
-                    expectedDetectedCardTypes.first().cardType,
+                    expectedDetectedCardTypes.first().cardBrand,
                     true
                 )
 
@@ -713,7 +712,7 @@ internal class DefaultCardDelegateTest(
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
-                assertEquals(CardType(cardBrand = CardBrand.VISA), componentState.cardType)
+                assertEquals(CardBrand(cardType = CardType.VISA), componentState.cardBrand)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -780,7 +779,7 @@ internal class DefaultCardDelegateTest(
                     createDetectedCardType(),
                     createDetectedCardType().copy(
                         isSelected = true,
-                        cardType = CardType(cardBrand = CardBrand.VISA)
+                        cardBrand = CardBrand(cardType = CardType.VISA)
                     )
                 )
 
@@ -801,9 +800,9 @@ internal class DefaultCardDelegateTest(
                         addressUIState = addressUIState,
                         installmentOptions = listOf(installmentModel),
                         cardBrands = listOf(
-                            CardListItem(CardType(cardBrand = CardBrand.VISA), false, Environment.TEST),
-                            CardListItem(CardType(cardBrand = CardBrand.MASTERCARD), false, Environment.TEST),
-                            CardListItem(CardType(cardBrand = CardBrand.AMERICAN_EXPRESS), false, Environment.TEST)
+                            CardListItem(CardBrand(cardType = CardType.VISA), false, Environment.TEST),
+                            CardListItem(CardBrand(cardType = CardType.MASTERCARD), false, Environment.TEST),
+                            CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST)
                         ),
                     )
                 )
@@ -816,7 +815,7 @@ internal class DefaultCardDelegateTest(
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(8), componentState.binValue)
-                assertEquals(CardType(cardBrand = CardBrand.VISA), componentState.cardType)
+                assertEquals(CardBrand(cardType = CardType.VISA), componentState.cardBrand)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -844,7 +843,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals("12", encryptedPassword)
                     assertEquals("funding_source_1", fundingSource)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
-                    assertEquals(CardBrand.VISA.txVariant, brand)
+                    assertEquals(CardType.VISA.txVariant, brand)
                     assertNull(storedPaymentMethodId)
                     assertEquals("2.2.11", threeDS2SdkVersion)
                 }
@@ -973,7 +972,7 @@ internal class DefaultCardDelegateTest(
     private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
         return CardConfiguration
             .Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setSupportedCardTypes(CardType(cardBrand = CardBrand.VISA))
+            .setSupportedCardTypes(CardType.VISA)
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -993,11 +992,7 @@ internal class DefaultCardDelegateTest(
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
             .setShowStorePaymentField(false)
-            .setSupportedCardTypes(
-                CardType(cardBrand = CardBrand.VISA),
-                CardType(cardBrand = CardBrand.MASTERCARD),
-                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
-            )
+            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
     private fun createOutputData(
@@ -1016,7 +1011,7 @@ internal class DefaultCardDelegateTest(
         holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
         showStorePaymentField: Boolean = true,
         detectedCardTypes: List<DetectedCardType> =
-            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType(cardBrand = CardBrand.VISA))),
+            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardBrand(cardType = CardType.VISA))),
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
@@ -1025,7 +1020,7 @@ internal class DefaultCardDelegateTest(
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
         cardBrands: List<CardListItem> = listOf(
             CardListItem(
-                CardType(cardBrand = CardBrand.VISA),
+                CardBrand(cardType = CardType.VISA),
                 true,
                 Environment.TEST
             )
@@ -1061,7 +1056,7 @@ internal class DefaultCardDelegateTest(
     }
 
     private fun createDetectedCardType(
-        cardType: CardType = CardType(cardBrand = CardBrand.MASTERCARD),
+        cardBrand: CardBrand = CardBrand(cardType = CardType.MASTERCARD),
         isReliable: Boolean = true,
         enableLuhnCheck: Boolean = true,
         cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
@@ -1071,7 +1066,7 @@ internal class DefaultCardDelegateTest(
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
-            cardType = cardType,
+            cardBrand = cardBrand,
             isReliable = isReliable,
             enableLuhnCheck = enableLuhnCheck,
             cvcPolicy = cvcPolicy,

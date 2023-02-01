@@ -11,7 +11,7 @@ package com.adyen.checkout.card
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.api.model.Brand
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
@@ -204,7 +204,7 @@ internal class DefaultCardDelegate(
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
-            supportedCardTypes = componentParams.supportedCardTypes,
+            supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope
         )
@@ -216,7 +216,7 @@ internal class DefaultCardDelegate(
             .onEach { detectedCardTypes ->
                 Logger.d(
                     TAG,
-                    "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardType }} " +
+                    "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
                 updateOutputData(detectedCardTypes = detectedCardTypes)
@@ -330,7 +330,7 @@ internal class DefaultCardDelegate(
             addressUIState = addressFormUIState,
             installmentOptions = getInstallmentOptions(
                 installmentConfiguration = componentParams.installmentConfiguration,
-                cardType = selectedOrFirstCardType?.cardType,
+                cardBrand = selectedOrFirstCardType?.cardBrand,
                 isCardTypeReliable = isReliable
             ),
             cardBrands = getCardBrands(filteredDetectedCardTypes),
@@ -363,9 +363,9 @@ internal class DefaultCardDelegate(
     ): CardComponentState {
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+        val firstCardBrand = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
             detectedCardTypes = outputData.detectedCardTypes
-        )?.cardType
+        )?.cardBrand
 
         val binValue =
             if (outputData.cardNumberState.validation.isValid() && cardNumber.length >= EXTENDED_CARD_NUMBER_LENGTH) {
@@ -382,7 +382,7 @@ internal class DefaultCardDelegate(
                 paymentComponentData = PaymentComponentData(),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
-                cardType = firstCardType,
+                cardBrand = firstCardBrand,
                 binValue = binValue,
                 lastFourDigits = null
             )
@@ -410,7 +410,7 @@ internal class DefaultCardDelegate(
                 paymentComponentData = PaymentComponentData(),
                 isInputValid = false,
                 isReady = true,
-                cardType = firstCardType,
+                cardBrand = firstCardBrand,
                 binValue = binValue,
                 lastFourDigits = null
             )
@@ -420,7 +420,7 @@ internal class DefaultCardDelegate(
             encryptedCard,
             outputData,
             cardNumber,
-            firstCardType,
+            firstCardBrand,
             binValue
         )
     }
@@ -509,7 +509,7 @@ internal class DefaultCardDelegate(
         val isOptional =
             CardAddressValidationUtils.isAddressOptional(
                 addressParams = componentParams.addressParams,
-                cardType = detectedCardType?.cardType?.txVariant
+                cardType = detectedCardType?.cardBrand?.txVariant
             )
 
         return AddressValidationUtils.validateAddressInput(
@@ -551,14 +551,14 @@ internal class DefaultCardDelegate(
 
     private fun getInstallmentOptions(
         installmentConfiguration: InstallmentConfiguration?,
-        cardType: CardType?,
+        cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
         val isDebit = getFundingSource() == DEBIT_FUNDING_SOURCE
         return if (isDebit) {
             emptyList()
         } else {
-            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
+            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardBrand, isCardTypeReliable)
         }
     }
 
@@ -604,7 +604,7 @@ internal class DefaultCardDelegate(
         encryptedCard: EncryptedCard,
         stateOutputData: CardOutputData,
         cardNumber: String,
-        firstCardType: CardType?,
+        firstCardBrand: CardBrand?,
         binValue: String
     ): CardComponentState {
         val cardPaymentMethod = CardPaymentMethod().apply {
@@ -636,7 +636,7 @@ internal class DefaultCardDelegate(
             if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
                 brand = DetectedCardTypesUtils.getSelectedCardType(
                     detectedCardTypes = stateOutputData.detectedCardTypes
-                )?.cardType?.txVariant
+                )?.cardBrand?.txVariant
             }
 
             fundingSource = getFundingSource()
@@ -658,7 +658,7 @@ internal class DefaultCardDelegate(
             paymentComponentData = paymentComponentData,
             isInputValid = true,
             isReady = true,
-            cardType = firstCardType,
+            cardBrand = firstCardBrand,
             binValue = binValue,
             lastFourDigits = lastFour
         )
@@ -711,10 +711,10 @@ internal class DefaultCardDelegate(
 
     private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
         val noCardDetected = detectedCardTypes.isEmpty()
-        return componentParams.supportedCardTypes.map { cardType ->
+        return componentParams.supportedCardBrands.map { cardBrand ->
             CardListItem(
-                cardType = cardType,
-                isDetected = noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType),
+                cardBrand = cardBrand,
+                isDetected = noCardDetected || detectedCardTypes.map { it.cardBrand }.contains(cardBrand),
                 environment = componentParams.environment,
             )
         }

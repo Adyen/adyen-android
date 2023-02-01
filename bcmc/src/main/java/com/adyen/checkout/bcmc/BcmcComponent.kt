@@ -102,6 +102,6 @@ class BcmcComponent internal constructor(
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BCMC)
 
-        internal val SUPPORTED_CARD_TYPE = CardType(cardBrand = CardBrand.BCMC)
+        internal val SUPPORTED_CARD_TYPE = CardBrand(cardType = CardType.BCMC)
     }
 }

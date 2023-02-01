@@ -54,7 +54,7 @@ internal class CardComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2
         )
             .setHolderNameRequired(true)
-            .setSupportedCardTypes(CardType(cardBrand = CardBrand.DINERS), CardType(cardBrand = CardBrand.MAESTRO))
+            .setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
             .setShopperReference(shopperReference)
             .setShowStorePaymentField(false)
             .setHideCvc(true)
@@ -73,9 +73,9 @@ internal class CardComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
             isHolderNameRequired = true,
-            supportedCardTypes = listOf(
-                CardType(cardBrand = CardBrand.DINERS),
-                CardType(cardBrand = CardBrand.MAESTRO)
+            supportedCardBrands = listOf(
+                CardBrand(cardType = CardType.DINERS),
+                CardBrand(cardType = CardType.MAESTRO)
             ),
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
@@ -129,20 +129,20 @@ internal class CardComponentParamsMapperTest {
     @Test
     fun `when supported card types are set in the card configuration then they should be used in the params`() {
         val cardConfiguration = getCardConfigurationBuilder()
-            .setSupportedCardTypes(CardType(cardBrand = CardBrand.MAESTRO), CardType(cardBrand = CardBrand.BCMC))
+            .setSupportedCardTypes(CardType.MAESTRO, CardType.BCMC)
             .build()
 
         val paymentMethod = PaymentMethod(
             brands = listOf(
-                CardBrand.VISA.txVariant,
-                CardBrand.MASTERCARD.txVariant
+                CardType.VISA.txVariant,
+                CardType.MASTERCARD.txVariant
             )
         )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(CardType(cardBrand = CardBrand.MAESTRO), CardType(cardBrand = CardBrand.BCMC))
+            supportedCardBrands = listOf(CardBrand(cardType = CardType.MAESTRO), CardBrand(cardType = CardType.BCMC))
         )
 
         assertEquals(expected, params)
@@ -155,14 +155,14 @@ internal class CardComponentParamsMapperTest {
             PaymentMethod(
                 brands = listOf(
                     RestrictedCardType.NYCE.txVariant,
-                    CardBrand.MASTERCARD.txVariant
+                    CardType.MASTERCARD.txVariant
                 )
             )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(CardType(cardBrand = CardBrand.MASTERCARD))
+            supportedCardBrands = listOf(CardBrand(cardType = CardType.MASTERCARD))
         )
 
         assertEquals(expected, params)
@@ -175,17 +175,17 @@ internal class CardComponentParamsMapperTest {
 
         val paymentMethod = PaymentMethod(
             brands = listOf(
-                CardBrand.VISA.txVariant,
-                CardBrand.MASTERCARD.txVariant
+                CardType.VISA.txVariant,
+                CardType.MASTERCARD.txVariant
             )
         )
 
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
-            supportedCardTypes = listOf(
-                CardType(cardBrand = CardBrand.VISA),
-                CardType(cardBrand = CardBrand.MASTERCARD)
+            supportedCardBrands = listOf(
+                CardBrand(cardType = CardType.VISA),
+                CardBrand(cardType = CardType.MASTERCARD)
             )
         )
 
@@ -200,7 +200,7 @@ internal class CardComponentParamsMapperTest {
         val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
-            supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
+            supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
         )
 
         assertEquals(expected, params)
@@ -221,7 +221,7 @@ internal class CardComponentParamsMapperTest {
         amount: Amount = Amount.EMPTY,
         isHolderNameRequired: Boolean = false,
         isSubmitButtonVisible: Boolean = true,
-        supportedCardTypes: List<CardType> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
+        supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = true,
         isHideCvc: Boolean = false,
@@ -238,7 +238,7 @@ internal class CardComponentParamsMapperTest {
         isCreatedByDropIn = isCreatedByDropIn,
         isHolderNameRequired = isHolderNameRequired,
         isSubmitButtonVisible = isSubmitButtonVisible,
-        supportedCardTypes = supportedCardTypes,
+        supportedCardBrands = supportedCardBrands,
         shopperReference = shopperReference,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
         isHideCvc = isHideCvc,

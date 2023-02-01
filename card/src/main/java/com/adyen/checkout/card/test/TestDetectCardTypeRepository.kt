@@ -40,15 +40,15 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
     override fun detectCardType(
         cardNumber: String,
         publicKey: String?,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
     ) {
         val detectedCardTypes = when (detectionResult) {
             ERROR -> null
-            DETECTED_LOCALLY -> getDetectedCardTypesLocal(supportedCardTypes)
-            FETCHED_FROM_NETWORK -> getDetectedCardTypesNetwork(supportedCardTypes)
-            DUAL_BRANDED -> getDetectedCardTypesDualBranded(supportedCardTypes)
+            DETECTED_LOCALLY -> getDetectedCardTypesLocal(supportedCardBrands)
+            FETCHED_FROM_NETWORK -> getDetectedCardTypesNetwork(supportedCardBrands)
+            DUAL_BRANDED -> getDetectedCardTypesDualBranded(supportedCardBrands)
             EMPTY -> emptyList()
         } ?: return
 
@@ -63,56 +63,56 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
         EMPTY,
     }
 
-    fun getDetectedCardTypesLocal(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardType = CardType(cardBrand = CardBrand.VISA)
+    fun getDetectedCardTypesLocal(supportedCardTypes: List<CardBrand>): List<DetectedCardType> {
+        val cardBrand = CardBrand(cardType = CardType.VISA)
         return listOf(
             DetectedCardType(
-                cardType = cardType,
+                cardBrand = cardBrand,
                 isReliable = false,
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardType),
+                isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = null,
             )
         )
     }
 
-    fun getDetectedCardTypesNetwork(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardType = CardType(cardBrand = CardBrand.MASTERCARD)
+    fun getDetectedCardTypesNetwork(supportedCardTypes: List<CardBrand>): List<DetectedCardType> {
+        val cardBrand = CardBrand(cardType = CardType.MASTERCARD)
         return listOf(
             DetectedCardType(
-                cardType = cardType,
+                cardBrand = cardBrand,
                 isReliable = true,
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.REQUIRED,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardType),
+                isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = 16,
             )
         )
     }
 
-    fun getDetectedCardTypesDualBranded(supportedCardTypes: List<CardType>): List<DetectedCardType> {
-        val cardTypeFirst = CardType(cardBrand = CardBrand.BCMC)
-        val cardTypeSecond = CardType(cardBrand = CardBrand.MAESTRO)
+    fun getDetectedCardTypesDualBranded(supportedCardBrands: List<CardBrand>): List<DetectedCardType> {
+        val cardBrandFirst = CardBrand(cardType = CardType.BCMC)
+        val cardBrandSecond = CardBrand(cardType = CardType.MAESTRO)
         return listOf(
             DetectedCardType(
-                cardType = cardTypeFirst,
+                cardBrand = cardBrandFirst,
                 isReliable = true,
                 enableLuhnCheck = true,
                 cvcPolicy = Brand.FieldPolicy.HIDDEN,
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = supportedCardTypes.contains(cardTypeFirst),
+                isSupported = supportedCardBrands.contains(cardBrandFirst),
                 panLength = 16,
             ),
             DetectedCardType(
-                cardType = cardTypeSecond,
+                cardBrand = cardBrandSecond,
                 isReliable = true,
                 enableLuhnCheck = false,
                 cvcPolicy = Brand.FieldPolicy.OPTIONAL,
                 expiryDatePolicy = Brand.FieldPolicy.HIDDEN,
-                isSupported = supportedCardTypes.contains(cardTypeSecond),
+                isSupported = supportedCardBrands.contains(cardBrandSecond),
                 panLength = 16,
             )
         )

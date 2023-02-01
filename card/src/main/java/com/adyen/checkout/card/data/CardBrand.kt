@@ -12,29 +12,29 @@ import kotlinx.parcelize.Parcelize
 import java.util.regex.Pattern
 
 @Parcelize
-data class CardType constructor(val txVariant: String) : Parcelable {
+data class CardBrand constructor(val txVariant: String) : Parcelable {
 
     /**
-     * Use this constructor when defining the supported card brand predefined inside [CardBrand] enum
+     * Use this constructor when defining the supported card brand predefined inside [CardType] enum
      * inside your component
      */
-    constructor(cardBrand: CardBrand) : this(txVariant = cardBrand.txVariant)
+    constructor(cardType: CardType) : this(txVariant = cardType.txVariant)
 
     companion object {
         /**
-         * Estimate all potential [CardTypes][CardType] for a given card number.
+         * Estimate all potential [CardBrands][CardBrand] for a given card number.
          *
          * @param cardNumber The potential card number.
-         * @return All matching [CardTypes][CardType] if the number was valid, otherwise an empty [List].
+         * @return All matching [CardBrands][CardBrand] if the number was valid, otherwise an empty [List].
          */
-        fun estimate(cardNumber: String): List<CardType> {
-            return CardBrand.values().filter { it.isEstimateFor(cardNumber) }.map { CardType(cardBrand = it) }
+        fun estimate(cardNumber: String): List<CardBrand> {
+            return CardType.values().filter { it.isEstimateFor(cardNumber) }.map { CardBrand(cardType = it) }
         }
     }
 }
 
 @Suppress("unused", "SpellCheckingInspection")
-enum class CardBrand(val txVariant: String, private val mPattern: Pattern) {
+enum class CardType(val txVariant: String, private val mPattern: Pattern) {
 
     AMERICAN_EXPRESS("amex", Pattern.compile("^3[47][0-9]{0,13}$")),
     ARGENCARD("argencard", Pattern.compile("^(50)(1)\\d*$")),
@@ -80,18 +80,18 @@ enum class CardBrand(val txVariant: String, private val mPattern: Pattern) {
     companion object {
 
         /**
-         * Get [CardBrand] from the brand name as it appears in the Checkout API.
+         * Get [CardType] from the brand name as it appears in the Checkout API.
          */
-        fun getByBrandName(brand: String): CardBrand? {
+        fun getByBrandName(brand: String): CardType? {
             return values().firstOrNull { it.txVariant == brand }
         }
     }
 
     /**
-     * Returns whether a given card number is estimated for this [CardBrand].
+     * Returns whether a given card number is estimated for this [CardType].
      *
      * @param cardNumber The card number to make an estimation for.
-     * @return Whether the [CardBrand] is an estimation for a given card number.
+     * @return Whether the [CardType] is an estimation for a given card number.
      */
     internal fun isEstimateFor(cardNumber: String): Boolean {
         val normalizedCardNumber = cardNumber.replace("\\s".toRegex(), "")

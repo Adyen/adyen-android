@@ -9,19 +9,19 @@
 package com.adyen.checkout.card
 
 import android.os.Parcelable
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.parcelize.Parcelize
 
 /**
  * Configuration class for Installments in Card Component. This class can be used
- * to define installment options for all cards or specific [CardType]. [defaultOptions]
+ * to define installment options for all cards or specific [CardBrand]. [defaultOptions]
  * and [cardBasedOptions] can be combined together. In that case [InstallmentOptions] from
  * [cardBasedOptions] will override the option defined in [defaultOptions].
  *
  * Note: [cardBasedOptions] should contain only one [InstallmentOptions.CardBasedInstallmentOptions]
- * instance for a [CardType].
+ * instance for a [CardBrand].
  *
  * @param defaultOptions Installment Options to be used for all card types.
  * @param cardBasedOptions Installment Options to be used for specific card types.
@@ -61,13 +61,13 @@ sealed class InstallmentOptions : Parcelable {
     /**
      * @param values see [InstallmentOptions.values]
      * @param includeRevolving see [InstallmentOptions.includeRevolving]
-     * @param cardType a [CardType] to apply the given options
+     * @param cardBrand a [CardBrand] to apply the given options
      */
     @Parcelize
     data class CardBasedInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean,
-        val cardType: CardType
+        val cardBrand: CardBrand
     ) : InstallmentOptions() {
 
         /**
@@ -75,8 +75,8 @@ sealed class InstallmentOptions : Parcelable {
          *
          * Creates a [DefaultInstallmentOptions] instance with values in range [2, maxInstallments]
          */
-        constructor(maxInstallments: Int, includeRevolving: Boolean, cardType: CardType) :
-            this((STARTING_INSTALLMENT_VALUE..maxInstallments).toList(), includeRevolving, cardType)
+        constructor(maxInstallments: Int, includeRevolving: Boolean, cardBrand: CardBrand) :
+            this((STARTING_INSTALLMENT_VALUE..maxInstallments).toList(), includeRevolving, cardBrand)
     }
 
     /**
