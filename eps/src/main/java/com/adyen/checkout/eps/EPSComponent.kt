@@ -33,6 +33,6 @@ class EPSComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<EPSComponent, EPSConfiguration> = EPSComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.EPS)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.EPS)
     }
 }

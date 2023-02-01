@@ -13,9 +13,9 @@ import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
+import com.adyen.checkout.card.util.CardNumberUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-import java.util.Arrays
 
 /**
  * Input that support formatting for card number.
@@ -55,7 +55,7 @@ open class CardNumberInput @JvmOverloads constructor(
 
     override fun afterTextChanged(editable: Editable) {
         val initial = editable.toString()
-        var processed = initial.trim { it <= ' ' }.replace(DIGIT_SEPARATOR.toString().toRegex(), "")
+        var processed = initial.replace(DIGIT_SEPARATOR, "")
         processed = formatProcessedString(processed)
         if (initial != processed) {
             editable.replace(0, initial.length, processed)
@@ -63,35 +63,23 @@ open class CardNumberInput @JvmOverloads constructor(
         super.afterTextChanged(editable)
     }
 
-    @Suppress("SpreadOperator")
-    private fun formatProcessedString(processedValue: String): String {
-        val result =
-            splitStringWithMask(processedValue, *if (isAmexCard) AMEX_CARD_NUMBER_MASK else DEFAULT_CARD_NUMBER_MASK)
-        return result.joinToString(DIGIT_SEPARATOR.toString()).trim { it <= ' ' }
-    }
-
-    private fun splitStringWithMask(value: String, vararg mask: Int): Array<String?> {
-        val result = arrayOfNulls<String>(mask.size)
-        Arrays.fill(result, "")
-        var tempValue = value
-        for (indexOfMask in mask.indices) {
-            if (tempValue.length >= mask[indexOfMask]) {
-                result[indexOfMask] = tempValue.substring(START_OF_STRING, mask[indexOfMask])
-                tempValue = tempValue.substring(mask[indexOfMask])
-            } else {
-                result[indexOfMask] = tempValue
-                break
-            }
-        }
-        return result
+    private fun formatProcessedString(unformattedString: String): String {
+        return CardNumberUtils.formatCardNumber(
+            unformattedString = unformattedString,
+            maskPartsLengths = if (isAmexCard) AMEX_CARD_NUMBER_MASK else DEFAULT_CARD_NUMBER_MASK,
+            separator = DIGIT_SEPARATOR,
+        )
     }
 
     companion object {
         private const val MAX_DIGIT_SEPARATOR_COUNT = 4
-        private const val DIGIT_SEPARATOR = ' '
+        private const val DIGIT_SEPARATOR = " "
         private const val SUPPORTED_DIGITS = "0123456789"
-        private val AMEX_CARD_NUMBER_MASK = intArrayOf(4, 6, 5, 4)
-        private val DEFAULT_CARD_NUMBER_MASK = intArrayOf(4, 4, 4, 4, 3)
-        private const val START_OF_STRING = 0
+
+        // 4 characters then 6 then 5 then 4. Example: 1234 123456 12345 1234
+        private val AMEX_CARD_NUMBER_MASK = listOf(4, 6, 5, 4)
+
+        // 4 characters then 4 then 4 then 4 then 3. Example: 1234 1234 1234 1234 123
+        private val DEFAULT_CARD_NUMBER_MASK = listOf(4, 4, 4, 4, 3)
     }
 }

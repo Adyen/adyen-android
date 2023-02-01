@@ -33,6 +33,6 @@ class OnlineBankingCZComponent internal constructor(
         val PROVIDER: PaymentComponentProvider<
             OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration
             > = OnlineBankingCZComponentProvider()
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
     }
 }

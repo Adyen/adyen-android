@@ -34,6 +34,6 @@ class EntercashComponent internal constructor(
             EntercashComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ENTERCASH)
     }
 }

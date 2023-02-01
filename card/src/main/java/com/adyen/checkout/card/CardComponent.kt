@@ -107,6 +107,6 @@ class CardComponent internal constructor(
         val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SCHEME)
     }
 }

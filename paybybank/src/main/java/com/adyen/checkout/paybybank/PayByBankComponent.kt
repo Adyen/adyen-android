@@ -79,6 +79,6 @@ class PayByBankComponent internal constructor(
             PayByBankComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.PAY_BY_BANK)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.PAY_BY_BANK)
     }
 }
