@@ -102,7 +102,6 @@ class BlikActivity : AppCompatActivity() {
             activity = this,
             paymentMethod = componentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getBlikConfiguration(),
-            application = application,
             componentCallback = componentData.callback
         )
 

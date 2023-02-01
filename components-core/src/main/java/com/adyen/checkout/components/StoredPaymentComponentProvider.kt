@@ -18,6 +18,7 @@ import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.util.requireApplication
 
 interface StoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
@@ -33,7 +34,6 @@ interface StoredPaymentComponentProvider<
      * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
      * @param configuration       The Configuration of the component.
      * @param key                 Key
-     * @param application         The [Application] instance used to handle actions with.
      *
      * @return The Component
      */
@@ -42,7 +42,6 @@ interface StoredPaymentComponentProvider<
         fragment: Fragment,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
@@ -53,7 +52,7 @@ interface StoredPaymentComponentProvider<
             lifecycleOwner = fragment.viewLifecycleOwner,
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
-            application = application,
+            application = fragment.requireApplication(),
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,
@@ -66,7 +65,6 @@ interface StoredPaymentComponentProvider<
         activity: ComponentActivity,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
@@ -77,7 +75,7 @@ interface StoredPaymentComponentProvider<
             lifecycleOwner = activity,
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
-            application = application,
+            application = activity.application,
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,

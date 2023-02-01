@@ -87,7 +87,6 @@ class BacsFragment : BottomSheetDialogFragment() {
             fragment = this,
             paymentMethod = bacsComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getBacsConfiguration(),
-            application = requireActivity().application,
             componentCallback = bacsComponentData.callback
         )
 

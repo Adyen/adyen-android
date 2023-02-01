@@ -350,7 +350,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<CardComponentState>,
             )
         }
@@ -361,7 +360,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
             )
         }
@@ -395,7 +393,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bacsConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<BacsDirectDebitComponentState>,
             )
         }
@@ -406,7 +403,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<CardPaymentMethod>>,
             )
         }
@@ -417,7 +413,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
             )
         }
@@ -428,7 +423,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<CardComponentState>,
             )
         }
@@ -439,7 +433,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<DotpayPaymentMethod>>,
             )
         }
@@ -450,7 +443,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<EntercashPaymentMethod>>,
             )
@@ -462,7 +454,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<EPSPaymentMethod>>,
             )
         }
@@ -473,7 +464,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = giftcardConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<GiftCardComponentState>,
             )
         }
@@ -484,7 +474,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = googlePayConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<GooglePayComponentState>,
             )
         }
@@ -495,7 +484,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<IdealPaymentMethod>>,
             )
         }
@@ -506,7 +494,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = instantPaymentConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
             )
         }
@@ -517,7 +504,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = mbWayConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
             )
         }
@@ -528,7 +514,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MolpayPaymentMethod>>,
             )
         }
@@ -539,7 +524,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingCZConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
             )
@@ -551,7 +535,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<OnlineBankingPLPaymentMethod>>,
             )
@@ -563,7 +546,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingSKConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<OnlineBankingSKPaymentMethod>>,
             )
@@ -575,7 +557,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<OpenBankingPaymentMethod>>,
             )
@@ -587,7 +568,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payByBankConfig,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback
                     as ComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
             )
@@ -599,7 +579,6 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
-                application = fragment.requireApplication(),
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
             )
         }
@@ -612,5 +591,3 @@ internal fun getComponentFor(
 internal fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {
     return DropInComponentParamsMapper().mapToParams(this, amount)
 }
-
-private fun Fragment.requireApplication(): Application = requireContext().applicationContext as Application

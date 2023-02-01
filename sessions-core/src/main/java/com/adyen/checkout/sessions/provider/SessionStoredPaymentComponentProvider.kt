@@ -20,6 +20,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.requireApplication
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 
@@ -44,7 +45,6 @@ interface SessionStoredPaymentComponentProvider<
         checkoutSession: CheckoutSession,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String? = null,
     ): ComponentT {
@@ -55,7 +55,7 @@ interface SessionStoredPaymentComponentProvider<
             checkoutSession = checkoutSession,
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
-            application = application,
+            application = fragment.requireApplication(),
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,
@@ -68,7 +68,6 @@ interface SessionStoredPaymentComponentProvider<
         checkoutSession: CheckoutSession,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String? = null,
     ): ComponentT {
@@ -79,7 +78,7 @@ interface SessionStoredPaymentComponentProvider<
             checkoutSession = checkoutSession,
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
-            application = application,
+            application = activity.application,
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,

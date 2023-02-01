@@ -18,6 +18,7 @@ import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.util.requireApplication
 
 // TODO SESSIONS docs
 /**
@@ -40,7 +41,6 @@ interface PaymentComponentProvider<
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
      * @param key           The key to use to identify the [PaymentComponent].
-     * @param application   The [Application] instance used to handle actions with.
      *
      * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
      * instantiate multiple [PaymentComponent]s in the same lifecycle.
@@ -52,7 +52,6 @@ interface PaymentComponentProvider<
         fragment: Fragment,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
@@ -63,7 +62,7 @@ interface PaymentComponentProvider<
             lifecycleOwner = fragment.viewLifecycleOwner,
             paymentMethod = paymentMethod,
             configuration = configuration,
-            application = application,
+            application = fragment.requireApplication(),
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,
@@ -76,7 +75,6 @@ interface PaymentComponentProvider<
         activity: ComponentActivity,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
@@ -87,7 +85,7 @@ interface PaymentComponentProvider<
             lifecycleOwner = activity,
             paymentMethod = paymentMethod,
             configuration = configuration,
-            application = application,
+            application = activity.application,
             defaultArgs = null,
             key = key,
             componentCallback = componentCallback,

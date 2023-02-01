@@ -69,7 +69,6 @@ class InstantFragment : BottomSheetDialogFragment() {
             this,
             componentData.paymentMethod,
             checkoutConfigurationProvider.getInstantConfiguration(),
-            requireActivity().application,
             componentData.callback,
         )
 

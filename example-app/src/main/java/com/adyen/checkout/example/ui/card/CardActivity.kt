@@ -89,7 +89,6 @@ class CardActivity : AppCompatActivity() {
             activity = this,
             paymentMethod = cardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getCardConfiguration(),
-            application = application,
             componentCallback = cardComponentData.callback,
         )
 

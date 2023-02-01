@@ -98,7 +98,6 @@ class SessionsCardActivity : AppCompatActivity() {
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getCardConfiguration(),
-            application = application,
             componentCallback = sessionsCardComponentData.callback,
         )
 
