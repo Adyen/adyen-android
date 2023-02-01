@@ -111,18 +111,20 @@ abstract class OnlineBankingComponentProvider<
                 )
 
                 createComponent(
-                    onlineBankingDelegate,
-                    genericActionDelegate,
-                    DefaultActionHandlingComponent(
+                    delegate = onlineBankingDelegate,
+                    genericActionDelegate = genericActionDelegate,
+                    actionHandlingComponent = DefaultActionHandlingComponent(
                         genericActionDelegate,
                         onlineBankingDelegate
                     ),
-                    DefaultComponentEventHandler(componentCallback)
+                    componentEventHandler = DefaultComponentEventHandler()
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, componentClass]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -184,10 +186,9 @@ abstract class OnlineBankingComponentProvider<
                     sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<PaymentComponentState<PaymentMethodT>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
                 )
 
                 createComponent(
@@ -202,7 +203,9 @@ abstract class OnlineBankingComponentProvider<
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, componentClass]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

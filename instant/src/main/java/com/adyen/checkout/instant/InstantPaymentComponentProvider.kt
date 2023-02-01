@@ -104,13 +104,15 @@ class InstantPaymentComponentProvider(
                 instantPaymentDelegate = instantPaymentDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, instantPaymentDelegate),
-                componentEventHandler = DefaultComponentEventHandler(componentCallback),
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, InstantPaymentComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -166,10 +168,9 @@ class InstantPaymentComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<PaymentComponentState<PaymentMethodDetails>>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             InstantPaymentComponent(
@@ -182,7 +183,9 @@ class InstantPaymentComponentProvider(
 
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, InstantPaymentComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

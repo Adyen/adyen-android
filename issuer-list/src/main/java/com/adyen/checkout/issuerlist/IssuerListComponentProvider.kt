@@ -109,13 +109,15 @@ abstract class IssuerListComponentProvider<
                 issuerListDelegate,
                 genericActionDelegate,
                 DefaultActionHandlingComponent(genericActionDelegate, issuerListDelegate),
-                DefaultComponentEventHandler(componentCallback),
+                DefaultComponentEventHandler(),
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, componentClass]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -172,10 +174,9 @@ abstract class IssuerListComponentProvider<
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<PaymentComponentState<PaymentMethodT>>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             createComponent(
@@ -188,7 +189,9 @@ abstract class IssuerListComponentProvider<
 
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, componentClass]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

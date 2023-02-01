@@ -100,12 +100,14 @@ class SepaComponentProvider(
                     sepaDelegate = sepaDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
-                    componentEventHandler = DefaultComponentEventHandler(componentCallback)
+                    componentEventHandler = DefaultComponentEventHandler()
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -163,10 +165,9 @@ class SepaComponentProvider(
                     sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<PaymentComponentState<SepaPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
                 )
 
                 SepaComponent(
@@ -178,7 +179,9 @@ class SepaComponentProvider(
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

@@ -101,19 +101,19 @@ class GiftCardComponentProvider(
                 application = application,
             )
 
-            val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
             GiftCardComponent(
                 giftCardDelegate = giftCardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, giftCardDelegate),
-                componentEventHandler = componentEventHandler,
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -178,10 +178,9 @@ class GiftCardComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<GiftCardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             GiftCardComponent(
@@ -194,7 +193,9 @@ class GiftCardComponentProvider(
 
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

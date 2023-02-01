@@ -11,13 +11,14 @@ package com.adyen.checkout.sessions
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.BaseComponentCallback
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.sessions.model.SessionPaymentResult
 
 // BIG TODO SESSIONS: docs
-interface SessionComponentCallback<T : PaymentComponentState<*>> {
+interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {
     // Generic events
     fun onStateChanged(state: T) = Unit
     fun onAction(action: Action)

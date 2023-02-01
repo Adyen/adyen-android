@@ -102,12 +102,14 @@ class BacsDirectDebitComponentProvider(
                     bacsDelegate = bacsDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
-                    componentEventHandler = DefaultComponentEventHandler(componentCallback)
+                    componentEventHandler = DefaultComponentEventHandler()
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -165,10 +167,9 @@ class BacsDirectDebitComponentProvider(
                     sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<BacsDirectDebitComponentState>(
                     sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
+                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer
                 )
 
                 BacsDirectDebitComponent(
@@ -180,7 +181,9 @@ class BacsDirectDebitComponentProvider(
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

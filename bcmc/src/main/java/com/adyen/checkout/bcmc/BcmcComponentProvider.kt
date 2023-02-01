@@ -110,11 +110,13 @@ class BcmcComponentProvider(
                 bcmcDelegate = bcmcDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
-                componentEventHandler = DefaultComponentEventHandler(componentCallback),
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
@@ -182,10 +184,9 @@ class BcmcComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<PaymentComponentState<CardPaymentMethod>>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             BcmcComponent(
@@ -196,7 +197,9 @@ class BcmcComponentProvider(
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 

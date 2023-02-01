@@ -108,12 +108,14 @@ class PayByBankComponentProvider(
                     payByBankDelegate = payByBankDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
-                    componentEventHandler = DefaultComponentEventHandler(componentCallback)
+                    componentEventHandler = DefaultComponentEventHandler()
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -171,10 +173,9 @@ class PayByBankComponentProvider(
                     sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<PaymentComponentState<PayByBankPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
                 )
 
                 PayByBankComponent(
@@ -186,7 +187,9 @@ class PayByBankComponentProvider(
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

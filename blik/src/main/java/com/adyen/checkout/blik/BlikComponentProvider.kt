@@ -101,18 +101,18 @@ class BlikComponentProvider(
                     application = application,
                 )
 
-                val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
                 BlikComponent(
                     blikDelegate = blikDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = componentEventHandler,
+                    componentEventHandler = DefaultComponentEventHandler()
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -158,18 +158,18 @@ class BlikComponentProvider(
                     application = application,
                 )
 
-                val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
                 BlikComponent(
                     blikDelegate = blikDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = componentEventHandler,
+                    componentEventHandler = DefaultComponentEventHandler(),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -229,10 +229,9 @@ class BlikComponentProvider(
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
 
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<PaymentComponentState<BlikPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
                 )
 
                 BlikComponent(
@@ -244,7 +243,9 @@ class BlikComponentProvider(
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 
@@ -304,10 +305,9 @@ class BlikComponentProvider(
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
 
-                val sessionHandler = SessionHandler(
+                val sessionHandler = SessionHandler<PaymentComponentState<BlikPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionComponentCallback = componentCallback
                 )
 
                 BlikComponent(
@@ -319,7 +319,9 @@ class BlikComponentProvider(
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
             }
     }
 

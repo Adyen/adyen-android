@@ -120,17 +120,17 @@ class CardComponentProvider(
                 application = application,
             )
 
-            val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = componentEventHandler,
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
@@ -203,10 +203,9 @@ class CardComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             CardComponent(
@@ -218,7 +217,9 @@ class CardComponentProvider(
         }
 
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
@@ -271,17 +272,17 @@ class CardComponentProvider(
                 application = application,
             )
 
-            val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = componentEventHandler,
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
@@ -346,10 +347,9 @@ class CardComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler(
+            val sessionHandler = SessionHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             CardComponent(
@@ -360,7 +360,9 @@ class CardComponentProvider(
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
