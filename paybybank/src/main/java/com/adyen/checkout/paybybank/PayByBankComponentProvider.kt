@@ -38,7 +38,7 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -76,41 +76,41 @@ class PayByBankComponentProvider(
     ): PayByBankComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val payByBankDelegate = DefaultPayByBankDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    paymentMethod = paymentMethod,
-                    order = order,
-                    componentParams = componentParams,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val payByBankDelegate = DefaultPayByBankDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                order = order,
+                componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                PayByBankComponent(
-                    payByBankDelegate = payByBankDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
-                    componentEventHandler = DefaultComponentEventHandler()
-                )
-            }
+            PayByBankComponent(
+                payByBankDelegate = payByBankDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
+                componentEventHandler = DefaultComponentEventHandler()
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
@@ -133,58 +133,59 @@ class PayByBankComponentProvider(
     ): PayByBankComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val payByBankDelegate = DefaultPayByBankDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    paymentMethod = paymentMethod,
-                    order = checkoutSession.order,
-                    componentParams = componentParams,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val payByBankDelegate = DefaultPayByBankDelegate(
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                    savedStateHandle = savedStateHandle,
-                    checkoutSession = checkoutSession,
-                )
-                val sessionInteractor = SessionInteractor(
-                    sessionRepository = SessionRepository(
-                        sessionService = SessionService(httpClient),
-                        clientKey = componentParams.clientKey,
-                    ),
-                    sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                    isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
-                )
-                val sessionHandler = SessionHandler<PaymentComponentState<PayByBankPaymentMethod>>(
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+            val sessionComponentEventHandler =
+                SessionComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
                 )
 
-                PayByBankComponent(
-                    payByBankDelegate = payByBankDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
-                    componentEventHandler = sessionHandler
-                )
-            }
+            PayByBankComponent(
+                payByBankDelegate = payByBankDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, payByBankDelegate),
+                componentEventHandler = sessionComponentEventHandler
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, PayByBankComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {

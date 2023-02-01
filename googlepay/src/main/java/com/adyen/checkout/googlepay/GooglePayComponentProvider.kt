@@ -39,7 +39,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -172,7 +172,7 @@ class GooglePayComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionHandler = SessionHandler<GooglePayComponentState>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<GooglePayComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -181,7 +181,7 @@ class GooglePayComponentProvider(
                 googlePayDelegate = googlePayDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, googlePayDelegate),
-                componentEventHandler = sessionHandler,
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
 

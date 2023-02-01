@@ -38,7 +38,7 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -68,41 +68,41 @@ class SepaComponentProvider(
     ): SepaComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val sepaDelegate = DefaultSepaDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    order = order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val sepaDelegate = DefaultSepaDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                SepaComponent(
-                    sepaDelegate = sepaDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
-                    componentEventHandler = DefaultComponentEventHandler()
-                )
-            }
+            SepaComponent(
+                sepaDelegate = sepaDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
+                componentEventHandler = DefaultComponentEventHandler()
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
@@ -125,58 +125,59 @@ class SepaComponentProvider(
     ): SepaComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val sepaDelegate = DefaultSepaDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    order = checkoutSession.order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val sepaDelegate = DefaultSepaDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                    savedStateHandle = savedStateHandle,
-                    checkoutSession = checkoutSession,
-                )
-                val sessionInteractor = SessionInteractor(
-                    sessionRepository = SessionRepository(
-                        sessionService = SessionService(httpClient),
-                        clientKey = componentParams.clientKey,
-                    ),
-                    sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                    isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
-                )
-                val sessionHandler = SessionHandler<PaymentComponentState<SepaPaymentMethod>>(
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+            val sessionComponentEventHandler =
+                SessionComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
                 )
 
-                SepaComponent(
-                    sepaDelegate = sepaDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
-                    componentEventHandler = sessionHandler
-                )
-            }
+            SepaComponent(
+                sepaDelegate = sepaDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
+                componentEventHandler = sessionComponentEventHandler
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {

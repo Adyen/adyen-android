@@ -39,7 +39,7 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -174,7 +174,7 @@ abstract class IssuerListComponentProvider<
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler<PaymentComponentState<PaymentMethodT>>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<PaymentMethodT>>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -183,7 +183,7 @@ abstract class IssuerListComponentProvider<
                 issuerListDelegate,
                 genericActionDelegate,
                 DefaultActionHandlingComponent(genericActionDelegate, issuerListDelegate),
-                sessionHandler,
+                sessionComponentEventHandler,
             )
         }
 

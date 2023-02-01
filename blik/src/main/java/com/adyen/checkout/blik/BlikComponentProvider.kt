@@ -40,7 +40,7 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -73,41 +73,41 @@ class BlikComponentProvider(
     ): BlikComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val blikDelegate = DefaultBlikDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    order = order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val blikDelegate = DefaultBlikDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                BlikComponent(
-                    blikDelegate = blikDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = DefaultComponentEventHandler()
-                )
-            }
+            BlikComponent(
+                blikDelegate = blikDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
+                componentEventHandler = DefaultComponentEventHandler()
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
@@ -130,41 +130,41 @@ class BlikComponentProvider(
     ): BlikComponent {
         assertSupported(storedPaymentMethod)
 
-        val genericStoredFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val blikDelegate = StoredBlikDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                    order = order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val blikDelegate = StoredBlikDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                storedPaymentMethod = storedPaymentMethod,
+                order = order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                BlikComponent(
-                    blikDelegate = blikDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = DefaultComponentEventHandler(),
-                )
-            }
+            BlikComponent(
+                blikDelegate = blikDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
+                componentEventHandler = DefaultComponentEventHandler(),
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
@@ -187,60 +187,60 @@ class BlikComponentProvider(
     ): BlikComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val blikDelegate = DefaultBlikDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    order = checkoutSession.order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val blikDelegate = DefaultBlikDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                    savedStateHandle = savedStateHandle,
-                    checkoutSession = checkoutSession,
-                )
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
 
-                val sessionInteractor = SessionInteractor(
-                    sessionRepository = SessionRepository(
-                        sessionService = SessionService(httpClient),
-                        clientKey = componentParams.clientKey,
-                    ),
-                    sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                    isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
-                )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
 
-                val sessionHandler = SessionHandler<PaymentComponentState<BlikPaymentMethod>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
-                BlikComponent(
-                    blikDelegate = blikDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = sessionHandler,
-                )
-            }
+            BlikComponent(
+                blikDelegate = blikDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
+                componentEventHandler = sessionComponentEventHandler,
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
@@ -263,60 +263,61 @@ class BlikComponentProvider(
     ): BlikComponent {
         assertSupported(storedPaymentMethod)
 
-        val genericStoredFactory: ViewModelProvider.Factory =
-            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
-                val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-                val analyticsService = AnalyticsService(httpClient)
-                val analyticsRepository = DefaultAnalyticsRepository(
-                    packageName = application.packageName,
-                    locale = componentParams.shopperLocale,
-                    source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                    analyticsService = analyticsService,
-                    analyticsMapper = AnalyticsMapper(),
-                )
+        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
 
-                val blikDelegate = StoredBlikDelegate(
-                    observerRepository = PaymentObserverRepository(),
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                    order = checkoutSession.order,
-                    analyticsRepository = analyticsRepository,
-                    submitHandler = SubmitHandler(savedStateHandle),
-                )
+            val blikDelegate = StoredBlikDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                storedPaymentMethod = storedPaymentMethod,
+                order = checkoutSession.order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
 
-                val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                    configuration = configuration.genericActionConfiguration,
-                    savedStateHandle = savedStateHandle,
-                    application = application,
-                )
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
 
-                val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                    savedStateHandle = savedStateHandle,
-                    checkoutSession = checkoutSession,
-                )
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
 
-                val sessionInteractor = SessionInteractor(
-                    sessionRepository = SessionRepository(
-                        sessionService = SessionService(httpClient),
-                        clientKey = componentParams.clientKey,
-                    ),
-                    sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                    isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
-                )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
 
-                val sessionHandler = SessionHandler<PaymentComponentState<BlikPaymentMethod>>(
+            val sessionComponentEventHandler =
+                SessionComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
                 )
 
-                BlikComponent(
-                    blikDelegate = blikDelegate,
-                    genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                    componentEventHandler = sessionHandler,
-                )
-            }
+            BlikComponent(
+                blikDelegate = blikDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
+                componentEventHandler = sessionComponentEventHandler,
+            )
+        }
+
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {

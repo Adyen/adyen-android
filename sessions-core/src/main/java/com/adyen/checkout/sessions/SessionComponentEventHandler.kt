@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("TooManyFunctions")
-class SessionHandler<T : PaymentComponentState<*>>(
+class SessionComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
 ) : ComponentEventHandler<T> {

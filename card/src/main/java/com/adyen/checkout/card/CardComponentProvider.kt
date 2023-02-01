@@ -44,7 +44,7 @@ import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
@@ -203,7 +203,7 @@ class CardComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler<CardComponentState>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -212,7 +212,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = sessionHandler,
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
 
@@ -347,7 +347,7 @@ class CardComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler<CardComponentState>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -356,7 +356,7 @@ class CardComponentProvider(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = sessionHandler,
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
