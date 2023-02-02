@@ -179,6 +179,10 @@ internal class DefaultGenericActionDelegate(
         delegate.refreshStatus()
     }
 
+    override fun onError(e: CheckoutException) {
+        delegate.onError(e)
+    }
+
     override fun onCleared() {
         Logger.d(TAG, "onCleared")
         removeObserver()
