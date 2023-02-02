@@ -9,7 +9,6 @@
 package com.adyen.checkout.onlinebankingcore
 
 import android.app.Application
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -72,14 +71,13 @@ abstract class OnlineBankingComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodT>>,
         order: Order?,
         key: String?
     ): OnlineBankingComponent<PaymentMethodT> {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -136,13 +134,12 @@ abstract class OnlineBankingComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodT>>,
         key: String?
     ): OnlineBankingComponent<PaymentMethodT> {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)

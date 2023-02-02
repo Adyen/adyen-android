@@ -8,7 +8,6 @@
 package com.adyen.checkout.card
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -71,14 +70,13 @@ class CardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<CardComponentState>,
         order: Order?,
         key: String?
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
@@ -143,13 +141,12 @@ class CardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<CardComponentState>,
         key: String?
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
@@ -231,14 +228,13 @@ class CardComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<CardComponentState>,
         order: Order?,
         key: String?
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsStored(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -295,13 +291,12 @@ class CardComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<CardComponentState>,
         key: String?
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsStored(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)

@@ -9,7 +9,6 @@
 package com.adyen.checkout.sessions.provider
 
 import android.app.Application
-import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -53,9 +52,8 @@ interface SessionPaymentComponentProvider<
             paymentMethod = paymentMethod,
             configuration = configuration,
             application = fragment.requireApplication(),
-            defaultArgs = null,
-            key = key,
             componentCallback = componentCallback,
+            key = key,
         )
     }
 
@@ -76,9 +74,8 @@ interface SessionPaymentComponentProvider<
             paymentMethod = paymentMethod,
             configuration = configuration,
             application = activity.application,
-            defaultArgs = null,
-            key = key,
             componentCallback = componentCallback,
+            key = key,
         )
     }
 
@@ -91,7 +88,6 @@ interface SessionPaymentComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String?,
     ): ComponentT

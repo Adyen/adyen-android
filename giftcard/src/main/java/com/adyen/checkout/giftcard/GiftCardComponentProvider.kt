@@ -8,7 +8,6 @@
 package com.adyen.checkout.giftcard
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -62,7 +61,6 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<GiftCardComponentState>,
         order: Order?,
         key: String?,
@@ -71,7 +69,7 @@ class GiftCardComponentProvider(
 
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-        val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -126,7 +124,6 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<GiftCardComponentState>,
         key: String?
     ): GiftCardComponent {
@@ -134,7 +131,7 @@ class GiftCardComponentProvider(
 
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-        val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)

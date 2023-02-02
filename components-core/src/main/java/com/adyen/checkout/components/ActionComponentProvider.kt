@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import android.app.Application
-import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
@@ -56,7 +55,6 @@ interface ActionComponentProvider<
             application = application,
             configuration = configuration,
             callback = callback,
-            defaultArgs = null,
             key = key
         )
     }
@@ -89,7 +87,6 @@ interface ActionComponentProvider<
             application = application,
             configuration = configuration,
             callback = callback,
-            defaultArgs = null,
             key = key
         )
     }
@@ -101,9 +98,6 @@ interface ActionComponentProvider<
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
      * @param application             Your main application class.
      * @param configuration           The Configuration of the component.
-     * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in
-     *                                [ViewModel] if there is no previously saved state or previously saved state misses
-     *                                a value by such key.
      * @param key                     The key to use to identify the [ActionComponent].
      *
      * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
@@ -119,7 +113,6 @@ interface ActionComponentProvider<
         application: Application,
         configuration: ConfigurationT,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String? = null,
     ): ComponentT
 

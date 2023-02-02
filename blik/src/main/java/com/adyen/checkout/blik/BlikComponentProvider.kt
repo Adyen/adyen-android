@@ -9,7 +9,6 @@
 package com.adyen.checkout.blik
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -66,14 +65,13 @@ class BlikComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
         order: Order?,
         key: String?,
     ): BlikComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -123,14 +121,13 @@ class BlikComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
         order: Order?,
         key: String?,
     ): BlikComponent {
         assertSupported(storedPaymentMethod)
 
-        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -181,13 +178,12 @@ class BlikComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
         key: String?
     ): BlikComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -257,13 +253,12 @@ class BlikComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
         key: String?
     ): BlikComponent {
         assertSupported(storedPaymentMethod)
 
-        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)

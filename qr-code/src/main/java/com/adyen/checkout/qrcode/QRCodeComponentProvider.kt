@@ -9,7 +9,6 @@
 package com.adyen.checkout.qrcode
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -47,10 +46,9 @@ class QRCodeComponentProvider(
         application: Application,
         configuration: QRCodeConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): QRCodeComponent {
-        val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
                 delegate = qrCodeDelegate,

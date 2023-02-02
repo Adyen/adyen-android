@@ -8,7 +8,6 @@
 package com.adyen.checkout.bcmc
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -64,7 +63,6 @@ class BcmcComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BcmcConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<CardPaymentMethod>>,
         order: Order?,
         key: String?,
@@ -87,7 +85,7 @@ class BcmcComponentProvider(
             analyticsMapper = AnalyticsMapper(),
         )
 
-        val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val bcmcDelegate = DefaultBcmcDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
@@ -129,7 +127,6 @@ class BcmcComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BcmcConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<CardPaymentMethod>>,
         key: String?
     ): BcmcComponent {
@@ -151,7 +148,7 @@ class BcmcComponentProvider(
             analyticsMapper = AnalyticsMapper(),
         )
 
-        val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val bcmcDelegate = DefaultBcmcDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,

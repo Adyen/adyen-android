@@ -9,7 +9,6 @@
 package com.adyen.checkout.mbway
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -61,14 +60,13 @@ class MBWayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: MBWayConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
         order: Order?,
         key: String?,
     ): MBWayComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -119,13 +117,12 @@ class MBWayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: MBWayConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
         key: String?
     ): MBWayComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)

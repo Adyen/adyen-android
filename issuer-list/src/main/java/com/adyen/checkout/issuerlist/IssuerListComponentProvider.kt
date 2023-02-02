@@ -9,7 +9,6 @@
 package com.adyen.checkout.issuerlist
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -71,14 +70,13 @@ abstract class IssuerListComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodT>>,
         order: Order?,
         key: String?
     ): ComponentT {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -129,13 +127,12 @@ abstract class IssuerListComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodT>>,
         key: String?
     ): ComponentT {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)

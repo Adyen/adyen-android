@@ -9,7 +9,6 @@
 package com.adyen.checkout.redirect
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -43,10 +42,9 @@ class RedirectComponentProvider(
         application: Application,
         configuration: RedirectConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): RedirectComponent {
-        val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val redirectFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
                 delegate = redirectDelegate,

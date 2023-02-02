@@ -9,7 +9,6 @@
 package com.adyen.checkout.instant
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -67,14 +66,13 @@ class InstantPaymentComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: InstantPaymentConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
         order: Order?,
         key: String?
     ): InstantPaymentComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -124,13 +122,12 @@ class InstantPaymentComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: InstantPaymentConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
         key: String?
     ): InstantPaymentComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)

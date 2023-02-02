@@ -8,7 +8,6 @@
 package com.adyen.checkout.googlepay
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -69,7 +68,6 @@ class GooglePayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<GooglePayComponentState>,
         order: Order?,
         key: String?,
@@ -77,7 +75,7 @@ class GooglePayComponentProvider(
         assertSupported(paymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
-        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -126,14 +124,13 @@ class GooglePayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<GooglePayComponentState>,
         key: String?
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
-        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

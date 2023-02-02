@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import android.app.Application
-import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -63,10 +62,9 @@ interface PaymentComponentProvider<
             paymentMethod = paymentMethod,
             configuration = configuration,
             application = fragment.requireApplication(),
-            defaultArgs = null,
-            key = key,
             componentCallback = componentCallback,
             order = order,
+            key = key,
         )
     }
 
@@ -86,10 +84,9 @@ interface PaymentComponentProvider<
             paymentMethod = paymentMethod,
             configuration = configuration,
             application = activity.application,
-            defaultArgs = null,
-            key = key,
             componentCallback = componentCallback,
             order = order,
+            key = key,
         )
     }
 
@@ -100,9 +97,6 @@ interface PaymentComponentProvider<
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
      * @param paymentMethod           The corresponding  [PaymentMethod] object.
      * @param configuration           The Configuration of the component.
-     * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in
-     *                                [ViewModel] if there is no previously saved state or previously saved state misses
-     *                                a value by such key
      * @param key                     The key to use to identify the [PaymentComponent].
      * @param application   The [Application] instance used to handle actions with.
      *
@@ -119,7 +113,6 @@ interface PaymentComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order?,
         key: String?,

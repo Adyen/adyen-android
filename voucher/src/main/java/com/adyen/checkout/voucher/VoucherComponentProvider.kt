@@ -9,7 +9,6 @@
 package com.adyen.checkout.voucher
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -42,10 +41,9 @@ class VoucherComponentProvider(
         application: Application,
         configuration: VoucherConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): VoucherComponent {
-        val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val voucherFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
                 delegate = voucherDelegate,

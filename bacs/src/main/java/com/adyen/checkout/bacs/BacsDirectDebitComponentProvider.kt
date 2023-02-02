@@ -9,7 +9,6 @@
 package com.adyen.checkout.bacs
 
 import android.app.Application
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -63,14 +62,13 @@ class BacsDirectDebitComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BacsDirectDebitConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: ComponentCallback<BacsDirectDebitComponentState>,
         order: Order?,
         key: String?
     ): BacsDirectDebitComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -121,13 +119,12 @@ class BacsDirectDebitComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BacsDirectDebitConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
         componentCallback: SessionComponentCallback<BacsDirectDebitComponentState>,
         key: String?
     ): BacsDirectDebitComponent {
         assertSupported(paymentMethod)
 
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
