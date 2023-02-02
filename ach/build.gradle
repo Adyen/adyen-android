@@ -27,6 +27,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -36,4 +39,11 @@ dependencies {
 
     // Dependencies
     implementation libraries.material
+
+    //Tests
+    testImplementation project(':test-core')
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
 }
