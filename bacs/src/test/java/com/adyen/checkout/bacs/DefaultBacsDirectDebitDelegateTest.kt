@@ -465,13 +465,56 @@ internal class DefaultBacsDirectDebitDelegateTest(
             }
 
         @Test
-        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                delegate.onSubmit()
-                verify(submitHandler).onSubmit(expectMostRecentItem())
+        fun `when delegate onSubmit is called and component is in input mode and output data is not valid then submit handler onSubmit is called`() =
+            runTest {
+                delegate.componentStateFlow.test {
+                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                    delegate.onSubmit()
+                    verify(submitHandler).onSubmit(expectMostRecentItem())
+                }
             }
-        }
+
+        @Test
+        fun `when delegate onSubmit is called and component is in input mode and output data is valid then component should go in confirmation mode`() =
+            runTest {
+                delegate.outputDataFlow.test {
+                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                    delegate.updateInputData {
+                        holderName = "test"
+                        bankAccountNumber = "12345678"
+                        sortCode = "123456"
+                        shopperEmail = "test@adyen.com"
+                        isAmountConsentChecked = true
+                        isAccountConsentChecked = true
+                    }
+
+                    delegate.onSubmit()
+
+                    assertEquals(BacsDirectDebitMode.CONFIRMATION, expectMostRecentItem().mode)
+                }
+            }
+
+        @Test
+        fun `when delegate onSubmit is called and component is in confirmation mode and output data is valid then submit handler onSubmit is called`() =
+            runTest {
+                delegate.componentStateFlow.test {
+                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                    delegate.updateInputData {
+                        holderName = "test"
+                        bankAccountNumber = "12345678"
+                        sortCode = "123456"
+                        shopperEmail = "test@adyen.com"
+                        isAmountConsentChecked = true
+                        isAccountConsentChecked = true
+                        mode = BacsDirectDebitMode.CONFIRMATION
+                    }
+
+                    delegate.onSubmit()
+                    verify(submitHandler).onSubmit(expectMostRecentItem())
+                }
+            }
     }
 
     private fun createBacsDelegate(
