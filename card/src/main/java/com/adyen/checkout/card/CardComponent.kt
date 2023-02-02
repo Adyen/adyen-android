@@ -18,7 +18,6 @@ import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
@@ -41,7 +40,7 @@ class CardComponent internal constructor(
     internal val componentEventHandler: ComponentEventHandler<CardComponentState>,
 ) :
     ViewModel(),
-    PaymentComponent<CardComponentState>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -60,7 +59,7 @@ class CardComponent internal constructor(
         componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
@@ -73,7 +72,7 @@ class CardComponent internal constructor(
         )
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         cardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -84,12 +83,9 @@ class CardComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
-    // TODO sessions: Move it to the PaymentComponent interface
-    fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? CardDelegate)?.setInteractionBlocked(isInteractionBlocked) ?: Logger.e(
-            TAG,
-            "Payment component is not interactable, ignoring."
-        )
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? CardDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {
@@ -104,7 +100,7 @@ class CardComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
+        val PROVIDER = CardComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SCHEME)

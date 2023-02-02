@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerListComponent
@@ -44,6 +45,7 @@ internal class IssuerListComponentTest(
     @Mock private val issuerListDelegate: IssuerListDelegate<TestIssuerPaymentMethod>,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<TestIssuerPaymentMethod>>,
 ) {
 
     // We created TestIssuerListComponent to be able to run our tests, because IssuerListComponent is an abstract class
@@ -59,6 +61,7 @@ internal class IssuerListComponentTest(
             issuerListDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -67,6 +70,7 @@ internal class IssuerListComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(issuerListDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -75,6 +79,7 @@ internal class IssuerListComponentTest(
 
         verify(issuerListDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -109,7 +114,12 @@ internal class IssuerListComponentTest(
         runTest {
             val issuerListDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
             whenever(issuerListDelegate.viewFlow) doReturn issuerListDelegateViewFlow
-            component = TestIssuerListComponent(issuerListDelegate, genericActionDelegate, actionHandlingComponent)
+            component = TestIssuerListComponent(
+                issuerListDelegate,
+                genericActionDelegate,
+                actionHandlingComponent,
+                componentEventHandler,
+            )
 
             component.viewFlow.test {
                 assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -125,7 +135,12 @@ internal class IssuerListComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = TestIssuerListComponent(issuerListDelegate, genericActionDelegate, actionHandlingComponent)
+        component = TestIssuerListComponent(
+            issuerListDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

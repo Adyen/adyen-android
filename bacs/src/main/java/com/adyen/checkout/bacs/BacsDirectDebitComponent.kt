@@ -18,8 +18,8 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ButtonDelegate
@@ -37,8 +37,9 @@ class BacsDirectDebitComponent internal constructor(
     private val bacsDelegate: BacsDirectDebitDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<BacsDirectDebitComponentState>
 ) : ViewModel(),
-    PaymentComponent<BacsDirectDebitComponentState>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -54,9 +55,10 @@ class BacsDirectDebitComponent internal constructor(
     init {
         bacsDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
     ) {
@@ -64,7 +66,7 @@ class BacsDirectDebitComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         bacsDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -103,19 +105,24 @@ class BacsDirectDebitComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? BacsDirectDebitDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         bacsDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
-            BacsDirectDebitComponentProvider()
+        val PROVIDER = BacsDirectDebitComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BACS)

@@ -9,7 +9,6 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -52,10 +51,9 @@ class Adyen3DS2ComponentProvider(
         application: Application,
         configuration: Adyen3DS2Configuration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): Adyen3DS2Component {
-        val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
 
             Adyen3DS2Component(

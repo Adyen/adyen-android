@@ -56,16 +56,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private val storedPaymentMethod: StoredPaymentMethod by arguments(STORED_PAYMENT_KEY)
-    private lateinit var component: PaymentComponent<*>
+    private lateinit var component: PaymentComponent
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         if (storedPaymentMethod.type.isNullOrEmpty()) {
             throw ComponentException("Stored payment method is empty or not found.")
         }
-
-        component =
-            getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-        component.observe(viewLifecycleOwner, storedPaymentViewModel::onPaymentComponentEvent)
 
         _binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
@@ -78,6 +74,21 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         initView()
         observeState()
         observeEvents()
+        loadComponent()
+    }
+
+    private fun loadComponent() {
+        try {
+            component = getComponentFor(
+                fragment = this,
+                storedPaymentMethod = storedPaymentMethod,
+                dropInConfiguration = dropInViewModel.dropInConfiguration,
+                amount = dropInViewModel.amount,
+                componentCallback = storedPaymentViewModel
+            )
+        } catch (e: CheckoutException) {
+            handleError(ComponentError(e))
+        }
     }
 
     private fun initView() {

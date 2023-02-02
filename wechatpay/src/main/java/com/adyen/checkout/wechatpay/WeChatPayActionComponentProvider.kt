@@ -9,7 +9,6 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -45,10 +44,9 @@ class WeChatPayActionComponentProvider(
         application: Application,
         configuration: WeChatPayActionConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): WeChatPayActionComponent {
-        val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val weChatFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val weChatDelegate = getDelegate(configuration, savedStateHandle, application)
             WeChatPayActionComponent(
                 delegate = weChatDelegate,

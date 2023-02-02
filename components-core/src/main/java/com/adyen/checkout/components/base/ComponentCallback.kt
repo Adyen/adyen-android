@@ -13,7 +13,7 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
 
 // TODO SESSIONS: docs
-interface ComponentCallback<T : PaymentComponentState<*>> {
+interface ComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {
     // Generic events
     fun onStateChanged(state: T) = Unit
     fun onSubmit(state: T)

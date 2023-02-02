@@ -9,7 +9,6 @@
 package com.adyen.checkout.action
 
 import android.app.Application
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -46,10 +45,9 @@ class GenericActionComponentProvider(
         application: Application,
         configuration: GenericActionConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): GenericActionComponent {
-        val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericActionFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,

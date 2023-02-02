@@ -8,7 +8,6 @@
 package com.adyen.checkout.card
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -18,8 +17,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
@@ -45,109 +43,40 @@ import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionHandler
+import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-) : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+) :
+    PaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
     private val componentParamsMapper = CardComponentParamsMapper(overrideComponentParams)
 
-    override fun get(
-        savedStateRegistryOwner: SavedStateRegistryOwner,
-        viewModelStoreOwner: ViewModelStoreOwner,
-        paymentMethod: PaymentMethod,
-        configuration: CardConfiguration,
-        application: Application,
-        defaultArgs: Bundle?,
-        key: String?
-    ): CardComponent {
-        assertSupported(paymentMethod)
-
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val genericEncrypter = DefaultGenericEncrypter()
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-            val binLookupService = BinLookupService(httpClient)
-            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
-            val publicKeyService = PublicKeyService(httpClient)
-            val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val addressService = AddressService(httpClient)
-            val addressRepository = DefaultAddressRepository(addressService)
-            val cardValidationMapper = CardValidationMapper()
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
-                analyticsMapper = AnalyticsMapper(),
-            )
-
-            val cardDelegate = DefaultCardDelegate(
-                observerRepository = PaymentObserverRepository(),
-                publicKeyRepository = publicKeyRepository,
-                componentParams = componentParams,
-                paymentMethod = paymentMethod,
-                order = null, // TODO use argument when all providers are refactored
-                analyticsRepository = analyticsRepository,
-                addressRepository = addressRepository,
-                detectCardTypeRepository = detectCardTypeRepository,
-                cardValidationMapper = cardValidationMapper,
-                cardEncrypter = cardEncrypter,
-                genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
-            )
-
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
-
-            val componentEventHandler = DefaultComponentEventHandler(object : ComponentCallback<CardComponentState> {
-                // TODO sessions: remove
-                override fun onSubmit(state: CardComponentState) = Unit
-
-                // TODO sessions: remove
-                override fun onAdditionalDetails(actionComponentData: ActionComponentData) = Unit
-
-                // TODO sessions: remove
-                override fun onError(componentError: ComponentError) = Unit
-            })
-
-            CardComponent(
-                cardDelegate = cardDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = componentEventHandler,
-            )
-        }
-        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
-    }
-
     @Suppress("LongParameterList", "LongMethod")
-    fun get(
+    override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
-        key: String?,
         componentCallback: ComponentCallback<CardComponentState>,
-        order: Order? = null,
+        order: Order?,
+        key: String?
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
@@ -180,7 +109,7 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(savedStateHandle)
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -189,22 +118,22 @@ class CardComponentProvider(
                 application = application,
             )
 
-            val componentEventHandler = DefaultComponentEventHandler(componentCallback)
-
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = componentEventHandler,
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
     @Suppress("LongParameterList", "LongMethod")
-    fun get(
+    override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
@@ -212,13 +141,12 @@ class CardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
-        key: String?,
-        componentCallback: SessionComponentCallback<CardComponentState>
+        componentCallback: SessionComponentCallback<CardComponentState>,
+        key: String?
     ): CardComponent {
         assertSupported(paymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
@@ -251,7 +179,7 @@ class CardComponentProvider(
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
                 genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(savedStateHandle)
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -272,37 +200,41 @@ class CardComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionHandler = SessionHandler(
+            val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionComponentCallback = componentCallback
             )
 
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = sessionHandler,
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.componentEventHandler::onPaymentComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
         }
     }
 
+    @Suppress("LongParameterList", "LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        defaultArgs: Bundle?,
-        key: String?,
+        componentCallback: ComponentCallback<CardComponentState>,
+        order: Order?,
+        key: String?
     ): CardComponent {
         assertSupported(storedPaymentMethod)
 
-        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsStored(configuration)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -322,11 +254,12 @@ class CardComponentProvider(
             val cardDelegate = StoredCardDelegate(
                 observerRepository = PaymentObserverRepository(),
                 storedPaymentMethod = storedPaymentMethod,
+                order = order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
                 cardEncrypter = cardEncrypter,
                 publicKeyRepository = publicKeyRepository,
-                submitHandler = SubmitHandler()
+                submitHandler = SubmitHandler(savedStateHandle)
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -335,25 +268,97 @@ class CardComponentProvider(
                 application = application,
             )
 
-            val componentEventHandler = DefaultComponentEventHandler(object : ComponentCallback<CardComponentState> {
-                // TODO sessions: remove
-                override fun onSubmit(state: CardComponentState) = Unit
+            CardComponent(
+                cardDelegate = cardDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
+                componentEventHandler = DefaultComponentEventHandler(),
+            )
+        }
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
+        }
+    }
 
-                // TODO sessions: remove
-                override fun onAdditionalDetails(actionComponentData: ActionComponentData) = Unit
+    @Suppress("LongParameterList", "LongMethod")
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: CardConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<CardComponentState>,
+        key: String?
+    ): CardComponent {
+        assertSupported(storedPaymentMethod)
 
-                // TODO sessions: remove
-                override fun onError(componentError: ComponentError) = Unit
-            })
+        val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val publicKeyService = PublicKeyService(httpClient)
+            val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
+            val genericEncrypter = DefaultGenericEncrypter()
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val cardDelegate = StoredCardDelegate(
+                observerRepository = PaymentObserverRepository(),
+                storedPaymentMethod = storedPaymentMethod,
+                order = checkoutSession.order,
+                componentParams = componentParams,
+                analyticsRepository = analyticsRepository,
+                cardEncrypter = cardEncrypter,
+                publicKeyRepository = publicKeyRepository,
+                submitHandler = SubmitHandler(savedStateHandle)
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+            val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
-                componentEventHandler = componentEventHandler,
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
+        }
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

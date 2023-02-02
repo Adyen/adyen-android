@@ -10,10 +10,12 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
@@ -45,6 +47,7 @@ internal class DefaultOnlineBankingDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val context: Context,
     @Mock private val pdfOpener: PdfOpener,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
 ) {
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
@@ -111,6 +114,7 @@ internal class DefaultOnlineBankingDelegateTest(
 
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertEquals(TEST_ORDER, data.order)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
@@ -173,17 +177,46 @@ internal class DefaultOnlineBankingDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createOnlineBankingDelegate(
-        configuration: TestOnlineBankingConfiguration = getDefaultTestOnlineBankingConfigurationBuilder().build()
+        configuration: TestOnlineBankingConfiguration = getDefaultTestOnlineBankingConfigurationBuilder().build(),
+        order: OrderRequest? = TEST_ORDER,
     ) = DefaultOnlineBankingDelegate(
         observerRepository = PaymentObserverRepository(),
         pdfOpener = pdfOpener,
         paymentMethod = PaymentMethod(),
+        order = order,
         analyticsRepository = analyticsRepository,
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         termsAndConditionsUrl = TEST_URL,
         paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
-        submitHandler = SubmitHandler(),
+        submitHandler = submitHandler,
     )
 
     private fun getDefaultTestOnlineBankingConfigurationBuilder() = TestOnlineBankingConfiguration.Builder(
@@ -195,5 +228,6 @@ internal class DefaultOnlineBankingDelegateTest(
     companion object {
         private const val TEST_URL = "any-url"
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

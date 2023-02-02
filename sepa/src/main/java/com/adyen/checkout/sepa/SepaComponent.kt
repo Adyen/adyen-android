@@ -16,9 +16,9 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.toActionCallback
@@ -38,8 +38,9 @@ class SepaComponent internal constructor(
     private val sepaDelegate: SepaDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>
 ) : ViewModel(),
-    PaymentComponent<PaymentComponentState<SepaPaymentMethod>>,
+    PaymentComponent,
     ViewableComponent,
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -55,9 +56,10 @@ class SepaComponent internal constructor(
     init {
         sepaDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit
     ) {
@@ -65,7 +67,7 @@ class SepaComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         sepaDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -76,18 +78,24 @@ class SepaComponent internal constructor(
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? SepaDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         sepaDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
+        val PROVIDER = SepaComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.SEPA)

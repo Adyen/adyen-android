@@ -9,10 +9,14 @@
 package com.adyen.checkout.paybybank
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
@@ -39,7 +43,8 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultPayByBankDelegateTest(
-    @Mock private val analyticsRepository: AnalyticsRepository
+    @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<PayByBankPaymentMethod>>,
 ) {
 
     private lateinit var delegate: DefaultPayByBankDelegate
@@ -52,12 +57,10 @@ internal class DefaultPayByBankDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        delegate = DefaultPayByBankDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+        delegate = createPayByBankDelegate(
+            issuers = listOf(
+                Issuer(id = "issuer-id", name = "issuer-name")
+            )
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -132,6 +135,7 @@ internal class DefaultPayByBankDelegateTest(
                 )
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertEquals(TEST_ORDER, data.order)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
@@ -141,14 +145,8 @@ internal class DefaultPayByBankDelegateTest(
 
     @Test
     fun `when issuers is empty in paymentMethod then viewFlow should emit null`() = runTest {
-        delegate = DefaultPayByBankDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(
-                issuers = emptyList()
-            ),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+        delegate = createPayByBankDelegate(
+            issuers = emptyList()
         )
         delegate.viewFlow.test {
             assertEquals(null, expectMostRecentItem())
@@ -157,16 +155,10 @@ internal class DefaultPayByBankDelegateTest(
 
     @Test
     fun `when issuers is not empty in paymentMethod then viewFlow should emit PayByBankComponentViewType`() = runTest {
-        delegate = DefaultPayByBankDelegate(
-            observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
-            paymentMethod = PaymentMethod(
-                issuers = listOf(
-                    Issuer(id = "issuer-id", name = "issuer-name")
-                )
-            ),
-            analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+        delegate = createPayByBankDelegate(
+            issuers = listOf(
+                Issuer(id = "issuer-id", name = "issuer-name")
+            )
         )
         delegate.viewFlow.test {
             assertEquals(PayByBankComponentViewType, expectMostRecentItem())
@@ -179,7 +171,61 @@ internal class DefaultPayByBankDelegateTest(
         verify(analyticsRepository).sendAnalyticsEvent()
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+
+        @Test
+        fun `when no issuers in paymentMethod and delegate is initialized then submit handler onSubmit is called`() =
+            runTest {
+                delegate = createPayByBankDelegate(issuers = emptyList())
+                delegate.componentStateFlow.test {
+                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                    verify(submitHandler).onSubmit(expectMostRecentItem())
+                }
+            }
+    }
+
+    private fun createPayByBankDelegate(
+        issuers: List<Issuer>,
+        order: Order? = TEST_ORDER,
+    ): DefaultPayByBankDelegate {
+        return DefaultPayByBankDelegate(
+            observerRepository = PaymentObserverRepository(),
+            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            paymentMethod = PaymentMethod(
+                issuers = issuers
+            ),
+            order = order,
+            analyticsRepository = analyticsRepository,
+            submitHandler = submitHandler,
+        )
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

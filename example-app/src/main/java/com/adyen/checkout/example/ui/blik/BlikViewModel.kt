@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
@@ -43,15 +43,13 @@ class BlikViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel() {
+) : ViewModel(), ComponentCallback<PaymentComponentState<BlikPaymentMethod>> {
 
     private val _blikViewState = MutableStateFlow<BlikViewState>(BlikViewState.Loading)
     val blikViewState = _blikViewState.asStateFlow()
 
     private val _events = MutableSharedFlow<BlikEvent>()
     val events: SharedFlow<BlikEvent> = _events.asSharedFlow()
-
-    private var blikComponentState: PaymentComponentState<BlikPaymentMethod>? = null
 
     init {
         viewModelScope.launch { _blikViewState.emit(fetchPaymentMethods()) }
@@ -82,29 +80,24 @@ class BlikViewModel @Inject constructor(
         if (blikPaymentMethod == null) {
             BlikViewState.Error(R.string.error_dialog_title)
         } else {
-            BlikViewState.ShowComponent(blikPaymentMethod)
+            val componentData = BlikComponentData(
+                paymentMethod = blikPaymentMethod,
+                callback = this@BlikViewModel,
+            )
+            BlikViewState.ShowComponent(componentData)
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                onBlikComponentState(event.state)
-            }
-            is PaymentComponentEvent.Error -> {
-                onComponentError(event.error)
-            }
-            is PaymentComponentEvent.ActionDetails -> {
-                sendPaymentDetails(event.data)
-            }
-            is PaymentComponentEvent.Submit -> {
-                makePayment(event.state.data)
-            }
-        }
+    override fun onSubmit(state: PaymentComponentState<BlikPaymentMethod>) {
+        makePayment(state.data)
     }
 
-    private fun onBlikComponentState(event: PaymentComponentState<BlikPaymentMethod>) {
-        blikComponentState = event
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        sendPaymentDetails(actionComponentData)
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
     }
 
     private fun onComponentError(error: ComponentError) {

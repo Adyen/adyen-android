@@ -1,9 +1,12 @@
 package com.adyen.checkout.sepa
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
@@ -29,6 +32,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultSepaDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<SepaPaymentMethod>>,
 ) {
 
     private lateinit var delegate: DefaultSepaDelegate
@@ -73,6 +77,7 @@ internal class DefaultSepaDelegateTest(
                 assertTrue(isReady)
                 assertEquals("name", data.paymentMethod?.ownerName)
                 assertEquals("NL02ABNA0123456789", data.paymentMethod?.iban)
+                assertEquals(TEST_ORDER, data.order)
             }
 
             cancelAndIgnoreRemainingEvents()
@@ -111,14 +116,43 @@ internal class DefaultSepaDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createSepaDelegate(
-        configuration: SepaConfiguration = getDefaultSepaConfigurationBuilder().build()
+        configuration: SepaConfiguration = getDefaultSepaConfigurationBuilder().build(),
+        order: Order? = TEST_ORDER,
     ) = DefaultSepaDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
+        order = order,
         componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler()
+        submitHandler = submitHandler
     )
 
     private fun getDefaultSepaConfigurationBuilder() = SepaConfiguration.Builder(
@@ -129,5 +163,6 @@ internal class DefaultSepaDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

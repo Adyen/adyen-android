@@ -16,6 +16,7 @@ import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
 ) : InstantPaymentDelegate {
@@ -50,8 +52,10 @@ internal class DefaultInstantPaymentDelegate(
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
     private fun createComponentState(): PaymentComponentState<PaymentMethodDetails> {
-        val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
-        paymentComponentData.paymentMethod = GenericPaymentMethod(paymentMethod.type)
+        val paymentComponentData = PaymentComponentData<PaymentMethodDetails>(
+            paymentMethod = GenericPaymentMethod(paymentMethod.type),
+            order = order,
+        )
         return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 

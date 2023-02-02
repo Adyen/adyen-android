@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.exception.CheckoutException
@@ -50,28 +49,14 @@ internal class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    private fun attachComponent(component: PaymentComponent<*>) {
+    private fun attachComponent(component: PaymentComponent) {
         if (component !is ViewableComponent) throw CheckoutException("Attached component is not viewable")
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
 
         binding.giftCardView.attach(component, viewLifecycleOwner)
 
         if (giftCardComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.giftCardView.requestFocus()
-        }
-    }
-
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

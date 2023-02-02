@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import app.cash.turbine.test
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -85,7 +84,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.ContinueButton(), awaitItem().buttonState)
             }
@@ -96,7 +95,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.PayButton(TEST_AMOUNT, Locale.US), expectMostRecentItem().buttonState)
             }
@@ -106,7 +105,7 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when component emits an error then view model should propagate this error`() = runTest {
         viewModel.eventsFlow.test {
             val componentError = ComponentError(CheckoutException("Test message", Exception("Test exception")))
-            viewModel.onPaymentComponentEvent(PaymentComponentEvent.Error<PaymentComponentState<*>>(componentError))
+            viewModel.onError(componentError)
 
             assertEquals(PreselectedStoredEvent.ShowError(componentError), awaitItem())
         }
@@ -116,7 +115,7 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when component emits a submit event then view model should emit to request a payments call`() = runTest {
         viewModel.eventsFlow.test {
             val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
-            viewModel.onPaymentComponentEvent(PaymentComponentEvent.Submit(componentState))
+            viewModel.onSubmit(componentState)
 
             assertEquals(PreselectedStoredEvent.RequestPaymentsCall(componentState), awaitItem())
         }
@@ -126,9 +125,7 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when component emits an action event then view model should throw an exception`() = runTest {
         viewModel.eventsFlow.test {
             assertThrows<IllegalStateException> {
-                viewModel.onPaymentComponentEvent(
-                    PaymentComponentEvent.ActionDetails<PaymentComponentState<*>>(ActionComponentData())
-                )
+                viewModel.onAdditionalDetails(ActionComponentData())
             }
         }
     }
@@ -138,7 +135,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.eventsFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
                 assertEquals(PreselectedStoredEvent.ShowStoredPaymentScreen, awaitItem())
@@ -150,7 +147,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.eventsFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
                 assertEquals(PreselectedStoredEvent.SubmitComponent, awaitItem())
@@ -162,7 +159,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = false)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
                 assertEquals(ButtonState.Loading, expectMostRecentItem().buttonState)
@@ -174,7 +171,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
-                viewModel.onPaymentComponentEvent(PaymentComponentEvent.StateChanged(componentState))
+                viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
                 assertEquals(ButtonState.PayButton(TEST_AMOUNT, Locale.US), expectMostRecentItem().buttonState)

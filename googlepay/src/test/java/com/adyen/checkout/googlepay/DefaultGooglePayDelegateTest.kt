@@ -13,6 +13,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.google.android.gms.wallet.PaymentData
@@ -56,6 +57,7 @@ internal class DefaultGooglePayDelegateTest(
         delegate = DefaultGooglePayDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
+            order = TEST_ORDER,
             componentParams = GooglePayComponentParamsMapper(null).mapToParams(configuration, paymentMethod),
             analyticsRepository = analyticsRepository,
         )
@@ -107,6 +109,7 @@ internal class DefaultGooglePayDelegateTest(
                 assertTrue(isInputValid)
                 assertTrue(isReady)
                 assertEquals(paymentData, paymentData)
+                assertEquals(TEST_ORDER, data.order)
             }
 
             cancelAndIgnoreRemainingEvents()
@@ -117,5 +120,9 @@ internal class DefaultGooglePayDelegateTest(
     fun `when delegate is initialized then analytics event is sent`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         verify(analyticsRepository).sendAnalyticsEvent()
+    }
+
+    companion object {
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

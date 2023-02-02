@@ -13,9 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
@@ -27,10 +27,8 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -38,8 +36,9 @@ internal class DefaultBacsDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler
+    private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
 ) : BacsDirectDebitDelegate {
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
@@ -52,21 +51,17 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
-    private val submitChannel: Channel<BacsDirectDebitComponentState> = bufferedChannel()
-    override val submitFlow: Flow<BacsDirectDebitComponentState> = submitChannel.receiveAsFlow()
+    override val submitFlow: Flow<BacsDirectDebitComponentState> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
     internal val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
-
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
     }
 
@@ -130,11 +125,12 @@ internal class DefaultBacsDirectDebitDelegate(
                 if (outputData.isValid) {
                     setMode(BacsDirectDebitMode.CONFIRMATION)
                 } else {
-                    submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
+                    // If mode is input and input is not valid this triggers an InvalidUI event
+                    submitHandler.onSubmit(state)
                 }
             }
             BacsDirectDebitMode.CONFIRMATION -> {
-                submitHandler.onSubmit(state, submitChannel, _uiEventChannel, _uiStateFlow)
+                submitHandler.onSubmit(state)
             }
         }
     }
@@ -198,6 +194,7 @@ internal class DefaultBacsDirectDebitDelegate(
         val paymentComponentData = PaymentComponentData(
             shopperEmail = outputData.shopperEmailState.value,
             paymentMethod = bacsDirectDebitPaymentMethod,
+            order = order
         )
 
         return BacsDirectDebitComponentState(
@@ -211,6 +208,10 @@ internal class DefaultBacsDirectDebitDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()

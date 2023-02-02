@@ -21,4 +21,6 @@ interface SepaDelegate :
     val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>>
 
     fun updateInputData(update: SepaInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

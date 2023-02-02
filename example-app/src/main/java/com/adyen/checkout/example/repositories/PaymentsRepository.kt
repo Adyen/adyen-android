@@ -22,6 +22,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject
 
+// TODO SESSIONS: remove paymentsRequest and detailsRequest. Remove async suffix
 interface PaymentsRepository {
     suspend fun createSession(sessionRequest: SessionRequest): SessionModel?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?

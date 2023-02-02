@@ -70,6 +70,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCardDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
     private lateinit var cardEncrypter: TestCardEncrypter
@@ -701,6 +702,7 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `output data with default config is valid, then component state should be good`() = runTest {
+            delegate = createCardDelegate(order = null)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
@@ -823,10 +825,10 @@ internal class DefaultCardDelegateTest(
                     assertEquals("0108", socialSecurityNumber)
                     assertEquals(expectedAddress, billingAddress)
                     assertEquals(expectedInstallments, installments)
+                    assertEquals(TEST_ORDER, order)
                     assertNull(amount)
                     assertNull(dateOfBirth)
                     assertNull(deliveryAddress)
-                    assertNull(order)
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
@@ -912,6 +914,33 @@ internal class DefaultCardDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
@@ -922,7 +951,8 @@ internal class DefaultCardDelegateTest(
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
-        order: OrderRequest? = null,
+        submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
+        order: OrderRequest? = TEST_ORDER,
     ): DefaultCardDelegate {
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -936,7 +966,7 @@ internal class DefaultCardDelegateTest(
             cardValidationMapper = cardValidationMapper,
             genericEncrypter = genericEncrypter,
             analyticsRepository = analyticsRepository,
-            submitHandler = SubmitHandler(),
+            submitHandler = submitHandler,
         )
     }
 
@@ -1083,5 +1113,6 @@ internal class DefaultCardDelegateTest(
         private const val TEST_CARD_NUMBER = "5555444433331111"
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

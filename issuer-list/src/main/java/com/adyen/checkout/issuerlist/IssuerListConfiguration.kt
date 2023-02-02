@@ -8,7 +8,9 @@
 package com.adyen.checkout.issuerlist
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.base.ButtonConfiguration
 import com.adyen.checkout.components.base.ButtonConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
@@ -19,6 +21,9 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
 
     abstract val viewType: IssuerListViewType?
     abstract val hideIssuerLogos: Boolean?
+
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    abstract val genericActionConfiguration: GenericActionConfiguration
 
     abstract class IssuerListBuilder<
         IssuerListConfigurationT : IssuerListConfiguration,

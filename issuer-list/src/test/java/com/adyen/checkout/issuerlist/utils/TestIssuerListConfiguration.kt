@@ -9,6 +9,7 @@
 package com.adyen.checkout.issuerlist.utils
 
 import android.content.Context
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
@@ -26,6 +27,7 @@ class TestIssuerListConfiguration private constructor(
     override val viewType: IssuerListViewType?,
     override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,
+    override val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
     class Builder : IssuerListBuilder<TestIssuerListConfiguration, Builder> {
@@ -52,6 +54,7 @@ class TestIssuerListConfiguration private constructor(
                 viewType = viewType,
                 isSubmitButtonVisible = isSubmitButtonVisible,
                 hideIssuerLogos = hideIssuerLogos,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }

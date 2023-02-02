@@ -29,4 +29,6 @@ interface BlikDelegate :
     val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>>
 
     fun updateInputData(update: BlikInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

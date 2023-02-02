@@ -26,10 +26,10 @@ inline fun <reified ViewModelT : ViewModel> viewModelFactory(crossinline factory
     }
 
 @MainThread
-inline fun <reified ViewModelT : ViewModel> viewModelFactory(
+fun <ViewModelT : ViewModel> viewModelFactory(
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle?,
-    crossinline factoryProducer: (SavedStateHandle) -> ViewModelT
+    factoryProducer: (SavedStateHandle) -> ViewModelT
 ): AbstractSavedStateViewModelFactory {
     return object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
         override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {

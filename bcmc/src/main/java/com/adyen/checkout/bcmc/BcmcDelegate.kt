@@ -36,4 +36,6 @@ interface BcmcDelegate :
     fun isCardNumberSupported(cardNumber: String?): Boolean
 
     fun updateInputData(update: BcmcInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

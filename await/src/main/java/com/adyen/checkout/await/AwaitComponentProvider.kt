@@ -9,7 +9,6 @@
 package com.adyen.checkout.await
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -49,10 +48,9 @@ class AwaitComponentProvider(
         application: Application,
         configuration: AwaitConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): AwaitComponent {
-        val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val awaitFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,

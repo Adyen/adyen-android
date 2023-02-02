@@ -15,7 +15,7 @@ import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-internal object BacsViewProvider : ViewProvider {
+internal object BacsDirectDebitViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
@@ -34,5 +34,5 @@ internal enum class BacsComponentViewType(override val buttonTextResId: Int) : B
     INPUT(R.string.bacs_continue),
     CONFIRMATION(R.string.bacs_confirm_and_pay);
 
-    override val viewProvider: ViewProvider = BacsViewProvider
+    override val viewProvider: ViewProvider = BacsDirectDebitViewProvider
 }
