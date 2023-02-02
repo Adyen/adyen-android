@@ -26,4 +26,4 @@ CardConfiguration.Builder([SHOPPER_LOCALE], [ENVIRONMENT], [CLIENT_KEY])
 
 ## Deprecated
 * The `CardType.UNKNOWN` property. Use `CardBrand(txVariant = "[CARD_BRAND]")` instead.
-* The `CardType.setTxVariant()` method. No longer needed as it was used with `CardType.UNKNOWN`
+* The `CardType.setTxVariant()` method. No longer needed as it was used with `CardType.UNKNOWN`.
