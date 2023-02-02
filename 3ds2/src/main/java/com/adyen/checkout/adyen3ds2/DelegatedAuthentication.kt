@@ -36,8 +36,8 @@ internal class DelegatedAuthentication(
 
     private var adyenAuthentication: AdyenAuthentication? = null
 
-    private var pendingRegistrationSdkInput: String? by SavedStateHandleProperty(REGISTRATION_SDK_INPUT_KEY)
-    private var pendingAuthenticationSdkInput: String? by SavedStateHandleProperty(AUTHENTICATION_SDK_INPUT_KEY)
+    private var pendingRegistrationSdkInput: String? = null
+    private var pendingAuthenticationSdkInput: String? = null
 
     private var countDownTimer: CountDownTimer? = null
     internal var isTimerStarted: Boolean? by SavedStateHandleProperty(IS_TIMER_STARTED_KEY)
@@ -111,8 +111,6 @@ internal class DelegatedAuthentication(
         pendingAuthenticationSdkInput = sdkInput
     }
 
-    internal fun isAuthenticationInitiated(): Boolean = pendingAuthenticationSdkInput != null
-
     internal fun getAuthenticationSdkInput(): String? = pendingAuthenticationSdkInput
 
     internal fun completeAuthentication() {
@@ -147,9 +145,6 @@ internal class DelegatedAuthentication(
 
         private val DEFAULT_TIMEOUT_IN_MILLIS = 90.seconds.inWholeMilliseconds
         private const val HUNDRED = 100
-
-        private const val REGISTRATION_SDK_INPUT_KEY = "delegated_authentication_registration_sdk_input"
-        private const val AUTHENTICATION_SDK_INPUT_KEY = "delegated_authentication_sdk_input"
 
         private const val MILLIS_UNTIL_FINISHED_KEY = "delegated_authentication_millis_until_finished"
         private const val IS_TIMER_STARTED_KEY = "delegated_authentication_is_timer_started"
