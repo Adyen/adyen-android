@@ -15,8 +15,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.util.StringUtil
-import java.util.Calendar
-import java.util.GregorianCalendar
+import java.util.*
 
 object CardValidationUtils {
 
@@ -109,8 +108,8 @@ object CardValidationUtils {
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
             cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
-            cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
-            cardType?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
+            cardType?.cardBrand?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
+            cardType?.cardBrand?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)

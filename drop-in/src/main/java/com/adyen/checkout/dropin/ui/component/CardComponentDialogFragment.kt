@@ -16,7 +16,7 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardListAdapter
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -92,9 +92,9 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         val supportedCards = if (cardComponent.isStoredPaymentMethod()) {
-            emptyList<CardType>()
+            emptyList<CardBrand>()
         } else {
-            cardComponent.configuration.supportedCardTypes
+            cardComponent.configuration.supportedCardBrands
         }
         cardListAdapter = CardListAdapter(
             ImageLoader.getInstance(requireContext(), component.configuration.environment),
@@ -108,7 +108,9 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         val cardComponentState = paymentComponentState as? CardComponentState
         if (cardComponentState?.cardType != null && !cardComponent.isStoredPaymentMethod()) {
             // TODO: 11/01/2021 pass list of cards from Bin Lookup
-            cardListAdapter.setFilteredCard(listOf(cardComponentState.cardType))
+            cardListAdapter.setFilteredCard(
+                listOf(CardBrand(txVariant = cardComponentState.cardType?.txVariant.orEmpty()))
+            )
         } else {
             cardListAdapter.setFilteredCard(emptyList())
         }

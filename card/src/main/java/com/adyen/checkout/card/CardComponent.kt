@@ -229,7 +229,7 @@ class CardComponent private constructor(
             addressFormUIState,
             cardDelegate.getInstallmentOptions(
                 configuration.installmentConfiguration,
-                selectedOrFirstCardType?.cardType,
+                selectedOrFirstCardType?.cardBrand?.cardType,
                 isReliable
             ),
             countryOptions,
@@ -339,7 +339,7 @@ class CardComponent private constructor(
 
         val cardNumber = stateOutputData.cardNumberState.value
 
-        val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
+        val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardBrand?.cardType
 
         val binValue = if (
             stateOutputData.cardNumberState.validation.isValid() &&
@@ -440,7 +440,7 @@ class CardComponent private constructor(
         }
 
         if (isDualBrandedFlow(stateOutputData)) {
-            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.firstOrNull { it.isSelected }?.cardType?.txVariant
+            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.firstOrNull { it.isSelected }?.cardBrand?.txVariant
         }
 
         cardPaymentMethod.fundingSource = cardDelegate.getFundingSource()

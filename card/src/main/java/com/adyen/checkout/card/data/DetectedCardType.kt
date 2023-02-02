@@ -11,7 +11,7 @@ package com.adyen.checkout.card.data
 import com.adyen.checkout.card.api.model.Brand
 
 data class DetectedCardType(
-    val cardType: CardType,
+    val cardBrand: CardBrand,
     val isReliable: Boolean,
     val enableLuhnCheck: Boolean,
     val cvcPolicy: Brand.FieldPolicy,

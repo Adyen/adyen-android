@@ -57,7 +57,13 @@ public enum CardType {
     UATP("uatp", Pattern.compile("^1[0-9]{0,14}$")),
     VISA("visa", Pattern.compile("^4[0-9]{0,18}$")),
     VISADANKORT("visadankort", Pattern.compile("^(4571)[0-9]{0,12}$")),
-    // UNKNOWN type is used for txVariants that are valid but not accounted for in this enum
+    /**
+     * UNKNOWN type is used for txVariants that are valid but not accounted for in this enum.
+     *
+     * @deprecated Was not working correctly when there were more than one card brand. Use
+     * {@link CardBrand} instead when adding supported card brand that isn't inside this enum.
+     */
+    @Deprecated
     UNKNOWN("", Pattern.compile("([1-9])+"));
 
     private String mTxVariant;
@@ -111,6 +117,10 @@ public enum CardType {
         return mTxVariant;
     }
 
+    /**
+     * @deprecated No longer needed as it was used with {@link CardType#UNKNOWN} which is deprecated.
+     */
+    @Deprecated
     public void setTxVariant(@NonNull String txVariant) {
         mTxVariant = txVariant;
     }

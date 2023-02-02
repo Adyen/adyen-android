@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -33,25 +34,21 @@ class StoredCardDelegate(
     publicKeyRepository: PublicKeyRepository
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
-    private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
-    private val storedDetectedCardTypes = if (cardType != null) {
-        listOf(
-            DetectedCardType(
-                cardType,
-                isReliable = true,
-                enableLuhnCheck = true,
-                cvcPolicy = when {
-                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
-                    else -> Brand.FieldPolicy.REQUIRED
-                },
-                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                panLength = null,
-                isSupported = true
-            )
+    private val cardBrand = CardBrand(storedPaymentMethod.brand.orEmpty())
+    private val storedDetectedCardTypes = listOf(
+        DetectedCardType(
+            cardBrand,
+            isReliable = true,
+            enableLuhnCheck = true,
+            cvcPolicy = when {
+                cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardBrand.cardType) -> Brand.FieldPolicy.HIDDEN
+                else -> Brand.FieldPolicy.REQUIRED
+            },
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+            panLength = null,
+            isSupported = true
         )
-    } else {
-        emptyList()
-    }
+    )
 
     override fun getPaymentMethodType(): String {
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -72,7 +69,7 @@ class StoredCardDelegate(
     }
 
     override fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
-        return if (cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType?.cardType)) {
+        return if (cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType?.cardBrand?.cardType)) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -110,7 +107,7 @@ class StoredCardDelegate(
     }
 
     override fun isCvcHidden(): Boolean {
-        return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
+        return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardBrand.cardType)
     }
 
     override fun isSocialSecurityNumberRequired(): Boolean {

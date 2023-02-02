@@ -13,7 +13,7 @@ import com.adyen.checkout.card.api.BinLookupConnection
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.card.api.model.Brand
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.core.encryption.Sha256
@@ -79,8 +79,8 @@ class BinLookupRepository {
         }
         return@coroutineScope try {
             val encryptedBin = deferredEncryption.await()
-            val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
-            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
+            val cardBrands = cardConfiguration.supportedCardBrands.map { it.txVariant }
+            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands)
             BinLookupConnection(
                 request,
                 cardConfiguration.environment,
@@ -102,11 +102,9 @@ class BinLookupRepository {
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse?.brands.orEmpty().mapNotNull { brandResponse ->
             if (brandResponse.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply {
-                txVariant = brandResponse.brand
-            }
+            val cardBrand = CardBrand(brandResponse.brand)
             DetectedCardType(
-                cardType,
+                cardBrand,
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(
