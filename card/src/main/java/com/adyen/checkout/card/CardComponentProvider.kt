@@ -126,11 +126,7 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    cardDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = componentEventHandler,
             )
         }
@@ -200,11 +196,7 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    cardDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = componentEventHandler,
             )
         }
@@ -292,11 +284,7 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    cardDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = sessionHandler,
             )
         }
@@ -365,11 +353,7 @@ class CardComponentProvider(
             CardComponent(
                 cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    cardDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = componentEventHandler,
             )
         }

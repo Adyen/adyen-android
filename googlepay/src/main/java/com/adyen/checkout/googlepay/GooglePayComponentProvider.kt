@@ -87,11 +87,7 @@ class GooglePayComponentProvider(
             GooglePayComponent(
                 googlePayDelegate = googlePayDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    googlePayDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, googlePayDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory)[key, GooglePayComponent::class.java]

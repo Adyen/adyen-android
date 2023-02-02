@@ -64,8 +64,7 @@ internal class DefaultGenericActionDelegateTest(
             SavedStateHandle(),
             configuration,
             GenericComponentParamsMapper(null).mapToParams(configuration),
-            actionDelegateProvider,
-            Application()
+            actionDelegateProvider
         )
         whenever(activity.application) doReturn Application()
 

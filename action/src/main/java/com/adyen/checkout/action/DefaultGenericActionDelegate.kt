@@ -9,7 +9,6 @@
 package com.adyen.checkout.action
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -49,7 +48,6 @@ internal class DefaultGenericActionDelegate(
     private val configuration: GenericActionConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
-    private val application: Application
 ) : GenericActionDelegate {
 
     private var _delegate: ActionDelegate? = null
@@ -73,12 +71,6 @@ internal class DefaultGenericActionDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
         _coroutineScope = coroutineScope
-
-        // Restoring the state after process kill
-        val activeAction = savedStateHandle.get<Action>(ACTIVE_ACTION)
-        activeAction?.let {
-            initDelegate(activeAction, application)
-        }
     }
 
     override fun observe(
@@ -110,31 +102,26 @@ internal class DefaultGenericActionDelegate(
         if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
             Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
         } else {
-            savedStateHandle[ACTIVE_ACTION] = action
-            initDelegate(action, activity.application)
+            val delegate = actionDelegateProvider.getDelegate(
+                action = action,
+                configuration = configuration,
+                savedStateHandle = savedStateHandle,
+                application = activity.application
+            )
+            this._delegate = delegate
+            Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
+
+            delegate.initialize(coroutineScope)
+
+            set3DS2UICustomizationInDelegate(delegate)
+            initDelegatedAuthenticationInDelegate(delegate)
+
+            observeDetails(delegate)
+            observeExceptions(delegate)
+            observeViewFlow(delegate)
         }
 
         delegate.handleAction(action, activity)
-    }
-
-    private fun initDelegate(action: Action, application: Application) {
-        val delegate = actionDelegateProvider.getDelegate(
-            action = action,
-            configuration = configuration,
-            savedStateHandle = savedStateHandle,
-            application = application
-        )
-        this._delegate = delegate
-        Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
-
-        delegate.initialize(coroutineScope)
-
-        set3DS2UICustomizationInDelegate(delegate)
-        initDelegatedAuthenticationInDelegate(delegate)
-
-        observeDetails(delegate)
-        observeExceptions(delegate)
-        observeViewFlow(delegate)
     }
 
     private fun observeExceptions(delegate: ActionDelegate) {
@@ -219,7 +206,5 @@ internal class DefaultGenericActionDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-
-        private const val ACTIVE_ACTION = "default_generic_action_delegate_active_action"
     }
 }

@@ -79,11 +79,7 @@ class MBWayComponentProvider(
                 MBWayComponent(
                     mbWayDelegate = mbWayDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        mbWayDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, mbWayDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, MBWayComponent::class.java]

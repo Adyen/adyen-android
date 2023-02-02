@@ -77,11 +77,7 @@ class BacsDirectDebitComponentProvider(
                 BacsDirectDebitComponent(
                     bacsDelegate = bacsDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        bacsDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]

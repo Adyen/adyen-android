@@ -48,9 +48,7 @@ internal class BcmcView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        // TODO (Auth) discuss. In case of restoring the state after process kill the view may receive
-        // not only BcmcDelegate as a parameter because BcmcComponent viewFlow is merged. See BcmcComponent viewFlow
-        if (delegate !is BcmcDelegate) return
+        if (delegate !is BcmcDelegate) throw IllegalArgumentException("Unsupported delegate type")
         this.delegate = delegate
 
         this.localizedContext = localizedContext

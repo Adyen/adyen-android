@@ -90,11 +90,7 @@ class BcmcComponentProvider(
             BcmcComponent(
                 bcmcDelegate = bcmcDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
-                    genericActionDelegate,
-                    bcmcDelegate
-                ),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java]

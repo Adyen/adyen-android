@@ -80,11 +80,7 @@ class BlikComponentProvider(
                 BlikComponent(
                     blikDelegate = blikDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        blikDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BlikComponent::class.java]
@@ -131,11 +127,7 @@ class BlikComponentProvider(
                 BlikComponent(
                     blikDelegate = blikDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        blikDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, BlikComponent::class.java]

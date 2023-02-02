@@ -54,7 +54,6 @@ class GenericActionComponentProvider(
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(
-                    savedStateHandle,
                     genericActionDelegate,
                     null
                 ),
@@ -78,8 +77,7 @@ class GenericActionComponentProvider(
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(componentParams),
-            application = application
+            actionDelegateProvider = ActionDelegateProvider(componentParams)
         )
     }
 

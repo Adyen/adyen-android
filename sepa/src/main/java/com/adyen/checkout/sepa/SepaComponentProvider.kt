@@ -79,11 +79,7 @@ class SepaComponentProvider(
                 SepaComponent(
                     sepaDelegate = sepaDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        sepaDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, sepaDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, SepaComponent::class.java]

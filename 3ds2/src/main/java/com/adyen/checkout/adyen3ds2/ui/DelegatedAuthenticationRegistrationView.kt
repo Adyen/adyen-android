@@ -43,7 +43,7 @@ internal class DelegatedAuthenticationRegistrationView @JvmOverloads constructor
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is Adyen3DS2Delegate) throw IllegalArgumentException()
+        if (delegate !is Adyen3DS2Delegate) throw IllegalArgumentException("Unsupported delegate type")
         this.localizedContext = localizedContext
 
         val adyenAuthentication = delegate.getAdyenAuthentication()

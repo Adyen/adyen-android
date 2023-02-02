@@ -85,7 +85,6 @@ class OnlineBankingSKComponentProvider(
                     delegate = onlineBankingDelegate,
                     genericActionDelegate = genericActionDelegate,
                     actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
                         genericActionDelegate,
                         onlineBankingDelegate
                     ),

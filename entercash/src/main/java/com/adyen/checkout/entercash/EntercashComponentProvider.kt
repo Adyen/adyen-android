@@ -81,11 +81,7 @@ class EntercashComponentProvider(
                 EntercashComponent(
                     delegate = issuerListDelegate,
                     genericActionDelegate = genericActionDelegate,
-                    actionHandlingComponent = DefaultActionHandlingComponent(
-                        savedStateHandle,
-                        genericActionDelegate,
-                        issuerListDelegate
-                    ),
+                    actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, issuerListDelegate),
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, EntercashComponent::class.java]

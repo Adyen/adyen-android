@@ -107,37 +107,19 @@ internal class DefaultAdyen3DS2Delegate(
     private var currentTransaction: Transaction? = null
 
     //region Identify shopper completion parameters
-    private var submitFingerprintAutomatically: Boolean? by SavedStateHandleProperty(
-        SUBMIT_FINGERPRINT_AUTOMATICALLY_KEY
-    )
-    private var currentEncodedFingerprintToken: String? by SavedStateHandleProperty(ENCODED_FINGERPRINT_TOKEN_KEY)
+    private var submitFingerprintAutomatically: Boolean? = null
+    private var currentEncodedFingerprintToken: String? = null
     //endregion
 
     //region Challenge completion parameters
     private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
-    private var currentSdkTransactionId: String? by SavedStateHandleProperty(SDK_TRANSACTION_ID_KEY)
-    private var currentTransactionStatus: String? by SavedStateHandleProperty(TRANSACTION_STATUS_KEY)
-    private var removeDelegatedAuthenticationCredentials: Boolean? by SavedStateHandleProperty(
-        REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS_KEY
-    )
+    private var currentSdkTransactionId: String? = null
+    private var currentTransactionStatus: String? = null
+    private var removeDelegatedAuthenticationCredentials: Boolean? = null
     //endregion
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        delegatedAuthentication.initialize(coroutineScope)
-        // Restoring UI state after process kill
-        val isDelegatedAuthenticationTimerStarted = delegatedAuthentication.isTimerStarted
-        when {
-            delegatedAuthentication.isRegistrationInitiated() && isDelegatedAuthenticationTimerStarted == true -> {
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION_REGISTRATION)
-            }
-            delegatedAuthentication.isAuthenticationInitiated() && isDelegatedAuthenticationTimerStarted == true -> {
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.DELEGATED_AUTHENTICATION)
-            }
-            else -> {
-                _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
-            }
-        }
     }
 
     override fun observe(
@@ -228,7 +210,7 @@ internal class DefaultAdyen3DS2Delegate(
     ) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
 
-        // We need to keep these parameters to be able to complete the transaction after process kill
+        // We need to keep these parameters to be able to complete the transaction after Delegated Authentication
         this.currentEncodedFingerprintToken = encodedFingerprintToken
         this.submitFingerprintAutomatically = submitFingerprintAutomatically
 
@@ -262,10 +244,10 @@ internal class DefaultAdyen3DS2Delegate(
     private fun completeIdentifyShopper(
         activity: Activity,
         delegatedAuthenticationSdkOutput: String? = null,
-        removeDACredentials: Boolean? = null
+        removeDelegatedAuthenticationCredentials: Boolean? = null
     ) {
         _viewFlow.tryEmit(Adyen3DS2ComponentViewType.REDIRECT)
-        this.removeDelegatedAuthenticationCredentials = removeDACredentials
+        this.removeDelegatedAuthenticationCredentials = removeDelegatedAuthenticationCredentials
 
         val fingerprintToken = currentEncodedFingerprintToken?.let { createFingerprintToken(it) }
         val configParameters = AdyenConfigParameters.Builder(
@@ -489,7 +471,7 @@ internal class DefaultAdyen3DS2Delegate(
     override fun completed(completionEvent: CompletionEvent) {
         Logger.d(TAG, "challenge completed")
 
-        // We need to keep these parameters to be able to complete the transaction after process was killed
+        // We need to keep these parameters to be able to complete the transaction after Delegated Authentication
         currentSdkTransactionId = completionEvent.sdkTransactionID
         currentTransactionStatus = completionEvent.transactionStatus
 
@@ -637,14 +619,7 @@ internal class DefaultAdyen3DS2Delegate(
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private const val ENCODED_FINGERPRINT_TOKEN_KEY = "encoded_fingerprint_token"
-        private const val SUBMIT_FINGERPRINT_AUTOMATICALLY_KEY = "submit_fingerprint_automatically"
-
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
-        private const val SDK_TRANSACTION_ID_KEY = "sdk_transaction_id"
-        private const val TRANSACTION_STATUS_KEY = "transaction_status"
-        private const val REMOVE_DELEGATED_AUTHENTICATION_CREDENTIALS_KEY =
-            "remove_delegated_authentication_credentials"
 
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
