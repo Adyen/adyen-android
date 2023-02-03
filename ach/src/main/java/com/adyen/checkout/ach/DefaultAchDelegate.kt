@@ -16,6 +16,7 @@ import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -58,9 +59,10 @@ internal class DefaultAchDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
-    private val submitHandler: SubmitHandler,
+    private val submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>>,
     private val genericEncrypter: GenericEncrypter,
-    override val componentParams: AchComponentParams
+    override val componentParams: AchComponentParams,
+    private val order: Order?
 ) : AchDelegate {
 
     private val inputData: AchInputData = AchInputData()
@@ -86,22 +88,17 @@ internal class DefaultAchDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PaymentComponentState<AchPaymentMethod>> = _componentStateFlow
 
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val _uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = _uiEventChannel.receiveAsFlow()
-
     private var publicKey: String? = null
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private val submitChannel: Channel<PaymentComponentState<AchPaymentMethod>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<AchPaymentMethod>> = submitChannel.receiveAsFlow()
-
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(AchComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    override val submitFlow: Flow<PaymentComponentState<AchPaymentMethod>> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         updateInputData {
@@ -248,7 +245,6 @@ internal class DefaultAchDelegate(
     private fun createComponentState(
         outputData: AchOutputData = this.outputData
     ): PaymentComponentState<AchPaymentMethod> {
-        val paymentComponentData = PaymentComponentData<AchPaymentMethod>()
         val publicKey = publicKey
         if (!outputData.isValid || publicKey == null) {
             return PaymentComponentState(
@@ -276,15 +272,16 @@ internal class DefaultAchDelegate(
                 encryptedBankLocationId = encryptedBankLocationId,
                 ownerName = outputData.ownerName.value
             )
-            paymentComponentData.apply {
-                paymentMethod = achPaymentMethod
-                if (isAddressRequired(outputData.addressUIState)) {
-                    billingAddress = AddressFormUtils.makeAddressData(
-                        addressOutputData = outputData.addressState,
-                        addressFormUIState = outputData.addressUIState
-                    )
-                }
+            val paymentComponentData = PaymentComponentData(order = order, paymentMethod = achPaymentMethod)
+
+            if (isAddressRequired(outputData.addressUIState)) {
+                paymentComponentData.billingAddress = AddressFormUtils.makeAddressData(
+                    addressOutputData = outputData.addressState,
+                    addressFormUIState = outputData.addressUIState
+                )
             }
+
+            return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
             return PaymentComponentState(
@@ -293,8 +290,6 @@ internal class DefaultAchDelegate(
                 isReady = true
             )
         }
-
-        return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 
     private fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
@@ -322,9 +317,7 @@ internal class DefaultAchDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        componentStateFlow.onEach {
-            onState(it)
-        }.launchIn(coroutineScope)
+        submitHandler.initialize(coroutineScope, componentStateFlow)
 
         sendAnalyticsEvent(coroutineScope)
         fetchPublicKey(coroutineScope)
@@ -336,15 +329,8 @@ internal class DefaultAchDelegate(
         }
     }
 
-    private fun onState(state: PaymentComponentState<AchPaymentMethod>) {
-        val uiState = _uiStateFlow.value
-        if (uiState == PaymentComponentUIState.Loading) {
-            if (state.isValid) {
-                submitChannel.trySend(state)
-            } else {
-                _uiStateFlow.tryEmit(PaymentComponentUIState.Idle)
-            }
-        }
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     override fun onCleared() {
@@ -355,10 +341,7 @@ internal class DefaultAchDelegate(
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = _uiEventChannel,
-            uiStateChannel = _uiStateFlow
+            state = state
         )
     }
 

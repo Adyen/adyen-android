@@ -8,16 +8,23 @@
 
 package com.adyen.checkout.ach
 
+import app.cash.turbine.test
 import com.adyen.checkout.ach.testrepository.TestAddressRepository
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.api.model.AddressItem
+import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.AddressFormUIState
 import com.adyen.checkout.components.ui.AddressInputModel
+import com.adyen.checkout.components.ui.AddressOutputData
+import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressFormUtils
@@ -42,12 +49,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultAchDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>>
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
@@ -376,6 +385,52 @@ internal class DefaultAchDelegateTest(
             assertTrue(componentState.isReady)
             assertFalse(componentState.isInputValid)
         }
+
+        @Test
+        fun `when all fields in outputdata are valid, payment method in component state should be the same value in outputdata`() =
+            runTest {
+                val adddressInputModel = AddressInputModel(
+                    postalCode = "34220",
+                    street = "Street Name",
+                    stateOrProvince = "province",
+                    houseNumberOrName = "44",
+                    apartmentSuite = "aparment",
+                    city = "Istanbul",
+                    country = "Turkey"
+                )
+
+                val addressOutputData = createAddressOutputData(
+                    postalCode = FieldState(adddressInputModel.postalCode, Validation.Valid),
+                    street = FieldState(adddressInputModel.street, Validation.Valid),
+                    stateOrProvince = FieldState(adddressInputModel.stateOrProvince, Validation.Valid),
+                    houseNumberOrName = FieldState(adddressInputModel.houseNumberOrName, Validation.Valid),
+                    apartmentSuite = FieldState(adddressInputModel.apartmentSuite, Validation.Valid),
+                    city = FieldState(adddressInputModel.city, Validation.Valid),
+                    country = FieldState(adddressInputModel.country, Validation.Valid),
+                    isOptional = false
+                )
+
+                val addressUIState = AddressFormUIState.FULL_ADDRESS
+                val expectedAddress = AddressFormUtils.makeAddressData(addressOutputData, addressUIState)
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData {
+                    bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                    bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                    ownerName = TEST_OWNER_NAME
+                    address = adddressInputModel
+                }
+
+                val componentState = delegate.componentStateFlow.first()
+
+                with(componentState.data) {
+                    assertEquals(expectedAddress, billingAddress)
+                    assertEquals(paymentMethod?.ownerName, TEST_OWNER_NAME)
+                    assertEquals(paymentMethod?.encryptedBankLocationId, TEST_BANK_BANK_LOCATION_ID)
+                    assertEquals(paymentMethod?.encryptedBankAccountNumber, TEST_BANK_ACCOUNT_NUMBER)
+                }
+            }
     }
 
     @Nested
@@ -403,22 +458,78 @@ internal class DefaultAchDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
+    private fun createAddressOutputData(
+        postalCode: FieldState<String> = FieldState("", Validation.Valid),
+        street: FieldState<String> = FieldState("", Validation.Valid),
+        stateOrProvince: FieldState<String> = FieldState("", Validation.Valid),
+        houseNumberOrName: FieldState<String> = FieldState("", Validation.Valid),
+        apartmentSuite: FieldState<String> = FieldState("", Validation.Valid),
+        city: FieldState<String> = FieldState("", Validation.Valid),
+        country: FieldState<String> = FieldState("", Validation.Valid),
+        isOptional: Boolean = true,
+        countryOptions: List<AddressListItem> = emptyList(),
+        stateOptions: List<AddressListItem> = emptyList()
+    ): AddressOutputData {
+        return AddressOutputData(
+            postalCode = postalCode,
+            street = street,
+            stateOrProvince = stateOrProvince,
+            houseNumberOrName = houseNumberOrName,
+            apartmentSuite = apartmentSuite,
+            city = city,
+            country = country,
+            isOptional = isOptional,
+            countryOptions = countryOptions,
+            stateOptions = stateOptions
+        )
+    }
+
     private fun createAchDelegate(
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
         genericEncrypter: GenericEncrypter = this.genericEncrypter,
+        submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>> = this.submitHandler,
         configuration: AchConfiguration = getAchConfigurationBuilder().build(),
+        order: OrderRequest? = TEST_ORDER,
     ) = DefaultAchDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = paymentMethod,
         analyticsRepository = analyticsRepository,
         publicKeyRepository = publicKeyRepository,
         addressRepository = addressRepository,
-        submitHandler = SubmitHandler(),
+        submitHandler = submitHandler,
         genericEncrypter = genericEncrypter,
-        componentParams = AchComponentParamsMapper(null).mapToParams(configuration)
+        componentParams = AchComponentParamsMapper(null).mapToParams(configuration),
+        order = order
     )
 
     private fun getAchConfigurationBuilder() = AchConfiguration.Builder(
@@ -432,5 +543,6 @@ internal class DefaultAchDelegateTest(
         private const val TEST_BANK_ACCOUNT_NUMBER = "123456"
         private const val TEST_BANK_BANK_LOCATION_ID = "123456789"
         private const val TEST_OWNER_NAME = "Joseph"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

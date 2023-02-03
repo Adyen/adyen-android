@@ -14,6 +14,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -42,6 +43,7 @@ internal class AchComponentTest(
     @Mock private val achDelegate: AchDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<AchPaymentMethod>>,
 ) {
 
     private lateinit var component: AchComponent
@@ -54,7 +56,8 @@ internal class AchComponentTest(
         component = AchComponent(
             achDelegate,
             genericActionDelegate,
-            actionHandlingComponent
+            actionHandlingComponent,
+            componentEventHandler
         )
     }
 
@@ -62,6 +65,7 @@ internal class AchComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(achDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -70,6 +74,7 @@ internal class AchComponentTest(
 
         verify(achDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -101,7 +106,7 @@ internal class AchComponentTest(
     fun `when ach delegate view flow emits a value then component view flow should match that value`() = runTest {
         val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(achDelegate.viewFlow) doReturn achDelegateViewFlow
-        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent)
+        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
         assertEquals(TestComponentViewType.VIEW_TYPE_1, component.viewFlow.first())
         achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
         assertEquals(TestComponentViewType.VIEW_TYPE_2, component.viewFlow.first())
@@ -111,7 +116,7 @@ internal class AchComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn achDelegateViewFlow
-        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent)
+        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         // this value should match the value of the main delegate and not the action delegate
         // and in practice the initial value of the action delegate view flow is always null so it should be ignored

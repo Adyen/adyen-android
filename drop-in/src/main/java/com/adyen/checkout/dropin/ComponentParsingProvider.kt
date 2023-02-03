@@ -40,6 +40,7 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPPaymentMethod
@@ -675,10 +676,10 @@ internal fun getComponentFor(
             val achConfiguration: AchConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
             AchComponentProvider(dropInParams).get(
-                owner = fragment,
+                fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = achConfiguration,
-                application = fragment.requireApplication(),
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<AchPaymentMethod>>,
             )
         }
         else -> {

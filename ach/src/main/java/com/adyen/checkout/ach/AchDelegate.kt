@@ -32,4 +32,6 @@ interface AchDelegate :
 
     val exceptionFlow: Flow<CheckoutException>
     fun updateInputData(update: AchInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
