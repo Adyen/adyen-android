@@ -148,7 +148,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
 
     override fun onSubmit(state: CardComponentState): Boolean {
         // for this example we will only take over the flow if the brand is MASTERCARD
-        if (state.cardType != CardType(CardBrand.MASTERCARD)) return false
+        if (state.cardBrand != CardBrand(CardType.MASTERCARD)) return false
 
         isFlowTakenOver = true
         makePayment(state.data)
