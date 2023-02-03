@@ -122,16 +122,16 @@ object CardValidationUtils {
     /**
      * Validate Security Code.
      */
-    fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
+    fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType?): FieldState<String> {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
         val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
-            cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
-            cardType?.cardType == CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) &&
+            detectedCardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
+            detectedCardType?.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
-            cardType?.cardType != CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) &&
+            detectedCardType?.cardBrand != CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState
         }

@@ -34,7 +34,7 @@ class CardConfiguration private constructor(
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
     val isHolderNameRequired: Boolean?,
-    val supportedCardTypes: List<CardType>?,
+    val supportedCardBrands: List<CardBrand>?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
     val isHideCvc: Boolean?,
@@ -53,7 +53,7 @@ class CardConfiguration private constructor(
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder>,
         ButtonConfigurationBuilder {
-        private var supportedCardTypes: List<CardType>? = null
+        private var supportedCardBrands: List<CardBrand>? = null
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null
         private var shopperReference: String? = null
@@ -96,11 +96,26 @@ class CardConfiguration private constructor(
          *
          * Defaults to [PaymentMethod.brands] if it exists, or [DEFAULT_SUPPORTED_CARDS_LIST] otherwise.
          *
+         * Use this method when adding supported types that are not inside the [CardType] enum.
+         *
+         * @param supportCardBrands array of [CardBrand]
+         * @return [CardConfiguration.Builder]
+         */
+        fun setSupportedCardTypes(vararg supportCardBrands: CardBrand): Builder {
+            supportedCardBrands = listOf(*supportCardBrands)
+            return this
+        }
+
+        /**
+         * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
+         *
+         * Defaults to [PaymentMethod.brands] if it exists, or [DEFAULT_SUPPORTED_CARDS_LIST] otherwise.
+         *
          * @param supportCardTypes array of [CardType]
          * @return [CardConfiguration.Builder]
          */
         fun setSupportedCardTypes(vararg supportCardTypes: CardType): Builder {
-            supportedCardTypes = listOf(*supportCardTypes)
+            supportedCardBrands = listOf(*supportCardTypes).map { CardBrand(cardType = it) }
             return this
         }
 
@@ -250,7 +265,7 @@ class CardConfiguration private constructor(
                 amount = amount,
                 isHolderNameRequired = holderNameRequired,
                 isSubmitButtonVisible = isSubmitButtonVisible,
-                supportedCardTypes = supportedCardTypes,
+                supportedCardBrands = supportedCardBrands,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = isStorePaymentFieldVisible,
                 isHideCvc = isHideCvc,
@@ -265,10 +280,10 @@ class CardConfiguration private constructor(
     }
 
     companion object {
-        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardType> = listOf(
-            CardType(cardBrand = CardBrand.VISA),
-            CardType(cardBrand = CardBrand.AMERICAN_EXPRESS),
-            CardType(cardBrand = CardBrand.MASTERCARD)
+        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardBrand> = listOf(
+            CardBrand(cardType = CardType.VISA),
+            CardBrand(cardType = CardType.AMERICAN_EXPRESS),
+            CardBrand(cardType = CardType.MASTERCARD)
         )
     }
 }

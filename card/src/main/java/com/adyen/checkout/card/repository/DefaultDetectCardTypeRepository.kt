@@ -42,7 +42,7 @@ internal class DefaultDetectCardTypeRepository(
     override fun detectCardType(
         cardNumber: String,
         publicKey: String?,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
     ) {
@@ -62,21 +62,21 @@ internal class DefaultDetectCardTypeRepository(
                     fetchFromNetwork(
                         cardNumber,
                         publicKey,
-                        supportedCardTypes,
+                        supportedCardBrands,
                         clientKey,
                         coroutineScope
                     )
                 }
             }
         }
-        _detectedCardTypesFlow.trySend(detectCardLocally(cardNumber, supportedCardTypes))
+        _detectedCardTypesFlow.trySend(detectCardLocally(cardNumber, supportedCardBrands))
     }
 
     @Suppress("LongParameterList")
     private fun fetchFromNetwork(
         cardNumber: String,
         publicKey: String?,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
     ) {
@@ -88,7 +88,7 @@ internal class DefaultDetectCardTypeRepository(
                 fetch(
                     cardNumber,
                     publicKey,
-                    supportedCardTypes,
+                    supportedCardBrands,
                     clientKey
                 )?.let {
                     _detectedCardTypesFlow.send(it)
@@ -97,26 +97,26 @@ internal class DefaultDetectCardTypeRepository(
         }
     }
 
-    private fun detectCardLocally(cardNumber: String, supportedCardTypes: List<CardType>): List<DetectedCardType> {
+    private fun detectCardLocally(cardNumber: String, supportedCardBrands: List<CardBrand>): List<DetectedCardType> {
         Logger.d(TAG, "detectCardLocally")
         if (cardNumber.isEmpty()) {
             return emptyList()
         }
-        val estimateCardTypes = CardType.estimate(cardNumber)
-        return estimateCardTypes.map { localDetectedCard(it, supportedCardTypes) }
+        val estimateCardTypes = CardBrand.estimate(cardNumber)
+        return estimateCardTypes.map { localDetectedCard(it, supportedCardBrands) }
     }
 
-    private fun localDetectedCard(cardType: CardType, supportedCardTypes: List<CardType>): DetectedCardType {
+    private fun localDetectedCard(cardBrand: CardBrand, supportedCardBrands: List<CardBrand>): DetectedCardType {
         return DetectedCardType(
-            cardType,
+            cardBrand = cardBrand,
             isReliable = false,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                NO_CVC_BRANDS.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                NO_CVC_BRANDS.contains(cardBrand) -> Brand.FieldPolicy.HIDDEN
                 else -> Brand.FieldPolicy.REQUIRED
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardTypes.contains(cardType),
+            isSupported = supportedCardBrands.contains(cardBrand),
             panLength = null
         )
     }
@@ -136,12 +136,12 @@ internal class DefaultDetectCardTypeRepository(
     private suspend fun fetch(
         cardNumber: String,
         publicKey: String,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
     ): List<DetectedCardType>? {
         val key = hashBin(cardNumber)
         cachedBinLookup[key] = BinLookupResult.Loading
-        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardTypes, clientKey)
+        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardBrands, clientKey)
 
         return if (binLookupResponse == null) {
             cachedBinLookup.remove(key)
@@ -156,13 +156,13 @@ internal class DefaultDetectCardTypeRepository(
     private suspend fun makeBinLookup(
         cardNumber: String,
         publicKey: String,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
     ): BinLookupResponse? {
         return runSuspendCatching {
             val encryptedBin = cardEncrypter.encryptBin(cardNumber, publicKey)
-            val cardTypes = supportedCardTypes.map { it.txVariant }
-            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
+            val cardBrands = supportedCardBrands.map { it.txVariant }
+            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands)
 
             binLookupService.makeBinLookup(
                 request = request,
@@ -180,9 +180,9 @@ internal class DefaultDetectCardTypeRepository(
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse.brands.orEmpty().mapNotNull { brandResponse ->
             if (brandResponse.brand == null) return@mapNotNull null
-            val cardType = CardType(txVariant = brandResponse.brand)
+            val cardBrand = CardBrand(txVariant = brandResponse.brand)
             DetectedCardType(
-                cardType = cardType,
+                cardBrand = cardBrand,
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
@@ -197,7 +197,7 @@ internal class DefaultDetectCardTypeRepository(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType(cardBrand = CardBrand.BCMC))
+        private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 
         private const val REQUIRED_BIN_SIZE = 11
     }

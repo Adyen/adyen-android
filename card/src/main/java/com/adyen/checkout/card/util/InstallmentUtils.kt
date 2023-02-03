@@ -14,7 +14,7 @@ import com.adyen.checkout.card.InstallmentModel
 import com.adyen.checkout.card.InstallmentOption
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.components.model.payments.request.Installments
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
@@ -26,18 +26,18 @@ internal object InstallmentUtils {
      */
     fun makeInstallmentOptions(
         configuration: InstallmentConfiguration?,
-        cardType: CardType?,
+        cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
         val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
         val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
             isCardTypeReliable &&
-            (configuration?.cardBasedOptions?.any { it.cardType == cardType } ?: false)
+            (configuration?.cardBasedOptions?.any { it.cardBrand == cardBrand } ?: false)
 
         return when {
             hasOptionsForCardType -> {
-                makeInstallmentModelList(configuration?.cardBasedOptions?.firstOrNull { it.cardType == cardType })
+                makeInstallmentModelList(configuration?.cardBasedOptions?.firstOrNull { it.cardBrand == cardBrand })
             }
             hasDefaultInstallmentOptions -> {
                 makeInstallmentModelList(configuration?.defaultOptions)
@@ -108,7 +108,7 @@ internal object InstallmentUtils {
         cardBasedInstallmentOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?
     ): Boolean {
         val hasMultipleOptionsForSameCard = cardBasedInstallmentOptions
-            ?.groupBy { it.cardType }
+            ?.groupBy { it.cardBrand }
             ?.values
             ?.any { it.size > 1 } ?: false
         return !hasMultipleOptionsForSameCard

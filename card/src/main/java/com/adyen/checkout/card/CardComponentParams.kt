@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
-import java.util.Locale
 import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
 @Parcelize
 internal data class CardComponentParams(
@@ -27,7 +27,7 @@ internal data class CardComponentParams(
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean,
     val isHolderNameRequired: Boolean,
-    val supportedCardTypes: List<CardType>,
+    val supportedCardBrands: List<CardBrand>,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean,
     val isHideCvc: Boolean,

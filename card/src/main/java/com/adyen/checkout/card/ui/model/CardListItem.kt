@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.card.ui.model
 
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.core.api.Environment
 
 data class CardListItem(
-    val cardType: CardType,
+    val cardBrand: CardBrand,
     val isDetected: Boolean,
     // We need the environment to load the logo
     val environment: Environment,

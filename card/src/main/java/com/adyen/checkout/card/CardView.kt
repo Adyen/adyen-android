@@ -283,14 +283,14 @@ internal class CardView @JvmOverloads constructor(
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
             binding.cardBrandLogoImageViewPrimary.loadLogo(
                 environment = cardDelegate.componentParams.environment,
-                txVariant = detectedCardTypes[0].cardType.txVariant,
+                txVariant = detectedCardTypes[0].cardBrand.txVariant,
                 placeholder = R.drawable.ic_card,
                 errorFallback = R.drawable.ic_card,
             )
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
             // TODO: 29/01/2021 get this logic from OutputData
-            val isAmex = detectedCardTypes.any { it.cardType == CardType(cardBrand = CardBrand.AMERICAN_EXPRESS) }
+            val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 
             if (detectedCardTypes.size == 1 &&
@@ -316,7 +316,7 @@ internal class CardView @JvmOverloads constructor(
                 binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
                 binding.cardBrandLogoImageViewSecondary.loadLogo(
                     environment = cardDelegate.componentParams.environment,
-                    txVariant = detectedCardType.cardType.txVariant,
+                    txVariant = detectedCardType.cardBrand.txVariant,
                     placeholder = R.drawable.ic_card,
                     errorFallback = R.drawable.ic_card,
                 )

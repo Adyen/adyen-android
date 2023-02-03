@@ -177,7 +177,7 @@ internal class StoredCardDelegateTest(
         fun `security code is empty with a no cvc card, then output data should be valid`() = runTest {
             delegate = createCardDelegate(
                 storedPaymentMethod = getStoredPaymentMethod(
-                    brand = CardBrand.BCMC.txVariant,
+                    brand = CardType.BCMC.txVariant,
                 )
             )
 
@@ -261,7 +261,7 @@ internal class StoredCardDelegateTest(
                     assertTrue(isValid)
                     assertEquals(TEST_CARD_LAST_FOUR, lastFourDigits)
                     assertEquals("", binValue)
-                    assertEquals(CardType(cardBrand = CardBrand.MASTERCARD), cardType)
+                    assertEquals(CardBrand(cardType = CardType.MASTERCARD), cardBrand)
                 }
 
                 val paymentComponentData = componentState.data
@@ -416,11 +416,7 @@ internal class StoredCardDelegateTest(
             .setHolderNameRequired(true)
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-            .setSupportedCardTypes(
-                CardType(cardBrand = CardBrand.VISA),
-                CardType(cardBrand = CardBrand.MASTERCARD),
-                CardType(cardBrand = CardBrand.AMERICAN_EXPRESS)
-            )
+            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
     private fun createOutputData(
@@ -475,7 +471,7 @@ internal class StoredCardDelegateTest(
     }
 
     private fun createDetectedCardType(
-        cardType: CardType = TEST_CARD_TYPE,
+        cardBrand: CardBrand = TEST_CARD_TYPE,
         isReliable: Boolean = true,
         enableLuhnCheck: Boolean = true,
         cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
@@ -485,7 +481,7 @@ internal class StoredCardDelegateTest(
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
-            cardType = cardType,
+            cardBrand = cardBrand,
             isReliable = isReliable,
             enableLuhnCheck = enableLuhnCheck,
             cvcPolicy = cvcPolicy,
@@ -502,7 +498,7 @@ internal class StoredCardDelegateTest(
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
         private const val TEST_STORED_PM_ID = "1337"
-        private val TEST_CARD_TYPE = CardType(cardBrand = CardBrand.MASTERCARD)
+        private val TEST_CARD_TYPE = CardBrand(cardType = CardType.MASTERCARD)
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

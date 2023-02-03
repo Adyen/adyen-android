@@ -38,7 +38,7 @@ internal class CardListAdapter : ListAdapter<CardListItem, ImageViewHolder>(Card
             binding.imageViewBrandLogo.alpha = alpha
             binding.imageViewBrandLogo.loadLogo(
                 environment = card.environment,
-                txVariant = card.cardType.txVariant,
+                txVariant = card.cardBrand.txVariant,
             )
         }
     }
@@ -50,7 +50,7 @@ internal class CardListAdapter : ListAdapter<CardListItem, ImageViewHolder>(Card
 
     object CardDiffCallback : DiffUtil.ItemCallback<CardListItem>() {
         override fun areItemsTheSame(oldItem: CardListItem, newItem: CardListItem): Boolean =
-            oldItem.cardType.txVariant == newItem.cardType.txVariant
+            oldItem.cardBrand.txVariant == newItem.cardBrand.txVariant
 
         override fun areContentsTheSame(oldItem: CardListItem, newItem: CardListItem): Boolean =
             oldItem == newItem

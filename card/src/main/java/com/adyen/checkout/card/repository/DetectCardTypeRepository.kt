@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.repository
 
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.CardBrand
 import com.adyen.checkout.card.data.DetectedCardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +21,7 @@ interface DetectCardTypeRepository {
     fun detectCardType(
         cardNumber: String,
         publicKey: String?,
-        supportedCardTypes: List<CardType>,
+        supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
     )
