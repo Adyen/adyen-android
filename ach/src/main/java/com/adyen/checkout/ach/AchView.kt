@@ -169,7 +169,6 @@ internal class AchView @JvmOverloads constructor(
         }
     }
 
-    @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
         with(delegate.outputData) {
             var isErrorFocused = false
