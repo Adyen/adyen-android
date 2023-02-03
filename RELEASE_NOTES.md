@@ -9,6 +9,7 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 # New
+* The `CardComponentState.binValue` now reports 8 digit bins in case of card numbers with 16 or more digits.
 * We added `CardBrand`, along with `CardType`, to use when adding new card brands through `CardConfiguration`.
 * In `CardConfiguration` when adding supported card types you can now add new supported card types which are not part of `CardType`.
   example:
