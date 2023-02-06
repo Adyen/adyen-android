@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.ui
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.bundle.SavedStateHandleContainer
@@ -80,6 +81,7 @@ class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
     }
 
     companion object {
-        private const val IS_INTERACTION_BLOCKED = "IS_INTERACTION_BLOCKED"
+        @VisibleForTesting
+        internal const val IS_INTERACTION_BLOCKED = "IS_INTERACTION_BLOCKED"
     }
 }
