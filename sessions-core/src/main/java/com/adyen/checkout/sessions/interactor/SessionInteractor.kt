@@ -9,6 +9,7 @@
 package com.adyen.checkout.sessions.interactor
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OrderRequest
@@ -33,8 +34,12 @@ import kotlinx.coroutines.flow.update
 class SessionInteractor(
     private val sessionRepository: SessionRepository,
     sessionModel: SessionModel,
-    private var isFlowTakenOver: Boolean,
+    isFlowTakenOver: Boolean,
 ) {
+
+    @VisibleForTesting
+    internal var isFlowTakenOver: Boolean = isFlowTakenOver
+        private set
 
     private val _sessionFlow = MutableStateFlow(sessionModel)
     val sessionFlow: Flow<SessionModel> = _sessionFlow
@@ -136,11 +141,7 @@ class SessionInteractor(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
                     return if (response.balance.value <= 0) {
-                        SessionCallResult.Balance.Error(
-                            throwable = CheckoutException(
-                                errorMessage = "Not enough balance"
-                            )
-                        )
+                        SessionCallResult.Balance.Error(CheckoutException("Not enough balance"))
                     } else {
                         val balanceResult = BalanceResult(response.balance, response.transactionLimit)
                         SessionCallResult.Balance.Successful(balanceResult)
