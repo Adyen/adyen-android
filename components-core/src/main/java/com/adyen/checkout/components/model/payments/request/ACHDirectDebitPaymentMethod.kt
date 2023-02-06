@@ -16,7 +16,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class AchPaymentMethod(
+data class ACHDirectDebitPaymentMethod(
     override var type: String? = null,
     var encryptedBankAccountNumber: String? = null,
     var encryptedBankLocationId: String? = null,
@@ -30,8 +30,8 @@ data class AchPaymentMethod(
         private const val OWNER_NAME = "ownerName"
 
         @JvmField
-        val SERIALIZER: Serializer<AchPaymentMethod> = object : Serializer<AchPaymentMethod> {
-            override fun serialize(modelObject: AchPaymentMethod): JSONObject {
+        val SERIALIZER: Serializer<ACHDirectDebitPaymentMethod> = object : Serializer<ACHDirectDebitPaymentMethod> {
+            override fun serialize(modelObject: ACHDirectDebitPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
@@ -40,12 +40,12 @@ data class AchPaymentMethod(
                         putOpt(OWNER_NAME, modelObject.ownerName)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(AchPaymentMethod::class.java, e)
+                    throw ModelSerializationException(ACHDirectDebitPaymentMethod::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): AchPaymentMethod {
-                return AchPaymentMethod(
+            override fun deserialize(jsonObject: JSONObject): ACHDirectDebitPaymentMethod {
+                return ACHDirectDebitPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     encryptedBankAccountNumber = jsonObject.getStringOrNull(ENCRYPTED_BANK_ACCOUNT_NUMBER),
                     encryptedBankLocationId = jsonObject.getStringOrNull(ENCRYPTED_BANK_LOCATION_ID),

@@ -11,18 +11,18 @@ package com.adyen.checkout.ach
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.ui.AddressParams
 
-internal class AchComponentParamsMapper(
+internal class ACHDirectDebitComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
 ) {
 
     fun mapToParams(
-        achConfiguration: AchConfiguration
-    ): AchComponentParams {
-        return achConfiguration.mapToParamsInternal().override(overrideComponentParams)
+        configuration: ACHDirectDebitConfiguration
+    ): ACHDirectDebitComponentParams {
+        return configuration.mapToParamsInternal().override(overrideComponentParams)
     }
 
-    private fun AchConfiguration.mapToParamsInternal(): AchComponentParams {
-        return AchComponentParams(
+    private fun ACHDirectDebitConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
+        return ACHDirectDebitComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
@@ -48,9 +48,9 @@ internal class AchComponentParamsMapper(
         }
     }
 
-    private fun AchComponentParams.override(
+    private fun ACHDirectDebitComponentParams.override(
         overrideComponentParams: ComponentParams?
-    ): AchComponentParams {
+    ): ACHDirectDebitComponentParams {
         if (overrideComponentParams == null) return this
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,

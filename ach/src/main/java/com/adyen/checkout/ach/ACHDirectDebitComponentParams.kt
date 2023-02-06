@@ -19,7 +19,7 @@ import java.util.Locale
 
 @Parcelize
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class AchComponentParams(
+data class ACHDirectDebitComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

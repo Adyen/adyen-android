@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/textview_achHeader"
-        style="@style/AdyenCheckout.Ach.AchHeaderTextView"
+        style="@style/AdyenCheckout.ACHDirectDebit.AchHeaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/standard_margin" />
@@ -28,7 +28,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_account_holder_name"
-            style="@style/AdyenCheckout.Ach.AccountHolderNameInput" />
+            style="@style/AdyenCheckout.ACHDirectDebit.AccountHolderNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,7 +39,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_account_number"
-            style="@style/AdyenCheckout.Ach.AccountNumberInput" />
+            style="@style/AdyenCheckout.ACHDirectDebit.AccountNumberInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +50,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_aba_routing_number"
-            style="@style/AdyenCheckout.Ach.AbaRoutingNumberInput" />
+            style="@style/AdyenCheckout.ACHDirectDebit.AbaRoutingNumberInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.adyen.checkout.components.ui.view.address.AddressFormInput

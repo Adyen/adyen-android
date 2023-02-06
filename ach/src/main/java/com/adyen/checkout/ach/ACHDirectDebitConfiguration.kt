@@ -21,7 +21,7 @@ import java.util.Locale
 
 @Parcelize
 @Suppress("LongParameterList")
-class AchConfiguration private constructor(
+class ACHDirectDebitConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
@@ -33,7 +33,7 @@ class AchConfiguration private constructor(
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<AchConfiguration, Builder>,
+        ActionHandlingPaymentMethodConfigurationBuilder<ACHDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
@@ -83,15 +83,15 @@ class AchConfiguration private constructor(
          *
          * Default is [AddressConfiguration.FullAddress].
          * @param addressConfiguration The configuration object for address form.
-         * @return [AchConfiguration.Builder]
+         * @return [ACHDirectDebitConfiguration.Builder]
          */
         fun setAddressConfiguration(addressConfiguration: AddressConfiguration): Builder {
             this.addressConfiguration = addressConfiguration
             return this
         }
 
-        override fun buildInternal(): AchConfiguration {
-            return AchConfiguration(
+        override fun buildInternal(): ACHDirectDebitConfiguration {
+            return ACHDirectDebitConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,

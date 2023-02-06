@@ -15,7 +15,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.AddressRepository
@@ -53,24 +53,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
-internal class DefaultAchDelegate(
+internal class DefaultACHDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>>,
+    private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
     private val genericEncrypter: GenericEncrypter,
-    override val componentParams: AchComponentParams,
+    override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
-) : AchDelegate {
+) : ACHDirectDebitDelegate {
 
-    private val inputData: AchInputData = AchInputData()
+    private val inputData: ACHDirectDebitInputData = ACHDirectDebitInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<AchOutputData> = _outputDataFlow
+    override val outputDataFlow: Flow<ACHDirectDebitOutputData> = _outputDataFlow
 
-    override val outputData: AchOutputData
+    override val outputData: ACHDirectDebitOutputData
         get() = _outputDataFlow.value
 
     override val addressOutputData: AddressOutputData
@@ -86,17 +86,17 @@ internal class DefaultAchDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<AchPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>> = _componentStateFlow
 
     private var publicKey: String? = null
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(AchComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(ACHDirectDebitComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<AchPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -106,7 +106,7 @@ internal class DefaultAchDelegate(
         }
     }
 
-    override fun updateInputData(update: AchInputData.() -> Unit) {
+    override fun updateInputData(update: ACHDirectDebitInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
     }
@@ -128,7 +128,7 @@ internal class DefaultAchDelegate(
     private fun createOutputData(
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-    ): AchOutputData {
+    ): ACHDirectDebitOutputData {
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
             inputData.address.country
@@ -140,10 +140,10 @@ internal class DefaultAchDelegate(
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
-        return AchOutputData(
-            bankAccountNumber = AchValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
-            bankLocationId = AchValidationUtils.validateBankLocationId(inputData.bankLocationId),
-            ownerName = AchValidationUtils.validateOwnerName(inputData.ownerName),
+        return ACHDirectDebitOutputData(
+            bankAccountNumber = ACHDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
+            bankLocationId = ACHDirectDebitValidationUtils.validateBankLocationId(inputData.bankLocationId),
+            ownerName = ACHDirectDebitValidationUtils.validateOwnerName(inputData.ownerName),
             addressState = AddressValidationUtils.validateAddressInput(
                 inputData.address,
                 addressFormUIState,
@@ -235,7 +235,7 @@ internal class DefaultAchDelegate(
         }
     }
 
-    private fun updateComponentState(outputData: AchOutputData) {
+    private fun updateComponentState(outputData: ACHDirectDebitOutputData) {
         Logger.v(TAG, "updateComponentState")
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
@@ -243,8 +243,8 @@ internal class DefaultAchDelegate(
 
     @Suppress("ReturnCount")
     private fun createComponentState(
-        outputData: AchOutputData = this.outputData
-    ): PaymentComponentState<AchPaymentMethod> {
+        outputData: ACHDirectDebitOutputData = this.outputData
+    ): PaymentComponentState<ACHDirectDebitPaymentMethod> {
         val publicKey = publicKey
         if (!outputData.isValid || publicKey == null) {
             return PaymentComponentState(
@@ -266,8 +266,8 @@ internal class DefaultAchDelegate(
                 publicKey = publicKey
             )
 
-            val achPaymentMethod = AchPaymentMethod(
-                type = AchPaymentMethod.PAYMENT_METHOD_TYPE,
+            val achPaymentMethod = ACHDirectDebitPaymentMethod(
+                type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
                 encryptedBankAccountNumber = encryptedBankAccountNumber,
                 encryptedBankLocationId = encryptedBankLocationId,
                 ownerName = outputData.ownerName.value
@@ -299,7 +299,7 @@ internal class DefaultAchDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<AchPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,

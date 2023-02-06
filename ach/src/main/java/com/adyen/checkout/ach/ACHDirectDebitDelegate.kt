@@ -10,7 +10,7 @@ package com.adyen.checkout.ach
 
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.ui.AddressDelegate
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.UIStateDelegate
@@ -18,20 +18,20 @@ import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
-interface AchDelegate :
-    PaymentComponentDelegate<PaymentComponentState<AchPaymentMethod>>,
+interface ACHDirectDebitDelegate :
+    PaymentComponentDelegate<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate,
     AddressDelegate {
-    val outputData: AchOutputData
+    val outputData: ACHDirectDebitOutputData
 
-    val outputDataFlow: Flow<AchOutputData>
+    val outputDataFlow: Flow<ACHDirectDebitOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<AchPaymentMethod>>
+    val componentStateFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>>
 
     val exceptionFlow: Flow<CheckoutException>
-    fun updateInputData(update: AchInputData.() -> Unit)
+    fun updateInputData(update: ACHDirectDebitInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

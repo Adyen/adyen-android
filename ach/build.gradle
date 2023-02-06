@@ -5,8 +5,8 @@ plugins {
 }
 // Maven artifact
 ext.mavenArtifactId = "ach"
-ext.mavenArtifactName = "Adyen checkout ACH component"
-ext.mavenArtifactDescription = "Adyen checkout ACH component client for Adyen's Checkout API."
+ext.mavenArtifactName = "Adyen checkout ACH Direct Debit component"
+ext.mavenArtifactDescription = "Adyen checkout ACH Direct Debit component client for Adyen's Checkout API."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 

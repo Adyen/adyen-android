@@ -18,6 +18,7 @@ object PaymentMethodTypes {
     const val UNKNOWN = "unknown"
 
     // Type of the payment method as received by the paymentMethods/ API
+    const val ACH = "ach"
     const val IDEAL = "ideal"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
@@ -39,7 +40,6 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val PAY_BY_BANK = "paybybank"
-    const val ACH = "ach"
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
@@ -87,6 +87,7 @@ object PaymentMethodTypes {
     // List of all payment method types.
     val SUPPORTED_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
+            ACH,
             BCMC,
             DOTPAY,
             ENTERCASH,
@@ -110,7 +111,6 @@ object PaymentMethodTypes {
             ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL,
             PIX,
-            ACH
         )
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(

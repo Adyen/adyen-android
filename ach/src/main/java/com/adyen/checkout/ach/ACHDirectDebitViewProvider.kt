@@ -16,7 +16,7 @@ import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-internal object AchViewProvider : ViewProvider {
+internal object ACHDirectDebitViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
@@ -24,13 +24,13 @@ internal object AchViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            AchComponentViewType -> AchView(context, attrs, defStyleAttr)
+            ACHDirectDebitComponentViewType -> ACHDirectDebitView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal object AchComponentViewType : AmountButtonComponentViewType {
-    override val viewProvider: ViewProvider = AchViewProvider
+internal object ACHDirectDebitComponentViewType : AmountButtonComponentViewType {
+    override val viewProvider: ViewProvider = ACHDirectDebitViewProvider
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

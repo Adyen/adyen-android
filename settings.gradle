@@ -1,4 +1,5 @@
 include ':3ds2',
+        ':ach',
         ':action',
         ':await',
         ':bacs',
@@ -38,5 +39,5 @@ include ':3ds2',
         ':test-core',
         ':ui-core',
         ':voucher',
-        ':wechatpay',
-        ':ach'
+        ':wechatpay'
+

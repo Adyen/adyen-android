@@ -21,7 +21,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.extensions.mergeViewFlows
-import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.ViewableComponent
@@ -31,11 +31,11 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 
-class AchComponent internal constructor(
-    private val achDelegate: AchDelegate,
+class ACHDirectDebitComponent internal constructor(
+    private val achDirectDebitDelegate: ACHDirectDebitDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<AchPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -46,44 +46,44 @@ class AchComponent internal constructor(
 
     override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
         viewModelScope,
-        achDelegate.viewFlow,
+        achDirectDebitDelegate.viewFlow,
         genericActionDelegate.viewFlow,
     )
 
     init {
-        achDelegate.initialize(viewModelScope)
+        achDirectDebitDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
         componentEventHandler.initialize(viewModelScope)
     }
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<AchPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit
     ) {
-        achDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        achDirectDebitDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     internal fun removeObserver() {
-        achDelegate.removeObserver()
+        achDirectDebitDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
 
-    override fun isConfirmationRequired(): Boolean = achDelegate.isConfirmationRequired()
+    override fun isConfirmationRequired(): Boolean = achDirectDebitDelegate.isConfirmationRequired()
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? AchDelegate)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? ACHDirectDebitDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        achDelegate.onCleared()
+        achDirectDebitDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
     }
@@ -92,7 +92,7 @@ class AchComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER = AchComponentProvider()
+        val PROVIDER = ACHDirectDebitComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ACH)

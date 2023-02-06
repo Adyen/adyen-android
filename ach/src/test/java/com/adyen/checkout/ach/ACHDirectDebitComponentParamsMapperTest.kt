@@ -16,13 +16,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale
 
-internal class AchComponentParamsMapperTest {
+internal class ACHDirectDebitComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom ach configuration fields are null then all fields should match`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = AchComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
 
         val expected = getAchComponentParams()
 
@@ -35,7 +35,7 @@ internal class AchComponentParamsMapperTest {
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()
-        val params = AchComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
         val expected = getAchComponentParams()
         assertEquals(expected, params)
     }
@@ -56,7 +56,7 @@ internal class AchComponentParamsMapperTest {
             )
         )
 
-        val params = AchComponentParamsMapper(overrideParams).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(overrideParams).mapToParams(achConfiguration)
 
         val expected = getAchComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -80,7 +80,7 @@ internal class AchComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = AchComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
         val expected = getAchComponentParams()
 
         assertEquals(expected, params)
@@ -93,13 +93,13 @@ internal class AchComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = AchComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
         val expected = getAchComponentParams(addressParams = AddressParams.None)
 
         assertEquals(expected, params)
     }
 
-    private fun getAchConfigurationBuilder() = AchConfiguration.Builder(
+    private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
@@ -117,7 +117,7 @@ internal class AchComponentParamsMapperTest {
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST,
             addressFieldPolicy = AddressFieldPolicyParams.Required
         )
-    ) = AchComponentParams(
+    ) = ACHDirectDebitComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,

@@ -46,6 +46,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(':ach')
     api project(':action')
     api project(':bacs')
     api project(':bcmc')
@@ -71,7 +72,6 @@ dependencies {
     api project(':sepa')
     api project(':seven-eleven')
     api project(':sessions-core')
-    api project(':ach')
 
     // Dependencies
     implementation libraries.androidx.recyclerview

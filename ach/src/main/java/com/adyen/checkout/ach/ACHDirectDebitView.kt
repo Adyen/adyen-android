@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.adyen.checkout.ach.databinding.AchViewBinding
+import com.adyen.checkout.ach.databinding.AchDirectDebitViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-internal class AchView @JvmOverloads constructor(
+internal class ACHDirectDebitView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -38,9 +38,9 @@ internal class AchView @JvmOverloads constructor(
     defStyleAttr
 ),
     ComponentView {
-    private val binding = AchViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = AchDirectDebitViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var delegate: AchDelegate
+    private lateinit var delegate: ACHDirectDebitDelegate
 
     private lateinit var localizedContext: Context
 
@@ -51,7 +51,7 @@ internal class AchView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is AchDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        if (delegate !is ACHDirectDebitDelegate) throw IllegalArgumentException("Unsupported delegate type")
         this.delegate = delegate
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
@@ -65,19 +65,19 @@ internal class AchView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         with(binding) {
             textviewAchHeader.setLocalizedTextFromStyle(
-                R.style.AdyenCheckout_Ach_AchHeaderTextView,
+                R.style.AdyenCheckout_ACHDirectDebit_AchHeaderTextView,
                 localizedContext
             )
             textInputLayoutAccountHolderName.setLocalizedHintFromStyle(
-                R.style.AdyenCheckout_Ach_AccountHolderNameInput,
+                R.style.AdyenCheckout_ACHDirectDebit_AccountHolderNameInput,
                 localizedContext
             )
             textInputLayoutAccountNumber.setLocalizedHintFromStyle(
-                R.style.AdyenCheckout_Ach_AccountNumberInput,
+                R.style.AdyenCheckout_ACHDirectDebit_AccountNumberInput,
                 localizedContext
             )
             textInputLayoutAbaRoutingNumber.setLocalizedHintFromStyle(
-                R.style.AdyenCheckout_Ach_AbaRoutingNumberInput,
+                R.style.AdyenCheckout_ACHDirectDebit_AbaRoutingNumberInput,
                 localizedContext
             )
             addressFormInput.initLocalizedContext(localizedContext)
@@ -148,13 +148,13 @@ internal class AchView @JvmOverloads constructor(
         binding.addressFormInput.attachDelegate(delegate, coroutineScope)
     }
 
-    private fun observeDelegate(delegate: AchDelegate, coroutineScope: CoroutineScope) {
+    private fun observeDelegate(delegate: ACHDirectDebitDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(achOutputData: AchOutputData) {
+    private fun outputDataChanged(achOutputData: ACHDirectDebitOutputData) {
         setAddressInputVisibility(achOutputData.addressUIState)
     }
 

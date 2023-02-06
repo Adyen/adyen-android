@@ -15,7 +15,7 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -39,21 +39,21 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class AchComponentTest(
-    @Mock private val achDelegate: AchDelegate,
+internal class ACHDirectDebitComponentTest(
+    @Mock private val achDelegate: ACHDirectDebitDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<AchPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
 ) {
 
-    private lateinit var component: AchComponent
+    private lateinit var component: ACHDirectDebitComponent
 
     @BeforeEach
     fun before() {
-        whenever(achDelegate.viewFlow) doReturn MutableStateFlow(AchComponentViewType)
+        whenever(achDelegate.viewFlow) doReturn MutableStateFlow(ACHDirectDebitComponentViewType)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
-        component = AchComponent(
+        component = ACHDirectDebitComponent(
             achDelegate,
             genericActionDelegate,
             actionHandlingComponent,
@@ -80,7 +80,7 @@ internal class AchComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<AchPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 
@@ -99,14 +99,15 @@ internal class AchComponentTest(
     @Test
     fun `when component is initialized then view flow should match ach delegate view flow`() = runTest {
         val event = component.viewFlow.first()
-        assertEquals(AchComponentViewType, event)
+        assertEquals(ACHDirectDebitComponentViewType, event)
     }
 
     @Test
     fun `when ach delegate view flow emits a value then component view flow should match that value`() = runTest {
         val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(achDelegate.viewFlow) doReturn achDelegateViewFlow
-        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component =
+            ACHDirectDebitComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
         assertEquals(TestComponentViewType.VIEW_TYPE_1, component.viewFlow.first())
         achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
         assertEquals(TestComponentViewType.VIEW_TYPE_2, component.viewFlow.first())
@@ -116,11 +117,12 @@ internal class AchComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn achDelegateViewFlow
-        component = AchComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component =
+            ACHDirectDebitComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         // this value should match the value of the main delegate and not the action delegate
         // and in practice the initial value of the action delegate view flow is always null so it should be ignored
-        assertEquals(AchComponentViewType, component.viewFlow.first())
+        assertEquals(ACHDirectDebitComponentViewType, component.viewFlow.first())
         achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
         assertEquals(TestComponentViewType.VIEW_TYPE_2, component.viewFlow.first())
     }

@@ -13,7 +13,7 @@ import com.adyen.checkout.components.ui.AddressFormUIState
 import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.FieldState
 
-data class AchOutputData(
+data class ACHDirectDebitOutputData(
     var bankAccountNumber: FieldState<String>,
     var bankLocationId: FieldState<String>,
     var ownerName: FieldState<String>,

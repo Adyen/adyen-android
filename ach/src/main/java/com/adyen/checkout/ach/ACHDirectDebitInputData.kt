@@ -11,7 +11,7 @@ package com.adyen.checkout.ach
 import com.adyen.checkout.components.base.InputData
 import com.adyen.checkout.components.ui.AddressInputModel
 
-data class AchInputData(
+data class ACHDirectDebitInputData(
     var bankAccountNumber: String = "",
     var bankLocationId: String = "",
     var ownerName: String = "",

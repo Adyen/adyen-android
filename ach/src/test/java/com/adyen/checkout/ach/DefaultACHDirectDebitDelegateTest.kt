@@ -15,7 +15,7 @@ import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.api.model.AddressItem
 import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.AchPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -54,15 +54,15 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class DefaultAchDelegateTest(
+internal class DefaultACHDirectDebitDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>>
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var genericEncrypter: TestGenericEncrypter
-    private lateinit var delegate: AchDelegate
+    private lateinit var delegate: ACHDirectDebitDelegate
 
     @BeforeEach
     fun setUp() {
@@ -150,7 +150,7 @@ internal class DefaultAchDelegateTest(
         fun `when the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
             val configuration =
                 getAchConfigurationBuilder().setAddressConfiguration(AddressConfiguration.FullAddress()).build()
-            val componentParams = AchComponentParamsMapper(null).mapToParams(configuration)
+            val componentParams = ACHDirectDebitComponentParamsMapper(null).mapToParams(configuration)
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = componentParams.shopperLocale,
                 addressParams = componentParams.addressParams,
@@ -517,10 +517,10 @@ internal class DefaultAchDelegateTest(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
         genericEncrypter: GenericEncrypter = this.genericEncrypter,
-        submitHandler: SubmitHandler<PaymentComponentState<AchPaymentMethod>> = this.submitHandler,
-        configuration: AchConfiguration = getAchConfigurationBuilder().build(),
+        submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>> = this.submitHandler,
+        configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
         order: OrderRequest? = TEST_ORDER,
-    ) = DefaultAchDelegate(
+    ) = DefaultACHDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = paymentMethod,
         analyticsRepository = analyticsRepository,
@@ -528,11 +528,11 @@ internal class DefaultAchDelegateTest(
         addressRepository = addressRepository,
         submitHandler = submitHandler,
         genericEncrypter = genericEncrypter,
-        componentParams = AchComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ACHDirectDebitComponentParamsMapper(null).mapToParams(configuration),
         order = order
     )
 
-    private fun getAchConfigurationBuilder() = AchConfiguration.Builder(
+    private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
