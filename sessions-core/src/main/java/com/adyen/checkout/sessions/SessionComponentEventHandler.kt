@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.sessions
 
-import android.util.Log
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
@@ -25,7 +24,9 @@ import com.adyen.checkout.sessions.interactor.SessionCallResult
 import com.adyen.checkout.sessions.interactor.SessionInteractor
 import com.adyen.checkout.sessions.model.SessionPaymentResult
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -40,11 +41,15 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        coroutineScope.launch {
-            sessionInteractor.sessionFlow
-                .mapNotNull { it.sessionData }
-                .collect { updateSessionData(it) }
-        }
+        sessionInteractor.sessionFlow
+            .mapNotNull { it.sessionData }
+            .onEach { updateSessionData(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun updateSessionData(sessionData: String) {
+        Logger.v(TAG, "Updating session data - $sessionData")
+        sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
 
     override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, componentCallback: BaseComponentCallback) {
@@ -58,11 +63,6 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             is PaymentComponentEvent.StateChanged -> onState(event.state, sessionComponentCallback)
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
         }
-    }
-
-    private fun updateSessionData(sessionData: String) {
-        Logger.v(TAG, "Updating session data - $sessionData")
-        sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
 
     private fun onPaymentsCallRequested(
@@ -207,7 +207,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
     }
 
     private fun onFinished(result: SessionPaymentResult, sessionComponentCallback: SessionComponentCallback<T>) {
-        Log.d(TAG, "Finished: ${result.resultCode}")
+        Logger.d(TAG, "Finished: ${result.resultCode}")
         sessionComponentCallback.onFinished(result)
     }
 
