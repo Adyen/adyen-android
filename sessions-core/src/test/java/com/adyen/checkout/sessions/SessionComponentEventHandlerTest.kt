@@ -38,7 +38,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -94,14 +96,15 @@ internal class SessionComponentEventHandlerTest(
 
             @Test
             fun `then loading state should be propagated properly`() {
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertLoadingStatesEqual(listOf(true, false))
+                verify(callback).onLoading(true)
+                verify(callback).onLoading(false)
             }
 
             @Test
@@ -109,14 +112,14 @@ internal class SessionComponentEventHandlerTest(
                 val action = createTestAction()
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.Action(action)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertOnActionEquals(action)
+                verify(callback).onAction(action)
             }
 
             @Test
@@ -124,14 +127,16 @@ internal class SessionComponentEventHandlerTest(
                 val error = RuntimeException("Test")
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.Error(error)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertOnErrorCauseEquals(error)
+                val errorCaptor = argumentCaptor<ComponentError>()
+                verify(callback).onError(errorCaptor.capture())
+                assertEquals(error, errorCaptor.lastValue.exception.cause)
             }
 
             @Test
@@ -139,14 +144,14 @@ internal class SessionComponentEventHandlerTest(
                 val result = createSessionPaymentResult()
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.Finished(result)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertOnFinishedEquals(result)
+                verify(callback).onFinished(result)
             }
 
             @Test
@@ -154,14 +159,14 @@ internal class SessionComponentEventHandlerTest(
                 val result = createSessionPaymentResult()
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.NotFullyPaidOrder(result)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertOnFinishedEquals(result)
+                verify(callback).onFinished(result)
             }
 
             @Test
@@ -169,21 +174,21 @@ internal class SessionComponentEventHandlerTest(
                 val result = createSessionPaymentResult()
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.RefusedPartialPayment(result)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
                     callback
                 )
 
-                callback.assertOnFinishedEquals(result)
+                verify(callback).onFinished(result)
             }
 
             @Test
             fun `and result is TakenOver, then this should be set`() = runTest {
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Payments.TakenOver
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
@@ -200,14 +205,15 @@ internal class SessionComponentEventHandlerTest(
 
             @Test
             fun `then loading state should be propagated properly`() {
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
                     callback
                 )
 
-                callback.assertLoadingStatesEqual(listOf(true, false))
+                verify(callback).onLoading(true)
+                verify(callback).onLoading(false)
             }
 
             @Test
@@ -215,14 +221,14 @@ internal class SessionComponentEventHandlerTest(
                 val action = createTestAction()
                 whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Details.Action(action)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
                     callback
                 )
 
-                callback.assertOnActionEquals(action)
+                verify(callback).onAction(action)
             }
 
             @Test
@@ -230,14 +236,16 @@ internal class SessionComponentEventHandlerTest(
                 val error = RuntimeException("Test")
                 whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Details.Error(error)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
                     callback
                 )
 
-                callback.assertOnErrorCauseEquals(error)
+                val errorCaptor = argumentCaptor<ComponentError>()
+                verify(callback).onError(errorCaptor.capture())
+                assertEquals(error, errorCaptor.lastValue.exception.cause)
             }
 
             @Test
@@ -245,21 +253,21 @@ internal class SessionComponentEventHandlerTest(
                 val result = createSessionPaymentResult()
                 whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Details.Finished(result)
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
                     callback
                 )
 
-                callback.assertOnFinishedEquals(result)
+                verify(callback).onFinished(result)
             }
 
             @Test
             fun `and result is TakenOver, then this should be set`() = runTest {
                 whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
                     SessionCallResult.Details.TakenOver
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
@@ -276,7 +284,7 @@ internal class SessionComponentEventHandlerTest(
 
             @Test
             fun `then state change should be propagated`() = runTest {
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
                 val componentState = createPaymentComponentState()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
@@ -284,7 +292,7 @@ internal class SessionComponentEventHandlerTest(
                     callback
                 )
 
-                callback.assertOnStateChangedEquals(componentState)
+                verify(callback).onStateChanged(componentState)
             }
         }
 
@@ -294,7 +302,7 @@ internal class SessionComponentEventHandlerTest(
 
             @Test
             fun `then error be propagated`() = runTest {
-                val callback = TestSessionComponentCallback()
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
                 val error = ComponentError(CheckoutException("Test"))
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
@@ -302,7 +310,7 @@ internal class SessionComponentEventHandlerTest(
                     callback
                 )
 
-                callback.assertOnErrorEquals(error)
+                verify(callback).onError(error)
             }
         }
     }
@@ -330,61 +338,4 @@ internal class SessionComponentEventHandlerTest(
         resultCode = "resultCode",
         order = null,
     )
-
-    private class TestSessionComponentCallback : SessionComponentCallback<PaymentComponentState<*>> {
-
-        private var loadingStates = mutableListOf<Boolean>()
-
-        private var onActionValue: Action? = null
-
-        private var onErrorValue: ComponentError? = null
-
-        private var onFinishedValue: SessionPaymentResult? = null
-
-        private var onStateChangedValue: PaymentComponentState<*>? = null
-
-        override fun onAction(action: Action) {
-            onActionValue = action
-        }
-
-        override fun onError(componentError: ComponentError) {
-            onErrorValue = componentError
-        }
-
-        override fun onFinished(result: SessionPaymentResult) {
-            onFinishedValue = result
-        }
-
-        override fun onLoading(isLoading: Boolean) {
-            loadingStates.add(isLoading)
-        }
-
-        override fun onStateChanged(state: PaymentComponentState<*>) {
-            onStateChangedValue = state
-        }
-
-        fun assertLoadingStatesEqual(expected: List<Boolean>) {
-            assertEquals(expected, loadingStates)
-        }
-
-        fun assertOnActionEquals(expected: Action?) {
-            assertEquals(expected, onActionValue)
-        }
-
-        fun assertOnErrorCauseEquals(expected: Throwable?) {
-            assertEquals(expected, onErrorValue?.exception?.cause)
-        }
-
-        fun assertOnErrorEquals(expected: ComponentError?) {
-            assertEquals(expected, onErrorValue)
-        }
-
-        fun assertOnFinishedEquals(expected: SessionPaymentResult?) {
-            assertEquals(expected, onFinishedValue)
-        }
-
-        fun assertOnStateChangedEquals(expected: PaymentComponentState<*>?) {
-            assertEquals(expected, onStateChangedValue)
-        }
-    }
 }

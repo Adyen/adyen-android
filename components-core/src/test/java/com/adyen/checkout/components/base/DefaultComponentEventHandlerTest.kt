@@ -15,12 +15,13 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.Logger
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
 internal class DefaultComponentEventHandlerTest {
 
@@ -48,7 +49,7 @@ internal class DefaultComponentEventHandlerTest {
 
         @Test
         fun `is ActionDetails, then action should be propagated`() {
-            val callback = TestComponentCallback()
+            val callback = mock<ComponentCallback<PaymentComponentState<*>>>()
             val actionData = ActionComponentData(paymentData = "test")
 
             componentEventHandler.onPaymentComponentEvent(
@@ -56,12 +57,12 @@ internal class DefaultComponentEventHandlerTest {
                 callback
             )
 
-            callback.assertOnAdditionalDetailsEquals(actionData)
+            verify(callback).onAdditionalDetails(actionData)
         }
 
         @Test
         fun `is Error, then error should be propagated`() {
-            val callback = TestComponentCallback()
+            val callback = mock<ComponentCallback<PaymentComponentState<*>>>()
             val error = ComponentError(CheckoutException("Test"))
 
             componentEventHandler.onPaymentComponentEvent(
@@ -69,12 +70,12 @@ internal class DefaultComponentEventHandlerTest {
                 callback
             )
 
-            callback.assertOnErrorEquals(error)
+            verify(callback).onError(error)
         }
 
         @Test
         fun `is StateChanged, then state should be propagated`() {
-            val callback = TestComponentCallback()
+            val callback = mock<ComponentCallback<PaymentComponentState<*>>>()
             val state = createPaymentComponentState()
 
             componentEventHandler.onPaymentComponentEvent(
@@ -82,12 +83,12 @@ internal class DefaultComponentEventHandlerTest {
                 callback
             )
 
-            callback.assertOnStateChangedEquals(state)
+            verify(callback).onStateChanged(state)
         }
 
         @Test
         fun `is Submit, then state should be propagated`() {
-            val callback = TestComponentCallback()
+            val callback = mock<ComponentCallback<PaymentComponentState<*>>>()
             val state = createPaymentComponentState()
 
             componentEventHandler.onPaymentComponentEvent(
@@ -95,7 +96,7 @@ internal class DefaultComponentEventHandlerTest {
                 callback
             )
 
-            callback.assertOnSubmitEquals(state)
+            verify(callback).onSubmit(state)
         }
     }
 
@@ -104,47 +105,4 @@ internal class DefaultComponentEventHandlerTest {
         isInputValid = false,
         isReady = false,
     )
-
-    private class TestComponentCallback : ComponentCallback<PaymentComponentState<*>> {
-
-        private var onSubmitValue: PaymentComponentState<*>? = null
-
-        private var onAdditionalDetailsValue: ActionComponentData? = null
-
-        private var onErrorValue: ComponentError? = null
-
-        private var onStateChangedValue: PaymentComponentState<*>? = null
-
-        override fun onSubmit(state: PaymentComponentState<*>) {
-            onSubmitValue = state
-        }
-
-        override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-            onAdditionalDetailsValue = actionComponentData
-        }
-
-        override fun onError(componentError: ComponentError) {
-            onErrorValue = componentError
-        }
-
-        override fun onStateChanged(state: PaymentComponentState<*>) {
-            onStateChangedValue = state
-        }
-
-        fun assertOnSubmitEquals(expected: PaymentComponentState<*>?) {
-            assertEquals(expected, onSubmitValue)
-        }
-
-        fun assertOnAdditionalDetailsEquals(expected: ActionComponentData?) {
-            assertEquals(expected, onAdditionalDetailsValue)
-        }
-
-        fun assertOnErrorEquals(expected: ComponentError?) {
-            assertEquals(expected, onErrorValue)
-        }
-
-        fun assertOnStateChangedEquals(expected: PaymentComponentState<*>?) {
-            assertEquals(expected, onStateChangedValue)
-        }
-    }
 }
