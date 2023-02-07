@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 7/2/2023.
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+}
+
+ext.mavenArtifactId = "upi"
+ext.mavenArtifactName = "Adyen checkout UPI component"
+ext.mavenArtifactDescription = "Adyen checkout UPI component client for Adyen's Checkout API."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':action')
+    api project(':ui-core')
+    api project(':sessions-core')
+
+    // Dependencies
+    implementation libraries.material
+
+    //Tests
+    testImplementation project(':test-core')
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
+}
