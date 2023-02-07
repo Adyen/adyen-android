@@ -9,8 +9,12 @@
 <resources>
     <style name="AdyenCheckout.ACHDirectDebit" />
 
-    <style name="AdyenCheckout.ACHDirectDebit.AchHeaderTextView" parent="AdyenCheckout.TextAppearance.Primary">
+    <style name="AdyenCheckout.ACHDirectDebit.AchHeaderTextView" parent="AdyenCheckout.TextAppearance">
         <item name="android:text">@string/checkout_ach_bank_account_title</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
     </style>
 
     <style name="AdyenCheckout.ACHDirectDebit.AccountHolderNameInput" parent="AdyenCheckout.TextInputEditText">

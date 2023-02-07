@@ -17,8 +17,7 @@
         android:id="@+id/textview_achHeader"
         style="@style/AdyenCheckout.ACHDirectDebit.AchHeaderTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/standard_margin" />
+        android:layout_height="wrap_content" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_account_holder_name"
