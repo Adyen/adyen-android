@@ -19,7 +19,6 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
-import com.adyen.checkout.card.test.TestAddressRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
@@ -31,6 +30,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.test.TestAddressRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.AddressFormUIState
 import com.adyen.checkout.components.ui.AddressInputModel
@@ -162,42 +162,44 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `address configuration is full address with default country, then countries and states should be emitted`() = runTest {
-            val countriesFlow = addressRepository.countriesFlow.testIn(this)
-            val statesFlow = addressRepository.statesFlow.testIn(this)
+        fun `address configuration is full address with default country, then countries and states should be emitted`() =
+            runTest {
+                val countriesFlow = addressRepository.countriesFlow.testIn(this)
+                val statesFlow = addressRepository.statesFlow.testIn(this)
 
-            delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(AddressConfiguration.FullAddress(defaultCountryCode = "NL"))
-                    .build()
-            )
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate = createCardDelegate(
+                    configuration = getDefaultCardConfigurationBuilder()
+                        .setAddressConfiguration(AddressConfiguration.FullAddress(defaultCountryCode = "NL"))
+                        .build()
+                )
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.awaitItem())
-            assertEquals(TestAddressRepository.STATES, statesFlow.awaitItem())
+                assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.awaitItem())
+                assertEquals(TestAddressRepository.STATES, statesFlow.awaitItem())
 
-            countriesFlow.cancelAndIgnoreRemainingEvents()
-            statesFlow.cancelAndIgnoreRemainingEvents()
-        }
+                countriesFlow.cancelAndIgnoreRemainingEvents()
+                statesFlow.cancelAndIgnoreRemainingEvents()
+            }
 
         @Test
-        fun `address configuration is full address without default country, then only countries should be emitted`() = runTest {
-            val countriesFlow = addressRepository.countriesFlow.testIn(this)
-            val statesFlow = addressRepository.statesFlow.testIn(this)
+        fun `address configuration is full address without default country, then only countries should be emitted`() =
+            runTest {
+                val countriesFlow = addressRepository.countriesFlow.testIn(this)
+                val statesFlow = addressRepository.statesFlow.testIn(this)
 
-            delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(AddressConfiguration.FullAddress())
-                    .build()
-            )
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate = createCardDelegate(
+                    configuration = getDefaultCardConfigurationBuilder(shopperLocale = Locale.CANADA)
+                        .setAddressConfiguration(AddressConfiguration.FullAddress())
+                        .build()
+                )
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.awaitItem())
-            statesFlow.expectNoEvents()
+                assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.awaitItem())
+                statesFlow.expectNoEvents()
 
-            countriesFlow.cancelAndIgnoreRemainingEvents()
-            statesFlow.cancelAndIgnoreRemainingEvents()
-        }
+                countriesFlow.cancelAndIgnoreRemainingEvents()
+                statesFlow.cancelAndIgnoreRemainingEvents()
+            }
 
         @Test
         fun `When the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
@@ -211,7 +213,7 @@ internal class DefaultCardDelegateTest(
 
             val expectedCountries = AddressFormUtils.markAddressListItemSelected(
                 list = countryOptions,
-                code = null,
+                code = delegate.componentParams.shopperLocale.country,
             )
 
             delegate = createCardDelegate(
@@ -969,9 +971,9 @@ internal class DefaultCardDelegateTest(
         )
     }
 
-    private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
+    private fun getDefaultCardConfigurationBuilder(shopperLocale: Locale = Locale.US): CardConfiguration.Builder {
         return CardConfiguration
-            .Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+            .Builder(shopperLocale, Environment.TEST, TEST_CLIENT_KEY)
             .setSupportedCardTypes(CardType.VISA)
     }
 

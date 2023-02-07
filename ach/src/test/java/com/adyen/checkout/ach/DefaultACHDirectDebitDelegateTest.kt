@@ -9,7 +9,6 @@
 package com.adyen.checkout.ach
 
 import app.cash.turbine.test
-import com.adyen.checkout.ach.testrepository.TestAddressRepository
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.api.model.AddressItem
@@ -20,6 +19,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.test.TestAddressRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.AddressFormUIState
 import com.adyen.checkout.components.ui.AddressInputModel
@@ -194,7 +194,10 @@ internal class DefaultACHDirectDebitDelegateTest(
                 assertEquals(addressInputModel.city, city.value)
                 assertEquals(addressInputModel.country, country.value)
                 assertEquals(expectedCountries, countryOptions)
-                assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES))
+                assertEquals(
+                    stateOptions,
+                    AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
+                )
             }
         }
 

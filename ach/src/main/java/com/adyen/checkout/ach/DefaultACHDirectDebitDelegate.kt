@@ -270,12 +270,12 @@ internal class DefaultACHDirectDebitDelegate(
 
         try {
             val encryptedBankAccountNumber = genericEncrypter.encryptField(
-                encryptionKey = ENCRYTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
+                encryptionKey = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
                 fieldToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
             val encryptedBankLocationId = genericEncrypter.encryptField(
-                encryptionKey = ENCRYTION_KEY_FOR_BANK_LOCATION_ID,
+                encryptionKey = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
                 fieldToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey
             )
@@ -351,7 +351,7 @@ internal class DefaultACHDirectDebitDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private const val ENCRYTION_KEY_FOR_BANK_ACCOUNT_NUMBER = "bankAccountNumber"
-        private const val ENCRYTION_KEY_FOR_BANK_LOCATION_ID = "bankLocationId"
+        private const val ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER = "bankAccountNumber"
+        private const val ENCRYPTION_KEY_FOR_BANK_LOCATION_ID = "bankLocationId"
     }
 }
