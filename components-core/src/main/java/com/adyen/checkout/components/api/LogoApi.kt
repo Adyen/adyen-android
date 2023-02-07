@@ -60,12 +60,13 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
     private val connectionsMap: MutableMap<String, LogoConnectionTask> = HashMap()
     private val logoUrlFormat: String = host + LOGO_PATH
     private val densityExtension: String = getDensityExtension(displayMetrics.densityDpi)
-    private val cache: LruCache<String, BitmapDrawable> = object : LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
-        override fun sizeOf(key: String, drawable: BitmapDrawable): Int {
-            // The cache size will be measured in kilobytes rather than number of items.
-            return drawable.bitmap.byteCount / KILO_BYTE_SIZE
+    private val cache: LruCache<String, BitmapDrawable> =
+        object : LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
+            override fun sizeOf(key: String, drawable: BitmapDrawable): Int {
+                // The cache size will be measured in kilobytes rather than number of items.
+                return drawable.bitmap.byteCount / KILO_BYTE_SIZE
+            }
         }
-    }
 
     /**
      * Starts a request to get the [Drawable] of a Logo from the web.
@@ -128,7 +129,9 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
      */
     fun cancelAll() {
         synchronized(this) {
-            connectionsMap.values.forEach { it.cancel(true) }
+            for (task in connectionsMap.values) {
+                task.cancel(true)
+            }
             connectionsMap.clear()
         }
     }

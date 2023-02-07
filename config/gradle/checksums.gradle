@@ -9,25 +9,25 @@
 if (!hasProperty("checksums")) {
     final checksums = [
             // Adyen dependencies
-            "com.adyen.threeds:adyen-3ds2:2.2.10:837e38377835138ae5fc3aac4b1dde3e:MD5",
+            "com.adyen.threeds:adyen-3ds2:2.2.11:76476cc4231d60c7d453762fc52001e0:MD5",
 
             // Kotlin
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21:02ff117102ed2651e8ad98b39e9dbe50:MD5",
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21:4f74db0220f534e0c746fc2a89a50304:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21:5bb547be66e8cd76d1a9c1f5387c24ac:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.5.21:662cdacfac64a3a16cda4dddcd6a8cba:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.6.21:eb3d83e86861d7399e816410e1ceba2c:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.6.21:ea6fa29c284656cd40b13825464f5972:MD5",
 
             // Coroutines
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0:111a33c5f32964013d38e0d78bbdf9f3:MD5",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1:e427aac656a3159609ea059d38feaf7f:MD5",
 
             // Android Gradle Plugin
             "androidx.databinding:viewbinding:4.2.2:80a29d43e530c7475f9d192bbb57b21c:MD5",
 
             // AndroidX
             "androidx.annotation:annotation:1.2.0:9120b153f33a2d61a6252935839f6d4e:MD5",
-            "androidx.fragment:fragment-ktx:1.3.6:216a94bd16a352d33f7290fbb54a80c4:MD5",
+            "androidx.fragment:fragment-ktx:1.5.5:c83d5ca8b64cf3d654b18c040a1849bf:MD5",
             "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1:c428105e833da1a710e8fa2d72002867:MD5",
-            "androidx.appcompat:appcompat:1.3.1:19cb8c81e85229a2d43fc770278b7dbe:MD5",
+            "androidx.appcompat:appcompat:1.5.1:f7d714a51790b8bf4bb2c52191d5f1db:MD5",
             "androidx.recyclerview:recyclerview:1.2.1:4c7c87151df88efe8e3b25d634874896:MD5",
             "androidx.browser:browser:1.3.0:f4bd0b4782e1a25c4c3fae304aa982c2:MD5",
 
