@@ -100,6 +100,20 @@ internal class DefaultACHDirectDebitDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
+    override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
+        submitHandler.initialize(coroutineScope, componentStateFlow)
+
+        sendAnalyticsEvent(coroutineScope)
+        fetchPublicKey(coroutineScope)
+
+        if (componentParams.addressParams is AddressParams.FullAddress) {
+            subscribeToStatesList()
+            subscribeToCountryList()
+            requestCountryList()
+        }
+    }
+
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         updateInputData {
             this.address.update()
@@ -256,12 +270,12 @@ internal class DefaultACHDirectDebitDelegate(
 
         try {
             val encryptedBankAccountNumber = genericEncrypter.encryptField(
-                encryptionKey = BANK_ACCOUNT_NUMBER,
+                encryptionKey = ENCRYTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
                 fieldToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
             val encryptedBankLocationId = genericEncrypter.encryptField(
-                encryptionKey = BANK_LOCATION_ID,
+                encryptionKey = ENCRYTION_KEY_FOR_BANK_LOCATION_ID,
                 fieldToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey
             )
@@ -315,20 +329,6 @@ internal class DefaultACHDirectDebitDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun initialize(coroutineScope: CoroutineScope) {
-        _coroutineScope = coroutineScope
-        submitHandler.initialize(coroutineScope, componentStateFlow)
-
-        sendAnalyticsEvent(coroutineScope)
-        fetchPublicKey(coroutineScope)
-
-        if (componentParams.addressParams is AddressParams.FullAddress) {
-            subscribeToStatesList()
-            subscribeToCountryList()
-            requestCountryList()
-        }
-    }
-
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
@@ -351,7 +351,7 @@ internal class DefaultACHDirectDebitDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        const val BANK_ACCOUNT_NUMBER = "bankAccountNumber"
-        const val BANK_LOCATION_ID = "bankLocationId"
+        private const val ENCRYTION_KEY_FOR_BANK_ACCOUNT_NUMBER = "bankAccountNumber"
+        private const val ENCRYTION_KEY_FOR_BANK_LOCATION_ID = "bankLocationId"
     }
 }

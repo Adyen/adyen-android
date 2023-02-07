@@ -440,7 +440,8 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = configuration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
             )
         }
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

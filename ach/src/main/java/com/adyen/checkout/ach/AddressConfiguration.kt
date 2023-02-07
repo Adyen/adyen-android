@@ -24,12 +24,11 @@ sealed class AddressConfiguration : Parcelable {
 
     /**
      * Full Address Form will be shown as part of the ach component.
-     * Default supported countries are ["US", "PR"]
      * @param supportedCountryCodes Supported country codes to be filtered from the available country
      * options.
      */
     @Parcelize
     data class FullAddress(
-        val supportedCountryCodes: List<String> = listOf("US", "PR"),
+        val supportedCountryCodes: List<String>,
     ) : AddressConfiguration()
 }

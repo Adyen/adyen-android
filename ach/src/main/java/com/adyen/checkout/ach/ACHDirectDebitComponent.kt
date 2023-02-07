@@ -95,6 +95,6 @@ class ACHDirectDebitComponent internal constructor(
         val PROVIDER = ACHDirectDebitComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ACH)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ACH)
     }
 }

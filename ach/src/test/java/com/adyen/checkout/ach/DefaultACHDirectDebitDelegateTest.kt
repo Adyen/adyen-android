@@ -137,7 +137,11 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when address configuration is FullAddress, addressUIState in outputdata must be FullAddress`() = runTest {
             val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(AddressConfiguration.FullAddress()).build()
+                getAchConfigurationBuilder().setAddressConfiguration(
+                    AddressConfiguration.FullAddress(
+                        supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST
+                    )
+                ).build()
             delegate = createAchDelegate(configuration = configuration)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -149,7 +153,11 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
             val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(AddressConfiguration.FullAddress()).build()
+                getAchConfigurationBuilder().setAddressConfiguration(
+                    AddressConfiguration.FullAddress(
+                        DEFAULT_SUPPORTED_COUNTRY_LIST
+                    )
+                ).build()
             val componentParams = ACHDirectDebitComponentParamsMapper(null).mapToParams(configuration)
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = componentParams.shopperLocale,
@@ -544,5 +552,6 @@ internal class DefaultACHDirectDebitDelegateTest(
         private const val TEST_BANK_BANK_LOCATION_ID = "123456789"
         private const val TEST_OWNER_NAME = "Joseph"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
     }
 }

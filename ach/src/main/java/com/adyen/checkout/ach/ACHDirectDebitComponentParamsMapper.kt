@@ -30,7 +30,11 @@ internal class ACHDirectDebitComponentParamsMapper(
             isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            addressParams = addressConfiguration.mapToAddressParam()
+            addressParams = addressConfiguration?.mapToAddressParam()
+                ?: AddressParams.FullAddress(
+                    supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
+                    addressFieldPolicy = AddressFieldPolicyParams.Required
+                )
         )
     }
 
@@ -60,5 +64,9 @@ internal class ACHDirectDebitComponentParamsMapper(
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )
+    }
+
+    companion object {
+        private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
     }
 }

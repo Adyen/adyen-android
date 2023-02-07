@@ -99,6 +99,20 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when the address configuration is null, default address configuration should be FullAddress with default supported countries`() {
+        val achConfiguration = getAchConfigurationBuilder().build()
+
+        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+
+        val expectedAddressParams: AddressParams = AddressParams.FullAddress(
+            supportedCountryCodes = SUPPORTED_COUNTRY_LIST,
+            addressFieldPolicy = AddressFieldPolicyParams.Required
+        )
+
+        assertEquals(expectedAddressParams, params.addressParams)
+    }
+
     private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,

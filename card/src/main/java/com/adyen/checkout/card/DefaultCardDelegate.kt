@@ -625,7 +625,7 @@ internal class DefaultCardDelegate(
             if (isKCPAuthRequired()) {
                 publicKey?.let { publicKey ->
                     encryptedPassword = genericEncrypter.encryptField(
-                        GenericEncrypter.KCP_PASSWORD_KEY,
+                        KCP_PASSWORD_KEY,
                         stateOutputData.kcpCardPasswordState.value,
                         publicKey
                     )
@@ -740,5 +740,6 @@ internal class DefaultCardDelegate(
         internal const val BIN_VALUE_EXTENDED_LENGTH = 8
         private const val EXTENDED_CARD_NUMBER_LENGTH = 16
         private const val LAST_FOUR_LENGTH = 4
+        private const val KCP_PASSWORD_KEY = "password"
     }
 }

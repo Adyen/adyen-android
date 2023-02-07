@@ -19,6 +19,10 @@ import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+/**
+ * [Configuration] class required by [ACHDirectDebitComponent] to change it's behavior.
+ * Pass it to the [ACHDirectDebitComponent.PROVIDER].
+ */
 @Parcelize
 @Suppress("LongParameterList")
 class ACHDirectDebitConfiguration private constructor(
@@ -29,7 +33,7 @@ class ACHDirectDebitConfiguration private constructor(
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-    val addressConfiguration: AddressConfiguration,
+    val addressConfiguration: AddressConfiguration?,
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
@@ -37,8 +41,7 @@ class ACHDirectDebitConfiguration private constructor(
         ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
-        private var addressConfiguration: AddressConfiguration =
-            AddressConfiguration.FullAddress(supportedCountryCodes = listOf("US", "PR"))
+        private var addressConfiguration: AddressConfiguration? = null
 
         /**
          * Constructor for Builder with default values.
@@ -82,6 +85,7 @@ class ACHDirectDebitConfiguration private constructor(
          * Configures the address form to be shown to the shopper.
          *
          * Default is [AddressConfiguration.FullAddress].
+         * Default supported countries are ["US", "PR"]
          * @param addressConfiguration The configuration object for address form.
          * @return [ACHDirectDebitConfiguration.Builder]
          */

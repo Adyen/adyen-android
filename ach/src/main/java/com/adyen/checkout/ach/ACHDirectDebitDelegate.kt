@@ -31,6 +31,7 @@ interface ACHDirectDebitDelegate :
     val componentStateFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>>
 
     val exceptionFlow: Flow<CheckoutException>
+
     fun updateInputData(update: ACHDirectDebitInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)

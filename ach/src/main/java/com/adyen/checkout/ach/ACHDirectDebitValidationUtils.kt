@@ -11,7 +11,7 @@ package com.adyen.checkout.ach
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 
-object ACHDirectDebitValidationUtils {
+internal object ACHDirectDebitValidationUtils {
 
     private const val MINIMUM_ACCOUNT_NUMBER_LENGTH = 4
     private const val MAXIMUM_ACCOUNT_NUMBER_LENGTH = 17

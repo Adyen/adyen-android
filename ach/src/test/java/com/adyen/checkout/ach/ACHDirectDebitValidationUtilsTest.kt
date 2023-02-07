@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 internal class ACHDirectDebitValidationUtilsTest {
 
     @Test
-    fun `if an account number length is lower than minumum length,return Invalid`() {
+    fun `if an account number length is lower than minimum length,return Invalid`() {
         val accountNumber = "123"
         val validation = ACHDirectDebitValidationUtils.validateBankAccountNumber(accountNumber).validation
 
