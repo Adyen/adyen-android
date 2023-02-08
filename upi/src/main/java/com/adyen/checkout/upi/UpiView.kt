@@ -14,9 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.isVisible
-import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.upi.databinding.UpiViewBinding
 import kotlinx.coroutines.CoroutineScope
 
@@ -30,22 +29,27 @@ internal class UpiView @JvmOverloads constructor(
     private val binding = UpiViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
-        binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, _ ->
+        orientation = VERTICAL
+
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        setPadding(padding, padding, padding, 0)
+
+        binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.button_vpa -> {
-                    binding.textInputLayoutVpa.isVisible = true
-                    binding.textViewQrCodeDescription.isVisible = false
+                    binding.textInputLayoutVpa.isVisible = isChecked
+                    binding.textViewQrCodeDescription.isVisible = !isChecked
                 }
                 R.id.button_qrCode -> {
-                    binding.textInputLayoutVpa.isVisible = false
-                    binding.textViewQrCodeDescription.isVisible = true
+                    binding.textInputLayoutVpa.isVisible = !isChecked
+                    binding.textViewQrCodeDescription.isVisible = isChecked
                 }
             }
         }
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        // TODO
+        if (delegate !is UpiDelegate) throw IllegalArgumentException("Unsupported delegate type")
     }
 
     override fun highlightValidationErrors() {

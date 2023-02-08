@@ -51,11 +51,12 @@
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_marginTop="16dp"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_vpa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,6 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment."
         android:visibility="gone"
         tools:visibility="visible" />

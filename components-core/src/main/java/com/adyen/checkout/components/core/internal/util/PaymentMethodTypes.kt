@@ -42,6 +42,9 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val PAY_BY_BANK = "paybybank"
+    const val UPI = "upi"
+    const val UPI_COLLECT = "upi_collect"
+    const val UPI_QR = "upi_qr"
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
@@ -113,6 +116,9 @@ object PaymentMethodTypes {
             ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL,
             PIX,
+            UPI,
+            UPI_COLLECT,
+            UPI_QR,
         )
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(

@@ -127,6 +127,10 @@ import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
+import com.adyen.checkout.upi.UpiComponent
+import com.adyen.checkout.upi.UpiComponentProvider
+import com.adyen.checkout.upi.UpiComponentState
+import com.adyen.checkout.upi.UpiConfiguration
 import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
@@ -317,6 +321,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
+        )
+        UpiComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> UpiConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
         )
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
@@ -678,6 +687,16 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = sevenElevenConfiguration,
                 componentCallback = componentCallback as ComponentCallback<SevenElevenComponentState>,
+            )
+        }
+        UpiComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val upiConfiguration: UpiConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            UpiComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = upiConfiguration,
+                componentCallback = componentCallback as ComponentCallback<UpiComponentState>,
             )
         }
         else -> {
