@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.UpiPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -104,8 +103,11 @@ internal class DefaultUpiDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData(): UpiOutputData {
-        return UpiOutputData(inputData.virtualPaymentAddress)
+    private fun createOutputData() = with(inputData) {
+        UpiOutputData(
+            mode = mode,
+            virtualPaymentAddress = virtualPaymentAddress,
+        )
     }
 
     private fun outputDataChanged(outputData: UpiOutputData) {
@@ -122,8 +124,9 @@ internal class DefaultUpiDelegate(
         outputData: UpiOutputData = this.outputData
     ): UpiComponentState {
         val paymentMethod = UpiPaymentMethod(
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            virtualPaymentAddress = outputData.virtualPaymentAddressFieldState.value
+            type = if (outputData.mode == UpiMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            virtualPaymentAddress = if (outputData.mode == UpiMode.VPA) outputData.virtualPaymentAddressFieldState.value
+            else null
         )
 
         val paymentComponentData = PaymentComponentData(

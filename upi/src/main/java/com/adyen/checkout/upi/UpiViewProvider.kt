@@ -30,5 +30,5 @@ internal object UpiViewProvider : ViewProvider {
 
 internal object UpiComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = UpiViewProvider
-    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    override val buttonTextResId: Int = R.string.upi_continue
 }

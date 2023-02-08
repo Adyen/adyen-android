@@ -12,12 +12,18 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 
-class UpiOutputData(virtualPaymentAddress: String) : OutputData {
+class UpiOutputData(
+    val mode: UpiMode,
+    virtualPaymentAddress: String,
+) : OutputData {
 
     val virtualPaymentAddressFieldState = validateVirtualPaymentAddress(virtualPaymentAddress)
 
     override val isValid: Boolean
-        get() = virtualPaymentAddressFieldState.validation.isValid()
+        get() = when (mode) {
+            UpiMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
+            UpiMode.QR -> true
+        }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
         // TODO: validate VPA
@@ -25,6 +31,6 @@ class UpiOutputData(virtualPaymentAddress: String) : OutputData {
             FieldState(virtualPaymentAddress, Validation.Valid)
         } else {
             // TODO: use proper string resource
-            FieldState(virtualPaymentAddress, Validation.Invalid(0))
+            FieldState(virtualPaymentAddress, Validation.Invalid(R.string.upi_continue))
         }
 }

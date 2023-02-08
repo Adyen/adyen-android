@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.upi
 
-import com.adyen.checkout.components.core.internal.ui.model.InputData
-
-data class UpiInputData(
-    var mode: UpiMode = UpiMode.VPA,
-    var virtualPaymentAddress: String = "",
-) : InputData
+enum class UpiMode {
+    VPA,
+    QR,
+}

@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:checkedButton="@id/button_vpa"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -51,16 +52,14 @@
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_marginTop="16dp">
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_vpa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Virtual Payment Address" />
+            android:hint="Virtual Payment Address"
+            android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,8 +67,10 @@
         android:id="@+id/textView_qrCodeDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/input_layout_height"
         android:text="Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment."
         android:visibility="gone"
         tools:visibility="visible" />
