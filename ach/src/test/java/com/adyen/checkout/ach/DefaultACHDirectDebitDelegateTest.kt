@@ -11,7 +11,6 @@ package com.adyen.checkout.ach
 import app.cash.turbine.test
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.api.model.AddressItem
 import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
@@ -32,9 +31,10 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
-import com.adyen.checkout.test.extensions.testFlow
+import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
@@ -90,36 +90,32 @@ internal class DefaultACHDirectDebitDelegateTest(
                 setAddressConfiguration(AddressConfiguration.None)
             }.build())
 
-            val countriesFlow = mutableListOf<List<AddressItem>>()
-            val statesFlow = mutableListOf<List<AddressItem>>()
-            val jobCountries = testFlow(addressRepository.countriesFlow, countriesFlow)
-            val jobStateFlow = testFlow(addressRepository.statesFlow, statesFlow)
+            val countriesTestFlow = addressRepository.countriesFlow.test(testScheduler)
+            val statesTestFlow = addressRepository.statesFlow.test(testScheduler)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             runCurrent()
-            assertEquals(countriesFlow.size, 0)
-            assertEquals(statesFlow.size, 0)
+            assertEquals(countriesTestFlow.values.size, 0)
+            assertEquals(statesTestFlow.values.size, 0)
 
-            jobCountries.cancel()
-            jobStateFlow.cancel()
+            countriesTestFlow.cancel()
+            statesTestFlow.cancel()
         }
 
         @Test
         fun `address configuration is full address and shopper local is US, then countries and states should be emitted`() =
             runTest {
-                val countriesFlow = mutableListOf<List<AddressItem>>()
-                val statesFlow = mutableListOf<List<AddressItem>>()
-                val jobCountries = testFlow(addressRepository.countriesFlow, countriesFlow)
-                val jobStateFlow = testFlow(addressRepository.statesFlow, statesFlow)
+                val countriesTestFlow = addressRepository.countriesFlow.test(testScheduler)
+                val statesTestFlow = addressRepository.statesFlow.test(testScheduler)
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
                 runCurrent()
 
-                assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.firstOrNull())
-                assertEquals(TestAddressRepository.STATES, statesFlow.firstOrNull())
+                assertEquals(TestAddressRepository.COUNTRIES, countriesTestFlow.values.firstOrNull())
+                assertEquals(TestAddressRepository.STATES, statesTestFlow.values.firstOrNull())
 
-                jobCountries.cancel()
-                jobStateFlow.cancel()
+                countriesTestFlow.cancel()
+                statesTestFlow.cancel()
             }
 
         @Test
