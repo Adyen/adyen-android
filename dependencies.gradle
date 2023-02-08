@@ -31,7 +31,7 @@ ext {
 
     // Android Dependencies
     annotation_version = "1.5.0"
-    appcompat_version = "1.6.0"
+    appcompat_version = "1.6.1"
     browser_version = "1.4.0"
     coroutines_version = "1.6.4"
     fragment_version = "1.5.5"
