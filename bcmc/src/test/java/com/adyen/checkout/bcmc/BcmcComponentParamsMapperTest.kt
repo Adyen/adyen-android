@@ -26,7 +26,7 @@ internal class BcmcComponentParamsMapperTest {
         )
             .build()
 
-        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
@@ -59,7 +59,7 @@ internal class BcmcComponentParamsMapperTest {
             .setSubmitButtonVisible(false)
             .build()
 
-        val params = BcmcComponentParamsMapper(null).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.US,
@@ -100,7 +100,7 @@ internal class BcmcComponentParamsMapperTest {
             )
         )
 
-        val params = BcmcComponentParamsMapper(overrideParams).mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration, overrideParams)
 
         val expected = BcmcComponentParams(
             shopperLocale = Locale.GERMAN,

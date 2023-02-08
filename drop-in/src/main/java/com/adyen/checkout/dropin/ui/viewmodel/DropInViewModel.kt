@@ -65,9 +65,9 @@ internal class DropInViewModel(
             bundleHandler.amount = value
         }
 
-    private var sessionDetails: SessionDetails?
+    internal var sessionDetails: SessionDetails?
         get() = bundleHandler.sessionDetails
-        set(value) {
+        private set(value) {
             bundleHandler.sessionDetails = value
         }
 

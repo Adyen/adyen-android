@@ -12,6 +12,7 @@ import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.sessions.model.SessionModel
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import kotlinx.parcelize.Parcelize
 
@@ -22,7 +23,8 @@ data class SessionDetails(
     val sessionData: String,
     val amount: Amount,
     val expiresAt: String,
-    val returnUrl: String
+    val returnUrl: String,
+    val sessionSetupConfiguration: SessionSetupConfiguration?
 ) : Parcelable
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -33,6 +35,7 @@ fun SessionSetupResponse.mapToDetails(): SessionDetails {
         amount = amount ?: Amount.EMPTY,
         expiresAt = expiresAt,
         returnUrl = returnUrl,
+        sessionSetupConfiguration = configuration
     )
 }
 

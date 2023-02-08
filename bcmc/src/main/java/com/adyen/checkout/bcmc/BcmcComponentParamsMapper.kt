@@ -11,12 +11,11 @@ package com.adyen.checkout.bcmc
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
-internal class BcmcComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+internal class BcmcComponentParamsMapper {
 
     fun mapToParams(
         bcmcConfiguration: BcmcConfiguration,
+        overrideComponentParams: ComponentParams? = null,
         sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): BcmcComponentParams {
         return bcmcConfiguration

@@ -26,7 +26,7 @@ internal class CardComponentParamsMapperTest {
     fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -66,7 +66,7 @@ internal class CardComponentParamsMapperTest {
             .setAddressConfiguration(addressConfiguration)
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -109,7 +109,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(overrideParams).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod(), overrideParams)
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -139,7 +139,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MAESTRO), CardBrand(cardType = CardType.BCMC))
@@ -159,7 +159,7 @@ internal class CardComponentParamsMapperTest {
                 )
             )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MASTERCARD))
@@ -180,7 +180,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(
@@ -197,7 +197,7 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST

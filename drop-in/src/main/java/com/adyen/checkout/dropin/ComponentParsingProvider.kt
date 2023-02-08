@@ -123,6 +123,7 @@ import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentProvider
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
@@ -423,13 +424,14 @@ internal fun getComponentFor(
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("LongMethod", "UNCHECKED_CAST")
+@Suppress("LongMethod", "UNCHECKED_CAST", "LongParameterList")
 internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount,
     componentCallback: ComponentCallback<*>,
+    sessionSetupConfiguration: SessionSetupConfiguration?,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
@@ -457,7 +459,7 @@ internal fun getComponentFor(
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            BcmcComponentProvider(dropInParams).get(
+            BcmcComponentProvider(dropInParams, sessionSetupConfiguration).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
@@ -477,7 +479,7 @@ internal fun getComponentFor(
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            CardComponentProvider(dropInParams).get(
+            CardComponentProvider(dropInParams, sessionSetupConfiguration).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,

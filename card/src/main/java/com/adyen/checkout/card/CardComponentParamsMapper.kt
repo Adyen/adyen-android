@@ -18,13 +18,12 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
-internal class CardComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+internal class CardComponentParamsMapper {
 
     fun mapToParamsDefault(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
+        overrideComponentParams: ComponentParams? = null,
         sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): CardComponentParams {
         val supportedCardBrands = cardConfiguration.getSupportedCardBrands(paymentMethod)
@@ -35,6 +34,7 @@ internal class CardComponentParamsMapper(
 
     fun mapToParamsStored(
         cardConfiguration: CardConfiguration,
+        overrideComponentParams: ComponentParams? = null
     ): CardComponentParams {
         val supportedCardBrands = cardConfiguration.getSupportedCardBrandsStored()
         return cardConfiguration
