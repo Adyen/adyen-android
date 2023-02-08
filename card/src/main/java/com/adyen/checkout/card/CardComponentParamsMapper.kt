@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ui.AddressFieldPolicy
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 internal class CardComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
@@ -24,10 +25,11 @@ internal class CardComponentParamsMapper(
     fun mapToParamsDefault(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): CardComponentParams {
         val supportedCardBrands = cardConfiguration.getSupportedCardBrands(paymentMethod)
         return cardConfiguration
-            .mapToParamsInternal(supportedCardBrands)
+            .mapToParamsInternal(supportedCardBrands, sessionSetupConfiguration)
             .override(overrideComponentParams)
     }
 
@@ -42,6 +44,7 @@ internal class CardComponentParamsMapper(
 
     private fun CardConfiguration.mapToParamsInternal(
         supportedCardBrands: List<CardBrand>,
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): CardComponentParams {
         return CardComponentParams(
             shopperLocale = shopperLocale,
@@ -54,7 +57,8 @@ internal class CardComponentParamsMapper(
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             supportedCardBrands = supportedCardBrands,
             shopperReference = shopperReference,
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
+            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
+                ?: isStorePaymentFieldVisible ?: true,
             isHideCvc = isHideCvc ?: false,
             isHideCvcStoredCard = isHideCvcStoredCard ?: false,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,

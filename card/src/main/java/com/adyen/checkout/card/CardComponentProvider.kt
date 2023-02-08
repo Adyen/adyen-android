@@ -147,7 +147,11 @@ class CardComponentProvider(
         assertSupported(paymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
+            val componentParams = componentParamsMapper.mapToParamsDefault(
+                configuration,
+                paymentMethod,
+                checkoutSession.sessionSetupResponse.configuration
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)

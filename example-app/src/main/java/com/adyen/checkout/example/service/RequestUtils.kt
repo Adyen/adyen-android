@@ -20,8 +20,10 @@ import com.adyen.checkout.example.data.api.model.Item
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
+import com.adyen.checkout.example.data.api.model.RecurringProcessingModel
 import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
 import com.adyen.checkout.example.data.api.model.SessionRequest
+import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
 import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
 import org.json.JSONObject
 
@@ -62,6 +64,8 @@ fun getSessionRequest(
     threeDSAuthenticationOnly: Boolean = false,
     shopperEmail: String? = null,
     allowedPaymentMethods: List<String>? = null,
+    storePaymentMethodMode: String? = StorePaymentMethodMode.ASK_FOR_CONSENT.mode,
+    recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel
 ): SessionRequest {
     return SessionRequest(
         merchantAccount = merchantAccount,
@@ -81,6 +85,8 @@ fun getSessionRequest(
         threeDS2RequestData = null, // if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
         shopperEmail = shopperEmail,
         allowedPaymentMethods = allowedPaymentMethods,
+        storePaymentMethodMode = storePaymentMethodMode,
+        recurringProcessingModel = recurringProcessingModel
     )
 }
 

@@ -132,7 +132,10 @@ class BcmcComponentProvider(
     ): BcmcComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(
+            configuration,
+            checkoutSession.sessionSetupResponse.configuration
+        )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
