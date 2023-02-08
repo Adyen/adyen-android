@@ -25,11 +25,25 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+/**
+ * Extend this service if you want to take over the sessions flow in Drop-in and make the required network calls to the
+ * Adyen Checkout APIs through your backend. Note that once you take over the sessions flow you have to handle the rest
+ * of the network calls yourself.
+ *
+ * Make sure you define add your subclass of this [DropInService] in your manifest file.
+ *
+ * You need to implement the [onSubmit] and [onAdditionalDetails] with this service. The rest of the methods are
+ * optional.
+ */
 open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
     private lateinit var sessionInteractor: SessionInteractor
 
+    /**
+     * Indicates whether you already took over the sessions flow in a previous action. This field could be useful if you
+     * are only taking over the flow in certain conditions and you want to know in a subsequent call whether you did
+     * take over the flow earlier or not.
+     */
     var isFlowTakenOver: Boolean = false
         private set
 

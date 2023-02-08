@@ -40,8 +40,8 @@ import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
- * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to
- * customize their behavior.
+ * There you will find specific methods to add configurations for each specific component, to be able to customize
+ * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize

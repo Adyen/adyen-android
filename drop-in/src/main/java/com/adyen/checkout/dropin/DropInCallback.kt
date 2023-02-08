@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin
 
 /**
- * A class that defines the callbacks from Drop-in to the component that launched it.
+ * A class that defines the callbacks from Drop-in to the Activity or Fragment that launched it.
  */
 interface DropInCallback {
 
