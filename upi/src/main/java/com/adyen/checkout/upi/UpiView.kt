@@ -67,8 +67,8 @@ internal class UpiView @JvmOverloads constructor(
                     if (isChecked) {
                         binding.editTextVpa.requestFocus()
                         binding.editTextVpa.showKeyboard()
+                        delegate.updateInputData { mode = UpiMode.VPA }
                     }
-                    delegate.updateInputData { mode = UpiMode.VPA }
                 }
                 R.id.button_qrCode -> {
                     binding.textInputLayoutVpa.isVisible = !isChecked
@@ -78,8 +78,8 @@ internal class UpiView @JvmOverloads constructor(
                     if (isChecked) {
                         binding.editTextVpa.clearFocus()
                         hideKeyboard()
+                        delegate.updateInputData { mode = UpiMode.QR }
                     }
-                    delegate.updateInputData { mode = UpiMode.QR }
                 }
             }
         }
