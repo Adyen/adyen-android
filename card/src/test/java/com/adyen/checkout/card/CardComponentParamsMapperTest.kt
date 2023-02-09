@@ -16,8 +16,12 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 internal class CardComponentParamsMapperTest {
@@ -206,6 +210,31 @@ internal class CardComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @ParameterizedTest
+    @MethodSource("sessionSetupConfigurationSource")
+    @Suppress("MaxLineLength")
+    fun `is store payment field visible should match enable store details from session setup response whatever the value of show store payment field inside card configurations`(
+        showStorePaymentField: Boolean,
+        enableStoreDetails: Boolean,
+        isStorePaymentFieldVisible: Boolean
+    ) {
+        val cardConfiguration = getCardConfigurationBuilder()
+            .setShowStorePaymentField(showStorePaymentField)
+            .build()
+
+        val params = CardComponentParamsMapper().mapToParamsDefault(
+            cardConfiguration,
+            PaymentMethod(),
+            sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = enableStoreDetails)
+        )
+
+        val expected = getCardComponentParams(
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun getCardConfigurationBuilder() = CardConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
@@ -253,5 +282,14 @@ internal class CardComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+
+        @JvmStatic
+        fun sessionSetupConfigurationSource() = listOf(
+            // showStorePaymentField, enableStoreDetails, isStorePaymentFieldVisible
+            arguments(false, false, false),
+            arguments(false, true, true),
+            arguments(true, false, false),
+            arguments(true, true, true),
+        )
     }
 }
