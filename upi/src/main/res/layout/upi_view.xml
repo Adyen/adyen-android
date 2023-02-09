@@ -5,9 +5,7 @@
   ~
   ~ Created by oscars on 7/2/2023.
   -->
-<!-- TODO: Move strings and styles -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,35 +13,30 @@
     tools:parentTag="android.widget.LinearLayout">
 
     <TextView
-        android:id="@+id/textView_choiceDescription"
+        android:id="@+id/textView_modeSelection"
+        style="@style/AdyenCheckout.UPI.ModeSelectionTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Make a selection on how you would like to use UPI." />
+        android:layout_height="wrap_content" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggleButton_choice"
+        style="@style/AdyenCheckout.UPI.ButtonToggleGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:checkedButton="@id/button_vpa"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/button_vpa"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/AdyenCheckout.UPI.VPAButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="VPA" />
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/button_qrCode"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/AdyenCheckout.UPI.QRButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="QR code" />
+            android:layout_weight="1" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -56,22 +49,20 @@
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_vpa"
+            style="@style/AdyenCheckout.UPI.VPAEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Virtual Payment Address"
-            android:maxLines="1"/>
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView_qrCodeDescription"
+        style="@style/AdyenCheckout.UPI.QRGenerationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
-        android:minHeight="@dimen/input_layout_height"
-        android:text="Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment."
         android:visibility="gone"
         tools:visibility="visible" />
 

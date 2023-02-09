@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">Valitse, kuinka haluat käyttää UPI-sovellusta.</string>
+    <string name="checkout_upi_vpa_validation">Syötä oikea virtuaalinen maksuosoite</string>
+    <string name="checkout_upi_qr_generation">Luo QR-koodi, jonka voit ladata tai josta voit ottaa kuvakaappauksen ja lähettää sen UPI-sovellukseen suorittaaksesi maksun loppuun.</string>
+
+</resources>

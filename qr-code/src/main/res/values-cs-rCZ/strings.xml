@@ -9,6 +9,7 @@
 
 <resources>
     <string name="checkout_qr_code_pix">Zkopírujte kód, pak otevřete aplikaci se zaregistrovaným klíčem PIX, zvolte Zaplatit pomocí PIX a vložte kód.</string>
+    <string name="checkout_qr_code_upi">Pořiďte snímek obrazovky a nahrajte ho v aplikaci UPI nebo naskenujte QR kód ve své oblíbené aplikaci UPI a dokončete platbu.</string>
     <string name="checkout_qr_code_copy_button">Kopírovat kód</string>
     <string name="checkout_qr_code_timer_text">Na zaplacení vám zbývá %s</string>
     <string name="checkout_qr_code_copied_toast">Kód zkopírován do schránky</string>

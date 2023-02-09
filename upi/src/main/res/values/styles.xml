@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+<resources>
+
+    <style name="AdyenCheckout.UPI.ModeSelectionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_upi_mode_selection</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.ButtonToggleGroup" parent="AdyenCheckout">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="checkedButton">@id/button_vpa</item>
+        <item name="selectionRequired">true</item>
+        <item name="singleSelection">true</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.VPAButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_upi_vpa</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.QRButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_upi_qr_code</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.VPAEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_upi_vpa_full</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.QRGenerationTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_upi_qr_generation</item>
+        <item name="android:minHeight">@dimen/input_layout_height</item>
+    </style>
+</resources>

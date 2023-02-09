@@ -10,5 +10,6 @@
 <resources>
     <string name="checkout_await_message_blik">Spusťte bankovní aplikaci a potvrďte platbu.</string>
     <string name="checkout_await_message_mbway">Potvrďte platbu v aplikaci MB WAY</string>
+    <string name="checkout_await_message_upi">Otevřete platební aplikaci UPI a potvrďte platbu</string>
     <string name="checkout_await_waiting_confirmation">Čeká se na potvrzení</string>
 </resources>

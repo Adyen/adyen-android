@@ -22,6 +22,8 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.hideKeyboard
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.databinding.UpiViewBinding
@@ -52,8 +54,33 @@ internal class UpiView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
+        initLocalizedStrings(localizedContext)
+
         initPicker(delegate)
         initVpaInput(delegate, localizedContext)
+    }
+
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textViewModeSelection.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_ModeSelectionTextView,
+            localizedContext
+        )
+        binding.buttonVpa.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_VPAButton,
+            localizedContext
+        )
+        binding.buttonQrCode.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_QRButton,
+            localizedContext
+        )
+        binding.textInputLayoutVpa.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_UPI_VPAEditText,
+            localizedContext
+        )
+        binding.textViewQrCodeDescription.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_QRGenerationTextView,
+            localizedContext
+        )
     }
 
     private fun initPicker(delegate: UpiDelegate) {

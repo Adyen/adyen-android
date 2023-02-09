@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">Izberite, kako želite uporabljati aplikacijo UPI.</string>
+    <string name="checkout_upi_vpa_validation">Vnesite pravilen virtualni naslov za plačilo</string>
+    <string name="checkout_upi_qr_generation">Ustvarite kodo QR, ki jo lahko prenesete ali naredite posnetek zaslona, in jo za dokončanje plačila naložite v aplikacijo UPI.</string>
+
+</resources>
