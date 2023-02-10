@@ -31,7 +31,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom ach configuration fields are set then all fields should match`() {
-        val addressConfiguration = AddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
+        val addressConfiguration =
+            ACHDirectDebitAddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()
@@ -75,7 +76,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
 
     @Test
     fun `when a address is selected as FullAddress, addressParams should return FullAddress`() {
-        val addressConfiguration = AddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
+        val addressConfiguration =
+            ACHDirectDebitAddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()
@@ -88,7 +90,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
 
     @Test
     fun `when a address is selected as None, addressParams should return None`() {
-        val addressConfiguration = AddressConfiguration.None
+        val addressConfiguration = ACHDirectDebitAddressConfiguration.None
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()

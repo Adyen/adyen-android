@@ -33,7 +33,7 @@ class ACHDirectDebitConfiguration private constructor(
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-    val addressConfiguration: AddressConfiguration?,
+    val addressConfiguration: ACHDirectDebitAddressConfiguration?,
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
@@ -41,7 +41,7 @@ class ACHDirectDebitConfiguration private constructor(
         ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
-        private var addressConfiguration: AddressConfiguration? = null
+        private var addressConfiguration: ACHDirectDebitAddressConfiguration? = null
 
         /**
          * Constructor for Builder with default values.
@@ -84,12 +84,12 @@ class ACHDirectDebitConfiguration private constructor(
         /**
          * Configures the address form to be shown to the shopper.
          *
-         * Default is [AddressConfiguration.FullAddress].
+         * Default is [ACHDirectDebitAddressConfiguration.FullAddress].
          * Default supported countries are ["US", "PR"]
          * @param addressConfiguration The configuration object for address form.
          * @return [ACHDirectDebitConfiguration.Builder]
          */
-        fun setAddressConfiguration(addressConfiguration: AddressConfiguration): Builder {
+        fun setAddressConfiguration(addressConfiguration: ACHDirectDebitAddressConfiguration): Builder {
             this.addressConfiguration = addressConfiguration
             return this
         }

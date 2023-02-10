@@ -38,12 +38,12 @@ internal class ACHDirectDebitComponentParamsMapper(
         )
     }
 
-    private fun AddressConfiguration.mapToAddressParam(): AddressParams {
+    private fun ACHDirectDebitAddressConfiguration.mapToAddressParam(): AddressParams {
         return when (this) {
-            is AddressConfiguration.None -> {
+            is ACHDirectDebitAddressConfiguration.None -> {
                 AddressParams.None
             }
-            is AddressConfiguration.FullAddress -> {
+            is ACHDirectDebitAddressConfiguration.FullAddress -> {
                 AddressParams.FullAddress(
                     supportedCountryCodes = supportedCountryCodes,
                     addressFieldPolicy = AddressFieldPolicyParams.Required
