@@ -32,10 +32,10 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class WeChatPayActionComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -65,7 +65,7 @@ class WeChatPayActionComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): WeChatDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)

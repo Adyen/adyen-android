@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EPSComponentProvider(
     overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : IssuerListComponentProvider<EPSComponent, EPSConfiguration, EPSPaymentMethod>(
     componentClass = EPSComponent::class.java,
     overrideComponentParams = overrideComponentParams,

@@ -58,7 +58,7 @@ internal class DefaultWeChatDelegateTest(
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,
             paymentDataRepository = paymentDataRepository,

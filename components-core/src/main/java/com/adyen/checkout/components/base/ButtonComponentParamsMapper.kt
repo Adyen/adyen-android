@@ -4,12 +4,11 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ButtonComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+class ButtonComponentParamsMapper {
 
     fun mapToParams(
         configuration: Configuration,
+        overrideComponentParams: ComponentParams? = null,
     ): ButtonComponentParams {
         return configuration
             .mapToParamsInternal()

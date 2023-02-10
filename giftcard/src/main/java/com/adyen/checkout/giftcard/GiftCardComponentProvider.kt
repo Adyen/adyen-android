@@ -42,17 +42,19 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GiftCardComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState>,
     SessionPaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState> {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -70,7 +72,7 @@ class GiftCardComponentProvider(
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val analyticsService = AnalyticsService(httpClient)
@@ -132,7 +134,7 @@ class GiftCardComponentProvider(
         val genericEncrypter = DefaultGenericEncrypter()
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val analyticsService = AnalyticsService(httpClient)

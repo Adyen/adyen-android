@@ -41,12 +41,14 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class InstantPaymentComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<
         InstantPaymentComponent,
@@ -57,7 +59,7 @@ class InstantPaymentComponentProvider(
         InstantPaymentConfiguration,
         PaymentComponentState<PaymentMethodDetails>> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -73,7 +75,7 @@ class InstantPaymentComponentProvider(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -128,7 +130,7 @@ class InstantPaymentComponentProvider(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

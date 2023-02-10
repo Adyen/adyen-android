@@ -247,7 +247,7 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration)
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -309,7 +309,7 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration)
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

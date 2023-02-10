@@ -49,7 +49,7 @@ class DefaultInstantPaymentDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
             order = TEST_ORDER,
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
             analyticsRepository = analyticsRepository
         )
         Logger.setLogcatLevel(Logger.NONE)

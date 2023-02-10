@@ -13,12 +13,12 @@ import com.adyen.checkout.components.base.ComponentParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
 
     fun mapToParams(
-        issuerListConfiguration: IssuerListConfiguration
+        issuerListConfiguration: IssuerListConfiguration,
+        overrideComponentParams: ComponentParams? = null
     ): IssuerListComponentParams {
         return issuerListConfiguration
             .mapToParamsInternal()

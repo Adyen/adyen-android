@@ -27,7 +27,7 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1
         ).build()
 
-        val params = GenericComponentParamsMapper(null).mapToParams(componentConfiguration)
+        val params = GenericComponentParamsMapper().mapToParams(componentConfiguration)
 
         val expected = GenericComponentParams(
             shopperLocale = Locale.US,
@@ -63,8 +63,9 @@ internal class GenericComponentParamsMapperTest {
             )
         )
 
-        val params = GenericComponentParamsMapper(overrideParams).mapToParams(
-            componentConfiguration
+        val params = GenericComponentParamsMapper().mapToParams(
+            componentConfiguration,
+            overrideParams
         )
 
         val expected = GenericComponentParams(

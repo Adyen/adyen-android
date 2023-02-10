@@ -88,7 +88,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,

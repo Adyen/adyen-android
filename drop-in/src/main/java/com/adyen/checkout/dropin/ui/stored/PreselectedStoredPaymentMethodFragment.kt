@@ -84,7 +84,8 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 storedPaymentMethod = storedPaymentMethod,
                 dropInConfiguration = dropInViewModel.dropInConfiguration,
                 amount = dropInViewModel.amount,
-                componentCallback = storedPaymentViewModel
+                componentCallback = storedPaymentViewModel,
+                sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration
             )
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

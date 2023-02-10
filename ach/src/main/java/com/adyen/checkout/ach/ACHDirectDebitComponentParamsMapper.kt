@@ -11,12 +11,11 @@ package com.adyen.checkout.ach
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.ui.AddressParams
 
-internal class ACHDirectDebitComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+internal class ACHDirectDebitComponentParamsMapper {
 
     fun mapToParams(
-        configuration: ACHDirectDebitConfiguration
+        configuration: ACHDirectDebitConfiguration,
+        overrideComponentParams: ComponentParams? = null
     ): ACHDirectDebitComponentParams {
         return configuration.mapToParamsInternal().override(overrideComponentParams)
     }

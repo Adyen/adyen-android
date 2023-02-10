@@ -43,6 +43,7 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
@@ -52,11 +53,12 @@ abstract class EContextComponentProvider<
     ConfigurationT : EContextConfiguration,
     PaymentMethodT : EContextPaymentMethod>(
     private val componentClass: Class<ComponentT>,
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : PaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>>,
     SessionPaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>> {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -73,7 +75,7 @@ abstract class EContextComponentProvider<
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
+                val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
                 val analyticsService = AnalyticsService(httpClient)
                 val analyticsRepository = DefaultAnalyticsRepository(
@@ -128,7 +130,7 @@ abstract class EContextComponentProvider<
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(configuration)
+                val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
                 val analyticsService = AnalyticsService(httpClient)
                 val analyticsRepository = DefaultAnalyticsRepository(

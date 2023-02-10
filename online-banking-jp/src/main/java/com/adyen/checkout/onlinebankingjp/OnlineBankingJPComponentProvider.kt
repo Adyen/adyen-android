@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.EContextComponentProvider
 import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingJPComponentProvider(
     overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : EContextComponentProvider<
     OnlineBankingJPComponent,
     OnlineBankingJPConfiguration,

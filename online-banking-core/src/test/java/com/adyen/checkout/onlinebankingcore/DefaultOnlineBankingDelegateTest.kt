@@ -213,7 +213,7 @@ internal class DefaultOnlineBankingDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         termsAndConditionsUrl = TEST_URL,
         paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
         submitHandler = submitHandler,

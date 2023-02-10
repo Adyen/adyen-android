@@ -34,10 +34,10 @@ import com.adyen.checkout.core.util.FileDownloader
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -66,7 +66,7 @@ class QRCodeComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): QRCodeDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

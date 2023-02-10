@@ -202,7 +202,7 @@ internal class DefaultGiftCardDelegateTest(
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         publicKeyRepository = publicKeyRepository,
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         cardEncrypter = cardEncrypter,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,

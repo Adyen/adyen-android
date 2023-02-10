@@ -63,7 +63,7 @@ internal class DefaultGenericActionDelegateTest(
             ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
-            GenericComponentParamsMapper(null).mapToParams(configuration),
+            GenericComponentParamsMapper().mapToParams(configuration),
             actionDelegateProvider
         )
         whenever(activity.application) doReturn Application()
