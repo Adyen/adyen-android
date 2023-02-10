@@ -18,6 +18,7 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sessions.model.SessionModel
 import com.adyen.checkout.sessions.model.SessionPaymentResult
@@ -253,9 +254,8 @@ class SessionInteractor(
         val callWasHandled = merchantCall()
         return if (!callWasHandled) {
             if (isFlowTakenOver) {
-                throw CheckoutException(
-                    "Sessions flow was already taken over in a" +
-                        " previous call, $merchantMethodName should be implemented"
+                throw MethodNotImplementedException(
+                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented"
                 )
             } else {
                 internalCall()

@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.service
 
 import android.os.Bundle
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.dropin.DropInConfiguration
 
 interface BaseDropInServiceContract {
@@ -30,13 +31,13 @@ interface BaseDropInServiceContract {
      *
      * Use [sendRecurringResult] to send the final result of this call back to the Drop-in.
      *
-     * Note that not overriding this method while enabling this feature will cause a [NotImplementedError] to
+     * Note that not overriding this method while enabling this feature will cause a [MethodNotImplementedException] to
      * be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
     fun onRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        throw NotImplementedError("Method onRemoveStoredPaymentMethod is not implemented")
+        throw MethodNotImplementedException("Method onRemoveStoredPaymentMethod is not implemented")
     }
 
     /**

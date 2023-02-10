@@ -13,6 +13,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
 
 interface SessionDropInServiceContract {
@@ -26,7 +27,7 @@ interface SessionDropInServiceContract {
      * conditions, then you can return [false] if these conditions are not met.
      *
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [NotImplementedError] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
+     * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
      * We provide a [PaymentComponentState] which contains information about the state of the payment component at the
@@ -67,7 +68,7 @@ interface SessionDropInServiceContract {
      * conditions, then you can return [false] if these conditions are not met.
      *
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [NotImplementedError] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
+     * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
      * We provide inside [ActionComponentData] the whole request data expected by the /payments/details endpoint. Use
@@ -101,7 +102,7 @@ interface SessionDropInServiceContract {
      * conditions, then you can return [false] if these conditions are not met.
      *
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [NotImplementedError] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
+     * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
      * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
@@ -113,7 +114,7 @@ interface SessionDropInServiceContract {
      * You should eventually call [sendBalanceResult] with a [BalanceDropInServiceResult] containing the result
      * of the network request. Drop-in will be updated then based on the [BalanceDropInServiceResult] you sent.
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -135,7 +136,7 @@ interface SessionDropInServiceContract {
      * conditions, then you can return [false] if these conditions are not met.
      *
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [NotImplementedError] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
+     * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
      * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
@@ -144,7 +145,7 @@ interface SessionDropInServiceContract {
      * You should eventually call [sendOrderResult] with a [OrderDropInServiceResult] containing the result of the
      * network request. The base class will handle messaging the UI afterwards, based on the [OrderDropInServiceResult].
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -165,7 +166,7 @@ interface SessionDropInServiceContract {
      * conditions, then you can return [false] if these conditions are not met.
      *
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [NotImplementedError] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
+     * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
      * We provide [order], an [Order] object that contains a non-serialized version of the order
@@ -181,7 +182,7 @@ interface SessionDropInServiceContract {
      * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
      * operation is made on a background thread.
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.

@@ -13,6 +13,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
 
 interface DropInServiceContract {
@@ -86,7 +87,7 @@ interface DropInServiceContract {
      * You should eventually call [sendBalanceResult] with a [BalanceDropInServiceResult] containing the result
      * of the network request. Drop-in will be updated then based on the [BalanceDropInServiceResult] you sent.
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -94,7 +95,7 @@ interface DropInServiceContract {
      * @param paymentMethodDetails The data from the partial payment method component.
      */
     fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
-        throw NotImplementedError("Method onBalanceCheck is not implemented.")
+        throw MethodNotImplementedException("Method onBalanceCheck is not implemented.")
     }
 
     /**
@@ -109,13 +110,13 @@ interface DropInServiceContract {
      * You should eventually call [sendOrderResult] with a [OrderDropInServiceResult] containing the result of the
      * network request. The base class will handle messaging the UI afterwards, based on the [OrderDropInServiceResult].
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
     fun onOrderRequest() {
-        throw NotImplementedError("Method onOrderRequest is not implemented.")
+        throw MethodNotImplementedException("Method onOrderRequest is not implemented.")
     }
 
     /**
@@ -138,7 +139,7 @@ interface DropInServiceContract {
      * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
      * operation is made on a background thread.
      *
-     * Note that not overriding this method while enabling partial payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -147,6 +148,6 @@ interface DropInServiceContract {
      * @param shouldUpdatePaymentMethods indicates whether payment methods should be re-fetched and passed to Drop-in.
      */
     fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
-        throw NotImplementedError("Method onOrderCancel is not implemented.")
+        throw MethodNotImplementedException("Method onOrderCancel is not implemented.")
     }
 }
