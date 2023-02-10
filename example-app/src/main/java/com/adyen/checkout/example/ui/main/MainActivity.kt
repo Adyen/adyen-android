@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 )
             }
             is MainNavigation.DropInWithSession -> {
-                DropIn.startPaymentWithSession(
+                DropIn.startPayment(
                     this,
                     dropInLauncher,
                     navigation.checkoutSession,
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 )
             }
             is MainNavigation.DropInWithCustomSession -> {
-                DropIn.startPaymentWithSession(
+                DropIn.startPayment(
                     this,
                     dropInLauncher,
                     navigation.checkoutSession,

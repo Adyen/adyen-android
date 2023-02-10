@@ -64,7 +64,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         emitResult(result)
     }
 
-    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    final override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
@@ -90,7 +90,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+    final override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
@@ -113,7 +113,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
+    final override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
@@ -135,7 +135,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestOrdersCall() {
+    final override fun requestOrdersCall() {
         launch {
             val result = sessionInteractor.createOrder(
                 ::onOrderRequest,
@@ -156,7 +156,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+    final override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         val shouldUpdatePaymentMethods = !isDropInCancelledByUser
         launch {
             val result = sessionInteractor.cancelOrder(

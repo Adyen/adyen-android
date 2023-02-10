@@ -133,7 +133,7 @@ class DropInConfiguration private constructor(
          * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in
          * the payment methods screen.
          *
-         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled

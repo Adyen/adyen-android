@@ -32,8 +32,8 @@ interface BaseDropInServiceContract {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
-    fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        throw NotImplementedError("Method removeStoredPaymentMethod is not implemented")
+    fun onRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        throw NotImplementedError("Method onRemoveStoredPaymentMethod is not implemented")
     }
 
     /**
@@ -74,7 +74,7 @@ interface BaseDropInServiceContract {
      * Allow asynchronously sending the results of the Recurring/ network call.
      *
      * Call this method after making a network call to remove a stored payment method
-     * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
+     * while using [onRemoveStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
      * depending on the response of the corresponding network call.
      * Check the subclasses of [RecurringDropInServiceResult] for more information.
      *

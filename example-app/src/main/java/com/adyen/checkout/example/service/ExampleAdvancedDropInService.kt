@@ -44,7 +44,7 @@ import javax.inject.Inject
  *
  * In addition, it handles the partial payment flow (gift cards) by implementing [onBalanceCheck],
  * [onOrderRequest] and [onOrderCancel] and it handles the stored payment method removal flow by
- * implementing [removeStoredPaymentMethod].
+ * implementing [onRemoveStoredPaymentMethod].
  */
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
@@ -305,7 +305,7 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    override fun removeStoredPaymentMethod(
+    override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
         launch(Dispatchers.IO) {

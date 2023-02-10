@@ -132,7 +132,7 @@ class ExampleDropInService : DropInService() {
         return jsonResponse.has("action")
     }
 
-    override fun removeStoredPaymentMethod(
+    override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
         launch(Dispatchers.IO) {

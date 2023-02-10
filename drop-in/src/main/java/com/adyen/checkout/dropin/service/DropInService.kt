@@ -28,27 +28,27 @@ import com.adyen.checkout.core.log.Logger
  */
 abstract class DropInService : BaseDropInService(), DropInServiceContract {
 
-    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    final override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         Logger.d(TAG, "requestPaymentsCall")
         onSubmit(paymentComponentState)
     }
 
-    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+    final override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         Logger.d(TAG, "requestDetailsCall")
         onAdditionalDetails(actionComponentData)
     }
 
-    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
+    final override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         Logger.d(TAG, "requestBalanceCall")
         onBalanceCheck(paymentMethodData)
     }
 
-    override fun requestOrdersCall() {
+    final override fun requestOrdersCall() {
         Logger.d(TAG, "requestOrdersCall")
         onOrderRequest()
     }
 
-    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+    final override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         Logger.d(TAG, "requestCancelOrder")
         onOrderCancel(order, !isDropInCancelledByUser)
     }
