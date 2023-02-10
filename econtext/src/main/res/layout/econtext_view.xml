@@ -37,6 +37,18 @@
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_emailAddress"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_emailAddress"
+            style="@style/AdyenCheckout.EContext.ShopperEmailInput"
+            tools:ignore="RequiredSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <LinearLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
@@ -74,16 +86,4 @@
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_emailAddress"
-        style="@style/AdyenCheckout.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-            android:id="@+id/editText_emailAddress"
-            style="@style/AdyenCheckout.EContext.ShopperEmailInput"
-            tools:ignore="RequiredSize" />
-    </com.google.android.material.textfield.TextInputLayout>
 </merge>
