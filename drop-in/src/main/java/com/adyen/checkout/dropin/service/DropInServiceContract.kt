@@ -11,166 +11,135 @@ package com.adyen.checkout.dropin.service
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.core.exception.MethodNotImplementedException
+import org.json.JSONObject
 
-// TODO SESSIONS: check docs
 interface DropInServiceContract {
 
     /**
-     * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
+     * In this method you should make a network call to the /payments endpoint of the Checkout API through your server.
      *
-     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
-     * the Component [Configuration] and the user input,
-     * specially the "paymentMethod" object with the shopper input details.
-     * The rest of the payments/ call object should be filled in, on your server, according to your needs.
+     * We provide a [PaymentComponentState] which contains information about the state of the payment component at the
+     * moment the user submits the payment.
      *
-     * We also provide a [PaymentComponentState] that contains a non-serialized version of the
-     * payment component JSON and might also contain more details about the state of the
-     * component at the moment in which the payment is confirmed by the user.
+     * We also provide inside [PaymentComponentState.data] the parameters that we can infer from the component's
+     * configuration and the user input, especially the [state.data.paymentMethod] object with the shopper input
+     * details.
      *
-     * - Asynchronous handling:
+     * Use [PaymentComponentData.SERIALIZER] to serialize this data to a [JSONObject]. The rest of the /payments call
+     * request data should be filled in, on your server, according to your needs.
      *
-     *     Since this method runs on the main thread, you should make sure the payments/ call and
-     * any other long running operation is made on a background thread. You should eventually call
-     * [sendResult] with a [DropInServiceResult] containing the result of the network request.
-     * The base class will handle messaging the UI afterwards, based on the [DropInServiceResult].
+     * You should eventually call [sendResult] with a [DropInServiceResult] containing the result of the network
+     * request. Drop-in will be updated then based on the [DropInServiceResult] you sent.
      *
-     *     Note that overriding this method means that the [makePaymentsCall] method will not be
-     * called anymore and therefore you can disregard it.
+     * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
+     * operation is made on a background thread.
      *
-     * - Synchronous handling:
+     * Note that the [PaymentComponentState] is a abstract class, you can check and cast to one of its subclasses for
+     * a more component specific state.
      *
-     *     Alternatively, if you don't need asynchronous handling but you still want to access
-     * the [PaymentComponentState], you will still need to implement [makePaymentsCall]. After you
-     * are done handling the [PaymentComponentState] inside [onPaymentsCallRequested], call
-     * [super.onPaymentsCallRequested] to proceed. This will internally invoke your
-     * implementation of [makePaymentsCall] in a background thread so you won't need to
-     * manage the threads yourself.
-     *
-     * Note that the [PaymentComponentState] is a abstract class, you can check and cast to
-     * one of its child classes for a more component specific state.
-     *
-     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
-     * by calling [sendResult] with [DropInServiceResult.Update].
+     * Only applicable for partial payments flow: in case of a partial payment, you should update Drop-in by calling
+     * [sendResult] with [DropInServiceResult.Update].
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentComponentState The state of the [PaymentComponent] at the moment the user
-     * submits the payment.
+     * @param state The state of the payment component at the moment the user submits the payment.
      */
     fun onSubmit(state: PaymentComponentState<*>)
 
     /**
-     * In this method you should make the network call to tell your server to make a call to the payments/details/
-     * endpoint.
+     * In this method you should make a network call to the /payments/details endpoint of the Checkout API through your
+     * server.
      *
-     * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
-     * payments/details/ endpoint (if paymentData was provided).
+     * We provide inside [ActionComponentData] the whole request data expected by the /payments/details endpoint. Use
+     * [ActionComponentData.SERIALIZER] to serialize this data to a [JSONObject].
      *
-     * We also provide an [ActionComponentData] that contains a non-serialized version of the
-     * action component JSON.
+     * You should eventually call [sendResult] with a [DropInServiceResult] containing the result of the network
+     * request. Drop-in will be updated then based on the [DropInServiceResult] you sent.
      *
-     * - Asynchronous handling:
+     * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
+     * operation is made on a background thread.
      *
-     *     Since this method runs on the main thread, you should make sure the payments/details/
-     * call and any other long running operation is made on a background thread. You should
-     * eventually call [sendResult] with a [DropInServiceResult] containing the result of the
-     * network request. The base class will handle messaging the UI afterwards, based on the
-     * [DropInServiceResult].
-     *
-     *     Note that overriding this method means that the [makeDetailsCall] method will not be
-     * called anymore and therefore you can disregard it.
-     *
-     * - Synchronous handling:
-     *
-     *     Alternatively, if you don't need asynchronous handling but you still want to access
-     * the [ActionComponentData], you will still need to implement [makeDetailsCall]. After you
-     * are done handling the [ActionComponentData] inside [onDetailsCallRequested], call
-     * [super.onDetailsCallRequested] to proceed. This will internally invoke your
-     * implementation of [makeDetailsCall] in a background thread so you won't need to
-     * manage the threads yourself.
-     *
-     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
-     * by calling [sendResult] with [DropInServiceResult.Update].
+     * Only applicable for partial payments flow: in case of a partial payment, you should update Drop-in by calling
+     * [sendResult] with [DropInServiceResult.Update].
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param actionComponentData The data from the [ActionComponent].
+     * @param actionComponentData The data from the action component.
      */
     fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
-     * Only applicable for gift card flow.
+     * Only applicable for partial payments flow.
      *
-     * In this method you should make the network call to tell your server to make a call to the
-     * paymentMethods/balance/ endpoint. This method is called right after the user enters their gift card
-     * details and submits them.
+     * In this method you should make a network call to the /paymentMethods/balance endpoint of the Checkout API through
+     * your server. This method is called right after the user enters their partial payment method details and submits
+     * them.
      *
-     * We provide [paymentMethodData], a [PaymentMethodDetails] object that contains a non-serialized
-     * version of the gift card payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it
-     * to a [JSONObject].
+     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
+     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
      *
-     * Asynchronous handling: since this method runs on the main thread, you should make sure the
-     * paymentMethods/balance/ call and any other long running operation is made on a background thread.
+     * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
+     * operation is made on a background thread.
      *
      * You should eventually call [sendBalanceResult] with a [BalanceDropInServiceResult] containing the result
-     * of the network request. The base class will handle messaging the UI afterwards, based on the
-     * [BalanceDropInServiceResult].
+     * of the network request. Drop-in will be updated then based on the [BalanceDropInServiceResult] you sent.
      *
-     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodData The data from the gift card component.
+     * @param paymentMethodDetails The data from the partial payment method component.
      */
     fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
-        throw NotImplementedError("Method onBalanceCheck is not implemented.")
+        throw MethodNotImplementedException("Method onBalanceCheck is not implemented.")
     }
 
     /**
-     * Only applicable for gift card flow.
+     * Only applicable for partial payments flow.
      *
-     * In this method you should make the network call to tell your server to make a call to the
-     * orders/ endpoint. This method is called when the user is trying to pay a part of the Drop-in amount
-     * using a gift card.
+     * In this method you should make a network call to the /orders endpoint of the Checkout API through your server.
+     * This method is called when the user is trying to pay a part of the Drop-in amount using a partial payment method.
      *
-     * Asynchronous handling: since this method runs on the main thread, you should make sure the orders/
-     * call and any other long running operation is made on a background thread.
+     * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
+     * operation is made on a background thread.
      *
      * You should eventually call [sendOrderResult] with a [OrderDropInServiceResult] containing the result of the
      * network request. The base class will handle messaging the UI afterwards, based on the [OrderDropInServiceResult].
      *
-     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
     fun onOrderRequest() {
-        throw NotImplementedError("Method onOrderRequest is not implemented.")
+        throw MethodNotImplementedException("Method onOrderRequest is not implemented.")
     }
 
     /**
-     * Only applicable for gift card flow.
+     * Only applicable for partial payments flow.
      *
-     * In this method you should make the network call to tell your server to make a call to the
-     * orders/cancel/ endpoint. This method is called during a partial payment, when the user removes
-     * their already paid gift cards either by using the remove button or cancelling Drop-in.
+     * In this method you should make a network call to the /orders/cancel endpoint of the Checkout API through your
+     * server. This method is called during a partial payment, when the user removes their already submitted partial
+     * payments either by using the remove button or cancelling Drop-in.
      *
      * We provide [order], an [Order] object that contains a non-serialized version of the order
      * to be cancelled. Use [Order.SERIALIZER] to serialize it to a [JSONObject].
      *
      * The [shouldUpdatePaymentMethods] flag indicates the next step you should take after the API call
      * is made:
-     * - [true] means that Drop-in is still showing and you should therefore call paymentMethods/
-     * then update Drop-in with the new list of payment methods, by passing [DropInServiceResult.Update] to
+     * - [true] means that Drop-in is still showing and you might want to call /paymentMethods with the new payment
+     * amount. Update Drop-in with the new list of payment methods, by passing [DropInServiceResult.Update] to
      * [sendResult].
-     * - [false] means that Drop-in is being dismissed by the user so there is no need to do any further calls.
+     * - [false] means that Drop-in is being dismissed by the user so there is no need to make any further calls.
      *
-     * Asynchronous handling: since this method runs on the main thread, you should make sure the
-     * paymentMethods/balance/ call and any other long running operation is made on a background thread.
+     * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
+     * operation is made on a background thread.
      *
-     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
      * to be thrown.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -179,6 +148,6 @@ interface DropInServiceContract {
      * @param shouldUpdatePaymentMethods indicates whether payment methods should be re-fetched and passed to Drop-in.
      */
     fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
-        throw NotImplementedError("Method onOrderCancel is not implemented.")
+        throw MethodNotImplementedException("Method onOrderCancel is not implemented.")
     }
 }

@@ -40,8 +40,8 @@ import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
- * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to
- * customize their behavior.
+ * There you will find specific methods to add configurations for each specific component, to be able to customize
+ * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
@@ -133,7 +133,7 @@ class DropInConfiguration private constructor(
          * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in
          * the payment methods screen.
          *
-         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
