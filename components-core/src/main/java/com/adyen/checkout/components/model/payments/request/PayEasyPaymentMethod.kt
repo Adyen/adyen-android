@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.model.payments.request
 
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
@@ -24,6 +25,8 @@ class PayEasyPaymentMethod(
 ) : EContextPaymentMethod() {
 
     companion object {
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.ECONTEXT_ATM
+
         @JvmField
         val SERIALIZER: Serializer<PayEasyPaymentMethod> = object : Serializer<PayEasyPaymentMethod> {
             override fun serialize(modelObject: PayEasyPaymentMethod): JSONObject {
