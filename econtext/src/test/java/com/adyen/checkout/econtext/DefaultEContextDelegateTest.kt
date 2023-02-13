@@ -45,7 +45,7 @@ internal class DefaultEContextDelegateTest(
     @Mock private val submitHandler: SubmitHandler<PaymentComponentState<TestEContextPaymentMethod>>,
 ) {
 
-    private lateinit var delegate: DefaultEContextDelegate<*>
+    private lateinit var delegate: DefaultEContextDelegate<TestEContextPaymentMethod>
 
     @BeforeEach
     fun beforeEach() {
@@ -191,6 +191,33 @@ internal class DefaultEContextDelegateTest(
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
+        }
+
+        @Nested
+        inner class SubmitHandlerTest {
+
+            @Test
+            fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+                val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+                delegate.initialize(coroutineScope)
+                verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+            }
+
+            @Test
+            fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+                runTest {
+                    delegate.setInteractionBlocked(true)
+                    verify(submitHandler).setInteractionBlocked(true)
+                }
+
+            @Test
+            fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+                delegate.componentStateFlow.test {
+                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                    delegate.onSubmit()
+                    verify(submitHandler).onSubmit(expectMostRecentItem())
+                }
+            }
         }
     }
 
