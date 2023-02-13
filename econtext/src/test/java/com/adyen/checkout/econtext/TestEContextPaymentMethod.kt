@@ -11,7 +11,7 @@ package com.adyen.checkout.econtext
 import android.os.Parcel
 import com.adyen.checkout.components.model.payments.request.EContextPaymentMethod
 
-class TestEContextPaymentMethod(
+internal class TestEContextPaymentMethod(
     override var firstName: String? = "firstName",
     override var lastName: String? = "lastName",
     override var telephoneNumber: String? = "telephoneNumber",
