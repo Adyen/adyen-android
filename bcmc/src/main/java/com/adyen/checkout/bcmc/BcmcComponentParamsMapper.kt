@@ -9,20 +9,23 @@
 package com.adyen.checkout.bcmc
 
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
-internal class BcmcComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+internal class BcmcComponentParamsMapper {
 
     fun mapToParams(
         bcmcConfiguration: BcmcConfiguration,
+        overrideComponentParams: ComponentParams? = null,
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): BcmcComponentParams {
         return bcmcConfiguration
-            .mapToParamsInternal()
+            .mapToParamsInternal(sessionSetupConfiguration)
             .override(overrideComponentParams)
     }
 
-    private fun BcmcConfiguration.mapToParamsInternal(): BcmcComponentParams {
+    private fun BcmcConfiguration.mapToParamsInternal(
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
+    ): BcmcComponentParams {
         return BcmcComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -33,7 +36,8 @@ internal class BcmcComponentParamsMapper(
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             isHolderNameRequired = isHolderNameRequired ?: false,
             shopperReference = shopperReference,
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
+            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
+                ?: isStorePaymentFieldVisible ?: false,
         )
     }
 

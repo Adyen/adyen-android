@@ -22,7 +22,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when parent configuration is null and custom ach configuration fields are null then all fields should match`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
 
         val expected = getAchComponentParams()
 
@@ -36,7 +36,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()
-        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
         val expected = getAchComponentParams()
         assertEquals(expected, params)
     }
@@ -57,7 +57,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             )
         )
 
-        val params = ACHDirectDebitComponentParamsMapper(overrideParams).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration, overrideParams)
 
         val expected = getAchComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -82,7 +82,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
         val expected = getAchComponentParams()
 
         assertEquals(expected, params)
@@ -95,7 +95,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
         val expected = getAchComponentParams(addressParams = AddressParams.None)
 
         assertEquals(expected, params)
@@ -105,7 +105,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when the address configuration is null, default address configuration should be FullAddress with default supported countries`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = ACHDirectDebitComponentParamsMapper(null).mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
 
         val expectedAddressParams: AddressParams = AddressParams.FullAddress(
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST,

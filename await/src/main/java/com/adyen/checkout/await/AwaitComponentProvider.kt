@@ -33,10 +33,10 @@ import com.adyen.checkout.core.api.HttpClientFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AwaitComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -67,7 +67,7 @@ class AwaitComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): AwaitDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

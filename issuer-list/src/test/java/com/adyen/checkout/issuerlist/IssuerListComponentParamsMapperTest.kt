@@ -28,7 +28,7 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .build()
 
-        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -57,7 +57,7 @@ internal class IssuerListComponentParamsMapperTest {
             .setSubmitButtonVisible(false)
             .build()
 
-        val params = IssuerListComponentParamsMapper(null).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -99,7 +99,7 @@ internal class IssuerListComponentParamsMapperTest {
             )
         )
 
-        val params = IssuerListComponentParamsMapper(overrideParams).mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration, overrideParams)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.GERMAN,

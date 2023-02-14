@@ -29,10 +29,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class VoucherComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -61,7 +61,7 @@ class VoucherComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): VoucherDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         return DefaultVoucherDelegate(ActionObserverRepository(), componentParams)
     }
 

@@ -154,7 +154,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                         DEFAULT_SUPPORTED_COUNTRY_LIST
                     )
                 ).build()
-            val componentParams = ACHDirectDebitComponentParamsMapper(null).mapToParams(configuration)
+            val componentParams = ACHDirectDebitComponentParamsMapper().mapToParams(configuration)
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = componentParams.shopperLocale,
                 addressParams = componentParams.addressParams,
@@ -535,7 +535,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         addressRepository = addressRepository,
         submitHandler = submitHandler,
         genericEncrypter = genericEncrypter,
-        componentParams = ACHDirectDebitComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ACHDirectDebitComponentParamsMapper().mapToParams(configuration),
         order = order
     )
 

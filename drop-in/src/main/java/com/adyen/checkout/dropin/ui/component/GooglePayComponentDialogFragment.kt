@@ -81,7 +81,8 @@ internal class GooglePayComponentDialogFragment :
                 paymentMethod = paymentMethod,
                 dropInConfiguration = dropInViewModel.dropInConfiguration,
                 amount = dropInViewModel.amount,
-                componentCallback = this
+                componentCallback = this,
+                sessionSetupConfiguration = null
             ) as GooglePayComponent
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

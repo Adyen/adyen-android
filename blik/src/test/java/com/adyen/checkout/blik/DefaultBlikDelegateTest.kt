@@ -227,7 +227,7 @@ internal class DefaultBlikDelegateTest(
         configuration: BlikConfiguration = getDefaultBlikConfigurationBuilder().build()
     ) = DefaultBlikDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         analyticsRepository = analyticsRepository,

@@ -11,12 +11,11 @@ package com.adyen.checkout.components.base
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GenericComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+class GenericComponentParamsMapper {
 
     fun mapToParams(
         configuration: Configuration,
+        overrideComponentParams: ComponentParams? = null
     ): GenericComponentParams {
         return configuration
             .mapToParamsInternal()

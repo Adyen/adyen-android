@@ -27,4 +27,6 @@ data class SessionRequest(
     val threeDS2RequestData: ThreeDS2RequestDataRequest?,
     val shopperEmail: String?,
     val allowedPaymentMethods: List<String>?,
+    val storePaymentMethodMode: String?,
+    val recurringProcessingModel: String?
 )

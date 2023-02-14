@@ -58,7 +58,7 @@ internal class DefaultGooglePayDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
-            componentParams = GooglePayComponentParamsMapper(null).mapToParams(configuration, paymentMethod),
+            componentParams = GooglePayComponentParamsMapper().mapToParams(configuration, paymentMethod),
             analyticsRepository = analyticsRepository,
         )
     }

@@ -29,6 +29,7 @@ import com.adyen.checkout.sessions.model.orders.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.model.orders.SessionOrderResponse
 import com.adyen.checkout.sessions.model.payments.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import com.adyen.checkout.sessions.models.TestPaymentMethod
 import com.adyen.checkout.sessions.repository.SessionRepository
@@ -751,6 +752,7 @@ internal class SessionInteractorTest(
         expiresAt: String = "",
         returnUrl: String = "",
         paymentMethods: PaymentMethodsApiResponse? = PaymentMethodsApiResponse(),
+        configuration: SessionSetupConfiguration? = null
     ): SessionSetupResponse {
         return SessionSetupResponse(
             id = id,
@@ -758,7 +760,8 @@ internal class SessionInteractorTest(
             amount = amount,
             expiresAt = expiresAt,
             paymentMethods = paymentMethods,
-            returnUrl = returnUrl
+            returnUrl = returnUrl,
+            configuration = configuration
         )
     }
 

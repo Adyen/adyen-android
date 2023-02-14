@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IdealComponentProvider(
     overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod>(
     componentClass = IdealComponent::class.java,
     overrideComponentParams = overrideComponentParams,

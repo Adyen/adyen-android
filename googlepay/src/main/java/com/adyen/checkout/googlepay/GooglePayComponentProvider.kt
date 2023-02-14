@@ -42,6 +42,7 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 import com.google.android.gms.common.ConnectionResult
@@ -53,13 +54,14 @@ private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     SessionPaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GooglePayComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -74,7 +76,7 @@ class GooglePayComponentProvider(
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -129,7 +131,7 @@ class GooglePayComponentProvider(
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -207,7 +209,7 @@ class GooglePayComponentProvider(
             return
         }
         val callbackWeakReference = WeakReference(callback)
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
         val paymentsClient = Wallet.getPaymentsClient(
             applicationContext,
             GooglePayUtils.createWalletOptions(componentParams)

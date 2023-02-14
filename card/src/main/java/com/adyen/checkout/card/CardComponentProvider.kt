@@ -47,20 +47,22 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
-    private val componentParamsMapper = CardComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = CardComponentParamsMapper()
 
     @Suppress("LongParameterList", "LongMethod")
     override fun get(
@@ -77,7 +79,12 @@ class CardComponentProvider(
         assertSupported(paymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
+            val componentParams = componentParamsMapper.mapToParamsDefault(
+                configuration,
+                paymentMethod,
+                overrideComponentParams,
+                sessionSetupConfiguration
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -147,7 +154,12 @@ class CardComponentProvider(
         assertSupported(paymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(configuration, paymentMethod)
+            val componentParams = componentParamsMapper.mapToParamsDefault(
+                configuration,
+                paymentMethod,
+                overrideComponentParams,
+                checkoutSession.sessionSetupResponse.configuration
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncrypter = DefaultGenericEncrypter()
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
@@ -235,7 +247,7 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration)
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -297,7 +309,7 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration)
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

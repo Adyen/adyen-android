@@ -45,12 +45,14 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ACHDirectDebitComponentProvider(
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<
         ACHDirectDebitComponent,
@@ -63,9 +65,7 @@ class ACHDirectDebitComponentProvider(
         PaymentComponentState<ACHDirectDebitPaymentMethod>
         > {
 
-    private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(
-        overrideComponentParams = overrideComponentParams
-    )
+    private val componentParamsMapper = ACHDirectDebitComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -80,7 +80,7 @@ class ACHDirectDebitComponentProvider(
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -145,7 +145,7 @@ class ACHDirectDebitComponentProvider(
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

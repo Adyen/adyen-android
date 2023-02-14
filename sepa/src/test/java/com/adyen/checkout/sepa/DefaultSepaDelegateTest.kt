@@ -150,7 +150,7 @@ internal class DefaultSepaDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler
     )

@@ -16,8 +16,12 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 internal class CardComponentParamsMapperTest {
@@ -26,7 +30,7 @@ internal class CardComponentParamsMapperTest {
     fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -66,7 +70,7 @@ internal class CardComponentParamsMapperTest {
             .setAddressConfiguration(addressConfiguration)
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -109,7 +113,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(overrideParams).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod(), overrideParams)
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -139,7 +143,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MAESTRO), CardBrand(cardType = CardType.BCMC))
@@ -159,7 +163,7 @@ internal class CardComponentParamsMapperTest {
                 )
             )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MASTERCARD))
@@ -180,7 +184,7 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, paymentMethod)
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(
@@ -197,10 +201,35 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val params = CardComponentParamsMapper(null).mapToParamsDefault(cardConfiguration, PaymentMethod())
+        val params = CardComponentParamsMapper().mapToParamsDefault(cardConfiguration, PaymentMethod())
 
         val expected = getCardComponentParams(
             supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @ParameterizedTest
+    @MethodSource("sessionSetupConfigurationSource")
+    @Suppress("MaxLineLength")
+    fun `is store payment field visible should match enable store details from session setup response whatever the value of show store payment field inside card configurations`(
+        showStorePaymentField: Boolean,
+        enableStoreDetails: Boolean,
+        isStorePaymentFieldVisible: Boolean
+    ) {
+        val cardConfiguration = getCardConfigurationBuilder()
+            .setShowStorePaymentField(showStorePaymentField)
+            .build()
+
+        val params = CardComponentParamsMapper().mapToParamsDefault(
+            cardConfiguration,
+            PaymentMethod(),
+            sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = enableStoreDetails)
+        )
+
+        val expected = getCardComponentParams(
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible
         )
 
         assertEquals(expected, params)
@@ -253,5 +282,14 @@ internal class CardComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+
+        @JvmStatic
+        fun sessionSetupConfigurationSource() = listOf(
+            // showStorePaymentField, enableStoreDetails, isStorePaymentFieldVisible
+            arguments(false, false, false),
+            arguments(false, true, true),
+            arguments(true, false, false),
+            arguments(true, true, true),
+        )
     }
 }

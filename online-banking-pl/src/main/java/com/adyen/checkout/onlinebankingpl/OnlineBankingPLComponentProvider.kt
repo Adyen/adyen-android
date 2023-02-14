@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingPLComponentProvider(
     overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : IssuerListComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration, OnlineBankingPLPaymentMethod>(
     componentClass = OnlineBankingPLComponent::class.java,
     overrideComponentParams = overrideComponentParams,

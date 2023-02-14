@@ -39,10 +39,10 @@ import kotlinx.coroutines.Dispatchers
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class Adyen3DS2ComponentProvider(
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -72,7 +72,10 @@ class Adyen3DS2ComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): Adyen3DS2Delegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(
+            configuration,
+            overrideComponentParams
+        )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)

@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingCZComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : OnlineBankingComponentProvider<
     OnlineBankingCZComponent,
     OnlineBankingCZConfiguration,

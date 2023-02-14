@@ -44,17 +44,19 @@ import com.adyen.checkout.sessions.SessionComponentEventHandler
 import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.interactor.SessionInteractor
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(
-    overrideComponentParams: ComponentParams? = null,
+    private val overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
     PaymentComponentProvider<BcmcComponent, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>>,
     SessionPaymentComponentProvider<BcmcComponent, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>> {
 
-    private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = BcmcComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -69,7 +71,11 @@ class BcmcComponentProvider(
     ): BcmcComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(
+            configuration,
+            overrideComponentParams,
+            sessionSetupConfiguration
+        )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -132,7 +138,11 @@ class BcmcComponentProvider(
     ): BcmcComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(
+            configuration,
+            overrideComponentParams,
+            checkoutSession.sessionSetupResponse.configuration
+        )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

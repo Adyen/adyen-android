@@ -17,10 +17,12 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EntercashComponentProvider(
     overrideComponentParams: ComponentParams? = null,
+    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) : IssuerListComponentProvider<EntercashComponent, EntercashConfiguration, EntercashPaymentMethod>(
     componentClass = EntercashComponent::class.java,
     overrideComponentParams = overrideComponentParams,

@@ -44,7 +44,7 @@ internal class DefaultRedirectDelegateTest {
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultRedirectDelegate(
             ActionObserverRepository(),
-            GenericComponentParamsMapper(null).mapToParams(configuration),
+            GenericComponentParamsMapper().mapToParams(configuration),
             redirectHandler,
             paymentDataRepository
         )
