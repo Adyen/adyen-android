@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Bankrekening</string>
+    <string name="checkout_ach_bank_account_holder_name">Naam rekeninghouder</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Ongeldige naam rekeninghouder</string>
+    <string name="checkout_ach_bank_account_number">Rekeningnummer</string>
+    <string name="checkout_ach_bank_account_number_invalid">Ongeldig rekeningnummer</string>
+    <string name="checkout_ach_bank_account_location">Routingnummer (ABA)</string>
+    <string name="checkout_ach_bank_account_location_invalid">Ongeldig routingnummer (ABA)</string>
+</resources>

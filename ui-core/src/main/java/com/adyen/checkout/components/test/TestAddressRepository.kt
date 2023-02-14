@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 9/8/2022.
+ * Created by onurk on 7/2/2023.
  */
 
-package com.adyen.checkout.card.test
+package com.adyen.checkout.components.test
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.api.model.AddressItem
@@ -19,7 +19,6 @@ import java.util.Locale
 /**
  * Test implementation of [AddressRepository]. This class should never be used except in test code.
  */
-// TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
 class TestAddressRepository : AddressRepository {
 
@@ -67,6 +66,10 @@ class TestAddressRepository : AddressRepository {
             AddressItem(
                 id = "NL",
                 name = "Netherlands",
+            ),
+            AddressItem(
+                id = "US",
+                name = "The United States of America",
             ),
         )
 

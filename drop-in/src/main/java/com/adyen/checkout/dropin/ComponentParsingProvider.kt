@@ -12,6 +12,9 @@ package com.adyen.checkout.dropin
 
 import android.app.Application
 import androidx.fragment.app.Fragment
+import com.adyen.checkout.ach.ACHDirectDebitComponent
+import com.adyen.checkout.ach.ACHDirectDebitComponentProvider
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
@@ -37,6 +40,7 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPPaymentMethod
@@ -183,6 +187,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<*, *> = when {
+        ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> ACHDirectDebitConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             BacsDirectDebitConfiguration.Builder(
                 shopperLocale = shopperLocale,
@@ -424,6 +433,17 @@ internal fun getComponentFor(
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
+        ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val configuration: ACHDirectDebitConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            ACHDirectDebitComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = configuration,
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+            )
+        }
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)

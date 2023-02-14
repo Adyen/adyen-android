@@ -46,6 +46,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(':ach')
     api project(':action')
     api project(':bacs')
     api project(':bcmc')

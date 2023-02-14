@@ -18,6 +18,7 @@ object PaymentMethodTypes {
     const val UNKNOWN = "unknown"
 
     // Type of the payment method as received by the paymentMethods/ API
+    const val ACH = "ach"
     const val IDEAL = "ideal"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
@@ -86,6 +87,7 @@ object PaymentMethodTypes {
     // List of all payment method types.
     val SUPPORTED_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
+            ACH,
             BCMC,
             DOTPAY,
             ENTERCASH,

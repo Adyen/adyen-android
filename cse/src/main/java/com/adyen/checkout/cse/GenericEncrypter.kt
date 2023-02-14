@@ -19,8 +19,4 @@ interface GenericEncrypter {
     ): String
 
     fun makeGenerationTime(generationTime: Date? = null): String
-
-    companion object {
-        const val KCP_PASSWORD_KEY = "password"
-    }
 }

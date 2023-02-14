@@ -78,6 +78,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
                 PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
                 SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
+                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")
