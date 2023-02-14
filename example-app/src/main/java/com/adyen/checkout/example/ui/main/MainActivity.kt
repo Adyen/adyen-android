@@ -22,7 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
-import com.adyen.checkout.dropin.DropInResult
+import com.adyen.checkout.dropin.SessionDropInCallback
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleAdvancedDropInService
@@ -39,12 +39,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DropInCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
-    private val dropInLauncher = DropIn.registerForDropInResult(this, this)
+    private val dropInLauncher = DropIn.registerForDropInResult(
+        this,
+        DropInCallback { dropInResult -> viewModel.onDropInResult(dropInResult) }
+    )
+
+    private val sessionDropInLauncher = DropIn.registerForDropInResult(
+        this,
+        SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) }
+    )
 
     private var componentItemAdapter: ComponentItemAdapter? = null
 
@@ -89,8 +97,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDropInResult(dropInResult: DropInResult?) = viewModel.onDropInResult(dropInResult)
-
     private fun onViewState(viewState: MainViewState) {
         when (viewState) {
             MainViewState.Loading -> setLoading(true)
@@ -122,7 +128,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             is MainNavigation.DropInWithSession -> {
                 DropIn.startPayment(
                     this,
-                    dropInLauncher,
+                    sessionDropInLauncher,
                     navigation.checkoutSession,
                     navigation.dropInConfiguration,
                 )
@@ -130,7 +136,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             is MainNavigation.DropInWithCustomSession -> {
                 DropIn.startPayment(
                     this,
-                    dropInLauncher,
+                    sessionDropInLauncher,
                     navigation.checkoutSession,
                     navigation.dropInConfiguration,
                     ExampleSessionsDropInService::class.java

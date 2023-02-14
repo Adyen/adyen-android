@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 2/8/2021.
+ * Created by josephj on 14/2/2023.
  */
 
 package com.adyen.checkout.dropin
@@ -15,33 +15,34 @@ import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.adyen.checkout.dropin.ui.DropInActivity
 
-internal class DropInResultContract : ActivityResultContract<DropInResultContractParams, DropInResult?>() {
-    override fun createIntent(context: Context, input: DropInResultContractParams): Intent {
+internal class SessionDropInResultContract :
+    ActivityResultContract<SessionDropInResultContractParams, SessionDropInResult?>() {
+    override fun createIntent(context: Context, input: SessionDropInResultContractParams): Intent {
         return DropInActivity.createIntent(
             context = context,
             dropInConfiguration = input.dropInConfiguration,
-            paymentMethodsApiResponse = input.paymentMethodsApiResponse,
+            checkoutSession = input.checkoutSession,
             service = ComponentName(context, input.serviceClass),
         )
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): DropInResult? {
+    override fun parseResult(resultCode: Int, intent: Intent?): SessionDropInResult? {
         return handleActivityResult(resultCode, intent)
     }
 
-    private fun handleActivityResult(resultCode: Int, data: Intent?): DropInResult? {
+    private fun handleActivityResult(resultCode: Int, data: Intent?): SessionDropInResult? {
         return when {
             data == null -> null
             resultCode == Activity.RESULT_CANCELED && data.hasExtra(DropIn.ERROR_REASON_KEY) -> {
                 val reason = data.getStringExtra(DropIn.ERROR_REASON_KEY) ?: ""
                 if (reason == DropIn.ERROR_REASON_USER_CANCELED) {
-                    DropInResult.CancelledByUser()
+                    SessionDropInResult.CancelledByUser()
                 } else {
-                    DropInResult.Error(reason)
+                    SessionDropInResult.Error(reason)
                 }
             }
             resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.RESULT_KEY) -> {
-                DropInResult.Finished(data.getStringExtra(DropIn.RESULT_KEY) ?: "")
+                SessionDropInResult.Finished(data.getStringExtra(DropIn.RESULT_KEY) ?: "")
             }
             else -> null
         }

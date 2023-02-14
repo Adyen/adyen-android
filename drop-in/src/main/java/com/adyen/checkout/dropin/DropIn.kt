@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.dropin
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
@@ -22,7 +20,6 @@ import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInService
-import com.adyen.checkout.dropin.ui.DropInActivity
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
 
@@ -65,9 +62,9 @@ object DropIn {
     @JvmStatic
     fun registerForDropInResult(
         caller: ActivityResultCaller,
-        callback: DropInCallback
-    ): ActivityResultLauncher<Intent> {
-        return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+        callback: SessionDropInCallback
+    ): ActivityResultLauncher<SessionDropInResultContractParams> {
+        return caller.registerForActivityResult(SessionDropInResultContract(), callback::onDropInResult)
     }
 
     /**
@@ -92,19 +89,44 @@ object DropIn {
     @JvmStatic
     fun startPayment(
         context: Context,
-        dropInLauncher: ActivityResultLauncher<Intent>,
+        dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
         checkoutSession: CheckoutSession,
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
         Logger.d(TAG, "startPayment with sessions")
-        val intent = DropInActivity.createIntent(
-            context,
+        val sessionDropInResultContractParams = SessionDropInResultContractParams(
             dropInConfiguration,
             checkoutSession,
-            getComponentName(context, serviceClass),
+            serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, intent)
+        startPayment(context, dropInLauncher, dropInConfiguration, sessionDropInResultContractParams)
+    }
+
+    /**
+     * Register your Activity or Fragment with the Activity Result API and receive the final Drop-in result using the
+     * [DropInCallback].
+     *
+     * This *must* be called unconditionally, as part of the initialization path, typically as a field initializer of an
+     * Activity or Fragment.
+     *
+     * You will receive the Drop-in result in the [DropInCallback.onDropInResult] method. This method can return one of
+     * these three results:
+     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
+     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
+     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error has occurred.
+     *
+     * @param caller The class that needs to launch Drop-in and receive its callback.
+     * @param callback Callback for the Drop-in result.
+     *
+     * @return The [ActivityResultLauncher] required to receive the result of Drop-in.
+     */
+    @JvmStatic
+    fun registerForDropInResult(
+        caller: ActivityResultCaller,
+        callback: DropInCallback
+    ): ActivityResultLauncher<DropInResultContractParams> {
+        return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
     }
 
     /**
@@ -128,35 +150,32 @@ object DropIn {
     @JvmStatic
     fun startPayment(
         context: Context,
-        dropInLauncher: ActivityResultLauncher<Intent>,
+        dropInLauncher: ActivityResultLauncher<DropInResultContractParams>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out DropInService>,
     ) {
         Logger.d(TAG, "startPayment with payment methods")
-        val intent = DropInActivity.createIntent(
-            context,
+        val dropInResultContractParams = DropInResultContractParams(
             dropInConfiguration,
             paymentMethodsApiResponse,
-            getComponentName(context, serviceClass),
+            serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, intent)
+        startPayment(context, dropInLauncher, dropInConfiguration, dropInResultContractParams)
     }
 
-    private fun startPayment(
+    private fun <T> startPayment(
         context: Context,
-        dropInLauncher: ActivityResultLauncher<Intent>,
+        dropInLauncher: ActivityResultLauncher<T>,
         dropInConfiguration: DropInConfiguration,
-        intent: Intent,
+        params: T,
     ) {
         updateDefaultLogcatLevel(context)
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
-        dropInLauncher.launch(intent)
+        dropInLauncher.launch(params)
     }
 
     private fun updateDefaultLogcatLevel(context: Context) {
         Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
     }
-
-    private fun getComponentName(context: Context, serviceClass: Class<*>) = ComponentName(context, serviceClass)
 }
