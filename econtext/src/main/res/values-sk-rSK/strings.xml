@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Krstné meno</string>
+    <string name="checkout_econtext_last_name_hint">Priezvisko</string>
+    <string name="checkout_econtext_phone_number_hint">Telefónne číslo</string>
+    <string name="checkout_econtext_shopper_email_hint">E-mailová adresa</string>
+
+    <string name="checkout_econtext_first_name_invalid">Meno nie je platné</string>
+    <string name="checkout_econtext_last_name_invalid">Priezvisko nie je platné</string>
+    <string name="checkout_econtext_phone_number_invalid">Neplatné telefónne číslo</string>
+    <string name="checkout_econtext_shopper_email_invalid">Neplatná emailová adresa</string>
+</resources>

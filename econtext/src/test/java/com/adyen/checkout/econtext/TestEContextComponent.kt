@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ozgur on 13/2/2023.
+ */
+
+package com.adyen.checkout.econtext
+
+import com.adyen.checkout.action.DefaultActionHandlingComponent
+import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
+
+internal class TestEContextComponent internal constructor(
+    delegate: EContextDelegate<TestEContextPaymentMethod>,
+    genericActionDelegate: GenericActionDelegate,
+    actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<TestEContextPaymentMethod>>,
+) : EContextComponent<TestEContextPaymentMethod>(
+    delegate,
+    genericActionDelegate,
+    actionHandlingComponent,
+    componentEventHandler
+) {
+
+    // This method is needed for testing purposes
+    @Suppress("RedundantOverride")
+    override fun onCleared() {
+        super.onCleared()
+    }
+}

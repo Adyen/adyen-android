@@ -106,9 +106,9 @@ object PaymentMethodTypes {
             BLIK,
             WECHAT_PAY_SDK,
             PAY_NOW,
-            PIX,
             ONLINE_BANKING_CZ,
-            ONLINE_BANKING_PL
+            ONLINE_BANKING_PL,
+            PIX,
         )
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
@@ -140,6 +140,10 @@ object PaymentMethodTypes {
             DOKU_BNI_VA,
             DOKU_BCA_VA,
             DOKU_WALLET,
+            ECONTEXT_ATM,
+            ECONTEXT_ONLINE,
+            ECONTEXT_SEVEN_ELEVEN,
+            ECONTEXT_STORES,
             BOLETOBANCARIO,
             BOLETOBANCARIO_BANCODOBRASIL,
             BOLETOBANCARIO_BRADESCO,
@@ -150,10 +154,6 @@ object PaymentMethodTypes {
             DRAGONPAY_OTC_BANKING,
             DRAGONPAY_OTC_NON_BANKING,
             DRAGONPAY_OTC_PHILIPPINES,
-            ECONTEXT_SEVEN_ELEVEN,
-            ECONTEXT_ATM,
-            ECONTEXT_STORES,
-            ECONTEXT_ONLINE
         )
     )
 }

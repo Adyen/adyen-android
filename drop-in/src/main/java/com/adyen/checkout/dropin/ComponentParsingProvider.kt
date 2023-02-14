@@ -39,6 +39,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
@@ -46,13 +47,19 @@ import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PayEasyPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentProvider
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -88,6 +95,9 @@ import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentProvider
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
@@ -100,9 +110,15 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
+import com.adyen.checkout.payeasy.PayEasyComponent
+import com.adyen.checkout.payeasy.PayEasyComponentProvider
+import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.seveneleven.SevenElevenComponent
+import com.adyen.checkout.seveneleven.SevenElevenComponentProvider
+import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
@@ -188,6 +204,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
+        ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
+            ConvenienceStoresJPConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> DotpayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -240,6 +262,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
                 environment = environment,
                 clientKey = clientKey
             )
+        OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
+            OnlineBankingJPConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingPLConfiguration.Builder(
                 shopperLocale = shopperLocale,
@@ -262,7 +290,17 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
+        PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> PayEasyConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SepaConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+        SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SevenElevenConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -426,6 +464,17 @@ internal fun getComponentFor(
                 componentCallback = componentCallback as ComponentCallback<CardComponentState>,
             )
         }
+        ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            ConvenienceStoresJPComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = convenienceStoresJPConfiguration,
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<ConvenienceStoresJPPaymentMethod>>,
+            )
+        }
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -528,6 +577,17 @@ internal fun getComponentFor(
                     as ComponentCallback<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
             )
         }
+        OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val onlineBankingJPConfig: OnlineBankingJPConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            OnlineBankingJPComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = onlineBankingJPConfig,
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<OnlineBankingJPPaymentMethod>>,
+            )
+        }
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -572,6 +632,16 @@ internal fun getComponentFor(
                     as ComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
             )
         }
+        PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val payEasyConfiguration: PayEasyConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            PayEasyComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = payEasyConfiguration,
+                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<PayEasyPaymentMethod>>,
+            )
+        }
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val sepaConfiguration: SepaConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -580,6 +650,17 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
                 componentCallback = componentCallback as ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+            )
+        }
+        SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val sevenElevenConfiguration: SevenElevenConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            SevenElevenComponentProvider(dropInParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = sevenElevenConfiguration,
+                componentCallback = componentCallback
+                    as ComponentCallback<PaymentComponentState<SevenElevenPaymentMethod>>,
             )
         }
         else -> {
