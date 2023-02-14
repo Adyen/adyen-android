@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.adyen.checkout.dropin.ui.DropInActivity
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 
 internal class SessionDropInResultContract :
     ActivityResultContract<SessionDropInResultContractParams, SessionDropInResult?>() {
@@ -41,8 +42,19 @@ internal class SessionDropInResultContract :
                     SessionDropInResult.Error(reason)
                 }
             }
+            resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.SESSION_RESULT_KEY) -> {
+                SessionDropInResult.Finished(requireNotNull(data.getParcelableExtra(DropIn.SESSION_RESULT_KEY)))
+            }
             resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.RESULT_KEY) -> {
-                SessionDropInResult.Finished(data.getStringExtra(DropIn.RESULT_KEY) ?: "")
+                val result = data.getStringExtra(DropIn.RESULT_KEY)
+                SessionDropInResult.Finished(
+                    SessionPaymentResult(
+                        sessionResult = null,
+                        sessionData = null,
+                        resultCode = result,
+                        order = null,
+                    )
+                )
             }
             else -> null
         }

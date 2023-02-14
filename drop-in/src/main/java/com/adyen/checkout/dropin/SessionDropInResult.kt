@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInService
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 
 /**
  * A class that contains the final result of Drop-in.
@@ -26,8 +27,8 @@ sealed class SessionDropInResult {
      *
      * Two scenarios could trigger this result:
      * - An exception occurred during Drop-in.
-     * - [DropInServiceResult.Error] was returned in [SessionDropInService]. In this case, the [reason]
-     * parameter will have the same value as [DropInServiceResult.Error.reason].
+     * - [DropInServiceResult.Error] was returned in your implementation of [SessionDropInService]. In this case, the
+     * [reason] parameter will have the same value as [DropInServiceResult.Error.reason].
      *
      * @param reason The reason of the error.
      */
@@ -39,5 +40,5 @@ sealed class SessionDropInResult {
      *
      * @param result The result of Drop-in.
      */
-    class Finished(val result: String) : SessionDropInResult()
+    class Finished(val result: SessionPaymentResult) : SessionDropInResult()
 }

@@ -30,10 +30,7 @@ import kotlinx.coroutines.launch
  * Adyen Checkout APIs through your backend. Note that once you take over the sessions flow you have to handle the rest
  * of the network calls yourself.
  *
- * Make sure you define add your subclass of this [DropInService] in your manifest file.
- *
- * You need to implement the [onSubmit] and [onAdditionalDetails] with this service. The rest of the methods are
- * optional.
+ * Make sure you define add your subclass of this [SessionDropInService] in your manifest file.
  */
 open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
@@ -90,7 +87,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
+                is SessionCallResult.Payments.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(reason = "Payment is refused while making a partial payment.")
@@ -116,7 +113,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
+                is SessionCallResult.Details.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
                 SessionCallResult.Details.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
                     return@launch

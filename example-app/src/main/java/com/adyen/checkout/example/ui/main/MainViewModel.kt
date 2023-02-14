@@ -179,7 +179,7 @@ internal class MainViewModel @Inject constructor(
         val message = when (sessionDropInResult) {
             is SessionDropInResult.CancelledByUser -> "Canceled by user"
             is SessionDropInResult.Error -> sessionDropInResult.reason ?: "DropInResult is error without reason"
-            is SessionDropInResult.Finished -> sessionDropInResult.result
+            is SessionDropInResult.Finished -> sessionDropInResult.result.resultCode ?: "Result code is null"
             null -> "DropInResult is null"
         }
         _eventFlow.tryEmit(MainEvent.Toast(message))
