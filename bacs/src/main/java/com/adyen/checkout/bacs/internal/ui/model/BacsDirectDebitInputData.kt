@@ -6,11 +6,12 @@
  * Created by ozgur on 2/11/2021.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui.model
 
+import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.components.base.InputData
 
-data class BacsDirectDebitInputData(
+internal data class BacsDirectDebitInputData(
     var holderName: String = "",
     var bankAccountNumber: String = "",
     var sortCode: String = "",

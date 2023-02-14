@@ -1,19 +1,21 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 18/11/2021.
+ * Created by oscars on 15/2/2023.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitConfirmationViewBinding
+import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.ui.ComponentView

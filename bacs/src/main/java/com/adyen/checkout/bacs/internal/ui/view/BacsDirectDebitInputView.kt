@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 2/11/2021.
+ * Created by oscars on 15/2/2023.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,9 +15,12 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
-import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.base.ButtonComponentParams
+import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
@@ -33,8 +36,6 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
-private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
 internal class BacsDirectDebitInputView @JvmOverloads constructor(
@@ -303,3 +304,5 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     override fun getView(): View = this
 }
+
+private val TAG = LogUtil.getTag()

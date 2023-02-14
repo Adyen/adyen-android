@@ -16,9 +16,9 @@ import com.adyen.checkout.ach.ACHDirectDebitComponent
 import com.adyen.checkout.ach.ACHDirectDebitComponentProvider
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.bacs.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration

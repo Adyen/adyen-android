@@ -6,12 +6,13 @@
  * Created by ozgur on 2/11/2021.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui.model
 
+import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
-data class BacsDirectDebitOutputData(
+internal data class BacsDirectDebitOutputData(
     val holderNameState: FieldState<String>,
     val bankAccountNumberState: FieldState<String>,
     val sortCodeState: FieldState<String>,
