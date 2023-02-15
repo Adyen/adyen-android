@@ -6,9 +6,12 @@
  * Created by atef on 22/8/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate

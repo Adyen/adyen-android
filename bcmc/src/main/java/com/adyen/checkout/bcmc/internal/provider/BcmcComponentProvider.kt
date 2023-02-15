@@ -5,7 +5,8 @@
  *
  * Created by arman on 18/9/2019.
  */
-package com.adyen.checkout.bcmc
+
+package com.adyen.checkout.bcmc.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -15,6 +16,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
+import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.bcmc.internal.ui.DefaultBcmcDelegate
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState

@@ -6,7 +6,7 @@
  * Created by oscars on 29/9/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -17,7 +17,9 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
+import com.adyen.checkout.bcmc.R
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
+import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.isVisible

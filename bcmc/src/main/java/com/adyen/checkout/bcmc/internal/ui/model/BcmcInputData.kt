@@ -5,12 +5,12 @@
  *
  * Created by caiof on 27/8/2020.
  */
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.base.InputData
 
-data class BcmcInputData(
+internal data class BcmcInputData(
     var cardNumber: String = "",
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
     var cardHolderName: String = "",

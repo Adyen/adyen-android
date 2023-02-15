@@ -6,10 +6,11 @@
  * Created by oscars on 29/9/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.bcmc.internal.ui.view.BcmcView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType

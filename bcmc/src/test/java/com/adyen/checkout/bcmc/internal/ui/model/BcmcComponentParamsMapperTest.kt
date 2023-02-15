@@ -6,8 +6,9 @@
  * Created by josephj on 17/11/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui.model
 
+import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
