@@ -100,8 +100,8 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
-import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
+import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration

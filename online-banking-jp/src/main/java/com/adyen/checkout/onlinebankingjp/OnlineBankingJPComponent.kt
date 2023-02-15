@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPayme
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 
 class OnlineBankingJPComponent internal constructor(
     delegate: EContextDelegate<OnlineBankingJPPaymentMethod>,
