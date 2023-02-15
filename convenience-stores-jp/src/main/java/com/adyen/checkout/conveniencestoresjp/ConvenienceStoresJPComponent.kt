@@ -16,7 +16,7 @@ import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPP
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
 import com.adyen.checkout.econtext.EContextComponent
-import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
 class ConvenienceStoresJPComponent internal constructor(
     delegate: EContextDelegate<ConvenienceStoresJPPaymentMethod>,

@@ -6,7 +6,7 @@
  * Created by ozgur on 25/1/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.PaymentComponentState
@@ -21,6 +21,9 @@ import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.econtext.TestEContextConfiguration
+import com.adyen.checkout.econtext.TestEContextPaymentMethod
+import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
