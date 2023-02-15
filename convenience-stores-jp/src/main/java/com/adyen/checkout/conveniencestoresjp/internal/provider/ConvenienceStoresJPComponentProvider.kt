@@ -6,7 +6,7 @@
  * Created by ozgur on 20/1/2023.
  */
 
-package com.adyen.checkout.conveniencestoresjp
+package com.adyen.checkout.conveniencestoresjp.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -15,6 +15,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPPaymentMethod
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.econtext.EContextComponentProvider
 import com.adyen.checkout.econtext.EContextDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
