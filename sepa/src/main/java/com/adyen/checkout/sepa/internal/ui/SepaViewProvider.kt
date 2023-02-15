@@ -6,7 +6,7 @@
  * Created by josephj on 5/9/2022.
  */
 
-package com.adyen.checkout.sepa
+package com.adyen.checkout.sepa.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,6 +15,7 @@ import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.sepa.internal.ui.view.SepaView
 
 internal object SepaViewProvider : ViewProvider {
 

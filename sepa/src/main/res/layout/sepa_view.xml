@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.sepa.ui.IbanInput
+        <com.adyen.checkout.sepa.internal.ui.view.IbanInput
             android:id="@+id/editText_ibanNumber"
             style="@style/AdyenCheckout.Sepa.AccountNumberInput"
             tools:ignore="RequiredSize" />

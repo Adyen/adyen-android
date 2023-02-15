@@ -5,11 +5,11 @@
  *
  * Created by caiof on 22/8/2019.
  */
-package com.adyen.checkout.sepa
+package com.adyen.checkout.sepa.internal.ui.model
 
 import com.adyen.checkout.components.base.InputData
 
-data class SepaInputData(
+internal data class SepaInputData(
     var name: String = "",
     var iban: String = "",
 ) : InputData

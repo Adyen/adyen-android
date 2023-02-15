@@ -118,7 +118,7 @@ import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentProvider
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaComponent
-import com.adyen.checkout.sepa.SepaComponentProvider
+import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent

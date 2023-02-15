@@ -5,7 +5,7 @@
  *
  * Created by josephj on 30/9/2022.
  */
-package com.adyen.checkout.sepa
+package com.adyen.checkout.sepa.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -21,7 +21,10 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sepa.R
 import com.adyen.checkout.sepa.databinding.SepaViewBinding
+import com.adyen.checkout.sepa.internal.ui.SepaDelegate
+import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import kotlinx.coroutines.CoroutineScope
 
 internal class SepaView @JvmOverloads constructor(

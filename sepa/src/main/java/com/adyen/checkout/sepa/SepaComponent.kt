@@ -29,6 +29,8 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
+import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
+import com.adyen.checkout.sepa.internal.ui.SepaDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**
