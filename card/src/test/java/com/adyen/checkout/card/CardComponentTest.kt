@@ -13,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.card.internal.ui.CardComponentViewType
+import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType

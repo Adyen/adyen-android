@@ -8,15 +8,13 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.data.CardBrand
-import com.adyen.checkout.card.data.CardType
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class CardTypeTest {
+internal class CardTypeTest {
 
     @Test
     fun `test if card number is not part of predefined card brand enum`() {

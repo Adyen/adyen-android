@@ -11,10 +11,10 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.data.CardBrand
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData

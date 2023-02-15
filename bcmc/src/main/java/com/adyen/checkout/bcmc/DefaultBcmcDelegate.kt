@@ -10,12 +10,12 @@ package com.adyen.checkout.bcmc
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.card.CardValidationMapper
+import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.api.model.Brand
-import com.adyen.checkout.card.data.CardBrand
-import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
