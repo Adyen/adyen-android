@@ -15,8 +15,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
-import com.adyen.checkout.onlinebankingcore.OnlineBankingComponentProvider
-import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

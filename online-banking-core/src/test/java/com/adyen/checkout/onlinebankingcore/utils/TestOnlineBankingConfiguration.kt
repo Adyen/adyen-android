@@ -19,7 +19,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-class TestOnlineBankingConfiguration private constructor(
+internal class TestOnlineBankingConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

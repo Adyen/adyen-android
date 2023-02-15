@@ -17,7 +17,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
-import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 
 class OnlineBankingCZComponent internal constructor(

@@ -13,7 +13,7 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
-import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 
 internal class TestOnlineBankingComponent internal constructor(
     delegate: OnlineBankingDelegate<TestOnlineBankingPaymentMethod>,
