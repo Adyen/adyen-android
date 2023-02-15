@@ -1,4 +1,12 @@
-package com.adyen.checkout.sepa
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ozgur on 19/7/2022.
+ */
+
+package com.adyen.checkout.sepa.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -19,6 +27,8 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
+import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

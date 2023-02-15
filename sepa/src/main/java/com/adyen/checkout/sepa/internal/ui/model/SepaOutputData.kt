@@ -5,14 +5,15 @@
  *
  * Created by caiof on 22/8/2019.
  */
-package com.adyen.checkout.sepa
+package com.adyen.checkout.sepa.internal.ui.model
 
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.sepa.Iban.Companion.parse
+import com.adyen.checkout.sepa.R
+import com.adyen.checkout.sepa.internal.ui.model.Iban.Companion.parse
 
-class SepaOutputData(ownerName: String, ibanNumber: String) : OutputData {
+internal class SepaOutputData(ownerName: String, ibanNumber: String) : OutputData {
 
     val ownerNameField: FieldState<String> = FieldState(
         value = ownerName,

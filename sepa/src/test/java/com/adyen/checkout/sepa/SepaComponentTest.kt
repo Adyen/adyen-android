@@ -19,6 +19,8 @@ import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sepa.internal.ui.SepaComponentViewType
+import com.adyen.checkout.sepa.internal.ui.SepaDelegate
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import kotlinx.coroutines.ExperimentalCoroutinesApi

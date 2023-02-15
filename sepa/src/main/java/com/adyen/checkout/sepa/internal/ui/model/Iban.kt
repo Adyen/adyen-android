@@ -5,7 +5,7 @@
  *
  * Created by timon on 13/08/2017.
  */
-package com.adyen.checkout.sepa
+package com.adyen.checkout.sepa.internal.ui.model
 
 import java.math.BigInteger
 import java.util.Arrays
@@ -13,7 +13,7 @@ import java.util.Collections
 import java.util.Locale
 import java.util.regex.Pattern
 
-class Iban private constructor(val value: String) {
+internal class Iban private constructor(val value: String) {
 
     @Suppress("MemberVisibilityCanBePrivate")
     val countryCode: String = value.substring(0, COUNTRY_CODE_POSITION_END)
