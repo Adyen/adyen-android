@@ -6,7 +6,7 @@
  * Created by ozgur on 18/1/2023.
  */
 
-package com.adyen.checkout.seveneleven
+package com.adyen.checkout.seveneleven.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -18,6 +18,8 @@ import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMe
 import com.adyen.checkout.econtext.EContextComponentProvider
 import com.adyen.checkout.econtext.EContextDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
+import com.adyen.checkout.seveneleven.SevenElevenComponent
+import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SevenElevenComponentProvider(

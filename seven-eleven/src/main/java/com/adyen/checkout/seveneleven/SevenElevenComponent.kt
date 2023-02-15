@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMe
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 
 class SevenElevenComponent internal constructor(
     delegate: EContextDelegate<SevenElevenPaymentMethod>,

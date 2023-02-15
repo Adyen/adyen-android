@@ -122,8 +122,8 @@ import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
-import com.adyen.checkout.seveneleven.SevenElevenComponentProvider
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
