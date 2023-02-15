@@ -6,8 +6,9 @@
  * Created by josephj on 17/11/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui.model
 
+import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 

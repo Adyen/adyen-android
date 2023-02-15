@@ -6,14 +6,18 @@
  * Created by oscars on 8/7/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParams
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcInputData
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentEvent

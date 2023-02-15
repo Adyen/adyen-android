@@ -20,7 +20,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bcmc.BcmcComponent
-import com.adyen.checkout.bcmc.BcmcComponentProvider
+import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentProvider

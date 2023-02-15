@@ -6,9 +6,8 @@
  * Created by josephj on 15/11/2022.
  */
 
-package com.adyen.checkout.bcmc
+package com.adyen.checkout.bcmc.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
@@ -17,8 +16,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class BcmcComponentParams(
+internal data class BcmcComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
