@@ -6,10 +6,13 @@
  * Created by josephj on 28/9/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.bacs.R
+import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitConfirmationView
+import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitInputView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType

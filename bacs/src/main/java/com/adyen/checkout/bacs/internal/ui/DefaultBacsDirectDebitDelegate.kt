@@ -6,10 +6,14 @@
  * Created by oscars on 6/7/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.bacs.BacsDirectDebitComponentState
+import com.adyen.checkout.bacs.BacsDirectDebitMode
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitInputData
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParams
@@ -166,8 +170,7 @@ internal class DefaultBacsDirectDebitDelegate(
 
     private fun createOutputData() = BacsDirectDebitOutputData(
         holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-        bankAccountNumberState = BacsDirectDebitValidationUtils
-            .validateBankAccountNumber(inputData.bankAccountNumber),
+        bankAccountNumberState = BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
         sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
         shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
         isAmountConsentChecked = inputData.isAmountConsentChecked,

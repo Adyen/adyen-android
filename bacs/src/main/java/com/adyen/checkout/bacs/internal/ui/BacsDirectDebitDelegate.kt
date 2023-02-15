@@ -6,8 +6,12 @@
  * Created by oscars on 6/7/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui
 
+import com.adyen.checkout.bacs.BacsDirectDebitComponentState
+import com.adyen.checkout.bacs.BacsDirectDebitMode
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitInputData
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ButtonDelegate
@@ -15,7 +19,7 @@ import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-interface BacsDirectDebitDelegate :
+internal interface BacsDirectDebitDelegate :
     PaymentComponentDelegate<BacsDirectDebitComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 9/11/2021.
+ * Created by oscars on 15/2/2023.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal.ui
 
+import com.adyen.checkout.bacs.R
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.ValidationUtils
@@ -15,7 +16,7 @@ import com.adyen.checkout.components.util.ValidationUtils
 private const val BANK_ACCOUNT_NUMBER_LENGTH = 8
 private const val SORT_CODE_LENGTH = 6
 
-object BacsDirectDebitValidationUtils {
+internal object BacsDirectDebitValidationUtils {
 
     fun validateHolderName(holderName: String): FieldState<String> {
         return if (holderName.isBlank()) {

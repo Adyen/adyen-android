@@ -6,9 +6,16 @@
  * Created by atef on 18/8/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.bacs.internal
 
 import app.cash.turbine.test
+import com.adyen.checkout.bacs.BacsDirectDebitComponentState
+import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.BacsDirectDebitMode
+import com.adyen.checkout.bacs.R
+import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
+import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
+import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
