@@ -5,7 +5,7 @@
  *
  * Created by caiof on 21/8/2019.
  */
-package com.adyen.checkout.adyen3ds2.exception
+package com.adyen.checkout.adyen3ds2
 
 import com.adyen.checkout.core.exception.ComponentException
 

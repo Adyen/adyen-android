@@ -6,10 +6,10 @@
  * Created by josephj on 21/5/2021.
  */
 
-package com.adyen.checkout.adyen3ds2.repository
+package com.adyen.checkout.adyen3ds2.internal.data.api
 
-import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
-import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.core.log.LogUtil
@@ -17,7 +17,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import org.json.JSONObject
 
-class SubmitFingerprintRepository internal constructor(
+internal class SubmitFingerprintRepository internal constructor(
     private val submitFingerprintService: SubmitFingerprintService
 ) {
 

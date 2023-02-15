@@ -12,7 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate

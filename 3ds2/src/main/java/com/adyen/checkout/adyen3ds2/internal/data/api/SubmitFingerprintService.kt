@@ -6,10 +6,10 @@
  * Created by josephj on 29/4/2021.
  */
 
-package com.adyen.checkout.adyen3ds2.connection
+package com.adyen.checkout.adyen3ds2.internal.data.api
 
-import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
-import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintResponse
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResponse
 import com.adyen.checkout.core.api.HttpClient
 import com.adyen.checkout.core.api.post
 import kotlinx.coroutines.Dispatchers

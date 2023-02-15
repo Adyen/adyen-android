@@ -6,7 +6,7 @@
  * Created by josephj on 21/5/2021.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -15,8 +15,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
-import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
+import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintService
+import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
