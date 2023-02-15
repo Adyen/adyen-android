@@ -115,8 +115,8 @@ import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.payeasy.PayEasyComponent
-import com.adyen.checkout.payeasy.PayEasyComponentProvider
 import com.adyen.checkout.payeasy.PayEasyConfiguration
+import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration

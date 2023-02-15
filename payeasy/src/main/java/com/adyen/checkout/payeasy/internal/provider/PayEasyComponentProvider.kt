@@ -6,7 +6,7 @@
  * Created by ozgur on 19/1/2023.
  */
 
-package com.adyen.checkout.payeasy
+package com.adyen.checkout.payeasy.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -17,6 +17,8 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.PayEasyPaymentMethod
 import com.adyen.checkout.econtext.EContextComponentProvider
 import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.payeasy.PayEasyComponent
+import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
