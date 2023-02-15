@@ -106,8 +106,8 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
-import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
+import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
