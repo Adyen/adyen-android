@@ -6,17 +6,19 @@
  * Created by oscars on 24/8/2022.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
-import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
-import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
-import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
+import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
+import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.encoding.JavaBase64Encoder

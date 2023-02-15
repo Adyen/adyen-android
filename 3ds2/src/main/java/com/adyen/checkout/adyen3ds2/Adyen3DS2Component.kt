@@ -12,6 +12,8 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.adyen3ds2.internal.provider.Adyen3DS2ComponentProvider
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider

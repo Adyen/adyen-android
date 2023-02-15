@@ -6,7 +6,7 @@
  * Created by josephj on 29/4/2021.
  */
 
-package com.adyen.checkout.adyen3ds2.model
+package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.ModelSerializationException
@@ -18,7 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class SubmitFingerprintResponse(
+internal data class SubmitFingerprintResponse(
     val action: Action?,
     val type: String?,
     val details: String?

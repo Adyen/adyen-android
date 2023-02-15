@@ -5,7 +5,7 @@
  *
  * Created by caiof on 10/5/2019.
  */
-package com.adyen.checkout.adyen3ds2.model
+package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class ChallengeToken(
+internal data class ChallengeToken(
     var acsReferenceNumber: String? = null,
     var acsSignedContent: String? = null,
     var acsTransID: String? = null,

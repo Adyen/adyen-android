@@ -5,7 +5,7 @@
  *
  * Created by caiof on 7/5/2019.
  */
-package com.adyen.checkout.adyen3ds2.model
+package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class FingerprintToken(
+internal data class FingerprintToken(
     val directoryServerId: String? = null,
     val directoryServerPublicKey: String? = null,
     val threeDSServerTransID: String? = null,

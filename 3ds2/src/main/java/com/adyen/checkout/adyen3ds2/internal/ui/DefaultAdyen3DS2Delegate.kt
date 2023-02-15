@@ -6,7 +6,7 @@
  * Created by oscars on 22/8/2022.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.app.Activity
 import android.app.Application
@@ -14,12 +14,13 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
-import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
-import com.adyen.checkout.adyen3ds2.model.ChallengeToken
-import com.adyen.checkout.adyen3ds2.model.FingerprintToken
-import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
-import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
+import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
+import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
+import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
+import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
+import com.adyen.checkout.adyen3ds2.internal.data.model.FingerprintToken
+import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.GenericComponentParams

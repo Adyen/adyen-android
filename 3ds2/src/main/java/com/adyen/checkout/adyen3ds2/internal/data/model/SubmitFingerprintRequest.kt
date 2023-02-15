@@ -6,7 +6,7 @@
  * Created by josephj on 29/4/2021.
  */
 
-package com.adyen.checkout.adyen3ds2.model
+package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
@@ -16,7 +16,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class SubmitFingerprintRequest(
+internal data class SubmitFingerprintRequest(
     val encodedFingerprint: String?,
     val paymentData: String?
 ) : ModelObject() {

@@ -6,7 +6,7 @@
  * Created by oscars on 23/9/2022.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet

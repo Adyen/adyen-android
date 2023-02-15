@@ -6,15 +6,14 @@
  * Created by josephj on 31/5/2021.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.adyen3ds2.model.ChallengeResult
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
 import org.json.JSONObject
 
-class Adyen3DS2Serializer {
+internal class Adyen3DS2Serializer {
     companion object {
         private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
         private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
