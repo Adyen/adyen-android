@@ -17,6 +17,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PROVIDER
+import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
