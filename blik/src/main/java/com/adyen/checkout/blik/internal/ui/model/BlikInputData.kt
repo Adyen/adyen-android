@@ -5,10 +5,10 @@
  *
  * Created by josephj on 4/12/2020.
  */
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.ui.model
 
 import com.adyen.checkout.components.base.InputData
 
-data class BlikInputData(
+internal data class BlikInputData(
     var blikCode: String = "",
 ) : InputData

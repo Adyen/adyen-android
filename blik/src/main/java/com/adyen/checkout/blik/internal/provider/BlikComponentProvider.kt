@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -16,6 +16,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate
+import com.adyen.checkout.blik.internal.ui.StoredBlikDelegate
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider

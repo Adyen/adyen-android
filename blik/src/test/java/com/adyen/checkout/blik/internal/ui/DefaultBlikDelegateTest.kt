@@ -6,9 +6,11 @@
  * Created by josephj on 25/7/2022.
  */
 
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper

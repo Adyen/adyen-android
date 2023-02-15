@@ -23,7 +23,7 @@ import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.blik.BlikComponentProvider
+import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
