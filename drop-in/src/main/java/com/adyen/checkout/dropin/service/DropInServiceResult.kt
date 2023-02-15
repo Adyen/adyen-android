@@ -12,6 +12,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.dropin.DropInCallback
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
 
 sealed class BaseDropInServiceResult
@@ -81,6 +82,8 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : DropInServiceResult(), DropInServiceResultError
+
+    internal class FinishedWithSessions(val result: SessionPaymentResult) : DropInServiceResult()
 }
 
 sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {

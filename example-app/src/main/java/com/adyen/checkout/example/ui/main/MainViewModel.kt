@@ -15,6 +15,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInResult
+import com.adyen.checkout.dropin.SessionDropInResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
@@ -169,6 +170,16 @@ internal class MainViewModel @Inject constructor(
             is DropInResult.CancelledByUser -> "Canceled by user"
             is DropInResult.Error -> dropInResult.reason ?: "DropInResult is error without reason"
             is DropInResult.Finished -> dropInResult.result
+            null -> "DropInResult is null"
+        }
+        _eventFlow.tryEmit(MainEvent.Toast(message))
+    }
+
+    fun onDropInResult(sessionDropInResult: SessionDropInResult?) {
+        val message = when (sessionDropInResult) {
+            is SessionDropInResult.CancelledByUser -> "Canceled by user"
+            is SessionDropInResult.Error -> sessionDropInResult.reason ?: "DropInResult is error without reason"
+            is SessionDropInResult.Finished -> sessionDropInResult.result.resultCode ?: "Result code is null"
             null -> "DropInResult is null"
         }
         _eventFlow.tryEmit(MainEvent.Toast(message))
