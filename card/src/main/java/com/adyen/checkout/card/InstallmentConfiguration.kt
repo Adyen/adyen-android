@@ -9,8 +9,7 @@
 package com.adyen.checkout.card
 
 import android.os.Parcelable
-import com.adyen.checkout.card.data.CardBrand
-import com.adyen.checkout.card.util.InstallmentUtils
+import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.parcelize.Parcelize
 

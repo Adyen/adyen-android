@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@null">
 
-            <com.adyen.checkout.card.ui.CardNumberInput
+            <com.adyen.checkout.card.internal.ui.view.CardNumberInput
                 android:id="@+id/editText_cardNumber"
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@id/editText_expiryDate"
@@ -101,7 +101,7 @@
             android:layout_marginEnd="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.card.ui.ExpiryDateInput
+            <com.adyen.checkout.card.internal.ui.view.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusDown="@id/editText_securityCode"
@@ -117,7 +117,7 @@
             android:layout_marginStart="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.card.ui.SecurityCodeInput
+            <com.adyen.checkout.card.internal.ui.view.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
                 style="@style/AdyenCheckout.Card.SecurityCodeInput"
                 android:nextFocusDown="@id/editText_cardHolder"
@@ -161,7 +161,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.card.ui.SocialSecurityNumberInput
+        <com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberInput
             android:id="@+id/editText_socialSecurityNumber"
             style="@style/AdyenCheckout.Card.SocialSecurityNumberInput"
             android:nextFocusDown="@id/editText_kcpBirthDateOrTaxNumber"

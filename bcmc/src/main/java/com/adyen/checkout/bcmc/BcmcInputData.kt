@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.bcmc
 
-import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.base.InputData
 
 data class BcmcInputData(

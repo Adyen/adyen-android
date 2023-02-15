@@ -9,9 +9,9 @@
 package com.adyen.checkout.bcmc
 
 import app.cash.turbine.test
-import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.internal.ui.CardValidationMapper
+import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod

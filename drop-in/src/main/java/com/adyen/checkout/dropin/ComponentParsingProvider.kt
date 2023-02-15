@@ -26,7 +26,7 @@ import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentProvider
+import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod

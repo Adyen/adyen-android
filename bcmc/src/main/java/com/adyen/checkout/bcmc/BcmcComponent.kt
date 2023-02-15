@@ -14,8 +14,8 @@ import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
-import com.adyen.checkout.card.data.CardBrand
-import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
