@@ -6,10 +6,11 @@
  * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.util
 
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
+import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 
 internal fun List<Issuer>.mapToModel(): List<OnlineBankingModel> =
     this.mapNotNull { issuer ->

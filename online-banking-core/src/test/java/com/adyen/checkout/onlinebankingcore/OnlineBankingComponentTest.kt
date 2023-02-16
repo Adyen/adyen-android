@@ -18,6 +18,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingComponentViewType
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingPaymentMethod
 import com.adyen.checkout.test.TestDispatcherExtension

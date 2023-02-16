@@ -6,7 +6,7 @@
  * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.util
 
 import android.content.ActivityNotFoundException
 import android.content.Context

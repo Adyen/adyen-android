@@ -6,7 +6,7 @@
  * Created by josephj on 5/10/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet

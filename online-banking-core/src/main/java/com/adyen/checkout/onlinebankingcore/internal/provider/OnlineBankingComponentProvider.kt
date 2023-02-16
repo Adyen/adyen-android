@@ -6,9 +6,10 @@
  * Created by ozgur on 31/1/2023.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.provider
 
 import android.app.Application
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -36,6 +37,11 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
+import com.adyen.checkout.onlinebankingcore.internal.ui.DefaultOnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler
@@ -46,6 +52,7 @@ import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.repository.SessionRepository
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class OnlineBankingComponentProvider<
     ComponentT : OnlineBankingComponent<PaymentMethodT>,
     ConfigurationT : OnlineBankingConfiguration,

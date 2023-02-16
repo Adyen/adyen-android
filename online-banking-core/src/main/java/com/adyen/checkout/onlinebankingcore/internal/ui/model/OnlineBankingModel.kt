@@ -6,10 +6,12 @@
  * Created by atef on 9/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class OnlineBankingModel(
     val id: String,
     val name: String

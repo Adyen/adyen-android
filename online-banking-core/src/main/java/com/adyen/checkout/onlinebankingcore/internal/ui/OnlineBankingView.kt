@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 20/9/2022.
+ * Created by atef on 15/2/2023.
  */
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -23,7 +23,9 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
+import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import kotlinx.coroutines.CoroutineScope
 
 internal class OnlineBankingView @JvmOverloads constructor(

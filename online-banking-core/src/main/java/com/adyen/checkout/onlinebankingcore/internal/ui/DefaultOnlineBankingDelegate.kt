@@ -6,10 +6,9 @@
  * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal.ui
 
 import android.content.Context
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -31,6 +30,12 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingInputData
+import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
+import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
+import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
+import com.adyen.checkout.onlinebankingcore.internal.util.getLegacyIssuers
+import com.adyen.checkout.onlinebankingcore.internal.util.mapToModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -39,8 +44,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
