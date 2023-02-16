@@ -6,10 +6,11 @@
  * Created by josephj on 5/9/2022.
  */
 
-package com.adyen.checkout.await
+package com.adyen.checkout.await.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.await.internal.ui.view.AwaitView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType

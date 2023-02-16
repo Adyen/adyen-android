@@ -6,11 +6,12 @@
  * Created by oscars on 17/8/2022.
  */
 
-package com.adyen.checkout.await
+package com.adyen.checkout.await.internal.ui
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.GenericComponentParams

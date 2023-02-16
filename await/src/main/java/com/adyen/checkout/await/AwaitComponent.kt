@@ -11,6 +11,8 @@ import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.await.internal.provider.AwaitComponentProvider
+import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.ActionComponentProvider
