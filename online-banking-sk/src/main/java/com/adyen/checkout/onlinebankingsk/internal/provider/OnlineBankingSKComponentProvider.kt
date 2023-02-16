@@ -6,7 +6,7 @@
  * Created by atef on 23/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingsk
+package com.adyen.checkout.onlinebankingsk.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -17,6 +17,8 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
