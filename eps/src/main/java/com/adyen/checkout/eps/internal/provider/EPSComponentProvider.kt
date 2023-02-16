@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.eps
+package com.adyen.checkout.eps.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -15,6 +15,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.eps.EPSComponent
+import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
