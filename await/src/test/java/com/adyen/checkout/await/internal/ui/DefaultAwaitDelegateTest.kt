@@ -6,12 +6,13 @@
  * Created by oscars on 17/8/2022.
  */
 
-package com.adyen.checkout.await
+package com.adyen.checkout.await.internal.ui
 
 import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.await.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
+import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.repository.ActionObserverRepository

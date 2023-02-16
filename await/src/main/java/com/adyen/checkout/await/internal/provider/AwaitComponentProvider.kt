@@ -6,7 +6,7 @@
  * Created by josephj on 7/6/2021.
  */
 
-package com.adyen.checkout.await
+package com.adyen.checkout.await.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -15,6 +15,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.await.AwaitComponent
+import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.await.internal.ui.AwaitDelegate
+import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams

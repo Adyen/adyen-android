@@ -5,7 +5,7 @@
  *
  * Created by josephj on 31/8/2022.
  */
-package com.adyen.checkout.await
+package com.adyen.checkout.await.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -13,7 +13,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
+import com.adyen.checkout.await.R
 import com.adyen.checkout.await.databinding.AwaitViewBinding
+import com.adyen.checkout.await.internal.ui.AwaitDelegate
+import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.image.loadLogo
