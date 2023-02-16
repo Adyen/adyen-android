@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate

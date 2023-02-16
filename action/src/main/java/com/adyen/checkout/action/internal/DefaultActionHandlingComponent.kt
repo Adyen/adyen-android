@@ -6,11 +6,13 @@
  * Created by oscars on 11/11/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal
 
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.response.Action

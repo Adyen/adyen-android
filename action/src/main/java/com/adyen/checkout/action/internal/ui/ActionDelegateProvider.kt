@@ -6,10 +6,11 @@
  * Created by oscars on 24/8/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.ui
 
 import android.app.Application
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.provider.Adyen3DS2ComponentProvider
 import com.adyen.checkout.await.AwaitConfiguration

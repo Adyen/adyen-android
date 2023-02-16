@@ -10,8 +10,8 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration

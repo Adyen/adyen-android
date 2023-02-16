@@ -18,8 +18,8 @@ import com.adyen.checkout.ach.ACHDirectDebitComponent
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper

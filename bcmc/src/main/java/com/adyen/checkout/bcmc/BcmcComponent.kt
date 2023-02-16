@@ -10,9 +10,9 @@ package com.adyen.checkout.bcmc
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate

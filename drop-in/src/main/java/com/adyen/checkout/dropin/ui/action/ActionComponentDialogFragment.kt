@@ -21,8 +21,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.GenericActionComponent
-import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionComponentCallback

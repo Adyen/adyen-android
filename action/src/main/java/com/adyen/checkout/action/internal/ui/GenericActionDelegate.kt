@@ -6,14 +6,16 @@
  * Created by josephj on 19/9/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.ui
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.threeds2.customization.UiCustomization
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface GenericActionDelegate :
     ActionDelegate,
     DetailsEmittingDelegate,

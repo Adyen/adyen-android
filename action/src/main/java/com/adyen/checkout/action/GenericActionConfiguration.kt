@@ -11,6 +11,7 @@ package com.adyen.checkout.action
 import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.GenericActionConfiguration.Builder
+import com.adyen.checkout.action.internal.ActionHandlingConfigurationBuilder
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.base.BaseConfigurationBuilder

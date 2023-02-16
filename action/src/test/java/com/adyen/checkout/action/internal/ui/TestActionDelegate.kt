@@ -6,7 +6,7 @@
  * Created by josephj on 21/9/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.ui
 
 import android.app.Activity
 import android.content.Intent
