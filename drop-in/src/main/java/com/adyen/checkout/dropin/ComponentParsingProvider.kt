@@ -71,8 +71,8 @@ import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.interal.provider.DotpayComponentProvider
 import com.adyen.checkout.entercash.EntercashComponent
-import com.adyen.checkout.entercash.EntercashComponentProvider
 import com.adyen.checkout.entercash.EntercashConfiguration
+import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
