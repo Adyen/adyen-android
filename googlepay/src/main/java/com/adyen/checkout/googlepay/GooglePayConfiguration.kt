@@ -17,9 +17,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.googlepay.model.BillingAddressParameters
-import com.adyen.checkout.googlepay.model.MerchantInfo
-import com.adyen.checkout.googlepay.model.ShippingAddressParameters
 import com.google.android.gms.wallet.WalletConstants
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

@@ -5,7 +5,7 @@
  *
  * Created by caiof on 17/7/2019.
  */
-package com.adyen.checkout.googlepay.model
+package com.adyen.checkout.googlepay.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
@@ -13,12 +13,13 @@ import com.adyen.checkout.core.model.JsonUtils.serializeOptStringList
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import com.adyen.checkout.googlepay.BillingAddressParameters
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class CardParameters(
+internal data class CardParameters(
     var allowedAuthMethods: List<String?>? = null,
     var allowedCardNetworks: List<String?>? = null,
     var isAllowPrepaidCards: Boolean = false,

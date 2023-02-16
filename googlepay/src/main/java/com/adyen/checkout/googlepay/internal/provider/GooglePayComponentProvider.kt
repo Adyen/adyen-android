@@ -5,7 +5,7 @@
  *
  * Created by caiof on 25/7/2019.
  */
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -35,7 +35,12 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.util.GooglePayUtils
+import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.internal.ui.DefaultGooglePayDelegate
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
+import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler

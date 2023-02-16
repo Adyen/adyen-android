@@ -6,7 +6,7 @@
  * Created by oscars on 19/7/2022.
  */
 
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -24,7 +24,9 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.util.GooglePayUtils
+import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet

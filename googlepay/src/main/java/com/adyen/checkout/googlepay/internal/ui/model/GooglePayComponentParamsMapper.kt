@@ -6,7 +6,7 @@
  * Created by josephj on 18/11/2022.
  */
 
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -17,8 +17,9 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.util.AllowedAuthMethods
-import com.adyen.checkout.googlepay.util.AllowedCardNetworks
+import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.internal.util.AllowedAuthMethods
+import com.adyen.checkout.googlepay.internal.util.AllowedCardNetworks
 import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper {

@@ -6,14 +6,14 @@
  * Created by josephj on 15/11/2022.
  */
 
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.googlepay.model.BillingAddressParameters
-import com.adyen.checkout.googlepay.model.MerchantInfo
-import com.adyen.checkout.googlepay.model.ShippingAddressParameters
+import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.MerchantInfo
+import com.adyen.checkout.googlepay.ShippingAddressParameters
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

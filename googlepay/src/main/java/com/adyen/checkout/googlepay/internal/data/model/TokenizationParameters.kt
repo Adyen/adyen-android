@@ -5,7 +5,7 @@
  *
  * Created by caiof on 18/7/2019.
  */
-package com.adyen.checkout.googlepay.model
+package com.adyen.checkout.googlepay.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class TokenizationParameters(
+internal data class TokenizationParameters(
     var gateway: String? = null,
     var gatewayMerchantId: String? = null,
 ) : ModelObject() {
