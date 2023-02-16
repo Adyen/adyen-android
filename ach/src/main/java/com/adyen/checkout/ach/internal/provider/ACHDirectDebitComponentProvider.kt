@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 24/1/2023.
+ * Created by onurk on 16/2/2023.
  */
 
-package com.adyen.checkout.ach
+package com.adyen.checkout.ach.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -14,6 +14,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.ach.ACHDirectDebitComponent
+import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionComponentProvider
 import com.adyen.checkout.components.PaymentComponentProvider

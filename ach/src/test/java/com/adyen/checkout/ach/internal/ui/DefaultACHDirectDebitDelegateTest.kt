@@ -3,12 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 31/1/2023.
+ * Created by onurk on 16/2/2023.
  */
 
-package com.adyen.checkout.ach
+package com.adyen.checkout.ach.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.R
+import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.model.AddressListItem
