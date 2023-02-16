@@ -22,6 +22,7 @@ import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.DelegatedAuthentication
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams

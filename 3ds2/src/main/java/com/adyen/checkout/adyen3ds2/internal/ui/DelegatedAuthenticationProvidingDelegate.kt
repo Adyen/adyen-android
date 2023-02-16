@@ -6,7 +6,7 @@
  * Created by temirlan on 7/12/2022.
  */
 
-package com.adyen.checkout.adyen3ds2
+package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.app.Activity
 import androidx.annotation.DrawableRes

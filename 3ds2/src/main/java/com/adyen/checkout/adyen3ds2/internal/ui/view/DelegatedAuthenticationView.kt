@@ -1,4 +1,12 @@
-package com.adyen.checkout.adyen3ds2.ui
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by temirlan on 16/2/2023.
+ */
+
+package com.adyen.checkout.adyen3ds2.internal.ui.view
 
 import android.app.Activity
 import android.content.Context
@@ -11,9 +19,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationResult
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.R
 import com.adyen.checkout.adyen3ds2.databinding.DelegatedAuthenticationViewBinding
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle

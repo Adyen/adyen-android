@@ -10,8 +10,8 @@ package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.adyen3ds2.ui.DelegatedAuthenticationView
-import com.adyen.checkout.adyen3ds2.ui.DelegatedAuthenticationRegistrationView
+import com.adyen.checkout.adyen3ds2.internal.ui.view.DelegatedAuthenticationView
+import com.adyen.checkout.adyen3ds2.internal.ui.view.DelegatedAuthenticationRegistrationView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
