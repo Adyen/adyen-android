@@ -6,7 +6,7 @@
  * Created by ozgur on 13/12/2022.
  */
 
-package com.adyen.checkout.paybybank
+package com.adyen.checkout.paybybank.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.PaymentComponentState
@@ -22,6 +22,8 @@ import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.paybybank.PayByBankConfiguration
+import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
