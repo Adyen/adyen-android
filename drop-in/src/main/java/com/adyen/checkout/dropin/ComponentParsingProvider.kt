@@ -68,7 +68,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
-import com.adyen.checkout.dotpay.DotpayComponentProvider
+import com.adyen.checkout.dotpay.interal.provider.DotpayComponentProvider
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.entercash.EntercashComponent
 import com.adyen.checkout.entercash.EntercashComponentProvider

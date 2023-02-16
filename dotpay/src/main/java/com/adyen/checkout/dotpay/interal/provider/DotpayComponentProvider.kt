@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.dotpay
+package com.adyen.checkout.dotpay.interal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -15,6 +15,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.dotpay.DotpayComponent
+import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
