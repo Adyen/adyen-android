@@ -26,9 +26,9 @@ import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponent
@@ -97,8 +97,8 @@ import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentProvider
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
-import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
+import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
