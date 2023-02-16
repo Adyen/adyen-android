@@ -6,7 +6,7 @@
  * Created by oscars on 9/9/2022.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,6 +14,8 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.qrcode.internal.ui.view.FullQRCodeView
+import com.adyen.checkout.qrcode.internal.ui.view.SimpleQRCodeView
 
 internal object QrCodeViewProvider : ViewProvider {
 

@@ -6,7 +6,7 @@
  * Created by atef on 10/1/2023.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal.ui.model
 
 import androidx.annotation.RestrictTo
 

@@ -6,7 +6,7 @@
  * Created by oscars on 16/8/2022.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal
 
 import android.os.CountDownTimer
 

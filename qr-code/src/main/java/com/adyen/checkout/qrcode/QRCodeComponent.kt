@@ -22,6 +22,8 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
+import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import kotlinx.coroutines.flow.Flow
 
 class QRCodeComponent internal constructor(
