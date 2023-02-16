@@ -18,6 +18,8 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
+import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
+import com.adyen.checkout.instant.internal.ui.InstantPaymentDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -6,7 +6,7 @@
  * Created by ozgur on 4/11/2022.
  */
 
-package com.adyen.checkout.instant
+package com.adyen.checkout.instant.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -35,6 +35,9 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.instant.InstantPaymentComponent
+import com.adyen.checkout.instant.InstantPaymentConfiguration
+import com.adyen.checkout.instant.internal.ui.DefaultInstantPaymentDelegate
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler

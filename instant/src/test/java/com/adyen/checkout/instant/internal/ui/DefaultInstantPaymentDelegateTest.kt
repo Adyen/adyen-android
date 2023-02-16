@@ -6,7 +6,7 @@
  * Created by ozgur on 9/11/2022.
  */
 
-package com.adyen.checkout.instant
+package com.adyen.checkout.instant.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.instant.InstantPaymentConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
