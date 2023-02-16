@@ -88,11 +88,11 @@ import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.instant.InstantPaymentComponent
-import com.adyen.checkout.instant.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.InstantPaymentConfiguration
+import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
 import com.adyen.checkout.mbway.MBWayComponent
-import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.mbway.MBWayConfiguration
+import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider

@@ -6,13 +6,13 @@
  * Created by ozgur on 4/11/2022.
  */
 
-package com.adyen.checkout.instant
+package com.adyen.checkout.instant.internal.ui
 
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import kotlinx.coroutines.flow.Flow
 
-interface InstantPaymentDelegate : PaymentComponentDelegate<PaymentComponentState<PaymentMethodDetails>> {
+internal interface InstantPaymentDelegate : PaymentComponentDelegate<PaymentComponentState<PaymentMethodDetails>> {
     val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>>
 }

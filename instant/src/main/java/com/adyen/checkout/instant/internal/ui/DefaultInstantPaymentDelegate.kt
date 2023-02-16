@@ -6,7 +6,7 @@
  * Created by ozgur on 4/11/2022.
  */
 
-package com.adyen.checkout.instant
+package com.adyen.checkout.instant.internal.ui
 
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
