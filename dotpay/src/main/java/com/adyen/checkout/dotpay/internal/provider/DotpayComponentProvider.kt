@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.dotpay.interal.provider
+package com.adyen.checkout.dotpay.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent

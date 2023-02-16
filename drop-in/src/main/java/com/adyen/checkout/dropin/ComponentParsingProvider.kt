@@ -13,8 +13,8 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.ach.ACHDirectDebitComponent
-import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -69,7 +69,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
-import com.adyen.checkout.dotpay.interal.provider.DotpayComponentProvider
+import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.entercash.EntercashComponent
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
@@ -109,8 +109,8 @@ import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
-import com.adyen.checkout.openbanking.OpenBankingComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration

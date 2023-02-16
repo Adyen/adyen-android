@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.openbanking
+package com.adyen.checkout.openbanking.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -17,6 +17,8 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
+import com.adyen.checkout.openbanking.OpenBankingComponent
+import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

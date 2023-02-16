@@ -18,7 +18,7 @@ import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
-class IssuerListSpinnerAdapter internal constructor(
+internal class IssuerListSpinnerAdapter constructor(
     private val context: Context,
     private var issuerList: List<IssuerModel>,
     private val paymentMethod: String,
