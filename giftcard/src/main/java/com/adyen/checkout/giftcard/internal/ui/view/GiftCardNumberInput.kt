@@ -6,7 +6,7 @@
  * Created by josephj on 9/9/2021.
  */
 
-package com.adyen.checkout.giftcard.ui
+package com.adyen.checkout.giftcard.internal.ui.view
 
 import android.content.Context
 import android.text.Editable
@@ -14,12 +14,12 @@ import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils.DIGIT_SEPARATOR
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils.MAXIMUM_GIFT_CARD_NUMBER_LENGTH
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils.MAX_DIGIT_SEPARATOR_COUNT
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.DIGIT_SEPARATOR
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAXIMUM_GIFT_CARD_NUMBER_LENGTH
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAX_DIGIT_SEPARATOR_COUNT
 
-class GiftCardNumberInput constructor(
+internal class GiftCardNumberInput constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

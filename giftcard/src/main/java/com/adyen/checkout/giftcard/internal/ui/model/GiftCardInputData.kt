@@ -6,11 +6,11 @@
  * Created by josephj on 9/9/2021.
  */
 
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui.model
 
 import com.adyen.checkout.components.base.InputData
 
-data class GiftCardInputData(
+internal data class GiftCardInputData(
     var cardNumber: String = "",
     var pin: String = ""
 ) : InputData

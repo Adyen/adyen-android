@@ -6,14 +6,14 @@
  * Created by josephj on 9/9/2021.
  */
 
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui.model
 
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils
-import com.adyen.checkout.giftcard.util.GiftCardPinUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 
-class GiftCardOutputData(cardNumber: String, pin: String) : OutputData {
+internal class GiftCardOutputData(cardNumber: String, pin: String) : OutputData {
 
     val giftcardNumberFieldState: FieldState<String> = GiftCardNumberUtils.validateInputField(cardNumber)
     val giftcardPinFieldState: FieldState<String> = GiftCardPinUtils.validateInputField(pin)

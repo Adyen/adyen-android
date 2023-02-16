@@ -6,7 +6,7 @@
  * Created by oscars on 18/7/2022.
  */
 
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
@@ -18,6 +18,9 @@ import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

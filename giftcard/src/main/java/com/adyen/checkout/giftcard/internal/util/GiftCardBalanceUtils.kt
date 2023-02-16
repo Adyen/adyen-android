@@ -6,12 +6,14 @@
  * Created by josephj on 20/9/2021.
  */
 
-package com.adyen.checkout.giftcard.util
+package com.adyen.checkout.giftcard.internal.util
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.isEmpty
 import kotlin.math.min
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object GiftCardBalanceUtils {
 
     /**
@@ -65,6 +67,7 @@ object GiftCardBalanceUtils {
     }
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class GiftCardBalanceStatus {
     class FullPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceStatus()
     class PartialPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceStatus()

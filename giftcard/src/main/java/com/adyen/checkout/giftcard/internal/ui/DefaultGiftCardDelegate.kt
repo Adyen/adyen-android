@@ -6,7 +6,7 @@
  * Created by oscars on 14/7/2022.
  */
 
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -34,6 +34,9 @@ import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

@@ -77,9 +77,9 @@ import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.giftcard.GiftCardComponent
-import com.adyen.checkout.giftcard.GiftCardComponentProvider
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayComponentState

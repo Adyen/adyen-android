@@ -6,16 +6,19 @@
  * Created by oscars on 14/7/2022.
  */
 
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui
 
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import kotlinx.coroutines.flow.Flow
 
-interface GiftCardDelegate :
+internal interface GiftCardDelegate :
     PaymentComponentDelegate<GiftCardComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

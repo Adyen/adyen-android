@@ -35,8 +35,8 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.order.OrderModel
 import com.adyen.checkout.dropin.ui.stored.isStoredPaymentSupported
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
-import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
+import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.data.SessionDetails
 import com.adyen.checkout.sessions.data.mapToModel

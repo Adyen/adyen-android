@@ -5,7 +5,7 @@
  *
  * Created by josephj on 13/9/2021.
  */
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -36,6 +36,10 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
+import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler

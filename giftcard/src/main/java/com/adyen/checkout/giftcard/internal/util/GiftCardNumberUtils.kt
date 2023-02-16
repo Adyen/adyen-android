@@ -6,13 +6,13 @@
  * Created by josephj on 9/9/2021.
  */
 
-package com.adyen.checkout.giftcard.util
+package com.adyen.checkout.giftcard.internal.util
 
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.giftcard.R
 
-object GiftCardNumberUtils {
+internal object GiftCardNumberUtils {
 
     private const val CARD_NUMBER_MASK_GROUP_LENGTH = 4
     const val DIGIT_SEPARATOR = ' '

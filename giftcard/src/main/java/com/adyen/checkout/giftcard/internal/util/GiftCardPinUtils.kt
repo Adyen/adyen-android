@@ -6,16 +6,16 @@
  * Created by josephj on 9/9/2021.
  */
 
-package com.adyen.checkout.giftcard.util
+package com.adyen.checkout.giftcard.internal.util
 
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.giftcard.R
 
-object GiftCardPinUtils {
+internal object GiftCardPinUtils {
 
     private const val MINIMUM_GIFT_CARD_PIN_LENGTH = 3
-    const val MAXIMUM_GIFT_CARD_PIN_LENGTH = 10
+    private const val MAXIMUM_GIFT_CARD_PIN_LENGTH = 10
 
     fun validateInputField(giftCardPin: String): FieldState<String> {
         val validation = when {
