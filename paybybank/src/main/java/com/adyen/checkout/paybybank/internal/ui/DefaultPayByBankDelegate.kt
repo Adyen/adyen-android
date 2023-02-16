@@ -6,7 +6,7 @@
  * Created by ozgur on 28/9/2022.
  */
 
-package com.adyen.checkout.paybybank
+package com.adyen.checkout.paybybank.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -29,6 +29,8 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData
+import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

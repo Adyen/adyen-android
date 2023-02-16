@@ -6,7 +6,7 @@
  * Created by ozgur on 21/10/2022.
  */
 
-package com.adyen.checkout.paybybank
+package com.adyen.checkout.paybybank.internal.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

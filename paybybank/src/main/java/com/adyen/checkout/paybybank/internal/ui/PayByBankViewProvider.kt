@@ -6,13 +6,14 @@
  * Created by ozgur on 17/10/2022.
  */
 
-package com.adyen.checkout.paybybank
+package com.adyen.checkout.paybybank.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.paybybank.internal.ui.view.PayByBankView
 
 internal object PayByBankViewProvider : ViewProvider {
 

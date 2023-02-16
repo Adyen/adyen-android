@@ -27,6 +27,8 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
+import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
 import kotlinx.coroutines.flow.Flow
 
 class PayByBankComponent internal constructor(

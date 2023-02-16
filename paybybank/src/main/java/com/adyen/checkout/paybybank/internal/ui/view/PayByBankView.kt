@@ -6,7 +6,7 @@
  * Created by ozgur on 28/9/2022.
  */
 
-package com.adyen.checkout.paybybank
+package com.adyen.checkout.paybybank.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -21,12 +21,15 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.paybybank.R
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
+import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
+import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class PayByBankView @JvmOverloads constructor(
+internal class PayByBankView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
