@@ -62,8 +62,8 @@ import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
-import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentProvider
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
+import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -100,8 +100,8 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
-import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
+import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
@@ -115,15 +115,15 @@ import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.payeasy.PayEasyComponent
-import com.adyen.checkout.payeasy.PayEasyComponentProvider
 import com.adyen.checkout.payeasy.PayEasyConfiguration
+import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
-import com.adyen.checkout.seveneleven.SevenElevenComponentProvider
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()

@@ -6,7 +6,7 @@
  * Created by ozgur on 13/1/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,6 +14,7 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.econtext.internal.ui.view.EContextView
 
 internal object EContextViewProvider : ViewProvider {
 

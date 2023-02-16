@@ -29,6 +29,7 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import kotlinx.coroutines.flow.Flow
 
 abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod> protected constructor(

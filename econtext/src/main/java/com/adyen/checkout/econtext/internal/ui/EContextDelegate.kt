@@ -6,16 +6,20 @@
  * Created by ozgur on 13/1/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.EContextPaymentMethod
 import com.adyen.checkout.components.ui.ButtonDelegate
 import com.adyen.checkout.components.ui.UIStateDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
+import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import kotlinx.coroutines.flow.Flow
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface EContextDelegate<EContextPaymentMethodT : EContextPaymentMethod> :
     PaymentComponentDelegate<PaymentComponentState<EContextPaymentMethodT>>,
     ViewProvidingDelegate,

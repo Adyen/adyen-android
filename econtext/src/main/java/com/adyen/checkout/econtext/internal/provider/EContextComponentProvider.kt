@@ -6,7 +6,7 @@
  * Created by ozgur on 31/1/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -37,6 +37,10 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegate
+import com.adyen.checkout.econtext.EContextComponent
+import com.adyen.checkout.econtext.EContextConfiguration
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler

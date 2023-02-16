@@ -6,9 +6,8 @@
  * Created by ozgur on 13/1/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui
 
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -31,14 +30,16 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.econtext.R
+import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
+import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
+internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,

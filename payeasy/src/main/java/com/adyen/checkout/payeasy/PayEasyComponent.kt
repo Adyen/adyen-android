@@ -15,7 +15,8 @@ import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.PayEasyPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.econtext.EContextComponent
-import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 
 class PayEasyComponent internal constructor(
     delegate: EContextDelegate<PayEasyPaymentMethod>,

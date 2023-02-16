@@ -6,11 +6,13 @@
  * Created by ozgur on 7/6/2022.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class EContextOutputData(
     val firstNameState: FieldState<String>,
     val lastNameState: FieldState<String>,

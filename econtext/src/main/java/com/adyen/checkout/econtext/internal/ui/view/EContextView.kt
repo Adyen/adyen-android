@@ -6,7 +6,7 @@
  * Created by ozgur on 7/6/2022.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -24,11 +24,13 @@ import com.adyen.checkout.components.ui.adapter.CountryModel
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import kotlinx.coroutines.CoroutineScope
 
 @Suppress("TooManyFunctions")
-class EContextView @JvmOverloads constructor(
+internal class EContextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
