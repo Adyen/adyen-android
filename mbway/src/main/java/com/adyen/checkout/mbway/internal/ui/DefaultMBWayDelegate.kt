@@ -6,7 +6,7 @@
  * Created by josephj on 30/6/2022.
  */
 
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -29,6 +29,8 @@ import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

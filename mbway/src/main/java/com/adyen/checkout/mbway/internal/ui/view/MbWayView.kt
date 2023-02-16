@@ -6,7 +6,7 @@
  * Created by ozgur on 30/9/2022.
  */
 
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -25,7 +25,9 @@ import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.mbway.R
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
+import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import kotlinx.coroutines.CoroutineScope
 
 internal class MbWayView @JvmOverloads constructor(

@@ -29,6 +29,8 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
+import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
+import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**

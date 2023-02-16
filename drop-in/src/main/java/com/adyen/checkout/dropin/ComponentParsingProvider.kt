@@ -91,7 +91,7 @@ import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
-import com.adyen.checkout.mbway.MBWayComponentProvider
+import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentProvider
