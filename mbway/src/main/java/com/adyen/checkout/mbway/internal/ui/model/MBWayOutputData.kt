@@ -5,14 +5,15 @@
  *
  * Created by josephj on 18/12/2020.
  */
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.ValidationUtils
+import com.adyen.checkout.mbway.R
 
-class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
+internal class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
 
     val mobilePhoneNumberFieldState: FieldState<String> = validateMobileNumber(mobilePhoneNumber)
 

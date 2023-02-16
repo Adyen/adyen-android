@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -35,6 +35,9 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
+import com.adyen.checkout.mbway.MBWayComponent
+import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler

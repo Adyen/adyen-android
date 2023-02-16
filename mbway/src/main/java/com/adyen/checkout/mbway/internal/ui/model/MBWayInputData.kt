@@ -5,11 +5,11 @@
  *
  * Created by caiof on 11/8/2020.
  */
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.base.InputData
 
-data class MBWayInputData(
+internal data class MBWayInputData(
     var countryCode: String = "",
     var localPhoneNumber: String = ""
 ) : InputData
