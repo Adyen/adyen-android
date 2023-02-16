@@ -3,13 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 25/1/2023.
+ * Created by onurk on 16/2/2023.
  */
 
-package com.adyen.checkout.ach
+package com.adyen.checkout.ach.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.ach.internal.ui.view.ACHDirectDebitView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType

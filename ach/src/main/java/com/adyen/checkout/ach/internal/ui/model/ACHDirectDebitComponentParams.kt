@@ -3,12 +3,11 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 24/1/2023.
+ * Created by onurk on 16/2/2023.
  */
 
-package com.adyen.checkout.ach
+package com.adyen.checkout.ach.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
@@ -18,8 +17,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class ACHDirectDebitComponentParams(
+internal data class ACHDirectDebitComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

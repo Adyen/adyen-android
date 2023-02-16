@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 17/1/2023.
+ * Created by onurk on 16/2/2023.
  */
 
-package com.adyen.checkout.ach
+package com.adyen.checkout.ach.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,7 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import com.adyen.checkout.ach.R
 import com.adyen.checkout.ach.databinding.AchDirectDebitViewBinding
+import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
+import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle

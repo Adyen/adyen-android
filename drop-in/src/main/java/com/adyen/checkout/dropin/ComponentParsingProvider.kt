@@ -13,7 +13,7 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.ach.ACHDirectDebitComponent
-import com.adyen.checkout.ach.ACHDirectDebitComponentProvider
+import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState

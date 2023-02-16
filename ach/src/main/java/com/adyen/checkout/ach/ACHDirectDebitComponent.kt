@@ -11,6 +11,8 @@ package com.adyen.checkout.ach
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
+import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
 import com.adyen.checkout.action.ActionHandlingComponent
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
