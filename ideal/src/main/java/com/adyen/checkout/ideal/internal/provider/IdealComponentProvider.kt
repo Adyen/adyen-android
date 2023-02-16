@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.molpay
+package com.adyen.checkout.ideal.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -14,33 +14,35 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
-import com.adyen.checkout.issuerlist.IssuerListComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.ideal.IdealComponent
+import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class MolpayComponentProvider(
+class IdealComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<MolpayComponent, MolpayConfiguration, MolpayPaymentMethod>(
-    componentClass = MolpayComponent::class.java,
+) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod>(
+    componentClass = IdealComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<MolpayPaymentMethod>,
+        delegate: IssuerListDelegate<IdealPaymentMethod>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<MolpayPaymentMethod>>
-    ) = MolpayComponent(
+        componentEventHandler: ComponentEventHandler<PaymentComponentState<IdealPaymentMethod>>
+    ) = IdealComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
 
-    override fun createPaymentMethod() = MolpayPaymentMethod()
+    override fun createPaymentMethod() = IdealPaymentMethod()
 
-    override fun getSupportedPaymentMethods(): List<String> = MolpayComponent.PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethods(): List<String> = IdealComponent.PAYMENT_METHOD_TYPES
 }

@@ -13,7 +13,7 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 internal class TestIssuerListComponent internal constructor(
     delegate: IssuerListDelegate<TestIssuerPaymentMethod>,

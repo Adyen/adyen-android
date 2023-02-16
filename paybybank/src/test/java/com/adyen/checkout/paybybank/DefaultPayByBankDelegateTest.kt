@@ -21,7 +21,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.issuerlist.IssuerModel
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

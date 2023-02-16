@@ -5,7 +5,7 @@
  *
  * Created by caiof on 21/5/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
-import com.adyen.checkout.issuerlist.IssuerListRecyclerAdapter.IssuerViewHolder
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.issuerlist.internal.ui.view.IssuerListRecyclerAdapter.IssuerViewHolder
 
 internal class IssuerListRecyclerAdapter(
     private val paymentMethod: String,

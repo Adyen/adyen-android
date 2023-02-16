@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.eps
+package com.adyen.checkout.dotpay.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -14,34 +14,35 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.issuerlist.IssuerListComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.dotpay.DotpayComponent
+import com.adyen.checkout.dotpay.DotpayConfiguration
+import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class EPSComponentProvider(
+class DotpayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<EPSComponent, EPSConfiguration, EPSPaymentMethod>(
-    componentClass = EPSComponent::class.java,
+) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod>(
+    componentClass = DotpayComponent::class.java,
     overrideComponentParams = overrideComponentParams,
-    hideIssuerLogosDefaultValue = true
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<EPSPaymentMethod>,
+        delegate: IssuerListDelegate<DotpayPaymentMethod>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<EPSPaymentMethod>>
-    ) = EPSComponent(
+        componentEventHandler: ComponentEventHandler<PaymentComponentState<DotpayPaymentMethod>>
+    ) = DotpayComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
 
-    override fun createPaymentMethod() = EPSPaymentMethod()
+    override fun createPaymentMethod() = DotpayPaymentMethod()
 
-    override fun getSupportedPaymentMethods(): List<String> = EPSComponent.PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethods(): List<String> = DotpayComponent.PAYMENT_METHOD_TYPES
 }

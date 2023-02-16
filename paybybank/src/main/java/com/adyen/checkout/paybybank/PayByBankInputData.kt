@@ -9,7 +9,7 @@
 package com.adyen.checkout.paybybank
 
 import com.adyen.checkout.components.base.InputData
-import com.adyen.checkout.issuerlist.IssuerModel
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
 class PayByBankInputData(
     var query: String? = null,

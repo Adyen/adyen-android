@@ -28,7 +28,7 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.issuerlist.IssuerModel
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

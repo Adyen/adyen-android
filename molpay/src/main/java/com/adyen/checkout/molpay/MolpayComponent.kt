@@ -14,8 +14,9 @@ import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
+import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.

@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.entercash
+package com.adyen.checkout.molpay.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -14,33 +14,35 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.issuerlist.IssuerListComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
+import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
+import com.adyen.checkout.molpay.MolpayComponent
+import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class EntercashComponentProvider(
+class MolpayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<EntercashComponent, EntercashConfiguration, EntercashPaymentMethod>(
-    componentClass = EntercashComponent::class.java,
+) : IssuerListComponentProvider<MolpayComponent, MolpayConfiguration, MolpayPaymentMethod>(
+    componentClass = MolpayComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<EntercashPaymentMethod>,
+        delegate: IssuerListDelegate<MolpayPaymentMethod>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<EntercashPaymentMethod>>
-    ) = EntercashComponent(
+        componentEventHandler: ComponentEventHandler<PaymentComponentState<MolpayPaymentMethod>>
+    ) = MolpayComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
 
-    override fun createPaymentMethod() = EntercashPaymentMethod()
+    override fun createPaymentMethod() = MolpayPaymentMethod()
 
-    override fun getSupportedPaymentMethods(): List<String> = EntercashComponent.PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethods(): List<String> = MolpayComponent.PAYMENT_METHOD_TYPES
 }

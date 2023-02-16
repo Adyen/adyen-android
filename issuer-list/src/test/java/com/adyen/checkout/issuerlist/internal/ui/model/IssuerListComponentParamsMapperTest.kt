@@ -6,11 +6,11 @@
  * Created by josephj on 17/11/2022.
  */
 
+package com.adyen.checkout.issuerlist.internal.ui.model
+
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.issuerlist.IssuerListComponentParams
-import com.adyen.checkout.issuerlist.IssuerListComponentParamsMapper
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals

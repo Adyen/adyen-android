@@ -6,10 +6,12 @@
  * Created by caiof on 17/11/2020.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.api.Environment
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class IssuerModel(
     val id: String,
     val name: String,

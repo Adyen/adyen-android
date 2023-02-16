@@ -5,7 +5,7 @@
  *
  * Created by caiof on 26/4/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.view
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -16,8 +16,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
-class IssuerListSpinnerAdapter internal constructor(
+internal class IssuerListSpinnerAdapter constructor(
     private val context: Context,
     private var issuerList: List<IssuerModel>,
     private val paymentMethod: String,

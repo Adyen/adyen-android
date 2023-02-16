@@ -6,11 +6,12 @@
  * Created by atef on 25/8/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui
 
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
 internal fun List<Issuer>.mapToModel(environment: Environment): List<IssuerModel> =
     this.mapNotNull { (id, name, isDisabled) ->

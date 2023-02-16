@@ -6,9 +6,8 @@
  * Created by oscars on 11/7/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui
 
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentEvent
@@ -27,14 +26,18 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.IssuerListViewType
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,

@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.ideal
+package com.adyen.checkout.entercash.internal.provider
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.DefaultActionHandlingComponent
@@ -14,33 +14,35 @@ import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
-import com.adyen.checkout.issuerlist.IssuerListComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.entercash.EntercashComponent
+import com.adyen.checkout.entercash.EntercashConfiguration
+import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class IdealComponentProvider(
+class EntercashComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod>(
-    componentClass = IdealComponent::class.java,
+) : IssuerListComponentProvider<EntercashComponent, EntercashConfiguration, EntercashPaymentMethod>(
+    componentClass = EntercashComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<IdealPaymentMethod>,
+        delegate: IssuerListDelegate<EntercashPaymentMethod>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<IdealPaymentMethod>>
-    ) = IdealComponent(
+        componentEventHandler: ComponentEventHandler<PaymentComponentState<EntercashPaymentMethod>>
+    ) = EntercashComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
 
-    override fun createPaymentMethod() = IdealPaymentMethod()
+    override fun createPaymentMethod() = EntercashPaymentMethod()
 
-    override fun getSupportedPaymentMethods(): List<String> = IdealComponent.PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethods(): List<String> = EntercashComponent.PAYMENT_METHOD_TYPES
 }
