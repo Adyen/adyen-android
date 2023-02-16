@@ -5,10 +5,12 @@
  *
  * Created by caiof on 25/4/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.InputData
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class IssuerListInputData(
     var selectedIssuer: IssuerModel? = null,
 ) : InputData

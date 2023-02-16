@@ -6,7 +6,7 @@
  * Created by atef on 17/8/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.PaymentComponentState
@@ -17,6 +17,11 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import kotlinx.coroutines.CoroutineScope

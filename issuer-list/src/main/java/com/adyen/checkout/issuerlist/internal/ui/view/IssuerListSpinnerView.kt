@@ -5,7 +5,7 @@
  *
  * Created by caiof on 26/4/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -18,6 +18,7 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import kotlinx.coroutines.CoroutineScope
 
 internal class IssuerListSpinnerView @JvmOverloads constructor(

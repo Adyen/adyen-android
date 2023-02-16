@@ -6,7 +6,7 @@
  * Created by josephj on 30/9/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,6 +15,8 @@ import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ButtonComponentViewType
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.issuerlist.internal.ui.view.IssuerListRecyclerView
+import com.adyen.checkout.issuerlist.internal.ui.view.IssuerListSpinnerView
 
 internal object IssuerListViewProvider : ViewProvider {
 

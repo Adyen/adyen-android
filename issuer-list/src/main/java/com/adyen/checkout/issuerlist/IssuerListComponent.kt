@@ -28,6 +28,7 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**

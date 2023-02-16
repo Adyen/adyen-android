@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
-import com.adyen.checkout.issuerlist.IssuerModel
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
 internal class PayByBankRecyclerAdapter(
     private val paymentMethod: String,

@@ -6,13 +6,14 @@
  * Created by josephj on 15/11/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

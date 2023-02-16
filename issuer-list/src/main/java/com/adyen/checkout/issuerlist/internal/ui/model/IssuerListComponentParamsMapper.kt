@@ -6,10 +6,12 @@
  * Created by josephj on 17/11/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(

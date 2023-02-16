@@ -18,6 +18,8 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListComponentViewType
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.utils.TestIssuerListComponent
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import com.adyen.checkout.test.TestDispatcherExtension
