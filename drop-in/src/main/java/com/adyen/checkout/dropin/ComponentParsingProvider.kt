@@ -94,8 +94,8 @@ import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayComponent
-import com.adyen.checkout.molpay.MolpayComponentProvider
 import com.adyen.checkout.molpay.MolpayConfiguration
+import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
