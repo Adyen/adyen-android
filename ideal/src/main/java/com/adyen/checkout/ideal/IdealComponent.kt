@@ -14,6 +14,7 @@ import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.ideal.IdealComponent.Companion.PROVIDER
+import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 

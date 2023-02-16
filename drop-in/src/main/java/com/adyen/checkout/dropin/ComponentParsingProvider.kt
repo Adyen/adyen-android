@@ -85,8 +85,8 @@ import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
-import com.adyen.checkout.ideal.IdealComponentProvider
 import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.InstantPaymentConfiguration
