@@ -6,10 +6,11 @@
  * Created by josephj on 29/9/2022.
  */
 
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
+import com.adyen.checkout.blik.internal.ui.view.BlikView
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.AmountButtonComponentViewType

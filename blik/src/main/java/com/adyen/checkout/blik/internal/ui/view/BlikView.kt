@@ -5,7 +5,7 @@
  *
  * Created by josephj on 29/9/2022.
  */
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -13,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import com.adyen.checkout.blik.R
 import com.adyen.checkout.blik.databinding.BlikViewBinding
+import com.adyen.checkout.blik.internal.ui.BlikDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle

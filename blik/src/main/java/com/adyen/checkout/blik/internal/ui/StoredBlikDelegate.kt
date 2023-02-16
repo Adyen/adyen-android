@@ -6,15 +6,16 @@
  * Created by josephj on 1/7/2022.
  */
 
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.internal.ui
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.blik.internal.ui.model.BlikInputData
+import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -33,16 +34,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-internal class DefaultBlikDelegate(
+internal class StoredBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
-    private val paymentMethod: PaymentMethod,
+    private val storedPaymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler<PaymentComponentState<BlikPaymentMethod>>,
 ) : BlikDelegate {
-
-    private val inputData: BlikInputData = BlikInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
@@ -61,10 +60,6 @@ internal class DefaultBlikDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
-
-    init {
-        updateComponentState(outputData)
-    }
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -89,7 +84,7 @@ internal class DefaultBlikDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback,
+            callback = callback
         )
     }
 
@@ -98,39 +93,24 @@ internal class DefaultBlikDelegate(
     }
 
     override fun getPaymentMethodType(): String {
-        return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+        return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
     override fun updateInputData(update: BlikInputData.() -> Unit) {
-        inputData.update()
-        onInputDataChanged()
+        Logger.e(TAG, "updateInputData should not be called in StoredBlikDelegate")
     }
 
-    private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
-        val outputData = createOutputData()
-        outputDataChanged(outputData)
-        updateComponentState(outputData)
+    override fun onSubmit() {
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(state)
     }
 
-    private fun createOutputData() = BlikOutputData(inputData.blikCode)
+    private fun createOutputData() = BlikOutputData(blikCode = "")
 
-    private fun outputDataChanged(outputData: BlikOutputData) {
-        _outputDataFlow.tryEmit(outputData)
-    }
-
-    @VisibleForTesting
-    internal fun updateComponentState(outputData: BlikOutputData) {
-        val componentState = createComponentState(outputData)
-        _componentStateFlow.tryEmit(componentState)
-    }
-
-    private fun createComponentState(
-        outputData: BlikOutputData = this.outputData
-    ): PaymentComponentState<BlikPaymentMethod> {
+    private fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-            blikCode = outputData.blikCodeField.value
+            storedPaymentMethodId = storedPaymentMethod.id
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -140,14 +120,9 @@ internal class DefaultBlikDelegate(
 
         return PaymentComponentState(
             data = paymentComponentData,
-            isInputValid = outputData.isValid,
+            isInputValid = true,
             isReady = true
         )
-    }
-
-    override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
