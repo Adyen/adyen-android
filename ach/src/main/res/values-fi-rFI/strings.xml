@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Pankkitili</string>
+    <string name="checkout_ach_bank_account_holder_name">Tilinhaltijan nimi</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Ei-kelvollinen tilinhaltijan nimi</string>
+    <string name="checkout_ach_bank_account_number">Tilinumero</string>
+    <string name="checkout_ach_bank_account_number_invalid">Väärä tilin numero</string>
+    <string name="checkout_ach_bank_account_location">ABA-reititysnumero</string>
+    <string name="checkout_ach_bank_account_location_invalid">Ei-kelvollinen ABA-reititysnumero</string>
+</resources>

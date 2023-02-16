@@ -9,7 +9,8 @@ package com.adyen.checkout.ideal
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.ideal.IdealComponent.Companion.PROVIDER
@@ -23,17 +24,19 @@ class IdealComponent internal constructor(
     delegate: IssuerListDelegate<IdealPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<IdealPaymentMethod>>,
 ) : IssuerListComponent<IdealPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
 
     companion object {
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
+        val PROVIDER = IdealComponentProvider()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.IDEAL)
     }
 }

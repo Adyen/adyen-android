@@ -20,7 +20,7 @@ internal class ButtonComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1
         ).build()
 
-        val params = ButtonComponentParamsMapper(null).mapToParams(componentConfiguration)
+        val params = ButtonComponentParamsMapper().mapToParams(componentConfiguration)
 
         val expected = ButtonComponentParams(
             shopperLocale = Locale.US,
@@ -57,8 +57,9 @@ internal class ButtonComponentParamsMapperTest {
             )
         )
 
-        val params = ButtonComponentParamsMapper(overrideParams).mapToParams(
-            componentConfiguration
+        val params = ButtonComponentParamsMapper().mapToParams(
+            componentConfiguration,
+            overrideParams
         )
 
         val expected = ButtonComponentParams(

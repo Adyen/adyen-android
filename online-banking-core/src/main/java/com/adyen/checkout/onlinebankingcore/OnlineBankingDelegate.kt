@@ -37,4 +37,6 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     fun openTermsAndConditions(context: Context)
 
     fun updateInputData(update: OnlineBankingInputData.() -> Unit)
+
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

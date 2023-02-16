@@ -25,5 +25,5 @@ interface ComponentEventHandler<T : PaymentComponentState<*>> {
 
     fun onCleared()
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>)
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, componentCallback: BaseComponentCallback)
 }

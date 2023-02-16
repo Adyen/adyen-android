@@ -11,7 +11,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-
 }
 
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
@@ -62,7 +61,7 @@ android {
 dependencies {
     // Checkout
     implementation project(':drop-in')
-//    implementation "com.adyen.checkout:drop-in:4.9.1"
+//    implementation "com.adyen.checkout:drop-in:4.10.0"
 
     // Uncomment to enable Delegated Authentication
 //    implementation libraries.adyenAuthentication

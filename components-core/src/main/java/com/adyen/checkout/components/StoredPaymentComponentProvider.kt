@@ -8,15 +8,22 @@
 package com.adyen.checkout.components
 
 import android.app.Application
-import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.util.requireApplication
 
-interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*>, ConfigurationT : Configuration> :
-    PaymentComponentProvider<ComponentT, ConfigurationT> {
+interface StoredPaymentComponentProvider<
+    ComponentT : PaymentComponent,
+    ConfigurationT : Configuration,
+    ComponentStateT : PaymentComponentState<*>
+    > {
 
     /**
      * Get a [PaymentComponent] with a stored payment method.
@@ -25,19 +32,51 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*>, Confi
      * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
      * @param configuration       The Configuration of the component.
      * @param key                 Key
-     * @param application         The [Application] instance used to handle actions with.
      *
      * @return The Component
      */
-    @Throws(CheckoutException::class)
-    fun <T> get(
-        owner: T,
+    @Suppress("LongParameterList")
+    fun get(
+        fragment: Fragment,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        application: Application,
+        componentCallback: ComponentCallback<ComponentStateT>,
+        order: Order? = null,
         key: String? = null,
-    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, storedPaymentMethod, configuration, application, null, key)
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = fragment,
+            viewModelStoreOwner = fragment,
+            lifecycleOwner = fragment.viewLifecycleOwner,
+            storedPaymentMethod = storedPaymentMethod,
+            configuration = configuration,
+            application = fragment.requireApplication(),
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
+    @Suppress("LongParameterList")
+    fun get(
+        activity: ComponentActivity,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: ConfigurationT,
+        componentCallback: ComponentCallback<ComponentStateT>,
+        order: Order? = null,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = activity,
+            viewModelStoreOwner = activity,
+            lifecycleOwner = activity,
+            storedPaymentMethod = storedPaymentMethod,
+            configuration = configuration,
+            application = activity.application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
     }
 
     /**
@@ -47,23 +86,21 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*>, Confi
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
      * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
      * @param configuration           The Configuration of the component.
-     * @param defaultArgs             Values from this `Bundle` will be used as defaults by [SavedStateHandle] passed in
-     *                                [ViewModel] if there is no previously saved state or previously saved state misses
-     *                                a value by such key
      * @param key                     Key
      * @param application             The [Application] instance used to handle actions with.
      *
      * @return The Component
      */
     @Suppress("LongParameterList")
-    @Throws(CheckoutException::class)
-    operator fun get(
+    fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        defaultArgs: Bundle?,
+        componentCallback: ComponentCallback<ComponentStateT>,
+        order: Order?,
         key: String?,
     ): ComponentT
 

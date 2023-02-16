@@ -67,7 +67,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 )
 
                 Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
-                val response = paymentsRepository.paymentsRequestAsync(paymentRequest)
+                val response = paymentsRepository.makePaymentsRequest(paymentRequest)
 
                 val result = handleResponse(response)
                 sendResult(result)
@@ -85,7 +85,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
             launch(Dispatchers.IO) {
                 Logger.d(TAG, "onDetailsCallRequested")
 
-                val response = paymentsRepository.detailsRequestAsync(
+                val response = paymentsRepository.makeDetailsRequest(
                     ActionComponentData.SERIALIZER.serialize(actionComponentData)
                 )
 

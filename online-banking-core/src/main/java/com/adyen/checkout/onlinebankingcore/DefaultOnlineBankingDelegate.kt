@@ -19,6 +19,7 @@ import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.PaymentComponentUIEvent
@@ -43,10 +44,11 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val observerRepository: PaymentObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     override val componentParams: ButtonComponentParams,
     private val analyticsRepository: AnalyticsRepository,
     private val termsAndConditionsUrl: String,
-    private val submitHandler: SubmitHandler,
+    private val submitHandler: SubmitHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT> {
 
@@ -66,14 +68,9 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(OnlineBankingComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<PaymentComponentState<IssuerListPaymentMethodT>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitChannel.receiveAsFlow()
-
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     init {
         val outputData = OnlineBankingOutputData()
@@ -82,6 +79,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
     }
 
@@ -146,7 +144,10 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id
 
-        val paymentComponentData = PaymentComponentData(paymentMethod = issuerListPaymentMethod)
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = issuerListPaymentMethod,
+            order = order
+        )
 
         return PaymentComponentState(paymentComponentData, outputData.isValid, true)
     }
@@ -161,17 +162,16 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state = state)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
 
     override fun onCleared() {
         removeObserver()

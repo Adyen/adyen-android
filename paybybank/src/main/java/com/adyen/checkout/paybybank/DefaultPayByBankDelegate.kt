@@ -14,10 +14,10 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
@@ -30,18 +30,18 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.IssuerModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class DefaultPayByBankDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val order: Order?,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler,
+    private val submitHandler: SubmitHandler<PaymentComponentState<PayByBankPaymentMethod>>,
 ) : PayByBankDelegate {
 
     private val inputData = PayByBankInputData()
@@ -57,27 +57,23 @@ internal class DefaultPayByBankDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val submitChannel: Channel<PaymentComponentState<PayByBankPaymentMethod>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = submitChannel.receiveAsFlow()
-
-    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
-    override val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
-
-    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
+    override val submitFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = submitHandler.submitFlow
+    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
+    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     init {
         val hasIssuers = paymentMethod.issuers?.isNotEmpty() == true
         if (!hasIssuers) {
             val state = createValidComponentState()
             _componentStateFlow.tryEmit(state)
-            submitChannel.trySend(state)
+            submitHandler.onSubmit(state) // TODO sessions: test
         } else {
             _viewFlow.tryEmit(PayByBankComponentViewType)
         }
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
     }
 
@@ -137,17 +133,23 @@ internal class DefaultPayByBankDelegate(
         _componentStateFlow.tryEmit(createComponentState(outputData))
     }
 
-    private fun createComponentState(outputData: PayByBankOutputData = this.outputData): PaymentComponentState<PayByBankPaymentMethod> {
+    private fun createComponentState(
+        outputData: PayByBankOutputData = this.outputData
+    ): PaymentComponentState<PayByBankPaymentMethod> {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
-            type = getPaymentMethodType(), issuer = outputData.selectedIssuer?.id ?: ""
+            type = getPaymentMethodType(),
+            issuer = outputData.selectedIssuer?.id.orEmpty()
         )
 
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = payByBankPaymentMethod
+            paymentMethod = payByBankPaymentMethod,
+            order = order
         )
 
         return PaymentComponentState(
-            data = paymentComponentData, isInputValid = outputData.isValid, isReady = true
+            data = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = true
         )
     }
 
@@ -160,7 +162,9 @@ internal class DefaultPayByBankDelegate(
             paymentMethod = payByBankPaymentMethod
         )
         return PaymentComponentState(
-            data = paymentComponentData, isInputValid = true, isReady = true
+            data = paymentComponentData,
+            isInputValid = true,
+            isReady = true
         )
     }
 
@@ -190,12 +194,11 @@ internal class DefaultPayByBankDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state,
-            submitChannel = submitChannel,
-            uiEventChannel = uiEventChannel,
-            uiStateFlow = _uiStateFlow
-        )
+        submitHandler.onSubmit(state = state)
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     override fun onCleared() {

@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentProvider
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -99,17 +98,11 @@ class CardActivity : AppCompatActivity() {
     }
 
     private fun setupCardView(cardComponentData: CardComponentData) {
-        // TODO sessions: change back to CardComponent.PROVIDER
-        val cardComponent = CardComponentProvider().get(
-            savedStateRegistryOwner = this,
-            viewModelStoreOwner = this,
-            lifecycleOwner = this,
+        val cardComponent = CardComponent.PROVIDER.get(
+            activity = this,
             paymentMethod = cardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getCardConfiguration(),
-            application = application,
-            defaultArgs = null,
-            key = null,
-            componentCallback = cardComponentData.callback
+            componentCallback = cardComponentData.callback,
         )
         authenticationLauncher?.let {
             cardComponent.initDelegatedAuthentication(it)

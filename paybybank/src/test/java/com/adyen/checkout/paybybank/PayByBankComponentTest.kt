@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -42,6 +43,7 @@ internal class PayByBankComponentTest(
     @Mock private val payByBankDelegate: PayByBankDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>,
 ) {
 
     private lateinit var component: PayByBankComponent
@@ -55,6 +57,7 @@ internal class PayByBankComponentTest(
             payByBankDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -63,6 +66,7 @@ internal class PayByBankComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(payByBankDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -71,6 +75,7 @@ internal class PayByBankComponentTest(
 
         verify(payByBankDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -105,7 +110,12 @@ internal class PayByBankComponentTest(
         runTest {
             val payByBankDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
             whenever(payByBankDelegate.viewFlow) doReturn payByBankDelegateViewFlow
-            component = PayByBankComponent(payByBankDelegate, genericActionDelegate, actionHandlingComponent)
+            component = PayByBankComponent(
+                payByBankDelegate,
+                genericActionDelegate,
+                actionHandlingComponent,
+                componentEventHandler
+            )
 
             component.viewFlow.test {
                 assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -121,7 +131,8 @@ internal class PayByBankComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = PayByBankComponent(payByBankDelegate, genericActionDelegate, actionHandlingComponent)
+        component =
+            PayByBankComponent(payByBankDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

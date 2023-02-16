@@ -16,6 +16,7 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 internal class DefaultGooglePayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
+    private val order: OrderRequest?,
     override val componentParams: GooglePayComponentParams,
     private val analyticsRepository: AnalyticsRepository,
 ) : GooglePayDelegate {
@@ -106,7 +108,10 @@ internal class DefaultGooglePayDelegate(
         } ?: false
 
         val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData, paymentMethod.type)
-        val paymentComponentData = PaymentComponentData(paymentMethod = paymentMethod)
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = paymentMethod,
+            order = order,
+        )
 
         return GooglePayComponentState(
             paymentComponentData = paymentComponentData,

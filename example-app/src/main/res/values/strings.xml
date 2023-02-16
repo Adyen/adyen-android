@@ -9,6 +9,7 @@
     <string name="bacs_component_entry">BACS (using bottom sheet)</string>
     <string name="card_component_entry">Card</string>
     <string name="card_component_with_session_entry">Card with session</string>
+    <string name="card_component_with_session_taken_over_entry">Card with custom session</string>
 
     <string name="country_code_error">Your country code must be %s</string>
     <string name="currency_code_error">Your currency code must be %s</string>

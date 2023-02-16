@@ -9,14 +9,13 @@
 package com.adyen.checkout.example.ui.blik
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
 
 sealed class BlikViewState {
 
     object Loading : BlikViewState()
 
-    data class ShowComponent(val paymentMethod: PaymentMethod) : BlikViewState()
+    data class ShowComponent(val componentData: BlikComponentData) : BlikViewState()
 
     data class Action(val action: ActionResponse) : BlikViewState()
 

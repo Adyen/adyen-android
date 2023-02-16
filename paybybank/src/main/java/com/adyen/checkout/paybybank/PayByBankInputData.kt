@@ -14,4 +14,4 @@ import com.adyen.checkout.issuerlist.IssuerModel
 class PayByBankInputData(
     var query: String? = null,
     var selectedIssuer: IssuerModel? = null
-): InputData
+) : InputData

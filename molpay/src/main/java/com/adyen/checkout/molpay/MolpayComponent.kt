@@ -9,7 +9,8 @@ package com.adyen.checkout.molpay
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -23,18 +24,20 @@ class MolpayComponent internal constructor(
     delegate: IssuerListDelegate<MolpayPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<MolpayPaymentMethod>>,
 ) : IssuerListComponent<MolpayPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
+        val PROVIDER = MolpayComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(
+        val PAYMENT_METHOD_TYPES = listOf(
             PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,
             PaymentMethodTypes.MOLPAY_VIETNAM

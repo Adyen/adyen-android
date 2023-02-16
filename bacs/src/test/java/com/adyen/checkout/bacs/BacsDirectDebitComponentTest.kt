@@ -13,7 +13,10 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
+import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -41,6 +44,7 @@ internal class BacsDirectDebitComponentTest(
     @Mock private val bacsDirectDebitDelegate: BacsDirectDebitDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<BacsDirectDebitComponentState>,
 ) {
 
     private lateinit var component: BacsDirectDebitComponent
@@ -54,6 +58,7 @@ internal class BacsDirectDebitComponentTest(
             bacsDirectDebitDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -62,6 +67,7 @@ internal class BacsDirectDebitComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(bacsDirectDebitDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -70,6 +76,7 @@ internal class BacsDirectDebitComponentTest(
 
         verify(bacsDirectDebitDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -103,7 +110,12 @@ internal class BacsDirectDebitComponentTest(
     fun `when bacs delegate view flow emits a value then component view flow should match that value`() = runTest {
         val bacsDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(bacsDirectDebitDelegate.viewFlow) doReturn bacsDelegateViewFlow
-        component = BacsDirectDebitComponent(bacsDirectDebitDelegate, genericActionDelegate, actionHandlingComponent)
+        component = BacsDirectDebitComponent(
+            bacsDirectDebitDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -119,7 +131,12 @@ internal class BacsDirectDebitComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = BacsDirectDebitComponent(bacsDirectDebitDelegate, genericActionDelegate, actionHandlingComponent)
+        component = BacsDirectDebitComponent(
+            bacsDirectDebitDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
@@ -135,12 +152,14 @@ internal class BacsDirectDebitComponentTest(
 
     @Test
     fun `when setConfirmationMode is called then delegate setMode is called`() {
+        whenever(actionHandlingComponent.activeDelegate) doReturn bacsDirectDebitDelegate
         component.setConfirmationMode()
         verify(bacsDirectDebitDelegate).setMode(BacsDirectDebitMode.CONFIRMATION)
     }
 
     @Test
     fun `when setInputMode is called then delegate setMode is called`() {
+        whenever(actionHandlingComponent.activeDelegate) doReturn bacsDirectDebitDelegate
         component.setInputMode()
         verify(bacsDirectDebitDelegate).setMode(BacsDirectDebitMode.INPUT)
     }

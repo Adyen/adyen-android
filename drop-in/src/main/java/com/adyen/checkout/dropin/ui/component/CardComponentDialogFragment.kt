@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -37,9 +36,6 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
 
-        // Keeping generic component to use the observer from the BaseComponentDialogFragment
-        component.observe(viewLifecycleOwner, ::onPaymentComponentEvent)
-
         // try to get the name from the payment methods response
         binding.header.text = dropInViewModel.getPaymentMethods()
             .find { it.type == PaymentMethodTypes.SCHEME }?.name
@@ -49,19 +45,6 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         if (cardComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
-        }
-    }
-
-    private fun onPaymentComponentEvent(event: PaymentComponentEvent<*>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> {
-                // no ops
-            }
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> {
-                throw IllegalStateException("This event should not be used in drop-in")
-            }
-            is PaymentComponentEvent.Submit -> startPayment(event.state)
         }
     }
 

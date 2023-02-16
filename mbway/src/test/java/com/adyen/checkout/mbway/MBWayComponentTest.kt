@@ -15,6 +15,7 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
@@ -43,6 +44,7 @@ internal class MBWayComponentTest(
     @Mock private val mbWayDelegate: MBWayDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<MBWayPaymentMethod>>,
 ) {
 
     private lateinit var component: MBWayComponent
@@ -56,6 +58,7 @@ internal class MBWayComponentTest(
             mbWayDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -64,6 +67,7 @@ internal class MBWayComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(mbWayDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -72,6 +76,7 @@ internal class MBWayComponentTest(
 
         verify(mbWayDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -105,7 +110,7 @@ internal class MBWayComponentTest(
     fun `when mb way delegate view flow emits a value then component view flow should match that value`() = runTest {
         val mbWayDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(mbWayDelegate.viewFlow) doReturn mbWayDelegateViewFlow
-        component = MBWayComponent(mbWayDelegate, genericActionDelegate, actionHandlingComponent)
+        component = MBWayComponent(mbWayDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -121,7 +126,7 @@ internal class MBWayComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = MBWayComponent(mbWayDelegate, genericActionDelegate, actionHandlingComponent)
+        component = MBWayComponent(mbWayDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

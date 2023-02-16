@@ -24,7 +24,8 @@ data class SessionSetupResponse(
     val amount: Amount?,
     val expiresAt: String,
     val paymentMethods: PaymentMethodsApiResponse?,
-    val returnUrl: String
+    val returnUrl: String,
+    val configuration: SessionSetupConfiguration?
 ) : ModelObject() {
 
     companion object {
@@ -34,6 +35,7 @@ data class SessionSetupResponse(
         private const val EXPIRES_AT = "expiresAt"
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val RETURN_URL = "returnUrl"
+        private const val CONFIGURATION = "configuration"
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupResponse> = object : Serializer<SessionSetupResponse> {
@@ -49,6 +51,10 @@ data class SessionSetupResponse(
                         ModelUtils.serializeOpt(modelObject.paymentMethods, PaymentMethodsApiResponse.SERIALIZER)
                     )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
+                    jsonObject.putOpt(
+                        CONFIGURATION,
+                        ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER)
+                    )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)
                 }
@@ -66,7 +72,11 @@ data class SessionSetupResponse(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
                             PaymentMethodsApiResponse.SERIALIZER
                         ),
-                        returnUrl = jsonObject.optString(RETURN_URL)
+                        returnUrl = jsonObject.optString(RETURN_URL),
+                        configuration = ModelUtils.deserializeOpt(
+                            jsonObject.optJSONObject(CONFIGURATION),
+                            SessionSetupConfiguration.SERIALIZER
+                        )
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)

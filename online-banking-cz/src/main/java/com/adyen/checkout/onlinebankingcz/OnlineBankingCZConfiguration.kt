@@ -9,13 +9,10 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.ButtonConfiguration
-import com.adyen.checkout.components.base.ButtonConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -28,14 +25,10 @@ class OnlineBankingCZConfiguration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
-    internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration, ButtonConfiguration {
+    override val genericActionConfiguration: GenericActionConfiguration,
+) : OnlineBankingConfiguration() {
 
-    class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingCZConfiguration, Builder>,
-        ButtonConfigurationBuilder {
-
-        private var isSubmitButtonVisible: Boolean? = null
+    class Builder : OnlineBankingConfigurationBuilder<OnlineBankingCZConfiguration, Builder> {
 
         /**
          * Constructor for Builder with default values.
@@ -62,11 +55,6 @@ class OnlineBankingCZConfiguration private constructor(
             environment: Environment,
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
-
-        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
-            this.isSubmitButtonVisible = isSubmitButtonVisible
-            return this
-        }
 
         override fun buildInternal(): OnlineBankingCZConfiguration {
             return OnlineBankingCZConfiguration(

@@ -9,7 +9,6 @@
 package com.adyen.checkout.action
 
 import android.app.Application
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -34,10 +33,10 @@ import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 
 class GenericActionComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -46,10 +45,9 @@ class GenericActionComponentProvider(
         application: Application,
         configuration: GenericActionConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): GenericActionComponent {
-        val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val genericActionFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,
@@ -71,7 +69,7 @@ class GenericActionComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         return DefaultGenericActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,

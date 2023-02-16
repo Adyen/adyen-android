@@ -11,14 +11,13 @@ package com.adyen.checkout.components.base
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultComponentEventHandler<T : PaymentComponentState<*>>(
-    private val componentCallback: ComponentCallback<T>
-) : ComponentEventHandler<T> {
+class DefaultComponentEventHandler<T : PaymentComponentState<*>> : ComponentEventHandler<T> {
 
     // no ops
     override fun initialize(coroutineScope: CoroutineScope) = Unit
@@ -26,13 +25,16 @@ class DefaultComponentEventHandler<T : PaymentComponentState<*>>(
     // no ops
     override fun onCleared() = Unit
 
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, componentCallback: BaseComponentCallback) {
+        @Suppress("UNCHECKED_CAST")
+        val callback = componentCallback as? ComponentCallback<T>
+            ?: throw CheckoutException("Callback must be type of ${ComponentCallback::class.java.canonicalName}")
         Logger.v(TAG, "Event received $event")
         when (event) {
-            is PaymentComponentEvent.ActionDetails -> componentCallback.onAdditionalDetails(event.data)
-            is PaymentComponentEvent.Error -> componentCallback.onError(event.error)
-            is PaymentComponentEvent.StateChanged -> componentCallback.onStateChanged(event.state)
-            is PaymentComponentEvent.Submit -> componentCallback.onSubmit(event.state)
+            is PaymentComponentEvent.ActionDetails -> callback.onAdditionalDetails(event.data)
+            is PaymentComponentEvent.Error -> callback.onError(event.error)
+            is PaymentComponentEvent.StateChanged -> callback.onStateChanged(event.state)
+            is PaymentComponentEvent.Submit -> callback.onSubmit(event.state)
         }
     }
 

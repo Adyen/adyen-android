@@ -15,7 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
 import com.adyen.checkout.components.ActionComponentData
@@ -86,7 +86,7 @@ internal class TestActionDelegate :
             throw NotImplementedError("This method shouldn't be used in tests")
         }
     }
-    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper().mapToParams(configuration)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -127,7 +127,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     private val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
 
-    override val componentParams: ComponentParams = GenericComponentParamsMapper(null).mapToParams(configuration)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper().mapToParams(configuration)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

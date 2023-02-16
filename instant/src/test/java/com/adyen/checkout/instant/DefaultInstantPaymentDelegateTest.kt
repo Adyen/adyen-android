@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
@@ -47,7 +48,8 @@ class DefaultInstantPaymentDelegateTest(
         delegate = DefaultInstantPaymentDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
-            componentParams = GenericComponentParamsMapper(null).mapToParams(configuration),
+            order = TEST_ORDER,
+            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
             analyticsRepository = analyticsRepository
         )
         Logger.setLogcatLevel(Logger.NONE)
@@ -58,6 +60,7 @@ class DefaultInstantPaymentDelegateTest(
         delegate.componentStateFlow.test {
             with(awaitItem()) {
                 assertEquals(TYPE, data.paymentMethod?.type)
+                assertEquals(TEST_ORDER, data.order)
                 assertTrue(isInputValid)
                 assertTrue(isValid)
             }
@@ -75,5 +78,6 @@ class DefaultInstantPaymentDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TYPE = "txVariant"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

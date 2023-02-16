@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Prenume</string>
+    <string name="checkout_econtext_last_name_hint">Nume de familie</string>
+    <string name="checkout_econtext_phone_number_hint">Număr de telefon</string>
+    <string name="checkout_econtext_shopper_email_hint">Adresă de e-mail</string>
+
+    <string name="checkout_econtext_first_name_invalid">Prenumele nu este valabil</string>
+    <string name="checkout_econtext_last_name_invalid">Numele de familie nu este valabil</string>
+    <string name="checkout_econtext_phone_number_invalid">Număr de telefon incorect</string>
+    <string name="checkout_econtext_shopper_email_invalid">Adresă de e-mail incorectă</string>
+</resources>

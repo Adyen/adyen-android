@@ -46,11 +46,13 @@ android {
 
 dependencies {
     // Checkout
+    api project(':ach')
     api project(':action')
     api project(':bacs')
     api project(':bcmc')
     api project(':blik')
     api project(':card')
+    api project(':convenience-stores-jp')
     api project(':dotpay')
     api project(':entercash')
     api project(':eps')
@@ -61,11 +63,14 @@ dependencies {
     api project(':mbway')
     api project(':molpay')
     api project(':online-banking-cz')
+    api project(':online-banking-jp')
     api project(':online-banking-pl')
     api project(':online-banking-sk')
     api project(':openbanking')
+    api project(':payeasy')
     api project(':paybybank')
     api project(':sepa')
+    api project(':seven-eleven')
     api project(':sessions-core')
 
     // Delegated Authentication

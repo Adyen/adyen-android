@@ -15,5 +15,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Card,
         ComponentItem.Entry.Instant,
         ComponentItem.Entry.CardWithSession,
+        ComponentItem.Entry.CardWithSessionTakenOver,
     )
 }

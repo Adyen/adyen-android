@@ -73,6 +73,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.model.SessionPaymentResult
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
 
@@ -438,6 +439,7 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
+            is DropInServiceResult.FinishedWithSessions -> sendResult(dropInServiceResult.result)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
@@ -499,8 +501,14 @@ internal class DropInActivity :
         )
     }
 
-    private fun sendResult(content: String) {
-        val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, content)
+    private fun sendResult(result: String) {
+        val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, result)
+        setResult(Activity.RESULT_OK, resultIntent)
+        terminateSuccessfully()
+    }
+
+    private fun sendResult(result: SessionPaymentResult) {
+        val resultIntent = Intent().putExtra(DropIn.SESSION_RESULT_KEY, result)
         setResult(Activity.RESULT_OK, resultIntent)
         terminateSuccessfully()
     }

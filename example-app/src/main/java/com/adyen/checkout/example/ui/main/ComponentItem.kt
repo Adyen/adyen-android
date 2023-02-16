@@ -18,5 +18,6 @@ internal sealed class ComponentItem {
         object Card : Entry(R.string.card_component_entry)
         object Instant : Entry(R.string.instant_component_entry)
         object CardWithSession : Entry(R.string.card_component_with_session_entry)
+        object CardWithSessionTakenOver : Entry(R.string.card_component_with_session_taken_over_entry)
     }
 }

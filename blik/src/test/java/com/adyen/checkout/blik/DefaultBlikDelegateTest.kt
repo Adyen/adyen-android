@@ -9,9 +9,12 @@
 package com.adyen.checkout.blik
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsRepository
 import com.adyen.checkout.components.base.ButtonComponentParamsMapper
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
@@ -37,6 +40,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultBlikDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<BlikPaymentMethod>>,
 ) {
 
     private lateinit var delegate: DefaultBlikDelegate
@@ -152,6 +156,7 @@ internal class DefaultBlikDelegateTest(
                     assertEquals("777134", data.paymentMethod?.blikCode)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
+                    assertEquals(TEST_ORDER, data.order)
                 }
 
                 cancelAndIgnoreRemainingEvents()
@@ -191,14 +196,42 @@ internal class DefaultBlikDelegateTest(
         }
     }
 
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
     private fun createBlikDelegate(
         configuration: BlikConfiguration = getDefaultBlikConfigurationBuilder().build()
     ) = DefaultBlikDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null).mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         paymentMethod = PaymentMethod(),
+        order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
-        submitHandler = SubmitHandler()
+        submitHandler = submitHandler,
     )
 
     private fun getDefaultBlikConfigurationBuilder() = BlikConfiguration.Builder(
@@ -209,5 +242,6 @@ internal class DefaultBlikDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
     }
 }

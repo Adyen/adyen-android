@@ -29,4 +29,17 @@
         <item name="android:textSize">@dimen/qr_code_timer_text_size</item>
         <item name="android:textColor">@color/qrCodeTimerTextColor</item>
     </style>
+
+    <style name="AdyenCheckout.QrCode.SaveButton" parent="AdyenCheckout.Button.Colored">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/copy_button_height</item>
+        <item name="android:text">@string/checkout_qr_code_save_button</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.QrCode.Image">
+        <item name="android:layout_width">@dimen/qr_image_height</item>
+        <item name="android:layout_height">@dimen/qr_image_height</item>
+        <item name="android:src">@drawable/ic_placeholder_image</item>
+    </style>
 </resources>

@@ -37,6 +37,25 @@ allprojects {
 }
 
 subprojects {
+    project.afterEvaluate {
+        def javaVersion = 11
+        def isAndroid = plugins.hasPlugin("com.android.application") || plugins.hasPlugin("com.android.library")
+        if (isAndroid) {
+            android {
+                compileOptions {
+                    sourceCompatibility = javaVersion
+                    targetCompatibility = javaVersion
+                }
+            }
+        }
+
+        if (plugins.hasPlugin("kotlin-android")) {
+            kotlin {
+                jvmToolchain(javaVersion)
+            }
+        }
+    }
+
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         kotlinOptions {
             freeCompilerArgs += [

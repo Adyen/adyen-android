@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
     id 'kotlin-parcelize'
 }
 
@@ -31,7 +31,7 @@ android {
 dependencies {
     // Checkout
     api project(':action')
-    api project(':components-core')
+    api project(':sessions-core')
 
     // Dependencies
     implementation libraries.material

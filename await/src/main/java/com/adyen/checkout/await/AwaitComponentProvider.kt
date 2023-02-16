@@ -9,7 +9,6 @@
 package com.adyen.checkout.await
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -34,10 +33,10 @@ import com.adyen.checkout.core.api.HttpClientFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AwaitComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -49,10 +48,9 @@ class AwaitComponentProvider(
         application: Application,
         configuration: AwaitConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): AwaitComponent {
-        val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val awaitFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,
@@ -69,7 +67,7 @@ class AwaitComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): AwaitDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

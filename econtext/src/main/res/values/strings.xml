@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">First name</string>
+    <string name="checkout_econtext_last_name_hint">Last name</string>
+    <string name="checkout_econtext_phone_number_hint">Telephone number</string>
+    <string name="checkout_econtext_shopper_email_hint">Email address</string>
+
+    <string name="checkout_econtext_first_name_invalid">First name is not valid</string>
+    <string name="checkout_econtext_last_name_invalid">Last name is not valid</string>
+    <string name="checkout_econtext_phone_number_invalid">Invalid telephone number</string>
+    <string name="checkout_econtext_shopper_email_invalid">Invalid email address</string>
+</resources>

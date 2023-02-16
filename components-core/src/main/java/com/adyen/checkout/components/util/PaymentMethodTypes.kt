@@ -18,6 +18,7 @@ object PaymentMethodTypes {
     const val UNKNOWN = "unknown"
 
     // Type of the payment method as received by the paymentMethods/ API
+    const val ACH = "ach"
     const val IDEAL = "ideal"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
@@ -42,6 +43,7 @@ object PaymentMethodTypes {
 
     // Payment methods that do not need a payment component, but only an action component
     const val WECHAT_PAY_SDK = "wechatpaySDK"
+    const val PAY_NOW = "paynow"
     const val PIX = "pix"
 
     // Voucher payment methods that are not yet supported
@@ -85,6 +87,7 @@ object PaymentMethodTypes {
     // List of all payment method types.
     val SUPPORTED_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
+            ACH,
             BCMC,
             DOTPAY,
             ENTERCASH,
@@ -104,14 +107,16 @@ object PaymentMethodTypes {
             SCHEME,
             BLIK,
             WECHAT_PAY_SDK,
-            PIX,
+            PAY_NOW,
             ONLINE_BANKING_CZ,
-            ONLINE_BANKING_PL
+            ONLINE_BANKING_PL,
+            PIX,
         )
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
             WECHAT_PAY_SDK,
+            PAY_NOW,
             PIX
         )
     )
@@ -137,6 +142,10 @@ object PaymentMethodTypes {
             DOKU_BNI_VA,
             DOKU_BCA_VA,
             DOKU_WALLET,
+            ECONTEXT_ATM,
+            ECONTEXT_ONLINE,
+            ECONTEXT_SEVEN_ELEVEN,
+            ECONTEXT_STORES,
             BOLETOBANCARIO,
             BOLETOBANCARIO_BANCODOBRASIL,
             BOLETOBANCARIO_BRADESCO,
@@ -147,10 +156,6 @@ object PaymentMethodTypes {
             DRAGONPAY_OTC_BANKING,
             DRAGONPAY_OTC_NON_BANKING,
             DRAGONPAY_OTC_PHILIPPINES,
-            ECONTEXT_SEVEN_ELEVEN,
-            ECONTEXT_ATM,
-            ECONTEXT_STORES,
-            ECONTEXT_ONLINE
         )
     )
 }

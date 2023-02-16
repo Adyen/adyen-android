@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">名字</string>
+    <string name="checkout_econtext_last_name_hint">姓氏</string>
+    <string name="checkout_econtext_phone_number_hint">電話號碼</string>
+    <string name="checkout_econtext_shopper_email_hint">電子郵件地址</string>
+
+    <string name="checkout_econtext_first_name_invalid">名字無效</string>
+    <string name="checkout_econtext_last_name_invalid">姓氏無效</string>
+    <string name="checkout_econtext_phone_number_invalid">電話號碼無效</string>
+    <string name="checkout_econtext_shopper_email_invalid">電子郵件地址無效</string>
+</resources>

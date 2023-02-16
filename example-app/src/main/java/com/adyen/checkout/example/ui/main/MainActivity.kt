@@ -22,7 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
-import com.adyen.checkout.dropin.DropInResult
+import com.adyen.checkout.dropin.SessionDropInCallback
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleAdvancedDropInService
@@ -31,6 +31,7 @@ import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardActivity
+import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
@@ -38,12 +39,20 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DropInCallback {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
-    private val dropInLauncher = DropIn.registerForDropInResult(this, this)
+    private val dropInLauncher = DropIn.registerForDropInResult(
+        this,
+        DropInCallback { dropInResult -> viewModel.onDropInResult(dropInResult) }
+    )
+
+    private val sessionDropInLauncher = DropIn.registerForDropInResult(
+        this,
+        SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) }
+    )
 
     private var componentItemAdapter: ComponentItemAdapter? = null
 
@@ -88,8 +97,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDropInResult(dropInResult: DropInResult?) = viewModel.onDropInResult(dropInResult)
-
     private fun onViewState(viewState: MainViewState) {
         when (viewState) {
             MainViewState.Loading -> setLoading(true)
@@ -119,17 +126,17 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                 )
             }
             is MainNavigation.DropInWithSession -> {
-                DropIn.startPaymentWithSession(
+                DropIn.startPayment(
                     this,
-                    dropInLauncher,
+                    sessionDropInLauncher,
                     navigation.checkoutSession,
                     navigation.dropInConfiguration,
                 )
             }
             is MainNavigation.DropInWithCustomSession -> {
-                DropIn.startPaymentWithSession(
+                DropIn.startPayment(
                     this,
-                    dropInLauncher,
+                    sessionDropInLauncher,
                     navigation.checkoutSession,
                     navigation.dropInConfiguration,
                     ExampleSessionsDropInService::class.java
@@ -146,6 +153,10 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             }
             MainNavigation.CardWithSession -> {
                 val intent = Intent(this, SessionsCardActivity::class.java)
+                startActivity(intent)
+            }
+            MainNavigation.CardWithSessionTakenOver -> {
+                val intent = Intent(this, SessionsCardTakenOverActivity::class.java)
                 startActivity(intent)
             }
             is MainNavigation.Instant -> {

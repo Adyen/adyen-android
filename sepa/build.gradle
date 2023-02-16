@@ -45,6 +45,7 @@ dependencies {
     // Checkout
     api project(':action')
     api project(':ui-core')
+    api project(':sessions-core')
 
     // Dependencies
     implementation libraries.material

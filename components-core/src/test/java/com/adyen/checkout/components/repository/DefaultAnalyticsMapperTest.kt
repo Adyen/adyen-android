@@ -105,7 +105,7 @@ internal class DefaultAnalyticsMapperTest {
 
             val expected = mapOf(
                 "payload_version" to "1",
-                "version" to "4.9.1",
+                "version" to "4.10.0",
                 "flavor" to "components",
                 "component" to "PAYMENT_METHOD_TYPE",
                 "locale" to "en_US",

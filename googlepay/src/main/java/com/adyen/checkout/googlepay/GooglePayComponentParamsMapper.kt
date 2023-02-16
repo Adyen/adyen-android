@@ -21,13 +21,12 @@ import com.adyen.checkout.googlepay.util.AllowedAuthMethods
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 import com.google.android.gms.wallet.WalletConstants
 
-internal class GooglePayComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-) {
+internal class GooglePayComponentParamsMapper {
 
     fun mapToParams(
         googlePayConfiguration: GooglePayConfiguration,
         paymentMethod: PaymentMethod,
+        overrideComponentParams: ComponentParams? = null
     ): GooglePayComponentParams {
         return googlePayConfiguration
             .mapToParamsInternal(paymentMethod)

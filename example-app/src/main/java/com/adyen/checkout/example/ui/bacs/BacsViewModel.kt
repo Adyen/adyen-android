@@ -15,8 +15,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -43,10 +42,10 @@ internal class BacsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel() {
+) : ViewModel(), ComponentCallback<BacsDirectDebitComponentState> {
 
-    private val _paymentMethodFlow = MutableStateFlow<PaymentMethod?>(null)
-    val paymentMethodFlow: Flow<PaymentMethod> = _paymentMethodFlow.filterNotNull()
+    private val _bacsComponentDataFlow = MutableStateFlow<BacsComponentData?>(null)
+    val bacsComponentDataFlow: Flow<BacsComponentData> = _bacsComponentDataFlow.filterNotNull()
 
     private val _viewState = MutableStateFlow<BacsViewState>(BacsViewState.Loading)
     val viewState: Flow<BacsViewState> = _viewState
@@ -90,18 +89,26 @@ internal class BacsViewModel @Inject constructor(
         if (paymentMethod == null) {
             _viewState.emit(BacsViewState.Error(R.string.error_dialog_title))
         } else {
-            _paymentMethodFlow.emit(paymentMethod)
+            _bacsComponentDataFlow.emit(
+                BacsComponentData(
+                    paymentMethod,
+                    this@BacsViewModel
+                )
+            )
             _viewState.emit(BacsViewState.ShowComponent)
         }
     }
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<BacsDirectDebitComponentState>) {
-        when (event) {
-            is PaymentComponentEvent.StateChanged -> Unit
-            is PaymentComponentEvent.Error -> onComponentError(event.error)
-            is PaymentComponentEvent.ActionDetails -> sendPaymentDetails(event.data)
-            is PaymentComponentEvent.Submit -> makePayment(event.state.data)
-        }
+    override fun onSubmit(state: BacsDirectDebitComponentState) {
+        makePayment(state.data)
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        sendPaymentDetails(actionComponentData)
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
     }
 
     private fun onComponentError(error: ComponentError) {
@@ -111,7 +118,7 @@ internal class BacsViewModel @Inject constructor(
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
         viewModelScope.launch(Dispatchers.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-            handlePaymentResponse(paymentsRepository.detailsRequestAsync(json))
+            handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
     }
 
@@ -150,7 +157,7 @@ internal class BacsViewModel @Inject constructor(
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
 
-            handlePaymentResponse(paymentsRepository.paymentsRequestAsync(paymentRequest))
+            handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
         }
     }
 }

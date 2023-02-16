@@ -16,6 +16,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponentEvent
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -43,6 +44,7 @@ internal class GooglePayComponentTest(
     @Mock private val googlePayDelegate: GooglePayDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
+    @Mock private val componentEventHandler: ComponentEventHandler<GooglePayComponentState>,
 ) {
 
     private lateinit var component: GooglePayComponent
@@ -55,6 +57,7 @@ internal class GooglePayComponentTest(
             googlePayDelegate,
             genericActionDelegate,
             actionHandlingComponent,
+            componentEventHandler,
         )
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -63,6 +66,7 @@ internal class GooglePayComponentTest(
     fun `when component is created then delegates are initialized`() {
         verify(googlePayDelegate).initialize(component.viewModelScope)
         verify(genericActionDelegate).initialize(component.viewModelScope)
+        verify(componentEventHandler).initialize(component.viewModelScope)
     }
 
     @Test
@@ -71,6 +75,7 @@ internal class GooglePayComponentTest(
 
         verify(googlePayDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
     }
 
     @Test
@@ -104,7 +109,12 @@ internal class GooglePayComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = GooglePayComponent(googlePayDelegate, genericActionDelegate, actionHandlingComponent)
+        component = GooglePayComponent(
+            googlePayDelegate = googlePayDelegate,
+            genericActionDelegate = genericActionDelegate,
+            actionHandlingComponent = actionHandlingComponent,
+            componentEventHandler = componentEventHandler
+        )
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())

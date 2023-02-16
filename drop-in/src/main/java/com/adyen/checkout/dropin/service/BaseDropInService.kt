@@ -36,7 +36,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class BaseDropInService : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropInServiceContract {
 
     private val coroutineJob: Job = Job()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
+    final override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
 
     @Suppress("LeakingThis")
     private val binder = DropInBinder(this)
@@ -81,22 +81,22 @@ abstract class BaseDropInService : Service(), CoroutineScope, BaseDropInServiceI
         super.onDestroy()
     }
 
-    override fun sendResult(result: DropInServiceResult) {
+    final override fun sendResult(result: DropInServiceResult) {
         Logger.d(TAG, "dispatching DropInServiceResult")
         emitResult(result)
     }
 
-    override fun sendBalanceResult(result: BalanceDropInServiceResult) {
+    final override fun sendBalanceResult(result: BalanceDropInServiceResult) {
         Logger.d(TAG, "dispatching BalanceDropInServiceResult")
         emitResult(result)
     }
 
-    override fun sendOrderResult(result: OrderDropInServiceResult) {
+    final override fun sendOrderResult(result: OrderDropInServiceResult) {
         Logger.d(TAG, "dispatching OrderDropInServiceResult")
         emitResult(result)
     }
 
-    override fun sendRecurringResult(result: RecurringDropInServiceResult) {
+    final override fun sendRecurringResult(result: RecurringDropInServiceResult) {
         Logger.d(TAG, "dispatching RecurringDropInServiceResult")
         emitResult(result)
     }
@@ -108,16 +108,16 @@ abstract class BaseDropInService : Service(), CoroutineScope, BaseDropInServiceI
         }
     }
 
-    override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
+    final override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
         resultFlow.collect { callback(it) }
     }
 
-    override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+    final override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
         Logger.d(TAG, "requestRemoveStoredPaymentMethod")
-        removeStoredPaymentMethod(storedPaymentMethod)
+        onRemoveStoredPaymentMethod(storedPaymentMethod)
     }
 
-    override fun getAdditionalData(): Bundle? {
+    final override fun getAdditionalData(): Bundle? {
         return additionalData
     }
 

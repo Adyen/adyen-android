@@ -9,7 +9,8 @@ package com.adyen.checkout.openbanking
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -23,17 +24,18 @@ class OpenBankingComponent internal constructor(
     delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<OpenBankingPaymentMethod>>,
 ) : IssuerListComponent<OpenBankingPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> =
-            OpenBankingComponentProvider()
+        val PROVIDER = OpenBankingComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.OPEN_BANKING)
     }
 }

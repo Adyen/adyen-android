@@ -108,7 +108,7 @@ internal class CardViewModel @Inject constructor(
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
 
-            handlePaymentResponse(paymentsRepository.paymentsRequestAsync(paymentRequest))
+            handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
         }
     }
 
@@ -132,7 +132,7 @@ internal class CardViewModel @Inject constructor(
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
         viewModelScope.launch(Dispatchers.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-            handlePaymentResponse(paymentsRepository.detailsRequestAsync(json))
+            handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
     }
 

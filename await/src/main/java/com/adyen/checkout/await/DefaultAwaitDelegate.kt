@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
@@ -114,7 +115,7 @@ internal class DefaultAwaitDelegate(
 
     private fun startStatusPolling(paymentData: String, action: Action) {
         statusPollingJob?.cancel()
-        statusPollingJob = statusRepository.poll(paymentData)
+        statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
             .onEach { onStatus(it, action) }
             .launchIn(coroutineScope)
     }
@@ -188,6 +189,8 @@ internal class DefaultAwaitDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"

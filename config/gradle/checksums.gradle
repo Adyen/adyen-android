@@ -13,17 +13,17 @@ if (!hasProperty("checksums")) {
         "com.adyen.authentication:android-authentication:0.2.1:8341daa9f518255dad457c2ed065c2f4:MD5",
 
         // Kotlin
-        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0:34246294df796300616b9b6352ffcece:MD5",
-        "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.8.0:94d9337bf406e423ccf92403d7479127:MD5",
-        "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.8.0:78b9a773df0fdf62a6317fa2f7af554b:MD5",
-        "org.jetbrains.kotlin:kotlin-parcelize-compiler:1.8.0:9a8663f16914ed558113d08b674e1405:MD5",
-        "org.jetbrains.kotlin:kotlin-parcelize-runtime:1.8.0:14f5427e93df472b1553b4e6bec4ec73:MD5",
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10:1cbbdbbfa072d00dc042d6ae62d3154f:MD5",
+        "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.8.10:b1443b52c025574ead03247fa0fa6eef:MD5",
+        "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.8.10:650d18e851d4434dcd40caccbae92df4:MD5",
+        "org.jetbrains.kotlin:kotlin-parcelize-compiler:1.8.10:460d1586020b102497f2add04e914a9a:MD5",
+        "org.jetbrains.kotlin:kotlin-parcelize-runtime:1.8.10:7a0b3113ad2788c104f44f0f96334944:MD5",
 
         // Coroutines
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4:7aad79016f327ae9cfd0b560b0b47558:MD5",
 
         // Android Gradle Plugin
-        "androidx.databinding:viewbinding:7.4.0:dfbc4b5d3bee24bf9e719c13eb39952e:MD5",
+        "androidx.databinding:viewbinding:7.4.1:5d4f47ee4ba987a62147da77c0a4ba89:MD5",
 
         // AndroidX
         "androidx.annotation:annotation:1.5.0:5f8c96f5310d39845efa73dd82b717e4:MD5",
@@ -32,9 +32,9 @@ if (!hasProperty("checksums")) {
         "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1:ddec34e06f4a0f22fd183b94a6772fce:MD5",
         "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1:310579b5e3add440a01fb6ce60097929:MD5",
         "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1:4167b1a439be9f530c5cbf26b590e5cb:MD5",
-        "androidx.appcompat:appcompat:1.6.0:322cd659d7b3832dd379a9c24434874b:MD5",
+        "androidx.appcompat:appcompat:1.6.1:ccc362b1e6d93ca72726b05ce1b074f2:MD5",
         "androidx.recyclerview:recyclerview:1.2.1:4c7c87151df88efe8e3b25d634874896:MD5",
-        "androidx.browser:browser:1.4.0:8b6dfac591dd4b320351218bae97040e:MD5",
+        "androidx.browser:browser:1.5.0:6f312f71b7ae84c28c6b9b322ddadbcc:MD5",
 
         // Google
         "com.google.android.material:material:1.8.0:be66d71684f2b388946239a6771f5b0f:MD5",

@@ -13,9 +13,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentCallback
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -30,7 +32,9 @@ private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
 @Suppress("TooManyFunctions")
-internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment() {
+internal abstract class BaseComponentDialogFragment :
+    DropInBottomSheetDialogFragment(),
+    ComponentCallback<PaymentComponentState<*>> {
 
     companion object {
         private val TAG = LogUtil.getTag()
@@ -38,7 +42,7 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
-    lateinit var component: PaymentComponent<*>
+    lateinit var component: PaymentComponent
     private var isStoredPayment = false
     private var navigatedFromPreselected = false
 
@@ -77,17 +81,6 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
             isStoredPayment = !storedPaymentMethod.type.isNullOrEmpty()
             navigatedFromPreselected = it.getBoolean(NAVIGATED_FROM_PRESELECTED, false)
         }
-
-        try {
-            component = if (isStoredPayment) {
-                getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-            } else {
-                getComponentFor(this, paymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
-            }
-        } catch (e: CheckoutException) {
-            handleError(ComponentError(e))
-            return
-        }
     }
 
     abstract override fun onCreateView(
@@ -107,13 +100,56 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         return true
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadComponent()
+    }
+
+    private fun loadComponent() {
+        try {
+            component = if (isStoredPayment) {
+                getComponentFor(
+                    fragment = this,
+                    storedPaymentMethod = storedPaymentMethod,
+                    dropInConfiguration = dropInViewModel.dropInConfiguration,
+                    amount = dropInViewModel.amount,
+                    componentCallback = this,
+                    sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration
+                )
+            } else {
+                getComponentFor(
+                    fragment = this,
+                    paymentMethod = paymentMethod,
+                    sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration,
+                    dropInConfiguration = dropInViewModel.dropInConfiguration,
+                    amount = dropInViewModel.amount,
+                    componentCallback = this
+                )
+            }
+        } catch (e: CheckoutException) {
+            handleError(ComponentError(e))
+        }
+    }
+
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
         protocol.terminateDropIn()
     }
 
-    protected fun startPayment(componentState: PaymentComponentState<out PaymentMethodDetails>) {
+    override fun onSubmit(state: PaymentComponentState<*>) {
+        startPayment(state)
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        throw IllegalStateException("This event should not be used in drop-in")
+    }
+
+    override fun onError(componentError: ComponentError) {
+        onComponentError(componentError)
+    }
+
+    private fun startPayment(componentState: PaymentComponentState<out PaymentMethodDetails>) {
         try {
             if (componentState.isValid) {
                 requestProtocolCall(componentState)
@@ -129,7 +165,7 @@ internal abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFra
         protocol.requestPaymentsCall(componentState)
     }
 
-    protected fun onComponentError(componentError: ComponentError) {
+    private fun onComponentError(componentError: ComponentError) {
         Logger.e(TAG, "ComponentError", componentError.exception)
         handleError(componentError)
     }

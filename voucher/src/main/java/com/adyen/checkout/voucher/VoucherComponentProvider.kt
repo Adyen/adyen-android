@@ -9,7 +9,6 @@
 package com.adyen.checkout.voucher
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -30,10 +29,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class VoucherComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -42,10 +41,9 @@ class VoucherComponentProvider(
         application: Application,
         configuration: VoucherConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): VoucherComponent {
-        val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val voucherFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
                 delegate = voucherDelegate,
@@ -63,7 +61,7 @@ class VoucherComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): VoucherDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         return DefaultVoucherDelegate(ActionObserverRepository(), componentParams)
     }
 

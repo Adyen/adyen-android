@@ -74,6 +74,11 @@ abstract class PaymentMethodDetails : ModelObject() {
                 BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
                 BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
                 PayByBankPaymentMethod.PAYMENT_METHOD_TYPE -> PayByBankPaymentMethod.SERIALIZER
+                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER
+                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
+                PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
+                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
+                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")

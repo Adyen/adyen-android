@@ -9,93 +9,79 @@
 package com.adyen.checkout.components.ui
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.bundle.SavedStateHandleContainer
+import com.adyen.checkout.components.bundle.SavedStateHandleProperty
+import com.adyen.checkout.components.channel.bufferedChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 
-// TODO docs
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SubmitHandler {
-    // override val savedStateHandle: SavedStateHandle = SavedStateHandle()
-    // : SavedStateHandleContainer {
+class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
+    override val savedStateHandle: SavedStateHandle,
+) : SavedStateHandleContainer {
 
-    private var isInteractionBlocked: Boolean? = null // by SavedStateHandleProperty(IS_INTERACTION_BLOCKED)
+    private var isInteractionBlocked: Boolean? by SavedStateHandleProperty(IS_INTERACTION_BLOCKED)
 
-    // TODO sessions: move all submit channels and flows here and mirror them in the delegates
-    // private val submitChannel: Channel<CardComponentState> = bufferedChannel()
-    // private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    private val submitChannel: Channel<ComponentStateT> = bufferedChannel()
+    val submitFlow: Flow<ComponentStateT> = submitChannel.receiveAsFlow()
 
-    fun <T : PaymentComponentState<out PaymentMethodDetails>> initialize(
+    private val _uiStateFlow = MutableStateFlow<PaymentComponentUIState>(PaymentComponentUIState.Idle)
+    val uiStateFlow: Flow<PaymentComponentUIState> = _uiStateFlow
+
+    private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
+    val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
+
+    fun initialize(
         coroutineScope: CoroutineScope,
-        componentStateFlow: Flow<T>,
-        submitChannel: Channel<T>,
-        uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
+        componentStateFlow: Flow<ComponentStateT>,
     ) {
         isInteractionBlocked?.let {
-            setInteractionBlocked(uiStateFlow, it)
+            setInteractionBlocked(it)
         }
         componentStateFlow.onEach { state ->
-            val uiState = uiStateFlow.value
+            val uiState = _uiStateFlow.value
             if (uiState == PaymentComponentUIState.PendingSubmit) {
                 if (state.isValid) {
-                    submit(submitChannel, state, uiStateFlow)
-                } else {
-                    emitUIState(uiStateFlow, PaymentComponentUIState.Idle)
+                    submitChannel.trySend(state)
                 }
+                resetUIState()
             }
         }.launchIn(coroutineScope)
     }
 
-    fun <T : PaymentComponentState<out PaymentMethodDetails>> onSubmit(
-        state: T,
-        submitChannel: Channel<T>,
-        uiEventChannel: Channel<PaymentComponentUIEvent>,
-        uiStateFlow: MutableStateFlow<PaymentComponentUIState>
-    ) {
+    fun onSubmit(state: ComponentStateT) {
         when {
             !state.isInputValid -> uiEventChannel.trySend(PaymentComponentUIEvent.InvalidUI)
-            state.isValid -> submit(submitChannel, state, uiStateFlow)
-            !state.isReady -> emitUIState(uiStateFlow, PaymentComponentUIState.PendingSubmit)
-            else -> emitUIState(uiStateFlow, PaymentComponentUIState.Idle)
+            state.isValid -> submitChannel.trySend(state)
+            !state.isReady -> _uiStateFlow.tryEmit(PaymentComponentUIState.PendingSubmit)
+            else -> resetUIState() // unreachable state
         }
     }
 
-    private fun <T : PaymentComponentState<out PaymentMethodDetails>> submit(
-        submitChannel: Channel<T>,
-        state: T,
-        uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
-    ) {
-        submitChannel.trySend(state)
-        emitUIState(uiStateFlow, PaymentComponentUIState.Blocked)
-    }
-
-    private fun emitUIState(
-        uiStateFlow: MutableStateFlow<PaymentComponentUIState>,
-        uiState: PaymentComponentUIState,
-    ) {
-        if (isInteractionBlocked != null) return
-        uiStateFlow.tryEmit(uiState)
-    }
-
-    fun setInteractionBlocked(
-        uiStateFlow: MutableStateFlow<PaymentComponentUIState>, // remove after uiStateFlow becomes a property
-        isInteractionBlocked: Boolean,
-    ) {
+    fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         this.isInteractionBlocked = isInteractionBlocked
-        val uiState = if (isInteractionBlocked) {
-            PaymentComponentUIState.Blocked
-        } else {
-            PaymentComponentUIState.Idle
+        resetUIState()
+    }
+
+    private fun resetUIState() {
+        val uiState = when (isInteractionBlocked) {
+            null -> PaymentComponentUIState.Idle
+            true -> PaymentComponentUIState.Blocked
+            false -> PaymentComponentUIState.Idle
         }
-        uiStateFlow.tryEmit(uiState)
+        _uiStateFlow.tryEmit(uiState)
     }
 
     companion object {
-        private const val IS_INTERACTION_BLOCKED = "IS_INTERACTION_BLOCKED"
+        @VisibleForTesting
+        internal const val IS_INTERACTION_BLOCKED = "IS_INTERACTION_BLOCKED"
     }
 }

@@ -17,9 +17,9 @@ import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.toActionCallback
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -36,8 +36,9 @@ class GooglePayComponent internal constructor(
     private val googlePayDelegate: GooglePayDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<GooglePayComponentState>,
 ) : ViewModel(),
-    PaymentComponent<GooglePayComponentState>,
+    PaymentComponent,
     ActivityResultHandlingComponent,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
@@ -49,9 +50,10 @@ class GooglePayComponent internal constructor(
     init {
         googlePayDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GooglePayComponentState>) -> Unit
     ) {
@@ -59,7 +61,7 @@ class GooglePayComponent internal constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun removeObserver() {
+    internal fun removeObserver() {
         googlePayDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
@@ -84,21 +86,25 @@ class GooglePayComponent internal constructor(
         googlePayDelegate.handleActivityResult(resultCode, data)
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        Logger.w(TAG, "Interaction with GooglePayComponent can't be blocked")
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
         googlePayDelegate.onCleared()
         genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> =
-            GooglePayComponentProvider()
+        val PROVIDER = GooglePayComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)
     }
 }

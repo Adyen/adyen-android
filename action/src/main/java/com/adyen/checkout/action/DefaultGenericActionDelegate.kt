@@ -13,7 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.authentication.AuthenticationLauncher
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionDelegate
@@ -193,6 +193,10 @@ internal class DefaultGenericActionDelegate(
         if (delegate !is StatusPollingDelegate) return
         Logger.d(TAG, "Refreshing status")
         delegate.refreshStatus()
+    }
+
+    override fun onError(e: CheckoutException) {
+        delegate.onError(e)
     }
 
     override fun onCleared() {

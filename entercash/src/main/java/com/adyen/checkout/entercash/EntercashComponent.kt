@@ -9,7 +9,8 @@ package com.adyen.checkout.entercash
 
 import com.adyen.checkout.action.DefaultActionHandlingComponent
 import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
@@ -23,17 +24,18 @@ class EntercashComponent internal constructor(
     delegate: IssuerListDelegate<EntercashPaymentMethod>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
+    componentEventHandler: ComponentEventHandler<PaymentComponentState<EntercashPaymentMethod>>,
 ) : IssuerListComponent<EntercashPaymentMethod>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
+    componentEventHandler,
 ) {
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> =
-            EntercashComponentProvider()
+        val PROVIDER = EntercashComponentProvider()
 
         @JvmField
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.ENTERCASH)
     }
 }

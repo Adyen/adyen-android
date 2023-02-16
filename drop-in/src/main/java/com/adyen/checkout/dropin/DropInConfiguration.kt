@@ -19,6 +19,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
@@ -30,18 +31,21 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
- * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to
- * customize their behavior.
+ * There you will find specific methods to add configurations for each specific component, to be able to customize
+ * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
@@ -133,7 +137,7 @@ class DropInConfiguration private constructor(
          * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in
          * the payment methods screen.
          *
-         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
@@ -291,6 +295,40 @@ class DropInConfiguration private constructor(
          */
         fun addBacsDirectDebitConfiguration(bacsDirectDebitConfiguration: BacsDirectDebitConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BACS] = bacsDirectDebitConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Seven Eleven payment method.
+         */
+        fun addSevenElevenConfiguration(sevenElevenConfiguration: SevenElevenConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN] = sevenElevenConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Japan payment method.
+         */
+        fun addOnlineBankingJPConfiguration(onlineBankingJPConfiguration: OnlineBankingJPConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ONLINE] = onlineBankingJPConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Convenience Stores Japan payment method.
+         */
+        fun addConvenienceStoresJPConfiguration(
+            convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration
+        ): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_STORES] = convenienceStoresJPConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Pay Easy payment method.
+         */
+        fun addPayEasyConfiguration(payEasyConfiguration: PayEasyConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ATM] = payEasyConfiguration
             return this
         }
 

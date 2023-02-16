@@ -9,7 +9,6 @@
 package com.adyen.checkout.qrcode
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -31,13 +30,14 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.util.FileDownloader
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -46,10 +46,9 @@ class QRCodeComponentProvider(
         application: Application,
         configuration: QRCodeConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): QRCodeComponent {
-        val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
                 delegate = qrCodeDelegate,
@@ -67,7 +66,7 @@ class QRCodeComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): QRCodeDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
@@ -82,6 +81,7 @@ class QRCodeComponentProvider(
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
+            fileDownloader = FileDownloader(application)
         )
     }
 

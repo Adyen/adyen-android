@@ -25,11 +25,22 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+/**
+ * Extend this service if you want to take over the sessions flow in Drop-in and make the required network calls to the
+ * Adyen Checkout APIs through your backend. Note that once you take over the sessions flow you have to handle the rest
+ * of the network calls yourself.
+ *
+ * Make sure you define add your subclass of this [SessionDropInService] in your manifest file.
+ */
 open class SessionDropInService : BaseDropInService(), SessionDropInServiceInterface, SessionDropInServiceContract {
 
     private lateinit var sessionInteractor: SessionInteractor
 
+    /**
+     * Indicates whether you already took over the sessions flow in a previous action. This field could be useful if you
+     * are only taking over the flow in certain conditions and you want to know in a subsequent call whether you did
+     * take over the flow earlier or not.
+     */
     var isFlowTakenOver: Boolean = false
         private set
 
@@ -64,7 +75,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         emitResult(result)
     }
 
-    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    final override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         launch {
             val result = sessionInteractor.onPaymentsCallRequested(
                 paymentComponentState,
@@ -76,7 +87,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Payments.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
+                is SessionCallResult.Payments.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(reason = "Payment is refused while making a partial payment.")
@@ -90,7 +101,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+    final override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         launch {
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
@@ -102,7 +113,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Details.Finished -> DropInServiceResult.Finished(result.result.resultCode ?: "")
+                is SessionCallResult.Details.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
                 SessionCallResult.Details.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
                     return@launch
@@ -113,7 +124,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
+    final override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         launch {
             val result = sessionInteractor.checkBalance(
                 paymentMethodData,
@@ -135,7 +146,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestOrdersCall() {
+    final override fun requestOrdersCall() {
         launch {
             val result = sessionInteractor.createOrder(
                 ::onOrderRequest,
@@ -156,7 +167,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+    final override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         val shouldUpdatePaymentMethods = !isDropInCancelledByUser
         launch {
             val result = sessionInteractor.cancelOrder(

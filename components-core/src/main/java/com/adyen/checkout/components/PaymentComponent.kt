@@ -7,9 +7,9 @@
  */
 package com.adyen.checkout.components
 
-import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
+// TODO sessions: docs
 /**
  * A component that handles collecting user input data. It handles validating and formatting the data for the UI.
  * A valid [PaymentComponentState] contains [PaymentMethodDetails] to help compose the payments/ call on the backend.
@@ -18,11 +18,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  *
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-interface PaymentComponent<ComponentStateT : PaymentComponentState<*>> : Component {
+interface PaymentComponent : Component {
 
-    // TODO sessions: remove this and make it internal inside the components
-    fun observe(lifecycleOwner: LifecycleOwner, callback: (PaymentComponentEvent<ComponentStateT>) -> Unit)
-
-    // TODO sessions: remove this and make it internal inside the components
-    fun removeObserver()
+    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

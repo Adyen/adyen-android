@@ -9,7 +9,6 @@
 package com.adyen.checkout.redirect
 
 import android.app.Application
-import android.os.Bundle
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -31,10 +30,10 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RedirectComponentProvider(
-    overrideComponentParams: ComponentParams? = null
+    private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams)
+    private val componentParamsMapper = GenericComponentParamsMapper()
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -43,10 +42,9 @@ class RedirectComponentProvider(
         application: Application,
         configuration: RedirectConfiguration,
         callback: ActionComponentCallback,
-        defaultArgs: Bundle?,
         key: String?,
     ): RedirectComponent {
-        val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+        val redirectFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
                 delegate = redirectDelegate,
@@ -64,7 +62,7 @@ class RedirectComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): RedirectDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration)
+        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultRedirectDelegate(
