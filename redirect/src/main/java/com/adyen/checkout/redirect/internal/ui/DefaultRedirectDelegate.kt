@@ -6,7 +6,7 @@
  * Created by josephj on 18/8/2022.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.internal.ui
 
 import android.app.Activity
 import android.content.Intent

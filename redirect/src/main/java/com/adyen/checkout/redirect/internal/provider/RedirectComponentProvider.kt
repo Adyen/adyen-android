@@ -6,7 +6,7 @@
  * Created by josephj on 28/5/2021.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -27,6 +27,10 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
+import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class RedirectComponentProvider(

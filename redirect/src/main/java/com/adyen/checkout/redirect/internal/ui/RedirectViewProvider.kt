@@ -6,7 +6,7 @@
  * Created by oscars on 23/9/2022.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
