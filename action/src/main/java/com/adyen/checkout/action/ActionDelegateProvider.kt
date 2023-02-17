@@ -26,9 +26,9 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
-import com.adyen.checkout.redirect.RedirectComponentProvider
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.voucher.VoucherConfiguration

@@ -18,6 +18,8 @@ import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.redirect.internal.ui.RedirectComponentViewType
+import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -6,7 +6,7 @@
  * Created by josephj on 18/8/2022.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -19,6 +19,7 @@ import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.test.TestRedirectHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.redirect.RedirectConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals

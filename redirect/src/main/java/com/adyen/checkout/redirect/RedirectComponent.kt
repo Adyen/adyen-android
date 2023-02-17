@@ -23,6 +23,8 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
+import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import kotlinx.coroutines.flow.Flow
 
 class RedirectComponent internal constructor(
