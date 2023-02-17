@@ -78,7 +78,7 @@ class GiftCardComponentProvider(
         val clientSideEncrypter = ClientSideEncrypter()
         val dateGenerator = DateGenerator()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -142,7 +142,7 @@ class GiftCardComponentProvider(
         val clientSideEncrypter = ClientSideEncrypter()
         val dateGenerator = DateGenerator()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

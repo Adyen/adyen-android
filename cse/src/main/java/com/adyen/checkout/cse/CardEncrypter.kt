@@ -8,11 +8,7 @@
 
 package com.adyen.checkout.cse
 
-import androidx.annotation.WorkerThread
 import com.adyen.checkout.cse.exception.EncryptionException
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 interface CardEncrypter {
 
@@ -24,7 +20,6 @@ interface CardEncrypter {
      * @return An [EncryptedCard] object with each encrypted field.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
     fun encryptFields(
         unencryptedCard: UnencryptedCard,
@@ -39,7 +34,6 @@ interface CardEncrypter {
      * @return The encrypted card data String.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
     fun encrypt(
         unencryptedCard: UnencryptedCard,
@@ -54,17 +48,6 @@ interface CardEncrypter {
      * @return The encrypted bin String.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
     fun encryptBin(bin: String, publicKey: String): String
-
-    companion object {
-
-        const val GENERATION_TIME_KEY = "generationtime"
-
-        val GENERATION_DATE_FORMAT: SimpleDateFormat =
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-                timeZone = TimeZone.getTimeZone("UTC")
-            }
-    }
 }

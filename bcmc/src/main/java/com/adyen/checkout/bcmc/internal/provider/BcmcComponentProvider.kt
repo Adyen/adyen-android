@@ -90,7 +90,7 @@ class BcmcComponentProvider(
         val dateGenerator = DateGenerator()
         val clientSideEncrypter = ClientSideEncrypter()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val analyticsService = AnalyticsService(httpClient)
         val analyticsRepository = DefaultAnalyticsRepository(
             packageName = application.packageName,
@@ -159,7 +159,7 @@ class BcmcComponentProvider(
         val dateGenerator = DateGenerator()
         val clientSideEncrypter = ClientSideEncrypter()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val analyticsService = AnalyticsService(httpClient)
         val analyticsRepository = DefaultAnalyticsRepository(
             packageName = application.packageName,

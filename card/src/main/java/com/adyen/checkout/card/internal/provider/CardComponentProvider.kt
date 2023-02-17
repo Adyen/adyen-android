@@ -98,7 +98,7 @@ class CardComponentProvider(
             val dateGenerator = DateGenerator()
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
@@ -175,7 +175,7 @@ class CardComponentProvider(
             val dateGenerator = DateGenerator()
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
@@ -267,7 +267,7 @@ class CardComponentProvider(
             val dateGenerator = DateGenerator()
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -331,7 +331,7 @@ class CardComponentProvider(
             val dateGenerator = DateGenerator()
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

@@ -7,28 +7,12 @@
  */
 package com.adyen.checkout.cse
 
-import androidx.annotation.WorkerThread
-import com.adyen.checkout.cse.CardEncrypter.Companion.GENERATION_TIME_KEY
 import com.adyen.checkout.cse.exception.EncryptionException
-import org.json.JSONException
-import org.json.JSONObject
 
 class DefaultCardEncrypter(
-    private val clientSideEncrypter: ClientSideEncrypter,
-    private val genericEncrypter: GenericEncrypter,
-    private val dateGenerator: DateGenerator,
+    private val genericEncrypter: GenericEncrypter
 ) : CardEncrypter {
 
-    /**
-     * Encrypts the available card data from [UnencryptedCard] into individual encrypted blocks.
-     *
-     * @param unencryptedCard The card data to be encrypted.
-     * @param publicKey     The key to be used for encryption.
-     * @return An [EncryptedCard] object with each encrypted field.
-     * @throws EncryptionException in case the encryption fails.
-     */
-    @WorkerThread
-    @Throws(EncryptionException::class)
     override fun encryptFields(
         unencryptedCard: UnencryptedCard,
         publicKey: String
@@ -38,23 +22,23 @@ class DefaultCardEncrypter(
             val encryptedExpiryYear: String?
             val encryptedNumber: String? = if (unencryptedCard.number != null) {
                 genericEncrypter.encryptField(
-                    CARD_NUMBER_KEY,
-                    unencryptedCard.number,
-                    publicKey
+                    fieldKeyToEncrypt = CARD_NUMBER_KEY,
+                    fieldValueToEncrypt = unencryptedCard.number,
+                    publicKey = publicKey
                 )
             } else {
                 null
             }
             if (unencryptedCard.expiryMonth != null && unencryptedCard.expiryYear != null) {
                 encryptedExpiryMonth = genericEncrypter.encryptField(
-                    EXPIRY_MONTH_KEY,
-                    unencryptedCard.expiryMonth,
-                    publicKey
+                    fieldKeyToEncrypt = EXPIRY_MONTH_KEY,
+                    fieldValueToEncrypt = unencryptedCard.expiryMonth,
+                    publicKey = publicKey
                 )
                 encryptedExpiryYear = genericEncrypter.encryptField(
-                    EXPIRY_YEAR_KEY,
-                    unencryptedCard.expiryYear,
-                    publicKey
+                    fieldKeyToEncrypt = EXPIRY_YEAR_KEY,
+                    fieldValueToEncrypt = unencryptedCard.expiryYear,
+                    publicKey = publicKey
                 )
             } else if (unencryptedCard.expiryMonth == null && unencryptedCard.expiryYear == null) {
                 encryptedExpiryMonth = null
@@ -67,60 +51,37 @@ class DefaultCardEncrypter(
             } else {
                 null
             }
-            EncryptedCard(encryptedNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode)
+            EncryptedCard(
+                encryptedCardNumber = encryptedNumber,
+                encryptedExpiryMonth = encryptedExpiryMonth,
+                encryptedExpiryYear = encryptedExpiryYear,
+                encryptedSecurityCode = encryptedSecurityCode
+            )
         } catch (e: IllegalStateException) {
             throw EncryptionException(e.message ?: "No message.", e)
         }
     }
 
-    /**
-     * Encrypts all the card data present in [UnencryptedCard] into a single block of content.
-     *
-     * @param unencryptedCard The card data to be encrypted.
-     * @param publicKey     The key to be used for encryption.
-     * @return The encrypted card data String.
-     * @throws EncryptionException in case the encryption fails.
-     */
-    @WorkerThread
-    @Throws(EncryptionException::class)
     override fun encrypt(
         unencryptedCard: UnencryptedCard,
         publicKey: String
     ): String {
-        val cardJson = JSONObject()
-        return try {
-            cardJson.put(CARD_NUMBER_KEY, unencryptedCard.number)
-            cardJson.put(EXPIRY_MONTH_KEY, unencryptedCard.expiryMonth)
-            cardJson.put(EXPIRY_YEAR_KEY, unencryptedCard.expiryYear)
-            cardJson.put(CVC_KEY, unencryptedCard.cvc)
-            cardJson.put(HOLDER_NAME_KEY, unencryptedCard.cardHolderName)
-            val formattedGenerationTime = genericEncrypter.makeGenerationTime(unencryptedCard.generationTime)
-            cardJson.put(GENERATION_TIME_KEY, formattedGenerationTime)
-            clientSideEncrypter.encrypt(publicKey, cardJson.toString())
-        } catch (e: JSONException) {
-            throw EncryptionException("Failed to created encrypted JSON data.", e)
-        }
+        return genericEncrypter.encryptFields(
+            publicKey,
+            CARD_NUMBER_KEY to unencryptedCard.number,
+            EXPIRY_MONTH_KEY to unencryptedCard.expiryMonth,
+            EXPIRY_YEAR_KEY to unencryptedCard.expiryYear,
+            CVC_KEY to unencryptedCard.cvc,
+            HOLDER_NAME_KEY to unencryptedCard.cardHolderName,
+        )
     }
 
-    /**
-     * Encrypts the BIN of the card to be used in the Bin Lookup endpoint.
-     *
-     * @param bin The BIN value to be encrypted.
-     * @param publicKey The key to be used for encryption.
-     * @return The encrypted bin String.
-     * @throws EncryptionException in case the encryption fails.
-     */
-    @WorkerThread
-    @Throws(EncryptionException::class)
     override fun encryptBin(bin: String, publicKey: String): String {
-        return try {
-            val binJson = JSONObject()
-            binJson.put(BIN_KEY, bin)
-            binJson.put(GENERATION_TIME_KEY, genericEncrypter.makeGenerationTime(dateGenerator.getCurrentDate()))
-            clientSideEncrypter.encrypt(publicKey, binJson.toString())
-        } catch (e: JSONException) {
-            throw EncryptionException("Failed to created encrypted JSON data.", e)
-        }
+        return genericEncrypter.encryptField(
+            BIN_KEY,
+            bin,
+            publicKey
+        )
     }
 
     companion object {

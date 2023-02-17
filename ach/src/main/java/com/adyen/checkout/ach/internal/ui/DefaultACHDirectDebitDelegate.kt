@@ -274,13 +274,13 @@ internal class DefaultACHDirectDebitDelegate(
 
         try {
             val encryptedBankAccountNumber = genericEncrypter.encryptField(
-                encryptionKey = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
-                fieldToEncrypt = outputData.bankAccountNumber.value,
+                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
+                fieldValueToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
             val encryptedBankLocationId = genericEncrypter.encryptField(
-                encryptionKey = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
-                fieldToEncrypt = outputData.bankLocationId.value,
+                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
+                fieldValueToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey
             )
 

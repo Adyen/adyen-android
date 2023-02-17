@@ -11,7 +11,6 @@ package com.adyen.checkout.cse.test
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.exception.EncryptionException
-import java.util.Date
 
 /**
  * Test implementation of [GenericEncrypter]. This class should never be used in not test code as it does not do
@@ -23,12 +22,13 @@ class TestGenericEncrypter : GenericEncrypter {
 
     var shouldThrowException = false
 
-    override fun encryptField(encryptionKey: String, fieldToEncrypt: Any, publicKey: String): String {
+    override fun encryptField(fieldKeyToEncrypt: String, fieldValueToEncrypt: Any?, publicKey: String): String {
         if (shouldThrowException) throw EncryptionException("Failed for testing purposes", null)
-        return fieldToEncrypt.toString()
+        return fieldValueToEncrypt.toString()
     }
 
-    override fun makeGenerationTime(generationTime: Date?): String {
-        return Date().toString()
+    override fun encryptFields(publicKey: String, vararg fieldsToEncrypt: Pair<String, Any?>): String {
+        if (shouldThrowException) throw EncryptionException("Failed for testing purposes", null)
+        return fieldsToEncrypt.firstOrNull().toString()
     }
 }

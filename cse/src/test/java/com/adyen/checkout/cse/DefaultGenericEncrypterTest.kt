@@ -43,8 +43,8 @@ internal class DefaultGenericEncrypterTest(
         val publicKey = "PUBLIC_KEY"
 
         val encrypted = genericEncrypter.encryptField(
-            encryptionKey = key,
-            fieldToEncrypt = value,
+            fieldKeyToEncrypt = key,
+            fieldValueToEncrypt = value,
             publicKey = publicKey
         )
 

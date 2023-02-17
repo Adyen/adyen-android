@@ -27,9 +27,7 @@ class DefaultCardEncrypterTest(
     @Mock private val dateGenerator: DateGenerator,
 ) {
     private val cardEncrypter = DefaultCardEncrypter(
-        clientSideEncrypter,
         DefaultGenericEncrypter(clientSideEncrypter, dateGenerator),
-        dateGenerator
     )
 
     @BeforeEach

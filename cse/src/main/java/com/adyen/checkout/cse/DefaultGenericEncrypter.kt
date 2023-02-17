@@ -8,46 +8,20 @@
 
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.cse.exception.EncryptionException
-import org.json.JSONException
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
-
 class DefaultGenericEncrypter(
     private val clientSideEncrypter: ClientSideEncrypter,
     private val dateGenerator: DateGenerator,
 ) : GenericEncrypter {
 
-    override fun encryptField(
-        encryptionKey: String,
-        fieldToEncrypt: Any,
-        publicKey: String
-    ): String {
-        return try {
-            val jsonToEncrypt = JSONObject()
-            jsonToEncrypt.put(encryptionKey, fieldToEncrypt)
-            jsonToEncrypt.put(CardEncrypter.GENERATION_TIME_KEY, makeGenerationTime())
-            clientSideEncrypter.encrypt(publicKey, jsonToEncrypt.toString())
-        } catch (e: JSONException) {
-            throw EncryptionException(ENCRYPTION_FAILED_MESSAGE, e)
-        }
+    override fun encryptField(fieldKeyToEncrypt: String, fieldValueToEncrypt: Any?, publicKey: String): String {
+        return encryptFields(
+            publicKey,
+            fieldKeyToEncrypt to fieldValueToEncrypt,
+        )
     }
 
-    override fun makeGenerationTime(generationTime: Date?): String {
-        return GENERATION_DATE_FORMAT.format(assureGenerationTime(generationTime))
-    }
-
-    private fun assureGenerationTime(generationTime: Date?): Date {
-        return generationTime ?: dateGenerator.getCurrentDate()
-    }
-
-    companion object {
-        private const val ENCRYPTION_FAILED_MESSAGE = "Encryption failed."
-        private val GENERATION_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+    override fun encryptFields(publicKey: String, vararg fieldsToEncrypt: Pair<String, Any?>): String {
+        val plainText = EncryptionPlainTextGenerator.generate(dateGenerator.getCurrentDate(), mapOf(*fieldsToEncrypt))
+        return clientSideEncrypter.encrypt(publicKey, plainText)
     }
 }
