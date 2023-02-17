@@ -17,6 +17,8 @@ import com.adyen.checkout.components.PaymentComponentEvent
 import com.adyen.checkout.components.base.ComponentEventHandler
 import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
+import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import kotlinx.coroutines.ExperimentalCoroutinesApi

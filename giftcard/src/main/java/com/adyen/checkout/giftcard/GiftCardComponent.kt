@@ -27,6 +27,8 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
+import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
+import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**

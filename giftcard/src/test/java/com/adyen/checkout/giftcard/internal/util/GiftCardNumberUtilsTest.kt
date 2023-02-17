@@ -1,6 +1,5 @@
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.util
 
-import com.adyen.checkout.giftcard.util.GiftCardNumberUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

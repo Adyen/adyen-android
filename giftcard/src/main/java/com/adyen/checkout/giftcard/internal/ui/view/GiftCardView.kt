@@ -5,7 +5,7 @@
  *
  * Created by josephj on 30/9/2022.
  */
-package com.adyen.checkout.giftcard
+package com.adyen.checkout.giftcard.internal.ui.view
 
 import android.content.Context
 import android.text.Editable
@@ -22,7 +22,9 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
+import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import kotlinx.coroutines.CoroutineScope
 
 internal class GiftCardView @JvmOverloads constructor(
