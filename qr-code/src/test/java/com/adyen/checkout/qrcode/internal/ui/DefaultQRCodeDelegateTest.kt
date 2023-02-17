@@ -6,7 +6,7 @@
  * Created by oscars on 15/8/2022.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal.ui
 
 import android.app.Activity
 import android.content.Context
@@ -27,7 +27,10 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.FileDownloader
-import com.adyen.checkout.qrcode.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
+import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
+import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

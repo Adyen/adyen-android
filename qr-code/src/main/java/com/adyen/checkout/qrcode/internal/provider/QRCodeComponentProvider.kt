@@ -6,7 +6,7 @@
  * Created by josephj on 7/6/2021.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -31,6 +31,11 @@ import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.util.FileDownloader
+import com.adyen.checkout.qrcode.QRCodeComponent
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
+import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate
+import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(

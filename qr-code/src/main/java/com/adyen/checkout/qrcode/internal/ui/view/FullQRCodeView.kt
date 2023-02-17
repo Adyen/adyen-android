@@ -6,7 +6,7 @@
  * Created by atef on 16/11/2022.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.qrcode.internal.ui.view
 
 import android.Manifest
 import android.content.Context
@@ -34,7 +34,11 @@ import com.adyen.checkout.components.util.isEmpty
 import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
+import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
+import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
