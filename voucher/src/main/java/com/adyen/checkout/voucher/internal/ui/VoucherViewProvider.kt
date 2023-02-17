@@ -6,13 +6,14 @@
  * Created by ozgur on 12/9/2022.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.voucher.internal.ui.view.VoucherView
 
 internal object VoucherViewProvider : ViewProvider {
 
