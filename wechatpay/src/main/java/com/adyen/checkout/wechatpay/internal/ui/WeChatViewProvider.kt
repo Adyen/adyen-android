@@ -6,7 +6,7 @@
  * Created by oscars on 4/10/2022.
  */
 
-package com.adyen.checkout.wechatpay
+package com.adyen.checkout.wechatpay.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet

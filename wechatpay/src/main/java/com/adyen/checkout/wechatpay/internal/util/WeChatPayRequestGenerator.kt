@@ -6,7 +6,7 @@
  * Created by oscars on 19/8/2022.
  */
 
-package com.adyen.checkout.wechatpay
+package com.adyen.checkout.wechatpay.internal.util
 
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.tencent.mm.opensdk.modelbase.BaseReq

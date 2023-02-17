@@ -43,8 +43,8 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.BaseDropInService
-import com.adyen.checkout.dropin.service.BaseDropInServiceResult
 import com.adyen.checkout.dropin.service.BaseDropInServiceInterface
+import com.adyen.checkout.dropin.service.BaseDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
