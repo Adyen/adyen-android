@@ -6,10 +6,12 @@
  * Created by ozgur on 29/11/2021.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.OutputData
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class VoucherOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,

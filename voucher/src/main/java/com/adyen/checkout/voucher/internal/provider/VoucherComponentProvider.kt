@@ -6,7 +6,7 @@
  * Created by ozgur on 29/11/2021.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -26,6 +26,10 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
+import com.adyen.checkout.voucher.VoucherComponent
+import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class VoucherComponentProvider(

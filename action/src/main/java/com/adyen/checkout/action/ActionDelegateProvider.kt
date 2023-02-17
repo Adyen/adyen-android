@@ -30,7 +30,7 @@ import com.adyen.checkout.qrcode.QRCodeComponentProvider
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.voucher.VoucherComponentProvider
+import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration

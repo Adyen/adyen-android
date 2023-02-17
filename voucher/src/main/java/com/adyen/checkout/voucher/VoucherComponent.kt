@@ -21,6 +21,8 @@ import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
+import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import kotlinx.coroutines.flow.Flow
 
 class VoucherComponent internal constructor(

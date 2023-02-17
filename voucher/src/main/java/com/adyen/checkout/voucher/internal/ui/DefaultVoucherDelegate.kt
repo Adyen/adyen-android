@@ -6,7 +6,7 @@
  * Created by josephj on 23/8/2022.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
@@ -20,6 +20,7 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

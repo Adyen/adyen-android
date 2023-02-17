@@ -6,7 +6,7 @@
  * Created by josephj on 23/8/2022.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import app.cash.turbine.test
@@ -14,6 +14,7 @@ import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.voucher.VoucherConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals

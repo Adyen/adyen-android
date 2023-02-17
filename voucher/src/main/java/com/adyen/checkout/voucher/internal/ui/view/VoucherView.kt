@@ -6,7 +6,7 @@
  * Created by ozgur on 12/9/2022.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui.view
 
 import android.content.Context
 import android.net.Uri
@@ -23,7 +23,10 @@ import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.voucher.R
+import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
+import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

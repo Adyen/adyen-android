@@ -6,12 +6,15 @@
  * Created by josephj on 23/8/2022.
  */
 
-package com.adyen.checkout.voucher
+package com.adyen.checkout.voucher.internal.ui
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface VoucherDelegate :
     ActionDelegate,
     ViewableDelegate<VoucherOutputData>,
