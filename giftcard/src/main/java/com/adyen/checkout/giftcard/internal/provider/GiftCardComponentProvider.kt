@@ -34,6 +34,8 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.cse.ClientSideEncrypter
+import com.adyen.checkout.cse.DateGenerator
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -73,8 +75,10 @@ class GiftCardComponentProvider(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val genericEncrypter = DefaultGenericEncrypter()
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val clientSideEncrypter = ClientSideEncrypter()
+        val dateGenerator = DateGenerator()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -135,8 +139,10 @@ class GiftCardComponentProvider(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val genericEncrypter = DefaultGenericEncrypter()
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val clientSideEncrypter = ClientSideEncrypter()
+        val dateGenerator = DateGenerator()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+        val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

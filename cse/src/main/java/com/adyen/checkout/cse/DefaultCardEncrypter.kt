@@ -12,10 +12,11 @@ import com.adyen.checkout.cse.CardEncrypter.Companion.GENERATION_TIME_KEY
 import com.adyen.checkout.cse.exception.EncryptionException
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.Date
 
 class DefaultCardEncrypter(
-    private val genericEncrypter: GenericEncrypter
+    private val clientSideEncrypter: ClientSideEncrypter,
+    private val genericEncrypter: GenericEncrypter,
+    private val dateGenerator: DateGenerator,
 ) : CardEncrypter {
 
     /**
@@ -95,8 +96,7 @@ class DefaultCardEncrypter(
             cardJson.put(HOLDER_NAME_KEY, unencryptedCard.cardHolderName)
             val formattedGenerationTime = genericEncrypter.makeGenerationTime(unencryptedCard.generationTime)
             cardJson.put(GENERATION_TIME_KEY, formattedGenerationTime)
-            val encrypter = ClientSideEncrypter(publicKey)
-            encrypter.encrypt(cardJson.toString())
+            clientSideEncrypter.encrypt(publicKey, cardJson.toString())
         } catch (e: JSONException) {
             throw EncryptionException("Failed to created encrypted JSON data.", e)
         }
@@ -116,9 +116,8 @@ class DefaultCardEncrypter(
         return try {
             val binJson = JSONObject()
             binJson.put(BIN_KEY, bin)
-            binJson.put(GENERATION_TIME_KEY, genericEncrypter.makeGenerationTime(Date()))
-            val encrypter = ClientSideEncrypter(publicKey)
-            encrypter.encrypt(binJson.toString())
+            binJson.put(GENERATION_TIME_KEY, genericEncrypter.makeGenerationTime(dateGenerator.getCurrentDate()))
+            clientSideEncrypter.encrypt(publicKey, binJson.toString())
         } catch (e: JSONException) {
             throw EncryptionException("Failed to created encrypted JSON data.", e)
         }

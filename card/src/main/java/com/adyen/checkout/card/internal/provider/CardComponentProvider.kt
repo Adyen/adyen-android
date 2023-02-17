@@ -46,6 +46,8 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.cse.ClientSideEncrypter
+import com.adyen.checkout.cse.DateGenerator
 import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
@@ -93,8 +95,10 @@ class CardComponentProvider(
                 sessionSetupConfiguration
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val genericEncrypter = DefaultGenericEncrypter()
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
@@ -168,8 +172,10 @@ class CardComponentProvider(
                 checkoutSession.sessionSetupResponse.configuration
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val genericEncrypter = DefaultGenericEncrypter()
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
@@ -258,8 +264,10 @@ class CardComponentProvider(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val genericEncrypter = DefaultGenericEncrypter()
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
 
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -320,8 +328,10 @@ class CardComponentProvider(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val genericEncrypter = DefaultGenericEncrypter()
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(clientSideEncrypter, genericEncrypter, dateGenerator)
 
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

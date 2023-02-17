@@ -42,6 +42,8 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.cse.ClientSideEncrypter
+import com.adyen.checkout.cse.DateGenerator
 import com.adyen.checkout.cse.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
@@ -91,7 +93,9 @@ class ACHDirectDebitComponentProvider(
             val analyticsService = AnalyticsService(httpClient)
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
@@ -156,7 +160,9 @@ class ACHDirectDebitComponentProvider(
             val analyticsService = AnalyticsService(httpClient)
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,

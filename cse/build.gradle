@@ -32,4 +32,5 @@ dependencies {
     //Tests
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
 }

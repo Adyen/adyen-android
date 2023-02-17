@@ -16,19 +16,21 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class DefaultGenericEncrypter : GenericEncrypter {
+class DefaultGenericEncrypter(
+    private val clientSideEncrypter: ClientSideEncrypter,
+    private val dateGenerator: DateGenerator,
+) : GenericEncrypter {
 
     override fun encryptField(
         encryptionKey: String,
         fieldToEncrypt: Any,
         publicKey: String
     ): String {
-        val encrypter = ClientSideEncrypter(publicKey)
         return try {
             val jsonToEncrypt = JSONObject()
             jsonToEncrypt.put(encryptionKey, fieldToEncrypt)
             jsonToEncrypt.put(CardEncrypter.GENERATION_TIME_KEY, makeGenerationTime())
-            encrypter.encrypt(jsonToEncrypt.toString())
+            clientSideEncrypter.encrypt(publicKey, jsonToEncrypt.toString())
         } catch (e: JSONException) {
             throw EncryptionException(ENCRYPTION_FAILED_MESSAGE, e)
         }
@@ -39,7 +41,7 @@ class DefaultGenericEncrypter : GenericEncrypter {
     }
 
     private fun assureGenerationTime(generationTime: Date?): Date {
-        return generationTime ?: Date()
+        return generationTime ?: dateGenerator.getCurrentDate()
     }
 
     companion object {
