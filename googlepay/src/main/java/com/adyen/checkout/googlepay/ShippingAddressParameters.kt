@@ -5,7 +5,7 @@
  *
  * Created by caiof on 30/7/2019.
  */
-package com.adyen.checkout.googlepay.model
+package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.parseOptStringList

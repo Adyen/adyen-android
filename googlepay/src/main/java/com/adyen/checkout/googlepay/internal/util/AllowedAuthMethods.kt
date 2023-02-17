@@ -5,9 +5,9 @@
  *
  * Created by caiof on 22/7/2019.
  */
-package com.adyen.checkout.googlepay.util
+package com.adyen.checkout.googlepay.internal.util
 
-object AllowedAuthMethods {
+internal object AllowedAuthMethods {
 
     private const val PAN_ONLY = "PAN_ONLY"
     private const val CRYPTOGRAM_3DS = "CRYPTOGRAM_3DS"

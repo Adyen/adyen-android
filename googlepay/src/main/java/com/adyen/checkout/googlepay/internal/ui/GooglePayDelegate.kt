@@ -6,15 +6,16 @@
  * Created by oscars on 19/7/2022.
  */
 
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
 import android.content.Intent
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.googlepay.GooglePayComponentState
 import kotlinx.coroutines.flow.Flow
 
-interface GooglePayDelegate : PaymentComponentDelegate<GooglePayComponentState> {
+internal interface GooglePayDelegate : PaymentComponentDelegate<GooglePayComponentState> {
 
     val componentStateFlow: Flow<GooglePayComponentState>
 

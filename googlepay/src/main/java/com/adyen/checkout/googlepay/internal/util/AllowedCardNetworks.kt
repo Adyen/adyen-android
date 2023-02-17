@@ -5,10 +5,10 @@
  *
  * Created by caiof on 17/7/2019.
  */
-package com.adyen.checkout.googlepay.util
+package com.adyen.checkout.googlepay.internal.util
 
 @Suppress("MemberVisibilityCanBePrivate")
-object AllowedCardNetworks {
+internal object AllowedCardNetworks {
 
     const val AMEX = "AMEX"
     const val DISCOVER = "DISCOVER"

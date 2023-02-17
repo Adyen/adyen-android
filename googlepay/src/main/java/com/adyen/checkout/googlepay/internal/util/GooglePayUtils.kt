@@ -5,21 +5,21 @@
  *
  * Created by caiof on 22/7/2019.
  */
-package com.adyen.checkout.googlepay.util
+package com.adyen.checkout.googlepay.internal.util
 
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.components.util.AmountFormat.toBigDecimal
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.googlepay.GooglePayComponentParams
-import com.adyen.checkout.googlepay.model.CardParameters
-import com.adyen.checkout.googlepay.model.GooglePayPaymentMethodModel
-import com.adyen.checkout.googlepay.model.IsReadyToPayRequestModel
-import com.adyen.checkout.googlepay.model.PaymentDataRequestModel
-import com.adyen.checkout.googlepay.model.PaymentMethodTokenizationSpecification
-import com.adyen.checkout.googlepay.model.TokenizationParameters
-import com.adyen.checkout.googlepay.model.TransactionInfoModel
+import com.adyen.checkout.googlepay.internal.data.model.CardParameters
+import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
+import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel
+import com.adyen.checkout.googlepay.internal.data.model.PaymentDataRequestModel
+import com.adyen.checkout.googlepay.internal.data.model.PaymentMethodTokenizationSpecification
+import com.adyen.checkout.googlepay.internal.data.model.TokenizationParameters
+import com.adyen.checkout.googlepay.internal.data.model.TransactionInfoModel
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest

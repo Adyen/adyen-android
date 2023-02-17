@@ -6,7 +6,7 @@
  * Created by oscars on 19/7/2022.
  */
 
-package com.adyen.checkout.googlepay
+package com.adyen.checkout.googlepay.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.analytics.AnalyticsRepository
@@ -16,6 +16,8 @@ import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMeth
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
