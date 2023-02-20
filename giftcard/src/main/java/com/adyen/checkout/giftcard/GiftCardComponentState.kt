@@ -17,9 +17,9 @@ import kotlinx.parcelize.Parcelize
  * PaymentComponentState for GiftCardComponent with additional data.
  */
 @Parcelize
-class GiftCardComponentState(
-    val paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
+data class GiftCardComponentState(
+    override val data: PaymentComponentData<GiftCardPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean,
     val lastFourDigits: String?
-) : PaymentComponentState<GiftCardPaymentMethod>(paymentComponentData, isInputValid, isReady), Parcelable
+) : PaymentComponentState<GiftCardPaymentMethod>, Parcelable

@@ -201,7 +201,7 @@ internal class DefaultBacsDirectDebitDelegate(
         )
 
         return BacsDirectDebitComponentState(
-            paymentComponentData = paymentComponentData,
+            data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true,
             mode = outputData.mode

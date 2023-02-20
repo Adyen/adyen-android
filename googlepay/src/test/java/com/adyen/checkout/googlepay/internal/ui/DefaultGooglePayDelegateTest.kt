@@ -82,8 +82,6 @@ internal class DefaultGooglePayDelegateTest(
     @Test
     fun `when payment data is null, then state is not valid`() = runTest {
         delegate.componentStateFlow.test {
-            skipItems(1)
-
             delegate.updateComponentState(null)
 
             with(awaitItem()) {
