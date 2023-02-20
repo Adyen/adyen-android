@@ -17,7 +17,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
@@ -32,9 +31,9 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.instant.internal.ui.DefaultInstantPaymentDelegate
@@ -56,11 +55,11 @@ class InstantPaymentComponentProvider(
     PaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
-        PaymentComponentState<PaymentMethodDetails>>,
+        InstantComponentState>,
     SessionPaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
-        PaymentComponentState<PaymentMethodDetails>> {
+        InstantComponentState> {
 
     private val componentParamsMapper = GenericComponentParamsMapper()
 
@@ -71,7 +70,7 @@ class InstantPaymentComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: InstantPaymentConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
+        componentCallback: ComponentCallback<InstantComponentState>,
         order: Order?,
         key: String?
     ): InstantPaymentComponent {
@@ -127,7 +126,7 @@ class InstantPaymentComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: InstantPaymentConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodDetails>>,
+        componentCallback: SessionComponentCallback<InstantComponentState>,
         key: String?
     ): InstantPaymentComponent {
         assertSupported(paymentMethod)
@@ -170,11 +169,10 @@ class InstantPaymentComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<PaymentMethodDetails>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<InstantComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             InstantPaymentComponent(
                 instantPaymentDelegate = instantPaymentDelegate,
