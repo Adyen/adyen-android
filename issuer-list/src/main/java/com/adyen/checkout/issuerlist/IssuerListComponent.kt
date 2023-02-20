@@ -34,12 +34,15 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Component should not be instantiated directly.
  */
-abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
+abstract class IssuerListComponent<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    > protected constructor(
+    private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT, ComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
     @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
+    val componentEventHandler: ComponentEventHandler<ComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -63,7 +66,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
         issuerListDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -82,7 +85,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? IssuerListDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? IssuerListDelegate<*, *>)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 

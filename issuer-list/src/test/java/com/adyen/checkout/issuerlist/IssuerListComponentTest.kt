@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.internal.util.Logger
@@ -44,10 +43,10 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class IssuerListComponentTest(
-    @Mock private val issuerListDelegate: IssuerListDelegate<TestIssuerPaymentMethod>,
+    @Mock private val issuerListDelegate: IssuerListDelegate<TestIssuerPaymentMethod, TestIssuerComponentState>,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<TestIssuerPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<TestIssuerComponentState>,
 ) {
 
     // We created TestIssuerListComponent to be able to run our tests, because IssuerListComponent is an abstract class
@@ -87,7 +86,7 @@ internal class IssuerListComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<TestIssuerPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<TestIssuerComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

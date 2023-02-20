@@ -10,7 +10,6 @@ package com.adyen.checkout.issuerlist.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
@@ -18,6 +17,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
+import com.adyen.checkout.issuerlist.TestIssuerComponentState
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
@@ -46,10 +46,10 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultIssuerListDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<TestIssuerPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
 ) {
 
-    private lateinit var delegate: DefaultIssuerListDelegate<TestIssuerPaymentMethod>
+    private lateinit var delegate: DefaultIssuerListDelegate<TestIssuerPaymentMethod, TestIssuerComponentState>
 
     @BeforeEach
     fun beforeEach() {
@@ -154,7 +154,15 @@ internal class DefaultIssuerListDelegateTest(
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
-        ) { TestIssuerPaymentMethod() }
+            typedPaymentMethodFactory = { TestIssuerPaymentMethod() },
+            componentStateFactory = { data, isInputValid, isReady ->
+                TestIssuerComponentState(
+                    data = data,
+                    isInputValid = isInputValid,
+                    isReady = isReady
+                )
+            }
+        )
 
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.RecyclerView, expectMostRecentItem())
@@ -178,7 +186,15 @@ internal class DefaultIssuerListDelegateTest(
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
-        ) { TestIssuerPaymentMethod() }
+            typedPaymentMethodFactory = { TestIssuerPaymentMethod() },
+            componentStateFactory = { data, isInputValid, isReady ->
+                TestIssuerComponentState(
+                    data = data,
+                    isInputValid = isInputValid,
+                    isReady = isReady
+                )
+            }
+        )
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
         }
@@ -254,7 +270,9 @@ internal class DefaultIssuerListDelegateTest(
         order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
-    ) { TestIssuerPaymentMethod() }
+        typedPaymentMethodFactory = { TestIssuerPaymentMethod() },
+        componentStateFactory = { data, isInputValid, isReady -> TestIssuerComponentState(data, isInputValid, isReady) }
+    )
 
     private fun getDefaultTestIssuerListConfigurationBuilder() = TestIssuerListConfiguration.Builder(
         Locale.US,

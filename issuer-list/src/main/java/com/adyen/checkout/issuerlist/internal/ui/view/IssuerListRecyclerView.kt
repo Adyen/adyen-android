@@ -38,10 +38,10 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    private lateinit var issuerListDelegate: IssuerListDelegate<*>
+    private lateinit var issuerListDelegate: IssuerListDelegate<*, *>
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is IssuerListDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        if (delegate !is IssuerListDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
         issuerListDelegate = delegate
 
         this.localizedContext = localizedContext

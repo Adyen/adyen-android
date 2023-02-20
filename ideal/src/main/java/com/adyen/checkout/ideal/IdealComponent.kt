@@ -9,7 +9,6 @@ package com.adyen.checkout.ideal
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
@@ -22,11 +21,11 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class IdealComponent internal constructor(
-    delegate: IssuerListDelegate<IdealPaymentMethod>,
+    delegate: IssuerListDelegate<IdealPaymentMethod, IdealComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<IdealPaymentMethod>>,
-) : IssuerListComponent<IdealPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<IdealComponentState>,
+) : IssuerListComponent<IdealPaymentMethod, IdealComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

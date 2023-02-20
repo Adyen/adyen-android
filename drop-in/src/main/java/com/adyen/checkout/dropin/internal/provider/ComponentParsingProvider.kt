@@ -46,17 +46,10 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -69,15 +62,18 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
+import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
 import com.adyen.checkout.entercash.EntercashComponent
+import com.adyen.checkout.entercash.EntercashComponentState
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
 import com.adyen.checkout.eps.EPSComponent
+import com.adyen.checkout.eps.EPSComponentState
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -89,6 +85,7 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.ideal.IdealComponent
+import com.adyen.checkout.ideal.IdealComponentState
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.instant.InstantPaymentComponent
@@ -98,6 +95,7 @@ import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.molpay.MolpayComponent
+import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
@@ -107,12 +105,14 @@ import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentState
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingComponent
+import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
 import com.adyen.checkout.paybybank.PayByBankComponent
@@ -510,7 +510,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<DotpayPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<DotpayComponentState>,
             )
         }
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -520,8 +520,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<EntercashPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<EntercashComponentState>,
             )
         }
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -531,7 +530,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<EPSPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<EPSComponentState>,
             )
         }
         GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -561,7 +560,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<IdealPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<IdealComponentState>,
             )
         }
         InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -591,7 +590,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MolpayPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<MolpayComponentState>,
             )
         }
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -623,8 +622,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<OnlineBankingPLPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<OnlineBankingPLComponentState>,
             )
         }
         OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -645,8 +643,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<OpenBankingPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<OpenBankingComponentState>,
             )
         }
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

@@ -11,11 +11,12 @@ package com.adyen.checkout.dotpay.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.dotpay.DotpayComponent
+import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
@@ -25,22 +26,28 @@ import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 class DotpayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod>(
+) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod, DotpayComponentState>(
     componentClass = DotpayComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<DotpayPaymentMethod>,
+        delegate: IssuerListDelegate<DotpayPaymentMethod, DotpayComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<DotpayPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<DotpayComponentState>
     ) = DotpayComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
+
+    override fun createComponentState(
+        data: PaymentComponentData<DotpayPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = DotpayComponentState(data, isInputValid, isReady)
 
     override fun createPaymentMethod() = DotpayPaymentMethod()
 

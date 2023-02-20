@@ -18,6 +18,7 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
@@ -33,8 +34,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.DefaultIssuerListDelegate
@@ -53,17 +54,18 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class IssuerListComponentProvider<
-    ComponentT : IssuerListComponent<PaymentMethodT>,
+    ComponentT : IssuerListComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : IssuerListConfiguration,
-    PaymentMethodT : IssuerListPaymentMethod
+    PaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<PaymentMethodT>
     >(
     private val componentClass: Class<ComponentT>,
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null,
     hideIssuerLogosDefaultValue: Boolean = false,
 ) :
-    PaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>>,
-    SessionPaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>> {
+    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+    SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(
         hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue
@@ -76,7 +78,7 @@ abstract class IssuerListComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: ComponentCallback<ComponentStateT>,
         order: Order?,
         key: String?
     ): ComponentT {
@@ -101,6 +103,7 @@ abstract class IssuerListComponentProvider<
                 analyticsRepository = analyticsRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 typedPaymentMethodFactory = ::createPaymentMethod,
+                componentStateFactory = ::createComponentState
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -133,7 +136,7 @@ abstract class IssuerListComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String?
     ): ComponentT {
         assertSupported(paymentMethod)
@@ -157,6 +160,7 @@ abstract class IssuerListComponentProvider<
                 analyticsRepository = analyticsRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 typedPaymentMethodFactory = ::createPaymentMethod,
+                componentStateFactory = ::createComponentState
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -177,7 +181,7 @@ abstract class IssuerListComponentProvider<
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<PaymentMethodT>>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<ComponentStateT>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -204,11 +208,17 @@ abstract class IssuerListComponentProvider<
         }
     }
 
+    protected abstract fun createComponentState(
+        data: PaymentComponentData<PaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ): ComponentStateT
+
     protected abstract fun createComponent(
-        delegate: IssuerListDelegate<PaymentMethodT>,
+        delegate: IssuerListDelegate<PaymentMethodT, ComponentStateT>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<PaymentMethodT>>,
+        componentEventHandler: ComponentEventHandler<ComponentStateT>,
     ): ComponentT
 
     protected abstract fun createPaymentMethod(): PaymentMethodT
