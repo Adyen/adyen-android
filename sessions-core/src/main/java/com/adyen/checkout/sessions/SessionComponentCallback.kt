@@ -15,7 +15,6 @@ import com.adyen.checkout.components.base.BaseComponentCallback
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.sessions.model.SessionPaymentResult
 
 // BIG TODO SESSIONS: docs
 interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {

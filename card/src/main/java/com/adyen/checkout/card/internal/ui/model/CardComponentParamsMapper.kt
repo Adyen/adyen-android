@@ -19,7 +19,7 @@ import com.adyen.checkout.components.ui.AddressFieldPolicy
 import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
+import com.adyen.checkout.sessions.SessionSetupConfiguration
 
 internal class CardComponentParamsMapper {
 

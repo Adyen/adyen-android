@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin
 
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInService
-import com.adyen.checkout.sessions.model.SessionPaymentResult
+import com.adyen.checkout.sessions.SessionPaymentResult
 
 /**
  * A class that contains the final result of Drop-in.
