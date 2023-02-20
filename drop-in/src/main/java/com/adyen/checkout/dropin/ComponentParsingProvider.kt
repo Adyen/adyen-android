@@ -112,8 +112,8 @@ import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
 import com.adyen.checkout.paybybank.PayByBankComponent
-import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.PayByBankConfiguration
+import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
@@ -124,7 +124,7 @@ import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
-import com.adyen.checkout.wechatpay.WeChatPayProvider
+import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
 

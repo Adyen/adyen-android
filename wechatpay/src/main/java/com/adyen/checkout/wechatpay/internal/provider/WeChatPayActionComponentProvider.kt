@@ -6,7 +6,7 @@
  * Created by josephj on 7/6/2021.
  */
 
-package com.adyen.checkout.wechatpay
+package com.adyen.checkout.wechatpay.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -27,6 +27,11 @@ import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.wechatpay.WeChatPayActionComponent
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import com.adyen.checkout.wechatpay.internal.ui.DefaultWeChatDelegate
+import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
+import com.adyen.checkout.wechatpay.internal.util.WeChatPayRequestGenerator
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 

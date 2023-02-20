@@ -32,8 +32,8 @@ import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentProvider
 
 internal class ActionDelegateProvider(
     private val overrideComponentParams: ComponentParams?

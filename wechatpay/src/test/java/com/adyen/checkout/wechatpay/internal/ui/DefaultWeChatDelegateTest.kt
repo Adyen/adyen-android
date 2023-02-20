@@ -6,7 +6,7 @@
  * Created by oscars on 19/8/2022.
  */
 
-package com.adyen.checkout.wechatpay
+package com.adyen.checkout.wechatpay.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -19,6 +19,8 @@ import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
 import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi

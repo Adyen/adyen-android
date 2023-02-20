@@ -21,6 +21,8 @@ import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.wechatpay.internal.ui.WeChatComponentViewType
+import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
