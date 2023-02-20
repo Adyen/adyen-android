@@ -11,7 +11,7 @@ package com.adyen.checkout.cse
 class DefaultGenericEncrypter(
     private val clientSideEncrypter: ClientSideEncrypter,
     private val dateGenerator: DateGenerator,
-) : GenericEncrypter {
+) : BaseGenericEncrypter {
 
     override fun encryptField(fieldKeyToEncrypt: String, fieldValueToEncrypt: Any?, publicKey: String): String {
         return encryptFields(

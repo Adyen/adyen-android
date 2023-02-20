@@ -10,7 +10,13 @@ package com.adyen.checkout.cse
 
 import com.adyen.checkout.cse.exception.EncryptionException
 
-interface GenericEncrypter {
+/**
+ * Allows the encryption of any type of data to be sent to Adyen's APIs.
+ * Use this class with custom component integrations.
+ */
+object GenericEncrypter {
+
+    private val encrypter = provideGenericEncrypter()
 
     /**
      * Encrypts a single field into a block of content.
@@ -21,11 +27,18 @@ interface GenericEncrypter {
      * @return The encrypted string.
      * @throws EncryptionException in case the encryption fails.
      */
+    @Throws(EncryptionException::class)
     fun encryptField(
         fieldKeyToEncrypt: String,
         fieldValueToEncrypt: Any?,
         publicKey: String,
-    ): String
+    ): String {
+        return encrypter.encryptField(
+            fieldKeyToEncrypt = fieldKeyToEncrypt,
+            fieldValueToEncrypt = fieldValueToEncrypt,
+            publicKey = publicKey,
+        )
+    }
 
     /**
      * Encrypts multiple fields into a single block of content.
@@ -35,8 +48,18 @@ interface GenericEncrypter {
      * @return The encrypted string.
      * @throws EncryptionException in case the encryption fails.
      */
+    @Throws(EncryptionException::class)
     fun encryptFields(
         publicKey: String,
         vararg fieldsToEncrypt: Pair<String, Any?>,
-    ): String
+    ): String {
+        return encrypter.encryptFields(
+            fieldsToEncrypt = fieldsToEncrypt,
+            publicKey = publicKey,
+        )
+    }
+
+    private fun provideGenericEncrypter(): BaseGenericEncrypter {
+        return DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator())
+    }
 }

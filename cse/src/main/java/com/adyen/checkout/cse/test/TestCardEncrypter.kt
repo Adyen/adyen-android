@@ -9,18 +9,18 @@
 package com.adyen.checkout.cse.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 
 /**
- * Test implementation of [CardEncrypter]. This class should never be used in not test code as it does not do
+ * Test implementation of [BaseCardEncrypter]. This class should never be used in not test code as it does not do
  * any encryption!
  */
 // TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
-class TestCardEncrypter : CardEncrypter {
+class TestCardEncrypter : BaseCardEncrypter {
 
     var shouldThrowException = false
 

@@ -10,7 +10,13 @@ package com.adyen.checkout.cse
 
 import com.adyen.checkout.cse.exception.EncryptionException
 
-interface CardEncrypter {
+/**
+ * Allows the encryption of card data to be sent to Adyen's APIs.
+ * Use this class with the custom card integration.
+ */
+object CardEncrypter {
+
+    private val encrypter = provideCardEncrypter()
 
     /**
      * Encrypts the available card data from [UnencryptedCard] into individual encrypted blocks.
@@ -24,7 +30,12 @@ interface CardEncrypter {
     fun encryptFields(
         unencryptedCard: UnencryptedCard,
         publicKey: String
-    ): EncryptedCard
+    ): EncryptedCard {
+        return encrypter.encryptFields(
+            unencryptedCard = unencryptedCard,
+            publicKey = publicKey
+        )
+    }
 
     /**
      * Encrypts all the card data present in [UnencryptedCard] into a single block of content.
@@ -38,7 +49,12 @@ interface CardEncrypter {
     fun encrypt(
         unencryptedCard: UnencryptedCard,
         publicKey: String
-    ): String
+    ): String {
+        return encrypter.encrypt(
+            unencryptedCard = unencryptedCard,
+            publicKey = publicKey
+        )
+    }
 
     /**
      * Encrypts the BIN of the card to be used in the Bin Lookup endpoint.
@@ -49,5 +65,14 @@ interface CardEncrypter {
      * @throws EncryptionException in case the encryption fails.
      */
     @Throws(EncryptionException::class)
-    fun encryptBin(bin: String, publicKey: String): String
+    fun encryptBin(bin: String, publicKey: String): String {
+        return encrypter.encryptBin(
+            bin = bin,
+            publicKey = publicKey
+        )
+    }
+
+    private fun provideCardEncrypter(): BaseCardEncrypter {
+        return DefaultCardEncrypter(DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator()))
+    }
 }

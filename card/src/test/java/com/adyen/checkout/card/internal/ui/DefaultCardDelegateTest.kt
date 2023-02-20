@@ -58,8 +58,8 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.BaseCardEncrypter
+import com.adyen.checkout.cse.BaseGenericEncrypter
 import com.adyen.checkout.cse.test.TestCardEncrypter
 import com.adyen.checkout.cse.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -960,8 +960,8 @@ internal class DefaultCardDelegateTest(
         addressRepository: AddressRepository = this.addressRepository,
         detectCardTypeRepository: DetectCardTypeRepository = this.detectCardTypeRepository,
         cardValidationMapper: CardValidationMapper = CardValidationMapper(),
-        cardEncrypter: CardEncrypter = this.cardEncrypter,
-        genericEncrypter: GenericEncrypter = this.genericEncrypter,
+        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
+        genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,

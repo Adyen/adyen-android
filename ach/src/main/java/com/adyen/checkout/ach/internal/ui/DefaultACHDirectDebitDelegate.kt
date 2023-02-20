@@ -41,7 +41,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.BaseGenericEncrypter
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -64,7 +64,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
-    private val genericEncrypter: GenericEncrypter,
+    private val genericEncrypter: BaseGenericEncrypter,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
 ) : ACHDirectDebitDelegate {

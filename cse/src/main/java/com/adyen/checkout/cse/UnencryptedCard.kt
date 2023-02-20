@@ -7,6 +7,10 @@
  */
 package com.adyen.checkout.cse
 
+/**
+ * Class containing raw card data that needs to be encrypted.
+ * Use [Builder] to instantiate and [CardEncrypter] to encrypt.
+ */
 class UnencryptedCard internal constructor(
     val number: String?,
     val expiryMonth: String?,
@@ -16,7 +20,7 @@ class UnencryptedCard internal constructor(
 ) {
 
     /**
-     * Builder for [UnencryptedCard] objects.
+     * Builder for [UnencryptedCard].
      */
     class Builder {
         private var number: String? = null

@@ -42,7 +42,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
@@ -63,7 +63,7 @@ internal class DefaultBcmcDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: CardEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
     private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>
 ) : BcmcDelegate {
 

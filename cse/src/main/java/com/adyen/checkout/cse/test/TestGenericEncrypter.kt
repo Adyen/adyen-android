@@ -9,16 +9,16 @@
 package com.adyen.checkout.cse.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.BaseGenericEncrypter
 import com.adyen.checkout.cse.exception.EncryptionException
 
 /**
- * Test implementation of [GenericEncrypter]. This class should never be used in not test code as it does not do
+ * Test implementation of [BaseGenericEncrypter]. This class should never be used in not test code as it does not do
  * any encryption!
  */
 // TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
-class TestGenericEncrypter : GenericEncrypter {
+class TestGenericEncrypter : BaseGenericEncrypter {
 
     var shouldThrowException = false
 

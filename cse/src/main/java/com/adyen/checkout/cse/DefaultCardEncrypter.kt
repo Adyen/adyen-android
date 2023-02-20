@@ -10,8 +10,8 @@ package com.adyen.checkout.cse
 import com.adyen.checkout.cse.exception.EncryptionException
 
 class DefaultCardEncrypter(
-    private val genericEncrypter: GenericEncrypter
-) : CardEncrypter {
+    private val genericEncrypter: BaseGenericEncrypter
+) : BaseCardEncrypter {
 
     override fun encryptFields(
         unencryptedCard: UnencryptedCard,

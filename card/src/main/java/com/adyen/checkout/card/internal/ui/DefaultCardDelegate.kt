@@ -62,9 +62,9 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.BaseGenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
@@ -92,8 +92,8 @@ internal class DefaultCardDelegate(
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: CardEncrypter,
-    private val genericEncrypter: GenericEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
+    private val genericEncrypter: BaseGenericEncrypter,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
 

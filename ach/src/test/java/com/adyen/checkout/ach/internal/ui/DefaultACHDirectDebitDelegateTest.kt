@@ -32,7 +32,7 @@ import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.BaseGenericEncrypter
 import com.adyen.checkout.cse.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
@@ -527,7 +527,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
-        genericEncrypter: GenericEncrypter = this.genericEncrypter,
+        genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>> = this.submitHandler,
         configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
         order: OrderRequest? = TEST_ORDER,
