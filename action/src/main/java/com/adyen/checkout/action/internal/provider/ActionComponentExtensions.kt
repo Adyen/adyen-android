@@ -6,9 +6,8 @@
  * Created by josephj on 19/9/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.provider
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.components.ActionComponentProvider
@@ -23,8 +22,7 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponent
  *
  * @return The provider able to handle the action.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun getActionProviderFor(
+internal fun getActionProviderFor(
     action: Action
 ): ActionComponentProvider<*, *, *>? {
     val allActionProviders = listOf(

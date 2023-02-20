@@ -6,14 +6,21 @@
  * Created by josephj on 23/8/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.provider
 
 import android.app.Application
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.ActionDelegateProvider
+import com.adyen.checkout.action.internal.ui.DefaultGenericActionDelegate
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionComponentCallback
 import com.adyen.checkout.components.base.ComponentParams
@@ -32,6 +39,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Fingerprint
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericActionComponentProvider(
     private val overrideComponentParams: ComponentParams? = null
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {

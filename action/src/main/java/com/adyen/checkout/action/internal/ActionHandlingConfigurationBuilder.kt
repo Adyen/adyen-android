@@ -1,6 +1,5 @@
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
@@ -8,8 +7,7 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionHandlingConfigurationBuilder<BuilderT> {
+internal interface ActionHandlingConfigurationBuilder<BuilderT> {
 
     /**
      * Add configuration for 3DS2 action.

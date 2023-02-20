@@ -6,13 +6,14 @@
  * Created by josephj on 20/9/2022.
  */
 
-package com.adyen.checkout.action
+package com.adyen.checkout.action.internal.ui
 
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.model.payments.response.RedirectAction

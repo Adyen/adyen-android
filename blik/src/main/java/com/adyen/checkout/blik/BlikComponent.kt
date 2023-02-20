@@ -10,9 +10,9 @@ package com.adyen.checkout.blik
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
 import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.blik.internal.ui.BlikDelegate

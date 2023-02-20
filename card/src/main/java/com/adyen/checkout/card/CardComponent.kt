@@ -11,9 +11,9 @@ package com.adyen.checkout.card
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
