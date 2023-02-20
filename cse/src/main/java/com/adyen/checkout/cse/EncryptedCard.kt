@@ -10,6 +10,9 @@ package com.adyen.checkout.cse
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * The encrypted card data to be sent to Adyen's APIs.
+ */
 @Parcelize
 data class EncryptedCard(
     val encryptedCardNumber: String?,

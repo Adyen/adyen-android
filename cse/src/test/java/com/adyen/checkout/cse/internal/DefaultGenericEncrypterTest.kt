@@ -6,7 +6,7 @@
  * Created by josephj on 17/2/2023.
  */
 
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals

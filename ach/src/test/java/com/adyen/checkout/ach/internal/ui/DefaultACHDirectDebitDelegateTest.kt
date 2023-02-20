@@ -32,8 +32,8 @@ import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.BaseGenericEncrypter
-import com.adyen.checkout.cse.test.TestGenericEncrypter
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope

@@ -5,10 +5,11 @@
  *
  * Created by caiof on 14/1/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
 import android.util.Base64
-import com.adyen.checkout.cse.exception.EncryptionException
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.cse.EncryptionException
 import java.math.BigInteger
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -31,6 +32,7 @@ import kotlin.text.Charsets.UTF_8
 /**
  * Created by andrei on 8/8/16.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ClientSideEncrypter {
 
     @Throws(EncryptionException::class)

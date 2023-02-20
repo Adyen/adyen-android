@@ -5,10 +5,14 @@
  *
  * Created by caiof on 14/1/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.exception.EncryptionException
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.UnencryptedCard
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultCardEncrypter(
     private val genericEncrypter: BaseGenericEncrypter
 ) : BaseCardEncrypter {

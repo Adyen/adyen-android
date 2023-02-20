@@ -5,7 +5,7 @@
  *
  * Created by josephj on 16/3/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
 import org.json.JSONException
 import org.json.JSONObject

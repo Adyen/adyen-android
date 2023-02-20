@@ -5,10 +5,9 @@
  *
  * Created by josephj on 16/3/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
-import com.adyen.checkout.cse.ResourceReader.readJsonFileFromResource
-import com.adyen.checkout.cse.ValidationUtils.isPublicKeyValid
+import com.adyen.checkout.cse.internal.ResourceReader.readJsonFileFromResource
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -41,7 +40,7 @@ internal class ValidationUtilsTest {
     fun isPublicKeyValid_CorrectPattern_ExpectValid() {
         val validKeys = getPublicKeysArrayFromJson(KEY_VALID_PUBLIC_KEYS)
         for (validKey in validKeys) {
-            assertTrue(isPublicKeyValid(validKey))
+            assertTrue(ValidationUtils.isPublicKeyValid(validKey))
         }
     }
 
@@ -49,7 +48,7 @@ internal class ValidationUtilsTest {
     fun isPublicKeyValid_IncorrectPattern_ExpectInvalid() {
         val invalidKeys = getPublicKeysArrayFromJson(KEY_INVALID_PUBLIC_KEYS)
         for (invalidKey in invalidKeys) {
-            assertFalse(isPublicKeyValid(invalidKey))
+            assertFalse(ValidationUtils.isPublicKeyValid(invalidKey))
         }
     }
 

@@ -6,10 +6,12 @@
  * Created by josephj on 17/2/2023.
  */
 
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
+import androidx.annotation.RestrictTo
 import java.util.Date
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DateGenerator {
     fun getCurrentDate(): Date = Date()
 }

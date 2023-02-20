@@ -5,11 +5,11 @@
  *
  * Created by josephj on 16/3/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
 import java.util.regex.Pattern
 
-object ValidationUtils {
+internal object ValidationUtils {
 
     private const val PUBLIC_KEY_PATTERN = "([A-F]|[0-9]){5}\\|([A-F]|[0-9]){512}"
     private const val PUBLIC_KEY_SIZE = 5 + 1 + 512

@@ -6,11 +6,11 @@
  * Created by josephj on 10/8/2022.
  */
 
-package com.adyen.checkout.cse.test
+package com.adyen.checkout.cse.internal.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.BaseGenericEncrypter
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.EncryptionException
 
 /**
  * Test implementation of [BaseGenericEncrypter]. This class should never be used in not test code as it does not do

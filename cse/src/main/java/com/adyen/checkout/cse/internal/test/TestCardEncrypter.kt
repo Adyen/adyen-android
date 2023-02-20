@@ -6,13 +6,13 @@
  * Created by oscars on 18/7/2022.
  */
 
-package com.adyen.checkout.cse.test
+package com.adyen.checkout.cse.internal.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.EncryptionException
 
 /**
  * Test implementation of [BaseCardEncrypter]. This class should never be used in not test code as it does not do
