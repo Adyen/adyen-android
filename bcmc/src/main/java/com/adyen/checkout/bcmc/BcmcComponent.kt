@@ -18,7 +18,6 @@ import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -26,7 +25,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -42,7 +40,7 @@ class BcmcComponent internal constructor(
     private val bcmcDelegate: BcmcDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<CardPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<BcmcComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -65,7 +63,7 @@ class BcmcComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<BcmcComponentState>) -> Unit
     ) {
         bcmcDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

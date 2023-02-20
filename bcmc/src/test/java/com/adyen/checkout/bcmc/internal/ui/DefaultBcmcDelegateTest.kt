@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
@@ -16,14 +17,12 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -49,7 +48,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultBcmcDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<BcmcComponentState>,
 ) {
 
     private lateinit var testPublicKeyRepository: TestPublicKeyRepository

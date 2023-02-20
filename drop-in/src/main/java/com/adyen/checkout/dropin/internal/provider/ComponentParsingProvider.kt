@@ -20,6 +20,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.blik.BlikComponent
@@ -44,7 +45,6 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
@@ -469,7 +469,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<CardPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<BcmcComponentState>,
             )
         }
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
