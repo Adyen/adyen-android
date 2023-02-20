@@ -24,6 +24,7 @@ import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.card.CardComponent
@@ -44,7 +45,6 @@ import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityChec
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
@@ -414,7 +414,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<BlikComponentState>,
             )
         }
         else -> {
@@ -479,7 +479,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<BlikComponentState>,
             )
         }
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

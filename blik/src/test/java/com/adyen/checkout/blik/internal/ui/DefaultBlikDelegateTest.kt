@@ -9,15 +9,14 @@
 package com.adyen.checkout.blik.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -42,7 +41,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultBlikDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<BlikPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<BlikComponentState>,
 ) {
 
     private lateinit var delegate: DefaultBlikDelegate

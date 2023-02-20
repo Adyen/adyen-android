@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.example.service
 
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.internal.data.model.toStringPretty
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -46,7 +46,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
         state: PaymentComponentState<*>,
     ): Boolean {
         return if (
-            state.data.paymentMethod is BlikPaymentMethod ||
+            state is BlikComponentState ||
             state is CardComponentState
         ) {
             launch(Dispatchers.IO) {
