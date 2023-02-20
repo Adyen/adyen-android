@@ -48,8 +48,7 @@ class DefaultCardEncrypterTest(
 
         val unencryptedCard = UnencryptedCard.Builder()
             .setNumber(number)
-            .setExpiryYear(expiryYear)
-            .setExpiryMonth(expiryMonth)
+            .setExpiryDate(expiryMonth, expiryYear)
             .setCvc(cvc)
             .build()
 
@@ -96,8 +95,7 @@ class DefaultCardEncrypterTest(
 
         val unencryptedCard = UnencryptedCard.Builder()
             .setNumber(number)
-            .setExpiryYear(expiryYear)
-            .setExpiryMonth(expiryMonth)
+            .setExpiryDate(expiryMonth, expiryYear)
             .setCvc(cvc)
             .setHolderName(holderName)
             .build()

@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.cse
 
-data class UnencryptedCard internal constructor(
+class UnencryptedCard internal constructor(
     val number: String?,
     val expiryMonth: String?,
     val expiryYear: String?,
@@ -37,23 +37,14 @@ data class UnencryptedCard internal constructor(
         }
 
         /**
-         * Set the optional expiry month, e.g. "1" or "01" for January.
+         * Set the optional expiry date.
          *
-         * @param expiryMonth The expiry month.
+         * @param expiryMonth The expiry month e.g. "1" or "01" for January.
+         * @param expiryYear The expiry year e.g. "2021".
          * @return The Builder instance.
          */
-        fun setExpiryMonth(expiryMonth: String): Builder {
+        fun setExpiryDate(expiryMonth: String, expiryYear: String): Builder {
             this.expiryMonth = removeWhiteSpaces(expiryMonth)
-            return this
-        }
-
-        /**
-         * Set the optional expiry year, e.g. "2021".
-         *
-         * @param expiryYear The expiry year.
-         * @return The Builder instance.
-         */
-        fun setExpiryYear(expiryYear: String): Builder {
             this.expiryYear = removeWhiteSpaces(expiryYear)
             return this
         }

@@ -250,8 +250,10 @@ internal class DefaultBcmcDelegate(
 
         val expiryDateResult = outputData.expiryDateField.value
         if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
-            unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-            unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+            unencryptedCardBuilder.setExpiryDate(
+                expiryMonth = expiryDateResult.expiryMonth.toString(),
+                expiryYear = expiryDateResult.expiryYear.toString()
+            )
         }
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)

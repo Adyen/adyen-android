@@ -212,10 +212,13 @@ internal class DefaultGiftCardDelegate(
         outputData: GiftCardOutputData,
         publicKey: String,
     ): EncryptedCard? = try {
-        val unencryptedCardBuilder = UnencryptedCard.Builder().setNumber(outputData.giftcardNumberFieldState.value)
+        val unencryptedCard = UnencryptedCard
+            .Builder()
+            .setNumber(outputData.giftcardNumberFieldState.value)
             .setCvc(outputData.giftcardPinFieldState.value)
+            .build()
 
-        cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        cardEncrypter.encryptFields(unencryptedCard, publicKey)
     } catch (e: EncryptionException) {
         exceptionChannel.trySend(e)
         null

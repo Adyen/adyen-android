@@ -253,8 +253,10 @@ internal class StoredCardDelegate(
             }
             val expiryDateResult = outputData.expiryDateState.value
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
-                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+                unencryptedCardBuilder.setExpiryDate(
+                    expiryMonth = expiryDateResult.expiryMonth.toString(),
+                    expiryYear = expiryDateResult.expiryYear.toString()
+                )
             }
 
             cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)

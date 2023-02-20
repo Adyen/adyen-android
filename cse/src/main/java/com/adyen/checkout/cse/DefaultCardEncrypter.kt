@@ -18,38 +18,40 @@ class DefaultCardEncrypter(
         publicKey: String
     ): EncryptedCard {
         return try {
-            val encryptedExpiryMonth: String?
-            val encryptedExpiryYear: String?
-            val encryptedNumber: String? = if (unencryptedCard.number != null) {
+            val encryptedNumber = unencryptedCard.number?.let { number ->
                 genericEncrypter.encryptField(
                     fieldKeyToEncrypt = CARD_NUMBER_KEY,
-                    fieldValueToEncrypt = unencryptedCard.number,
+                    fieldValueToEncrypt = number,
                     publicKey = publicKey
                 )
-            } else {
-                null
             }
-            if (unencryptedCard.expiryMonth != null && unencryptedCard.expiryYear != null) {
-                encryptedExpiryMonth = genericEncrypter.encryptField(
-                    fieldKeyToEncrypt = EXPIRY_MONTH_KEY,
-                    fieldValueToEncrypt = unencryptedCard.expiryMonth,
-                    publicKey = publicKey
-                )
-                encryptedExpiryYear = genericEncrypter.encryptField(
-                    fieldKeyToEncrypt = EXPIRY_YEAR_KEY,
-                    fieldValueToEncrypt = unencryptedCard.expiryYear,
-                    publicKey = publicKey
-                )
-            } else if (unencryptedCard.expiryMonth == null && unencryptedCard.expiryYear == null) {
-                encryptedExpiryMonth = null
-                encryptedExpiryYear = null
-            } else {
-                throw EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null)
+
+            val encryptedExpiryMonth: String?
+            val encryptedExpiryYear: String?
+            when {
+                unencryptedCard.expiryMonth != null && unencryptedCard.expiryYear != null -> {
+                    encryptedExpiryMonth = genericEncrypter.encryptField(
+                        fieldKeyToEncrypt = EXPIRY_MONTH_KEY,
+                        fieldValueToEncrypt = unencryptedCard.expiryMonth,
+                        publicKey = publicKey
+                    )
+                    encryptedExpiryYear = genericEncrypter.encryptField(
+                        fieldKeyToEncrypt = EXPIRY_YEAR_KEY,
+                        fieldValueToEncrypt = unencryptedCard.expiryYear,
+                        publicKey = publicKey
+                    )
+                }
+                unencryptedCard.expiryMonth == null && unencryptedCard.expiryYear == null -> {
+                    encryptedExpiryMonth = null
+                    encryptedExpiryYear = null
+                }
+                else -> {
+                    throw EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null)
+                }
             }
-            val encryptedSecurityCode: String? = if (unencryptedCard.cvc != null) {
-                genericEncrypter.encryptField(CVC_KEY, unencryptedCard.cvc, publicKey)
-            } else {
-                null
+
+            val encryptedSecurityCode = unencryptedCard.cvc?.let { cvc ->
+                genericEncrypter.encryptField(CVC_KEY, cvc, publicKey)
             }
             EncryptedCard(
                 encryptedCardNumber = encryptedNumber,
