@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -21,7 +20,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
@@ -40,7 +38,7 @@ class MBWayComponent internal constructor(
     private val mbWayDelegate: MBWayDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<MBWayPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<MBWayComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -63,7 +61,7 @@ class MBWayComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<MBWayComponentState>) -> Unit
     ) {
         mbWayDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

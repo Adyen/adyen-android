@@ -46,7 +46,6 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
@@ -92,6 +91,7 @@ import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
 import com.adyen.checkout.mbway.MBWayComponent
+import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.molpay.MolpayComponent
@@ -580,7 +580,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = mbWayConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<MBWayComponentState>,
             )
         }
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

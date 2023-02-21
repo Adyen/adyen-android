@@ -12,7 +12,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -24,6 +23,7 @@ import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -43,7 +43,7 @@ internal class DefaultMBWayDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<MBWayPaymentMethod>>,
+    private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) : MBWayDelegate {
 
     private val inputData = MBWayInputData()
@@ -52,14 +52,14 @@ internal class DefaultMBWayDelegate(
     override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
 
     override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<MBWayPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<MBWayComponentState> = submitHandler.submitFlow
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -84,7 +84,7 @@ internal class DefaultMBWayDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<MBWayComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -133,7 +133,7 @@ internal class DefaultMBWayDelegate(
 
     private fun createComponentState(
         outputData: MBWayOutputData = this.outputData
-    ): PaymentComponentState<MBWayPaymentMethod> {
+    ): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value
@@ -144,14 +144,14 @@ internal class DefaultMBWayDelegate(
             order = order,
         )
 
-        return PaymentComponentState(
+        return MBWayComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true
         )
     }
 
-    private fun componentStateChanged(componentState: PaymentComponentState<MBWayPaymentMethod>) {
+    private fun componentStateChanged(componentState: MBWayComponentState) {
         _componentStateFlow.tryEmit(componentState)
     }
 

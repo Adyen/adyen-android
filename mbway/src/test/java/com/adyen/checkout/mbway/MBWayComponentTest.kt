@@ -13,10 +13,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.MbWayComponentViewType
@@ -46,7 +44,7 @@ internal class MBWayComponentTest(
     @Mock private val mbWayDelegate: MBWayDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<MBWayPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<MBWayComponentState>,
 ) {
 
     private lateinit var component: MBWayComponent
@@ -84,7 +82,7 @@ internal class MBWayComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<MBWayPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<MBWayComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

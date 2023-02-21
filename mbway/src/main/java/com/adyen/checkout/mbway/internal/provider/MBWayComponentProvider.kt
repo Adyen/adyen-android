@@ -17,7 +17,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
@@ -31,10 +30,10 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.mbway.MBWayComponent
+import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -53,8 +52,8 @@ class MBWayComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
-    PaymentComponentProvider<MBWayComponent, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>>,
-    SessionPaymentComponentProvider<MBWayComponent, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>> {
+    PaymentComponentProvider<MBWayComponent, MBWayConfiguration, MBWayComponentState>,
+    SessionPaymentComponentProvider<MBWayComponent, MBWayConfiguration, MBWayComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -65,7 +64,7 @@ class MBWayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: MBWayConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
+        componentCallback: ComponentCallback<MBWayComponentState>,
         order: Order?,
         key: String?,
     ): MBWayComponent {
@@ -122,7 +121,7 @@ class MBWayComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: MBWayConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<MBWayPaymentMethod>>,
+        componentCallback: SessionComponentCallback<MBWayComponentState>,
         key: String?
     ): MBWayComponent {
         assertSupported(paymentMethod)
@@ -168,11 +167,10 @@ class MBWayComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<MBWayPaymentMethod>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<MBWayComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             MBWayComponent(
                 mbWayDelegate = mbWayDelegate,
