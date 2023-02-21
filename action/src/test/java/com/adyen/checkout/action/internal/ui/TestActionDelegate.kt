@@ -28,11 +28,11 @@ import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

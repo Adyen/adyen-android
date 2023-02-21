@@ -16,17 +16,17 @@ import android.view.View.OnFocusChangeListener
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.adapter.CountryAdapter
-import com.adyen.checkout.components.ui.adapter.CountryModel
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
 
 @Suppress("TooManyFunctions")

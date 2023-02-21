@@ -15,8 +15,8 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.base.ButtonParams
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

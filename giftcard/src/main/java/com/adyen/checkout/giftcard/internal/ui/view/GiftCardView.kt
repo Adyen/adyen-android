@@ -15,16 +15,16 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.hideError
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.extensions.showError
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 
 internal class GiftCardView @JvmOverloads constructor(

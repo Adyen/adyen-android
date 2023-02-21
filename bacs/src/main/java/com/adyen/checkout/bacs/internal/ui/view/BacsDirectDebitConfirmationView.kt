@@ -17,8 +17,8 @@ import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitConfirmationViewBinding
 import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
 
 internal class BacsDirectDebitConfirmationView @JvmOverloads constructor(

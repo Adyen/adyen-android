@@ -14,9 +14,9 @@ import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitInputData
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.base.ButtonComponentParams
 import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BacsDirectDebitDelegate :

@@ -39,23 +39,14 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.AddressListItem
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.AddressRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.test.TestAddressRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
-import com.adyen.checkout.components.ui.AddressFormUIState
-import com.adyen.checkout.components.ui.AddressInputModel
-import com.adyen.checkout.components.ui.AddressOutputData
-import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.util.AddressFormUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.internal.BaseCardEncrypter
@@ -63,6 +54,15 @@ import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
+import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -262,7 +262,8 @@ internal class DefaultCardDelegateTest(
                     assertEquals(addressInputModel.city, city.value)
                     assertEquals(addressInputModel.country, country.value)
                     assertEquals(expectedCountries, countryOptions)
-                    assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES))
+                    assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(
+                        TestAddressRepository.STATES))
                 }
             }
         }

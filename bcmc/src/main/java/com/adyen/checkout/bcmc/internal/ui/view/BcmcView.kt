@@ -21,13 +21,13 @@ import com.adyen.checkout.bcmc.R
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.hideError
-import com.adyen.checkout.components.extensions.isVisible
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.extensions.showError
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.isVisible
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 
 internal class BcmcView @JvmOverloads constructor(

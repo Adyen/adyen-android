@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal object CardAddressValidationUtils {
     //  TODO check it after ACH implementation

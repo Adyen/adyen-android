@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.adyen.checkout.components.ui.view.AdyenComponentView
+        <com.adyen.checkout.ui.core.AdyenComponentView
             android:id="@+id/component_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

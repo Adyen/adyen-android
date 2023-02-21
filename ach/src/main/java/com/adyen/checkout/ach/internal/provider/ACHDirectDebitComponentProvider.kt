@@ -25,7 +25,6 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticsMapper
 import com.adyen.checkout.components.analytics.AnalyticsSource
 import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
-import com.adyen.checkout.components.api.AddressService
 import com.adyen.checkout.components.api.AnalyticsService
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.components.base.ComponentCallback
@@ -36,10 +35,8 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.repository.DefaultAddressRepository
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.internal.ClientSideEncrypter
@@ -54,6 +51,9 @@ import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.internal.data.api.SessionService
 import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.data.api.AddressService
+import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ACHDirectDebitComponentProvider(

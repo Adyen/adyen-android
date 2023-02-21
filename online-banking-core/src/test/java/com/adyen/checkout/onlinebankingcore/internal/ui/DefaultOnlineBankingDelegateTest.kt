@@ -17,12 +17,12 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
 import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

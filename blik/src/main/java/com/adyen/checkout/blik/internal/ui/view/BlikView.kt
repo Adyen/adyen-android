@@ -17,14 +17,14 @@ import com.adyen.checkout.blik.R
 import com.adyen.checkout.blik.databinding.BlikViewBinding
 import com.adyen.checkout.blik.internal.ui.BlikDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.hideError
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.extensions.showError
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 
 internal class BlikView @JvmOverloads constructor(

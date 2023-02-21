@@ -15,11 +15,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.copyTextToClipboard
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -27,6 +23,10 @@ import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.copyTextToClipboard
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

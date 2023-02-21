@@ -13,12 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListRecyclerViewBinding
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
 internal class IssuerListRecyclerView @JvmOverloads constructor(

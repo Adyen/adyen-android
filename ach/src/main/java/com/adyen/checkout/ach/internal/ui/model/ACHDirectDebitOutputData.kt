@@ -9,9 +9,9 @@
 package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.AddressFormUIState
-import com.adyen.checkout.components.ui.AddressOutputData
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
 internal data class ACHDirectDebitOutputData(
     var bankAccountNumber: FieldState<String>,

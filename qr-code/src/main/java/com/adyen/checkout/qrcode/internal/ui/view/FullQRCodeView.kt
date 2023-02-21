@@ -21,13 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.extensions.toast
-import com.adyen.checkout.components.image.LogoSize
-import com.adyen.checkout.components.image.load
-import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.util.isEmpty
@@ -39,6 +33,12 @@ import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.LogoSize
+import com.adyen.checkout.ui.core.internal.ui.load
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.internal.util.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

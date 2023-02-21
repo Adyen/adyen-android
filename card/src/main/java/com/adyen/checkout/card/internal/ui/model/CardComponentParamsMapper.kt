@@ -15,11 +15,11 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.ui.AddressFieldPolicy
-import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class CardComponentParamsMapper {
 

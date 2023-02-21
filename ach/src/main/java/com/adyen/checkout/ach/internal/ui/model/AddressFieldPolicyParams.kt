@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.ach.internal.ui.model
 
-import com.adyen.checkout.components.ui.AddressFieldPolicy
+import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

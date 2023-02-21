@@ -26,7 +26,6 @@ import com.adyen.checkout.action.internal.provider.GenericActionComponentProvide
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.base.ActionComponentCallback
-import com.adyen.checkout.components.extensions.toast
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
@@ -40,6 +39,7 @@ import com.adyen.checkout.dropin.ui.arguments
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentFragmentEvent
 import com.adyen.checkout.dropin.ui.viewmodel.ActionComponentViewModel
+import com.adyen.checkout.ui.core.internal.util.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

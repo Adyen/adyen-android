@@ -16,7 +16,7 @@ import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.util.CardNumberUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 
 /**
  * Input that support formatting for card number.
