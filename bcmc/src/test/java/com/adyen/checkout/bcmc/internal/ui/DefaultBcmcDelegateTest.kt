@@ -26,7 +26,7 @@ import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -8,13 +8,19 @@
 
 package com.adyen.checkout.cse
 
-import androidx.annotation.WorkerThread
-import com.adyen.checkout.cse.exception.EncryptionException
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultCardEncrypter
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 
-interface CardEncrypter {
+/**
+ * Allows the encryption of card data to be sent to Adyen's APIs.
+ * Use this class with the custom card integration.
+ */
+object CardEncrypter {
+
+    private val encrypter = provideCardEncrypter()
 
     /**
      * Encrypts the available card data from [UnencryptedCard] into individual encrypted blocks.
@@ -24,12 +30,16 @@ interface CardEncrypter {
      * @return An [EncryptedCard] object with each encrypted field.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
     fun encryptFields(
         unencryptedCard: UnencryptedCard,
         publicKey: String
-    ): EncryptedCard
+    ): EncryptedCard {
+        return encrypter.encryptFields(
+            unencryptedCard = unencryptedCard,
+            publicKey = publicKey
+        )
+    }
 
     /**
      * Encrypts all the card data present in [UnencryptedCard] into a single block of content.
@@ -39,12 +49,16 @@ interface CardEncrypter {
      * @return The encrypted card data String.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
     fun encrypt(
         unencryptedCard: UnencryptedCard,
         publicKey: String
-    ): String
+    ): String {
+        return encrypter.encrypt(
+            unencryptedCard = unencryptedCard,
+            publicKey = publicKey
+        )
+    }
 
     /**
      * Encrypts the BIN of the card to be used in the Bin Lookup endpoint.
@@ -54,17 +68,15 @@ interface CardEncrypter {
      * @return The encrypted bin String.
      * @throws EncryptionException in case the encryption fails.
      */
-    @WorkerThread
     @Throws(EncryptionException::class)
-    fun encryptBin(bin: String, publicKey: String): String
+    fun encryptBin(bin: String, publicKey: String): String {
+        return encrypter.encryptBin(
+            bin = bin,
+            publicKey = publicKey
+        )
+    }
 
-    companion object {
-
-        const val GENERATION_TIME_KEY = "generationtime"
-
-        val GENERATION_DATE_FORMAT: SimpleDateFormat =
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-                timeZone = TimeZone.getTimeZone("UTC")
-            }
+    private fun provideCardEncrypter(): BaseCardEncrypter {
+        return DefaultCardEncrypter(DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator()))
     }
 }

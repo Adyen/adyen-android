@@ -17,7 +17,7 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData

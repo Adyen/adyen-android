@@ -5,10 +5,11 @@
  *
  * Created by caiof on 14/1/2021.
  */
-package com.adyen.checkout.cse
+package com.adyen.checkout.cse.internal
 
 import android.util.Base64
-import com.adyen.checkout.cse.exception.EncryptionException
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.cse.EncryptionException
 import java.math.BigInteger
 import java.security.InvalidAlgorithmParameterException
 import java.security.InvalidKeyException
@@ -31,18 +32,17 @@ import kotlin.text.Charsets.UTF_8
 /**
  * Created by andrei on 8/8/16.
  */
-class ClientSideEncrypter(publicKeyString: String) {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class ClientSideEncrypter {
 
-    private val aesCipher: Cipher
-    private val rsaCipher: Cipher
-    private val secureRandom: SecureRandom
-
-    init {
+    @Throws(EncryptionException::class)
+    @Suppress("ThrowsCount", "LongMethod")
+    fun encrypt(publicKeyString: String, plainText: String): String {
         if (!ValidationUtils.isPublicKeyValid(publicKeyString)) {
             throw EncryptionException("Invalid public key: $publicKeyString", null)
         }
 
-        aesCipher = try {
+        val aesCipher = try {
             Cipher.getInstance("AES/CCM/NoPadding")
         } catch (e: NoSuchAlgorithmException) {
             throw EncryptionException("Problem instantiation AES Cipher Algorithm", e)
@@ -50,7 +50,7 @@ class ClientSideEncrypter(publicKeyString: String) {
             throw EncryptionException("Problem instantiation AES Cipher Padding", e)
         }
 
-        secureRandom = SecureRandom()
+        val secureRandom = SecureRandom()
         val keyComponents = publicKeyString.split("|").toTypedArray()
 
         // The bytes can be converted back to a public key object
@@ -69,7 +69,7 @@ class ClientSideEncrypter(publicKeyString: String) {
             throw EncryptionException("Problem reading public key: $publicKeyString", e)
         }
 
-        rsaCipher = try {
+        val rsaCipher = try {
             Cipher.getInstance("RSA/None/PKCS1Padding").apply {
                 init(Cipher.ENCRYPT_MODE, pubKey)
             }
@@ -80,13 +80,9 @@ class ClientSideEncrypter(publicKeyString: String) {
         } catch (e: InvalidKeyException) {
             throw EncryptionException("Invalid public key: $publicKeyString", e)
         }
-    }
 
-    @Throws(EncryptionException::class)
-    @Suppress("ThrowsCount")
-    fun encrypt(plainText: String): String {
         val aesKey = generateAesKey()
-        val iv = generateIV()
+        val iv = generateIV(secureRandom)
         val encrypted: ByteArray = try {
             aesCipher.init(Cipher.ENCRYPT_MODE, aesKey, IvParameterSpec(iv))
             aesCipher.doFinal(plainText.toByteArray(UTF_8))
@@ -139,7 +135,7 @@ class ClientSideEncrypter(publicKeyString: String) {
      *
      * @return the IV bytes
      */
-    private fun generateIV(): ByteArray {
+    private fun generateIV(secureRandom: SecureRandom): ByteArray {
         // generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
         val iv = ByteArray(ivSize)
         secureRandom.nextBytes(iv)

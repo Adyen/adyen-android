@@ -41,8 +41,8 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.GenericEncrypter
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.EncryptionException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -64,7 +64,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
-    private val genericEncrypter: GenericEncrypter,
+    private val genericEncrypter: BaseGenericEncrypter,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
 ) : ACHDirectDebitDelegate {
@@ -274,13 +274,13 @@ internal class DefaultACHDirectDebitDelegate(
 
         try {
             val encryptedBankAccountNumber = genericEncrypter.encryptField(
-                encryptionKey = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
-                fieldToEncrypt = outputData.bankAccountNumber.value,
+                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
+                fieldValueToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
             val encryptedBankLocationId = genericEncrypter.encryptField(
-                encryptionKey = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
-                fieldToEncrypt = outputData.bankLocationId.value,
+                fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
+                fieldValueToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey
             )
 

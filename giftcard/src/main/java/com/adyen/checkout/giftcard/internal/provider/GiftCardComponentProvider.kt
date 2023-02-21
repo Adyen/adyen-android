@@ -34,8 +34,10 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.cse.DefaultCardEncrypter
-import com.adyen.checkout.cse.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultCardEncrypter
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
@@ -73,7 +75,9 @@ class GiftCardComponentProvider(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val genericEncrypter = DefaultGenericEncrypter()
+        val clientSideEncrypter = ClientSideEncrypter()
+        val dateGenerator = DateGenerator()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
@@ -135,7 +139,9 @@ class GiftCardComponentProvider(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val genericEncrypter = DefaultGenericEncrypter()
+        val clientSideEncrypter = ClientSideEncrypter()
+        val dateGenerator = DateGenerator()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)

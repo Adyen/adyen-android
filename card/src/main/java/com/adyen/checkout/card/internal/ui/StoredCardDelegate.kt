@@ -47,10 +47,10 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -66,7 +66,7 @@ internal class StoredCardDelegate(
     private val order: OrderRequest?,
     override val componentParams: CardComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val cardEncrypter: CardEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
@@ -253,8 +253,10 @@ internal class StoredCardDelegate(
             }
             val expiryDateResult = outputData.expiryDateState.value
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
-                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+                unencryptedCardBuilder.setExpiryDate(
+                    expiryMonth = expiryDateResult.expiryMonth.toString(),
+                    expiryYear = expiryDateResult.expiryYear.toString()
+                )
             }
 
             cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)

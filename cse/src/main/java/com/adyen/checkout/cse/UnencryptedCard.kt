@@ -7,37 +7,20 @@
  */
 package com.adyen.checkout.cse
 
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.Date
-
-data class UnencryptedCard(
+/**
+ * Class containing raw card data that needs to be encrypted.
+ * Use [Builder] to instantiate and [CardEncrypter] to encrypt.
+ */
+class UnencryptedCard internal constructor(
     val number: String?,
     val expiryMonth: String?,
     val expiryYear: String?,
     val cvc: String?,
     val cardHolderName: String?,
-    val generationTime: Date?
 ) {
-    override fun toString(): String {
-        return try {
-            val cardJson = JSONObject()
-            if (generationTime != null) {
-                cardJson.put("generationtime", CardEncrypter.GENERATION_DATE_FORMAT.format(generationTime))
-            }
-            if (number != null) {
-                // Builder checks that number needs to be at least 8 digits.
-                cardJson.put("number", number.substring(0, firstThreeDigits))
-            }
-            cardJson.putOpt("holderName", cardHolderName)
-            cardJson.toString()
-        } catch (e: JSONException) {
-            throw IllegalStateException("UnencryptedCard toString() failed.", e)
-        }
-    }
 
     /**
-     * Builder for [UnencryptedCard] objects.
+     * Builder for [UnencryptedCard].
      */
     class Builder {
         private var number: String? = null
@@ -45,7 +28,6 @@ data class UnencryptedCard(
         private var expiryYear: String? = null
         private var cardHolderName: String? = null
         private var cvc: String? = null
-        private var generationTime: Date? = null
 
         /**
          * Set the optional card number.
@@ -59,23 +41,14 @@ data class UnencryptedCard(
         }
 
         /**
-         * Set the optional expiry month, e.g. "1" or "01" for January.
+         * Set the optional expiry date.
          *
-         * @param expiryMonth The expiry month.
+         * @param expiryMonth The expiry month e.g. "1" or "01" for January.
+         * @param expiryYear The expiry year e.g. "2021".
          * @return The Builder instance.
          */
-        fun setExpiryMonth(expiryMonth: String): Builder {
+        fun setExpiryDate(expiryMonth: String, expiryYear: String): Builder {
             this.expiryMonth = removeWhiteSpaces(expiryMonth)
-            return this
-        }
-
-        /**
-         * Set the optional expiry year, e.g. "2021".
-         *
-         * @param expiryYear The expiry year.
-         * @return The Builder instance.
-         */
-        fun setExpiryYear(expiryYear: String): Builder {
             this.expiryYear = removeWhiteSpaces(expiryYear)
             return this
         }
@@ -103,17 +76,6 @@ data class UnencryptedCard(
         }
 
         /**
-         * Set the mandatory generation time.
-         *
-         * @param generationTime The generation time.
-         * @return The Builder instance.
-         */
-        fun setGenerationTime(generationTime: Date): Builder {
-            this.generationTime = generationTime
-            return this
-        }
-
-        /**
          * Builds the given [UnencryptedCard] object.
          *
          * @return The [UnencryptedCard] object.
@@ -126,7 +88,6 @@ data class UnencryptedCard(
                 expiryYear = expiryYear,
                 cvc = cvc,
                 cardHolderName = cardHolderName,
-                generationTime = generationTime
             )
         }
 
@@ -137,9 +98,5 @@ data class UnencryptedCard(
         private fun trimAndRemoveMultipleWhiteSpaces(string: String?): String? {
             return string?.trim { it <= ' ' }?.replace("\\s{2,}".toRegex(), " ")
         }
-    }
-
-    companion object {
-        private const val firstThreeDigits = 3
     }
 }

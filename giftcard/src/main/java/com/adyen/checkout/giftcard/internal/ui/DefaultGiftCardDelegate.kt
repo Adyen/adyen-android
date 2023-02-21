@@ -30,10 +30,10 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
@@ -52,7 +52,7 @@ internal class DefaultGiftCardDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: ButtonComponentParams,
-    private val cardEncrypter: CardEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) : GiftCardDelegate {
 
@@ -212,10 +212,13 @@ internal class DefaultGiftCardDelegate(
         outputData: GiftCardOutputData,
         publicKey: String,
     ): EncryptedCard? = try {
-        val unencryptedCardBuilder = UnencryptedCard.Builder().setNumber(outputData.giftcardNumberFieldState.value)
+        val unencryptedCard = UnencryptedCard
+            .Builder()
+            .setNumber(outputData.giftcardNumberFieldState.value)
             .setCvc(outputData.giftcardPinFieldState.value)
+            .build()
 
-        cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        cardEncrypter.encryptFields(unencryptedCard, publicKey)
     } catch (e: EncryptionException) {
         exceptionChannel.trySend(e)
         null

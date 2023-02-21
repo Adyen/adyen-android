@@ -41,8 +41,10 @@ import com.adyen.checkout.components.repository.PaymentObserverRepository
 import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.cse.DefaultCardEncrypter
-import com.adyen.checkout.cse.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultCardEncrypter
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionComponentEventHandler
@@ -85,7 +87,9 @@ class BcmcComponentProvider(
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
         val cardValidationMapper = CardValidationMapper()
-        val genericEncrypter = DefaultGenericEncrypter()
+        val dateGenerator = DateGenerator()
+        val clientSideEncrypter = ClientSideEncrypter()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val analyticsService = AnalyticsService(httpClient)
         val analyticsRepository = DefaultAnalyticsRepository(
@@ -152,7 +156,9 @@ class BcmcComponentProvider(
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
         val cardValidationMapper = CardValidationMapper()
-        val genericEncrypter = DefaultGenericEncrypter()
+        val dateGenerator = DateGenerator()
+        val clientSideEncrypter = ClientSideEncrypter()
+        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val analyticsService = AnalyticsService(httpClient)
         val analyticsRepository = DefaultAnalyticsRepository(

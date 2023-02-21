@@ -8,15 +8,61 @@
 
 package com.adyen.checkout.cse
 
-import java.util.Date
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 
-interface GenericEncrypter {
+/**
+ * Allows the encryption of any type of data to be sent to Adyen's APIs.
+ * Use this class with custom component integrations.
+ */
+object GenericEncrypter {
 
+    private val encrypter = provideGenericEncrypter()
+
+    /**
+     * Encrypts a single field into a block of content.
+     *
+     * @param fieldKeyToEncrypt The key of the field to be encrypted.
+     * @param fieldValueToEncrypt The value of the field to be encrypted.
+     * @param publicKey The key to be used for encryption.
+     * @return The encrypted string.
+     * @throws EncryptionException in case the encryption fails.
+     */
+    @Throws(EncryptionException::class)
     fun encryptField(
-        encryptionKey: String,
-        fieldToEncrypt: Any,
-        publicKey: String
-    ): String
+        fieldKeyToEncrypt: String,
+        fieldValueToEncrypt: Any?,
+        publicKey: String,
+    ): String {
+        return encrypter.encryptField(
+            fieldKeyToEncrypt = fieldKeyToEncrypt,
+            fieldValueToEncrypt = fieldValueToEncrypt,
+            publicKey = publicKey,
+        )
+    }
 
-    fun makeGenerationTime(generationTime: Date? = null): String
+    /**
+     * Encrypts multiple fields into a single block of content.
+     *
+     * @param publicKey The key to be used for encryption.
+     * @param fieldsToEncrypt The fields to be encrypted.
+     * @return The encrypted string.
+     * @throws EncryptionException in case the encryption fails.
+     */
+    @Throws(EncryptionException::class)
+    fun encryptFields(
+        publicKey: String,
+        vararg fieldsToEncrypt: Pair<String, Any?>,
+    ): String {
+        return encrypter.encryptFields(
+            fieldsToEncrypt = fieldsToEncrypt,
+            publicKey = publicKey,
+        )
+    }
+
+    private fun provideGenericEncrypter(): BaseGenericEncrypter {
+        return DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator())
+    }
 }

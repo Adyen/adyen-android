@@ -44,8 +44,8 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.util.AddressValidationUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -371,7 +371,7 @@ internal class StoredCardDelegateTest(
 
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
-        cardEncrypter: CardEncrypter = this.cardEncrypter,
+        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
