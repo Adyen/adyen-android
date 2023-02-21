@@ -6,9 +6,9 @@
  * Created by oscars on 8/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.ui.model
 
-enum class UpiMode {
+internal enum class UpiMode {
     VPA,
     QR,
 }

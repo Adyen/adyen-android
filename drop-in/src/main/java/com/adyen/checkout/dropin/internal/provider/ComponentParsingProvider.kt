@@ -128,9 +128,9 @@ import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 import com.adyen.checkout.upi.UpiComponent
-import com.adyen.checkout.upi.UpiComponentProvider
 import com.adyen.checkout.upi.UpiComponentState
 import com.adyen.checkout.upi.UpiConfiguration
+import com.adyen.checkout.upi.internal.provider.UpiComponentProvider
 import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()

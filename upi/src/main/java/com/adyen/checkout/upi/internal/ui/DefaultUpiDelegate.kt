@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/2/2023.
+ * Created by oscars on 21/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -26,6 +26,9 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.internal.ui.model.UpiInputData
+import com.adyen.checkout.upi.internal.ui.model.UpiMode
+import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -125,8 +128,11 @@ internal class DefaultUpiDelegate(
     ): UpiComponentState {
         val paymentMethod = UpiPaymentMethod(
             type = if (outputData.mode == UpiMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
-            virtualPaymentAddress = if (outputData.mode == UpiMode.VPA) outputData.virtualPaymentAddressFieldState.value
-            else null
+            virtualPaymentAddress = if (outputData.mode == UpiMode.VPA) {
+                outputData.virtualPaymentAddressFieldState.value
+            } else {
+                null
+            }
         )
 
         val paymentComponentData = PaymentComponentData(

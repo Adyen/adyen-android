@@ -3,18 +3,20 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 7/2/2023.
+ * Created by oscars on 21/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.upi.internal.ui.model.UpiInputData
+import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
 import kotlinx.coroutines.flow.Flow
 
-interface UpiDelegate :
+internal interface UpiDelegate :
     PaymentComponentDelegate<UpiComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 7/2/2023.
+ * Created by oscars on 21/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -26,7 +26,10 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
+import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.databinding.UpiViewBinding
+import com.adyen.checkout.upi.internal.ui.UpiDelegate
+import com.adyen.checkout.upi.internal.ui.model.UpiMode
 import kotlinx.coroutines.CoroutineScope
 
 internal class UpiView @JvmOverloads constructor(

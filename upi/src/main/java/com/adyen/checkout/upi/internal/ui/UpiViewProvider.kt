@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/2/2023.
+ * Created by oscars on 21/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,6 +14,8 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.upi.R
+import com.adyen.checkout.upi.internal.ui.view.UpiView
 
 internal object UpiViewProvider : ViewProvider {
 
@@ -29,6 +31,7 @@ internal object UpiViewProvider : ViewProvider {
 }
 
 internal object UpiComponentViewType : ButtonComponentViewType {
+
     override val viewProvider: ViewProvider = UpiViewProvider
 
     // TODO: Use better string

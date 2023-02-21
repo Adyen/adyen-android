@@ -28,6 +28,8 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import com.adyen.checkout.upi.UpiComponent.Companion.PROVIDER
+import com.adyen.checkout.upi.internal.provider.UpiComponentProvider
+import com.adyen.checkout.upi.internal.ui.UpiDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**

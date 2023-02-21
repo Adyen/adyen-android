@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 7/2/2023.
+ * Created by oscars on 21/2/2023.
  */
 
-package com.adyen.checkout.upi
+package com.adyen.checkout.upi.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -42,6 +42,9 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.UpiComponent
+import com.adyen.checkout.upi.UpiConfiguration
+import com.adyen.checkout.upi.internal.ui.DefaultUpiDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class UpiComponentProvider(
