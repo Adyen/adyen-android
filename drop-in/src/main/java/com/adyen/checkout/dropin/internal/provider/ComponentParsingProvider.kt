@@ -50,7 +50,6 @@ import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMe
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
@@ -122,6 +121,7 @@ import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
+import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
@@ -673,7 +673,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<SepaComponentState>,
             )
         }
         SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

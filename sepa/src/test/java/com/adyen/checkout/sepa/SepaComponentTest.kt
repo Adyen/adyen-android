@@ -13,8 +13,6 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.internal.util.Logger
@@ -46,7 +44,7 @@ internal class SepaComponentTest(
     @Mock private val sepaDelegate: SepaDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<SepaComponentState>,
 ) {
 
     private lateinit var component: SepaComponent
@@ -84,7 +82,7 @@ internal class SepaComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<SepaComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

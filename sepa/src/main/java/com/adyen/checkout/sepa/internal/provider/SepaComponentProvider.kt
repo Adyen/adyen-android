@@ -17,9 +17,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -32,9 +30,10 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sepa.SepaComponent
+import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.internal.ui.DefaultSepaDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -53,8 +52,8 @@ class SepaComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
-    PaymentComponentProvider<SepaComponent, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>>,
-    SessionPaymentComponentProvider<SepaComponent, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>> {
+    PaymentComponentProvider<SepaComponent, SepaConfiguration, SepaComponentState>,
+    SessionPaymentComponentProvider<SepaComponent, SepaConfiguration, SepaComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -65,7 +64,7 @@ class SepaComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: SepaConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+        componentCallback: ComponentCallback<SepaComponentState>,
         order: Order?,
         key: String?
     ): SepaComponent {
@@ -122,7 +121,7 @@ class SepaComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: SepaConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<SepaPaymentMethod>>,
+        componentCallback: SessionComponentCallback<SepaComponentState>,
         key: String?
     ): SepaComponent {
         assertSupported(paymentMethod)
@@ -166,11 +165,10 @@ class SepaComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<SepaComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             SepaComponent(
                 sepaDelegate = sepaDelegate,
