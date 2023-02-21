@@ -39,15 +39,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentMethod>(
+internal class DefaultEContextDelegate<
+    EContextPaymentMethodT : EContextPaymentMethod,
+    EContextComponentStateT : PaymentComponentState<EContextPaymentMethodT>
+    >(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<EContextPaymentMethodT>>,
+    private val submitHandler: SubmitHandler<EContextComponentStateT>,
     private val typedPaymentMethodFactory: () -> EContextPaymentMethodT,
-) : EContextDelegate<EContextPaymentMethodT> {
+    private val componentStateFactory: (
+        data: PaymentComponentData<EContextPaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) -> EContextComponentStateT
+) : EContextDelegate<EContextPaymentMethodT, EContextComponentStateT> {
 
     private val inputData: EContextInputData = EContextInputData()
 
@@ -57,12 +65,12 @@ internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentM
     override val outputData: EContextOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<EContextPaymentMethodT>> = _componentStateFlow
+    override val componentStateFlow: Flow<EContextComponentStateT> = _componentStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(EContextComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<EContextPaymentMethodT>> = submitHandler.submitFlow
+    override val submitFlow: Flow<EContextComponentStateT> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -106,7 +114,7 @@ internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentM
 
     private fun createComponentState(
         outputData: EContextOutputData = this.outputData
-    ): PaymentComponentState<EContextPaymentMethodT> {
+    ): EContextComponentStateT {
         val eContextPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             firstName = outputData.firstNameState.value
@@ -119,7 +127,7 @@ internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentM
             paymentMethod = eContextPaymentMethod,
             order = this@DefaultEContextDelegate.order,
         )
-        return PaymentComponentState(paymentComponentData, isInputValid, true)
+        return componentStateFactory(paymentComponentData, isInputValid, true)
     }
 
     private fun validateFirstName(firstName: String): FieldState<String> {
@@ -167,7 +175,7 @@ internal class DefaultEContextDelegate<EContextPaymentMethodT : EContextPaymentM
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<EContextPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<EContextComponentStateT>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,

@@ -11,13 +11,14 @@ package com.adyen.checkout.onlinebankingjp.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentState
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
@@ -28,16 +29,23 @@ class OnlineBankingJPComponentProvider(
 ) : EContextComponentProvider<
     OnlineBankingJPComponent,
     OnlineBankingJPConfiguration,
-    OnlineBankingJPPaymentMethod>(
+    OnlineBankingJPPaymentMethod,
+    OnlineBankingJPComponentState>(
     componentClass = OnlineBankingJPComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
+    override fun createComponentState(
+        data: PaymentComponentData<OnlineBankingJPPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = OnlineBankingJPComponentState(data, isInputValid, isReady)
+
     override fun createComponent(
-        delegate: EContextDelegate<OnlineBankingJPPaymentMethod>,
+        delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingJPPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<OnlineBankingJPComponentState>
     ): OnlineBankingJPComponent {
         return OnlineBankingJPComponent(
             delegate = delegate,

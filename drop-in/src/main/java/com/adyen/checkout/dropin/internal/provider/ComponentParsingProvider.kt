@@ -45,13 +45,10 @@ import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityChec
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
 import com.adyen.checkout.core.exception.CheckoutException
@@ -100,6 +97,7 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentState
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
@@ -118,6 +116,7 @@ import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
 import com.adyen.checkout.payeasy.PayEasyComponent
+import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
@@ -126,6 +125,7 @@ import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
+import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
@@ -499,8 +499,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = convenienceStoresJPConfiguration,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<ConvenienceStoresJPPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<ConvenienceStoresJPComponentState>,
             )
         }
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -611,8 +610,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingJPConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<OnlineBankingJPPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<OnlineBankingJPComponentState>,
             )
         }
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -663,7 +661,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payEasyConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PaymentComponentState<PayEasyPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<PayEasyComponentState>,
             )
         }
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -683,8 +681,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sevenElevenConfiguration,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<SevenElevenPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<SevenElevenComponentState>,
             )
         }
         else -> {

@@ -20,8 +20,11 @@ import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface EContextDelegate<EContextPaymentMethodT : EContextPaymentMethod> :
-    PaymentComponentDelegate<PaymentComponentState<EContextPaymentMethodT>>,
+interface EContextDelegate<
+    EContextPaymentMethodT : EContextPaymentMethod,
+    EContextComponentStateT : PaymentComponentState<EContextPaymentMethodT>
+    > :
+    PaymentComponentDelegate<EContextComponentStateT>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
@@ -30,7 +33,7 @@ interface EContextDelegate<EContextPaymentMethodT : EContextPaymentMethod> :
 
     val outputDataFlow: Flow<EContextOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<EContextPaymentMethodT>>
+    val componentStateFlow: Flow<EContextComponentStateT>
 
     fun updateInputData(update: EContextInputData.() -> Unit)
 

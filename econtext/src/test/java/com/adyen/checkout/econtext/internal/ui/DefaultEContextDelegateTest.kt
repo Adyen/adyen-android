@@ -11,7 +11,6 @@ package com.adyen.checkout.econtext.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
@@ -20,6 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.econtext.TestEContextComponentState
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
@@ -45,10 +45,10 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 internal class DefaultEContextDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<TestEContextPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
 ) {
 
-    private lateinit var delegate: DefaultEContextDelegate<TestEContextPaymentMethod>
+    private lateinit var delegate: DefaultEContextDelegate<TestEContextPaymentMethod, TestEContextComponentState>
 
     @BeforeEach
     fun beforeEach() {
@@ -233,8 +233,16 @@ internal class DefaultEContextDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        submitHandler = submitHandler
-    ) { TestEContextPaymentMethod() }
+        submitHandler = submitHandler,
+        typedPaymentMethodFactory = { TestEContextPaymentMethod() },
+        componentStateFactory = { data, isInputValid, isReady ->
+            TestEContextComponentState(
+                data = data,
+                isInputValid = isInputValid,
+                isReady = isReady
+            )
+        }
+    )
 
     private fun getDefaultTestEContextConfigurationBuilder() = TestEContextConfiguration.Builder(
         Locale.US,
