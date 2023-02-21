@@ -11,10 +11,10 @@ package com.adyen.checkout.issuerlist.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData

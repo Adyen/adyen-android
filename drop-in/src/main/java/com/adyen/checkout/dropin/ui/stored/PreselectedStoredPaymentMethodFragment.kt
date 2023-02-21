@@ -19,9 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ButtonComponent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.image.loadLogo
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.ui.util.PayButtonFormatter
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -39,6 +37,8 @@ import com.adyen.checkout.dropin.ui.viewModelsFactory
 import com.adyen.checkout.dropin.ui.viewmodel.ButtonState
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredEvent
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredPaymentViewModel
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

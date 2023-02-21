@@ -19,9 +19,9 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.base.GenericComponentParams
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.ui.AddressParams
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

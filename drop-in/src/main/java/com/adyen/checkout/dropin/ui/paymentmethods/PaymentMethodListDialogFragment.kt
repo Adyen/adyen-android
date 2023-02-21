@@ -20,7 +20,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -28,6 +27,7 @@ import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

@@ -11,7 +11,7 @@ package com.adyen.checkout.voucher.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

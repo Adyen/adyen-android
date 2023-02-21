@@ -12,10 +12,10 @@ import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.StringUtil.normalize
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar

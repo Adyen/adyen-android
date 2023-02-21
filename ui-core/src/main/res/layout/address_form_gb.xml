@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_houseNumber"
             style="@style/AdyenCheckout.HouseNumberInput"
             android:autofillHints="postalAddress"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_street"
             style="@style/AdyenCheckout.StreetInput"
             android:autofillHints="postalAddress"
@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
             style="@style/AdyenCheckout.CityTownInput"
             android:autofillHints="postalAddress"
@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
             style="@style/AdyenCheckout.PostalCodeInput"
             android:autofillHints="postalCode"

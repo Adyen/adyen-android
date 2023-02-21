@@ -10,12 +10,12 @@ package com.adyen.checkout.giftcard.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentView
-import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.internal.ui.view.GiftCardView
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewProvider
 
 internal object GiftCardViewProvider : ViewProvider {
 

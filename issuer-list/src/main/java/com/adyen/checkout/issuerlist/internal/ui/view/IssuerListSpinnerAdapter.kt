@@ -14,9 +14,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.adyen.checkout.components.image.loadLogo
-import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.ui.core.databinding.SpinnerListWithImageBinding
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
 
 internal class IssuerListSpinnerAdapter constructor(
     private val context: Context,

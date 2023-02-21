@@ -14,10 +14,10 @@ import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BcmcDelegate :

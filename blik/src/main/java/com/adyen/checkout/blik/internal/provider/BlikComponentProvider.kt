@@ -38,7 +38,6 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
@@ -51,6 +50,7 @@ import com.adyen.checkout.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.internal.data.api.SessionService
 import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.internal.provider.SessionStoredPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BlikComponentProvider(

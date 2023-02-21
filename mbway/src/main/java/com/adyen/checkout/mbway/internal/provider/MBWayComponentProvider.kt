@@ -28,11 +28,11 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.base.DefaultComponentEventHandler
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.mbway.MBWayComponent

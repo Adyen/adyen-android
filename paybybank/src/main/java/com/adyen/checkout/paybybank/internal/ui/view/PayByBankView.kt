@@ -15,9 +15,6 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
@@ -25,6 +22,9 @@ import com.adyen.checkout.paybybank.R
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
 import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

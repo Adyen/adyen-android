@@ -34,7 +34,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
@@ -51,6 +50,7 @@ import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.internal.data.api.SessionService
 import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class OnlineBankingComponentProvider<

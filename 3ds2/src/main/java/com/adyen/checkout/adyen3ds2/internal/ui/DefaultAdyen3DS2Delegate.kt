@@ -28,7 +28,8 @@ import com.adyen.checkout.components.bundle.SavedStateHandleContainer
 import com.adyen.checkout.components.bundle.SavedStateHandleProperty
 import com.adyen.checkout.components.channel.bufferedChannel
 import com.adyen.checkout.components.encoding.Base64Encoder
-import com.adyen.checkout.components.handler.RedirectHandler
+import com.adyen.checkout.ui.core.internal.RedirectHandler
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
@@ -37,7 +38,6 @@ import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAc
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
 import com.adyen.checkout.components.repository.PaymentDataRepository
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil

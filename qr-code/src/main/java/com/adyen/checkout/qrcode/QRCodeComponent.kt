@@ -18,12 +18,12 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 class QRCodeComponent internal constructor(

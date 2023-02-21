@@ -17,10 +17,10 @@ import com.adyen.checkout.components.ActionComponentEvent
 import com.adyen.checkout.components.base.ActionComponentEventHandler
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.SdkData
-import com.adyen.checkout.components.test.TestComponentViewType
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import com.adyen.checkout.wechatpay.internal.ui.WeChatComponentViewType
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import kotlinx.coroutines.ExperimentalCoroutinesApi

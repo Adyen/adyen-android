@@ -11,11 +11,11 @@ package com.adyen.checkout.sepa.internal.ui
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentComponentDelegate
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface SepaDelegate :

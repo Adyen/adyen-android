@@ -38,7 +38,6 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.cse.internal.ClientSideEncrypter
@@ -54,6 +53,7 @@ import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.internal.data.api.SessionService
 import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(

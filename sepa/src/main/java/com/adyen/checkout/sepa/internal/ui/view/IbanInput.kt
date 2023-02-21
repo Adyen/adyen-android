@@ -10,8 +10,8 @@ package com.adyen.checkout.sepa.internal.ui.view
 import android.content.Context
 import android.text.Editable
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.sepa.internal.ui.model.Iban
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 
 internal class IbanInput @JvmOverloads constructor(
     context: Context,

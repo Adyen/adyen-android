@@ -15,12 +15,12 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.hideError
-import com.adyen.checkout.components.extensions.showError
-import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.adapter.CountryAdapter
-import com.adyen.checkout.components.ui.adapter.CountryModel
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil

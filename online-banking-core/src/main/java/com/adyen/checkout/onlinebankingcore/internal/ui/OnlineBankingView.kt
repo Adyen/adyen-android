@@ -14,18 +14,18 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.hideError
-import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.extensions.showError
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 
 internal class OnlineBankingView @JvmOverloads constructor(

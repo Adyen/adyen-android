@@ -18,12 +18,12 @@ import com.adyen.checkout.await.databinding.AwaitViewBinding
 import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.image.loadLogo
-import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

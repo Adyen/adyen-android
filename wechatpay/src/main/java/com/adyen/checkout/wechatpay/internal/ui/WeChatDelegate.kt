@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface WeChatDelegate :

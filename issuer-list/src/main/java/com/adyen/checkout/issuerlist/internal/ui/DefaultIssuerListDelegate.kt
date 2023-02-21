@@ -18,11 +18,6 @@ import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMet
 import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -31,6 +26,11 @@ import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

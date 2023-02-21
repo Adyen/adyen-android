@@ -22,7 +22,6 @@ import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.base.GenericComponentParamsMapper
 import com.adyen.checkout.components.base.lifecycle.get
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
-import com.adyen.checkout.components.handler.DefaultRedirectHandler
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.repository.ActionObserverRepository
@@ -36,6 +35,7 @@ import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
+import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class QRCodeComponentProvider(
