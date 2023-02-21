@@ -73,7 +73,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.model.SessionPaymentResult
+import com.adyen.checkout.sessions.SessionPaymentResult
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
 

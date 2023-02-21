@@ -43,14 +43,14 @@ import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionComponentEventHandler
-import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
-import com.adyen.checkout.sessions.api.SessionService
-import com.adyen.checkout.sessions.interactor.SessionInteractor
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
-import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
-import com.adyen.checkout.sessions.repository.SessionRepository
+import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.sessions.internal.SessionComponentEventHandler
+import com.adyen.checkout.sessions.internal.SessionInteractor
+import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.internal.data.api.SessionService
+import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.internal.provider.SessionStoredPaymentComponentProvider
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BlikComponentProvider(

@@ -29,11 +29,11 @@ import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.CheckoutSessionProvider
+import com.adyen.checkout.sessions.CheckoutSessionResult
 import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.model.SessionModel
-import com.adyen.checkout.sessions.model.SessionPaymentResult
-import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
-import com.adyen.checkout.sessions.provider.CheckoutSessionResult
+import com.adyen.checkout.sessions.SessionModel
+import com.adyen.checkout.sessions.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

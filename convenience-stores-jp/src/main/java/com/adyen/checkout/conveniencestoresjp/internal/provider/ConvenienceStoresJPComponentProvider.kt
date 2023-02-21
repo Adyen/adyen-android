@@ -17,9 +17,9 @@ import com.adyen.checkout.components.base.ComponentParams
 import com.adyen.checkout.components.model.payments.request.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
-import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.sessions.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ConvenienceStoresJPComponentProvider(

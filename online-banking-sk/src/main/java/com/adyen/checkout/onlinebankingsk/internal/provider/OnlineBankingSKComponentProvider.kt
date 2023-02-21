@@ -19,7 +19,7 @@ import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingCompo
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
+import com.adyen.checkout.sessions.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingSKComponentProvider(
