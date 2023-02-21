@@ -9,13 +9,13 @@
 package com.adyen.checkout.ach.internal.ui
 
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParams
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitInputData
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.ach.internal.util.ACHDirectDebitValidationUtils
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -63,7 +63,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+    private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
     private val genericEncrypter: BaseGenericEncrypter,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
@@ -90,7 +90,7 @@ internal class DefaultACHDirectDebitDelegate(
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<ACHDirectDebitComponentState> = _componentStateFlow
 
     private var publicKey: String? = null
 
@@ -100,7 +100,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(ACHDirectDebitComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<ACHDirectDebitPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<ACHDirectDebitComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -262,10 +262,10 @@ internal class DefaultACHDirectDebitDelegate(
     @Suppress("ReturnCount")
     private fun createComponentState(
         outputData: ACHDirectDebitOutputData = this.outputData
-    ): PaymentComponentState<ACHDirectDebitPaymentMethod> {
+    ): ACHDirectDebitComponentState {
         val publicKey = publicKey
         if (!outputData.isValid || publicKey == null) {
-            return PaymentComponentState(
+            return ACHDirectDebitComponentState(
                 data = PaymentComponentData(),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null
@@ -299,10 +299,10 @@ internal class DefaultACHDirectDebitDelegate(
                 )
             }
 
-            return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+            return ACHDirectDebitComponentState(paymentComponentData, isInputValid = true, isReady = true)
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
-            return PaymentComponentState(
+            return ACHDirectDebitComponentState(
                 data = PaymentComponentData(),
                 isInputValid = false,
                 isReady = true
@@ -317,7 +317,7 @@ internal class DefaultACHDirectDebitDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<ACHDirectDebitComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,

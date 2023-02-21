@@ -14,10 +14,8 @@ import com.adyen.checkout.ach.internal.ui.ACHDirectDebitComponentViewType
 import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -45,7 +43,7 @@ internal class ACHDirectDebitComponentTest(
     @Mock private val achDelegate: ACHDirectDebitDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
 ) {
 
     private lateinit var component: ACHDirectDebitComponent
@@ -82,7 +80,7 @@ internal class ACHDirectDebitComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<ACHDirectDebitComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

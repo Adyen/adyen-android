@@ -10,11 +10,11 @@ package com.adyen.checkout.ach.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
+import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.R
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
@@ -60,7 +59,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultACHDirectDebitDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>
+    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
@@ -528,7 +527,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
         genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
-        submitHandler: SubmitHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>> = this.submitHandler,
+        submitHandler: SubmitHandler<ACHDirectDebitComponentState> = this.submitHandler,
         configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultACHDirectDebitDelegate(
