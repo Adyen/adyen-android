@@ -15,7 +15,6 @@ import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StatusResponseUtils
 import com.adyen.checkout.components.core.action.Action
@@ -782,7 +781,7 @@ internal class SessionInteractorTest(
             remainingAmount = Amount("USD", 100),
         )
 
-        private val TEST_COMPONENT_STATE = PaymentComponentState(
+        private val TEST_COMPONENT_STATE = TestComponentState(
             data = PaymentComponentData(TestPaymentMethod()),
             isInputValid = true,
             isReady = true,
