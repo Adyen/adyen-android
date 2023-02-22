@@ -8,7 +8,7 @@
 package com.adyen.checkout.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject

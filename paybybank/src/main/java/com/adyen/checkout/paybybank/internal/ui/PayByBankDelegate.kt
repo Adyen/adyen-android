@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.paybybank.internal.ui
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class GiftCardInputData(
     var cardNumber: String = "",

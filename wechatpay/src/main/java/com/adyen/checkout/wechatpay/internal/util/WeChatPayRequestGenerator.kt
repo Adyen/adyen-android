@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.wechatpay.internal.util
 
-import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelpay.PayReq
 

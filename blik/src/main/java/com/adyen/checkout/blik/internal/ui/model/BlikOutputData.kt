@@ -8,9 +8,9 @@
 package com.adyen.checkout.blik.internal.ui.model
 
 import com.adyen.checkout.blik.R
-import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 

@@ -11,9 +11,9 @@ package com.adyen.checkout.bcmc.internal.ui
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParams
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcInputData
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate

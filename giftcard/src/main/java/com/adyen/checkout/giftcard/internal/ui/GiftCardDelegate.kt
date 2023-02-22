@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.giftcard.internal.ui
 
-import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData

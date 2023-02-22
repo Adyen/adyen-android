@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.issuerlist.internal.ui.model
 
-import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration

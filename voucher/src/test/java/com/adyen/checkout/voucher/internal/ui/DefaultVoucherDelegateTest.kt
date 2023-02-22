@@ -10,9 +10,9 @@ package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import app.cash.turbine.test
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
-import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ActionObserverRepository
+import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.voucher.VoucherConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi

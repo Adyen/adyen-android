@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.dropin.ui.viewmodel
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.sessions.SessionModel

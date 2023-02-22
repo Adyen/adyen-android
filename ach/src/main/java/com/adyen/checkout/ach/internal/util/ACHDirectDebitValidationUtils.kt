@@ -9,8 +9,8 @@
 package com.adyen.checkout.ach.internal.util
 
 import com.adyen.checkout.ach.R
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 internal object ACHDirectDebitValidationUtils {
 

@@ -12,11 +12,11 @@ import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.ActionComponent
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.ActionComponentEventHandler
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.internal.ActionComponent
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

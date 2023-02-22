@@ -9,8 +9,8 @@
 package com.adyen.checkout.example.ui.bacs
 
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.PaymentMethod
 
 internal data class BacsComponentData(
     val paymentMethod: PaymentMethod,

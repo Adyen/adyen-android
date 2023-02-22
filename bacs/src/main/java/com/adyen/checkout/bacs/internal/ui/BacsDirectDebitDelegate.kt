@@ -12,8 +12,8 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitInputData
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
-import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate

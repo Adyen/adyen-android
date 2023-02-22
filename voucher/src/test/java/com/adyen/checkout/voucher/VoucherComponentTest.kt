@@ -12,9 +12,9 @@ import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.base.ActionComponentEventHandler
-import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared

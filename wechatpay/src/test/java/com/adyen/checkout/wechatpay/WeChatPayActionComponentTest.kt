@@ -13,10 +13,10 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.base.ActionComponentEventHandler
-import com.adyen.checkout.components.model.payments.response.SdkAction
-import com.adyen.checkout.components.model.payments.response.SdkData
+import com.adyen.checkout.components.core.action.SdkAction
+import com.adyen.checkout.components.core.action.SdkData
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared

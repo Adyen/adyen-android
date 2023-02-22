@@ -15,27 +15,27 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 
 @MainThread
 internal inline fun <reified ViewModelT : ViewModel> AppCompatActivity.getViewModel(
     crossinline factoryProducer: () -> ViewModelT
 ): ViewModelT {
-    return ViewModelProvider(this, viewModelFactory(factoryProducer)).get(ViewModelT::class.java)
+    return ViewModelProvider(this, viewModelFactory(factoryProducer))[ViewModelT::class.java]
 }
 
 @MainThread
 internal inline fun <reified ViewModelT : ViewModel> Fragment.getViewModel(
     crossinline f: () -> ViewModelT
 ): ViewModelT {
-    return ViewModelProvider(this, viewModelFactory(f)).get(ViewModelT::class.java)
+    return ViewModelProvider(this, viewModelFactory(f))[ViewModelT::class.java]
 }
 
 @MainThread
 internal inline fun <reified ViewModelT : ViewModel> Fragment.getActivityViewModel(
     crossinline f: () -> ViewModelT
 ): ViewModelT {
-    return ViewModelProvider(requireActivity(), viewModelFactory(f)).get(ViewModelT::class.java)
+    return ViewModelProvider(requireActivity(), viewModelFactory(f))[ViewModelT::class.java]
 }
 
 @MainThread

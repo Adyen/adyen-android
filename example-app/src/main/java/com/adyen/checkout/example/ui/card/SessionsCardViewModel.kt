@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage

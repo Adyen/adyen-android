@@ -11,9 +11,9 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.ui.order.OrderModel
 import com.adyen.checkout.dropin.ui.paymentmethods.GiftCardPaymentMethodModel

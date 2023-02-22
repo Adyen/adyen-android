@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.example.ui.instant
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 
 internal data class InstantComponentData(
     val paymentMethod: PaymentMethod,

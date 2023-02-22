@@ -7,10 +7,10 @@
  */
 package com.adyen.checkout.mbway.internal.ui.model
 
-import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.util.ValidationUtils
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.mbway.R
 
 internal class MBWayOutputData(mobilePhoneNumber: String) : OutputData {

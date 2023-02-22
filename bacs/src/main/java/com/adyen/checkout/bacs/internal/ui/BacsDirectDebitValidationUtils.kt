@@ -9,9 +9,9 @@
 package com.adyen.checkout.bacs.internal.ui
 
 import com.adyen.checkout.bacs.R
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.util.ValidationUtils
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.ValidationUtils
 
 private const val BANK_ACCOUNT_NUMBER_LENGTH = 8
 private const val SORT_CODE_LENGTH = 6

@@ -9,7 +9,7 @@
 package com.adyen.checkout.issuerlist.utils
 
 import android.os.Parcel
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 
 internal class TestIssuerPaymentMethod(
     override var issuer: String? = "issuer",

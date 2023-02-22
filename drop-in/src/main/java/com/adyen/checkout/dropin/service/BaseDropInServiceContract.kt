@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.service
 
 import android.os.Bundle
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.dropin.DropInConfiguration
 

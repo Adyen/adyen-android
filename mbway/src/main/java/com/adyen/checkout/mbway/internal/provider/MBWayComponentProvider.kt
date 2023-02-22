@@ -16,23 +16,22 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticsMapper
-import com.adyen.checkout.components.analytics.AnalyticsSource
-import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
-import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.base.ButtonComponentParamsMapper
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.base.DefaultComponentEventHandler
-import com.adyen.checkout.components.base.lifecycle.get
-import com.adyen.checkout.components.base.lifecycle.viewModelFactory
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
-import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
+import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.util.get
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.mbway.MBWayComponent
@@ -47,6 +46,7 @@ import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.internal.data.api.SessionService
 import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class MBWayComponentProvider(

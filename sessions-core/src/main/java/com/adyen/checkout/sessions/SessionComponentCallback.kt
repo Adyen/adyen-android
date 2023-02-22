@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.sessions
 
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BaseComponentCallback
-import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.BaseComponentCallback
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.components.core.action.Action
 
 // BIG TODO SESSIONS: docs
 interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {

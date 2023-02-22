@@ -9,9 +9,9 @@
 package com.adyen.checkout.onlinebankingcore.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.onlinebankingcore.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

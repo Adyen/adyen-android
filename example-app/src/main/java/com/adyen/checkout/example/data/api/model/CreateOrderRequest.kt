@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.data.api.model
 
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 
 data class CreateOrderRequest(
     val amount: Amount,

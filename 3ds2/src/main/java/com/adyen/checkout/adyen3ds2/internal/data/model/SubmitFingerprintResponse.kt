@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils

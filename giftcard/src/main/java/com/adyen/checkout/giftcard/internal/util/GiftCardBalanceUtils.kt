@@ -9,8 +9,8 @@
 package com.adyen.checkout.giftcard.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.isEmpty
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import kotlin.math.min
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

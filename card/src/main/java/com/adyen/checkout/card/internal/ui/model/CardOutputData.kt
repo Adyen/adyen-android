@@ -10,11 +10,11 @@ package com.adyen.checkout.card.internal.ui.model
 import androidx.annotation.StringRes
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.components.ui.ComponentMode
-import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
 
 internal data class CardOutputData(
     val cardNumberState: FieldState<String>,

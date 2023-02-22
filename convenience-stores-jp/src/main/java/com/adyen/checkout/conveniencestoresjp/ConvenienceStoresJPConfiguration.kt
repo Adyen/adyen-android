@@ -10,7 +10,7 @@ package com.adyen.checkout.conveniencestoresjp
 
 import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.econtext.EContextConfiguration
 import kotlinx.parcelize.Parcelize

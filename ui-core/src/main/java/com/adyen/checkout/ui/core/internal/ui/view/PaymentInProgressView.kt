@@ -14,8 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.RestrictTo
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.adyen.checkout.components.base.ActionDelegate
-import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.databinding.ViewPaymentInProgressBinding

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.paybybank.internal.ui.model
 
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
 internal class PayByBankInputData(

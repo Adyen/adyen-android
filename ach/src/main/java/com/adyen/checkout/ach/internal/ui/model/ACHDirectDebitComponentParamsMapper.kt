@@ -10,7 +10,7 @@ package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
-import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class ACHDirectDebitComponentParamsMapper {

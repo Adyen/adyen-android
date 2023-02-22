@@ -8,8 +8,8 @@
 package com.adyen.checkout.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.OrderResponse
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils

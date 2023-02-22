@@ -8,7 +8,7 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class BcmcInputData(
     var cardNumber: String = "",

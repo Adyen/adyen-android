@@ -10,8 +10,8 @@
 
 package com.adyen.checkout.example.service
 
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest

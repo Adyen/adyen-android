@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.core.action.RedirectAction
+import com.adyen.checkout.components.core.action.Threeds2Action
 import org.json.JSONObject
 
 internal sealed class SubmitFingerprintResult {

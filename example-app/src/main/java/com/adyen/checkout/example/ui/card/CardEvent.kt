@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.card
 
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.action.Action
 
 internal sealed class CardEvent {
 

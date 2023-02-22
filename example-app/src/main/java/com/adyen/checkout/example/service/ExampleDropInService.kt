@@ -9,11 +9,11 @@
 package com.adyen.checkout.example.service
 
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.getStringOrNull

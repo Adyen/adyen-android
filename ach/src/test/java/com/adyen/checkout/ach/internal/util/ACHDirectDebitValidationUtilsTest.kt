@@ -9,7 +9,7 @@
 package com.adyen.checkout.ach.internal.util
 
 import com.adyen.checkout.ach.R
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

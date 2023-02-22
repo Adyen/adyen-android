@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.bacs
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 
 class BacsDirectDebitComponentState(
     paymentComponentData: PaymentComponentData<BacsDirectDebitPaymentMethod>,

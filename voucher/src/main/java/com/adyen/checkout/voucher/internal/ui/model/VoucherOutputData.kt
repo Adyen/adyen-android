@@ -9,7 +9,7 @@
 package com.adyen.checkout.voucher.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class VoucherOutputData(

@@ -8,15 +8,15 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.components.core.internal.util.CountryInfo
+import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
-import com.adyen.checkout.components.util.CountryInfo
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import kotlinx.coroutines.flow.Flow
 
 internal interface MBWayDelegate :

@@ -9,7 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.components.base.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.sessions.SessionSetupConfiguration
 
 internal class BcmcComponentParamsMapper {

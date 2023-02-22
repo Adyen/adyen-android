@@ -9,12 +9,12 @@
 package com.adyen.checkout.dropin.ui.viewmodel
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.DropInConfiguration

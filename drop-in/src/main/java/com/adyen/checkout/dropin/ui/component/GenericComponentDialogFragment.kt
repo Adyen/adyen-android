@@ -12,9 +12,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

@@ -19,7 +19,7 @@ import androidx.core.view.children
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -134,9 +134,9 @@ internal class PaymentMethodListDialogFragment :
     }
 
     override fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        val storedPaymentMethod = StoredPaymentMethod().apply {
+        val storedPaymentMethod = StoredPaymentMethod(
             id = storedPaymentMethodModel.id
-        }
+        )
         protocol.removeStoredPaymentMethod(storedPaymentMethod)
     }
 
