@@ -10,33 +10,25 @@ package com.adyen.checkout.onlinebankingcz
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 
 class OnlineBankingCZComponent internal constructor(
-    delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
+    delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod, OnlineBankingCZComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingCZPaymentMethod>>
-) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<OnlineBankingCZComponentState>
+) : OnlineBankingComponent<OnlineBankingCZPaymentMethod, OnlineBankingCZComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,
     componentEventHandler
 ) {
-
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? OnlineBankingDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
-            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
-    }
-
     companion object {
         private val TAG = LogUtil.getTag()
 

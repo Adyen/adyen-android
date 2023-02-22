@@ -47,7 +47,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    private lateinit var onlineBankingDelegate: OnlineBankingDelegate<*>
+    private lateinit var onlineBankingDelegate: OnlineBankingDelegate<*, *>
 
     init {
         orientation = VERTICAL
@@ -55,7 +55,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is OnlineBankingDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        if (delegate !is OnlineBankingDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
         onlineBankingDelegate = delegate
 
         this.localizedContext = localizedContext

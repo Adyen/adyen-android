@@ -18,6 +18,7 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
@@ -34,8 +35,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.internal.ui.DefaultOnlineBankingDelegate
@@ -54,22 +55,17 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class OnlineBankingComponentProvider<
-    ComponentT : OnlineBankingComponent<PaymentMethodT>,
+    ComponentT : OnlineBankingComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : OnlineBankingConfiguration,
-    PaymentMethodT : IssuerListPaymentMethod
+    PaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<PaymentMethodT>
     >(
     private val componentClass: Class<ComponentT>,
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
-    PaymentComponentProvider<
-        OnlineBankingComponent<PaymentMethodT>,
-        ConfigurationT,
-        PaymentComponentState<PaymentMethodT>>,
-    SessionPaymentComponentProvider<
-        OnlineBankingComponent<PaymentMethodT>,
-        ConfigurationT,
-        PaymentComponentState<PaymentMethodT>> {
+    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+    SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -80,10 +76,10 @@ abstract class OnlineBankingComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: ComponentCallback<ComponentStateT>,
         order: Order?,
         key: String?
-    ): OnlineBankingComponent<PaymentMethodT> {
+    ): ComponentT {
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
@@ -107,7 +103,8 @@ abstract class OnlineBankingComponentProvider<
                 analyticsRepository = analyticsRepository,
                 termsAndConditionsUrl = getTermsAndConditionsUrl(),
                 submitHandler = SubmitHandler(savedStateHandle),
-                paymentMethodFactory = { createPaymentMethod() }
+                paymentMethodFactory = { createPaymentMethod() },
+                componentStateFactory = ::createComponentState
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -143,9 +140,9 @@ abstract class OnlineBankingComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String?
-    ): OnlineBankingComponent<PaymentMethodT> {
+    ): ComponentT {
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
@@ -170,6 +167,7 @@ abstract class OnlineBankingComponentProvider<
                 termsAndConditionsUrl = getTermsAndConditionsUrl(),
                 submitHandler = SubmitHandler(savedStateHandle),
                 paymentMethodFactory = { createPaymentMethod() },
+                componentStateFactory = ::createComponentState
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -190,7 +188,7 @@ abstract class OnlineBankingComponentProvider<
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<PaymentMethodT>>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<ComponentStateT>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -214,11 +212,17 @@ abstract class OnlineBankingComponentProvider<
             }
     }
 
+    protected abstract fun createComponentState(
+        data: PaymentComponentData<PaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ): ComponentStateT
+
     protected abstract fun createComponent(
-        delegate: OnlineBankingDelegate<PaymentMethodT>,
+        delegate: OnlineBankingDelegate<PaymentMethodT, ComponentStateT>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<PaymentMethodT>>,
+        componentEventHandler: ComponentEventHandler<ComponentStateT>,
     ): ComponentT
 
     protected abstract fun createPaymentMethod(): PaymentMethodT

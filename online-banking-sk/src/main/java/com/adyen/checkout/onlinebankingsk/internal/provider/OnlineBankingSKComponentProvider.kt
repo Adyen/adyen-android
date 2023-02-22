@@ -11,13 +11,14 @@ package com.adyen.checkout.onlinebankingsk.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentState
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
@@ -28,8 +29,8 @@ class OnlineBankingSKComponentProvider(
 ) : OnlineBankingComponentProvider<
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,
-    OnlineBankingSKPaymentMethod
-    >(
+    OnlineBankingSKPaymentMethod,
+    OnlineBankingSKComponentState>(
     componentClass = OnlineBankingSKComponent::class.java,
     overrideComponentParams = overrideComponentParams
 ) {
@@ -46,11 +47,17 @@ class OnlineBankingSKComponentProvider(
         return OnlineBankingSKComponent.TERMS_CONDITIONS_URL
     }
 
+    override fun createComponentState(
+        data: PaymentComponentData<OnlineBankingSKPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = OnlineBankingSKComponentState(data, isInputValid, isReady)
+
     override fun createComponent(
-        delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
+        delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod, OnlineBankingSKComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingSKPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<OnlineBankingSKComponentState>
     ): OnlineBankingSKComponent {
         return OnlineBankingSKComponent(
             delegate = delegate,

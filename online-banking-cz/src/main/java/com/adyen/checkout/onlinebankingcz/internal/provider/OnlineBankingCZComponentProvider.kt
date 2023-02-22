@@ -11,13 +11,14 @@ package com.adyen.checkout.onlinebankingcz.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentState
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
@@ -28,7 +29,8 @@ class OnlineBankingCZComponentProvider(
 ) : OnlineBankingComponentProvider<
     OnlineBankingCZComponent,
     OnlineBankingCZConfiguration,
-    OnlineBankingCZPaymentMethod>(
+    OnlineBankingCZPaymentMethod,
+    OnlineBankingCZComponentState>(
     componentClass = OnlineBankingCZComponent::class.java,
     overrideComponentParams = overrideComponentParams
 ) {
@@ -45,11 +47,17 @@ class OnlineBankingCZComponentProvider(
         return OnlineBankingCZComponent.TERMS_CONDITIONS_URL
     }
 
+    override fun createComponentState(
+        data: PaymentComponentData<OnlineBankingCZPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = OnlineBankingCZComponentState(data, isInputValid, isReady)
+
     override fun createComponent(
-        delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
+        delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod, OnlineBankingCZComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingCZPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<OnlineBankingCZComponentState>
     ): OnlineBankingCZComponent {
         return OnlineBankingCZComponent(
             delegate = delegate,

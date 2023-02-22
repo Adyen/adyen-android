@@ -33,7 +33,6 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
@@ -45,8 +44,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
@@ -94,6 +91,7 @@ import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentState
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
@@ -105,6 +103,7 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentState
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentState
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKComponentProvider
 import com.adyen.checkout.openbanking.OpenBankingComponent
@@ -598,8 +597,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingCZConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<OnlineBankingCZComponentState>,
             )
         }
         OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -629,8 +627,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingSKConfig,
-                componentCallback = componentCallback
-                    as ComponentCallback<PaymentComponentState<OnlineBankingSKPaymentMethod>>,
+                componentCallback = componentCallback as ComponentCallback<OnlineBankingSKComponentState>,
             )
         }
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

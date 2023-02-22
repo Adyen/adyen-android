@@ -31,12 +31,15 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
-abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    private val onlineBankingDelegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
+abstract class OnlineBankingComponent<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    > protected constructor(
+    private val onlineBankingDelegate: OnlineBankingDelegate<IssuerListPaymentMethodT, ComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
     @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
+    val componentEventHandler: ComponentEventHandler<ComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -60,7 +63,7 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
         onlineBankingDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -76,6 +79,11 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? OnlineBankingDelegate<*, *>)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {
