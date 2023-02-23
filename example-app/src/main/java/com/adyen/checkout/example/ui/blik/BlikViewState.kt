@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.ui.blik
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
+import com.adyen.checkout.components.core.action.Action as ActionResponse
 
 sealed class BlikViewState {
 

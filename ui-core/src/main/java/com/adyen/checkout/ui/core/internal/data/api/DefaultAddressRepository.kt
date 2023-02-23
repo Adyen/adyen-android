@@ -9,12 +9,12 @@
 package com.adyen.checkout.ui.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.ui.core.internal.data.model.AddressItem
-import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
+import com.adyen.checkout.ui.core.internal.data.model.AddressItem
+import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

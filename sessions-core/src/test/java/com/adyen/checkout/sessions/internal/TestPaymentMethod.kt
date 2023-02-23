@@ -9,7 +9,7 @@
 package com.adyen.checkout.sessions.internal
 
 import android.os.Parcel
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 
 internal class TestPaymentMethod(
     override var type: String? = null,

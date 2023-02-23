@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.ui.card
 
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionComponentCallback
 

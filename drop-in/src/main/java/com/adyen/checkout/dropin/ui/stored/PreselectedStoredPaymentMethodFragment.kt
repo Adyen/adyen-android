@@ -16,11 +16,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.util.DateUtils
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -199,9 +199,9 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
             .setMessage(R.string.checkout_remove_stored_payment_method_body)
             .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
-                val storedPaymentMethod = StoredPaymentMethod().apply {
+                val storedPaymentMethod = StoredPaymentMethod(
                     id = storedPaymentMethod.id
-                }
+                )
                 protocol.removeStoredPaymentMethod(storedPaymentMethod)
                 dialog.dismiss()
             }

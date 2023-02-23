@@ -14,10 +14,10 @@ import com.adyen.checkout.ach.internal.ui.ACHDirectDebitComponentViewType
 import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType

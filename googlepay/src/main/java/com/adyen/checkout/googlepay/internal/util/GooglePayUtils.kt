@@ -7,8 +7,8 @@
  */
 package com.adyen.checkout.googlepay.internal.util
 
-import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
-import com.adyen.checkout.components.util.AmountFormat.toBigDecimal
+import com.adyen.checkout.components.core.internal.util.AmountFormat.toBigDecimal
+import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

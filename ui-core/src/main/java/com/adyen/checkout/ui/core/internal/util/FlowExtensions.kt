@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.flow.mergeStateFlows
+import com.adyen.checkout.components.core.internal.util.mergeStateFlows
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

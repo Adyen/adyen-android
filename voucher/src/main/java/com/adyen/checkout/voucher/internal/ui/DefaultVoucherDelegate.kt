@@ -10,12 +10,12 @@ package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ActionObserverRepository
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil

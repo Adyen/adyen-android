@@ -11,10 +11,10 @@ package com.adyen.checkout.ui.core.internal.ui
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.bundle.SavedStateHandleContainer
-import com.adyen.checkout.components.bundle.SavedStateHandleProperty
-import com.adyen.checkout.components.channel.bufferedChannel
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

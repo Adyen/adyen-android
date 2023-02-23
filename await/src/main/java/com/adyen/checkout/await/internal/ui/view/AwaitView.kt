@@ -17,8 +17,8 @@ import com.adyen.checkout.await.R
 import com.adyen.checkout.await.databinding.AwaitViewBinding
 import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView

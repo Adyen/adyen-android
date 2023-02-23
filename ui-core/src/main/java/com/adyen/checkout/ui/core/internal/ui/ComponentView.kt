@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.core.internal.ui
 import android.content.Context
 import android.view.View
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import kotlinx.coroutines.CoroutineScope
 
 /**

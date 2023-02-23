@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.ui.giftcard
 
 import android.os.Parcelable
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

@@ -9,10 +9,10 @@ package com.adyen.checkout.entercash
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
 import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
 import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent

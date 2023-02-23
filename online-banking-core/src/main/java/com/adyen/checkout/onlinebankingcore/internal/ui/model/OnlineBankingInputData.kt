@@ -9,7 +9,7 @@
 package com.adyen.checkout.onlinebankingcore.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class OnlineBankingInputData(

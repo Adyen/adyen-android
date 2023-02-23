@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest

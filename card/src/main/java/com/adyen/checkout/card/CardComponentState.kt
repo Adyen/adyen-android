@@ -7,9 +7,9 @@
  */
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 
 /**
  * PaymentComponentState for CardComponent with additional data.

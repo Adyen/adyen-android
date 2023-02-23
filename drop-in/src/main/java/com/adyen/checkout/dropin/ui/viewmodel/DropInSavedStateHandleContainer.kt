@@ -12,10 +12,10 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.bundle.SavedStateHandleContainer
-import com.adyen.checkout.components.bundle.SavedStateHandleProperty
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration

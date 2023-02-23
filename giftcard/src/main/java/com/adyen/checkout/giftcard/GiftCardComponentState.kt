@@ -8,9 +8,9 @@
 package com.adyen.checkout.giftcard
 
 import android.os.Parcelable
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import kotlinx.parcelize.Parcelize
 
 /**

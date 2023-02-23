@@ -15,7 +15,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.model.payments.request.Installments
+import com.adyen.checkout.components.core.Installments
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
 

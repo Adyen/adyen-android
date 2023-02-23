@@ -9,8 +9,8 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler.Companion.IS_INTERACTION_BLOCKED
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -16,9 +16,9 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration

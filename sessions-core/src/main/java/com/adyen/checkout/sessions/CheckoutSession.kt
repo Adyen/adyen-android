@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.sessions
 
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentMethod
 
 // TODO docs
 data class CheckoutSession(

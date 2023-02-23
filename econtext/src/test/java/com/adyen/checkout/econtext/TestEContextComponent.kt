@@ -10,8 +10,8 @@ package com.adyen.checkout.econtext
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
 internal class TestEContextComponent internal constructor(

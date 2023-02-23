@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.sepa.internal.ui
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate

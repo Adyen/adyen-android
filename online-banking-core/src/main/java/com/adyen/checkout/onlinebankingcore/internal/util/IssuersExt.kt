@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.onlinebankingcore.internal.util
 
-import com.adyen.checkout.components.model.paymentmethods.InputDetail
-import com.adyen.checkout.components.model.paymentmethods.Issuer
+import com.adyen.checkout.components.core.InputDetail
+import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 
 internal fun List<Issuer>.mapToModel(): List<OnlineBankingModel> =

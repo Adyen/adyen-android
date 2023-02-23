@@ -7,9 +7,9 @@
  */
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.google.android.gms.wallet.PaymentData
 
 class GooglePayComponentState(

@@ -9,7 +9,7 @@
 package com.adyen.checkout.econtext
 
 import android.os.Parcel
-import com.adyen.checkout.components.model.payments.request.EContextPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 
 internal class TestEContextPaymentMethod(
     override var firstName: String? = "firstName",

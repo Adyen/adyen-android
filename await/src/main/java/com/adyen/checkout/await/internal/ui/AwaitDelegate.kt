@@ -10,10 +10,10 @@ package com.adyen.checkout.await.internal.ui
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
-import com.adyen.checkout.components.base.ActionDelegate
-import com.adyen.checkout.components.base.DetailsEmittingDelegate
-import com.adyen.checkout.components.base.StatusPollingDelegate
-import com.adyen.checkout.components.base.ViewableDelegate
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
+import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

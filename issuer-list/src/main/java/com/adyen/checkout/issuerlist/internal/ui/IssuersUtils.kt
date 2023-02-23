@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.issuerlist.internal.ui
 
-import com.adyen.checkout.components.model.paymentmethods.InputDetail
-import com.adyen.checkout.components.model.paymentmethods.Issuer
+import com.adyen.checkout.components.core.InputDetail
+import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 

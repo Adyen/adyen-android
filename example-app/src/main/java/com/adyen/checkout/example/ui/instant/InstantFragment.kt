@@ -20,7 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.FragmentInstantBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.instant.InstantPaymentComponent

@@ -15,20 +15,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.ActionComponentCallback
-import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.base.DefaultActionComponentEventHandler
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
-import com.adyen.checkout.components.base.lifecycle.get
-import com.adyen.checkout.components.base.lifecycle.viewModelFactory
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.components.repository.ActionObserverRepository
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.ActionComponentCallback
+import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
+import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.get
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

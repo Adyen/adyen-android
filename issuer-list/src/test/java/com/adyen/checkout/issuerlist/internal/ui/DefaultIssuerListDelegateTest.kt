@@ -9,11 +9,11 @@
 package com.adyen.checkout.issuerlist.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.IssuerListConfiguration

@@ -9,9 +9,9 @@
 package com.adyen.checkout.econtext.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.EContextPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate

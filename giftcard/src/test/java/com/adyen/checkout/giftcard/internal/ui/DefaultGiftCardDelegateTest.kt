@@ -9,12 +9,12 @@
 package com.adyen.checkout.giftcard.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.ButtonComponentParamsMapper
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponentState

@@ -8,7 +8,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
 internal data class CardInputData(

@@ -16,7 +16,7 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification

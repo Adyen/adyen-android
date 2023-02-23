@@ -11,7 +11,7 @@ package com.adyen.checkout.action.internal
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.threeds2.customization.UiCustomization
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -32,7 +32,7 @@ import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -43,9 +43,9 @@ import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
-import com.adyen.checkout.components.ui.ComponentMode
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.BuildUtils
 import kotlinx.coroutines.CoroutineScope

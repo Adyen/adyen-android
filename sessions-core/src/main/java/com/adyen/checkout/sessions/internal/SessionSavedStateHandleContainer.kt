@@ -10,8 +10,8 @@ package com.adyen.checkout.sessions.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.bundle.SavedStateHandleContainer
-import com.adyen.checkout.components.bundle.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionModel

@@ -11,8 +11,8 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.util.CardNumberValidation
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardValidationMapper {

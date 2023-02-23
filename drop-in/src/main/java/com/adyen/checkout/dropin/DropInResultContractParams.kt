@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.service.DropInService
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.giftcard.internal.util
 
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.giftcard.R
 
 internal object GiftCardNumberUtils {

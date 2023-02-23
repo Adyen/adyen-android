@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.model.paymentmethods.Configuration
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.Configuration
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger

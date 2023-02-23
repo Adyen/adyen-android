@@ -8,8 +8,8 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.components.base.OutputData
-import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
 
 internal data class BcmcOutputData internal constructor(
     val cardNumberField: FieldState<String>,

@@ -12,10 +12,10 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.components.base.GenericComponentParamsMapper
-import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.repository.ActionObserverRepository
-import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.components.core.action.RedirectAction
+import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.RedirectConfiguration

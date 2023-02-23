@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.model.payments.request.Address
+import com.adyen.checkout.components.core.Address
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -125,25 +125,25 @@ object AddressFormUtils {
      */
     fun makeAddressData(addressOutputData: AddressOutputData, addressFormUIState: AddressFormUIState): Address? {
         return when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> Address().apply {
-                postalCode = addressOutputData.postalCode.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
-                street = addressOutputData.street.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
-                stateOrProvince = addressOutputData.stateOrProvince.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
+            AddressFormUIState.FULL_ADDRESS -> Address(
+                postalCode = addressOutputData.postalCode.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
+                street = addressOutputData.street.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
+                stateOrProvince = addressOutputData.stateOrProvince.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 houseNumberOrName = makeHouseNumberOrName(
                     addressOutputData.houseNumberOrName.value,
                     addressOutputData.apartmentSuite.value
-                ).ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
-                city = addressOutputData.city.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
-                country = addressOutputData.country.value
-            }
-            AddressFormUIState.POSTAL_CODE -> Address().apply {
-                postalCode = addressOutputData.postalCode.value
-                street = Address.ADDRESS_NULL_PLACEHOLDER
-                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER
-                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
-                city = Address.ADDRESS_NULL_PLACEHOLDER
-                country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
-            }
+                ).ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
+                city = addressOutputData.city.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
+                country = addressOutputData.country.value,
+            )
+            AddressFormUIState.POSTAL_CODE -> Address(
+                postalCode = addressOutputData.postalCode.value,
+                street = Address.ADDRESS_NULL_PLACEHOLDER,
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                city = Address.ADDRESS_NULL_PLACEHOLDER,
+                country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
+            )
             else -> null
         }
     }

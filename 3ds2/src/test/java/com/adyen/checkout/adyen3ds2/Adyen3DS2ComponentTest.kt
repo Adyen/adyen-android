@@ -15,9 +15,9 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2ComponentViewType
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
-import com.adyen.checkout.components.ActionComponentEvent
-import com.adyen.checkout.components.base.ActionComponentEventHandler
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.core.action.Threeds2Action
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared

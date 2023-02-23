@@ -17,8 +17,8 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope

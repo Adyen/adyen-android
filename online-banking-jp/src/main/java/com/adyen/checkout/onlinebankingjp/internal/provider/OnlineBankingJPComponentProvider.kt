@@ -11,10 +11,10 @@ package com.adyen.checkout.onlinebankingjp.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent

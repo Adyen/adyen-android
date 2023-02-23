@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin
 
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 
 internal class DropInComponentParamsMapper {
 

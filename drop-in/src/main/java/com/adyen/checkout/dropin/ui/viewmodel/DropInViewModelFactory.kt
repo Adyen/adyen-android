@@ -12,12 +12,12 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.components.analytics.AnalyticsMapper
-import com.adyen.checkout.components.analytics.AnalyticsSource
-import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
-import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.api.OrderStatusService
-import com.adyen.checkout.components.repository.OrderStatusRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
+import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
+import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.dropin.DropInConfiguration
 

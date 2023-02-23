@@ -8,7 +8,8 @@
 
 package com.adyen.checkout.example.data.api.model
 
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.example.repositories.PaymentsRepositoryImpl
 import org.json.JSONObject
 
 /**

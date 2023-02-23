@@ -9,7 +9,7 @@
 package com.adyen.checkout.sessions
 
 import android.os.Parcelable
-import com.adyen.checkout.components.model.payments.response.OrderResponse
+import com.adyen.checkout.components.core.OrderResponse
 import kotlinx.parcelize.Parcelize
 
 // TODO SESSIONS: docs

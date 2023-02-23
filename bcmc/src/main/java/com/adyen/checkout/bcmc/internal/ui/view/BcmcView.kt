@@ -20,8 +20,8 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.bcmc.R
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.isVisible

@@ -10,9 +10,9 @@ package com.adyen.checkout.blik.internal.ui
 
 import com.adyen.checkout.blik.internal.ui.model.BlikInputData
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate

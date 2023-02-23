@@ -16,9 +16,9 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.sessions.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams

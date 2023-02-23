@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.sessions
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils

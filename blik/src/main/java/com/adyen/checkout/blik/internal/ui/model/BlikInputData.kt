@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.blik.internal.ui.model
 
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class BlikInputData(
     var blikCode: String = "",

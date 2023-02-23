@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.util
 
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel

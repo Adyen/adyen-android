@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.mbway.internal.ui.model
 
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class MBWayInputData(
     var countryCode: String = "",

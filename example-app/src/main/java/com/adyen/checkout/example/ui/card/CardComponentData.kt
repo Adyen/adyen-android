@@ -9,8 +9,8 @@
 package com.adyen.checkout.example.ui.card
 
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.PaymentMethod
 
 internal data class CardComponentData(
     val paymentMethod: PaymentMethod,

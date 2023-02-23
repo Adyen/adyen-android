@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.sessions
 
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.sessions.internal.CheckoutSessionInitializer
 import kotlinx.coroutines.CoroutineScope
 

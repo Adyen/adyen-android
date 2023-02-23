@@ -9,12 +9,12 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.paymentmethods.Configuration
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.PaymentObserverRepository
+import com.adyen.checkout.components.core.Configuration
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper

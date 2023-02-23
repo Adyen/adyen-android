@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.main
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.sessions.CheckoutSession
 

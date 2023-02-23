@@ -16,8 +16,8 @@ import android.widget.LinearLayout
 import com.adyen.checkout.blik.R
 import com.adyen.checkout.blik.databinding.BlikViewBinding
 import com.adyen.checkout.blik.internal.ui.BlikDelegate
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView

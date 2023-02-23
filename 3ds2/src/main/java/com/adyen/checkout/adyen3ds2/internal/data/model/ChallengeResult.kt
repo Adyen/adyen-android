@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.components.encoding.AndroidBase64Encoder
+import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
 import org.json.JSONObject

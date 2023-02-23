@@ -11,7 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.components.base.PaymentComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate

@@ -14,9 +14,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.R

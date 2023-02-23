@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 

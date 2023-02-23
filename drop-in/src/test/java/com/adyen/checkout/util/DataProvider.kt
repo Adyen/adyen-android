@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.util
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.components.model.connection.OrderStatusResponse
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
 import com.adyen.checkout.dropin.ui.order.OrderModel
 import org.json.JSONException
 import org.json.JSONObject

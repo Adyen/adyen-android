@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.ach.internal.ui.model
 
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
 internal data class ACHDirectDebitInputData(

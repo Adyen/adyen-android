@@ -14,10 +14,10 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
