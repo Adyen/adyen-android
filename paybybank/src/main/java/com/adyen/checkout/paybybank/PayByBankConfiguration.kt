@@ -13,7 +13,7 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

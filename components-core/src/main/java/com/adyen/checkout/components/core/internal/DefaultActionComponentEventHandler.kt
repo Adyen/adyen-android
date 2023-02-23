@@ -9,8 +9,8 @@
 package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultActionComponentEventHandler(

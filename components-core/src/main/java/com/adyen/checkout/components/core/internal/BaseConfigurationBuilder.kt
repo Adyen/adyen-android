@@ -5,9 +5,9 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.internal.util.validate
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.util.LocaleUtil
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import java.util.Locale
 
 /**

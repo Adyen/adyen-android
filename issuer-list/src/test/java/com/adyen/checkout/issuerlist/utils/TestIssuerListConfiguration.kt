@@ -11,7 +11,7 @@ package com.adyen.checkout.issuerlist.utils
 import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale

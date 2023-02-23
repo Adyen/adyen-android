@@ -15,8 +15,8 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel

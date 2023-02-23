@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData

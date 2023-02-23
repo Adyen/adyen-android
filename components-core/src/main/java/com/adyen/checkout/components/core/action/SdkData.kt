@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.components.core.action
 
-import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelObject
 
 @Suppress("UnnecessaryAbstractClass")
 abstract class SdkData : ModelObject()

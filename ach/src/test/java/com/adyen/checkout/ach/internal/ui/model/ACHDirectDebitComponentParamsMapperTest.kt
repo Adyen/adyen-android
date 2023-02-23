@@ -12,7 +12,7 @@ import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

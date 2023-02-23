@@ -11,7 +11,7 @@ package com.adyen.checkout.onlinebankingcz
 import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

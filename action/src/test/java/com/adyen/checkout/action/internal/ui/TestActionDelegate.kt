@@ -28,7 +28,7 @@ import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

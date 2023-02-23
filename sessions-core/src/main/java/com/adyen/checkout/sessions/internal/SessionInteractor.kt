@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.StatusResponseUtils
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.MethodNotImplementedException
-import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.sessions.SessionModel
 import com.adyen.checkout.sessions.SessionPaymentResult
 import com.adyen.checkout.sessions.internal.data.api.SessionRepository

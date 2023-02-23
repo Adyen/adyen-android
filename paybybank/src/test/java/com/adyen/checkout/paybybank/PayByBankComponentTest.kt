@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.paybybank.internal.ui.PayByBankComponentViewType
 import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
 import com.adyen.checkout.test.TestDispatcherExtension

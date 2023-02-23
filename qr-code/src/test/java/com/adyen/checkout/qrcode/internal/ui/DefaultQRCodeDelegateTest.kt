@@ -21,11 +21,11 @@ import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.FileDownloader
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY

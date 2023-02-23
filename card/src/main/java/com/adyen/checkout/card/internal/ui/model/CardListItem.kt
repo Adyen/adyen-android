@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 
 internal data class CardListItem(
     val cardBrand: CardBrand,

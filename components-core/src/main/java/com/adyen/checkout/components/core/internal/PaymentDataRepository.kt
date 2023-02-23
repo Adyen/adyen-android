@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.internal.util.LogUtil
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PaymentDataRepository(

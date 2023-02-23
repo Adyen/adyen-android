@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.dropin.DropInConfiguration
 
 internal class DropInViewModelFactory(

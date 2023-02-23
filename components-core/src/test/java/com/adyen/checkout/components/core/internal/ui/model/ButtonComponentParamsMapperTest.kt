@@ -2,7 +2,7 @@ package com.adyen.checkout.components.core.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ButtonTestConfiguration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Locale

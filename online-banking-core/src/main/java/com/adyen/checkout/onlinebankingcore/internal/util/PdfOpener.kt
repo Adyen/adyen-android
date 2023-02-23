@@ -16,8 +16,8 @@ import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

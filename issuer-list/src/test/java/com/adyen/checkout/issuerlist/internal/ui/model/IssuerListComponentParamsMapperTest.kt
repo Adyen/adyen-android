@@ -10,7 +10,7 @@ package com.adyen.checkout.issuerlist.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals

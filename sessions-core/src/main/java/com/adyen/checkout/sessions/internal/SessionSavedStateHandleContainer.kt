@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.sessions.CheckoutSession
 import com.adyen.checkout.sessions.SessionModel
 import com.adyen.checkout.sessions.internal.data.model.SessionDetails

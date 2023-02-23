@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.exception
 
-import com.adyen.checkout.core.api.ErrorResponseBody
+import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
 
 class HttpException(
     val code: Int,

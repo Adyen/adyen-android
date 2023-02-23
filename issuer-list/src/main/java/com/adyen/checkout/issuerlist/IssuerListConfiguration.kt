@@ -14,7 +14,7 @@ import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurati
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import java.util.Locale
 
 abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {

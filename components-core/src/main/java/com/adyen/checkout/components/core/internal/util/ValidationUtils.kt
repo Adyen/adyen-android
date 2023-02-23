@@ -3,7 +3,7 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import java.util.regex.Pattern
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

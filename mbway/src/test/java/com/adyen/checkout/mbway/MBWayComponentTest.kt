@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.MbWayComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension

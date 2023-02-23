@@ -16,7 +16,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.util.StringUtil
+import com.adyen.checkout.core.internal.util.StringUtil
 import java.util.Calendar
 import java.util.GregorianCalendar
 

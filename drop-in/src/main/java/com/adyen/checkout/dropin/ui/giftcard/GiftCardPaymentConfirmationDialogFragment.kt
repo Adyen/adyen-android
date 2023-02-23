@@ -15,8 +15,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftCardPaymentConfirmationBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment

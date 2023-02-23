@@ -9,9 +9,9 @@
 package com.adyen.checkout.dropin
 
 import android.content.Context
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.LocaleUtil
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import java.util.Locale
 
 internal object DropInPrefs {

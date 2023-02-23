@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import java.util.Locale
 
 internal data class GiftCardPaymentMethodModel(

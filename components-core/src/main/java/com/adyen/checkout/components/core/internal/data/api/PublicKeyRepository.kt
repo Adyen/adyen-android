@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PublicKeyRepository {

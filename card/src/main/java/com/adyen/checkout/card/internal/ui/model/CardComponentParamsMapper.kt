@@ -15,8 +15,8 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams

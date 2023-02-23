@@ -23,7 +23,7 @@ import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension

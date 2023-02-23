@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionModel
 import com.adyen.checkout.sessions.SessionPaymentResult

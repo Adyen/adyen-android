@@ -19,8 +19,8 @@ import com.adyen.checkout.components.core.internal.provider.ActionComponentProvi
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.IntentHandlingComponent
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

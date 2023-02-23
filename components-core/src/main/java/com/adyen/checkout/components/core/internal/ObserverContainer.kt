@@ -11,8 +11,8 @@ package com.adyen.checkout.components.core.internal
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.internal.util.mapToCallbackWithLifeCycle
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
