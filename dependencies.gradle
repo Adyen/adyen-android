@@ -57,7 +57,7 @@ ext {
     retrofit2_version = '2.9.0'
 
     // Tests
-    arch_core_testing_version = "2.1.0"
+    arch_core_testing_version = "2.2.0"
     espresso_version = "3.5.0"
     json_version = '20220924'
     junit_version = '4.13.2'
