@@ -19,8 +19,8 @@ import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.SessionDropInService
-import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.CheckoutSessionProvider
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 
 /**
  * Drop-in is our pre-built checkout UI for accepting payments. You only need to integrate through your backend with the

@@ -44,15 +44,15 @@ import com.adyen.checkout.cse.internal.ClientSideEncrypter
 import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
-import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionSetupConfiguration
-import com.adyen.checkout.sessions.internal.SessionComponentEventHandler
-import com.adyen.checkout.sessions.internal.SessionInteractor
-import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
-import com.adyen.checkout.sessions.internal.data.api.SessionRepository
-import com.adyen.checkout.sessions.internal.data.api.SessionService
-import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.SessionComponentCallback
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
+import com.adyen.checkout.sessions.core.internal.SessionInteractor
+import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.core.internal.data.api.SessionService
+import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -19,7 +19,7 @@ import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyConfiguration
-import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PayEasyComponentProvider(

@@ -14,7 +14,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.adyen.checkout.dropin.ui.DropInActivity
-import com.adyen.checkout.sessions.SessionPaymentResult
+import com.adyen.checkout.sessions.core.SessionPaymentResult
 
 internal class SessionDropInResultContract :
     ActivityResultContract<SessionDropInResultContractParams, SessionDropInResult?>() {

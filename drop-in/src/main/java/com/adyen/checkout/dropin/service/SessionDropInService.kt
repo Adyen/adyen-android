@@ -17,11 +17,11 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.sessions.SessionModel
-import com.adyen.checkout.sessions.internal.SessionCallResult
-import com.adyen.checkout.sessions.internal.SessionInteractor
-import com.adyen.checkout.sessions.internal.data.api.SessionRepository
-import com.adyen.checkout.sessions.internal.data.api.SessionService
+import com.adyen.checkout.sessions.core.SessionModel
+import com.adyen.checkout.sessions.core.internal.SessionCallResult
+import com.adyen.checkout.sessions.core.internal.SessionInteractor
+import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 

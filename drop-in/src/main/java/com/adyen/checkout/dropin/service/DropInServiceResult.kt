@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.DropInCallback
-import com.adyen.checkout.sessions.SessionPaymentResult
+import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.components.core.action.Action as ActionResponse
 
 sealed class BaseDropInServiceResult
