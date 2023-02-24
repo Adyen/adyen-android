@@ -46,6 +46,11 @@ fun JSONObject.optStringList(key: String): List<String>? {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.optIntList(key: String): List<Int>? {
+    return JsonUtils.parseOptIntegerList(optJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONArray.toStringPretty(): String {
     return try {
         toString(INDENTATION_SPACES)
@@ -91,6 +96,49 @@ object JsonUtils {
         }
         return JSONArray().apply {
             stringList.filter { !it.isNullOrEmpty() }.forEach {
+                put(it)
+            }
+        }
+    }
+
+    /**
+     * Parses a [JSONArray] to a list of integers.
+     *
+     * @param jsonArray The JSONArray to be read.
+     * @return A [List] of integers, or null if the jsonArray was null.
+     */
+    @JvmStatic
+    @Throws(JSONException::class)
+    fun parseOptIntegerList(jsonArray: JSONArray?): List<Int>? {
+        if (jsonArray == null) {
+            return null
+        }
+        val list: MutableList<Int> = ArrayList()
+        for (i in 0 until jsonArray.length()) {
+            val jsonValue = jsonArray.opt(i)
+            if (jsonValue is Int) {
+                val item = jsonArray.optInt(i)
+                list.add(item)
+            } else {
+                throw JSONException("type is not integer")
+            }
+        }
+        return Collections.unmodifiableList(list)
+    }
+
+    /**
+     * Serializes a List of integers to a [JSONArray].
+     *
+     * @param intList The [List] of integers to be serialized.
+     * @return The populated [JSONArray]. Could be null.
+     */
+    @JvmStatic
+    fun serializeOptIntegerList(intList: List<Int>?): JSONArray? {
+        if (intList == null) {
+            return null
+        }
+        return JSONArray().apply {
+            intList.forEach {
                 put(it)
             }
         }
