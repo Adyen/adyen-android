@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -19,7 +19,7 @@ import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class EPSComponentProvider(

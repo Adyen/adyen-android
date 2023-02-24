@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
-import com.adyen.checkout.sessions.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 

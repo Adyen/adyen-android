@@ -38,8 +38,8 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.sessions.internal.data.model.SessionDetails
-import com.adyen.checkout.sessions.internal.data.model.mapToModel
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
+import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

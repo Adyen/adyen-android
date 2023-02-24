@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
-import com.adyen.checkout.sessions.SessionModel
+import com.adyen.checkout.sessions.core.SessionModel
 
 internal sealed class DropInActivityEvent {
     data class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()

@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.sessions.SessionModel
+import com.adyen.checkout.sessions.core.SessionModel
 
 internal interface BaseDropInServiceInterface {
     suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)

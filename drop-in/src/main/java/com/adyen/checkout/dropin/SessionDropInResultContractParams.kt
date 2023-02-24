@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.dropin.service.SessionDropInService
-import com.adyen.checkout.sessions.CheckoutSession
+import com.adyen.checkout.sessions.core.CheckoutSession
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class SessionDropInResultContractParams(

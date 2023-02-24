@@ -37,15 +37,15 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
-import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionSetupConfiguration
-import com.adyen.checkout.sessions.internal.SessionComponentEventHandler
-import com.adyen.checkout.sessions.internal.SessionInteractor
-import com.adyen.checkout.sessions.internal.SessionSavedStateHandleContainer
-import com.adyen.checkout.sessions.internal.data.api.SessionRepository
-import com.adyen.checkout.sessions.internal.data.api.SessionService
-import com.adyen.checkout.sessions.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.SessionComponentCallback
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
+import com.adyen.checkout.sessions.core.internal.SessionInteractor
+import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.core.internal.data.api.SessionService
+import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
