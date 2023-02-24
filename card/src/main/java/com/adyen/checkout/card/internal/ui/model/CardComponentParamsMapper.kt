@@ -13,8 +13,8 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
@@ -66,7 +66,7 @@ internal class CardComponentParamsMapper {
             isHideCvcStoredCard = isHideCvcStoredCard ?: false,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-            installmentConfiguration = installmentConfiguration,
+            installmentParams = null,
             addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None
         )
     }

@@ -12,7 +12,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
@@ -25,6 +24,7 @@ import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
@@ -32,18 +32,18 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
-import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -339,7 +339,7 @@ internal class DefaultCardDelegate(
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
             installmentOptions = getInstallmentOptions(
-                installmentConfiguration = componentParams.installmentConfiguration,
+                installmentParams = componentParams.installmentParams,
                 cardBrand = selectedOrFirstCardType?.cardBrand,
                 isCardTypeReliable = isReliable
             ),
@@ -562,7 +562,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun getInstallmentOptions(
-        installmentConfiguration: InstallmentConfiguration?,
+        installmentParams: InstallmentParams?,
         cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
@@ -570,7 +570,7 @@ internal class DefaultCardDelegate(
         return if (isDebit) {
             emptyList()
         } else {
-            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardBrand, isCardTypeReliable)
+            InstallmentUtils.makeInstallmentOptions(installmentParams, cardBrand, isCardTypeReliable)
         }
     }
 
