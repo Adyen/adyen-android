@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import com.adyen.checkout.dropin.service.DropInService
-import com.adyen.checkout.dropin.service.DropInServiceResult
-
 /**
  * A class that contains the final result of Drop-in.
  */
