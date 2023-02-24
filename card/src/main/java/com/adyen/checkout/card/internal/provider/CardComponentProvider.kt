@@ -24,6 +24,7 @@ import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -41,8 +42,8 @@ import com.adyen.checkout.components.core.internal.provider.StoredPaymentCompone
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.cse.internal.ClientSideEncrypter
 import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
@@ -71,7 +72,7 @@ class CardComponentProvider(
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
-    private val componentParamsMapper = CardComponentParamsMapper()
+    private val componentParamsMapper = CardComponentParamsMapper(InstallmentsParamsMapper())
 
     @Suppress("LongParameterList", "LongMethod")
     override fun get(

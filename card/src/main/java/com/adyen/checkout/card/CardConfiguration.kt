@@ -10,11 +10,11 @@ package com.adyen.checkout.card
 import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -135,6 +135,9 @@ class CardConfiguration private constructor(
          *
          * Default is true.
          *
+         * When using `sessions` show store payment field will be ignored and replaced with the value
+         * sent to `/sessions` call.
+         *
          * @param showStorePaymentField [Boolean]
          * @return [CardConfiguration.Builder]
          */
@@ -215,6 +218,9 @@ class CardConfiguration private constructor(
 
         /**
          * Configures the installment options to be provided to the shopper.
+         *
+         * When using `sessions` installment configuration will be ignored and replaced with the value
+         * sent to `/sessions` call.
          *
          * @param installmentConfiguration The configuration object for installment options.
          * @return [CardConfiguration.Builder]

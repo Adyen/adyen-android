@@ -21,7 +21,7 @@ import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
-internal class CardComponentParamsMapper {
+internal class CardComponentParamsMapper(private val installmentsParamsMapper: InstallmentsParamsMapper) {
 
     fun mapToParamsDefault(
         cardConfiguration: CardConfiguration,
@@ -66,7 +66,10 @@ internal class CardComponentParamsMapper {
             isHideCvcStoredCard = isHideCvcStoredCard ?: false,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-            installmentParams = null,
+            installmentParams = installmentsParamsMapper?.mapToInstallmentParams(
+                sessionSetupConfiguration?.installmentOptions,
+                installmentConfiguration
+            ),
             addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None
         )
     }
