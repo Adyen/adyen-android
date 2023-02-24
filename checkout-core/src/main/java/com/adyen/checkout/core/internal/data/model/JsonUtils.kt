@@ -60,6 +60,29 @@ fun JSONArray.toStringPretty(): String {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Throws(JSONException::class)
+inline fun <reified T : ModelObject> JSONObject.jsonToMap(
+    modelSerializer: ModelObject.Serializer<T>
+): Map<String, T?> {
+    val map = mutableMapOf<String, T?>()
+
+    if (this !== JSONObject.NULL) {
+        val keysItr = this.keys()
+
+        while (keysItr.hasNext()) {
+            val key = keysItr.next()
+            val value = this[key]
+
+            if (value is JSONObject) {
+                map[key] = ModelUtils.deserializeOpt(value, modelSerializer)
+            }
+        }
+    }
+
+    return map
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object JsonUtils {
 
     /**
