@@ -23,8 +23,8 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData

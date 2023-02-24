@@ -16,7 +16,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.redirect.internal.ui.RedirectComponentViewType
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.test.TestDispatcherExtension

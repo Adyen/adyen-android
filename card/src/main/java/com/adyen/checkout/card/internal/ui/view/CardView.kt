@@ -47,7 +47,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.util.BuildUtils
+import com.adyen.checkout.core.internal.util.BuildUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

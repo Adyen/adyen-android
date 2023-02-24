@@ -12,9 +12,9 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.data.model.StatusRequest
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.runSuspendCatching
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext

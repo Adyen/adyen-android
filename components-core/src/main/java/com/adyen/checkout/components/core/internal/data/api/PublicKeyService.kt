@@ -10,8 +10,8 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.PublicKeyResponse
-import com.adyen.checkout.core.api.HttpClient
-import com.adyen.checkout.core.api.get
+import com.adyen.checkout.core.internal.data.api.HttpClient
+import com.adyen.checkout.core.internal.data.api.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

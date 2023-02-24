@@ -10,8 +10,8 @@ package com.adyen.checkout.googlepay.internal.util
 import com.adyen.checkout.components.core.internal.util.AmountFormat.toBigDecimal
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel

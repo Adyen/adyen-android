@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
 import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener

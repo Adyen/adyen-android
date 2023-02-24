@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData

@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.test
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import java.io.IOException
 
 /**

@@ -11,8 +11,8 @@ package com.adyen.checkout.components.core.internal
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

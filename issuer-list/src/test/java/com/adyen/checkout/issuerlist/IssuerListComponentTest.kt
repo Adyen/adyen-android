@@ -16,7 +16,7 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListComponentViewType
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.utils.TestIssuerListComponent

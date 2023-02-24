@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.TestConfiguration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

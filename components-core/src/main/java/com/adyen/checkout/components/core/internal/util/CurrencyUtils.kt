@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.internal.util.CheckoutCurrency.Compani
 import com.adyen.checkout.components.core.internal.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.internal.util.LogUtil
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.Currency

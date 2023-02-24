@@ -10,7 +10,7 @@ package com.adyen.checkout.example
 
 import android.app.Application
 import android.util.Log
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.ui.NightThemeRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

@@ -7,7 +7,8 @@
  */
 package com.adyen.checkout.core.exception
 
-import com.adyen.checkout.core.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
 
 /**+
  * Exception thrown when a [ModelObject] does not meet the requirement of having a SERIALIZER object.

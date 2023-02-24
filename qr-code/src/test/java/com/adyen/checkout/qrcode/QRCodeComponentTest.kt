@@ -16,7 +16,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.QrCodeComponentViewType
 import com.adyen.checkout.test.TestDispatcherExtension

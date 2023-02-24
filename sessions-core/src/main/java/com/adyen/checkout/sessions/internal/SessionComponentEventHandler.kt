@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.SessionComponentCallback
 import com.adyen.checkout.sessions.SessionPaymentResult
 import kotlinx.coroutines.CoroutineScope

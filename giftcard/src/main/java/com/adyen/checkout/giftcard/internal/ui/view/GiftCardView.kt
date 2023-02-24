@@ -16,8 +16,8 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate

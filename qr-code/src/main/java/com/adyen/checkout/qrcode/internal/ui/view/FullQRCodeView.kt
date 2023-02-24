@@ -26,8 +26,8 @@ import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.exception.PermissionException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate

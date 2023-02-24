@@ -9,9 +9,9 @@
 package com.adyen.checkout.card.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.ModelObject
-import com.adyen.checkout.core.model.ModelUtils
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

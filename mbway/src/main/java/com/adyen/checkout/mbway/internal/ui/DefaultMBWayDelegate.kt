@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType

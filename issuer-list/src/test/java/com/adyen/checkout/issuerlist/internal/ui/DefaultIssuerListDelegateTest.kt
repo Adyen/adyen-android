@@ -14,8 +14,8 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper

@@ -19,9 +19,9 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

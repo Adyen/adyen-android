@@ -17,7 +17,7 @@ import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType

@@ -9,10 +9,10 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.runSuspendCatching
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runSuspendCatching
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultPublicKeyRepository(

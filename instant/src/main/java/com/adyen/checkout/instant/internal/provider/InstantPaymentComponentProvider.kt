@@ -33,7 +33,7 @@ import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration

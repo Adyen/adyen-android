@@ -24,7 +24,7 @@ import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler

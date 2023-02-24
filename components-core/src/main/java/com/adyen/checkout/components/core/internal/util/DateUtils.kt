@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar

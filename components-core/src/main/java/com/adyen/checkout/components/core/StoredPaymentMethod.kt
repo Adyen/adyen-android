@@ -8,9 +8,9 @@
 package com.adyen.checkout.components.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
-import com.adyen.checkout.core.model.ModelObject
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.JsonUtils.parseOptStringList
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONArray
 import org.json.JSONException

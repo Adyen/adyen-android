@@ -16,8 +16,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.runSuspendCatching
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

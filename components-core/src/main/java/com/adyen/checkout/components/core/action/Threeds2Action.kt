@@ -9,7 +9,7 @@ package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.components.core.internal.ActionTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

@@ -16,8 +16,8 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.adyen.checkout.giftcard.GiftCardComponent

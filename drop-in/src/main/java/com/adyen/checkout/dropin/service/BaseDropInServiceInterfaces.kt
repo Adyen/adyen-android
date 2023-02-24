@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.sessions.SessionModel
 
 internal interface BaseDropInServiceInterface {

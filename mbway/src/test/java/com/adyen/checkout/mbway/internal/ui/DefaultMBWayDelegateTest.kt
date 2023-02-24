@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler

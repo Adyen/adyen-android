@@ -10,8 +10,8 @@ package com.adyen.checkout.card.internal.data.api
 
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
-import com.adyen.checkout.core.api.HttpClient
-import com.adyen.checkout.core.api.post
+import com.adyen.checkout.core.internal.data.api.HttpClient
+import com.adyen.checkout.core.internal.data.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 
 internal sealed class StoredPaymentMethodModel : PaymentMethodListItem {
     abstract val id: String

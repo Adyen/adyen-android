@@ -12,9 +12,9 @@ import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.StringUtil.normalize
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import java.text.ParseException
 import java.text.SimpleDateFormat

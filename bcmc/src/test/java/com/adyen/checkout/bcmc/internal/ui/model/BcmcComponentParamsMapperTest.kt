@@ -11,7 +11,7 @@ package com.adyen.checkout.bcmc.internal.ui.model
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.sessions.SessionSetupConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

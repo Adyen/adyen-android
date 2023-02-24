@@ -15,7 +15,7 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.test.TestDispatcherExtension

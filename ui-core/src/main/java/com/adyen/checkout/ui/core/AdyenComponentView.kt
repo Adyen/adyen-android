@@ -20,8 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType

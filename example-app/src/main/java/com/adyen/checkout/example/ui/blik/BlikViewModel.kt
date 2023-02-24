@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.util.CheckoutCurrency
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository

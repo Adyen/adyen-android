@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate

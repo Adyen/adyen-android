@@ -18,7 +18,7 @@ import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CountryUtils
-import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
