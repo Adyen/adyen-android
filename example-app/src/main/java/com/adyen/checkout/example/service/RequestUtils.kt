@@ -16,6 +16,7 @@ import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
+import com.adyen.checkout.example.data.api.model.InstallmentPlan
 import com.adyen.checkout.example.data.api.model.Item
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
@@ -25,6 +26,7 @@ import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodReques
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
 import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
+import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
 import org.json.JSONObject
 
 @Suppress("LongParameterList")
@@ -65,7 +67,14 @@ fun getSessionRequest(
     shopperEmail: String? = null,
     allowedPaymentMethods: List<String>? = null,
     storePaymentMethodMode: String? = StorePaymentMethodMode.ASK_FOR_CONSENT.mode,
-    recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel
+    recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
+    installmentOptions: Map<String, SessionSetupInstallmentOptions> = mapOf(
+        DEFAULT_INSTALLMENT_OPTION to SessionSetupInstallmentOptions(
+            plans = listOf(InstallmentPlan.REGULAR.plan),
+            preselectedValue = 2,
+            values = listOf(2)
+        )
+    )
 ): SessionRequest {
     return SessionRequest(
         merchantAccount = merchantAccount,
@@ -86,7 +95,8 @@ fun getSessionRequest(
         shopperEmail = shopperEmail,
         allowedPaymentMethods = allowedPaymentMethods,
         storePaymentMethodMode = storePaymentMethodMode,
-        recurringProcessingModel = recurringProcessingModel
+        recurringProcessingModel = recurringProcessingModel,
+        installmentOptions = installmentOptions
     )
 }
 
@@ -163,6 +173,8 @@ fun createRemoveStoredPaymentMethodRequest(
 private const val SHOPPER_IP = "142.12.31.22"
 private const val CHANNEL = "android"
 private val LINE_ITEMS = listOf(Item())
+private const val DEFAULT_INSTALLMENT_OPTION = "card"
+
 private fun getReference() = "android-test-components_${System.currentTimeMillis()}"
 private fun getAdditionalData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AdditionalData(
     allow3DS2 = isThreeds2Enabled.toString(),

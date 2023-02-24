@@ -10,32 +10,43 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.jsonToMap
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class SessionSetupConfiguration(val enableStoreDetails: Boolean? = null) : ModelObject() {
+data class SessionSetupConfiguration(
+    val enableStoreDetails: Boolean? = null,
+    val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null
+) : ModelObject() {
 
     companion object {
         private const val ENABLE_STORE_DETAILS = "enableStoreDetails"
+        private const val INSTALLMENT_OPTIONS = "installmentOptions"
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupConfiguration> = object : Serializer<SessionSetupConfiguration> {
             override fun serialize(modelObject: SessionSetupConfiguration): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(ENABLE_STORE_DETAILS, modelObject.enableStoreDetails)
+                return try {
+                    JSONObject().apply {
+                        putOpt(ENABLE_STORE_DETAILS, modelObject.enableStoreDetails)
+                        putOpt(
+                            INSTALLMENT_OPTIONS,
+                            modelObject.installmentOptions?.let { JSONObject(it) }
+                        )
+                    }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): SessionSetupConfiguration {
                 return try {
                     SessionSetupConfiguration(
-                        enableStoreDetails = jsonObject.optBoolean(ENABLE_STORE_DETAILS)
+                        enableStoreDetails = jsonObject.optBoolean(ENABLE_STORE_DETAILS),
+                        installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
+                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)
