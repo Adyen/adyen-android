@@ -12,13 +12,16 @@ import android.content.Context
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
-import com.adyen.checkout.dropin.service.DropInService
-import com.adyen.checkout.dropin.service.SessionDropInService
+import com.adyen.checkout.dropin.internal.DropInResultContract
+import com.adyen.checkout.dropin.internal.SessionDropInResultContract
+import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
+import com.adyen.checkout.dropin.internal.ui.model.SessionDropInResultContractParams
+import com.adyen.checkout.dropin.internal.util.DropInPrefs
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 
