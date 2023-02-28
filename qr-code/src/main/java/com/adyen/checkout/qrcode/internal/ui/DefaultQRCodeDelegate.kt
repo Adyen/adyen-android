@@ -156,12 +156,9 @@ internal class DefaultQRCodeDelegate(
         }
 
         val viewType = when (action.paymentMethodType) {
-            PaymentMethodTypes.PAY_NOW -> {
-                maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
-                QrCodeComponentViewType.FULL_QR_CODE
-            }
+            PaymentMethodTypes.PAY_NOW,
             PaymentMethodTypes.UPI_QR -> {
-                maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
+                maxPollingDurationMillis = SHORT_MAX_POLLING_DURATION
                 QrCodeComponentViewType.FULL_QR_CODE
             }
             else -> {
@@ -324,7 +321,7 @@ internal class DefaultQRCodeDelegate(
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
-        private val PAY_NOW_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
+        private val SHORT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
         private const val HUNDRED = 100
 
