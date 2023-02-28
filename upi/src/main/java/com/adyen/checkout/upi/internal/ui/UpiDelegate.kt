@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.upi.UpiComponentState
 import com.adyen.checkout.upi.internal.ui.model.UpiInputData
 import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
 import kotlinx.coroutines.flow.Flow

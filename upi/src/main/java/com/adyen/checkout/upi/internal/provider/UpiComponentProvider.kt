@@ -43,6 +43,7 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UpiComponent
+import com.adyen.checkout.upi.UpiComponentState
 import com.adyen.checkout.upi.UpiConfiguration
 import com.adyen.checkout.upi.internal.ui.DefaultUpiDelegate
 

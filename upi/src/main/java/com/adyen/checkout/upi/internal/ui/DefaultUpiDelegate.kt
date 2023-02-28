@@ -26,6 +26,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.UpiComponentState
 import com.adyen.checkout.upi.internal.ui.model.UpiInputData
 import com.adyen.checkout.upi.internal.ui.model.UpiMode
 import com.adyen.checkout.upi.internal.ui.model.UpiOutputData

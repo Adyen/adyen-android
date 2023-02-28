@@ -11,6 +11,7 @@
     <string name="checkout_upi_mode_selection">%%upi.modeSelection%%</string>
     <string name="checkout_upi_vpa_validation">%%upi.vpa.validationMessage%%</string>
     <string name="checkout_upi_qr_generation">%%upi.qrcode.generationMessage%%</string>
+    <string name="checkout_upi_continue">%%continue%%</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_upi_vpa" translatable="false">VPA</string>

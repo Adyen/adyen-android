@@ -11,17 +11,16 @@ package com.adyen.checkout.upi.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.UpiPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.UpiComponentState
 import com.adyen.checkout.upi.UpiConfiguration
 import com.adyen.checkout.upi.internal.ui.model.UpiMode
 import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
@@ -47,7 +46,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultUpiDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<UpiPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<UpiComponentState>,
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 

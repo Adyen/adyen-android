@@ -34,6 +34,5 @@ internal object UpiComponentViewType : ButtonComponentViewType {
 
     override val viewProvider: ViewProvider = UpiViewProvider
 
-    // TODO: Use better string
-    override val buttonTextResId: Int = R.string.pay_button
+    override val buttonTextResId: Int = R.string.checkout_upi_continue
 }

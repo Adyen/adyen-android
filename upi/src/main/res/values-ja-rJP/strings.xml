@@ -11,5 +11,6 @@
     <string name="checkout_upi_mode_selection">UPIの使用方法を選択します。</string>
     <string name="checkout_upi_vpa_validation">正しい仮想支払アドレスを入力してください</string>
     <string name="checkout_upi_qr_generation">ダウンロードまたはスクリーンショットで取得できるQRコードを生成し、UPIアプリにアップロードして支払いを完了します。</string>
+    <string name="checkout_upi_continue">続ける</string>
 
 </resources>

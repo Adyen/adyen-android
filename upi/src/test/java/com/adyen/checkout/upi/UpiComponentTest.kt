@@ -12,10 +12,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.UpiPaymentMethod
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -48,7 +46,7 @@ internal class UpiComponentTest(
     @Mock private val upiDelegate: UpiDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<UpiPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<UpiComponentState>,
 ) {
 
     private lateinit var component: UpiComponent
@@ -87,7 +85,7 @@ internal class UpiComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<UpiPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<UpiComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 
