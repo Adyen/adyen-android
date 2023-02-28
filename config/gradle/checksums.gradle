@@ -22,7 +22,7 @@ if (!hasProperty("checksums")) {
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4:7aad79016f327ae9cfd0b560b0b47558:MD5",
 
         // Android Gradle Plugin
-        "androidx.databinding:viewbinding:7.4.1:5d4f47ee4ba987a62147da77c0a4ba89:MD5",
+        "androidx.databinding:viewbinding:7.4.2:c3d1fbf450fc578ca2d69d6f80645bf4:MD5",
 
         // AndroidX
         "androidx.annotation:annotation:1.5.0:5f8c96f5310d39845efa73dd82b717e4:MD5",
