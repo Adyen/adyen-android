@@ -27,7 +27,7 @@ internal class UpiOutputData(
         }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
-        if (virtualPaymentAddress.isNotEmpty()) {
+        if (virtualPaymentAddress.isNotBlank()) {
             FieldState(virtualPaymentAddress, Validation.Valid)
         } else {
             FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
