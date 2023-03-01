@@ -77,7 +77,6 @@ internal class DefaultAdyen3DS2Delegate(
     private val redirectHandler: RedirectHandler,
     private val threeDS2Service: ThreeDS2Service,
     private val defaultDispatcher: CoroutineDispatcher,
-    private val embeddedRequestorAppUrl: String,
     private val base64Encoder: Base64Encoder,
     private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusReceiver, SavedStateHandleContainer {
@@ -365,7 +364,7 @@ internal class DefaultAdyen3DS2Delegate(
             // This field was introduced in version 2.2.0 so older protocols don't expect it to be present and might
             // throw an error.
             if (challenge.messageVersion != PROTOCOL_VERSION_2_1_0) {
-                threeDSRequestorAppURL = embeddedRequestorAppUrl
+                threeDSRequestorAppURL = componentParams.threeDSRequestorAppURL
             }
         }
     }

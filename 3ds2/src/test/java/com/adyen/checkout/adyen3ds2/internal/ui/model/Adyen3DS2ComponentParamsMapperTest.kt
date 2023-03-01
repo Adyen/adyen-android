@@ -24,7 +24,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         val adyen3DS2Configuration = getAdyen3DS2ConfigurationBuilder()
             .build()
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null).mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(null, null)
+            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
 
         val expected = getAdyen3DS2ComponentParams()
 
@@ -35,14 +36,18 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     fun `when parent configuration is null and custom 3ds2 configuration fields are set then all fields should match`() {
         val uiCustomization = UiCustomization()
 
+        val testUrl = "https://adyen.com"
         val adyen3DS2Configuration = getAdyen3DS2ConfigurationBuilder()
             .setUiCustomization(uiCustomization)
+            .setThreeDSRequestorAppURL(testUrl)
             .build()
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null).mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(null, null)
+            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
 
         val expected = getAdyen3DS2ComponentParams(
-            uiCustomization = uiCustomization
+            uiCustomization = uiCustomization,
+            threeDSRequestorAppURL = testUrl,
         )
 
         Assertions.assertEquals(expected, params)
@@ -67,7 +72,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             )
         )
 
-        val params = Adyen3DS2ComponentParamsMapper(overrideParams, null).mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(overrideParams, null)
+            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
 
         val expected = getAdyen3DS2ComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -98,6 +104,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         uiCustomization: UiCustomization? = null,
+        threeDSRequestorAppURL: String = TEST_REQUESTOR_APP_URL,
     ) = Adyen3DS2ComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -106,10 +113,12 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         uiCustomization = uiCustomization,
+        threeDSRequestorAppURL = threeDSRequestorAppURL,
     )
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private const val TEST_REQUESTOR_APP_URL = "TEST_REQUESTOR_APP_URL"
     }
 }

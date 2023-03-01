@@ -90,14 +90,14 @@ internal class DefaultAdyen3DS2DelegateTest(
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            componentParams = Adyen3DS2ComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = Adyen3DS2ComponentParamsMapper(null, null)
+                .mapToParams(configuration, null, "embeddedRequestorAppUrl"),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
             redirectHandler = redirectHandler,
             threeDS2Service = threeDS2Service,
             defaultDispatcher = dispatcher,
-            embeddedRequestorAppUrl = "embeddedRequestorAppUrl",
             base64Encoder = base64Encoder,
             application = Application(),
         )

@@ -8,17 +8,20 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
+import android.content.IntentFilter
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
+import com.adyen.threeds2.internal.ui.activity.ChallengeActivity
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
  * Configuration class for the [Adyen3DS2Component].
  */
+@Suppress("LongParameterList")
 @Parcelize
 class Adyen3DS2Configuration private constructor(
     override val shopperLocale: Locale,
@@ -27,6 +30,7 @@ class Adyen3DS2Configuration private constructor(
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
     val uiCustomization: UiCustomization?,
+    val threeDSRequestorAppURL: String?,
 ) : Configuration {
 
     /**
@@ -35,6 +39,8 @@ class Adyen3DS2Configuration private constructor(
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
 
         private var uiCustomization: UiCustomization? = null
+
+        private var threeDSRequestorAppURL: String? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -72,6 +78,20 @@ class Adyen3DS2Configuration private constructor(
             return this
         }
 
+        /**
+         * Sets the 3DS Requestor App URL. This is used to call your app after an out-of-band (OOB)
+         * authentication occurs.
+         *
+         * Make sure to also override [ChallengeActivity]'s [IntentFilter] with your own URL like
+         * [this](https://docs.adyen.com/online-payments/classic-integrations/api-integration-ecommerce/3d-secure/native-3ds2/android-sdk-integration#handling-android-app-links)
+         * when using this method.
+         */
+        @Suppress("MaxLineLength")
+        fun setThreeDSRequestorAppURL(threeDSRequestorAppURL: String): Builder {
+            this.threeDSRequestorAppURL = threeDSRequestorAppURL
+            return this
+        }
+
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(
                 shopperLocale = shopperLocale,
@@ -80,6 +100,7 @@ class Adyen3DS2Configuration private constructor(
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
                 uiCustomization = uiCustomization,
+                threeDSRequestorAppURL = threeDSRequestorAppURL,
             )
         }
     }
