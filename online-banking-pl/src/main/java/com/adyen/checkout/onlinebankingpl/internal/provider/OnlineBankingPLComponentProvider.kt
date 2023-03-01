@@ -11,13 +11,14 @@ package com.adyen.checkout.onlinebankingpl.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentState
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
@@ -25,22 +26,33 @@ import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 class OnlineBankingPLComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration, OnlineBankingPLPaymentMethod>(
+) : IssuerListComponentProvider<
+    OnlineBankingPLComponent,
+    OnlineBankingPLConfiguration,
+    OnlineBankingPLPaymentMethod,
+    OnlineBankingPLComponentState
+    >(
     componentClass = OnlineBankingPLComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
+        delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingPLPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<OnlineBankingPLComponentState>
     ) = OnlineBankingPLComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
+
+    override fun createComponentState(
+        data: PaymentComponentData<OnlineBankingPLPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = OnlineBankingPLComponentState(data, isInputValid, isReady)
 
     override fun createPaymentMethod() = OnlineBankingPLPaymentMethod()
 

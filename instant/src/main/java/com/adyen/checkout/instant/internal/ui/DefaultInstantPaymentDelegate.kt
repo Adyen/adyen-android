@@ -11,7 +11,6 @@ package com.adyen.checkout.instant.internal.ui
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -23,6 +22,7 @@ import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.instant.InstantComponentState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -39,11 +39,10 @@ internal class DefaultInstantPaymentDelegate(
     private val analyticsRepository: AnalyticsRepository,
 ) : InstantPaymentDelegate {
 
-    override val componentStateFlow: StateFlow<PaymentComponentState<PaymentMethodDetails>> =
-        MutableStateFlow(createComponentState())
+    override val componentStateFlow: StateFlow<InstantComponentState> = MutableStateFlow(createComponentState())
 
-    private val submitChannel: Channel<PaymentComponentState<PaymentMethodDetails>> = bufferedChannel()
-    override val submitFlow: Flow<PaymentComponentState<PaymentMethodDetails>> = submitChannel.receiveAsFlow()
+    private val submitChannel: Channel<InstantComponentState> = bufferedChannel()
+    override val submitFlow: Flow<InstantComponentState> = submitChannel.receiveAsFlow()
 
     init {
         submitChannel.trySend(componentStateFlow.value)
@@ -51,12 +50,12 @@ internal class DefaultInstantPaymentDelegate(
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
-    private fun createComponentState(): PaymentComponentState<PaymentMethodDetails> {
+    private fun createComponentState(): InstantComponentState {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>(
             paymentMethod = GenericPaymentMethod(paymentMethod.type),
             order = order,
         )
-        return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+        return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -73,7 +72,7 @@ internal class DefaultInstantPaymentDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<PaymentMethodDetails>>) -> Unit
+        callback: (PaymentComponentEvent<InstantComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,

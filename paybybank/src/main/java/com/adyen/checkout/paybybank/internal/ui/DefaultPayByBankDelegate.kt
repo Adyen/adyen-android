@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.InputDetail
 import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -25,6 +24,7 @@ import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -43,7 +43,7 @@ internal class DefaultPayByBankDelegate(
     private val order: Order?,
     override val componentParams: GenericComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<PayByBankPaymentMethod>>,
+    private val submitHandler: SubmitHandler<PayByBankComponentState>,
 ) : PayByBankDelegate {
 
     private val inputData = PayByBankInputData()
@@ -54,12 +54,12 @@ internal class DefaultPayByBankDelegate(
     override val outputData: PayByBankOutputData = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<PayByBankComponentState> = _componentStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<PayByBankPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<PayByBankComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -89,7 +89,7 @@ internal class DefaultPayByBankDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<PayByBankComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -137,7 +137,7 @@ internal class DefaultPayByBankDelegate(
 
     private fun createComponentState(
         outputData: PayByBankOutputData = this.outputData
-    ): PaymentComponentState<PayByBankPaymentMethod> {
+    ): PayByBankComponentState {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType(),
             issuer = outputData.selectedIssuer?.id.orEmpty()
@@ -148,14 +148,14 @@ internal class DefaultPayByBankDelegate(
             order = order
         )
 
-        return PaymentComponentState(
+        return PayByBankComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true
         )
     }
 
-    private fun createValidComponentState(): PaymentComponentState<PayByBankPaymentMethod> {
+    private fun createValidComponentState(): PayByBankComponentState {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType()
         )
@@ -163,7 +163,7 @@ internal class DefaultPayByBankDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = payByBankPaymentMethod
         )
-        return PaymentComponentState(
+        return PayByBankComponentState(
             data = paymentComponentData,
             isInputValid = true,
             isReady = true

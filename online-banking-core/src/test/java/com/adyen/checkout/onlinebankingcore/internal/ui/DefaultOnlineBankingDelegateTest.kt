@@ -11,17 +11,17 @@ package com.adyen.checkout.onlinebankingcore.internal.ui
 import android.content.Context
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
 import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
+import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingComponentState
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
+import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingPaymentMethod
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,10 +50,12 @@ internal class DefaultOnlineBankingDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val context: Context,
     @Mock private val pdfOpener: PdfOpener,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<OnlineBankingCZPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,
 ) {
 
-    private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
+    private lateinit var delegate: DefaultOnlineBankingDelegate<
+        TestOnlineBankingPaymentMethod,
+        TestOnlineBankingComponentState>
 
     @BeforeEach
     fun setup() {
@@ -218,8 +220,15 @@ internal class DefaultOnlineBankingDelegateTest(
         analyticsRepository = analyticsRepository,
         componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
         termsAndConditionsUrl = TEST_URL,
-        paymentMethodFactory = { OnlineBankingCZPaymentMethod() },
+        paymentMethodFactory = { TestOnlineBankingPaymentMethod() },
         submitHandler = submitHandler,
+        componentStateFactory = { data, isInputValid, isReady ->
+            TestOnlineBankingComponentState(
+                data = data,
+                isInputValid = isInputValid,
+                isReady = isReady
+            )
+        }
     )
 
     private fun getDefaultTestOnlineBankingConfigurationBuilder() = TestOnlineBankingConfiguration.Builder(

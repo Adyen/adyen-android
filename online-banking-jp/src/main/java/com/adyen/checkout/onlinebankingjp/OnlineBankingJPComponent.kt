@@ -10,7 +10,6 @@ package com.adyen.checkout.onlinebankingjp
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
@@ -19,11 +18,11 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 
 class OnlineBankingJPComponent internal constructor(
-    delegate: EContextDelegate<OnlineBankingJPPaymentMethod>,
+    delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingJPPaymentMethod>>
-) : EContextComponent<OnlineBankingJPPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<OnlineBankingJPComponentState>
+) : EContextComponent<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

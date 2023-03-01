@@ -13,16 +13,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.instant.InstantComponentState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +38,7 @@ internal class InstantViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel(), ComponentCallback<PaymentComponentState<PaymentMethodDetails>> {
+) : ViewModel(), ComponentCallback<InstantComponentState> {
 
     private val _instantComponentDataFlow = MutableStateFlow<InstantComponentData?>(null)
     val instantComponentDataFlow: Flow<InstantComponentData> = _instantComponentDataFlow.filterNotNull()
@@ -82,7 +81,7 @@ internal class InstantViewModel @Inject constructor(
         }
     }
 
-    override fun onSubmit(state: PaymentComponentState<PaymentMethodDetails>) {
+    override fun onSubmit(state: InstantComponentState) {
         makePayment(state.data)
         _instantViewState.tryEmit(InstantViewState.Loading)
     }

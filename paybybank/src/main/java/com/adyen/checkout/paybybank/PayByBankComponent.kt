@@ -14,14 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
@@ -35,7 +33,7 @@ class PayByBankComponent internal constructor(
     private val payByBankDelegate: PayByBankDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<PayByBankComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -57,7 +55,7 @@ class PayByBankComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<PayByBankComponentState>) -> Unit
     ) {
         payByBankDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

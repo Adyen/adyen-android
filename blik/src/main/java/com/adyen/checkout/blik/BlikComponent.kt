@@ -16,7 +16,6 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
 import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.blik.internal.ui.BlikDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -24,7 +23,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -40,7 +38,7 @@ class BlikComponent internal constructor(
     private val blikDelegate: BlikDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<BlikComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -63,7 +61,7 @@ class BlikComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<BlikComponentState>) -> Unit
     ) {
         blikDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

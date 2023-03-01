@@ -12,16 +12,16 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -41,7 +41,7 @@ internal class DefaultSepaDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<SepaPaymentMethod>>,
+    private val submitHandler: SubmitHandler<SepaComponentState>,
 ) : SepaDelegate {
 
     private val inputData: SepaInputData = SepaInputData()
@@ -52,12 +52,12 @@ internal class DefaultSepaDelegate(
     override val outputData: SepaOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<SepaComponentState> = _componentStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<SepaComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -76,7 +76,7 @@ internal class DefaultSepaDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<SepaComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -120,7 +120,7 @@ internal class DefaultSepaDelegate(
 
     private fun createComponentState(
         outputData: SepaOutputData = this.outputData
-    ): PaymentComponentState<SepaPaymentMethod> {
+    ): SepaComponentState {
         val paymentMethod = SepaPaymentMethod(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
             ownerName = outputData.ownerNameField.value,
@@ -130,7 +130,7 @@ internal class DefaultSepaDelegate(
             paymentMethod = paymentMethod,
             order = order
         )
-        return PaymentComponentState(
+        return SepaComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true,

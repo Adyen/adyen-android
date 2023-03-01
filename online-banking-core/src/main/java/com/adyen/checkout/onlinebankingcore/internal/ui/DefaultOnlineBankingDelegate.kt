@@ -44,7 +44,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+internal class DefaultOnlineBankingDelegate<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    >(
     private val observerRepository: PaymentObserverRepository,
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
@@ -52,9 +55,14 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
     override val componentParams: ButtonComponentParams,
     private val analyticsRepository: AnalyticsRepository,
     private val termsAndConditionsUrl: String,
-    private val submitHandler: SubmitHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
+    private val submitHandler: SubmitHandler<ComponentStateT>,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT,
-) : OnlineBankingDelegate<IssuerListPaymentMethodT> {
+    private val componentStateFactory: (
+        data: PaymentComponentData<IssuerListPaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) -> ComponentStateT,
+) : OnlineBankingDelegate<IssuerListPaymentMethodT, ComponentStateT> {
 
     private val inputData: OnlineBankingInputData = OnlineBankingInputData()
 
@@ -64,7 +72,7 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
     override val outputData: OnlineBankingOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
+    override val componentStateFlow: Flow<ComponentStateT> = _componentStateFlow
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
@@ -72,7 +80,7 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(OnlineBankingComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitHandler.submitFlow
+    override val submitFlow: Flow<ComponentStateT> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -97,7 +105,7 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -143,7 +151,7 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
 
     private fun createComponentState(
         outputData: OnlineBankingOutputData = this.outputData
-    ): PaymentComponentState<IssuerListPaymentMethodT> {
+    ): ComponentStateT {
         val issuerListPaymentMethod = paymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id
@@ -153,7 +161,7 @@ internal class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerLis
             order = order
         )
 
-        return PaymentComponentState(paymentComponentData, outputData.isValid, true)
+        return componentStateFactory(paymentComponentData, outputData.isValid, true)
     }
 
     override fun openTermsAndConditions(context: Context) {

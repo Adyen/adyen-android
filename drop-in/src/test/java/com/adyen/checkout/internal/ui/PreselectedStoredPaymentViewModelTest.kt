@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -86,7 +85,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when component emits a new state with invalid input then button state should be continue button`() =
         runTest {
             viewModel.uiStateFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
                 viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.ContinueButton(), awaitItem().buttonState)
@@ -97,7 +97,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when component emits a new state with valid input then button state should be pay button`() =
         runTest {
             viewModel.uiStateFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.PayButton(TEST_AMOUNT, Locale.US), expectMostRecentItem().buttonState)
@@ -117,7 +118,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     @Test
     fun `when component emits a submit event then view model should emit to request a payments call`() = runTest {
         viewModel.eventsFlow.test {
-            val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+            val componentState =
+                TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
             viewModel.onSubmit(componentState)
 
             assertEquals(PreselectedStoredEvent.RequestPaymentsCall(componentState), awaitItem())
@@ -137,7 +139,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when button is clicked with an invalid input then view model should request showing the stored component in a new screen`() =
         runTest {
             viewModel.eventsFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -149,7 +152,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when button is clicked with a valid input then view model should request submitting the component`() =
         runTest {
             viewModel.eventsFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -161,7 +165,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when button is clicked with a valid input but non ready state then button state should become loading`() =
         runTest {
             viewModel.uiStateFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = false)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = false)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -173,7 +178,8 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun `when button is clicked with a valid input and a ready state then button state should remain pay button`() =
         runTest {
             viewModel.uiStateFlow.test {
-                val componentState = PaymentComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                val componentState =
+                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 

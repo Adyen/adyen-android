@@ -10,13 +10,12 @@ package com.adyen.checkout.mbway.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -41,7 +40,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultMBWayDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<MBWayPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) {
 
     private lateinit var delegate: DefaultMBWayDelegate

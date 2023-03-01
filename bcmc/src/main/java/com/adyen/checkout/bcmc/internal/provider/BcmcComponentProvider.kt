@@ -17,12 +17,12 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.internal.ui.DefaultBcmcDelegate
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
@@ -37,9 +37,8 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.cse.internal.ClientSideEncrypter
 import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
@@ -60,8 +59,8 @@ class BcmcComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
-    PaymentComponentProvider<BcmcComponent, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>>,
-    SessionPaymentComponentProvider<BcmcComponent, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>> {
+    PaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState>,
+    SessionPaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState> {
 
     private val componentParamsMapper = BcmcComponentParamsMapper()
 
@@ -72,7 +71,7 @@ class BcmcComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BcmcConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<CardPaymentMethod>>,
+        componentCallback: ComponentCallback<BcmcComponentState>,
         order: Order?,
         key: String?,
     ): BcmcComponent {
@@ -142,7 +141,7 @@ class BcmcComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BcmcConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<CardPaymentMethod>>,
+        componentCallback: SessionComponentCallback<BcmcComponentState>,
         key: String?
     ): BcmcComponent {
         assertSupported(paymentMethod)
@@ -202,7 +201,7 @@ class BcmcComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<CardPaymentMethod>>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<BcmcComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )

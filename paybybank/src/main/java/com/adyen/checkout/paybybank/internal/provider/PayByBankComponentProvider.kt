@@ -17,7 +17,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
@@ -31,10 +30,10 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.paybybank.PayByBankComponent
+import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.paybybank.internal.ui.DefaultPayByBankDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -52,17 +51,8 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class PayByBankComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) :
-    PaymentComponentProvider<
-        PayByBankComponent,
-        PayByBankConfiguration,
-        PaymentComponentState<PayByBankPaymentMethod>
-        >,
-    SessionPaymentComponentProvider<
-        PayByBankComponent,
-        PayByBankConfiguration,
-        PaymentComponentState<PayByBankPaymentMethod>
-        > {
+) : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration, PayByBankComponentState>,
+    SessionPaymentComponentProvider<PayByBankComponent, PayByBankConfiguration, PayByBankComponentState> {
 
     private val componentParamsMapper = GenericComponentParamsMapper()
 
@@ -73,7 +63,7 @@ class PayByBankComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: PayByBankConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
+        componentCallback: ComponentCallback<PayByBankComponentState>,
         order: Order?,
         key: String?
     ): PayByBankComponent {
@@ -130,7 +120,7 @@ class PayByBankComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: PayByBankConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<PayByBankPaymentMethod>>,
+        componentCallback: SessionComponentCallback<PayByBankComponentState>,
         key: String?
     ): PayByBankComponent {
         assertSupported(paymentMethod)
@@ -174,11 +164,10 @@ class PayByBankComponentProvider(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
-            val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<PayByBankComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             PayByBankComponent(
                 payByBankDelegate = payByBankDelegate,

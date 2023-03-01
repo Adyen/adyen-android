@@ -8,18 +8,17 @@
 
 package com.adyen.checkout.blik.internal.ui
 
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.internal.ui.model.BlikInputData
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BlikDelegate :
-    PaymentComponentDelegate<PaymentComponentState<BlikPaymentMethod>>,
+    PaymentComponentDelegate<BlikComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
@@ -28,7 +27,7 @@ internal interface BlikDelegate :
 
     val outputDataFlow: Flow<BlikOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>>
+    val componentStateFlow: Flow<BlikComponentState>
 
     fun updateInputData(update: BlikInputData.() -> Unit)
 

@@ -15,10 +15,8 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.bcmc.internal.ui.BcmcComponentViewType
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -46,7 +44,7 @@ internal class BcmcComponentTest(
     @Mock private val bcmcDelegate: BcmcDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<CardPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<BcmcComponentState>,
 ) {
 
     private lateinit var component: BcmcComponent
@@ -84,7 +82,7 @@ internal class BcmcComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<BcmcComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

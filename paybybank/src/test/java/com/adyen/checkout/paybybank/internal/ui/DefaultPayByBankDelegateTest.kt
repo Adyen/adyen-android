@@ -12,15 +12,14 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
+import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -40,13 +39,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
-import java.util.Locale
+import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultPayByBankDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<PayByBankPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<PayByBankComponentState>,
 ) {
 
     private lateinit var delegate: DefaultPayByBankDelegate

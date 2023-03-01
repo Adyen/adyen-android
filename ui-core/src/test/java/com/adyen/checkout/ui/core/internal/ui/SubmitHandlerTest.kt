@@ -9,8 +9,9 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.ui.core.TestComponentState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler.Companion.IS_INTERACTION_BLOCKED
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -131,7 +132,7 @@ internal class SubmitHandlerTest {
     private fun createComponentState(
         isInputValid: Boolean = false,
         isReady: Boolean = false,
-    ) = PaymentComponentState(
+    ) = TestComponentState(
         data = PaymentComponentData(),
         isInputValid = isInputValid,
         isReady = isReady,

@@ -11,13 +11,13 @@ package com.adyen.checkout.sepa.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -42,7 +42,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultSepaDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<SepaPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<SepaComponentState>,
 ) {
 
     private lateinit var delegate: DefaultSepaDelegate

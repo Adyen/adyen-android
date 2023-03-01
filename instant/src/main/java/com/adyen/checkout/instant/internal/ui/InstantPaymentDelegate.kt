@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.instant.internal.ui
 
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.instant.InstantComponentState
 import kotlinx.coroutines.flow.Flow
 
-internal interface InstantPaymentDelegate :
-    PaymentComponentDelegate<PaymentComponentState<PaymentMethodDetails>> {
-    val componentStateFlow: Flow<PaymentComponentState<PaymentMethodDetails>>
+internal interface InstantPaymentDelegate : PaymentComponentDelegate<InstantComponentState> {
+    val componentStateFlow: Flow<InstantComponentState>
 }

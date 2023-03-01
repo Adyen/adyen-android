@@ -6,13 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
@@ -31,7 +29,7 @@ class InstantPaymentComponent internal constructor(
     private val instantPaymentDelegate: InstantPaymentDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<PaymentMethodDetails>>,
+    internal val componentEventHandler: ComponentEventHandler<InstantComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -49,7 +47,7 @@ class InstantPaymentComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<PaymentMethodDetails>>) -> Unit
+        callback: (PaymentComponentEvent<InstantComponentState>) -> Unit
     ) {
         instantPaymentDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

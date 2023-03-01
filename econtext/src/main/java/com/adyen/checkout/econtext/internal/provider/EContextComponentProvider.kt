@@ -18,6 +18,7 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
@@ -34,8 +35,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.EContextConfiguration
 import com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegate
@@ -53,14 +54,16 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class EContextComponentProvider<
-    ComponentT : EContextComponent<PaymentMethodT>,
+    ComponentT : EContextComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : EContextConfiguration,
-    PaymentMethodT : EContextPaymentMethod>(
+    PaymentMethodT : EContextPaymentMethod,
+    ComponentStateT : PaymentComponentState<PaymentMethodT>
+    >(
     private val componentClass: Class<ComponentT>,
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : PaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>>,
-    SessionPaymentComponentProvider<ComponentT, ConfigurationT, PaymentComponentState<PaymentMethodT>> {
+) : PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+    SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -71,7 +74,7 @@ abstract class EContextComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: ComponentCallback<ComponentStateT>,
         order: Order?,
         key: String?
     ): ComponentT {
@@ -96,7 +99,8 @@ abstract class EContextComponentProvider<
                     order = order,
                     analyticsRepository = analyticsRepository,
                     submitHandler = SubmitHandler(savedStateHandle),
-                    typedPaymentMethodFactory = { createPaymentMethod() }
+                    typedPaymentMethodFactory = { createPaymentMethod() },
+                    componentStateFactory = ::createComponentState
                 )
 
                 val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -127,7 +131,7 @@ abstract class EContextComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<PaymentMethodT>>,
+        componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String?
     ): ComponentT {
         assertSupported(paymentMethod)
@@ -151,7 +155,8 @@ abstract class EContextComponentProvider<
                     order = checkoutSession.order,
                     analyticsRepository = analyticsRepository,
                     submitHandler = SubmitHandler(savedStateHandle),
-                    typedPaymentMethodFactory = { createPaymentMethod() }
+                    typedPaymentMethodFactory = { createPaymentMethod() },
+                    componentStateFactory = ::createComponentState
                 )
 
                 val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -172,7 +177,7 @@ abstract class EContextComponentProvider<
                     sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                     isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
                 )
-                val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<PaymentMethodT>>(
+                val sessionComponentEventHandler = SessionComponentEventHandler<ComponentStateT>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer
                 )
@@ -191,11 +196,17 @@ abstract class EContextComponentProvider<
         }
     }
 
+    protected abstract fun createComponentState(
+        data: PaymentComponentData<PaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ): ComponentStateT
+
     abstract fun createComponent(
-        delegate: EContextDelegate<PaymentMethodT>,
+        delegate: EContextDelegate<PaymentMethodT, ComponentStateT>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<PaymentMethodT>>,
+        componentEventHandler: ComponentEventHandler<ComponentStateT>,
     ): ComponentT
 
     abstract fun createPaymentMethod(): PaymentMethodT

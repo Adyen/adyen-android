@@ -11,11 +11,12 @@ package com.adyen.checkout.conveniencestoresjp.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
@@ -28,16 +29,23 @@ class ConvenienceStoresJPComponentProvider(
 ) : EContextComponentProvider<
     ConvenienceStoresJPComponent,
     ConvenienceStoresJPConfiguration,
-    ConvenienceStoresJPPaymentMethod>(
+    ConvenienceStoresJPPaymentMethod,
+    ConvenienceStoresJPComponentState>(
     componentClass = ConvenienceStoresJPComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
+    override fun createComponentState(
+        data: PaymentComponentData<ConvenienceStoresJPPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = ConvenienceStoresJPComponentState(data, isInputValid, isReady)
+
     override fun createComponent(
-        delegate: EContextDelegate<ConvenienceStoresJPPaymentMethod>,
+        delegate: EContextDelegate<ConvenienceStoresJPPaymentMethod, ConvenienceStoresJPComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<ConvenienceStoresJPPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<ConvenienceStoresJPComponentState>
     ): ConvenienceStoresJPComponent {
         return ConvenienceStoresJPComponent(
             delegate = delegate,

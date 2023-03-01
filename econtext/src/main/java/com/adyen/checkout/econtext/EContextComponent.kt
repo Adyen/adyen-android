@@ -32,12 +32,15 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
-abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod> protected constructor(
-    private val eContextDelegate: EContextDelegate<EContextPaymentMethodT>,
+abstract class EContextComponent<
+    EContextPaymentMethodT : EContextPaymentMethod,
+    EContextComponentStateT : PaymentComponentState<EContextPaymentMethodT>
+    > protected constructor(
+    private val eContextDelegate: EContextDelegate<EContextPaymentMethodT, EContextComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
     @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<PaymentComponentState<EContextPaymentMethodT>>,
+    val componentEventHandler: ComponentEventHandler<EContextComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -60,7 +63,7 @@ abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod>
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<EContextPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<EContextComponentStateT>) -> Unit
     ) {
         eContextDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -73,7 +76,7 @@ abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod>
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? EContextDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? EContextDelegate<*, *>)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 

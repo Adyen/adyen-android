@@ -9,7 +9,6 @@ package com.adyen.checkout.molpay
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
@@ -22,11 +21,11 @@ import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MolpayComponent internal constructor(
-    delegate: IssuerListDelegate<MolpayPaymentMethod>,
+    delegate: IssuerListDelegate<MolpayPaymentMethod, MolpayComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<MolpayPaymentMethod>>,
-) : IssuerListComponent<MolpayPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<MolpayComponentState>,
+) : IssuerListComponent<MolpayPaymentMethod, MolpayComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

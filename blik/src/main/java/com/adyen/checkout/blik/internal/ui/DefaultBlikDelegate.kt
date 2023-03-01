@@ -10,11 +10,11 @@ package com.adyen.checkout.blik.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.internal.ui.model.BlikInputData
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -41,7 +41,7 @@ internal class DefaultBlikDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<BlikPaymentMethod>>,
+    private val submitHandler: SubmitHandler<BlikComponentState>,
 ) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()
@@ -53,12 +53,12 @@ internal class DefaultBlikDelegate(
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<BlikComponentState> = _componentStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<BlikComponentState> = submitHandler.submitFlow
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -83,7 +83,7 @@ internal class DefaultBlikDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<BlikComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -129,7 +129,7 @@ internal class DefaultBlikDelegate(
 
     private fun createComponentState(
         outputData: BlikOutputData = this.outputData
-    ): PaymentComponentState<BlikPaymentMethod> {
+    ): BlikComponentState {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             blikCode = outputData.blikCodeField.value
@@ -140,7 +140,7 @@ internal class DefaultBlikDelegate(
             order = order,
         )
 
-        return PaymentComponentState(
+        return BlikComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true

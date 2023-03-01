@@ -10,7 +10,6 @@ package com.adyen.checkout.onlinebankingpl
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingPLPaymentMethod
@@ -23,11 +22,11 @@ import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLCompo
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class OnlineBankingPLComponent internal constructor(
-    delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
+    delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingPLPaymentMethod>>,
-) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<OnlineBankingPLComponentState>,
+) : IssuerListComponent<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

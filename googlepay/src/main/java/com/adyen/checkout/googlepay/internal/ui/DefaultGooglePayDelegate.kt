@@ -116,7 +116,7 @@ internal class DefaultGooglePayDelegate(
         )
 
         return GooglePayComponentState(
-            paymentComponentData = paymentComponentData,
+            data = paymentComponentData,
             isInputValid = isValid,
             isReady = true,
             paymentData = paymentData

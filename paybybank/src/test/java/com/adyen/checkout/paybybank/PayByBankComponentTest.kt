@@ -13,10 +13,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.paybybank.internal.ui.PayByBankComponentViewType
 import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
@@ -45,7 +43,7 @@ internal class PayByBankComponentTest(
     @Mock private val payByBankDelegate: PayByBankDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<PayByBankPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<PayByBankComponentState>,
 ) {
 
     private lateinit var component: PayByBankComponent
@@ -83,7 +81,7 @@ internal class PayByBankComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<PayByBankPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<PayByBankComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

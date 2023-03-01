@@ -15,13 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.ach.ACHDirectDebitComponent
+import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
@@ -36,9 +36,8 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.cse.internal.ClientSideEncrypter
 import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
@@ -63,12 +62,12 @@ class ACHDirectDebitComponentProvider(
     PaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        PaymentComponentState<ACHDirectDebitPaymentMethod>
+        ACHDirectDebitComponentState
         >,
     SessionPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        PaymentComponentState<ACHDirectDebitPaymentMethod>
+        ACHDirectDebitComponentState
         > {
 
     private val componentParamsMapper = ACHDirectDebitComponentParamsMapper()
@@ -80,7 +79,7 @@ class ACHDirectDebitComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: ACHDirectDebitConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+        componentCallback: ComponentCallback<ACHDirectDebitComponentState>,
         order: Order?,
         key: String?
     ): ACHDirectDebitComponent {
@@ -148,7 +147,7 @@ class ACHDirectDebitComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: ACHDirectDebitConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+        componentCallback: SessionComponentCallback<ACHDirectDebitComponentState>,
         key: String?
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
@@ -202,11 +201,10 @@ class ACHDirectDebitComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>(
-                    sessionInteractor = sessionInteractor,
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                )
+            val sessionComponentEventHandler = SessionComponentEventHandler<ACHDirectDebitComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
 
             ACHDirectDebitComponent(
                 achDirectDebitDelegate = achDelegate,

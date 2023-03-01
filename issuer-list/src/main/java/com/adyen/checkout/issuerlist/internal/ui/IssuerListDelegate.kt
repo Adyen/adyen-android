@@ -22,8 +22,11 @@ import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod> :
-    PaymentComponentDelegate<PaymentComponentState<IssuerListPaymentMethodT>>,
+interface IssuerListDelegate<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    > :
+    PaymentComponentDelegate<ComponentStateT>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
@@ -34,7 +37,7 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
 
     val outputDataFlow: Flow<IssuerListOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>>
+    val componentStateFlow: Flow<ComponentStateT>
 
     fun getIssuers(): List<IssuerModel>
 

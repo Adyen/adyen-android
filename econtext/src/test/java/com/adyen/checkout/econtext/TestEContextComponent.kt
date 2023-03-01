@@ -10,16 +10,15 @@ package com.adyen.checkout.econtext
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
 internal class TestEContextComponent internal constructor(
-    delegate: EContextDelegate<TestEContextPaymentMethod>,
+    delegate: EContextDelegate<TestEContextPaymentMethod, TestEContextComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<TestEContextPaymentMethod>>,
-) : EContextComponent<TestEContextPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<TestEContextComponentState>,
+) : EContextComponent<TestEContextPaymentMethod, TestEContextComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

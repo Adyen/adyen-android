@@ -11,13 +11,14 @@ package com.adyen.checkout.openbanking.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.openbanking.OpenBankingComponent
+import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
@@ -25,22 +26,33 @@ import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 class OpenBankingComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
-) : IssuerListComponentProvider<OpenBankingComponent, OpenBankingConfiguration, OpenBankingPaymentMethod>(
+) : IssuerListComponentProvider<
+    OpenBankingComponent,
+    OpenBankingConfiguration,
+    OpenBankingPaymentMethod,
+    OpenBankingComponentState
+    >(
     componentClass = OpenBankingComponent::class.java,
     overrideComponentParams = overrideComponentParams,
 ) {
 
     override fun createComponent(
-        delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
+        delegate: IssuerListDelegate<OpenBankingPaymentMethod, OpenBankingComponentState>,
         genericActionDelegate: GenericActionDelegate,
         actionHandlingComponent: DefaultActionHandlingComponent,
-        componentEventHandler: ComponentEventHandler<PaymentComponentState<OpenBankingPaymentMethod>>
+        componentEventHandler: ComponentEventHandler<OpenBankingComponentState>
     ) = OpenBankingComponent(
         delegate = delegate,
         genericActionDelegate = genericActionDelegate,
         actionHandlingComponent = actionHandlingComponent,
         componentEventHandler = componentEventHandler,
     )
+
+    override fun createComponentState(
+        data: PaymentComponentData<OpenBankingPaymentMethod>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) = OpenBankingComponentState(data, isInputValid, isReady)
 
     override fun createPaymentMethod() = OpenBankingPaymentMethod()
 

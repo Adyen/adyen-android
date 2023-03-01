@@ -17,11 +17,11 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate
 import com.adyen.checkout.blik.internal.ui.StoredBlikDelegate
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentCallback
@@ -37,9 +37,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
@@ -57,10 +56,10 @@ class BlikComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null
 ) :
-    PaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
-    StoredPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
-    SessionPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>>,
-    SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>> {
+    PaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
+    StoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
+    SessionPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
+    SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -71,7 +70,7 @@ class BlikComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+        componentCallback: ComponentCallback<BlikComponentState>,
         order: Order?,
         key: String?,
     ): BlikComponent {
@@ -127,7 +126,7 @@ class BlikComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+        componentCallback: ComponentCallback<BlikComponentState>,
         order: Order?,
         key: String?,
     ): BlikComponent {
@@ -184,7 +183,7 @@ class BlikComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+        componentCallback: SessionComponentCallback<BlikComponentState>,
         key: String?
     ): BlikComponent {
         assertSupported(paymentMethod)
@@ -230,7 +229,7 @@ class BlikComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler = SessionComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>(
+            val sessionComponentEventHandler = SessionComponentEventHandler<BlikComponentState>(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -259,7 +258,7 @@ class BlikComponentProvider(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: BlikConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+        componentCallback: SessionComponentCallback<BlikComponentState>,
         key: String?
     ): BlikComponent {
         assertSupported(storedPaymentMethod)
@@ -306,7 +305,7 @@ class BlikComponentProvider(
             )
 
             val sessionComponentEventHandler =
-                SessionComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>(
+                SessionComponentEventHandler<BlikComponentState>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
                 )

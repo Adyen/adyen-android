@@ -37,15 +37,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+internal class DefaultIssuerListDelegate<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    >(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: IssuerListComponentParams,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
-    private val submitHandler: SubmitHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
+    private val submitHandler: SubmitHandler<ComponentStateT>,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
-) : IssuerListDelegate<IssuerListPaymentMethodT> {
+    private val componentStateFactory: (
+        data: PaymentComponentData<IssuerListPaymentMethodT>,
+        isInputValid: Boolean,
+        isReady: Boolean
+    ) -> ComponentStateT
+) : IssuerListDelegate<IssuerListPaymentMethodT, ComponentStateT> {
 
     private val inputData: IssuerListInputData = IssuerListInputData()
 
@@ -55,12 +63,12 @@ internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPa
     override val outputData: IssuerListOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
+    override val componentStateFlow: Flow<ComponentStateT> = _componentStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = submitHandler.submitFlow
+    override val submitFlow: Flow<ComponentStateT> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -79,7 +87,7 @@ internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPa
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -135,7 +143,7 @@ internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPa
 
     private fun createComponentState(
         outputData: IssuerListOutputData = this.outputData
-    ): PaymentComponentState<IssuerListPaymentMethodT> {
+    ): ComponentStateT {
         val issuerListPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             issuer = outputData.selectedIssuer?.id.orEmpty()
@@ -146,7 +154,7 @@ internal class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPa
             order = order,
         )
 
-        return PaymentComponentState(paymentComponentData, outputData.isValid, true)
+        return componentStateFactory(paymentComponentData, outputData.isValid, true)
     }
 
     override fun getPaymentMethodType(): String {

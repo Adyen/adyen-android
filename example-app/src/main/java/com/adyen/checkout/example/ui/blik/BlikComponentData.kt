@@ -8,12 +8,11 @@
 
 package com.adyen.checkout.example.ui.blik
 
-import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentCallback
 
 data class BlikComponentData(
     val paymentMethod: PaymentMethod,
-    val callback: ComponentCallback<PaymentComponentState<BlikPaymentMethod>>,
+    val callback: ComponentCallback<BlikComponentState>,
 )

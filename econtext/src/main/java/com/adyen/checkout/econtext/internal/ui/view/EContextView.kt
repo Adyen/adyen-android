@@ -42,7 +42,7 @@ internal class EContextView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    private lateinit var delegate: EContextDelegate<*>
+    private lateinit var delegate: EContextDelegate<*, *>
 
     init {
         orientation = VERTICAL
@@ -51,7 +51,7 @@ internal class EContextView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is EContextDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        if (delegate !is EContextDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
         this.delegate = delegate
 
         this.localizedContext = localizedContext
