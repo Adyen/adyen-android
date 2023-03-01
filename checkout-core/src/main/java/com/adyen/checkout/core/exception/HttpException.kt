@@ -10,6 +10,9 @@ package com.adyen.checkout.core.exception
 
 import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
 
+/**
+ * Indicates that an internal API call has failed.
+ */
 class HttpException(
     val code: Int,
     override val message: String,

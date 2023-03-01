@@ -14,7 +14,7 @@ import java.net.URL
 import java.util.Objects
 
 /**
- * Identifies which host URL to be used for network calls.
+ * Identifies which host URL to be used for internal network calls.
  */
 @Parcelize
 class Environment(private val internalUrl: URL) : Parcelable {
