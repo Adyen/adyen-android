@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">Geen toestemming verleend</string>
     <string name="checkout_rationale_title_storage_permission">Verzoek voor toestemming tot opslag</string>
     <string name="checkout_rationale_message_storage_permission">Om deze afbeelding op te slaan op uw apparaat, moet u toestemming voor opslag inschakelen</string>
+    <string name="checkout_stored_payment_confirmation_message">Bevestig %s betaling</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Annuleer</string>
 </resources>

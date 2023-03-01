@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -329,6 +330,14 @@ class DropInConfiguration private constructor(
          */
         fun addPayEasyConfiguration(payEasyConfiguration: PayEasyConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ATM] = payEasyConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for ACH Direct Debit payment method.
+         */
+        fun addAchDirectDebitConfiguration(achDirectDebitConfiguration: ACHDirectDebitConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ACH] = achDirectDebitConfiguration
             return this
         }
 

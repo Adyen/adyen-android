@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">No se ha dado permiso</string>
     <string name="checkout_rationale_title_storage_permission">Solicitud de permiso de almacenamiento</string>
     <string name="checkout_rationale_message_storage_permission">Para guardar esta imagen en su dispositivo, debe conceder permiso de almacenamiento</string>
+    <string name="checkout_stored_payment_confirmation_message">Confirmar pago de %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Cancelar</string>
 </resources>

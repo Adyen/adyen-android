@@ -11,18 +11,22 @@ package com.adyen.checkout.ach.internal.ui.model
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class ACHDirectDebitComponentParamsMapper {
 
     fun mapToParams(
         configuration: ACHDirectDebitConfiguration,
-        overrideComponentParams: ComponentParams? = null
+        overrideComponentParams: ComponentParams? = null,
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): ACHDirectDebitComponentParams {
-        return configuration.mapToParamsInternal().override(overrideComponentParams)
+        return configuration.mapToParamsInternal(sessionSetupConfiguration).override(overrideComponentParams)
     }
 
-    private fun ACHDirectDebitConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
+    private fun ACHDirectDebitConfiguration.mapToParamsInternal(
+        sessionSetupConfiguration: SessionSetupConfiguration? = null
+    ): ACHDirectDebitComponentParams {
         return ACHDirectDebitComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -35,7 +39,9 @@ internal class ACHDirectDebitComponentParamsMapper {
                 ?: AddressParams.FullAddress(
                     supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
                     addressFieldPolicy = AddressFieldPolicyParams.Required
-                )
+                ),
+            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
+                ?: isStorePaymentFieldVisible ?: true,
         )
     }
 

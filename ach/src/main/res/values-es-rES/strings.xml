@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Cuenta bancaria</string>
     <string name="checkout_ach_bank_account_holder_name">Nombre del titular de la cuenta</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Número de cuenta no válido</string>
     <string name="checkout_ach_bank_account_location">Número de ruta ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">El número de ruta ABA no es válido</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Recordar para mi próximo pago</string>
 </resources>

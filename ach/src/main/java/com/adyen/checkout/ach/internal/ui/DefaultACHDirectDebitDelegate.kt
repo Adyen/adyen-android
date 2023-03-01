@@ -169,7 +169,9 @@ internal class DefaultACHDirectDebitDelegate(
                 updatedStateOptions,
                 false
             ),
-            addressUIState = addressFormUIState
+            addressUIState = addressFormUIState,
+            isStoredPaymentMethodEnabled = inputData.isStorePaymentSelected,
+            showStorePaymentField = showStorePaymentField()
         )
     }
 
@@ -290,7 +292,11 @@ internal class DefaultACHDirectDebitDelegate(
                 encryptedBankLocationId = encryptedBankLocationId,
                 ownerName = outputData.ownerName.value
             )
-            val paymentComponentData = PaymentComponentData(order = order, paymentMethod = achPaymentMethod)
+            val paymentComponentData = PaymentComponentData(
+                order = order,
+                storePaymentMethod = outputData.isStoredPaymentMethodEnabled,
+                paymentMethod = achPaymentMethod
+            )
 
             if (isAddressRequired(outputData.addressUIState)) {
                 paymentComponentData.billingAddress = AddressFormUtils.makeAddressData(
@@ -312,6 +318,10 @@ internal class DefaultACHDirectDebitDelegate(
 
     private fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
         return AddressFormUtils.isAddressRequired(addressFormUIState)
+    }
+
+    private fun showStorePaymentField(): Boolean {
+        return componentParams.isStorePaymentFieldVisible
     }
 
     override fun observe(

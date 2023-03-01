@@ -29,6 +29,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentStoredPaymentMethodBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
+import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.arguments
@@ -129,6 +130,18 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 binding.storedPaymentMethodItem.textViewDetail.text =
                     DateUtils.parseDateToView(storedPaymentMethodModel.expiryMonth, storedPaymentMethodModel.expiryYear)
                 binding.storedPaymentMethodItem.textViewDetail.isVisible = true
+            }
+            is StoredACHDirectDebitModel -> {
+                binding.storedPaymentMethodItem.textViewTitle.text =
+                    requireActivity().getString(
+                        R.string.checkout_ach_bank_account_number_4digit,
+                        storedPaymentMethodModel.lastFour
+                    )
+                binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
+                    environment = dropInViewModel.dropInConfiguration.environment,
+                    txVariant = storedPaymentMethodModel.imageId,
+                )
+                binding.storedPaymentMethodItem.textViewDetail.isVisible = false
             }
             is GenericStoredModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text = storedPaymentMethodModel.name

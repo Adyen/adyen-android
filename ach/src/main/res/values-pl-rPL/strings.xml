@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Rachunek bankowy</string>
     <string name="checkout_ach_bank_account_holder_name">Imię i nazwisko posiadacza rachunku</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Nieprawidłowy numer rachunku</string>
     <string name="checkout_ach_bank_account_location">Kod bankowy ABA Routing Number</string>
     <string name="checkout_ach_bank_account_location_invalid">Nieprawidłowy kod bankowy ABA Routing Number</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Zapisz na potrzeby następnej płatności</string>
 </resources>

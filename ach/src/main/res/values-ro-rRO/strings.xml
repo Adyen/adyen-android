@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Cont bancar</string>
     <string name="checkout_ach_bank_account_holder_name">Numele titularului de cont</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Numărul de cont este incorect</string>
     <string name="checkout_ach_bank_account_location">Număr de direcționare ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">Număr de direcționare ABA incorect</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Salvează pentru următoarea mea plată</string>
 </resources>

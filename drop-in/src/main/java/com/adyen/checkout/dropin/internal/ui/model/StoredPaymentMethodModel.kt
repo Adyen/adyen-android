@@ -29,6 +29,15 @@ internal data class StoredCardModel(
     val environment: Environment,
 ) : StoredPaymentMethodModel()
 
+internal data class StoredACHDirectDebitModel(
+    override val id: String,
+    override val imageId: String,
+    override val isRemovable: Boolean,
+    val lastFour: String,
+    // We need the environment to load the logo
+    val environment: Environment,
+) : StoredPaymentMethodModel()
+
 internal data class GenericStoredModel(
     override val id: String,
     override val imageId: String,

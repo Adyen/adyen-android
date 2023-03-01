@@ -10,13 +10,18 @@ package com.adyen.checkout.dropin.internal.ui
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
+import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -31,9 +36,13 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("TooManyFunctions")
 internal class PaymentMethodsListViewModel(
     private val application: Application,
     private val paymentMethods: List<PaymentMethod>,
@@ -41,13 +50,18 @@ internal class PaymentMethodsListViewModel(
     private val order: OrderModel?,
     private val dropInConfiguration: DropInConfiguration,
     private val amount: Amount
-) : ViewModel(), ComponentAvailableCallback {
+) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
     internal val paymentMethodsFlow: StateFlow<List<PaymentMethodListItem>> = _paymentMethodsFlow
 
     private var storedPaymentMethodsList: MutableList<StoredPaymentMethodModel>? = null
     private var paymentMethodsAvailabilityMap: HashMap<PaymentMethod, Boolean> = hashMapOf()
+
+    private val eventsChannel: Channel<PaymentMethodListStoredEvent> = bufferedChannel()
+    val eventsFlow: Flow<PaymentMethodListStoredEvent> = eventsChannel.receiveAsFlow()
+
+    private var componentState: PaymentComponentState<*>? = null
 
     init {
         storedPaymentMethodsList = storedPaymentMethods.mapToStoredPaymentMethodsModelList().toMutableList()
@@ -137,6 +151,44 @@ internal class PaymentMethodsListViewModel(
         populatePaymentMethods()
     }
 
+    override fun onSubmit(state: PaymentComponentState<*>) {
+        eventsChannel.trySend(PaymentMethodListStoredEvent.RequestPaymentsCall(state))
+    }
+
+    override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
+        eventsChannel.trySend(PaymentMethodListStoredEvent.AdditionalDetails(actionComponentData))
+    }
+
+    override fun onError(componentError: ComponentError) {
+        eventsChannel.trySend(PaymentMethodListStoredEvent.ShowError(componentError))
+    }
+
+    override fun onStateChanged(state: PaymentComponentState<*>) {
+        componentState = state
+    }
+
+    fun onClickStoredItem(
+        storedPaymentMethod: StoredPaymentMethod,
+        storedPaymentMethodModel: StoredPaymentMethodModel
+    ) {
+        if (componentState?.isInputValid == true) {
+            eventsChannel.trySend(
+                PaymentMethodListStoredEvent.ShowConfirmationPopup(
+                    storedPaymentMethod.name ?: "",
+                    storedPaymentMethodModel
+                )
+            )
+        } else {
+            eventsChannel.trySend(PaymentMethodListStoredEvent.ShowStoredComponentDialog(storedPaymentMethod))
+        }
+    }
+
+    fun onClickConfirmationButton() {
+        if (componentState?.isValid == true) {
+            eventsChannel.trySend(PaymentMethodListStoredEvent.SubmitComponent)
+        }
+    }
+
     private fun List<PaymentMethod>.mapToPaymentMethodModelList(): List<PaymentMethodModel> =
         mapIndexedNotNull { index, paymentMethod ->
             val isAvailable = paymentMethodsAvailabilityMap[paymentMethod]
@@ -192,4 +244,19 @@ internal class PaymentMethodsListViewModel(
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
     }
+}
+
+internal sealed class PaymentMethodListStoredEvent {
+    class ShowStoredComponentDialog(val storedPaymentMethod: StoredPaymentMethod) : PaymentMethodListStoredEvent()
+
+    class ShowConfirmationPopup(val paymentMethodName: String, val storedPaymentMethodModel: StoredPaymentMethodModel) :
+        PaymentMethodListStoredEvent()
+
+    object SubmitComponent : PaymentMethodListStoredEvent()
+
+    data class RequestPaymentsCall(val state: PaymentComponentState<*>) : PaymentMethodListStoredEvent()
+
+    data class ShowError(val componentError: ComponentError) : PaymentMethodListStoredEvent()
+
+    data class AdditionalDetails(val data: ActionComponentData) : PaymentMethodListStoredEvent()
 }
