@@ -31,9 +31,9 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
@@ -50,7 +50,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
@@ -156,9 +157,12 @@ internal class DefaultQRCodeDelegate(
         }
 
         val viewType = when (action.paymentMethodType) {
-            PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.PAY_NOW -> {
+                maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
+                QrCodeComponentViewType.FULL_QR_CODE
+            }
             PaymentMethodTypes.UPI_QR -> {
-                maxPollingDurationMillis = SHORT_MAX_POLLING_DURATION
+                maxPollingDurationMillis = UPI_MAX_POLLING_DURATION
                 QrCodeComponentViewType.FULL_QR_CODE
             }
             else -> {
@@ -320,9 +324,10 @@ internal class DefaultQRCodeDelegate(
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
-        private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
-        private val SHORT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
-        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+        private val STATUS_POLLING_INTERVAL_MILLIS = 1.seconds.inWholeMilliseconds
+        private val PAY_NOW_MAX_POLLING_DURATION = 3.minutes.inWholeMilliseconds
+        private val UPI_MAX_POLLING_DURATION = 5.minutes.inWholeMilliseconds
+        private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"

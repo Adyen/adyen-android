@@ -333,7 +333,7 @@ class DropInConfiguration private constructor(
         }
 
         /**
-         * Add configuration for BACS Direct Debit payment method.
+         * Add configuration for UPI payment method.
          */
         fun addUpiConfiguration(upiConfiguration: UpiConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration

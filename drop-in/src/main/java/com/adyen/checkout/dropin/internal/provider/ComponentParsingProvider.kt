@@ -692,7 +692,7 @@ internal fun getComponentFor(
         UpiComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val upiConfiguration: UpiConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            UpiComponentProvider(dropInParams).get(
+            UpiComponentProvider(dropInParams, sessionSetupConfiguration).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = upiConfiguration,
