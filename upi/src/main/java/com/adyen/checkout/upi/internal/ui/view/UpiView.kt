@@ -87,6 +87,7 @@ internal class UpiView @JvmOverloads constructor(
     }
 
     private fun initPicker(delegate: UpiDelegate) {
+        binding.toggleButtonChoice.check(R.id.button_vpa)
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.button_vpa -> {

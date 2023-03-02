@@ -13,7 +13,6 @@
 
     <style name="AdyenCheckout.UPI.ButtonToggleGroup" parent="AdyenCheckout">
         <item name="android:layout_marginTop">16dp</item>
-        <item name="checkedButton">@id/button_vpa</item>
         <item name="selectionRequired">true</item>
         <item name="singleSelection">true</item>
     </style>
