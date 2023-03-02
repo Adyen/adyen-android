@@ -9,8 +9,7 @@ package com.adyen.checkout.cse
 
 import com.adyen.checkout.core.exception.CheckoutException
 
-class EncryptionException(message: String, cause: Throwable?) : CheckoutException(message, cause) {
-    companion object {
-        private const val serialVersionUID = 604047691381396990L
-    }
-}
+/**
+ * Exception thrown when the Adyen encryption fails.
+ */
+class EncryptionException(message: String, cause: Throwable?) : CheckoutException(message, cause)
