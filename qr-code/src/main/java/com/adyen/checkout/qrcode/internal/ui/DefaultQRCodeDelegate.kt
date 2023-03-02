@@ -89,8 +89,6 @@ internal class DefaultQRCodeDelegate(
 
     private var statusPollingJob: Job? = null
 
-    private var currentAction: Action? = null
-
     private var maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
 
     private fun attachStatusTimer() {
@@ -138,8 +136,6 @@ internal class DefaultQRCodeDelegate(
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
         }
-
-        currentAction = action
 
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
@@ -298,7 +294,7 @@ internal class DefaultQRCodeDelegate(
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     override fun downloadQRImage() {
         val date: Long = System.currentTimeMillis()
-        val imageName = String.format(IMAGE_NAME_FORMAT, currentAction?.paymentMethodType, date)
+        val imageName = String.format(IMAGE_NAME_FORMAT, date)
         val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
         coroutineScope.launch {
             fileDownloader.download(
@@ -330,7 +326,7 @@ internal class DefaultQRCodeDelegate(
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 
-        private const val IMAGE_NAME_FORMAT = "%s-%s.png"
+        private const val IMAGE_NAME_FORMAT = "QR-code-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
         private const val MIME_TYPE = "image/png"
     }
