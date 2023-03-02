@@ -43,4 +43,7 @@ android {
 dependencies {
     // Checkout
     api project(':components-core')
+
+    // Dependencies
+    api "app.cash.paykit:core:$cash_app_pay_version"
 }

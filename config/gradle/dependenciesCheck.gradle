@@ -47,7 +47,7 @@ afterEvaluate {
                     }
                     final calculatedChecksum = md.digest().collect { String.format "%02x", it }.join()
 
-                    assert checksum == calculatedChecksum: "Checksum ($algorithm) does not match: $dependency.name"
+                    assert checksum == calculatedChecksum: "Checksum ($algorithm) does not match: $dependency"
                 }
 
                 logger.lifecycle("\u2705 $configuration: $dependency.name")
