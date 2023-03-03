@@ -10,5 +10,6 @@
 <resources>
     <string name="checkout_await_message_blik">Avaa pankkisovelluksesi vahvistaaksesi maksun.</string>
     <string name="checkout_await_message_mbway">Vahvista maksusi MB WAY -sovelluksella</string>
+    <string name="checkout_await_message_upi">Avaa UPI-sovellus vahvistaaksesi maksun</string>
     <string name="checkout_await_waiting_confirmation">Odottaa vahvistusta</string>
 </resources>

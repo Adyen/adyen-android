@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">選擇所需的 UPI 使用方式。</string>
+    <string name="checkout_upi_vpa_validation">輸入正確的虛擬付款地址</string>
+    <string name="checkout_upi_qr_generation">產生可以下載或擷取螢幕畫面的 QR 代碼，然後將其上傳到 UPI 應用程式以完成付款。</string>
+    <string name="checkout_upi_continue">繼續</string>
+
+</resources>

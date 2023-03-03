@@ -59,7 +59,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
 
@@ -155,6 +155,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
     private fun getMessageTextResource(paymentMethodType: String?): Int? {
         return when (paymentMethodType) {
             PaymentMethodTypes.PAY_NOW -> R.string.checkout_qr_code_pay_now
+            PaymentMethodTypes.UPI_QR -> R.string.checkout_qr_code_upi
             else -> null
         }
     }

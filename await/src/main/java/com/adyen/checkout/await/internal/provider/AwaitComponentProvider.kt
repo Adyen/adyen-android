@@ -93,6 +93,10 @@ class AwaitComponentProvider(
     }
 
     companion object {
-        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
+        private val PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.BLIK,
+            PaymentMethodTypes.MB_WAY,
+            PaymentMethodTypes.UPI_COLLECT,
+        )
     }
 }

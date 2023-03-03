@@ -31,9 +31,9 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
@@ -50,7 +50,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
@@ -154,6 +155,10 @@ internal class DefaultQRCodeDelegate(
         val viewType = when (action.paymentMethodType) {
             PaymentMethodTypes.PAY_NOW -> {
                 maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
+                QrCodeComponentViewType.FULL_QR_CODE
+            }
+            PaymentMethodTypes.UPI_QR -> {
+                maxPollingDurationMillis = UPI_MAX_POLLING_DURATION
                 QrCodeComponentViewType.FULL_QR_CODE
             }
             else -> {
@@ -289,7 +294,7 @@ internal class DefaultQRCodeDelegate(
     @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     override fun downloadQRImage() {
         val date: Long = System.currentTimeMillis()
-        val imageName = String.format(IMAGE_NAME, date)
+        val imageName = String.format(IMAGE_NAME_FORMAT, date)
         val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
         coroutineScope.launch {
             fileDownloader.download(
@@ -307,16 +312,21 @@ internal class DefaultQRCodeDelegate(
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX, PaymentMethodTypes.PAY_NOW)
+        private val VIEWABLE_PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.PIX,
+            PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.UPI_QR,
+        )
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
-        private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
-        private val PAY_NOW_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(3L)
-        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+        private val STATUS_POLLING_INTERVAL_MILLIS = 1.seconds.inWholeMilliseconds
+        private val PAY_NOW_MAX_POLLING_DURATION = 3.minutes.inWholeMilliseconds
+        private val UPI_MAX_POLLING_DURATION = 5.minutes.inWholeMilliseconds
+        private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 
-        private const val IMAGE_NAME = "paynow-qr-code-%s.png"
+        private const val IMAGE_NAME_FORMAT = "QR-code-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
         private const val MIME_TYPE = "image/png"
     }

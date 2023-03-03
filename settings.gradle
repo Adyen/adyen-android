@@ -38,6 +38,7 @@ include ':3ds2',
         ':sessions-core',
         ':test-core',
         ':ui-core',
+        ':upi',
         ':voucher',
         ':wechatpay'
 

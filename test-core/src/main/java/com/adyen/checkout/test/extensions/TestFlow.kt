@@ -26,6 +26,8 @@ class TestFlow<T>(flow: Flow<T>, testScheduler: TestCoroutineScheduler) : Corout
     private val _values = mutableListOf<T>()
     val values: List<T> = _values
 
+    val latestValue: T get() = values.last()
+
     init {
         flow
             .onEach { _values.add(it) }
