@@ -19,8 +19,8 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import com.adyen.checkout.upi.internal.ui.UpiComponentViewType
-import com.adyen.checkout.upi.internal.ui.UpiDelegate
+import com.adyen.checkout.upi.internal.ui.UPIComponentViewType
+import com.adyen.checkout.upi.internal.ui.UPIDelegate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,21 +42,21 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class UpiComponentTest(
-    @Mock private val upiDelegate: UpiDelegate,
+internal class UPIComponentTest(
+    @Mock private val upiDelegate: UPIDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<UpiComponentState>,
+    @Mock private val componentEventHandler: ComponentEventHandler<UPIComponentState>,
 ) {
 
-    private lateinit var component: UpiComponent
+    private lateinit var component: UPIComponent
 
     @BeforeEach
     fun beforeEach() {
-        whenever(upiDelegate.viewFlow) doReturn MutableStateFlow(UpiComponentViewType)
+        whenever(upiDelegate.viewFlow) doReturn MutableStateFlow(UPIComponentViewType)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
-        component = UpiComponent(
+        component = UPIComponent(
             upiDelegate = upiDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
@@ -85,7 +85,7 @@ internal class UpiComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<UpiComponentState>) -> Unit = {}
+        val callback: (PaymentComponentEvent<UPIComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 
@@ -104,14 +104,14 @@ internal class UpiComponentTest(
     @Test
     fun `when component is initialized then view flow should match pay by bank delegate view flow`() = runTest {
         runCurrent()
-        assertEquals(UpiComponentViewType, component.viewFlow.first())
+        assertEquals(UPIComponentViewType, component.viewFlow.first())
     }
 
     @Test
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(upiDelegate.viewFlow) doReturn delegateViewFlow
-        component = UpiComponent(upiDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component = UPIComponent(upiDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         val viewTestFlow = component.viewFlow.test(testScheduler)
         assertEquals(TestComponentViewType.VIEW_TYPE_1, viewTestFlow.values.last())
@@ -126,13 +126,13 @@ internal class UpiComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = UpiComponent(upiDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component = UPIComponent(upiDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
         val viewTestFlow = component.viewFlow.test(testScheduler)
 
         // this value should match the value of the main delegate and not the action delegate
         // and in practice the initial value of the action delegate view flow is always null so it should be ignored
-        assertEquals(UpiComponentViewType, viewTestFlow.values.last())
+        assertEquals(UPIComponentViewType, viewTestFlow.values.last())
 
         actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
         assertEquals(TestComponentViewType.VIEW_TYPE_2, viewTestFlow.values.last())

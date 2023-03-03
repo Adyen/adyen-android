@@ -80,7 +80,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
                 PaymentMethodTypes.UPI,
                 PaymentMethodTypes.UPI_COLLECT,
-                PaymentMethodTypes.UPI_QR -> UpiPaymentMethod.SERIALIZER
+                PaymentMethodTypes.UPI_QR -> UPIPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")

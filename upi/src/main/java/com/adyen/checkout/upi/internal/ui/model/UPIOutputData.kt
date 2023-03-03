@@ -13,8 +13,8 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.upi.R
 
-internal class UpiOutputData(
-    val mode: UpiMode,
+internal class UPIOutputData(
+    val mode: UPIMode,
     virtualPaymentAddress: String,
 ) : OutputData {
 
@@ -22,8 +22,8 @@ internal class UpiOutputData(
 
     override val isValid: Boolean
         get() = when (mode) {
-            UpiMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
-            UpiMode.QR -> true
+            UPIMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
+            UPIMode.QR -> true
         }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =

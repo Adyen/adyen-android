@@ -42,18 +42,18 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.upi.UpiComponent
-import com.adyen.checkout.upi.UpiComponentState
-import com.adyen.checkout.upi.UpiConfiguration
-import com.adyen.checkout.upi.internal.ui.DefaultUpiDelegate
+import com.adyen.checkout.upi.UPIComponent
+import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.UPIConfiguration
+import com.adyen.checkout.upi.internal.ui.DefaultUPIDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class UpiComponentProvider(
+class UPIComponentProvider(
     private val overrideComponentParams: ComponentParams? = null,
     private val sessionSetupConfiguration: SessionSetupConfiguration? = null,
 ) :
-    PaymentComponentProvider<UpiComponent, UpiConfiguration, UpiComponentState>,
-    SessionPaymentComponentProvider<UpiComponent, UpiConfiguration, UpiComponentState> {
+    PaymentComponentProvider<UPIComponent, UPIConfiguration, UPIComponentState>,
+    SessionPaymentComponentProvider<UPIComponent, UPIConfiguration, UPIComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper()
 
@@ -62,12 +62,12 @@ class UpiComponentProvider(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: UpiConfiguration,
+        configuration: UPIConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<UpiComponentState>,
+        componentCallback: ComponentCallback<UPIComponentState>,
         order: Order?,
         key: String?
-    ): UpiComponent {
+    ): UPIComponent {
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
@@ -82,7 +82,7 @@ class UpiComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
 
-            val upiDelegate = DefaultUpiDelegate(
+            val upiDelegate = DefaultUPIDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsRepository = analyticsRepository,
                 observerRepository = PaymentObserverRepository(),
@@ -97,7 +97,7 @@ class UpiComponentProvider(
                 application = application,
             )
 
-            UpiComponent(
+            UPIComponent(
                 upiDelegate = upiDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, upiDelegate),
@@ -105,7 +105,7 @@ class UpiComponentProvider(
             )
         }
 
-        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, UpiComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, UPIComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -119,11 +119,11 @@ class UpiComponentProvider(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: UpiConfiguration,
+        configuration: UPIConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<UpiComponentState>,
+        componentCallback: SessionComponentCallback<UPIComponentState>,
         key: String?
-    ): UpiComponent {
+    ): UPIComponent {
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
@@ -138,7 +138,7 @@ class UpiComponentProvider(
                 analyticsMapper = AnalyticsMapper(),
             )
 
-            val upiDelegate = DefaultUpiDelegate(
+            val upiDelegate = DefaultUPIDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsRepository = analyticsRepository,
                 observerRepository = PaymentObserverRepository(),
@@ -168,12 +168,12 @@ class UpiComponentProvider(
             )
 
             val sessionComponentEventHandler =
-                SessionComponentEventHandler<UpiComponentState>(
+                SessionComponentEventHandler<UPIComponentState>(
                     sessionInteractor = sessionInteractor,
                     sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
                 )
 
-            UpiComponent(
+            UPIComponent(
                 upiDelegate = upiDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, upiDelegate),
@@ -181,7 +181,7 @@ class UpiComponentProvider(
             )
         }
 
-        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, UpiComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, UPIComponent::class.java]
             .also { component ->
                 component.observe(lifecycleOwner) {
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -196,6 +196,6 @@ class UpiComponentProvider(
     }
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
-        return UpiComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+        return UPIComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
     }
 }

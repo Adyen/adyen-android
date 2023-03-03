@@ -20,10 +20,10 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.upi.UpiComponentState
-import com.adyen.checkout.upi.UpiConfiguration
-import com.adyen.checkout.upi.internal.ui.model.UpiMode
-import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
+import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.UPIConfiguration
+import com.adyen.checkout.upi.internal.ui.model.UPIMode
+import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -45,14 +45,14 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultUpiDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<UpiComponentState>,
+internal class DefaultUPIDelegateTest(
+    @Mock private val submitHandler: SubmitHandler<UPIComponentState>,
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
-    private lateinit var delegate: DefaultUpiDelegate
+    private lateinit var delegate: DefaultUPIDelegate
 
-    private val configuration = UpiConfiguration.Builder(
+    private val configuration = UPIConfiguration.Builder(
         Locale.US,
         Environment.TEST,
         TEST_CLIENT_KEY
@@ -60,7 +60,7 @@ internal class DefaultUpiDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        delegate = createUpiDelegate()
+        delegate = createUPIDelegate()
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -80,7 +80,7 @@ internal class DefaultUpiDelegateTest(
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
             delegate.updateInputData {
-                mode = UpiMode.VPA
+                mode = UPIMode.VPA
                 virtualPaymentAddress = " "
             }
 
@@ -94,7 +94,7 @@ internal class DefaultUpiDelegateTest(
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
             delegate.updateInputData {
-                mode = UpiMode.VPA
+                mode = UPIMode.VPA
                 virtualPaymentAddress = "somevpa"
             }
 
@@ -108,7 +108,7 @@ internal class DefaultUpiDelegateTest(
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
             delegate.updateInputData {
-                mode = UpiMode.QR
+                mode = UPIMode.QR
                 virtualPaymentAddress = ""
             }
 
@@ -126,7 +126,7 @@ internal class DefaultUpiDelegateTest(
         fun `output is invalid, then component state should be invalid`() = runTest {
             val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
 
-            delegate.updateComponentState(UpiOutputData(UpiMode.VPA, ""))
+            delegate.updateComponentState(UPIOutputData(UPIMode.VPA, ""))
 
             with(componentStateTestFlow.latestValue) {
                 assertFalse(isInputValid)
@@ -138,7 +138,7 @@ internal class DefaultUpiDelegateTest(
         fun `mode is VPA and output is valid, then component state should be valid`() = runTest {
             val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
 
-            delegate.updateComponentState(UpiOutputData(UpiMode.VPA, "test"))
+            delegate.updateComponentState(UPIOutputData(UPIMode.VPA, "test"))
 
             with(componentStateTestFlow.latestValue) {
                 assertEquals("test", data.paymentMethod?.virtualPaymentAddress)
@@ -153,7 +153,7 @@ internal class DefaultUpiDelegateTest(
         fun `mode is QR and output is valid, then component state should be valid`() = runTest {
             val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
 
-            delegate.updateComponentState(UpiOutputData(UpiMode.QR, ""))
+            delegate.updateComponentState(UPIOutputData(UPIMode.QR, ""))
 
             with(componentStateTestFlow.latestValue) {
                 assertNull(data.paymentMethod?.virtualPaymentAddress)
@@ -192,9 +192,9 @@ internal class DefaultUpiDelegateTest(
         }
     }
 
-    private fun createUpiDelegate(
+    private fun createUPIDelegate(
         order: Order? = TEST_ORDER
-    ) = DefaultUpiDelegate(
+    ) = DefaultUPIDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),

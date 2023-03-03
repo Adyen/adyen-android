@@ -127,10 +127,10 @@ import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
-import com.adyen.checkout.upi.UpiComponent
-import com.adyen.checkout.upi.UpiComponentState
-import com.adyen.checkout.upi.UpiConfiguration
-import com.adyen.checkout.upi.internal.provider.UpiComponentProvider
+import com.adyen.checkout.upi.UPIComponent
+import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.UPIConfiguration
+import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
 import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
@@ -322,7 +322,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
-        UpiComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> UpiConfiguration.Builder(
+        UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> UPIConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
@@ -689,14 +689,14 @@ internal fun getComponentFor(
                 componentCallback = componentCallback as ComponentCallback<SevenElevenComponentState>,
             )
         }
-        UpiComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
-            val upiConfiguration: UpiConfiguration =
+        UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val upiConfiguration: UPIConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
-            UpiComponentProvider(dropInParams, sessionSetupConfiguration).get(
+            UPIComponentProvider(dropInParams, sessionSetupConfiguration).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = upiConfiguration,
-                componentCallback = componentCallback as ComponentCallback<UpiComponentState>,
+                componentCallback = componentCallback as ComponentCallback<UPIComponentState>,
             )
         }
         else -> {

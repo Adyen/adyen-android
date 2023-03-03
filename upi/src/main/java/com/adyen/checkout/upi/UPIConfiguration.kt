@@ -21,7 +21,7 @@ import java.util.Locale
 
 @Parcelize
 @Suppress("LongParameterList")
-class UpiConfiguration(
+class UPIConfiguration(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
@@ -32,10 +32,10 @@ class UpiConfiguration(
 ) : Configuration, ButtonConfiguration {
 
     /**
-     * Builder to create a [UpiConfiguration].
+     * Builder to create a [UPIConfiguration].
      */
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<UpiConfiguration, Builder>,
+        ActionHandlingPaymentMethodConfigurationBuilder<UPIConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
@@ -78,7 +78,7 @@ class UpiConfiguration(
             return this
         }
 
-        override fun buildInternal() = UpiConfiguration(
+        override fun buildInternal() = UPIConfiguration(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,

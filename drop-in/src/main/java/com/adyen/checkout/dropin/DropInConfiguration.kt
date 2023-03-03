@@ -37,7 +37,7 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
-import com.adyen.checkout.upi.UpiConfiguration
+import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
@@ -335,7 +335,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for UPI payment method.
          */
-        fun addUpiConfiguration(upiConfiguration: UpiConfiguration): Builder {
+        fun addUPIConfiguration(upiConfiguration: UPIConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
             return this
         }

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.upi.internal.ui.model
 
-internal enum class UpiMode {
+internal enum class UPIMode {
     VPA,
     QR,
 }

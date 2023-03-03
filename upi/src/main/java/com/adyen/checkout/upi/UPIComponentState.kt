@@ -10,10 +10,10 @@ package com.adyen.checkout.upi
 
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.UpiPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 
-data class UpiComponentState(
-    override val data: PaymentComponentData<UpiPaymentMethod>,
+data class UPIComponentState(
+    override val data: PaymentComponentData<UPIPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean
-) : PaymentComponentState<UpiPaymentMethod>
+) : PaymentComponentState<UPIPaymentMethod>

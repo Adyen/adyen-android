@@ -27,19 +27,19 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
-import com.adyen.checkout.upi.UpiComponent.Companion.PROVIDER
-import com.adyen.checkout.upi.internal.provider.UpiComponentProvider
-import com.adyen.checkout.upi.internal.ui.UpiDelegate
+import com.adyen.checkout.upi.UPIComponent.Companion.PROVIDER
+import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
+import com.adyen.checkout.upi.internal.ui.UPIDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
-class UpiComponent internal constructor(
-    private val upiDelegate: UpiDelegate,
+class UPIComponent internal constructor(
+    private val upiDelegate: UPIDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<UpiComponentState>,
+    internal val componentEventHandler: ComponentEventHandler<UPIComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -62,7 +62,7 @@ class UpiComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<UpiComponentState>) -> Unit
+        callback: (PaymentComponentEvent<UPIComponentState>) -> Unit
     ) {
         upiDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -80,7 +80,7 @@ class UpiComponent internal constructor(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? UpiDelegate)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? UPIDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
@@ -96,7 +96,7 @@ class UpiComponent internal constructor(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER = UpiComponentProvider()
+        val PROVIDER = UPIComponentProvider()
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(

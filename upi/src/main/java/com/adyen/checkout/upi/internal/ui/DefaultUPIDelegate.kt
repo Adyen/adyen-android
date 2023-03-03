@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
-import com.adyen.checkout.components.core.paymentmethod.UpiPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -26,39 +26,39 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.upi.UpiComponentState
-import com.adyen.checkout.upi.internal.ui.model.UpiInputData
-import com.adyen.checkout.upi.internal.ui.model.UpiMode
-import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
+import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.internal.ui.model.UPIInputData
+import com.adyen.checkout.upi.internal.ui.model.UPIMode
+import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-internal class DefaultUpiDelegate(
-    private val submitHandler: SubmitHandler<UpiComponentState>,
+internal class DefaultUPIDelegate(
+    private val submitHandler: SubmitHandler<UPIComponentState>,
     private val analyticsRepository: AnalyticsRepository,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
-) : UpiDelegate {
+) : UPIDelegate {
 
-    private val inputData = UpiInputData()
+    private val inputData = UPIInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<UpiOutputData> = _outputDataFlow
+    override val outputDataFlow: Flow<UPIOutputData> = _outputDataFlow
 
-    override val outputData: UpiOutputData get() = _outputDataFlow.value
+    override val outputData: UPIOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<UpiComponentState> = _componentStateFlow
+    override val componentStateFlow: Flow<UPIComponentState> = _componentStateFlow
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(UpiComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(UPIComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<UpiComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<UPIComponentState> = submitHandler.submitFlow
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -79,7 +79,7 @@ internal class DefaultUpiDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<UpiComponentState>) -> Unit
+        callback: (PaymentComponentEvent<UPIComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -95,7 +95,7 @@ internal class DefaultUpiDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun updateInputData(update: UpiInputData.() -> Unit) {
+    override fun updateInputData(update: UPIInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
     }
@@ -108,28 +108,28 @@ internal class DefaultUpiDelegate(
     }
 
     private fun createOutputData() = with(inputData) {
-        UpiOutputData(
+        UPIOutputData(
             mode = mode,
             virtualPaymentAddress = virtualPaymentAddress,
         )
     }
 
-    private fun outputDataChanged(outputData: UpiOutputData) {
+    private fun outputDataChanged(outputData: UPIOutputData) {
         _outputDataFlow.tryEmit(outputData)
     }
 
     @VisibleForTesting
-    internal fun updateComponentState(outputData: UpiOutputData) {
+    internal fun updateComponentState(outputData: UPIOutputData) {
         val componentState = createComponentState(outputData)
         componentStateChanged(componentState)
     }
 
     private fun createComponentState(
-        outputData: UpiOutputData = this.outputData
-    ): UpiComponentState {
-        val paymentMethod = UpiPaymentMethod(
-            type = if (outputData.mode == UpiMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
-            virtualPaymentAddress = if (outputData.mode == UpiMode.VPA) {
+        outputData: UPIOutputData = this.outputData
+    ): UPIComponentState {
+        val paymentMethod = UPIPaymentMethod(
+            type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
                 outputData.virtualPaymentAddressFieldState.value
             } else {
                 null
@@ -141,14 +141,14 @@ internal class DefaultUpiDelegate(
             order = order,
         )
 
-        return UpiComponentState(
+        return UPIComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true
         )
     }
 
-    private fun componentStateChanged(componentState: UpiComponentState) {
+    private fun componentStateChanged(componentState: UPIComponentState) {
         _componentStateFlow.tryEmit(componentState)
     }
 

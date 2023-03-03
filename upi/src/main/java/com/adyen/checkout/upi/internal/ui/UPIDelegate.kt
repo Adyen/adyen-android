@@ -12,24 +12,24 @@ import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.checkout.upi.UpiComponentState
-import com.adyen.checkout.upi.internal.ui.model.UpiInputData
-import com.adyen.checkout.upi.internal.ui.model.UpiOutputData
+import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.internal.ui.model.UPIInputData
+import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
 import kotlinx.coroutines.flow.Flow
 
-internal interface UpiDelegate :
-    PaymentComponentDelegate<UpiComponentState>,
+internal interface UPIDelegate :
+    PaymentComponentDelegate<UPIComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
 
-    val outputData: UpiOutputData
+    val outputData: UPIOutputData
 
-    val outputDataFlow: Flow<UpiOutputData>
+    val outputDataFlow: Flow<UPIOutputData>
 
-    val componentStateFlow: Flow<UpiComponentState>
+    val componentStateFlow: Flow<UPIComponentState>
 
-    fun updateInputData(update: UpiInputData.() -> Unit)
+    fun updateInputData(update: UPIInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

@@ -28,11 +28,11 @@ import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.databinding.UpiViewBinding
-import com.adyen.checkout.upi.internal.ui.UpiDelegate
-import com.adyen.checkout.upi.internal.ui.model.UpiMode
+import com.adyen.checkout.upi.internal.ui.UPIDelegate
+import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import kotlinx.coroutines.CoroutineScope
 
-internal class UpiView @JvmOverloads constructor(
+internal class UPIView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -41,7 +41,7 @@ internal class UpiView @JvmOverloads constructor(
 
     private val binding = UpiViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var delegate: UpiDelegate
+    private lateinit var delegate: UPIDelegate
 
     private lateinit var localizedContext: Context
 
@@ -53,7 +53,7 @@ internal class UpiView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is UpiDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        if (delegate !is UPIDelegate) throw IllegalArgumentException("Unsupported delegate type")
         this.delegate = delegate
         this.localizedContext = localizedContext
 
@@ -86,7 +86,7 @@ internal class UpiView @JvmOverloads constructor(
         )
     }
 
-    private fun initPicker(delegate: UpiDelegate) {
+    private fun initPicker(delegate: UPIDelegate) {
         binding.toggleButtonChoice.check(R.id.button_vpa)
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
@@ -98,7 +98,7 @@ internal class UpiView @JvmOverloads constructor(
                     if (isChecked) {
                         binding.editTextVpa.requestFocus()
                         binding.editTextVpa.showKeyboard()
-                        delegate.updateInputData { mode = UpiMode.VPA }
+                        delegate.updateInputData { mode = UPIMode.VPA }
                     }
                 }
                 R.id.button_qrCode -> {
@@ -109,14 +109,14 @@ internal class UpiView @JvmOverloads constructor(
                     if (isChecked) {
                         binding.editTextVpa.clearFocus()
                         hideKeyboard()
-                        delegate.updateInputData { mode = UpiMode.QR }
+                        delegate.updateInputData { mode = UPIMode.QR }
                     }
                 }
             }
         }
     }
 
-    private fun initVpaInput(delegate: UpiDelegate, localizedContext: Context) {
+    private fun initVpaInput(delegate: UPIDelegate, localizedContext: Context) {
         binding.editTextVpa.setOnChangeListener { editable ->
             delegate.updateInputData { virtualPaymentAddress = editable.toString() }
             binding.textInputLayoutVpa.hideError()

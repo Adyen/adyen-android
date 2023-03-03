@@ -15,9 +15,9 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
 import com.adyen.checkout.upi.R
-import com.adyen.checkout.upi.internal.ui.view.UpiView
+import com.adyen.checkout.upi.internal.ui.view.UPIView
 
-internal object UpiViewProvider : ViewProvider {
+internal object UPIViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
@@ -25,14 +25,14 @@ internal object UpiViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        UpiComponentViewType -> UpiView(context, attrs, defStyleAttr)
+        UPIComponentViewType -> UPIView(context, attrs, defStyleAttr)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
 
-internal object UpiComponentViewType : ButtonComponentViewType {
+internal object UPIComponentViewType : ButtonComponentViewType {
 
-    override val viewProvider: ViewProvider = UpiViewProvider
+    override val viewProvider: ViewProvider = UPIViewProvider
 
     override val buttonTextResId: Int = R.string.checkout_upi_continue
 }
