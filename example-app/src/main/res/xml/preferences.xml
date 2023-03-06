@@ -70,6 +70,13 @@
             app:useSimpleSummaryProvider="true" />
 
         <DropDownPreference
+            android:entries="@array/card_installment_options_mode_entries"
+            android:entryValues="@array/card_installment_options_mode_entry_values"
+            android:key="@string/card_installment_options_mode_key"
+            android:title="@string/card_installment_options_mode_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
             android:entries="@array/instant_payment_method_type_entries"
             android:entryValues="@array/instant_payment_method_type_values"
             android:key="@string/instant_payment_method_type_key"

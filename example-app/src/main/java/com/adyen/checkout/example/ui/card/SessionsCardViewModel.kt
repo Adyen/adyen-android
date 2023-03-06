@@ -21,6 +21,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
+import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
@@ -100,6 +101,7 @@ internal class SessionsCardViewModel @Inject constructor(
                     ?: throw IllegalStateException("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
             )
         ) ?: return null
 

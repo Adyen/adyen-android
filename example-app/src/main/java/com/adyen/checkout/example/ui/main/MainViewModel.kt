@@ -20,6 +20,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
+import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
@@ -138,7 +139,8 @@ internal class MainViewModel @Inject constructor(
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
                     ?: throw IllegalStateException("Return url should be set"),
-                shopperEmail = keyValueStorage.getShopperEmail()
+                shopperEmail = keyValueStorage.getShopperEmail(),
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
             )
         ) ?: return null
 

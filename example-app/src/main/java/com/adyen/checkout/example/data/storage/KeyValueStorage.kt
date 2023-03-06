@@ -28,6 +28,7 @@ interface KeyValueStorage {
     fun isSplitCardFundingSources(): Boolean
     fun isAddressFormEnabled(): Int
     fun getInstantPaymentMethodType(): String
+    fun getInstallmentOptionsMode(): Int
 }
 
 @Suppress("TooManyFunctions")
@@ -96,6 +97,14 @@ internal class DefaultKeyValueStorage(
         )
     }
 
+    override fun getInstallmentOptionsMode(): Int {
+        return sharedPreferences.get(
+            appContext,
+            R.string.card_installment_options_mode_key,
+            DEFAULT_INSTALLMENT_OPTIONS_MODE
+        ).toInt()
+    }
+
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
         private const val DEFAULT_LOCALE = "en-US"
@@ -105,6 +114,7 @@ internal class DefaultKeyValueStorage(
         private const val DEFAULT_EXECUTE_3D = false
         private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
         private const val DEFAULT_ENABLE_ADDRESS_FORM = "0"
+        private const val DEFAULT_INSTALLMENT_OPTIONS_MODE = "0"
         private const val DEFAULT_INSTANT_PAYMENT_METHOD = "paypal"
     }
 }

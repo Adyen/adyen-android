@@ -14,6 +14,8 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Installments
 
@@ -22,25 +24,25 @@ private const val REVOLVING_INSTALLMENT_VALUE = 1
 internal object InstallmentUtils {
 
     /**
-     * Create a list of installment options from [InstallmentConfiguration].
+     * Create a list of installment options from [InstallmentParams].
      */
     fun makeInstallmentOptions(
-        configuration: InstallmentConfiguration?,
+        params: InstallmentParams?,
         cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
-        val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
-        val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
+        val hasCardBasedInstallmentOptions = params?.cardBasedOptions != null
+        val hasDefaultInstallmentOptions = params?.defaultOptions != null
         val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
             isCardTypeReliable &&
-            (configuration?.cardBasedOptions?.any { it.cardBrand == cardBrand } ?: false)
+            (params?.cardBasedOptions?.any { it.cardBrand == cardBrand } ?: false)
 
         return when {
             hasOptionsForCardType -> {
-                makeInstallmentModelList(configuration?.cardBasedOptions?.firstOrNull { it.cardBrand == cardBrand })
+                makeInstallmentModelList(params?.cardBasedOptions?.firstOrNull { it.cardBrand == cardBrand })
             }
             hasDefaultInstallmentOptions -> {
-                makeInstallmentModelList(configuration?.defaultOptions)
+                makeInstallmentModelList(params?.defaultOptions)
             }
             else -> {
                 emptyList()
@@ -48,7 +50,7 @@ internal object InstallmentUtils {
         }
     }
 
-    private fun makeInstallmentModelList(installmentOptions: InstallmentOptions?): List<InstallmentModel> {
+    private fun makeInstallmentModelList(installmentOptions: InstallmentOptionParams?): List<InstallmentModel> {
         if (installmentOptions == null) return emptyList()
         val installmentOptionsList = mutableListOf<InstallmentModel>()
         val oneTimeOption = InstallmentModel(

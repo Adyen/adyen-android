@@ -20,6 +20,20 @@
         <item>"2"</item>
     </array>
 
+    <array name="card_installment_options_mode_entries" >
+        <item>"None"</item>
+        <item>"Default installment options"</item>
+        <item>"Default installment options with revolving"</item>
+        <item>"Card based installment options (VISA)"</item>
+    </array>
+
+    <array name="card_installment_options_mode_entry_values">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
+        <item>"3"</item>
+    </array>
+
     <array name="instant_payment_method_type_entries">
         <item>"Paypal"</item>
         <item>"Klarna"</item>

@@ -26,6 +26,7 @@ import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -382,7 +383,7 @@ internal class StoredCardDelegateTest(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper().mapToParamsStored(configuration),
+            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsStored(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,

@@ -35,13 +35,16 @@ import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
@@ -262,8 +265,11 @@ internal class DefaultCardDelegateTest(
                     assertEquals(addressInputModel.city, city.value)
                     assertEquals(addressInputModel.country, country.value)
                     assertEquals(expectedCountries, countryOptions)
-                    assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(
-                        TestAddressRepository.STATES))
+                    assertEquals(
+                        stateOptions, AddressFormUtils.initializeStateOptions(
+                            TestAddressRepository.STATES
+                        )
+                    )
                 }
             }
         }
@@ -524,6 +530,13 @@ internal class DefaultCardDelegateTest(
                     includeRevolving = true
                 )
             )
+            val expectedInstallmentParams = InstallmentParams(
+                InstallmentOptionParams.DefaultInstallmentOptions(
+                    values = listOf(2, 3),
+                    includeRevolving = true
+                )
+            )
+
             val addressConfiguration = AddressConfiguration.FullAddress()
             val addressParams = AddressParams.FullAddress(addressFieldPolicy = AddressFieldPolicyParams.Required)
 
@@ -600,7 +613,7 @@ internal class DefaultCardDelegateTest(
                 val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
 
                 val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
-                    installmentConfiguration,
+                    expectedInstallmentParams,
                     expectedDetectedCardTypes.first().cardBrand,
                     true
                 )
@@ -974,7 +987,10 @@ internal class DefaultCardDelegateTest(
             paymentMethod = paymentMethod,
             order = order,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper().mapToParamsDefault(configuration, paymentMethod),
+            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+                configuration,
+                paymentMethod
+            ),
             cardEncrypter = cardEncrypter,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,

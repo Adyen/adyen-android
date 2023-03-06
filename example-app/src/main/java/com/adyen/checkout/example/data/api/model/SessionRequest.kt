@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.data.api.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
 
 data class SessionRequest(
     val merchantAccount: String,
@@ -28,5 +29,6 @@ data class SessionRequest(
     val shopperEmail: String?,
     val allowedPaymentMethods: List<String>?,
     val storePaymentMethodMode: String?,
-    val recurringProcessingModel: String?
+    val recurringProcessingModel: String?,
+    val installmentOptions: Map<String, SessionSetupInstallmentOptions>?
 )
