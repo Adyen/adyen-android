@@ -97,6 +97,8 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return BlikPaymentMethod.SERIALIZER;
             case BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE:
                 return BacsDirectDebitPaymentMethod.SERIALIZER;
+            case CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE:
+                return CashAppPayPaymentMethod.SERIALIZER;
             default:
                 return GenericPaymentMethod.SERIALIZER;
         }

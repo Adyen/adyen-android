@@ -19,6 +19,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
@@ -419,6 +420,14 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Cash App Pay payment method.
+         */
+        fun addCashAppPayConfiguration(cashAppPayConfiguration: CashAppPayConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.CASH_APP_PAY] = cashAppPayConfiguration
             return this
         }
 

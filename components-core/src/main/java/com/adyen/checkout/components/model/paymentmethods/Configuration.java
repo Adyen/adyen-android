@@ -33,7 +33,9 @@ public class Configuration extends ModelObject {
     private static final String INTENT = "intent";
     // Card
     private static final String KOREAN_AUTHENTICATION_REQUIRED = "koreanAuthenticationRequired";
-
+    // Cash App Pay
+    private static final String CLIENT_ID = "clientId";
+    private static final String SCOPE_ID = "scopeId";
 
 
     @NonNull
@@ -47,6 +49,8 @@ public class Configuration extends ModelObject {
                 jsonObject.putOpt(GATEWAY_MERCHANT_ID, modelObject.getGatewayMerchantId());
                 jsonObject.putOpt(INTENT, modelObject.getIntent());
                 jsonObject.putOpt(KOREAN_AUTHENTICATION_REQUIRED, modelObject.getKoreanAuthenticationRequired());
+                jsonObject.putOpt(CLIENT_ID, modelObject.getClientId());
+                jsonObject.putOpt(SCOPE_ID, modelObject.getScopeId());
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethod.class, e);
             }
@@ -61,6 +65,8 @@ public class Configuration extends ModelObject {
             configuration.setGatewayMerchantId(jsonObject.optString(GATEWAY_MERCHANT_ID, null));
             configuration.setIntent(jsonObject.optString(INTENT, null));
             configuration.setKoreanAuthenticationRequired(jsonObject.optString(KOREAN_AUTHENTICATION_REQUIRED, null));
+            configuration.setClientId(jsonObject.optString(CLIENT_ID, null));
+            configuration.setScopeId(jsonObject.optString(SCOPE_ID, null));
             return configuration;
         }
     };
@@ -69,6 +75,8 @@ public class Configuration extends ModelObject {
     private String gatewayMerchantId;
     private String intent;
     private String koreanAuthenticationRequired;
+    private String clientId;
+    private String scopeId;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -95,6 +103,16 @@ public class Configuration extends ModelObject {
         return koreanAuthenticationRequired;
     }
 
+    @Nullable
+    public String getClientId() {
+        return clientId;
+    }
+
+    @Nullable
+    public String getScopeId() {
+        return scopeId;
+    }
+
     public void setMerchantId(@Nullable String merchantId) {
         this.merchantId = merchantId;
     }
@@ -109,5 +127,13 @@ public class Configuration extends ModelObject {
 
     public void setKoreanAuthenticationRequired(@Nullable String koreanAuthenticationRequired) {
         this.koreanAuthenticationRequired = koreanAuthenticationRequired;
+    }
+
+    public void setClientId(@Nullable String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setScopeId(@Nullable String scopeId) {
+        this.scopeId = scopeId;
     }
 }

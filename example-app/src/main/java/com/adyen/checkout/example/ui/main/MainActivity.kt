@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -37,6 +38,7 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -166,6 +168,10 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .build()
 
+        val cashAppPayConfiguration = CashAppPayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+            .setReturnUrl(RedirectComponent.getReturnUrl(applicationContext))
+            .build()
+
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             ExampleFullAsyncDropInService::class.java,
@@ -177,6 +183,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .add3ds2ActionConfiguration(adyen3DS2Configuration)
+            .addCashAppPayConfiguration(cashAppPayConfiguration)
             .setEnableRemovingStoredPaymentMethods(true)
 
         try {

@@ -30,6 +30,8 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
+import com.adyen.checkout.cashapppay.CashAppPayComponent
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
@@ -141,6 +143,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BCMC -> BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.CASH_APP_PAY -> CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -299,6 +302,11 @@ internal fun getComponentFor(
         PaymentMethodTypes.BLIK -> {
             val blikConfiguration: BlikConfiguration = getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK, dropInConfiguration, amount)
             BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
+        }
+        PaymentMethodTypes.CASH_APP_PAY -> {
+            val cashAppPayConfiguration: CashAppPayConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.CASH_APP_PAY, dropInConfiguration, amount)
+            CashAppPayComponent.PROVIDER.get(fragment, paymentMethod, cashAppPayConfiguration)
         }
         PaymentMethodTypes.DOTPAY -> {
             val dotpayConfig: DotpayConfiguration = getConfigurationForPaymentMethod(PaymentMethodTypes.DOTPAY, dropInConfiguration, amount)
@@ -480,6 +488,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is BcmcConfiguration -> BcmcConfiguration.Builder(this)
         is BlikConfiguration -> BlikConfiguration.Builder(this)
         is CardConfiguration -> CardConfiguration.Builder(this)
+        is CashAppPayConfiguration -> CashAppPayConfiguration.Builder(this)
         is DotpayConfiguration -> DotpayConfiguration.Builder(this)
         is DropInConfiguration -> DropInConfiguration.Builder(this)
         is EntercashConfiguration -> EntercashConfiguration.Builder(this)
