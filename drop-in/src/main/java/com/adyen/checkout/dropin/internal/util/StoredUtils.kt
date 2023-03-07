@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
+import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 
@@ -22,21 +23,30 @@ internal fun StoredPaymentMethod.mapStoredModel(
     return when (this.type) {
         PaymentMethodTypes.SCHEME -> with(this) {
             StoredCardModel(
-                id.orEmpty(),
-                brand.orEmpty(),
-                isRemovingEnabled,
-                lastFour.orEmpty(),
-                expiryMonth.orEmpty(),
-                expiryYear.orEmpty(),
-                environment,
+                id = id.orEmpty(),
+                imageId = brand.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                lastFour = lastFour.orEmpty(),
+                expiryMonth = expiryMonth.orEmpty(),
+                expiryYear = expiryYear.orEmpty(),
+                environment = environment,
+            )
+        }
+        PaymentMethodTypes.ACH -> with(this) {
+            StoredACHDirectDebitModel(
+                id = id.orEmpty(),
+                imageId = type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                lastFour = bankAccountNumber?.takeLast(LAST_FOUR_LENGTH) ?: "",
+                environment = environment,
             )
         }
         else -> GenericStoredModel(
-            id.orEmpty(),
-            type.orEmpty(),
-            isRemovingEnabled,
-            name.orEmpty(),
-            environment,
+            id = id.orEmpty(),
+            imageId = type.orEmpty(),
+            isRemovable = isRemovingEnabled,
+            name = name.orEmpty(),
+            environment = environment,
         )
     }
 }
@@ -47,3 +57,5 @@ internal fun StoredPaymentMethod.isStoredPaymentSupported(): Boolean {
         PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) &&
         isEcommerce
 }
+
+private const val LAST_FOUR_LENGTH = 4

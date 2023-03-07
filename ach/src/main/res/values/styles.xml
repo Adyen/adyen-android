@@ -34,4 +34,9 @@
         <item name="android:maxLength">9</item>
     </style>
 
+    <style name="AdyenCheckout.ACHDirectDebit.StorePaymentSwitch" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/checkout_ach_store_payment_method_switch_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Bankrekening</string>
     <string name="checkout_ach_bank_account_holder_name">Naam rekeninghouder</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Ongeldig rekeningnummer</string>
     <string name="checkout_ach_bank_account_location">Routingnummer (ABA)</string>
     <string name="checkout_ach_bank_account_location_invalid">Ongeldig routingnummer (ABA)</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Bewaar voor mijn volgende betaling</string>
 </resources>

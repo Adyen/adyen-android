@@ -35,6 +35,7 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Compani
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
+import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -105,6 +106,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                 when (model) {
                     is StoredCardModel -> bindStoredCard(model)
                     is GenericStoredModel -> bindGenericStored(model)
+                    is StoredACHDirectDebitModel -> bindStoredACHDirectDebit(model)
                 }
                 paymentMethodItemUnderlayButton.setOnClickListener {
                     showRemoveStoredPaymentDialog(
@@ -136,6 +138,19 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                     text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
                     isVisible = true
                 }
+                textViewAmount.isVisible = false
+            }
+        }
+
+        private fun bindStoredACHDirectDebit(model: StoredACHDirectDebitModel) {
+            with(binding) {
+                val context = root.context
+                textViewTitle.text = context.getString(R.string.checkout_ach_bank_account_number_4digit, model.lastFour)
+                imageViewLogo.loadLogo(
+                    environment = model.environment,
+                    txVariant = model.imageId,
+                )
+                textViewDetail.isVisible = false
                 textViewAmount.isVisible = false
             }
         }

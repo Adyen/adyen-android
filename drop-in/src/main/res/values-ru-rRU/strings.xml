@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">Разрешение не предоставлено</string>
     <string name="checkout_rationale_title_storage_permission">Запросить разрешение на сохранение</string>
     <string name="checkout_rationale_message_storage_permission">Для сохранения данного изображения на устройстве необходимо предоставить на это разрешение</string>
+    <string name="checkout_stored_payment_confirmation_message">Подтвердить оплату %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Отменить</string>
 </resources>

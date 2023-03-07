@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Bankkonto</string>
     <string name="checkout_ach_bank_account_holder_name">Kontohavers navn</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Ugyldigt kontonummer</string>
     <string name="checkout_ach_bank_account_location">ABA-registreringsnummer</string>
     <string name="checkout_ach_bank_account_location_invalid">Ugyldigt ABA-registreringsnummer</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Gem til min næste betaling</string>
 </resources>

@@ -166,6 +166,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     val environment = dropInConfiguration.environment
     val clientKey = dropInConfiguration.clientKey
     val builder: BaseConfigurationBuilder<*, *> = when {
+        ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) ->
+            ACHDirectDebitConfiguration.Builder(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
+            )
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -405,6 +411,17 @@ internal fun getComponentFor(
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     return when {
+        ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+            val achConfig: ACHDirectDebitConfiguration =
+                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
+            ACHDirectDebitComponentProvider(dropInParams, sessionSetupConfiguration).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                configuration = achConfig,
+                componentCallback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
+                key = storedPaymentMethod.id
+            )
+        }
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
@@ -413,6 +430,7 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
                 componentCallback = componentCallback as ComponentCallback<CardComponentState>,
+                key = storedPaymentMethod.id
             )
         }
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
@@ -423,6 +441,7 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
                 componentCallback = componentCallback as ComponentCallback<BlikComponentState>,
+                key = storedPaymentMethod.id
             )
         }
         else -> {

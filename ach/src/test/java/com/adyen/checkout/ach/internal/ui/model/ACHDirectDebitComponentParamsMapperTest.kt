@@ -13,6 +13,7 @@ import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -117,6 +118,81 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         assertEquals(expectedAddressParams, params.addressParams)
     }
 
+    @Test
+    fun `when the isStorePaymentFieldVisible  in configuration is false, isStorePaymentFieldVisible in component params should be false`() {
+        val achConfiguration = getAchConfigurationBuilder().apply {
+            setShowStorePaymentField(false)
+        }.build()
+
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+
+        val expected = getAchComponentParams(isStorePaymentFieldVisible = false)
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when the isStorePaymentFieldVisible  in configuration is true, isStorePaymentFieldVisible in component params should be true`() {
+        val achConfiguration = getAchConfigurationBuilder().apply {
+            setShowStorePaymentField(true)
+        }.build()
+
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+
+        val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when the enableStoreDetails in SessionSetupConfiguration is true, isStorePaymentFieldVisible in component params should be true`() {
+        val achConfiguration = getAchConfigurationBuilder().apply {
+            setShowStorePaymentField(false)
+        }.build()
+
+        val sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = true)
+
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
+            configuration = achConfiguration,
+            sessionSetupConfiguration = sessionSetupConfiguration
+        )
+
+        val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when the enableStoreDetails in SessionSetupConfiguration is false, isStorePaymentFieldVisible in component params should be false`() {
+        val achConfiguration = getAchConfigurationBuilder().apply {
+            setShowStorePaymentField(true)
+        }.build()
+
+        val sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = false)
+
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
+            configuration = achConfiguration,
+            sessionSetupConfiguration = sessionSetupConfiguration
+        )
+
+        val expected = getAchComponentParams(isStorePaymentFieldVisible = false)
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when isStorePaymentFieldVisible is not set, isStorePaymentFieldVisible should be true`() {
+        val achConfiguration = getAchConfigurationBuilder().build()
+
+        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
+            configuration = achConfiguration
+        )
+
+        val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
+
+        assertEquals(expected, params)
+    }
+
     private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
@@ -134,7 +210,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         addressParams: AddressParams = AddressParams.FullAddress(
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST,
             addressFieldPolicy = AddressFieldPolicyParams.Required
-        )
+        ),
+        isStorePaymentFieldVisible: Boolean = true
     ) = ACHDirectDebitComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -143,7 +220,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         isSubmitButtonVisible = isSubmitButtonVisible,
-        addressParams = addressParams
+        addressParams = addressParams,
+        isStorePaymentFieldVisible = isStorePaymentFieldVisible
     )
 
     companion object {

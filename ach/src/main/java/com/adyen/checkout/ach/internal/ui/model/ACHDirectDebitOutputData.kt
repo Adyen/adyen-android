@@ -18,7 +18,9 @@ internal data class ACHDirectDebitOutputData(
     var bankLocationId: FieldState<String>,
     var ownerName: FieldState<String>,
     val addressState: AddressOutputData,
-    val addressUIState: AddressFormUIState
+    val addressUIState: AddressFormUIState,
+    val isStoredPaymentMethodEnabled: Boolean,
+    val showStorePaymentField: Boolean,
 ) : OutputData {
 
     override val isValid: Boolean

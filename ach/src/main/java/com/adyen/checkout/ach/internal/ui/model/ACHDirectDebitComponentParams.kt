@@ -25,5 +25,6 @@ internal data class ACHDirectDebitComponentParams(
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean,
-    val addressParams: AddressParams
+    val addressParams: AddressParams,
+    val isStorePaymentFieldVisible: Boolean,
 ) : ComponentParams, ButtonParams

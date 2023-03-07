@@ -21,6 +21,7 @@ data class ACHDirectDebitPaymentMethod(
     var encryptedBankAccountNumber: String? = null,
     var encryptedBankLocationId: String? = null,
     var ownerName: String? = null,
+    var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -28,6 +29,7 @@ data class ACHDirectDebitPaymentMethod(
         private const val ENCRYPTED_BANK_ACCOUNT_NUMBER = "encryptedBankAccountNumber"
         private const val ENCRYPTED_BANK_LOCATION_ID = "encryptedBankLocationId"
         private const val OWNER_NAME = "ownerName"
+        private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
 
         @JvmField
         val SERIALIZER: Serializer<ACHDirectDebitPaymentMethod> = object : Serializer<ACHDirectDebitPaymentMethod> {
@@ -38,6 +40,7 @@ data class ACHDirectDebitPaymentMethod(
                         putOpt(ENCRYPTED_BANK_ACCOUNT_NUMBER, modelObject.encryptedBankAccountNumber)
                         putOpt(ENCRYPTED_BANK_LOCATION_ID, modelObject.encryptedBankLocationId)
                         putOpt(OWNER_NAME, modelObject.ownerName)
+                        putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ACHDirectDebitPaymentMethod::class.java, e)
@@ -50,6 +53,7 @@ data class ACHDirectDebitPaymentMethod(
                     encryptedBankAccountNumber = jsonObject.getStringOrNull(ENCRYPTED_BANK_ACCOUNT_NUMBER),
                     encryptedBankLocationId = jsonObject.getStringOrNull(ENCRYPTED_BANK_LOCATION_ID),
                     ownerName = jsonObject.getStringOrNull(OWNER_NAME),
+                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                 )
             }
         }

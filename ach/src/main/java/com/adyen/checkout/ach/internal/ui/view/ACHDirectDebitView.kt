@@ -63,6 +63,10 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
         initBankAccountNumber()
         initAbaRoutingNumber()
         initAccountHolderName()
+
+        binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
+            delegate.updateInputData { isStorePaymentSelected = isChecked }
+        }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -81,6 +85,10 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
             )
             textInputLayoutAbaRoutingNumber.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_AbaRoutingNumberInput,
+                localizedContext
+            )
+            switchStorePaymentMethod.setLocalizedTextFromStyle(
+                R.style.AdyenCheckout_ACHDirectDebit_StorePaymentSwitch,
                 localizedContext
             )
             addressFormInput.initLocalizedContext(localizedContext)
@@ -159,6 +167,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
 
     private fun outputDataChanged(achOutputData: ACHDirectDebitOutputData) {
         setAddressInputVisibility(achOutputData.addressUIState)
+        setStorePaymentSwitchVisibility(achOutputData.showStorePaymentField)
     }
 
     private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {
@@ -170,6 +179,10 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                 binding.addressFormInput.isVisible = false
             }
         }
+    }
+
+    private fun setStorePaymentSwitchVisibility(showStorePaymentField: Boolean) {
+        binding.switchStorePaymentMethod.isVisible = showStorePaymentField
     }
 
     override fun highlightValidationErrors() {

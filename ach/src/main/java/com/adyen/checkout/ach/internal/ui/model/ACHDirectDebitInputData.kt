@@ -16,4 +16,5 @@ internal data class ACHDirectDebitInputData(
     var bankLocationId: String = "",
     var ownerName: String = "",
     var address: AddressInputModel = AddressInputModel(),
+    var isStorePaymentSelected: Boolean = false,
 ) : InputData
