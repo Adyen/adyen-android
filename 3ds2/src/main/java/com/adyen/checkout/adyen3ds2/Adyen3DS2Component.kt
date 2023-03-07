@@ -325,7 +325,8 @@ class Adyen3DS2Component(
             acsSignedContent = challenge.acsSignedContent
             // This field was introduced in version 2.2.0 so older protocols don't expect it to be present and might throw an error.
             if (challenge.messageVersion != PROTOCOL_VERSION_2_1_0) {
-                threeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(getApplication())
+                threeDSRequestorAppURL = configuration.threeDSRequestorAppURL
+                    ?: ChallengeParameters.getEmbeddedRequestorAppURL(getApplication())
             }
         }
     }
