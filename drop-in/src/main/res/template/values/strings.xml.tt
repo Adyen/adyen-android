@@ -33,6 +33,8 @@
     <string name="checkout_permission_not_granted">%%runtimePermission.permissionDeniedMessage%%</string>
     <string name="checkout_rationale_title_storage_permission">%%storagePermission.rationaleTitle%%</string>
     <string name="checkout_rationale_message_storage_permission">%%storagePermission.rationaleMsg%%</string>
+    <string name="checkout_stored_payment_confirmation_message">%%oneClick.confirmationAlert.title%%</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">%%cancelButton%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

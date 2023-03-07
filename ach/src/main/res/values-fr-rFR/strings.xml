@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Compte bancaire</string>
     <string name="checkout_ach_bank_account_holder_name">Nom du titulaire du compte</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Numéro du compte incorrect</string>
     <string name="checkout_ach_bank_account_location">Code ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">Code ABA incorrect</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Sauvegarder pour mon prochain paiement</string>
 </resources>

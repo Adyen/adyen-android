@@ -11,8 +11,8 @@ package com.adyen.checkout.example.ui.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.SessionDropInResult
@@ -20,11 +20,12 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
+import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.model.SessionModel
-import com.adyen.checkout.sessions.provider.CheckoutSessionProvider
-import com.adyen.checkout.sessions.provider.CheckoutSessionResult
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.CheckoutSessionProvider
+import com.adyen.checkout.sessions.core.CheckoutSessionResult
+import com.adyen.checkout.sessions.core.SessionModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -138,7 +139,8 @@ internal class MainViewModel @Inject constructor(
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
                     ?: throw IllegalStateException("Return url should be set"),
-                shopperEmail = keyValueStorage.getShopperEmail()
+                shopperEmail = keyValueStorage.getShopperEmail(),
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
             )
         ) ?: return null
 

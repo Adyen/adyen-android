@@ -9,13 +9,13 @@
 package com.adyen.checkout.ach
 
 import android.content.Context
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.ButtonConfiguration
-import com.adyen.checkout.components.base.ButtonConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -34,6 +34,7 @@ class ACHDirectDebitConfiguration private constructor(
     override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
     val addressConfiguration: ACHDirectDebitAddressConfiguration?,
+    val isStorePaymentFieldVisible: Boolean?,
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
@@ -42,6 +43,7 @@ class ACHDirectDebitConfiguration private constructor(
 
         private var isSubmitButtonVisible: Boolean? = null
         private var addressConfiguration: ACHDirectDebitAddressConfiguration? = null
+        private var isStorePaymentFieldVisible: Boolean? = null
 
         /**
          * Constructor for Builder with default values.
@@ -94,6 +96,19 @@ class ACHDirectDebitConfiguration private constructor(
             return this
         }
 
+        /**
+         * Set if the option to store the ACH Direct Debit for future payments should be shown as an input field.
+         *
+         * Default is true.
+         *
+         * @param showStorePaymentField [Boolean]
+         * @return [ACHDirectDebitConfiguration.Builder]
+         */
+        fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
+            isStorePaymentFieldVisible = showStorePaymentField
+            return this
+        }
+
         override fun buildInternal(): ACHDirectDebitConfiguration {
             return ACHDirectDebitConfiguration(
                 shopperLocale = shopperLocale,
@@ -103,7 +118,8 @@ class ACHDirectDebitConfiguration private constructor(
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
-                addressConfiguration = addressConfiguration
+                addressConfiguration = addressConfiguration,
+                isStorePaymentFieldVisible = isStorePaymentFieldVisible
             )
         }
     }

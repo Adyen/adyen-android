@@ -8,13 +8,13 @@
 package com.adyen.checkout.blik
 
 import android.content.Context
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.ButtonConfiguration
-import com.adyen.checkout.components.base.ButtonConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

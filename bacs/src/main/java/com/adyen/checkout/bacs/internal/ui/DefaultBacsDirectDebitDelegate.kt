@@ -14,22 +14,22 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitInputData
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.base.ButtonComponentParams
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
-import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -201,7 +201,7 @@ internal class DefaultBacsDirectDebitDelegate(
         )
 
         return BacsDirectDebitComponentState(
-            paymentComponentData = paymentComponentData,
+            data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true,
             mode = outputData.mode

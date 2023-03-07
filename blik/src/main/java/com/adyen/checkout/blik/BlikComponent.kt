@@ -10,25 +10,25 @@ package com.adyen.checkout.blik
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.extensions.mergeViewFlows
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
-import com.adyen.checkout.components.toActionCallback
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
+import com.adyen.checkout.blik.internal.ui.BlikDelegate
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -38,7 +38,7 @@ class BlikComponent internal constructor(
     private val blikDelegate: BlikDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>,
+    internal val componentEventHandler: ComponentEventHandler<BlikComponentState>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -61,7 +61,7 @@ class BlikComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<BlikComponentState>) -> Unit
     ) {
         blikDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())

@@ -10,25 +10,24 @@ package com.adyen.checkout.bcmc.internal.ui
 
 import android.app.Application
 import app.cash.turbine.test
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.test.TestPublicKeyRepository
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -52,7 +51,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultBcmcDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>,
+    @Mock private val submitHandler: SubmitHandler<BcmcComponentState>,
     @Mock private val application: Application
 ) {
 

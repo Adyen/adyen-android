@@ -9,10 +9,10 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.components.base.GenericComponentParams
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

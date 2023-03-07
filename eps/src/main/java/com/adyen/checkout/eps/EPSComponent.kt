@@ -7,25 +7,25 @@
  */
 package com.adyen.checkout.eps
 
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 import com.adyen.checkout.eps.EPSComponent.Companion.PROVIDER
+import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EPSComponent internal constructor(
-    delegate: IssuerListDelegate<EPSPaymentMethod>,
+    delegate: IssuerListDelegate<EPSPaymentMethod, EPSComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<EPSPaymentMethod>>,
-) : IssuerListComponent<EPSPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<EPSComponentState>,
+) : IssuerListComponent<EPSPaymentMethod, EPSComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

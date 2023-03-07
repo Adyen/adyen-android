@@ -13,51 +13,54 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionComponentProvider
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.internal.data.api.BinLookupService
+import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
-import com.adyen.checkout.card.internal.data.api.BinLookupService
-import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
-import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.analytics.AnalyticsMapper
-import com.adyen.checkout.components.analytics.AnalyticsSource
-import com.adyen.checkout.components.analytics.DefaultAnalyticsRepository
-import com.adyen.checkout.components.api.AddressService
-import com.adyen.checkout.components.api.AnalyticsService
-import com.adyen.checkout.components.api.PublicKeyService
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.base.DefaultComponentEventHandler
-import com.adyen.checkout.components.base.lifecycle.get
-import com.adyen.checkout.components.base.lifecycle.viewModelFactory
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.repository.DefaultAddressRepository
-import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.core.api.HttpClientFactory
+import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
+import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
+import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.util.get
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.cse.DefaultCardEncrypter
-import com.adyen.checkout.cse.DefaultGenericEncrypter
-import com.adyen.checkout.sessions.CheckoutSession
-import com.adyen.checkout.sessions.SessionComponentCallback
-import com.adyen.checkout.sessions.SessionComponentEventHandler
-import com.adyen.checkout.sessions.SessionSavedStateHandleContainer
-import com.adyen.checkout.sessions.api.SessionService
-import com.adyen.checkout.sessions.interactor.SessionInteractor
-import com.adyen.checkout.sessions.model.setup.SessionSetupConfiguration
-import com.adyen.checkout.sessions.provider.SessionPaymentComponentProvider
-import com.adyen.checkout.sessions.provider.SessionStoredPaymentComponentProvider
-import com.adyen.checkout.sessions.repository.SessionRepository
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultCardEncrypter
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.SessionComponentCallback
+import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
+import com.adyen.checkout.sessions.core.internal.SessionInteractor
+import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.core.internal.data.api.SessionService
+import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.data.api.AddressService
+import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
@@ -69,7 +72,7 @@ class CardComponentProvider(
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
-    private val componentParamsMapper = CardComponentParamsMapper()
+    private val componentParamsMapper = CardComponentParamsMapper(InstallmentsParamsMapper())
 
     @Suppress("LongParameterList", "LongMethod")
     override fun get(
@@ -93,7 +96,9 @@ class CardComponentProvider(
                 sessionSetupConfiguration
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
@@ -169,7 +174,9 @@ class CardComponentProvider(
                 checkoutSession.sessionSetupResponse.configuration
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
             val binLookupService = BinLookupService(httpClient)
             val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
@@ -260,7 +267,9 @@ class CardComponentProvider(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsService = AnalyticsService(httpClient)
@@ -323,7 +332,9 @@ class CardComponentProvider(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val genericEncrypter = DefaultGenericEncrypter()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsService = AnalyticsService(httpClient)

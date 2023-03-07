@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AvailabilityResult
 import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParams
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcInputData
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
@@ -23,33 +24,31 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.util.CardValidationUtils
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
-import com.adyen.checkout.components.model.payments.request.Order
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -67,8 +66,8 @@ internal class DefaultBcmcDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: BcmcComponentParams,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: CardEncrypter,
-    private val submitHandler: SubmitHandler<PaymentComponentState<CardPaymentMethod>>,
+    private val cardEncrypter: BaseCardEncrypter,
+    private val submitHandler: SubmitHandler<BcmcComponentState>,
     private val application: Application
 ) : BcmcDelegate {
 
@@ -78,7 +77,7 @@ internal class DefaultBcmcDelegate(
     override val outputDataFlow: Flow<BcmcOutputData> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>> = _componentStateFlow
+    override val componentStateFlow: Flow<BcmcComponentState> = _componentStateFlow
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
@@ -88,7 +87,7 @@ internal class DefaultBcmcDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PaymentComponentState<CardPaymentMethod>> = submitHandler.submitFlow
+    override val submitFlow: Flow<BcmcComponentState> = submitHandler.submitFlow
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -166,7 +165,7 @@ internal class DefaultBcmcDelegate(
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<PaymentComponentState<CardPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<BcmcComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
@@ -232,7 +231,7 @@ internal class DefaultBcmcDelegate(
     @Suppress("ReturnCount")
     private fun createComponentState(
         outputData: BcmcOutputData = this.outputData
-    ): PaymentComponentState<CardPaymentMethod> {
+    ): BcmcComponentState {
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>(
             order = order,
         )
@@ -241,14 +240,14 @@ internal class DefaultBcmcDelegate(
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
-            return PaymentComponentState(
+            return BcmcComponentState(
                 data = PaymentComponentData(),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
             )
         }
 
-        val encryptedCard = encryptCardData(outputData, publicKey) ?: return PaymentComponentState(
+        val encryptedCard = encryptCardData(outputData, publicKey) ?: return BcmcComponentState(
             data = PaymentComponentData(),
             isInputValid = false,
             isReady = true,
@@ -273,7 +272,7 @@ internal class DefaultBcmcDelegate(
             delegatedAuthenticationData = this@DefaultBcmcDelegate.delegatedAuthenticationData
         }
 
-        return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+        return BcmcComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 
     override fun onSubmit() {
@@ -290,8 +289,10 @@ internal class DefaultBcmcDelegate(
 
         val expiryDateResult = outputData.expiryDateField.value
         if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
-            unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-            unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+            unencryptedCardBuilder.setExpiryDate(
+                expiryMonth = expiryDateResult.expiryMonth.toString(),
+                expiryYear = expiryDateResult.expiryYear.toString()
+            )
         }
 
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)

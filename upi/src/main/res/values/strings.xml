@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">Make a selection on how you would like to use UPI.</string>
+    <string name="checkout_upi_vpa_validation">Enter a correct virtual payment address</string>
+    <string name="checkout_upi_qr_generation">Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment.</string>
+    <string name="checkout_upi_continue">Continue</string>
+
+    <!-- Untranslatable strings -->
+    <string name="checkout_upi_vpa" translatable="false">VPA</string>
+    <string name="checkout_upi_vpa_full" translatable="false">Virtual Payment Address</string>
+    <string name="checkout_upi_qr_code" translatable="false">QR code</string>
+</resources>

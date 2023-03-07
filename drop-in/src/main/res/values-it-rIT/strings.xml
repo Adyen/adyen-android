@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">l\'autorizzazione non viene concessa</string>
     <string name="checkout_rationale_title_storage_permission">Richiedi il permesso di archiviazione</string>
     <string name="checkout_rationale_message_storage_permission">Per salvare l\'immagine sul tuo dispositivo, devi abilitare l\'autorizzazione all\'archiviazione</string>
+    <string name="checkout_stored_payment_confirmation_message">Conferma il pagamento di %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Annulla</string>
 </resources>

@@ -7,25 +7,25 @@
  */
 package com.adyen.checkout.entercash
 
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
 import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
+import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EntercashComponent internal constructor(
-    delegate: IssuerListDelegate<EntercashPaymentMethod>,
+    delegate: IssuerListDelegate<EntercashPaymentMethod, EntercashComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<EntercashPaymentMethod>>,
-) : IssuerListComponent<EntercashPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<EntercashComponentState>,
+) : IssuerListComponent<EntercashPaymentMethod, EntercashComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

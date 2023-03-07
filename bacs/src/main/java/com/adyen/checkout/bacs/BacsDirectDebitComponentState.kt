@@ -8,16 +8,16 @@
 
 package com.adyen.checkout.bacs
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 
-class BacsDirectDebitComponentState(
-    paymentComponentData: PaymentComponentData<BacsDirectDebitPaymentMethod>,
-    isInputValid: Boolean,
-    isReady: Boolean,
+data class BacsDirectDebitComponentState(
+    override val data: PaymentComponentData<BacsDirectDebitPaymentMethod>,
+    override val isInputValid: Boolean,
+    override val isReady: Boolean,
     val mode: BacsDirectDebitMode = BacsDirectDebitMode.INPUT,
-) : PaymentComponentState<BacsDirectDebitPaymentMethod>(paymentComponentData, isInputValid, isReady) {
+) : PaymentComponentState<BacsDirectDebitPaymentMethod> {
 
     override val isValid: Boolean
         get() = super.isValid && mode == BacsDirectDebitMode.CONFIRMATION

@@ -5,12 +5,16 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.card.CardType
+import com.adyen.checkout.card.InstallmentConfiguration
+import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -21,6 +25,7 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("TooManyFunctions")
 @Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
@@ -64,6 +69,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         CardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setAddressConfiguration(getAddressConfiguration())
+            .setInstallmentConfigurations(getInstallmentConfiguration())
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
@@ -106,6 +112,38 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     private fun getRedirectConfiguration(): RedirectConfiguration =
         RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             .build()
+
+    private fun getInstallmentConfiguration(): InstallmentConfiguration =
+        when (keyValueStorage.getInstallmentOptionsMode()) {
+            0 -> InstallmentConfiguration()
+            1 -> getDefaultInstallmentOptions()
+            2 -> getDefaultInstallmentOptions(includeRevolving = true)
+            else -> getCardBasedInstallmentOptions()
+        }
+
+    private fun getDefaultInstallmentOptions(
+        maxInstallments: Int = 3,
+        includeRevolving: Boolean = false
+    ) = InstallmentConfiguration(
+        InstallmentOptions.DefaultInstallmentOptions(
+            maxInstallments = maxInstallments,
+            includeRevolving = includeRevolving
+        )
+    )
+
+    private fun getCardBasedInstallmentOptions(
+        maxInstallments: Int = 3,
+        includeRevolving: Boolean = false,
+        cardBrand: CardBrand = CardBrand(CardType.VISA)
+    ) = InstallmentConfiguration(
+        cardBasedOptions = listOf(
+            InstallmentOptions.CardBasedInstallmentOptions(
+                maxInstallments = maxInstallments,
+                includeRevolving = includeRevolving,
+                cardBrand = cardBrand
+            )
+        )
+    )
 
     companion object {
         private val TAG = LogUtil.getTag()

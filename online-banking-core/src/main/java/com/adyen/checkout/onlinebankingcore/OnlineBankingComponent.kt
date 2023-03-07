@@ -11,31 +11,35 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.extensions.mergeViewFlows
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.toActionCallback
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
-abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod> protected constructor(
-    private val onlineBankingDelegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
+abstract class OnlineBankingComponent<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    ComponentStateT : PaymentComponentState<IssuerListPaymentMethodT>
+    > protected constructor(
+    private val onlineBankingDelegate: OnlineBankingDelegate<IssuerListPaymentMethodT, ComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
     @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<PaymentComponentState<IssuerListPaymentMethodT>>,
+    val componentEventHandler: ComponentEventHandler<ComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -59,7 +63,7 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<IssuerListPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
         onlineBankingDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -75,6 +79,11 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? OnlineBankingDelegate<*, *>)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {

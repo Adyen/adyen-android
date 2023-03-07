@@ -12,31 +12,35 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.extensions.mergeViewFlows
-import com.adyen.checkout.components.model.payments.request.EContextPaymentMethod
-import com.adyen.checkout.components.toActionCallback
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
-abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod> protected constructor(
-    private val eContextDelegate: EContextDelegate<EContextPaymentMethodT>,
+abstract class EContextComponent<
+    EContextPaymentMethodT : EContextPaymentMethod,
+    EContextComponentStateT : PaymentComponentState<EContextPaymentMethodT>
+    > protected constructor(
+    private val eContextDelegate: EContextDelegate<EContextPaymentMethodT, EContextComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
     @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<PaymentComponentState<EContextPaymentMethodT>>,
+    val componentEventHandler: ComponentEventHandler<EContextComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -59,7 +63,7 @@ abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod>
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<EContextPaymentMethodT>>) -> Unit
+        callback: (PaymentComponentEvent<EContextComponentStateT>) -> Unit
     ) {
         eContextDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
@@ -72,7 +76,7 @@ abstract class EContextComponent<EContextPaymentMethodT : EContextPaymentMethod>
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? EContextDelegate<*>)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? EContextDelegate<*, *>)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 

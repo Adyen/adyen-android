@@ -9,10 +9,10 @@
 package com.adyen.checkout.adyen3ds2.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.base.ActionDelegate
-import com.adyen.checkout.components.base.DetailsEmittingDelegate
-import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.threeds2.customization.UiCustomization
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

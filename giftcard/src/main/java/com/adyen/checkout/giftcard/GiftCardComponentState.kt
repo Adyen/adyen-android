@@ -8,18 +8,18 @@
 package com.adyen.checkout.giftcard
 
 import android.os.Parcelable
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import kotlinx.parcelize.Parcelize
 
 /**
  * PaymentComponentState for GiftCardComponent with additional data.
  */
 @Parcelize
-class GiftCardComponentState(
-    val paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
+data class GiftCardComponentState(
+    override val data: PaymentComponentData<GiftCardPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean,
     val lastFourDigits: String?
-) : PaymentComponentState<GiftCardPaymentMethod>(paymentComponentData, isInputValid, isReady), Parcelable
+) : PaymentComponentState<GiftCardPaymentMethod>, Parcelable

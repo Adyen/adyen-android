@@ -10,20 +10,20 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
-import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -38,6 +38,7 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
@@ -329,6 +330,22 @@ class DropInConfiguration private constructor(
          */
         fun addPayEasyConfiguration(payEasyConfiguration: PayEasyConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ATM] = payEasyConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for ACH Direct Debit payment method.
+         */
+        fun addAchDirectDebitConfiguration(achDirectDebitConfiguration: ACHDirectDebitConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ACH] = achDirectDebitConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for UPI payment method.
+         */
+        fun addUPIConfiguration(upiConfiguration: UPIConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
             return this
         }
 

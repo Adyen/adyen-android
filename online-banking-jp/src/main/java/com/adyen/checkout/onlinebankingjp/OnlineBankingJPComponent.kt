@@ -8,21 +8,21 @@
 
 package com.adyen.checkout.onlinebankingjp
 
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.OnlineBankingJPPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.EContextComponent
-import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 
 class OnlineBankingJPComponent internal constructor(
-    delegate: EContextDelegate<OnlineBankingJPPaymentMethod>,
+    delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<OnlineBankingJPPaymentMethod>>
-) : EContextComponent<OnlineBankingJPPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<OnlineBankingJPComponentState>
+) : EContextComponent<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

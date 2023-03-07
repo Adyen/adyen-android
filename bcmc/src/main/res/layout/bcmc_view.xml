@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.adyen.checkout.components.ui.view.RoundCornerImageView
+                <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView"
                     style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
                     android:layout_width="@dimen/brand_logo_width"
@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
             style="@style/AdyenCheckout.Card.HolderNameInput"
             android:nextFocusDown="@id/editText_postalCode"

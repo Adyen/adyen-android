@@ -36,34 +36,37 @@ import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.AddressListItem
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.AddressRepository
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.test.TestAddressRepository
-import com.adyen.checkout.components.test.TestPublicKeyRepository
-import com.adyen.checkout.components.ui.AddressFormUIState
-import com.adyen.checkout.components.ui.AddressInputModel
-import com.adyen.checkout.components.ui.AddressOutputData
-import com.adyen.checkout.components.ui.AddressParams
-import com.adyen.checkout.components.ui.ComponentMode
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.util.AddressFormUtils
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.GenericEncrypter
-import com.adyen.checkout.cse.test.TestCardEncrypter
-import com.adyen.checkout.cse.test.TestGenericEncrypter
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
+import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -266,7 +269,11 @@ internal class DefaultCardDelegateTest(
                     assertEquals(addressInputModel.city, city.value)
                     assertEquals(addressInputModel.country, country.value)
                     assertEquals(expectedCountries, countryOptions)
-                    assertEquals(stateOptions, AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES))
+                    assertEquals(
+                        stateOptions, AddressFormUtils.initializeStateOptions(
+                            TestAddressRepository.STATES
+                        )
+                    )
                 }
             }
         }
@@ -527,6 +534,13 @@ internal class DefaultCardDelegateTest(
                     includeRevolving = true
                 )
             )
+            val expectedInstallmentParams = InstallmentParams(
+                InstallmentOptionParams.DefaultInstallmentOptions(
+                    values = listOf(2, 3),
+                    includeRevolving = true
+                )
+            )
+
             val addressConfiguration = AddressConfiguration.FullAddress()
             val addressParams = AddressParams.FullAddress(addressFieldPolicy = AddressFieldPolicyParams.Required)
 
@@ -603,7 +617,7 @@ internal class DefaultCardDelegateTest(
                 val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
 
                 val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
-                    installmentConfiguration,
+                    expectedInstallmentParams,
                     expectedDetectedCardTypes.first().cardBrand,
                     true
                 )
@@ -964,8 +978,8 @@ internal class DefaultCardDelegateTest(
         addressRepository: AddressRepository = this.addressRepository,
         detectCardTypeRepository: DetectCardTypeRepository = this.detectCardTypeRepository,
         cardValidationMapper: CardValidationMapper = CardValidationMapper(),
-        cardEncrypter: CardEncrypter = this.cardEncrypter,
-        genericEncrypter: GenericEncrypter = this.genericEncrypter,
+        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
+        genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
@@ -978,7 +992,10 @@ internal class DefaultCardDelegateTest(
             paymentMethod = paymentMethod,
             order = order,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper().mapToParamsDefault(configuration, paymentMethod),
+            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+                configuration,
+                paymentMethod
+            ),
             cardEncrypter = cardEncrypter,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,

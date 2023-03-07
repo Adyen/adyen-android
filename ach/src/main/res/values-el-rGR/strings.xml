@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Τραπεζικός λογαριασμός</string>
     <string name="checkout_ach_bank_account_holder_name">Όνομα κατόχου λογαριασμού</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Μη έγκυρος αριθμός λογαριασμού</string>
     <string name="checkout_ach_bank_account_location">Αριθμός δρομολόγησης ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">Μη έγκυρος αριθμός δρομολόγησης ABA</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

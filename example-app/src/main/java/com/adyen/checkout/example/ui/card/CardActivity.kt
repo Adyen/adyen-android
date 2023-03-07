@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent

@@ -15,7 +15,6 @@ import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AvailabilityResult
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
@@ -28,6 +27,7 @@ import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
@@ -35,42 +35,42 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.components.model.AddressListItem
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.AddressRepository
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.AddressFormUIState
-import com.adyen.checkout.components.ui.AddressInputModel
-import com.adyen.checkout.components.ui.AddressOutputData
-import com.adyen.checkout.components.ui.AddressParams
-import com.adyen.checkout.components.ui.ComponentMode
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.PaymentComponentUIEvent
-import com.adyen.checkout.components.ui.PaymentComponentUIState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.util.AddressFormUtils
-import com.adyen.checkout.components.ui.util.AddressValidationUtils
-import com.adyen.checkout.components.ui.view.ButtonComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.GenericEncrypter
+import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
+import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -96,8 +96,8 @@ internal class DefaultCardDelegate(
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: CardEncrypter,
-    private val genericEncrypter: GenericEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
+    private val genericEncrypter: BaseGenericEncrypter,
     private val submitHandler: SubmitHandler<CardComponentState>,
     private val application: Application
 ) : CardDelegate {
@@ -378,7 +378,7 @@ internal class DefaultCardDelegate(
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
             installmentOptions = getInstallmentOptions(
-                installmentConfiguration = componentParams.installmentConfiguration,
+                installmentParams = componentParams.installmentParams,
                 cardBrand = selectedOrFirstCardType?.cardBrand,
                 isCardTypeReliable = isReliable
             ),
@@ -428,7 +428,7 @@ internal class DefaultCardDelegate(
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
             return CardComponentState(
-                paymentComponentData = PaymentComponentData(),
+                data = PaymentComponentData(),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
                 cardBrand = firstCardBrand,
@@ -447,8 +447,10 @@ internal class DefaultCardDelegate(
             }
             val expiryDateResult = outputData.expiryDateState.value
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
-                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+                unencryptedCardBuilder.setExpiryDate(
+                    expiryMonth = expiryDateResult.expiryMonth.toString(),
+                    expiryYear = expiryDateResult.expiryYear.toString()
+                )
             }
 
             cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
@@ -456,7 +458,7 @@ internal class DefaultCardDelegate(
             exceptionChannel.trySend(e)
 
             return CardComponentState(
-                paymentComponentData = PaymentComponentData(),
+                data = PaymentComponentData(),
                 isInputValid = false,
                 isReady = true,
                 cardBrand = firstCardBrand,
@@ -599,7 +601,7 @@ internal class DefaultCardDelegate(
     }
 
     private fun getInstallmentOptions(
-        installmentConfiguration: InstallmentConfiguration?,
+        installmentParams: InstallmentParams?,
         cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
@@ -607,7 +609,7 @@ internal class DefaultCardDelegate(
         return if (isDebit) {
             emptyList()
         } else {
-            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardBrand, isCardTypeReliable)
+            InstallmentUtils.makeInstallmentOptions(installmentParams, cardBrand, isCardTypeReliable)
         }
     }
 
@@ -704,7 +706,7 @@ internal class DefaultCardDelegate(
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
         return CardComponentState(
-            paymentComponentData = paymentComponentData,
+            data = paymentComponentData,
             isInputValid = true,
             isReady = true,
             cardBrand = firstCardBrand,

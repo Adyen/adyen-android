@@ -16,19 +16,17 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/AdyenCheckout.QrCode.Logo"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_placeholder_image"
-        tools:ignore="RequiredSize" />
+        tools:ignore="ContentDescription,RequiredSize" />
 
     <TextView
         android:id="@+id/textView_top_label"
         style="@style/AdyenCheckout.TextAppearance.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/standard_margin"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/standard_margin"
         android:gravity="center"
         android:textIsSelectable="false"
         tools:text="@string/checkout_qr_code_pay_now" />
@@ -46,8 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/standard_margin"
-        android:gravity="center"
         android:textIsSelectable="false"
         tools:text="$ 700,000,00" />
 
@@ -55,9 +51,7 @@
         android:id="@+id/progress_indicator"
         style="@style/AdyenCheckout.QrCode.ProgressIndicator"
         android:layout_gravity="center_horizontal"
-        android:layout_marginHorizontal="@dimen/standard_margin"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:gravity="center" />
+        android:layout_marginTop="@dimen/standard_margin" />
 
     <TextView
         android:id="@+id/textView_timer"
@@ -65,16 +59,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginHorizontal="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_three_quarters_margin"
         android:layout_marginBottom="@dimen/standard_margin"
-        android:gravity="center"
         android:textIsSelectable="false"
         tools:text="This QR code is valid for 01:46" />
 
+    <!-- Reset margin to null, because the parent view already adds margin -->
     <Button
         android:id="@+id/button_saveImage"
-        style="@style/AdyenCheckout.QrCode.SaveButton" />
+        style="@style/AdyenCheckout.QrCode.SaveButton"
+        android:layout_marginStart="@null"
+        android:layout_marginEnd="@null" />
 
 </merge>
 

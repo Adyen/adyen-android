@@ -8,20 +8,19 @@
 
 package com.adyen.checkout.bcmc.internal.ui
 
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParams
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcInputData
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BcmcDelegate :
-    PaymentComponentDelegate<PaymentComponentState<CardPaymentMethod>>,
+    PaymentComponentDelegate<BcmcComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
@@ -32,7 +31,7 @@ internal interface BcmcDelegate :
 
     val outputDataFlow: Flow<BcmcOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>>
+    val componentStateFlow: Flow<BcmcComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
 

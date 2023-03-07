@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.example.data.api
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.sessions.model.SessionModel
+import com.adyen.checkout.sessions.core.SessionModel
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body

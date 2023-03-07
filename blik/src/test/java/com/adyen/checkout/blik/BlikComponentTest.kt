@@ -11,16 +11,16 @@ package com.adyen.checkout.blik
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
-import com.adyen.checkout.components.test.TestComponentViewType
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.blik.internal.ui.BlikComponentViewType
+import com.adyen.checkout.blik.internal.ui.BlikDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -44,7 +44,7 @@ internal class BlikComponentTest(
     @Mock private val blikDelegate: BlikDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<BlikPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<BlikComponentState>,
 ) {
 
     private lateinit var component: BlikComponent
@@ -82,7 +82,7 @@ internal class BlikComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<BlikPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<BlikComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

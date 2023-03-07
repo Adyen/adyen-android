@@ -15,12 +15,12 @@ import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.components.channel.bufferedChannel
-import com.adyen.checkout.core.encryption.Sha256
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.runSuspendCatching
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.internal.util.Sha256
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 internal class DefaultDetectCardTypeRepository(
-    private val cardEncrypter: CardEncrypter,
+    private val cardEncrypter: BaseCardEncrypter,
     private val binLookupService: BinLookupService,
 ) : DetectCardTypeRepository {
 

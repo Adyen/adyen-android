@@ -9,14 +9,13 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.components.base.ButtonParams
-import com.adyen.checkout.components.base.ComponentParams
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.ui.AddressParams
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -37,6 +36,6 @@ internal data class CardComponentParams(
     val isHideCvcStoredCard: Boolean,
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
     val kcpAuthVisibility: KCPAuthVisibility,
-    val installmentConfiguration: InstallmentConfiguration?,
+    val installmentParams: InstallmentParams?,
     val addressParams: AddressParams,
 ) : ComponentParams, ButtonParams

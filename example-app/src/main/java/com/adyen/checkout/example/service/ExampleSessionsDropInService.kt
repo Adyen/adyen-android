@@ -8,17 +8,17 @@
 
 package com.adyen.checkout.example.service
 
+import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.model.toStringPretty
-import com.adyen.checkout.dropin.service.DropInServiceResult
-import com.adyen.checkout.dropin.service.SessionDropInService
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.internal.data.model.toStringPretty
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.DropInServiceResult
+import com.adyen.checkout.dropin.SessionDropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
@@ -46,7 +46,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
         state: PaymentComponentState<*>,
     ): Boolean {
         return if (
-            state.data.paymentMethod is BlikPaymentMethod ||
+            state is BlikComponentState ||
             state is CardComponentState
         ) {
             launch(Dispatchers.IO) {

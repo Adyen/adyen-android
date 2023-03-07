@@ -12,15 +12,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentCallback
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.util.CheckoutCurrency
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.blik.BlikComponentState
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.internal.util.CheckoutCurrency
+import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -43,7 +43,7 @@ class BlikViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel(), ComponentCallback<PaymentComponentState<BlikPaymentMethod>> {
+) : ViewModel(), ComponentCallback<BlikComponentState> {
 
     private val _blikViewState = MutableStateFlow<BlikViewState>(BlikViewState.Loading)
     val blikViewState = _blikViewState.asStateFlow()
@@ -88,7 +88,7 @@ class BlikViewModel @Inject constructor(
         }
     }
 
-    override fun onSubmit(state: PaymentComponentState<BlikPaymentMethod>) {
+    override fun onSubmit(state: BlikComponentState) {
         makePayment(state.data)
     }
 

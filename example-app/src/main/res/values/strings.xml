@@ -44,6 +44,8 @@
     <string name="split_card_funding_sources_key">split_card_funding_sources</string>
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
     <string name="enable_card_address_form_key">enable_card_address_form</string>
+    <string name="card_installment_options_mode_title">Card installment options type</string>
+    <string name="card_installment_options_mode_key">card_installment_options_mode_key</string>
     <string name="enable_card_address_form_title">Enable card address form</string>
     <string name="instant_payment_method_type_key">instant_payment_method_type</string>
     <string name="instant_payment_method_type_title">Instant Payment Method Type</string>

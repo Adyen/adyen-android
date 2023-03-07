@@ -12,21 +12,23 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.base.ActivityResultHandlingComponent
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.toActionCallback
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ActivityResultHandlingComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
+import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 /**

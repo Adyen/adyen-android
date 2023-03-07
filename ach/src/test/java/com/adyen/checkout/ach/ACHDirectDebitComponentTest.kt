@@ -10,15 +10,15 @@ package com.adyen.checkout.ach
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.ACHDirectDebitPaymentMethod
-import com.adyen.checkout.components.test.TestComponentViewType
+import com.adyen.checkout.ach.internal.ui.ACHDirectDebitComponentViewType
+import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -43,7 +43,7 @@ internal class ACHDirectDebitComponentTest(
     @Mock private val achDelegate: ACHDirectDebitDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<PaymentComponentState<ACHDirectDebitPaymentMethod>>,
+    @Mock private val componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
 ) {
 
     private lateinit var component: ACHDirectDebitComponent
@@ -80,7 +80,7 @@ internal class ACHDirectDebitComponentTest(
     @Test
     fun `when observe is called then observe in delegates is called`() {
         val lifecycleOwner = mock<LifecycleOwner>()
-        val callback: (PaymentComponentEvent<PaymentComponentState<ACHDirectDebitPaymentMethod>>) -> Unit = {}
+        val callback: (PaymentComponentEvent<ACHDirectDebitComponentState>) -> Unit = {}
 
         component.observe(lifecycleOwner, callback)
 

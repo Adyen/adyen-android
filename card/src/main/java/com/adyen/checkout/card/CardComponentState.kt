@@ -7,18 +7,18 @@
  */
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 
 /**
  * PaymentComponentState for CardComponent with additional data.
  */
-class CardComponentState(
-    paymentComponentData: PaymentComponentData<CardPaymentMethod>,
-    isInputValid: Boolean,
-    isReady: Boolean,
+data class CardComponentState(
+    override val data: PaymentComponentData<CardPaymentMethod>,
+    override val isInputValid: Boolean,
+    override val isReady: Boolean,
     val cardBrand: CardBrand?,
     val binValue: String,
     val lastFourDigits: String?,
-) : PaymentComponentState<CardPaymentMethod>(paymentComponentData, isInputValid, isReady)
+) : PaymentComponentState<CardPaymentMethod>

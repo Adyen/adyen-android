@@ -27,27 +27,28 @@ import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.analytics.AnalyticsRepository
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.repository.PaymentObserverRepository
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.test.TestPublicKeyRepository
-import com.adyen.checkout.components.ui.AddressFormUIState
-import com.adyen.checkout.components.ui.AddressInputModel
-import com.adyen.checkout.components.ui.AddressOutputData
-import com.adyen.checkout.components.ui.ComponentMode
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.SubmitHandler
-import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.util.AddressValidationUtils
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.test.TestCardEncrypter
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -375,7 +376,7 @@ internal class StoredCardDelegateTest(
 
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
-        cardEncrypter: CardEncrypter = this.cardEncrypter,
+        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
@@ -387,7 +388,7 @@ internal class StoredCardDelegateTest(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper().mapToParamsStored(configuration),
+            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsStored(configuration),
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,

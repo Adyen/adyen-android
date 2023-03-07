@@ -11,11 +11,11 @@ package com.adyen.checkout.card.internal.ui
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.components.base.PaymentComponentDelegate
-import com.adyen.checkout.components.ui.AddressDelegate
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.UIStateDelegate
-import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 

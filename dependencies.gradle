@@ -19,10 +19,10 @@ ext {
     version_name = "4.10.0"
 
     // Build Script
-    android_gradle_plugin_version = '7.4.1'
+    android_gradle_plugin_version = '7.4.2'
     kotlin_version = '1.8.10'
     detekt_gradle_plugin_version = "1.22.0"
-    dokka_version = "1.7.20"
+    dokka_version = "1.8.10"
     hilt_version = "2.45"
 
     // Code quality
@@ -30,7 +30,7 @@ ext {
     ktlint_version = '0.48.2'
 
     // Android Dependencies
-    annotation_version = "1.5.0"
+    annotation_version = "1.6.0"
     appcompat_version = "1.6.1"
     browser_version = "1.5.0"
     coroutines_version = "1.6.4"
@@ -58,9 +58,9 @@ ext {
     retrofit2_version = '2.9.0'
 
     // Tests
-    arch_core_testing_version = "2.1.0"
+    arch_core_testing_version = "2.2.0"
     espresso_version = "3.5.0"
-    json_version = '20220924'
+    json_version = '20230227'
     junit_version = '4.13.2'
     junit_jupiter_version = "5.9.1"
     mockito_kotlin_version = "4.1.0"

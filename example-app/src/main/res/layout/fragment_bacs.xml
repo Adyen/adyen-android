@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenComponentView
+        <com.adyen.checkout.ui.core.AdyenComponentView
             android:id="@+id/component_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

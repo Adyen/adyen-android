@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Bank account</string>
     <string name="checkout_ach_bank_account_holder_name">Account holder name</string>
@@ -15,4 +14,8 @@
     <string name="checkout_ach_bank_account_number_invalid">Invalid account number</string>
     <string name="checkout_ach_bank_account_location">ABA routing number</string>
     <string name="checkout_ach_bank_account_location_invalid">Invalid ABA routing number</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Save for my next payment</string>
+
+    <!-- Untranslatable strings -->
+    <string name="checkout_ach_bank_account_number_4digit" translatable="false">•••• %s</string>
 </resources>

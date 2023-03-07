@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
@@ -17,7 +17,7 @@ import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.sessions.model.SessionModel
+import com.adyen.checkout.sessions.core.SessionModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject

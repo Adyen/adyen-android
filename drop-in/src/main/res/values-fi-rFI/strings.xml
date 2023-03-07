@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">Lupaa ei myönnetty</string>
     <string name="checkout_rationale_title_storage_permission">Pyydä tallennuslupaa</string>
     <string name="checkout_rationale_message_storage_permission">Sinun on otettava käyttöön tallennusoikeus tallentaaksesi tämän kuvan laitteeseesi</string>
+    <string name="checkout_stored_payment_confirmation_message">Vahvista %s maksu</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Peruuta</string>
 </resources>

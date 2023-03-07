@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.giftcard.ui.GiftCardNumberInput
+        <com.adyen.checkout.giftcard.internal.ui.view.GiftCardNumberInput
             android:id="@+id/editText_giftcardNumber"
             style="@style/AdyenCheckout.GiftCard.GiftCardNumberInput"
             tools:ignore="RequiredSize" />
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_giftcardPin"
             style="@style/AdyenCheckout.GiftCard.GiftCardPinInput"
             tools:ignore="RequiredSize" />

@@ -33,4 +33,6 @@
     <string name="checkout_permission_not_granted">未授予权限</string>
     <string name="checkout_rationale_title_storage_permission">请求存储权限</string>
     <string name="checkout_rationale_message_storage_permission">要将此图片保存到设备，您需要启用存储权限</string>
+    <string name="checkout_stored_payment_confirmation_message">确认 %s 支付</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
 </resources>

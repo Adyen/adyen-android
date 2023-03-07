@@ -6,7 +6,6 @@
   ~ Created by onurk on 17/01/2023.
   -->
 
-
 <resources>
     <string name="checkout_ach_bank_account_title">Банковский счет</string>
     <string name="checkout_ach_bank_account_holder_name">Имя владельца карты</string>
@@ -15,4 +14,5 @@
     <string name="checkout_ach_bank_account_number_invalid">Недействительный номер счета</string>
     <string name="checkout_ach_bank_account_location">Маршрутный номер ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">Недействительный маршрутный номер ABA</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Сохранить для следующего платежа</string>
 </resources>

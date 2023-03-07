@@ -8,19 +8,19 @@
 
 package com.adyen.checkout.issuerlist.utils
 
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.TestIssuerComponentState
+import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 internal class TestIssuerListComponent internal constructor(
-    delegate: IssuerListDelegate<TestIssuerPaymentMethod>,
+    delegate: IssuerListDelegate<TestIssuerPaymentMethod, TestIssuerComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<TestIssuerPaymentMethod>>,
-) : IssuerListComponent<TestIssuerPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<TestIssuerComponentState>,
+) : IssuerListComponent<TestIssuerPaymentMethod, TestIssuerComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

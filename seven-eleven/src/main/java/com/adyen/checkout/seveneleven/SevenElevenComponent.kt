@@ -8,21 +8,21 @@
 
 package com.adyen.checkout.seveneleven
 
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.model.payments.request.SevenElevenPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.econtext.EContextComponent
-import com.adyen.checkout.econtext.EContextDelegate
+import com.adyen.checkout.econtext.internal.ui.EContextDelegate
+import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 
 class SevenElevenComponent internal constructor(
-    delegate: EContextDelegate<SevenElevenPaymentMethod>,
+    delegate: EContextDelegate<SevenElevenPaymentMethod, SevenElevenComponentState>,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,
-    componentEventHandler: ComponentEventHandler<PaymentComponentState<SevenElevenPaymentMethod>>
-) : EContextComponent<SevenElevenPaymentMethod>(
+    componentEventHandler: ComponentEventHandler<SevenElevenComponentState>
+) : EContextComponent<SevenElevenPaymentMethod, SevenElevenComponentState>(
     delegate,
     genericActionDelegate,
     actionHandlingComponent,

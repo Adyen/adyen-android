@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.google.android.gms.wallet.PaymentData
 
-class GooglePayComponentState(
-    paymentComponentData: PaymentComponentData<GooglePayPaymentMethod>,
-    isInputValid: Boolean,
-    isReady: Boolean,
+data class GooglePayComponentState(
+    override val data: PaymentComponentData<GooglePayPaymentMethod>,
+    override val isInputValid: Boolean,
+    override val isReady: Boolean,
     val paymentData: PaymentData?,
-) : PaymentComponentState<GooglePayPaymentMethod>(paymentComponentData, isInputValid, isReady)
+) : PaymentComponentState<GooglePayPaymentMethod>

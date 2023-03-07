@@ -9,12 +9,12 @@ package com.adyen.checkout.issuerlist
 
 import android.content.Context
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.ButtonConfiguration
-import com.adyen.checkout.components.base.ButtonConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
 import java.util.Locale
 
 abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {

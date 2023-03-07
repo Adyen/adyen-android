@@ -10,16 +10,13 @@
 package com.adyen.checkout.googlepay
 
 import android.content.Context
-import com.adyen.checkout.action.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.googlepay.model.BillingAddressParameters
-import com.adyen.checkout.googlepay.model.MerchantInfo
-import com.adyen.checkout.googlepay.model.ShippingAddressParameters
 import com.google.android.gms.wallet.WalletConstants
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

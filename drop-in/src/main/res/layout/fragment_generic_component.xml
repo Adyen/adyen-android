@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.adyen.checkout.components.ui.view.AdyenComponentView
+            <com.adyen.checkout.ui.core.AdyenComponentView
                 android:id="@+id/componentView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

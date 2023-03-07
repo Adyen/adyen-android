@@ -9,7 +9,7 @@
 package com.adyen.checkout.bacs.internal.ui.model
 
 import com.adyen.checkout.bacs.BacsDirectDebitMode
-import com.adyen.checkout.components.base.InputData
+import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class BacsDirectDebitInputData(
     var holderName: String = "",

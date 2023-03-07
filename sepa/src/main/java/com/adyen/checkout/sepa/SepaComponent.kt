@@ -10,27 +10,25 @@ package com.adyen.checkout.sepa
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.ActionHandlingComponent
-import com.adyen.checkout.action.DefaultActionHandlingComponent
-import com.adyen.checkout.action.GenericActionDelegate
-import com.adyen.checkout.components.ButtonComponent
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentEvent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.base.ComponentEventHandler
-import com.adyen.checkout.components.extensions.mergeViewFlows
-import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
-import com.adyen.checkout.components.toActionCallback
-import com.adyen.checkout.components.ui.ButtonDelegate
-import com.adyen.checkout.components.ui.ViewableComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.internal.ui.SepaDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -40,7 +38,7 @@ class SepaComponent internal constructor(
     private val sepaDelegate: SepaDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    internal val componentEventHandler: ComponentEventHandler<PaymentComponentState<SepaPaymentMethod>>
+    internal val componentEventHandler: ComponentEventHandler<SepaComponentState>
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -63,7 +61,7 @@ class SepaComponent internal constructor(
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
-        callback: (PaymentComponentEvent<PaymentComponentState<SepaPaymentMethod>>) -> Unit
+        callback: (PaymentComponentEvent<SepaComponentState>) -> Unit
     ) {
         sepaDelegate.observe(lifecycleOwner, viewModelScope, callback)
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
