@@ -193,12 +193,14 @@ public abstract class BasePaymentComponent<
      */
     protected void notifyStateChanged(@NonNull OutputDataT outputData) {
         Logger.d(TAG, "notifyStateChanged with OutputData");
-        if (!outputData.equals(mOutputLiveData.getValue())) {
-            mOutputLiveData.setValue(outputData);
-            notifyStateChanged();
-        } else {
-            Logger.d(TAG, "state has not changed");
-        }
+        ThreadManager.MAIN_HANDLER.post(() -> {
+            if (!outputData.equals(mOutputLiveData.getValue())) {
+                mOutputLiveData.setValue(outputData);
+                notifyStateChanged();
+            } else {
+                Logger.d(TAG, "state has not changed");
+            }
+        });
     }
 
     /**
@@ -206,9 +208,9 @@ public abstract class BasePaymentComponent<
      */
     protected void notifyStateChanged() {
         Logger.d(TAG, "notifyStateChanged");
-        ThreadManager.EXECUTOR.submit(() -> {
+        ThreadManager.MAIN_HANDLER.post(() -> {
             try {
-                mPaymentComponentStateLiveData.postValue(createComponentState());
+                mPaymentComponentStateLiveData.setValue(createComponentState());
             } catch (Exception e) {
                 Logger.e(TAG, "notifyStateChanged - error:" + e.getMessage());
                 notifyException(new ComponentException("Unexpected error", e));
