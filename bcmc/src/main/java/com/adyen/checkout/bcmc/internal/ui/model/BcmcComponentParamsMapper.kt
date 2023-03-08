@@ -10,23 +10,24 @@ package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
-internal class BcmcComponentParamsMapper {
+internal class BcmcComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         bcmcConfiguration: BcmcConfiguration,
-        overrideComponentParams: ComponentParams? = null,
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
+        sessionParams: SessionParams?,
     ): BcmcComponentParams {
         return bcmcConfiguration
-            .mapToParamsInternal(sessionSetupConfiguration)
+            .mapToParamsInternal()
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun BcmcConfiguration.mapToParamsInternal(
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
-    ): BcmcComponentParams {
+    private fun BcmcConfiguration.mapToParamsInternal(): BcmcComponentParams {
         return BcmcComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -37,8 +38,7 @@ internal class BcmcComponentParamsMapper {
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             isHolderNameRequired = isHolderNameRequired ?: false,
             shopperReference = shopperReference,
-            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
-                ?: isStorePaymentFieldVisible ?: false,
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
         )
     }
 
@@ -53,6 +53,15 @@ internal class BcmcComponentParamsMapper {
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
+        )
+    }
+
+    private fun BcmcComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): BcmcComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
         )
     }
 }

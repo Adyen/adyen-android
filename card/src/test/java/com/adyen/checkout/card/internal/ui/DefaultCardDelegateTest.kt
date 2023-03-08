@@ -982,15 +982,18 @@ internal class DefaultCardDelegateTest(
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
     ): DefaultCardDelegate {
+        val componentParams = CardComponentParamsMapper(
+            installmentsParamsMapper = InstallmentsParamsMapper(),
+            overrideComponentParams = null,
+            overrideSessionParams = null
+        ).mapToParamsDefault(configuration, paymentMethod, null)
+
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = paymentMethod,
             order = order,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
-                configuration,
-                paymentMethod
-            ),
+            componentParams = componentParams,
             cardEncrypter = cardEncrypter,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,

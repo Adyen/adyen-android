@@ -9,10 +9,10 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -27,7 +27,7 @@ internal class BcmcComponentParamsMapperTest {
         val bcmcConfiguration = getBcmcConfigurationBuilder()
             .build()
 
-        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
 
         val expected = getBcmcComponentParams()
 
@@ -45,7 +45,7 @@ internal class BcmcComponentParamsMapperTest {
             .setSubmitButtonVisible(false)
             .build()
 
-        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration)
+        val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
 
         val expected = getBcmcComponentParams(
             isHolderNameRequired = true,
@@ -76,7 +76,7 @@ internal class BcmcComponentParamsMapperTest {
             )
         )
 
-        val params = BcmcComponentParamsMapper().mapToParams(bcmcConfiguration, overrideParams)
+        val params = BcmcComponentParamsMapper(overrideParams, null).mapToParams(bcmcConfiguration, null)
 
         val expected = getBcmcComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -105,9 +105,9 @@ internal class BcmcComponentParamsMapperTest {
             .setShowStorePaymentField(showStorePaymentField)
             .build()
 
-        val params = BcmcComponentParamsMapper().mapToParams(
-            bcmcConfiguration,
-            sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = enableStoreDetails)
+        val params = BcmcComponentParamsMapper(null, null).mapToParams(
+            bcmcConfiguration = bcmcConfiguration,
+            sessionParams = SessionParams(enableStoreDetails = enableStoreDetails, installmentOptions = null)
         )
 
         val expected = getBcmcComponentParams(isStorePaymentFieldVisible = isStorePaymentFieldVisible)

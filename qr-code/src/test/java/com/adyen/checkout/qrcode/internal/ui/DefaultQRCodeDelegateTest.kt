@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.FileDownloader
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
@@ -80,7 +80,7 @@ internal class DefaultQRCodeDelegateTest(
         ).build()
         delegate = DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

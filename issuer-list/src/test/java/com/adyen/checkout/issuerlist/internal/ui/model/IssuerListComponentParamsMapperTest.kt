@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.issuerlist.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
@@ -28,7 +28,7 @@ internal class IssuerListComponentParamsMapperTest {
         )
             .build()
 
-        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(null, null).mapToParams(issuerListConfiguration, null)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -57,7 +57,7 @@ internal class IssuerListComponentParamsMapperTest {
             .setSubmitButtonVisible(false)
             .build()
 
-        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration)
+        val params = IssuerListComponentParamsMapper(null, null).mapToParams(issuerListConfiguration, null)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.US,
@@ -99,7 +99,7 @@ internal class IssuerListComponentParamsMapperTest {
             )
         )
 
-        val params = IssuerListComponentParamsMapper().mapToParams(issuerListConfiguration, overrideParams)
+        val params = IssuerListComponentParamsMapper(overrideParams, null).mapToParams(issuerListConfiguration, null)
 
         val expected = IssuerListComponentParams(
             shopperLocale = Locale.GERMAN,

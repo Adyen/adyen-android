@@ -30,6 +30,7 @@ import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -37,10 +38,11 @@ import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AwaitComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper()
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -71,7 +73,7 @@ class AwaitComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): AwaitDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(configuration, null)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

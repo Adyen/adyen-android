@@ -19,8 +19,8 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -35,9 +35,10 @@ internal class CardComponentParamsMapperTest {
     fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
         val cardConfiguration = getCardConfigurationBuilder().build()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            PaymentMethod()
+            PaymentMethod(),
+            null
         )
 
         val expected = getCardComponentParams()
@@ -85,9 +86,10 @@ internal class CardComponentParamsMapperTest {
             .setAddressConfiguration(addressConfiguration)
             .build()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            PaymentMethod()
+            PaymentMethod(),
+            null
         )
 
         val expected = getCardComponentParams(
@@ -131,10 +133,10 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), overrideParams, null).mapToParamsDefault(
             cardConfiguration,
             PaymentMethod(),
-            overrideParams
+            null
         )
 
         val expected = getCardComponentParams(
@@ -165,9 +167,10 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            paymentMethod
+            paymentMethod,
+            null
         )
 
         val expected = getCardComponentParams(
@@ -188,9 +191,10 @@ internal class CardComponentParamsMapperTest {
                 )
             )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            paymentMethod
+            paymentMethod,
+            null
         )
 
         val expected = getCardComponentParams(
@@ -212,9 +216,10 @@ internal class CardComponentParamsMapperTest {
             )
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            paymentMethod
+            paymentMethod,
+            null
         )
 
         val expected = getCardComponentParams(
@@ -232,9 +237,10 @@ internal class CardComponentParamsMapperTest {
         val cardConfiguration = getCardConfigurationBuilder()
             .build()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
-            PaymentMethod()
+            PaymentMethod(),
+            null
         )
 
         val expected = getCardComponentParams(
@@ -256,10 +262,10 @@ internal class CardComponentParamsMapperTest {
             .setShowStorePaymentField(showStorePaymentField)
             .build()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsDefault(
+        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
             PaymentMethod(),
-            sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = enableStoreDetails)
+            sessionParams = SessionParams(enableStoreDetails = enableStoreDetails, installmentOptions = null)
         )
 
         val expected = getCardComponentParams(

@@ -10,10 +10,10 @@ package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when parent configuration is null and custom ach configuration fields are null then all fields should match`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
 
         val expected = getAchComponentParams()
 
@@ -39,7 +39,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         val achConfiguration = getAchConfigurationBuilder().apply {
             setAddressConfiguration(addressConfiguration)
         }.build()
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
         val expected = getAchComponentParams()
         assertEquals(expected, params)
     }
@@ -60,7 +60,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             )
         )
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration, overrideParams)
+        val params = ACHDirectDebitComponentParamsMapper(overrideParams, null).mapToParams(achConfiguration, null)
 
         val expected = getAchComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -85,7 +85,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
         val expected = getAchComponentParams()
 
         assertEquals(expected, params)
@@ -98,7 +98,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
         val expected = getAchComponentParams(addressParams = AddressParams.None)
 
         assertEquals(expected, params)
@@ -108,7 +108,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when the address configuration is null, default address configuration should be FullAddress with default supported countries`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
 
         val expectedAddressParams: AddressParams = AddressParams.FullAddress(
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST,
@@ -124,7 +124,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(false)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = false)
 
@@ -137,7 +137,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(true)
         }.build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(achConfiguration)
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(achConfiguration, null)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
 
@@ -150,11 +150,11 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(false)
         }.build()
 
-        val sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = true)
+        val sessionParams = SessionParams(enableStoreDetails = true, installmentOptions = null)
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
+        val params = ACHDirectDebitComponentParamsMapper(null, sessionParams).mapToParams(
             configuration = achConfiguration,
-            sessionSetupConfiguration = sessionSetupConfiguration
+            sessionParams = null
         )
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
@@ -168,11 +168,11 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(true)
         }.build()
 
-        val sessionSetupConfiguration = SessionSetupConfiguration(enableStoreDetails = false)
+        val sessionParams = SessionParams(enableStoreDetails = false, installmentOptions = null)
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
             configuration = achConfiguration,
-            sessionSetupConfiguration = sessionSetupConfiguration
+            sessionParams = sessionParams
         )
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = false)
@@ -184,8 +184,9 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when isStorePaymentFieldVisible is not set, isStorePaymentFieldVisible should be true`() {
         val achConfiguration = getAchConfigurationBuilder().build()
 
-        val params = ACHDirectDebitComponentParamsMapper().mapToParams(
-            configuration = achConfiguration
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
+            configuration = achConfiguration,
+            sessionParams = null
         )
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = true)

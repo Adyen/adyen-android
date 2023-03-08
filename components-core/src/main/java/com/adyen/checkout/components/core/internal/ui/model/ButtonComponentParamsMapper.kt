@@ -1,20 +1,24 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ButtonComponentParamsMapper {
+class ButtonComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         configuration: Configuration,
-        overrideComponentParams: ComponentParams? = null,
+        sessionParams: SessionParams?,
     ): ButtonComponentParams {
         return configuration
             .mapToParamsInternal()
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun Configuration.mapToParamsInternal(): ButtonComponentParams {
@@ -41,5 +45,12 @@ class ButtonComponentParamsMapper {
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount
         )
+    }
+
+    private fun ButtonComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): ButtonComponentParams {
+        if (sessionParams == null) return this
+        return copy()
     }
 }

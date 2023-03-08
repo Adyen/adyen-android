@@ -41,10 +41,10 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericActionComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null
+    overrideComponentParams: ComponentParams? = null,
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper()
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, null)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -74,13 +74,13 @@ class GenericActionComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(configuration, null)
         return DefaultGenericActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(componentParams)
+            actionDelegateProvider = ActionDelegateProvider(componentParams, null)
         )
     }
 

@@ -28,10 +28,10 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.JavaBase64Encoder
-import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeStatusReceiver
 import com.adyen.threeds2.CompletionEvent
@@ -90,7 +90,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            componentParams = GenericComponentParamsMapper().mapToParams(configuration),
+            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,

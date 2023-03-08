@@ -39,7 +39,8 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when parent configuration is null and custom google pay configuration fields are null then all fields should match`() {
         val googlePayConfiguration = getGooglePayConfigurationBuilder().build()
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+        val params =
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams()
 
@@ -65,7 +66,8 @@ internal class GooglePayComponentParamsMapperTest {
             .setShippingAddressParameters(shippingAddressParameters).setShippingAddressRequired(true)
             .setTotalPriceStatus("STATUS").build()
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+        val params =
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -109,8 +111,10 @@ internal class GooglePayComponentParamsMapperTest {
             )
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(
-            googlePayConfiguration, PaymentMethod(), overrideParams
+        val params = GooglePayComponentParamsMapper(overrideParams, null).mapToParams(
+            googlePayConfiguration,
+            PaymentMethod(),
+            null
         )
 
         val expected = getGooglePayComponentParams(
@@ -140,7 +144,7 @@ internal class GooglePayComponentParamsMapperTest {
             )
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, paymentMethod)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             gatewayMerchantId = "GATEWAY_MERCHANT_ID_1"
@@ -161,7 +165,7 @@ internal class GooglePayComponentParamsMapperTest {
             )
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, paymentMethod)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             gatewayMerchantId = "GATEWAY_MERCHANT_ID_2"
@@ -177,7 +181,7 @@ internal class GooglePayComponentParamsMapperTest {
         ).build()
 
         assertThrows<ComponentException> {
-            GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
         }
     }
 
@@ -189,7 +193,7 @@ internal class GooglePayComponentParamsMapperTest {
             brands = listOf("mc", "amex", "maestro", "discover")
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, paymentMethod)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             allowedCardNetworks = listOf("MASTERCARD", "AMEX", "DISCOVER")
@@ -203,7 +207,8 @@ internal class GooglePayComponentParamsMapperTest {
         val googlePayConfiguration =
             getGooglePayConfigurationBuilder().setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION).build()
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+        val params =
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION
@@ -216,7 +221,8 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when google pay environment is not set and environment is TEST then google pay environment should be ENVIRONMENT_TEST`() {
         val googlePayConfiguration = getGooglePayConfigurationBuilder().build()
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+        val params =
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             googlePayEnvironment = WalletConstants.ENVIRONMENT_TEST
@@ -231,7 +237,8 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.CHINA, environment = Environment.UNITED_STATES, clientKey = TEST_CLIENT_KEY_2
         ).setMerchantAccount(TEST_GATEWAY_MERCHANT_ID).build()
 
-        val params = GooglePayComponentParamsMapper().mapToParams(googlePayConfiguration, PaymentMethod())
+        val params =
+            GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.CHINA,
@@ -258,10 +265,10 @@ internal class GooglePayComponentParamsMapperTest {
             amount = Amount.EMPTY
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(
+        val params = GooglePayComponentParamsMapper(overrideParams, null).mapToParams(
             googlePayConfiguration,
             PaymentMethod(),
-            overrideParams
+            null,
         )
 
         val expected = getGooglePayComponentParams(
@@ -299,10 +306,10 @@ internal class GooglePayComponentParamsMapperTest {
             amount = Amount.EMPTY
         )
 
-        val params = GooglePayComponentParamsMapper().mapToParams(
+        val params = GooglePayComponentParamsMapper(overrideParams, null).mapToParams(
             googlePayConfiguration,
             PaymentMethod(),
-            overrideParams
+            null,
         )
 
         val expected = getGooglePayComponentParams(

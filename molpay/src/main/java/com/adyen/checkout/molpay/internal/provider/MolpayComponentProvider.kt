@@ -14,21 +14,22 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.MolpayConfiguration
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class MolpayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<MolpayComponent, MolpayConfiguration, MolpayPaymentMethod, MolpayComponentState>(
     componentClass = MolpayComponent::class.java,
     overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createComponent(

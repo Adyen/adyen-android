@@ -11,19 +11,16 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
-import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 
 internal class InstallmentsParamsMapper {
 
     internal fun mapToInstallmentParams(
-        sessionInstallmentOptions: Map<String, SessionSetupInstallmentOptions?>?,
-        installmentConfiguration: InstallmentConfiguration?
-    ) = sessionInstallmentOptions?.mapToInstallmentPrams() ?: installmentConfiguration?.mapToInstallmentParams()
-
-    private fun Map<String, SessionSetupInstallmentOptions?>?.mapToInstallmentPrams(): InstallmentParams {
+        sessionInstallmentOptions: Map<String, SessionInstallmentOptionsParams?>
+    ): InstallmentParams {
         var defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null
         val cardBasedOptionsList = mutableListOf<InstallmentOptionParams.CardBasedInstallmentOptions>()
-        this?.forEach { (key, value) ->
+        sessionInstallmentOptions.forEach { (key, value) ->
             if (key == DEFAULT_INSTALLMENT_OPTION) {
                 defaultOptions = value.mapToDefaultInstallmentOptions()
             } else {
@@ -33,12 +30,14 @@ internal class InstallmentsParamsMapper {
         return InstallmentParams(defaultOptions, cardBasedOptionsList)
     }
 
-    private fun InstallmentConfiguration?.mapToInstallmentParams(): InstallmentParams {
+    internal fun mapToInstallmentParams(
+        installmentConfiguration: InstallmentConfiguration
+    ): InstallmentParams {
         return InstallmentParams(
-            defaultOptions = this?.defaultOptions?.mapToDefaultInstallmentOptionsParam(),
-            cardBasedOptions = this?.cardBasedOptions?.map { option ->
+            defaultOptions = installmentConfiguration.defaultOptions?.mapToDefaultInstallmentOptionsParam(),
+            cardBasedOptions = installmentConfiguration.cardBasedOptions.map { option ->
                 option.mapToCardBasedInstallmentOptionsParams()
-            } ?: emptyList()
+            }
         )
     }
 
@@ -51,13 +50,13 @@ internal class InstallmentsParamsMapper {
     private fun InstallmentOptions.CardBasedInstallmentOptions.mapToCardBasedInstallmentOptionsParams() =
         InstallmentOptionParams.CardBasedInstallmentOptions(values, includeRevolving, cardBrand)
 
-    private fun SessionSetupInstallmentOptions?.mapToDefaultInstallmentOptions() =
+    private fun SessionInstallmentOptionsParams?.mapToDefaultInstallmentOptions() =
         InstallmentOptionParams.DefaultInstallmentOptions(
             values = this?.values ?: emptyList(),
             includeRevolving = this?.plans?.contains(InstallmentOption.REVOLVING.type) ?: false
         )
 
-    private fun SessionSetupInstallmentOptions?.mapToCardBasedInstallmentOptions(txVariant: String) =
+    private fun SessionInstallmentOptionsParams?.mapToCardBasedInstallmentOptions(txVariant: String) =
         InstallmentOptionParams.CardBasedInstallmentOptions(
             values = this?.values ?: emptyList(),
             includeRevolving = this?.plans?.contains(InstallmentOption.REVOLVING.type) ?: false,

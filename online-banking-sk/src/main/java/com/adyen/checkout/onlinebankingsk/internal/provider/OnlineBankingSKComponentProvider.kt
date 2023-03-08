@@ -20,12 +20,12 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentState
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingSKComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,

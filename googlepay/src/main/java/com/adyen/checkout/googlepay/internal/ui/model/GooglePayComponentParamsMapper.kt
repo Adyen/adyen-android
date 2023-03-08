@@ -11,6 +11,7 @@ package com.adyen.checkout.googlepay.internal.ui.model
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.CheckoutCurrency
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.Environment
@@ -22,16 +23,20 @@ import com.adyen.checkout.googlepay.internal.util.AllowedAuthMethods
 import com.adyen.checkout.googlepay.internal.util.AllowedCardNetworks
 import com.google.android.gms.wallet.WalletConstants
 
-internal class GooglePayComponentParamsMapper {
+internal class GooglePayComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         googlePayConfiguration: GooglePayConfiguration,
         paymentMethod: PaymentMethod,
-        overrideComponentParams: ComponentParams? = null
+        sessionParams: SessionParams?,
     ): GooglePayComponentParams {
         return googlePayConfiguration
             .mapToParamsInternal(paymentMethod)
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun GooglePayConfiguration.mapToParamsInternal(
@@ -125,6 +130,13 @@ internal class GooglePayComponentParamsMapper {
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = amount,
         )
+    }
+
+    private fun GooglePayComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): GooglePayComponentParams {
+        if (sessionParams == null) return this
+        return copy()
     }
 
     companion object {

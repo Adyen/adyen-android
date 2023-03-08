@@ -31,6 +31,7 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
@@ -43,13 +44,13 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -60,15 +61,17 @@ abstract class IssuerListComponentProvider<
     ComponentStateT : PaymentComponentState<PaymentMethodT>
     >(
     private val componentClass: Class<ComponentT>,
-    private val overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null,
+    overrideComponentParams: ComponentParams?,
+    overrideSessionParams: SessionParams?,
     hideIssuerLogosDefaultValue: Boolean = false,
 ) :
     PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
     SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(
-        hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue
+        hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue,
+        overrideComponentParams = overrideComponentParams,
+        overrideSessionParams = overrideSessionParams,
     )
 
     final override fun get(
@@ -85,7 +88,7 @@ abstract class IssuerListComponentProvider<
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -128,6 +131,7 @@ abstract class IssuerListComponentProvider<
             }
     }
 
+    @Suppress("LongMethod")
     final override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -142,7 +146,10 @@ abstract class IssuerListComponentProvider<
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParams(
+                issuerListConfiguration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

@@ -14,9 +14,9 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
@@ -36,20 +36,22 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class PaymentMethodsListViewModel(
     private val application: Application,
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
     private val dropInConfiguration: DropInConfiguration,
-    private val amount: Amount
+    private val amount: Amount,
+    private val sessionDetails: SessionDetails?,
 ) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
@@ -79,7 +81,14 @@ internal class PaymentMethodsListViewModel(
             when {
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
                     Logger.d(TAG, "Supported payment method: $type")
-                    checkPaymentMethodAvailability(application, paymentMethod, dropInConfiguration, amount, this)
+                    checkPaymentMethodAvailability(
+                        application = application,
+                        paymentMethod = paymentMethod,
+                        dropInConfiguration = dropInConfiguration,
+                        amount = amount,
+                        sessionDetails = sessionDetails,
+                        callback = this
+                    )
                 }
                 PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) -> {
                     Logger.e(TAG, "PaymentMethod not yet supported - $type")

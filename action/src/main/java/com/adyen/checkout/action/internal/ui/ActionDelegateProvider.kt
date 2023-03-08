@@ -26,6 +26,7 @@ import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
@@ -37,7 +38,8 @@ import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentProvider
 
 internal class ActionDelegateProvider(
-    private val overrideComponentParams: ComponentParams?
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun getDelegate(
@@ -48,42 +50,42 @@ internal class ActionDelegateProvider(
     ): ActionDelegate {
         return when (action) {
             is AwaitAction -> {
-                AwaitComponentProvider(overrideComponentParams).getDelegate(
+                AwaitComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is QrCodeAction -> {
-                QRCodeComponentProvider(overrideComponentParams).getDelegate(
+                QRCodeComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is RedirectAction -> {
-                RedirectComponentProvider(overrideComponentParams).getDelegate(
+                RedirectComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is BaseThreeds2Action -> {
-                Adyen3DS2ComponentProvider(overrideComponentParams).getDelegate(
+                Adyen3DS2ComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is VoucherAction -> {
-                VoucherComponentProvider(overrideComponentParams).getDelegate(
+                VoucherComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application
                 )
             }
             is SdkAction<*> -> {
-                WeChatPayActionComponentProvider(overrideComponentParams).getDelegate(
+                WeChatPayActionComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
                     getConfigurationForAction(configuration),
                     savedStateHandle,
                     application

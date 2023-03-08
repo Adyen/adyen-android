@@ -529,7 +529,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultBacsDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,

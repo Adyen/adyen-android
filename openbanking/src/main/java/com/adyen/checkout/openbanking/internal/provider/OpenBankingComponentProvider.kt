@@ -20,12 +20,12 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OpenBankingComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<
     OpenBankingComponent,
     OpenBankingConfiguration,
@@ -34,6 +34,7 @@ class OpenBankingComponentProvider(
     >(
     componentClass = OpenBankingComponent::class.java,
     overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createComponent(

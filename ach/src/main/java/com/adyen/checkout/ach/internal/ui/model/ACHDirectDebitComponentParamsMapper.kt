@@ -11,22 +11,25 @@ package com.adyen.checkout.ach.internal.ui.model
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
-internal class ACHDirectDebitComponentParamsMapper {
+internal class ACHDirectDebitComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         configuration: ACHDirectDebitConfiguration,
-        overrideComponentParams: ComponentParams? = null,
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
+        sessionParams: SessionParams?,
     ): ACHDirectDebitComponentParams {
-        return configuration.mapToParamsInternal(sessionSetupConfiguration).override(overrideComponentParams)
+        return configuration
+            .mapToParamsInternal()
+            .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun ACHDirectDebitConfiguration.mapToParamsInternal(
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
-    ): ACHDirectDebitComponentParams {
+    private fun ACHDirectDebitConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
         return ACHDirectDebitComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -40,8 +43,7 @@ internal class ACHDirectDebitComponentParamsMapper {
                     supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
                     addressFieldPolicy = AddressFieldPolicyParams.Required
                 ),
-            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
-                ?: isStorePaymentFieldVisible ?: true,
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
         )
     }
 
@@ -70,6 +72,15 @@ internal class ACHDirectDebitComponentParamsMapper {
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
+        )
+    }
+
+    private fun ACHDirectDebitComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): ACHDirectDebitComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
         )
     }
 

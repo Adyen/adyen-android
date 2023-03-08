@@ -379,11 +379,17 @@ internal class StoredCardDelegateTest(
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
     ): StoredCardDelegate {
+        val componentParams = CardComponentParamsMapper(
+            installmentsParamsMapper = InstallmentsParamsMapper(),
+            overrideComponentParams = null,
+            overrideSessionParams = null
+        ).mapToParamsStored(configuration, null)
+
         return StoredCardDelegate(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
-            componentParams = CardComponentParamsMapper(InstallmentsParamsMapper()).mapToParamsStored(configuration),
+            componentParams = componentParams,
             cardEncrypter = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,

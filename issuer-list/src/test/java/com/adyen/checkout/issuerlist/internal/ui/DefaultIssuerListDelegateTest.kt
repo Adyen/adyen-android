@@ -149,7 +149,7 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper().mapToParams(configuration),
+            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
@@ -181,7 +181,7 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper().mapToParams(configuration),
+            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
@@ -265,7 +265,7 @@ internal class DefaultIssuerListDelegateTest(
         configuration: TestIssuerListConfiguration = getDefaultTestIssuerListConfigurationBuilder().build()
     ) = DefaultIssuerListDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = IssuerListComponentParamsMapper().mapToParams(configuration),
+        componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
