@@ -107,7 +107,11 @@ internal class BcmcComponentParamsMapperTest {
 
         val params = BcmcComponentParamsMapper(null, null).mapToParams(
             bcmcConfiguration = bcmcConfiguration,
-            sessionParams = SessionParams(enableStoreDetails = enableStoreDetails, installmentOptions = null)
+            sessionParams = SessionParams(
+                enableStoreDetails = enableStoreDetails,
+                installmentOptions = null,
+                amount = null
+            )
         )
 
         val expected = getBcmcComponentParams(isStorePaymentFieldVisible = isStorePaymentFieldVisible)

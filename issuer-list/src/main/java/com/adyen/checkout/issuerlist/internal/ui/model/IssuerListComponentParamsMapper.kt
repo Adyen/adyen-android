@@ -63,6 +63,8 @@ class IssuerListComponentParamsMapper(
         sessionParams: SessionParams? = null
     ): IssuerListComponentParams {
         if (sessionParams == null) return this
-        return copy()
+        return copy(
+            amount = sessionParams.amount ?: amount,
+        )
     }
 }

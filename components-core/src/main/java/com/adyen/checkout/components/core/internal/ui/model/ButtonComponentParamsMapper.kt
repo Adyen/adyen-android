@@ -51,6 +51,8 @@ class ButtonComponentParamsMapper(
         sessionParams: SessionParams? = null
     ): ButtonComponentParams {
         if (sessionParams == null) return this
-        return copy()
+        return copy(
+            amount = sessionParams.amount ?: amount,
+        )
     }
 }

@@ -265,7 +265,11 @@ internal class CardComponentParamsMapperTest {
         val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
             PaymentMethod(),
-            sessionParams = SessionParams(enableStoreDetails = enableStoreDetails, installmentOptions = null)
+            sessionParams = SessionParams(
+                enableStoreDetails = enableStoreDetails,
+                installmentOptions = null,
+                amount = null
+            )
         )
 
         val expected = getCardComponentParams(

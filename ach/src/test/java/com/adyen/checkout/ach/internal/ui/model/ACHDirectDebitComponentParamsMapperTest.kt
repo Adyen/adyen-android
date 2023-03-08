@@ -150,7 +150,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(false)
         }.build()
 
-        val sessionParams = SessionParams(enableStoreDetails = true, installmentOptions = null)
+        val sessionParams = SessionParams(enableStoreDetails = true, installmentOptions = null, amount = null)
 
         val params = ACHDirectDebitComponentParamsMapper(null, sessionParams).mapToParams(
             configuration = achConfiguration,
@@ -168,7 +168,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(true)
         }.build()
 
-        val sessionParams = SessionParams(enableStoreDetails = false, installmentOptions = null)
+        val sessionParams = SessionParams(enableStoreDetails = false, installmentOptions = null, amount = null)
 
         val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
             configuration = achConfiguration,

@@ -56,6 +56,8 @@ class GenericComponentParamsMapper(
         sessionParams: SessionParams? = null
     ): GenericComponentParams {
         if (sessionParams == null) return this
-        return copy()
+        return copy(
+            amount = sessionParams.amount ?: amount,
+        )
     }
 }

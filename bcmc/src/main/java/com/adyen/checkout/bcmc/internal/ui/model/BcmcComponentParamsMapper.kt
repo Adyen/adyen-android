@@ -62,6 +62,7 @@ internal class BcmcComponentParamsMapper(
         if (sessionParams == null) return this
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
+            amount = sessionParams.amount ?: amount,
         )
     }
 }

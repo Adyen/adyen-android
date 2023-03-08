@@ -9,6 +9,7 @@
 package com.adyen.checkout.sessions.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -18,14 +19,14 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object SessionParamsFactory {
     fun create(checkoutSession: CheckoutSession): SessionParams {
-        return create(checkoutSession.sessionSetupResponse.configuration)
+        return create(checkoutSession.sessionSetupResponse.configuration, checkoutSession.sessionSetupResponse.amount)
     }
 
     fun create(sessionDetails: SessionDetails): SessionParams {
-        return create(sessionDetails.sessionSetupConfiguration)
+        return create(sessionDetails.sessionSetupConfiguration, sessionDetails.amount)
     }
 
-    private fun create(sessionSetupConfiguration: SessionSetupConfiguration?): SessionParams {
+    private fun create(sessionSetupConfiguration: SessionSetupConfiguration?, amount: Amount?): SessionParams {
         return SessionParams(
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
             installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
@@ -35,6 +36,7 @@ object SessionParamsFactory {
                     values = it.value?.values,
                 )
             }?.toMap(),
+            amount = amount,
         )
     }
 }

@@ -83,7 +83,7 @@ internal class CardComponentParamsMapper(
             isHideCvcStoredCard = isHideCvcStoredCard ?: false,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-            installmentParams = installmentConfiguration?.let { installmentsParamsMapper.mapToInstallmentParams(it) },
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration),
             addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None
         )
     }
@@ -174,9 +174,11 @@ internal class CardComponentParamsMapper(
         if (sessionParams == null) return this
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
-            installmentParams = sessionParams.installmentOptions?.let {
-                installmentsParamsMapper.mapToInstallmentParams(it)
-            } ?: installmentParams,
+            // we don't fall back to the original value of installmentParams value on purpose
+            // if sessionParams.installmentOptions is null we want installmentParams to be also null regardless of what
+            // InstallmentConfiguration is passed to the mapper
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionParams.installmentOptions),
+            amount = sessionParams.amount ?: amount,
         )
     }
 

@@ -136,7 +136,9 @@ internal class GooglePayComponentParamsMapper(
         sessionParams: SessionParams? = null
     ): GooglePayComponentParams {
         if (sessionParams == null) return this
-        return copy()
+        return copy(
+            amount = sessionParams.amount ?: amount,
+        )
     }
 
     companion object {

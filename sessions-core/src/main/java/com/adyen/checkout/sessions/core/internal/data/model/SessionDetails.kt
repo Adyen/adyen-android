@@ -21,7 +21,7 @@ import kotlinx.parcelize.Parcelize
 data class SessionDetails(
     val id: String,
     val sessionData: String,
-    val amount: Amount,
+    val amount: Amount?,
     val expiresAt: String,
     val returnUrl: String,
     val sessionSetupConfiguration: SessionSetupConfiguration?
@@ -32,7 +32,7 @@ fun SessionSetupResponse.mapToDetails(): SessionDetails {
     return SessionDetails(
         id = id,
         sessionData = sessionData,
-        amount = amount ?: Amount.EMPTY,
+        amount = amount,
         expiresAt = expiresAt,
         returnUrl = returnUrl,
         sessionSetupConfiguration = configuration

@@ -16,8 +16,9 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOp
 internal class InstallmentsParamsMapper {
 
     internal fun mapToInstallmentParams(
-        sessionInstallmentOptions: Map<String, SessionInstallmentOptionsParams?>
-    ): InstallmentParams {
+        sessionInstallmentOptions: Map<String, SessionInstallmentOptionsParams?>?
+    ): InstallmentParams? {
+        sessionInstallmentOptions ?: return null
         var defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null
         val cardBasedOptionsList = mutableListOf<InstallmentOptionParams.CardBasedInstallmentOptions>()
         sessionInstallmentOptions.forEach { (key, value) ->
@@ -31,8 +32,9 @@ internal class InstallmentsParamsMapper {
     }
 
     internal fun mapToInstallmentParams(
-        installmentConfiguration: InstallmentConfiguration
-    ): InstallmentParams {
+        installmentConfiguration: InstallmentConfiguration?
+    ): InstallmentParams? {
+        installmentConfiguration ?: return null
         return InstallmentParams(
             defaultOptions = installmentConfiguration.defaultOptions?.mapToDefaultInstallmentOptionsParam(),
             cardBasedOptions = installmentConfiguration.cardBasedOptions.map { option ->
