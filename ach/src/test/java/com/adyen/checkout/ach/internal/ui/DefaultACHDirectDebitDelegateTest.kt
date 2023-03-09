@@ -102,9 +102,11 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when isStorePaymentFieldVisible in configuration  is false, isStorePaymentFieldVisible in outputdata should be false`() =
             runTest {
-                delegate = createAchDelegate(configuration = getAchConfigurationBuilder().apply {
-                    setShowStorePaymentField(false)
-                }.build())
+                delegate = createAchDelegate(
+                    configuration = getAchConfigurationBuilder()
+                        .setShowStorePaymentField(false)
+                        .build()
+                )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
                 runCurrent()
@@ -117,9 +119,11 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when isStorePaymentFieldVisible in configuration  is true , isStorePaymentFieldVisible in outputdata should be true`() =
             runTest {
-                delegate = createAchDelegate(configuration = getAchConfigurationBuilder().apply {
-                    setShowStorePaymentField(true)
-                }.build())
+                delegate = createAchDelegate(
+                    configuration = getAchConfigurationBuilder()
+                        .setShowStorePaymentField(true)
+                        .build()
+                )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
                 runCurrent()
@@ -131,9 +135,11 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `address configuration is none, then countries and states should not be fetched`() = runTest {
-            delegate = createAchDelegate(configuration = getAchConfigurationBuilder().apply {
-                setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
-            }.build())
+            delegate = createAchDelegate(
+                configuration = getAchConfigurationBuilder()
+                    .setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+                    .build()
+            )
 
             val countriesTestFlow = addressRepository.countriesFlow.test(testScheduler)
             val statesTestFlow = addressRepository.statesFlow.test(testScheduler)

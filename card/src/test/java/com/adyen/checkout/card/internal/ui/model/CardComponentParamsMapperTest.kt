@@ -251,29 +251,29 @@ internal class CardComponentParamsMapperTest {
     }
 
     @ParameterizedTest
-    @MethodSource("sessionSetupConfigurationSource")
+    @MethodSource("enableStoreDetailsSource")
     @Suppress("MaxLineLength")
-    fun `is store payment field visible should match enable store details from session setup response whatever the value of show store payment field inside card configurations`(
-        showStorePaymentField: Boolean,
-        enableStoreDetails: Boolean,
-        isStorePaymentFieldVisible: Boolean
+    fun `isStorePaymentFieldVisible should match value set in sessions if it exists, otherwise should match configuration`(
+        configurationValue: Boolean,
+        sessionsValue: Boolean?,
+        expectedValue: Boolean
     ) {
         val cardConfiguration = getCardConfigurationBuilder()
-            .setShowStorePaymentField(showStorePaymentField)
+            .setShowStorePaymentField(configurationValue)
             .build()
 
         val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
             cardConfiguration,
             PaymentMethod(),
             sessionParams = SessionParams(
-                enableStoreDetails = enableStoreDetails,
+                enableStoreDetails = sessionsValue,
                 installmentOptions = null,
                 amount = null
             )
         )
 
         val expected = getCardComponentParams(
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible
+            isStorePaymentFieldVisible = expectedValue
         )
 
         assertEquals(expected, params)
@@ -328,12 +328,14 @@ internal class CardComponentParamsMapperTest {
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
 
         @JvmStatic
-        fun sessionSetupConfigurationSource() = listOf(
-            // showStorePaymentField, enableStoreDetails, isStorePaymentFieldVisible
+        fun enableStoreDetailsSource() = listOf(
+            // configurationValue, sessionsValue, expectedValue
             arguments(false, false, false),
             arguments(false, true, true),
             arguments(true, false, false),
             arguments(true, true, true),
+            arguments(false, null, false),
+            arguments(true, null, true),
         )
     }
 }
