@@ -1,7 +1,6 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
 
@@ -28,7 +27,7 @@ class ButtonComponentParamsMapper(
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY,
+            amount = amount,
             isSubmitButtonVisible = (this as? ButtonConfiguration)?.isSubmitButtonVisible ?: true
         )
     }
