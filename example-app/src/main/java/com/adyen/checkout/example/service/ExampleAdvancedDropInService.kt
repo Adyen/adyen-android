@@ -15,7 +15,6 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.StatusResponseUtils
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -49,10 +48,6 @@ import javax.inject.Inject
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ExampleAdvancedDropInService : DropInService() {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
@@ -164,7 +159,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
         return jsonResponse.getStringOrNull("resultCode")
-            .equals(other = StatusResponseUtils.RESULT_REFUSED, ignoreCase = true)
+            .equals(other = RESULT_REFUSED, ignoreCase = true)
     }
 
     private fun isAction(jsonResponse: JSONObject): Boolean {
@@ -334,5 +329,10 @@ class ExampleAdvancedDropInService : DropInService() {
             Logger.e(TAG, "FAILED")
             RecurringDropInServiceResult.Error(reason = "IOException")
         }
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val RESULT_REFUSED = "refused"
     }
 }
