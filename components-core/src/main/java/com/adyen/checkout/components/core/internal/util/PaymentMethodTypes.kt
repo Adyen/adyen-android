@@ -51,6 +51,7 @@ object PaymentMethodTypes {
     const val WECHAT_PAY_SDK = "wechatpaySDK"
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
+    const val PROMPT_PAY = "promptpay"
 
     // Voucher payment methods that are not yet supported
     const val MULTIBANCO = "multibanco"
@@ -118,6 +119,7 @@ object PaymentMethodTypes {
             ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL,
             PIX,
+            PROMPT_PAY,
             UPI,
             UPI_COLLECT,
             UPI_QR,
@@ -128,7 +130,8 @@ object PaymentMethodTypes {
             DUIT_NOW,
             WECHAT_PAY_SDK,
             PAY_NOW,
-            PIX
+            PIX,
+            PROMPT_PAY
         )
     )
     val UNSUPPORTED_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(

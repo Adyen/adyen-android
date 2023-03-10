@@ -39,6 +39,12 @@ internal enum class QRCodePaymentMethodConfig(
         viewType = QrCodeComponentViewType.FULL_QR_CODE,
         messageTextResource = R.string.checkout_qr_code_pay_now
     ),
+    PROMPT_PAY(
+        paymentMethodType = PaymentMethodTypes.PROMPT_PAY,
+        maxPollingDurationMillis = 90.seconds.inWholeMilliseconds,
+        viewType = QrCodeComponentViewType.FULL_QR_CODE,
+        messageTextResource = R.string.checkout_qr_code_prompt_pay
+    ),
     UPI_QR(
         paymentMethodType = PaymentMethodTypes.UPI_QR,
         maxPollingDurationMillis = 5.minutes.inWholeMilliseconds,

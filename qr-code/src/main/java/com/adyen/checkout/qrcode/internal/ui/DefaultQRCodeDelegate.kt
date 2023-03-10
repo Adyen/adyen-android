@@ -317,6 +317,7 @@ internal class DefaultQRCodeDelegate(
             PaymentMethodTypes.DUIT_NOW,
             PaymentMethodTypes.PIX,
             PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.PROMPT_PAY,
             PaymentMethodTypes.UPI_QR,
         )
 
