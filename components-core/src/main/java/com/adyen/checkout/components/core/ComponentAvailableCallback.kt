@@ -5,10 +5,9 @@
  *
  * Created by caiof on 23/7/2019.
  */
-package com.adyen.checkout.components.core.internal
+package com.adyen.checkout.components.core
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.PaymentMethod
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ComponentAvailableCallback {

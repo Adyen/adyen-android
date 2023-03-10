@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
-import com.adyen.checkout.components.core.internal.ActionComponentCallback
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate

@@ -6,15 +6,11 @@
  * Created by josephj on 13/1/2023.
  */
 
-package com.adyen.checkout.components.core.internal
+package com.adyen.checkout.components.core
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.BaseComponentCallback
 
 // TODO SESSIONS: docs
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallback {
     // Generic events
     fun onStateChanged(state: T) = Unit

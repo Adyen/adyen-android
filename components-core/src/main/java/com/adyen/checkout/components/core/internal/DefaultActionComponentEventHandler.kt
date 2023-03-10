@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 

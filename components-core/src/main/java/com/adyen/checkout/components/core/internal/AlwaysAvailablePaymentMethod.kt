@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

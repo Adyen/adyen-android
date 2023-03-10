@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R

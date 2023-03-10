@@ -17,7 +17,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.requireApplication

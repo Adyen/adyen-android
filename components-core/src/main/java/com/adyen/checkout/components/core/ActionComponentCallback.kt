@@ -6,14 +6,9 @@
  * Created by ozgur on 24/1/2023.
  */
 
-package com.adyen.checkout.components.core.internal
-
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.ComponentError
+package com.adyen.checkout.components.core
 
 // TODO SESSIONS: docs
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponentCallback {
     fun onAdditionalDetails(actionComponentData: ActionComponentData)
     fun onError(componentError: ComponentError)

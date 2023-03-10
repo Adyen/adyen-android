@@ -21,7 +21,7 @@ import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
-import com.adyen.checkout.components.core.internal.ActionComponentCallback
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
