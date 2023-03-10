@@ -17,6 +17,9 @@ import com.adyen.checkout.issuerlist.IssuerListViewType
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+/**
+ * Configuration class for the [OnlineBankingPLComponent].
+ */
 @Parcelize
 @Suppress("LongParameterList")
 class OnlineBankingPLConfiguration private constructor(
@@ -31,14 +34,17 @@ class OnlineBankingPLConfiguration private constructor(
     override val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
+    /**
+     * Builder to create an [OnlineBankingPLConfiguration].
+     */
     class Builder : IssuerListBuilder<OnlineBankingPLConfiguration, Builder> {
 
         /**
-         * Constructor for Builder with default values.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param context   A context
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -47,11 +53,11 @@ class OnlineBankingPLConfiguration private constructor(
         )
 
         /**
-         * Builder with required parameters.
+         * Initialize a configuration builder with the required fields.
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(
             shopperLocale: Locale,

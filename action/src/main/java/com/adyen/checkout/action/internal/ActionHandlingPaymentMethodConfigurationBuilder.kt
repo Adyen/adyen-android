@@ -20,7 +20,15 @@ import java.util.Locale
 abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
-    >(
+    >
+/**
+ * Initialize a configuration builder with the required fields.
+ *
+ * @param shopperLocale The [Locale] of the shopper.
+ * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+ * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+ */
+constructor(
     shopperLocale: Locale,
     environment: Environment,
     clientKey: String
@@ -34,11 +42,11 @@ abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     )
 
     /**
-     * Constructor that provides default values.
+     * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
      *
      * @param context A Context
-     * @param environment   The [Environment] to be used for network calls to Adyen.
-     * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+     * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+     * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
      */
     constructor(
         context: Context,
@@ -48,17 +56,6 @@ abstract class ActionHandlingPaymentMethodConfigurationBuilder<
         LocaleUtil.getLocale(context),
         environment,
         clientKey
-    )
-
-    /**
-     * Constructor that copies an existing configuration.
-     *
-     * @param configuration A configuration to initialize the builder.
-     */
-    constructor(configuration: ConfigurationT) : this(
-        configuration.shopperLocale,
-        configuration.environment,
-        configuration.clientKey
     )
 
     /**

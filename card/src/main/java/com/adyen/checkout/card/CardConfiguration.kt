@@ -20,7 +20,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
- * [Configuration] class required by [CardComponent] to change it's behavior. Pass it to the [CardComponent.PROVIDER].
+ * Configuration class for the [CardComponent].
  */
 @Parcelize
 @Suppress("LongParameterList")
@@ -64,11 +64,11 @@ class CardConfiguration private constructor(
         private var addressConfiguration: AddressConfiguration? = null
 
         /**
-         * Constructor for Builder with default values.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param context   A context
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A Context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -79,9 +79,9 @@ class CardConfiguration private constructor(
         /**
          * Builder with parameters for a [CardConfiguration].
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(
             shopperLocale: Locale,

@@ -14,9 +14,10 @@ import com.adyen.checkout.action.GenericActionConfiguration.Builder
 import com.adyen.checkout.action.internal.ActionHandlingConfigurationBuilder
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -29,8 +30,8 @@ import kotlin.collections.set
 /**
  * This is the base configuration for the Action handling component. You need to use the [Builder] to instantiate this
  * class.
- * There you will find specific methods to add configurations for each specific ActionComponent, to be able to customize
- * their behavior.
+ * There you will find specific methods to add configurations for each specific [ActionComponent], to be able to
+ * customize their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
@@ -53,7 +54,8 @@ class GenericActionConfiguration private constructor(
     }
 
     /**
-     * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
+     * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for each action
+     * component.
      */
     @Suppress("unused")
     class Builder :
@@ -64,11 +66,11 @@ class GenericActionConfiguration private constructor(
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         /**
-         * Constructor for Builder with default values.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param context   A context
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A Context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -77,11 +79,11 @@ class GenericActionConfiguration private constructor(
         )
 
         /**
-         * Builder with required parameters.
+         * Initialize a configuration builder with the required fields.
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
