@@ -20,5 +20,6 @@ interface ViewableComponent {
     /**
      * Emits the type of view that should be displayed with the component.
      */
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     val viewFlow: Flow<ComponentViewType?>
 }

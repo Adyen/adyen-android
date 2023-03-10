@@ -43,6 +43,7 @@ import java.lang.ref.WeakReference
 
 /**
  * A View that can display input and fill in details for a Component.
+ * Declare this view in your xml layout file and call [attach] to bind it to a component.
  */
 class AdyenComponentView @JvmOverloads constructor(
     context: Context,
