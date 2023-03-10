@@ -47,6 +47,7 @@ object PaymentMethodTypes {
     const val UPI_QR = "upi_qr"
 
     // Payment methods that do not need a payment component, but only an action component
+    const val DUIT_NOW = "duitnow"
     const val WECHAT_PAY_SDK = "wechatpaySDK"
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
@@ -94,6 +95,7 @@ object PaymentMethodTypes {
         listOf(
             ACH,
             BCMC,
+            DUIT_NOW,
             DOTPAY,
             ENTERCASH,
             EPS,
@@ -123,6 +125,7 @@ object PaymentMethodTypes {
     )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = Collections.unmodifiableList(
         listOf(
+            DUIT_NOW,
             WECHAT_PAY_SDK,
             PAY_NOW,
             PIX

@@ -36,6 +36,7 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -152,19 +153,12 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        val viewType = when (action.paymentMethodType) {
-            PaymentMethodTypes.PAY_NOW -> {
-                maxPollingDurationMillis = PAY_NOW_MAX_POLLING_DURATION
-                QrCodeComponentViewType.FULL_QR_CODE
-            }
-            PaymentMethodTypes.UPI_QR -> {
-                maxPollingDurationMillis = UPI_MAX_POLLING_DURATION
-                QrCodeComponentViewType.FULL_QR_CODE
-            }
-            else -> {
-                maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
-                QrCodeComponentViewType.SIMPLE_QR_CODE
-            }
+        var viewType = QrCodeComponentViewType.SIMPLE_QR_CODE
+
+        action.paymentMethodType?.let {
+            val qrConfig = QRCodePaymentMethodConfig.getByPaymentMethodType(it)
+            viewType = qrConfig.viewType
+            maxPollingDurationMillis = qrConfig.maxPollingDurationMillis
         }
         _viewFlow.tryEmit(viewType)
 
@@ -218,11 +212,18 @@ internal class DefaultQRCodeDelegate(
             qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, encodedQrCodeData)
         }
 
+        var messageTextResource: Int? = null
+        action.paymentMethodType?.let {
+            val qrConfig = QRCodePaymentMethodConfig.getByPaymentMethodType(it)
+            messageTextResource = qrConfig.messageTextResource
+        }
+
         val outputData = QRCodeOutputData(
             isValid = isValid,
             paymentMethodType = action.paymentMethodType,
             qrCodeData = action.qrCodeData,
-            qrImageUrl = qrImageUrl
+            qrImageUrl = qrImageUrl,
+            messageTextResource = messageTextResource
         )
         _outputDataFlow.tryEmit(outputData)
     }
@@ -313,6 +314,7 @@ internal class DefaultQRCodeDelegate(
         private val TAG = LogUtil.getTag()
 
         private val VIEWABLE_PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.DUIT_NOW,
             PaymentMethodTypes.PIX,
             PaymentMethodTypes.PAY_NOW,
             PaymentMethodTypes.UPI_QR,
@@ -321,8 +323,6 @@ internal class DefaultQRCodeDelegate(
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = 1.seconds.inWholeMilliseconds
-        private val PAY_NOW_MAX_POLLING_DURATION = 3.minutes.inWholeMilliseconds
-        private val UPI_MAX_POLLING_DURATION = 5.minutes.inWholeMilliseconds
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 

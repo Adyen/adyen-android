@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -111,7 +110,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
     private fun outputDataChanged(outputData: QRCodeOutputData) {
         Logger.d(TAG, "outputDataChanged")
 
-        updateMessageText(outputData.paymentMethodType)
+        updateMessageText(outputData.messageTextResource)
         updateLogo(outputData.paymentMethodType)
         updateQrImage(outputData.qrImageUrl)
         updateAmount(delegate.componentParams)
@@ -130,9 +129,9 @@ internal class FullQRCodeView @JvmOverloads constructor(
         }
     }
 
-    private fun updateMessageText(paymentMethodType: String?) {
-        val resId = getMessageTextResource(paymentMethodType) ?: return
-        binding.textViewTopLabel.text = localizedContext.getString(resId)
+    private fun updateMessageText(@StringRes messageTextResource: Int?) {
+        if (messageTextResource == null) return
+        binding.textViewTopLabel.text = localizedContext.getString(messageTextResource)
     }
 
     private fun updateLogo(paymentMethodType: String?) {
@@ -148,15 +147,6 @@ internal class FullQRCodeView @JvmOverloads constructor(
     private fun updateQrImage(qrImageUrl: String?) {
         if (!qrImageUrl.isNullOrEmpty()) {
             binding.imageViewQrcode.load(url = qrImageUrl)
-        }
-    }
-
-    @StringRes
-    private fun getMessageTextResource(paymentMethodType: String?): Int? {
-        return when (paymentMethodType) {
-            PaymentMethodTypes.PAY_NOW -> R.string.checkout_qr_code_pay_now
-            PaymentMethodTypes.UPI_QR -> R.string.checkout_qr_code_upi
-            else -> null
         }
     }
 
