@@ -18,11 +18,11 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.ComponentCallback
+import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.requireApplication
 
-// TODO SESSIONS docs
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface StoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
@@ -33,10 +33,15 @@ interface StoredPaymentComponentProvider<
     /**
      * Get a [PaymentComponent] with a stored payment method.
      *
-     * @param owner               The Activity or Fragment to associate the lifecycle.
-     * @param storedPaymentMethod The corresponding  [StoredPaymentMethod] object.
-     * @param configuration       The Configuration of the component.
-     * @param key                 Key
+     * @param fragment              The Fragment to associate the lifecycle.
+     * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
+     * @param configuration         The Configuration of the component.
+     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param order                 An [Order] in case of an ongoing partial payment flow.
+     * @param key                   The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
      *
      * @return The Component
      */
@@ -45,7 +50,7 @@ interface StoredPaymentComponentProvider<
         fragment: Fragment,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        componentCallback: ComponentCallback<ComponentStateT>,
+        callback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
     ): ComponentT {
@@ -56,18 +61,33 @@ interface StoredPaymentComponentProvider<
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
             application = fragment.requireApplication(),
-            componentCallback = componentCallback,
+            componentCallback = callback,
             order = order,
             key = key,
         )
     }
 
+    /**
+     * Get a [PaymentComponent] with a stored payment method.
+     *
+     * @param activity              The Activity to associate the lifecycle.
+     * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
+     * @param configuration         The Configuration of the component.
+     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param order                 An [Order] in case of an ongoing partial payment flow.
+     * @param key                   The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
     @Suppress("LongParameterList")
     fun get(
         activity: ComponentActivity,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        componentCallback: ComponentCallback<ComponentStateT>,
+        callback: ComponentCallback<ComponentStateT>,
         order: Order? = null,
         key: String? = null,
     ): ComponentT {
@@ -78,7 +98,7 @@ interface StoredPaymentComponentProvider<
             storedPaymentMethod = storedPaymentMethod,
             configuration = configuration,
             application = activity.application,
-            componentCallback = componentCallback,
+            componentCallback = callback,
             order = order,
             key = key,
         )
@@ -109,6 +129,8 @@ interface StoredPaymentComponentProvider<
         key: String?,
     ): ComponentT
 
-    // TODO docs
+    /**
+     * Checks if the provided component can handle a given stored payment method.
+     */
     fun isPaymentMethodSupported(storedPaymentMethod: StoredPaymentMethod): Boolean
 }

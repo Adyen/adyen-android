@@ -12,14 +12,12 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 
 /**
  * A [Component] is a class that helps to retrieve or format data related to a part of the Checkout API payment.
- *
- * @param <ComponentResultT> The main parameter that notifies changes on this component.
- * @param <ConfigurationT> The Configuration object associated with this Component.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface Component {
     /**
      * The delegate from this component.
      */
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     val delegate: ComponentDelegate
 }

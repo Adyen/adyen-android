@@ -82,10 +82,9 @@ internal class ActionComponentDialogFragment :
         try {
             val componentParams = dropInViewModel.dropInConfiguration.mapToParams(dropInViewModel.amount)
             actionComponent = GenericActionComponentProvider(componentParams).get(
-                this,
-                requireActivity().application,
-                actionConfiguration,
-                this
+                fragment = this,
+                configuration = actionConfiguration,
+                callback = this
             )
 
             if (shouldFinishWithAction()) {

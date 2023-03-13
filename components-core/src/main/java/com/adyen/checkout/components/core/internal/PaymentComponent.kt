@@ -11,17 +11,20 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 
-// TODO sessions: docs
 /**
  * A component that handles collecting user input data. It handles validating and formatting the data for the UI.
- * A valid [PaymentComponentState] contains [PaymentMethodDetails] to help compose the payments/ call on the backend.
+ * A valid [PaymentComponentState] contains [PaymentMethodDetails] to help compose the request to the /payments API
+ * call.
  *
+ * This component can also handle additional actions.
  *
- *
- * Should be used attached to a corresponding ComponentView to get data from.
+ * Can be attached to [AdyenComponentView] to present a view to the user.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentComponent : Component {
 
+    /**
+     * Sets whether the user is allowed to interact with the component or not.
+     */
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

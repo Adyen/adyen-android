@@ -423,7 +423,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = achConfig,
-                componentCallback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
+                callback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
                 key = storedPaymentMethod.id
             )
         }
@@ -434,7 +434,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
-                componentCallback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = componentCallback as ComponentCallback<CardComponentState>,
                 key = storedPaymentMethod.id
             )
         }
@@ -445,7 +445,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
-                componentCallback = componentCallback as ComponentCallback<BlikComponentState>,
+                callback = componentCallback as ComponentCallback<BlikComponentState>,
                 key = storedPaymentMethod.id
             )
         }
@@ -481,7 +481,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = configuration,
-                componentCallback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
+                callback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
             )
         }
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -491,7 +491,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bacsConfiguration,
-                componentCallback = componentCallback as ComponentCallback<BacsDirectDebitComponentState>,
+                callback = componentCallback as ComponentCallback<BacsDirectDebitComponentState>,
             )
         }
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -501,7 +501,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
-                componentCallback = componentCallback as ComponentCallback<BcmcComponentState>,
+                callback = componentCallback as ComponentCallback<BcmcComponentState>,
             )
         }
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -511,7 +511,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
-                componentCallback = componentCallback as ComponentCallback<BlikComponentState>,
+                callback = componentCallback as ComponentCallback<BlikComponentState>,
             )
         }
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -521,7 +521,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
-                componentCallback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = componentCallback as ComponentCallback<CardComponentState>,
             )
         }
         ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -531,7 +531,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = convenienceStoresJPConfiguration,
-                componentCallback = componentCallback as ComponentCallback<ConvenienceStoresJPComponentState>,
+                callback = componentCallback as ComponentCallback<ConvenienceStoresJPComponentState>,
             )
         }
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -541,7 +541,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
-                componentCallback = componentCallback as ComponentCallback<DotpayComponentState>,
+                callback = componentCallback as ComponentCallback<DotpayComponentState>,
             )
         }
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -551,7 +551,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
-                componentCallback = componentCallback as ComponentCallback<EntercashComponentState>,
+                callback = componentCallback as ComponentCallback<EntercashComponentState>,
             )
         }
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -561,7 +561,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
-                componentCallback = componentCallback as ComponentCallback<EPSComponentState>,
+                callback = componentCallback as ComponentCallback<EPSComponentState>,
             )
         }
         GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -571,7 +571,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = giftcardConfiguration,
-                componentCallback = componentCallback as ComponentCallback<GiftCardComponentState>,
+                callback = componentCallback as ComponentCallback<GiftCardComponentState>,
             )
         }
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -581,7 +581,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = googlePayConfiguration,
-                componentCallback = componentCallback as ComponentCallback<GooglePayComponentState>,
+                callback = componentCallback as ComponentCallback<GooglePayComponentState>,
             )
         }
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -591,7 +591,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
-                componentCallback = componentCallback as ComponentCallback<IdealComponentState>,
+                callback = componentCallback as ComponentCallback<IdealComponentState>,
             )
         }
         InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -601,7 +601,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = instantPaymentConfiguration,
-                componentCallback = componentCallback as ComponentCallback<InstantComponentState>,
+                callback = componentCallback as ComponentCallback<InstantComponentState>,
             )
         }
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -611,7 +611,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = mbWayConfiguration,
-                componentCallback = componentCallback as ComponentCallback<MBWayComponentState>,
+                callback = componentCallback as ComponentCallback<MBWayComponentState>,
             )
         }
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -621,7 +621,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
-                componentCallback = componentCallback as ComponentCallback<MolpayComponentState>,
+                callback = componentCallback as ComponentCallback<MolpayComponentState>,
             )
         }
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -631,7 +631,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingCZConfig,
-                componentCallback = componentCallback as ComponentCallback<OnlineBankingCZComponentState>,
+                callback = componentCallback as ComponentCallback<OnlineBankingCZComponentState>,
             )
         }
         OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -641,7 +641,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingJPConfig,
-                componentCallback = componentCallback as ComponentCallback<OnlineBankingJPComponentState>,
+                callback = componentCallback as ComponentCallback<OnlineBankingJPComponentState>,
             )
         }
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -651,7 +651,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
-                componentCallback = componentCallback as ComponentCallback<OnlineBankingPLComponentState>,
+                callback = componentCallback as ComponentCallback<OnlineBankingPLComponentState>,
             )
         }
         OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -661,7 +661,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingSKConfig,
-                componentCallback = componentCallback as ComponentCallback<OnlineBankingSKComponentState>,
+                callback = componentCallback as ComponentCallback<OnlineBankingSKComponentState>,
             )
         }
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -671,7 +671,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
-                componentCallback = componentCallback as ComponentCallback<OpenBankingComponentState>,
+                callback = componentCallback as ComponentCallback<OpenBankingComponentState>,
             )
         }
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -681,7 +681,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payByBankConfig,
-                componentCallback = componentCallback as ComponentCallback<PayByBankComponentState>,
+                callback = componentCallback as ComponentCallback<PayByBankComponentState>,
             )
         }
         PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -691,7 +691,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payEasyConfiguration,
-                componentCallback = componentCallback as ComponentCallback<PayEasyComponentState>,
+                callback = componentCallback as ComponentCallback<PayEasyComponentState>,
             )
         }
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -701,7 +701,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
-                componentCallback = componentCallback as ComponentCallback<SepaComponentState>,
+                callback = componentCallback as ComponentCallback<SepaComponentState>,
             )
         }
         SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -711,7 +711,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sevenElevenConfiguration,
-                componentCallback = componentCallback as ComponentCallback<SevenElevenComponentState>,
+                callback = componentCallback as ComponentCallback<SevenElevenComponentState>,
             )
         }
         UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
@@ -721,7 +721,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = upiConfiguration,
-                componentCallback = componentCallback as ComponentCallback<UPIComponentState>,
+                callback = componentCallback as ComponentCallback<UPIComponentState>,
             )
         }
         else -> {

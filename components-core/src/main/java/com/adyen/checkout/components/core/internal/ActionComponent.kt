@@ -13,11 +13,10 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 
 /**
- * A component that handles an "action" to be taken from the payments/ API result.
+ * A component that handles an "action" to be taken from the result of the /payments API call.
  *
- *
- *
- * Result on the [ActionComponentData] if populated can be considered valid to be sent back to the payments/details/ API
+ * If an [ActionComponentData] is emitted from this component, it should be sent back through the /payments/details API
+ * call.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponent : Component {

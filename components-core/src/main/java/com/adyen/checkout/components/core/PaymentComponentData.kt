@@ -16,6 +16,12 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Class containing the parameters that the SDK can infer from a component's configuration and user input, especially
+ * the [paymentMethod] object with the shopper input. Use [PaymentComponentData.SERIALIZER] to serialize this data to a
+ * [JSONObject]. The rest of the /payments call request data should be filled in, on your server, according to your
+ * needs.
+ */
 @Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var paymentMethod: PaymentMethodDetailsT? = null,
