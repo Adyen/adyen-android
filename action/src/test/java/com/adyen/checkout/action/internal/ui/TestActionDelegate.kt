@@ -15,18 +15,18 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.internal.ActionComponentEvent
-import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
-import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
+import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -81,7 +81,8 @@ internal class TestActionDelegate :
             throw NotImplementedError("This method shouldn't be used in tests")
         }
     }
-    override val componentParams: ComponentParams = GenericComponentParamsMapper().mapToParams(configuration)
+    override val componentParams: ComponentParams =
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -122,7 +123,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     private val configuration: Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
 
-    override val componentParams: ComponentParams = GenericComponentParamsMapper().mapToParams(configuration)
+    override val componentParams: ComponentParams =
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

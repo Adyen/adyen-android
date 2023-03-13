@@ -12,7 +12,7 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
-import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -23,7 +23,7 @@ internal class InstallmentParamsMapperTest {
     @Test
     fun `when session setup installment option is default then installment params should be the same `() {
         val sessionSetupInstallmentOptionsMap = mapOf(
-            DEFAULT_INSTALLMENT_OPTION to SessionSetupInstallmentOptions(
+            DEFAULT_INSTALLMENT_OPTION to SessionInstallmentOptionsParams(
                 plans = listOf(INSTALLMENT_PLAN),
                 preselectedValue = 2,
                 values = listOf(2)
@@ -36,10 +36,7 @@ internal class InstallmentParamsMapperTest {
             )
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
-            sessionSetupInstallmentOptionsMap,
-            null
-        )
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionSetupInstallmentOptionsMap)
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
@@ -47,7 +44,7 @@ internal class InstallmentParamsMapperTest {
     @Test
     fun `when session setup installment option is card based then installment params should be the same `() {
         val sessionSetupInstallmentOptionsMap = mapOf(
-            CardType.VISA.txVariant to SessionSetupInstallmentOptions(
+            CardType.VISA.txVariant to SessionInstallmentOptionsParams(
                 plans = listOf(INSTALLMENT_PLAN),
                 preselectedValue = 2,
                 values = listOf(2)
@@ -63,10 +60,7 @@ internal class InstallmentParamsMapperTest {
             )
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
-            sessionSetupInstallmentOptionsMap,
-            null
-        )
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionSetupInstallmentOptionsMap)
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
@@ -87,10 +81,7 @@ internal class InstallmentParamsMapperTest {
             )
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
-            null,
-            installmentConfiguration
-        )
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration)
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
@@ -117,10 +108,7 @@ internal class InstallmentParamsMapperTest {
             )
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
-            null,
-            installmentConfiguration
-        )
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration)
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }

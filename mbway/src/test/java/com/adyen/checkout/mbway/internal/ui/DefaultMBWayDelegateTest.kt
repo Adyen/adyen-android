@@ -232,7 +232,7 @@ internal class DefaultMBWayDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
-        componentParams = ButtonComponentParamsMapper().mapToParams(configuration),
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
     )

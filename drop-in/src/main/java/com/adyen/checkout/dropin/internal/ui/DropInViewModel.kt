@@ -61,7 +61,7 @@ internal class DropInViewModel(
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
     var amount: Amount
-        get() = bundleHandler.amount ?: dropInConfiguration.amount
+        get() = bundleHandler.amount ?: getInitialAmount()
         private set(value) {
             bundleHandler.amount = value
         }
@@ -143,6 +143,10 @@ internal class DropInViewModel(
         } ?: false
 
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
+    }
+
+    private fun getInitialAmount(): Amount {
+        return sessionDetails?.amount ?: dropInConfiguration.amount
     }
 
     fun onCreated() {
@@ -292,7 +296,7 @@ internal class DropInViewModel(
         val orderModel = getOrderDetails(orderResponse)
         if (orderModel == null) {
             currentOrder = null
-            amount = dropInConfiguration.amount
+            amount = getInitialAmount()
             Logger.d(TAG, "handleOrderResponse - Amount reverted: $amount")
             Logger.d(TAG, "handleOrderResponse - Order cancelled")
         } else {

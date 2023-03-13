@@ -114,13 +114,13 @@ internal abstract class BaseComponentDialogFragment :
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
-                    sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration
+                    sessionDetails = dropInViewModel.sessionDetails
                 )
             } else {
                 getComponentFor(
                     fragment = this,
                     paymentMethod = paymentMethod,
-                    sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration,
+                    sessionDetails = dropInViewModel.sessionDetails,
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this

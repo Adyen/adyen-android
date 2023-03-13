@@ -15,9 +15,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
 import com.adyen.checkout.components.core.internal.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
@@ -28,11 +28,12 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.googlepay.GooglePayComponent
@@ -43,13 +44,13 @@ import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMa
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.wallet.Wallet
@@ -59,14 +60,14 @@ private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GooglePayComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     SessionPaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper()
+    private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -81,7 +82,7 @@ class GooglePayComponentProvider(
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, null)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -136,7 +137,11 @@ class GooglePayComponentProvider(
     ): GooglePayComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(
+            googlePayConfiguration = configuration,
+            paymentMethod = paymentMethod,
+            sessionParams = SessionParamsFactory.create(checkoutSession),
+        )
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
@@ -214,7 +219,7 @@ class GooglePayComponentProvider(
             return
         }
         val callbackWeakReference = WeakReference(callback)
-        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, null)
         val paymentsClient = Wallet.getPaymentsClient(
             applicationContext,
             GooglePayUtils.createWalletOptions(componentParams)

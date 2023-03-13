@@ -15,39 +15,57 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
-internal class CardComponentParamsMapper(private val installmentsParamsMapper: InstallmentsParamsMapper) {
+@Suppress("TooManyFunctions")
+internal class CardComponentParamsMapper(
+    private val installmentsParamsMapper: InstallmentsParamsMapper,
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParamsDefault(
         cardConfiguration: CardConfiguration,
         paymentMethod: PaymentMethod,
-        overrideComponentParams: ComponentParams? = null,
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
+        sessionParams: SessionParams?,
     ): CardComponentParams {
         val supportedCardBrands = cardConfiguration.getSupportedCardBrands(paymentMethod)
-        return cardConfiguration
-            .mapToParamsInternal(supportedCardBrands, sessionSetupConfiguration)
-            .override(overrideComponentParams)
+        return mapToParams(
+            cardConfiguration,
+            supportedCardBrands,
+            sessionParams,
+        )
     }
 
     fun mapToParamsStored(
         cardConfiguration: CardConfiguration,
-        overrideComponentParams: ComponentParams? = null
+        sessionParams: SessionParams?,
     ): CardComponentParams {
         val supportedCardBrands = cardConfiguration.getSupportedCardBrandsStored()
+        return mapToParams(
+            cardConfiguration,
+            supportedCardBrands,
+            sessionParams,
+        )
+    }
+
+    private fun mapToParams(
+        cardConfiguration: CardConfiguration,
+        supportedCardBrands: List<CardBrand>,
+        sessionParams: SessionParams?,
+    ): CardComponentParams {
         return cardConfiguration
             .mapToParamsInternal(supportedCardBrands)
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun CardConfiguration.mapToParamsInternal(
         supportedCardBrands: List<CardBrand>,
-        sessionSetupConfiguration: SessionSetupConfiguration? = null
     ): CardComponentParams {
         return CardComponentParams(
             shopperLocale = shopperLocale,
@@ -60,16 +78,12 @@ internal class CardComponentParamsMapper(private val installmentsParamsMapper: I
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
             supportedCardBrands = supportedCardBrands,
             shopperReference = shopperReference,
-            isStorePaymentFieldVisible = sessionSetupConfiguration?.enableStoreDetails
-                ?: isStorePaymentFieldVisible ?: true,
+            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
             isHideCvc = isHideCvc ?: false,
             isHideCvcStoredCard = isHideCvcStoredCard ?: false,
             socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
-            installmentParams = installmentsParamsMapper?.mapToInstallmentParams(
-                sessionSetupConfiguration?.installmentOptions,
-                installmentConfiguration
-            ),
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration),
             addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None
         )
     }
@@ -152,6 +166,20 @@ internal class CardComponentParamsMapper(private val installmentsParamsMapper: I
                 AddressFieldPolicyParams.Required
             }
         }
+    }
+
+    private fun CardComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): CardComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
+            // we don't fall back to the original value of installmentParams value on purpose
+            // if sessionParams.installmentOptions is null we want installmentParams to be also null regardless of what
+            // InstallmentConfiguration is passed to the mapper
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionParams.installmentOptions),
+            amount = sessionParams.amount ?: amount,
+        )
     }
 
     companion object {

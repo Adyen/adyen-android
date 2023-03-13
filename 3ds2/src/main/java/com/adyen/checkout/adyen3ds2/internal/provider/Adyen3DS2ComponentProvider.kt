@@ -33,9 +33,10 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
-import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.internal.util.get
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
@@ -44,10 +45,11 @@ import kotlinx.coroutines.Dispatchers
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class Adyen3DS2ComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper()
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -79,7 +81,7 @@ class Adyen3DS2ComponentProvider(
     ): Adyen3DS2Delegate {
         val componentParams = componentParamsMapper.mapToParams(
             configuration,
-            overrideComponentParams
+            null
         )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)

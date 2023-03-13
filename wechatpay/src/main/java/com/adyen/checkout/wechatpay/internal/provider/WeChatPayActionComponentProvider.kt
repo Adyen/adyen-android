@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -37,10 +38,11 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class WeChatPayActionComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper()
+    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -70,7 +72,7 @@ class WeChatPayActionComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): WeChatDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+        val componentParams = componentParamsMapper.mapToParams(configuration, null)
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)

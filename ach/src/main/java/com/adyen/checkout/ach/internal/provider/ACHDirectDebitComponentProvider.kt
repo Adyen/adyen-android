@@ -18,8 +18,8 @@ import com.adyen.checkout.ach.ACHDirectDebitComponent
 import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
-import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.ach.internal.ui.StoredACHDirectDebitDelegate
+import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.Order
@@ -37,6 +37,7 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -46,7 +47,6 @@ import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -54,14 +54,15 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ACHDirectDebitComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) :
     PaymentComponentProvider<
         ACHDirectDebitComponent,
@@ -84,7 +85,10 @@ class ACHDirectDebitComponentProvider(
         ACHDirectDebitComponentState
         > {
 
-    private val componentParamsMapper = ACHDirectDebitComponentParamsMapper()
+    private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(
+        overrideComponentParams,
+        overrideSessionParams
+    )
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -95,12 +99,11 @@ class ACHDirectDebitComponentProvider(
         application: Application,
         componentCallback: ComponentCallback<ACHDirectDebitComponentState>,
         order: Order?,
-        key: String?
+        key: String?,
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams =
-                componentParamsMapper.mapToParams(configuration, overrideComponentParams, sessionSetupConfiguration)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -168,9 +171,8 @@ class ACHDirectDebitComponentProvider(
         assertSupported(paymentMethod)
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration,
-                overrideComponentParams,
-                checkoutSession.sessionSetupResponse.configuration
+                configuration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession)
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -256,7 +258,7 @@ class ACHDirectDebitComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -298,6 +300,7 @@ class ACHDirectDebitComponentProvider(
         }
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -312,7 +315,10 @@ class ACHDirectDebitComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParams(
+                configuration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession)
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(

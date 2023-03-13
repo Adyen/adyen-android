@@ -3,18 +3,21 @@ package com.adyen.checkout.components.core.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ButtonComponentParamsMapper {
+class ButtonComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         configuration: Configuration,
-        overrideComponentParams: ComponentParams? = null,
+        sessionParams: SessionParams?,
     ): ButtonComponentParams {
         return configuration
             .mapToParamsInternal()
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun Configuration.mapToParamsInternal(): ButtonComponentParams {
@@ -24,7 +27,7 @@ class ButtonComponentParamsMapper {
             clientKey = clientKey,
             isAnalyticsEnabled = isAnalyticsEnabled ?: true,
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY,
+            amount = amount,
             isSubmitButtonVisible = (this as? ButtonConfiguration)?.isSubmitButtonVisible ?: true
         )
     }
@@ -40,6 +43,15 @@ class ButtonComponentParamsMapper {
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount
+        )
+    }
+
+    private fun ButtonComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): ButtonComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            amount = sessionParams.amount ?: amount,
         )
     }
 }

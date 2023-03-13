@@ -14,21 +14,22 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DotpayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod, DotpayComponentState>(
     componentClass = DotpayComponent::class.java,
     overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createComponent(

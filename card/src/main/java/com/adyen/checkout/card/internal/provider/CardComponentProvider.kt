@@ -40,6 +40,7 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -50,7 +51,6 @@ import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -58,21 +58,26 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) :
     PaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
-    private val componentParamsMapper = CardComponentParamsMapper(InstallmentsParamsMapper())
+    private val componentParamsMapper = CardComponentParamsMapper(
+        installmentsParamsMapper = InstallmentsParamsMapper(),
+        overrideComponentParams = overrideComponentParams,
+        overrideSessionParams = overrideSessionParams
+    )
 
     @Suppress("LongParameterList", "LongMethod")
     override fun get(
@@ -92,8 +97,7 @@ class CardComponentProvider(
             val componentParams = componentParamsMapper.mapToParamsDefault(
                 configuration,
                 paymentMethod,
-                overrideComponentParams,
-                sessionSetupConfiguration
+                null,
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val dateGenerator = DateGenerator()
@@ -167,10 +171,9 @@ class CardComponentProvider(
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParamsDefault(
-                configuration,
-                paymentMethod,
-                overrideComponentParams,
-                checkoutSession.sessionSetupResponse.configuration
+                cardConfiguration = configuration,
+                paymentMethod = paymentMethod,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val dateGenerator = DateGenerator()
@@ -261,7 +264,7 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParamsStored(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -325,7 +328,10 @@ class CardComponentProvider(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(configuration, overrideComponentParams)
+            val componentParams = componentParamsMapper.mapToParamsStored(
+                cardConfiguration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+            )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

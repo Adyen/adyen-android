@@ -26,6 +26,7 @@ import com.adyen.checkout.internal.ConfigurationProvider
 import com.adyen.checkout.internal.DataProvider
 import com.adyen.checkout.internal.Helpers.mapToPaymentMethodModelList
 import com.adyen.checkout.internal.Helpers.mapToStoredPaymentMethodsModelList
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -59,6 +60,7 @@ internal class PaymentMethodsListViewModelTest(
     private lateinit var storedPaymentMethods: MutableList<StoredPaymentMethod>
     private lateinit var viewModel: PaymentMethodsListViewModel
     private var order: OrderModel? = null
+    private var sessionDetails: SessionDetails? = null
 
     @BeforeEach
     fun setup() {
@@ -74,7 +76,8 @@ internal class PaymentMethodsListViewModelTest(
             storedPaymentMethods = storedPaymentMethods,
             order = order,
             dropInConfiguration = configuration,
-            amount = amount
+            amount = amount,
+            sessionDetails = sessionDetails,
         )
     }
 
@@ -129,7 +132,8 @@ internal class PaymentMethodsListViewModelTest(
                 storedPaymentMethods = storedPaymentMethods,
                 order = order,
                 dropInConfiguration = configuration,
-                amount = amount
+                amount = amount,
+                sessionDetails = sessionDetails,
             )
 
             viewModel.paymentMethodsFlow.test {
@@ -154,7 +158,8 @@ internal class PaymentMethodsListViewModelTest(
                     storedPaymentMethods = storedPaymentMethods,
                     order = order,
                     dropInConfiguration = configuration,
-                    amount = amount
+                    amount = amount,
+                    sessionDetails = sessionDetails,
                 )
 
                 viewModel.paymentMethodsFlow.test {
@@ -179,7 +184,8 @@ internal class PaymentMethodsListViewModelTest(
                     storedPaymentMethods = storedPaymentMethods,
                     order = order,
                     dropInConfiguration = configuration,
-                    amount = amount
+                    amount = amount,
+                    sessionDetails = sessionDetails,
                 )
 
                 viewModel.paymentMethodsFlow.test {
@@ -205,7 +211,8 @@ internal class PaymentMethodsListViewModelTest(
                     storedPaymentMethods = storedPaymentMethods,
                     order = order,
                     dropInConfiguration = configuration,
-                    amount = amount
+                    amount = amount,
+                    sessionDetails = sessionDetails,
                 )
 
                 viewModel.paymentMethodsFlow.test {
@@ -232,7 +239,8 @@ internal class PaymentMethodsListViewModelTest(
                     storedPaymentMethods = storedPaymentMethods,
                     order = order,
                     dropInConfiguration = configuration,
-                    amount = amount
+                    amount = amount,
+                    sessionDetails = sessionDetails,
                 )
 
                 viewModel.paymentMethodsFlow.test {

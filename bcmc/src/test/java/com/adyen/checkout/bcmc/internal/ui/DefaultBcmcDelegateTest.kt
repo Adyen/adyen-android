@@ -368,7 +368,7 @@ internal class DefaultBcmcDelegateTest(
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         publicKeyRepository = testPublicKeyRepository,
-        componentParams = BcmcComponentParamsMapper().mapToParams(configuration),
+        componentParams = BcmcComponentParamsMapper(null, null).mapToParams(configuration, null),
         cardValidationMapper = cardValidationMapper,
         cardEncrypter = cardEncrypter,
         analyticsRepository = analyticsRepository,

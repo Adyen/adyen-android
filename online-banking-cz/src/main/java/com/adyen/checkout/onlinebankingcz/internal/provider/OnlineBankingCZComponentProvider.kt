@@ -20,19 +20,20 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentState
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OnlineBankingCZComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingCZComponent,
     OnlineBankingCZConfiguration,
     OnlineBankingCZPaymentMethod,
     OnlineBankingCZComponentState>(
     componentClass = OnlineBankingCZComponent::class.java,
-    overrideComponentParams = overrideComponentParams
+    overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createPaymentMethod(): OnlineBankingCZPaymentMethod {

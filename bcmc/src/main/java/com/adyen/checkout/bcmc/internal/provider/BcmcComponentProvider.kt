@@ -35,6 +35,7 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -45,24 +46,24 @@ import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BcmcComponentProvider(
-    private val overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideComponentParams: ComponentParams? = null,
+    overrideSessionParams: SessionParams? = null,
 ) :
     PaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState>,
     SessionPaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState> {
 
-    private val componentParamsMapper = BcmcComponentParamsMapper()
+    private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -77,11 +78,7 @@ class BcmcComponentProvider(
     ): BcmcComponent {
         assertSupported(paymentMethod)
 
-        val componentParams = componentParamsMapper.mapToParams(
-            configuration,
-            overrideComponentParams,
-            sessionSetupConfiguration
-        )
+        val componentParams = componentParamsMapper.mapToParams(configuration, null)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)
         val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -147,9 +144,8 @@ class BcmcComponentProvider(
         assertSupported(paymentMethod)
 
         val componentParams = componentParamsMapper.mapToParams(
-            configuration,
-            overrideComponentParams,
-            checkoutSession.sessionSetupResponse.configuration
+            bcmcConfiguration = configuration,
+            sessionParams = SessionParamsFactory.create(checkoutSession)
         )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val publicKeyService = PublicKeyService(httpClient)

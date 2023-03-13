@@ -10,21 +10,25 @@ package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
 
     fun mapToParams(
         issuerListConfiguration: IssuerListConfiguration,
-        overrideComponentParams: ComponentParams? = null
+        sessionParams: SessionParams?,
     ): IssuerListComponentParams {
         return issuerListConfiguration
             .mapToParamsInternal()
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun IssuerListConfiguration.mapToParamsInternal(): IssuerListComponentParams {
@@ -52,6 +56,15 @@ class IssuerListComponentParamsMapper(
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
+        )
+    }
+
+    private fun IssuerListComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): IssuerListComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            amount = sessionParams.amount ?: amount,
         )
     }
 }

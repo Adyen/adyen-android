@@ -14,18 +14,18 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ConvenienceStoresJPComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : EContextComponentProvider<
     ConvenienceStoresJPComponent,
     ConvenienceStoresJPConfiguration,
@@ -33,6 +33,7 @@ class ConvenienceStoresJPComponentProvider(
     ConvenienceStoresJPComponentState>(
     componentClass = ConvenienceStoresJPComponent::class.java,
     overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createComponentState(

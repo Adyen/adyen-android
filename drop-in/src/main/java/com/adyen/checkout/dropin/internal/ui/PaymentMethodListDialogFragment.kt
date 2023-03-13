@@ -64,12 +64,13 @@ internal class PaymentMethodListDialogFragment :
         Logger.d(TAG, "onCreateView")
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
-                requireActivity().application,
-                dropInViewModel.getPaymentMethods(),
-                dropInViewModel.getStoredPaymentMethods(),
-                dropInViewModel.currentOrder,
-                dropInViewModel.dropInConfiguration,
-                dropInViewModel.amount
+                application = requireActivity().application,
+                paymentMethods = dropInViewModel.getPaymentMethods(),
+                storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
+                order = dropInViewModel.currentOrder,
+                dropInConfiguration = dropInViewModel.dropInConfiguration,
+                amount = dropInViewModel.amount,
+                sessionDetails = dropInViewModel.sessionDetails,
             )
         }
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
@@ -161,7 +162,7 @@ internal class PaymentMethodListDialogFragment :
             dropInConfiguration = dropInViewModel.dropInConfiguration,
             amount = dropInViewModel.amount,
             componentCallback = paymentMethodsListViewModel,
-            sessionSetupConfiguration = dropInViewModel.sessionDetails?.sessionSetupConfiguration
+            sessionDetails = dropInViewModel.sessionDetails
         )
         paymentMethodsListViewModel.onClickStoredItem(storedPaymentMethod, storedPaymentMethodModel)
     }

@@ -14,10 +14,10 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
@@ -25,7 +25,7 @@ import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SevenElevenComponentProvider(
     overrideComponentParams: ComponentParams? = null,
-    private val sessionSetupConfiguration: SessionSetupConfiguration? = null
+    overrideSessionParams: SessionParams? = null,
 ) : EContextComponentProvider<
     SevenElevenComponent,
     SevenElevenConfiguration,
@@ -33,6 +33,7 @@ class SevenElevenComponentProvider(
     SevenElevenComponentState>(
     componentClass = SevenElevenComponent::class.java,
     overrideComponentParams = overrideComponentParams,
+    overrideSessionParams = overrideSessionParams,
 ) {
 
     override fun createComponentState(

@@ -12,15 +12,19 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GenericComponentParamsMapper {
+class GenericComponentParamsMapper(
+    private val overrideComponentParams: ComponentParams?,
+    private val overrideSessionParams: SessionParams?,
+) {
 
     fun mapToParams(
         configuration: Configuration,
-        overrideComponentParams: ComponentParams? = null
+        sessionParams: SessionParams?,
     ): GenericComponentParams {
         return configuration
             .mapToParamsInternal()
             .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
     }
 
     private fun Configuration.mapToParamsInternal(): GenericComponentParams {
@@ -45,6 +49,15 @@ class GenericComponentParamsMapper {
             isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
+        )
+    }
+
+    private fun GenericComponentParams.override(
+        sessionParams: SessionParams? = null
+    ): GenericComponentParams {
+        if (sessionParams == null) return this
+        return copy(
+            amount = sessionParams.amount ?: amount,
         )
     }
 }
