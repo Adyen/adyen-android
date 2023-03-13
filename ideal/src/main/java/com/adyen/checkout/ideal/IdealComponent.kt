@@ -10,7 +10,7 @@ package com.adyen.checkout.ideal
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
 import com.adyen.checkout.ideal.IdealComponent.Companion.PROVIDER
 import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider

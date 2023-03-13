@@ -9,7 +9,7 @@
 package com.adyen.checkout.qrcode.internal.ui.model
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.internal.ui.QrCodeComponentViewType
 import kotlin.time.Duration.Companion.minutes

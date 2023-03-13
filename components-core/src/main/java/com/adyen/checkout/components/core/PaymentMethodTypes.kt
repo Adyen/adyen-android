@@ -1,19 +1,17 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 4/3/2019.
+ * Created by josephj on 13/3/2023.
  */
-package com.adyen.checkout.components.core.internal.util
+package com.adyen.checkout.components.core
 
-import androidx.annotation.RestrictTo
 import java.util.Collections
 
 /**
  * Helper class with a list of all the currently supported Payment Methods on Components and Drop-In.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object PaymentMethodTypes {
 
     // Placeholder value if the type is not found.
