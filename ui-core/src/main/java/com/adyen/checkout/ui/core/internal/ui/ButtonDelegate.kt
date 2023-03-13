@@ -2,24 +2,16 @@ package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.annotation.RestrictTo
 
-// TODO docs
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ButtonDelegate {
 
     fun onSubmit()
 
     /**
-     * TODO: Update docs
-     * Tells if the view interaction requires confirmation from the user to start the payment flow.
-     * Confirmation usually is obtained by a "Pay" button the user need to press to start processing the payment.
-     * If confirmation is not required, it means the view handles input in a way that the user has already expressed the
-     * desire to continue.
+     * Indicates whether the component requires user interaction before the payment flow can be triggered.
+     * User interaction usually means filling an input, clicking a button, selecting an item from a list, etc.
      *
-     * Each type of view always returns the same value, so if the type of view is known, there is no need to check this
-     * method.
-     *
-     * @return If an update from the component attached to this View requires further user confirmation to continue or
-     * not.
+     * If no interaction is required, the component can be submitted at any point after it's loaded.
      */
     fun isConfirmationRequired(): Boolean
 
