@@ -19,11 +19,11 @@ import com.adyen.checkout.adyen3ds2.R
 import com.adyen.checkout.adyen3ds2.databinding.DelegatedAuthenticationRegistrationViewBinding
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
-import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ComponentView
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds

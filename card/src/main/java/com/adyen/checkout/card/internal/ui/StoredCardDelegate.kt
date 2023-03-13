@@ -25,7 +25,7 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
+import com.adyen.checkout.components.core.paymentmethod.DelegatedAuthenticationData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent

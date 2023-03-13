@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.DelegatedAuthenticationData
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil

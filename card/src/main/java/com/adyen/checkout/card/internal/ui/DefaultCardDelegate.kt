@@ -36,7 +36,7 @@ import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.model.payments.request.DelegatedAuthenticationData
+import com.adyen.checkout.components.core.paymentmethod.DelegatedAuthenticationData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent

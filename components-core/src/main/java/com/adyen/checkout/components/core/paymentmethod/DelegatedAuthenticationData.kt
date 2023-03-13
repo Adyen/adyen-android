@@ -6,12 +6,12 @@
  * Created by temirlan on 24/11/2022.
  */
 
-package com.adyen.checkout.components.model.payments.request
+package com.adyen.checkout.components.core.paymentmethod
 
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.ModelObject
-import com.adyen.checkout.core.model.getBooleanOrNull
-import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

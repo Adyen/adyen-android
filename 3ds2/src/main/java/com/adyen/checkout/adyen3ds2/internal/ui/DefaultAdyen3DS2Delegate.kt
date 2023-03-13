@@ -23,6 +23,8 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
+import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.BaseThreeds2Action
@@ -36,6 +38,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.Base64Encoder
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException

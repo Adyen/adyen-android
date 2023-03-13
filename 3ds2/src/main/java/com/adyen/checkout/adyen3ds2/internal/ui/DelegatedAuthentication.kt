@@ -15,11 +15,11 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
-import com.adyen.checkout.components.bundle.SavedStateHandleContainer
-import com.adyen.checkout.components.bundle.SavedStateHandleProperty
-import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +34,7 @@ internal class DelegatedAuthentication(
     @DrawableRes val merchantLogo: Int?
 ) : SavedStateHandleContainer {
 
+    private var currentAuthenticationLauncher: AuthenticationLauncher? = null
     private var adyenAuthentication: AdyenAuthentication? = null
 
     private var pendingRegistrationSdkInput: String? = null
@@ -53,7 +54,10 @@ internal class DelegatedAuthentication(
     }
 
     fun initAdyenAuthentication(context: Context, authenticationLauncher: AuthenticationLauncher) {
-        adyenAuthentication = AdyenAuthentication(context, authenticationLauncher)
+        if (currentAuthenticationLauncher != authenticationLauncher) {
+            currentAuthenticationLauncher = authenticationLauncher
+            adyenAuthentication = AdyenAuthentication(context, authenticationLauncher)
+        }
     }
 
     fun getAdyenAuthentication(): AdyenAuthentication? = adyenAuthentication

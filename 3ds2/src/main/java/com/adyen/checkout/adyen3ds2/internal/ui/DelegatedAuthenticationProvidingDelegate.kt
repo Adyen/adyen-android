@@ -14,7 +14,7 @@ import com.adyen.authentication.AdyenAuthentication
 import com.adyen.authentication.AuthenticationLauncher
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationResult
 import com.adyen.checkout.adyen3ds2.model.DelegatedAuthenticationRegistrationResult
-import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import kotlinx.coroutines.flow.Flow
 
 interface DelegatedAuthenticationProvidingDelegate {
