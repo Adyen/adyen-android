@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Plătiți</string>
     <string name="pay_button_with_value">Plătiți %s</string>
+    <string name="confirm_preauthorization">Confirmați preautorizarea</string>
     <string name="payment_methods_header">Metode de plată</string>
     <string name="error_dialog_title">Eroare</string>
     <string name="error_dialog_button">Ok</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, șterge</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anulare</string>
     <string name="checkout_remove_stored_payment_method_body">Ștergeți metoda de plată memorată</string>
+    <string name="checkout_stored_payment_confirmation_message">Confirmați plata %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Anulare</string>
 </resources>

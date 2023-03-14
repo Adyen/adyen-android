@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">결제</string>
     <string name="pay_button_with_value">%s 결제</string>
+    <string name="confirm_preauthorization">사전 승인 확인</string>
     <string name="payment_methods_header">결제 수단</string>
     <string name="error_dialog_title">오류</string>
     <string name="error_dialog_button">확인</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">예, 삭제합니다</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">취소</string>
     <string name="checkout_remove_stored_payment_method_body">저장된 결제 수단 삭제</string>
+    <string name="checkout_stored_payment_confirmation_message">%s 결제 확인</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">취소</string>
 </resources>

@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">支払う</string>
     <string name="pay_button_with_value">%sのお支払い</string>
+    <string name="confirm_preauthorization">事前承認を確認する</string>
     <string name="payment_methods_header">お支払い方法</string>
     <string name="error_dialog_title">エラー</string>
     <string name="error_dialog_button">OK</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">はい、削除します</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">キャンセル</string>
     <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>
+    <string name="checkout_stored_payment_confirmation_message">%sのお支払いをご確認下さい</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">キャンセル</string>
 </resources>

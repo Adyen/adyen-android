@@ -35,7 +35,7 @@ import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 @Suppress("TooManyFunctions")
-class PaymentMethodsListViewModel(
+internal class PaymentMethodsListViewModel(
     application: Application,
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,

@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">دفع</string>
     <string name="pay_button_with_value">دفع %s</string>
+    <string name="confirm_preauthorization">تأكيد التفويض المسبق</string>
     <string name="payment_methods_header">طرق الدفع</string>
     <string name="error_dialog_title">خطأ</string>
     <string name="error_dialog_button">موافق</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">نعم، أرغب في إزالتها</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">إلغاء</string>
     <string name="checkout_remove_stored_payment_method_body">إزالة طريقة الدفع المخزنة</string>
+    <string name="checkout_stored_payment_confirmation_message">تأكيد الدفع باستخدام %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">إلغاء</string>
 </resources>

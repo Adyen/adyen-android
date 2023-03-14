@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Fizetés</string>
     <string name="pay_button_with_value">Fizetendő: %s</string>
+    <string name="confirm_preauthorization">Előzetes meghatalmazás jóváhagyása</string>
     <string name="payment_methods_header">Fizetési módok</string>
     <string name="error_dialog_title">Hiba</string>
     <string name="error_dialog_button">OK</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Igen, eltávolítom</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Mégse</string>
     <string name="checkout_remove_stored_payment_method_body">Tárolt fizetési mód eltávolítása</string>
+    <string name="checkout_stored_payment_confirmation_message">%s használatával történő fizetés jóváhagyása</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Mégse</string>
 </resources>

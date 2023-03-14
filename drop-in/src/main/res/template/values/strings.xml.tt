@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">%%payButton%%</string>
     <string name="pay_button_with_value">%%payAmountFormat%%</string>
+    <string name="confirm_preauthorization">%%confirmPreauthorization%%</string>
     <string name="payment_methods_header">%%paymentMethods.title%%</string>
     <string name="error_dialog_title">%%error.title%%</string>
     <string name="error_dialog_button">%%dismissButton%%</string>
@@ -33,6 +34,8 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">%%storedPaymentMethod.disable.confirmButton%%</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">%%storedPaymentMethod.disable.cancelButton%%</string>
     <string name="checkout_remove_stored_payment_method_body">%%storedPaymentMethod.disable.confirmation%%</string>
+    <string name="checkout_stored_payment_confirmation_message">%%oneClick.confirmationAlert.title%%</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">%%cancelButton%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

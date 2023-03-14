@@ -27,11 +27,12 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
+import com.adyen.checkout.dropin.getComponentFor
+import com.adyen.checkout.dropin.ui.PayButtonFormatter
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
@@ -128,12 +129,14 @@ class PaymentMethodListDialogFragment :
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
         Logger.d(TAG, "onStoredPaymentMethodSelected")
         val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
-        // TODO: 10/12/2020 remove this after we have UI for stored Blik component
-        if (storedPaymentMethod.type == PaymentMethodTypes.BLIK) {
-            Logger.e(TAG, "Stored Blik is not yet supported in this flow.")
-            throw ComponentException("Stored Blik is not yet supported in this flow.")
+        when (storedPaymentMethod.type) {
+            PaymentMethodTypes.BLIK -> {
+                showStoredConfirmation(storedPaymentMethod)
+            }
+            else -> {
+                protocol.showStoredComponentDialog(storedPaymentMethod, false)
+            }
         }
-        protocol.showStoredComponentDialog(storedPaymentMethod, false)
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
@@ -197,6 +200,50 @@ class PaymentMethodListDialogFragment :
             if (it != draggedItem) {
                 it.collapseUnderlay()
             }
+        }
+    }
+
+    private fun showStoredConfirmation(storedPaymentMethod: StoredPaymentMethod) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(
+                String.format(
+                    resources.getString(R.string.checkout_stored_payment_confirmation_message),
+                    storedPaymentMethod.name ?: ""
+                )
+            )
+            .setNegativeButton(R.string.checkout_stored_payment_confirmation_cancel_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(
+                PayButtonFormatter.getPayButtonText(
+                    amount = dropInViewModel.amount,
+                    locale = dropInViewModel.dropInConfiguration.shopperLocale,
+                    localizedContext = requireContext(),
+                )
+            ) { dialog, _ ->
+                dialog.dismiss()
+                onConfirmationButtonClicked(storedPaymentMethod)
+            }
+            .show()
+    }
+
+    private fun onConfirmationButtonClicked(storedPaymentMethod: StoredPaymentMethod) {
+        val component = getComponentFor(
+            fragment = this,
+            storedPaymentMethod = storedPaymentMethod,
+            dropInConfiguration = dropInViewModel.dropInConfiguration,
+            amount = dropInViewModel.amount,
+        )
+
+        component.observe(viewLifecycleOwner) { componentState ->
+            if (componentState.isValid) {
+                protocol.requestPaymentsCall(componentState)
+            }
+        }
+
+        component.observeErrors(this) { error ->
+            Logger.e(TAG, error.errorMessage)
+            protocol.showError(getString(R.string.component_error), error.errorMessage, true)
         }
     }
 }

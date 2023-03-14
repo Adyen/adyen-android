@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Betal</string>
     <string name="pay_button_with_value">Betal %s</string>
+    <string name="confirm_preauthorization">Bekræft forhåndsgodkendelse</string>
     <string name="payment_methods_header">Betalingsmåder</string>
     <string name="error_dialog_title">Fejl</string>
     <string name="error_dialog_button">OK</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, fjern</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuller</string>
     <string name="checkout_remove_stored_payment_method_body">Fjern gemt betalingsmåde</string>
+    <string name="checkout_stored_payment_confirmation_message">Bekræft %s-betaling</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Annuller</string>
 </resources>
