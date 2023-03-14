@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.test.extensions
 
+import androidx.annotation.RestrictTo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -17,8 +18,14 @@ import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Collects the values of a flow into a list.
+ *
+ * Should only be used in tests.
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
-class TestFlow<T>(flow: Flow<T>, testScheduler: TestCoroutineScheduler) : CoroutineScope {
+@RestrictTo(RestrictTo.Scope.TESTS)
+class TestFlow<T> internal constructor(flow: Flow<T>, testScheduler: TestCoroutineScheduler) : CoroutineScope {
 
     private val coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext = UnconfinedTestDispatcher(testScheduler) + coroutineJob
@@ -35,7 +42,11 @@ class TestFlow<T>(flow: Flow<T>, testScheduler: TestCoroutineScheduler) : Corout
     }
 }
 
+/**
+ * Extension method to create a [TestFlow].
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
+@RestrictTo(RestrictTo.Scope.TESTS)
 fun <T> Flow<T>.test(testScheduler: TestCoroutineScheduler): TestFlow<T> {
     return TestFlow(this, testScheduler)
 }
