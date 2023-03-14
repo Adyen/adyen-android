@@ -11,7 +11,7 @@ import com.adyen.checkout.core.exception.ComponentException
 
 /**
  * This exception is just an indication that the 3DS2 Authentication did not finish as expected.
- * Can be caused by an actual error or by user cancellation.
+ * Can be caused by an actual error, like a timeout or a runtime exception.
  */
 class Authentication3DS2Exception(errorMessage: String) : ComponentException(errorMessage) {
     companion object {
