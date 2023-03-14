@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.ui.instant
 
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ComponentCallback
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.instant.InstantComponentState
 
 internal data class InstantComponentData(

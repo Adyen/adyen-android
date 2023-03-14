@@ -7,18 +7,18 @@
  */
 package com.adyen.checkout.components.core.paymentmethod
 
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import org.json.JSONObject
 
 /**
- * This class is a top level abstraction for data objects that can be serialized to the paymentMethod parameter on a
- * payments/ call.
- * The [SERIALIZER] object can serialize this to a [JSONObject] with the corresponding data.
+ * This class is a top level abstraction for data objects that can be serialized to the paymentMethod parameter inside
+ * the request body of the /payments API call.
  *
- * Alternatively you can use other parsing libraries if they support polymorphism.
+ * [PaymentMethodDetails.SERIALIZER] can be used to serialize and deserialize the subclasses of [PaymentMethodDetails]
+ * without having to know the exact type of the subclass.
  */
 abstract class PaymentMethodDetails : ModelObject() {
 

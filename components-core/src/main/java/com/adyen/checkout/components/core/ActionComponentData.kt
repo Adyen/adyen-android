@@ -16,6 +16,10 @@ import kotlinx.parcelize.WriteWith
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Class containing the whole request data expected by the /payments/details endpoint. Use
+ * [ActionComponentData.SERIALIZER] to serialize it to a [JSONObject].
+ */
 @Parcelize
 data class ActionComponentData(
     var paymentData: String? = null,

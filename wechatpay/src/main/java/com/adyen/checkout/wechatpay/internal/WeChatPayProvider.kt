@@ -11,7 +11,7 @@ package com.adyen.checkout.wechatpay.internal
 import android.app.Application
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ComponentAvailableCallback
+import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent

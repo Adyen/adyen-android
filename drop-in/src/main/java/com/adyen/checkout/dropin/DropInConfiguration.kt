@@ -19,7 +19,7 @@ import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -90,9 +90,9 @@ class DropInConfiguration private constructor(
         /**
          * Create a [DropInConfiguration]
          *
-         * @param context   A context
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -101,11 +101,11 @@ class DropInConfiguration private constructor(
         )
 
         /**
-         * Constructor for Builder with default values.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,

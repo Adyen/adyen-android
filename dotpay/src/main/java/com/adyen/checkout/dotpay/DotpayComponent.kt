@@ -10,7 +10,7 @@ package com.adyen.checkout.dotpay
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.util.PaymentMethodTypes
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider

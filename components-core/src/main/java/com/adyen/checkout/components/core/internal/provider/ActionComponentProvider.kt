@@ -15,14 +15,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
-import com.adyen.checkout.components.core.internal.ActionComponentCallback
-import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.util.requireApplication
 
-// TODO SESSIONS: DOCS
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponentProvider<
     ComponentT : ActionComponent,
@@ -34,9 +33,8 @@ interface ActionComponentProvider<
      * Get an [ActionComponent].
      *
      * @param fragment      The Fragment to associate the lifecycle.
-     * @param application   Your main application class.
      * @param configuration The Configuration of the component.
-     * @param callback      Th callback to handle events from the [ActionComponent].
+     * @param callback      The callback to handle events from the [ActionComponent].
      * @param key           The key to use to identify the [ActionComponent].
      *
      * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
@@ -44,9 +42,8 @@ interface ActionComponentProvider<
      *
      * @return The Component
      */
-    operator fun get(
+    fun get(
         fragment: Fragment,
-        application: Application,
         configuration: ConfigurationT,
         callback: ActionComponentCallback,
         key: String? = null,
@@ -55,7 +52,7 @@ interface ActionComponentProvider<
             savedStateRegistryOwner = fragment,
             viewModelStoreOwner = fragment,
             lifecycleOwner = fragment.viewLifecycleOwner,
-            application = application,
+            application = fragment.requireApplication(),
             configuration = configuration,
             callback = callback,
             key = key
@@ -66,7 +63,6 @@ interface ActionComponentProvider<
      * Get an [ActionComponent].
      *
      * @param activity      The Activity to associate the lifecycle.
-     * @param application   Your main application class.
      * @param configuration The Configuration of the component.
      * @param callback      The callback to handle events from the [ActionComponent].
      * @param key           The key to use to identify the [ActionComponent].
@@ -76,9 +72,8 @@ interface ActionComponentProvider<
      *
      * @return The Component
      */
-    operator fun <T> get(
+    fun <T> get(
         activity: ComponentActivity,
-        application: Application,
         configuration: ConfigurationT,
         callback: ActionComponentCallback,
         key: String? = null,
@@ -87,7 +82,7 @@ interface ActionComponentProvider<
             savedStateRegistryOwner = activity,
             viewModelStoreOwner = activity,
             lifecycleOwner = activity,
-            application = application,
+            application = activity.application,
             configuration = configuration,
             callback = callback,
             key = key
@@ -99,8 +94,10 @@ interface ActionComponentProvider<
      *
      * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param lifecycleOwner          The lifecycle owner, normally an Activity or Fragment.
      * @param application             Your main application class.
      * @param configuration           The Configuration of the component.
+     * @param callback                The callback to handle events from the [ActionComponent].
      * @param key                     The key to use to identify the [ActionComponent].
      *
      * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
@@ -109,7 +106,7 @@ interface ActionComponentProvider<
      * @return The Component
      */
     @Suppress("LongParameterList")
-    operator fun get(
+    fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
@@ -127,7 +124,7 @@ interface ActionComponentProvider<
     ): DelegateT
 
     /**
-     * Checks if the provided component can handle the specific action type.
+     * Checks if the provided component can handle a given action.
      *
      * @param action The Action object from the API response.
      * @return If the action can be handled by this component.
@@ -139,13 +136,12 @@ interface ActionComponentProvider<
      */
     val supportedActionTypes: List<String>
 
-    // TODO check docs
     /**
-     * Checks if the provided component will trigger updates that can be observed using
-     * [Component.observe]. If returns false, no events will be fired.
+     * Checks if the provided component will trigger any updates through the [ActionComponentCallback] or not.
+     * If false, no events will be fired and you don't need to make a /payments/details API call. The component only
+     * serves to present some final data to the shopper.
      *
-     * @return If the provided component provides details to make an API call to /payments/details end point.
+     * @return If the provided component provides details to make an API call to the /payments/details endpoint.
      */
-    // TODO move to component?
     fun providesDetails(action: Action): Boolean
 }

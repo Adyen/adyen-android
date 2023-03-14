@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 
-// TODO add docs
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class ActionComponentEvent : ComponentEvent {
     class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()

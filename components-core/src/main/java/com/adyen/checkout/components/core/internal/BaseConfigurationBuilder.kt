@@ -10,18 +10,19 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleUtil
 import java.util.Locale
 
-/**
- * Base constructor with the required fields.
- *
- * @param shopperLocale The Locale of the shopper.
- * @param environment   The [Environment] to be used for network calls to Adyen.
- * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
- */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class BaseConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
-    >(
+    >
+/**
+ * Initialize a configuration builder with the required fields.
+ *
+ * @param shopperLocale The [Locale] of the shopper.
+ * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+ * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+ */
+constructor(
     protected var shopperLocale: Locale,
     protected var environment: Environment,
     protected var clientKey: String
@@ -37,11 +38,11 @@ abstract class BaseConfigurationBuilder<
     }
 
     /**
-     * Constructor that provides default values.
+     * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
      *
      * @param context A Context
-     * @param environment   The [Environment] to be used for network calls to Adyen.
-     * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+     * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+     * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
      */
     constructor(
         context: Context,
@@ -82,6 +83,9 @@ abstract class BaseConfigurationBuilder<
 
     protected abstract fun buildInternal(): ConfigurationT
 
+    /**
+     * Build a configuration from the builder parameters.
+     */
     fun build(): ConfigurationT {
         if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
             throw CheckoutException("Client key does not match the environment.")
