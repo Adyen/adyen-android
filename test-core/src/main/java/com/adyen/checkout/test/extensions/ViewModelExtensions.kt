@@ -8,8 +8,15 @@
 
 package com.adyen.checkout.test.extensions
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModel
 
+/**
+ * Invokes the [ViewModel.onCleared] method. This method is protected, so we can only call it with reflection.
+ *
+ * Should only be used in tests.
+ */
+@RestrictTo(RestrictTo.Scope.TESTS)
 fun ViewModel.invokeOnCleared() {
     with(javaClass.getDeclaredMethod("onCleared")) {
         isAccessible = true

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.test
 
+import androidx.annotation.RestrictTo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,6 +40,7 @@ import org.junit.jupiter.api.extension.ParameterResolver
  * ```
  */
 @OptIn(ExperimentalCoroutinesApi::class)
+@RestrictTo(RestrictTo.Scope.TESTS)
 class TestDispatcherExtension : BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     override fun beforeEach(context: ExtensionContext) {
