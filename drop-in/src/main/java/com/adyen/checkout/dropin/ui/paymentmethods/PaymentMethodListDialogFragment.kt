@@ -237,6 +237,7 @@ class PaymentMethodListDialogFragment :
 
         component.observe(viewLifecycleOwner) { componentState ->
             if (componentState.isValid) {
+                component.removeObservers(viewLifecycleOwner)
                 protocol.requestPaymentsCall(componentState)
             }
         }
