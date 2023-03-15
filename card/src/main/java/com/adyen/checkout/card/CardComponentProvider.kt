@@ -25,6 +25,7 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+
     override fun <T> get(
         owner: T,
         paymentMethod: PaymentMethod,
@@ -70,12 +71,32 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         return get(owner, owner, storedPaymentMethod, configuration, null)
     }
 
+    override fun <T> get(
+        owner: T,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: CardConfiguration,
+        key: String?
+    ): CardComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, storedPaymentMethod, configuration, null, key)
+    }
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         defaultArgs: Bundle?
+    ): CardComponent {
+        return get(savedStateRegistryOwner, viewModelStoreOwner, storedPaymentMethod, configuration, defaultArgs, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: CardConfiguration,
+        defaultArgs: Bundle?,
+        key: String?
     ): CardComponent {
         val publicKeyRepository = PublicKeyRepository()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -89,7 +110,12 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                 configuration
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
+
+        return if (key == null) {
+            ViewModelProvider(viewModelStoreOwner, factory)[CardComponent::class.java]
+        } else {
+            ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java]
+        }
     }
 
     /**

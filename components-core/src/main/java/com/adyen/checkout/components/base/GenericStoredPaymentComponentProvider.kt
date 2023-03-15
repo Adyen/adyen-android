@@ -31,12 +31,32 @@ class GenericStoredPaymentComponentProvider<
         return get(owner, owner, storedPaymentMethod, configuration, null)
     }
 
+    override fun <T> get(
+        owner: T,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: ConfigurationT,
+        key: String?
+    ): BaseComponentT where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
+        return get(owner, owner, storedPaymentMethod, configuration, null, key)
+    }
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
         defaultArgs: Bundle?
+    ): BaseComponentT {
+        return get(savedStateRegistryOwner, viewModelStoreOwner, storedPaymentMethod, configuration, defaultArgs, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: ConfigurationT,
+        defaultArgs: Bundle?,
+        key: String?
     ): BaseComponentT {
         val genericStoredFactory: ViewModelProvider.Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             componentClass.getConstructor(
@@ -45,7 +65,11 @@ class GenericStoredPaymentComponentProvider<
                 configuration.javaClass
             ).newInstance(savedStateHandle, GenericStoredPaymentDelegate(storedPaymentMethod), configuration)
         }
-        return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[componentClass]
+        return if (key == null) {
+            ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[componentClass]
+        } else {
+            ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[key, componentClass]
+        }
     }
 
     override fun <T> get(

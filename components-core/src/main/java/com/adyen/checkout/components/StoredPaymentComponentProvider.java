@@ -22,6 +22,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.core.exception.CheckoutException;
 
 
+@SuppressWarnings("LambdaLast")
 public interface StoredPaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
         extends PaymentComponentProvider<ComponentT, ConfigurationT> {
     /**
@@ -32,12 +33,28 @@ public interface StoredPaymentComponentProvider<ComponentT extends PaymentCompon
      * @param configuration       The Configuration of the component.
      * @return The Component
      */
-    @SuppressWarnings("LambdaLast")
     @NonNull
     <T extends SavedStateRegistryOwner & ViewModelStoreOwner> ComponentT get(
             @NonNull T owner,
             @NonNull StoredPaymentMethod storedPaymentMethod,
             @NonNull ConfigurationT configuration
+    ) throws CheckoutException;
+
+    /**
+     * Get a {@link PaymentComponent} with a stored payment method.
+     *
+     * @param owner               The Activity or Fragment to associate the lifecycle.
+     * @param storedPaymentMethod The corresponding  {@link StoredPaymentMethod} object.
+     * @param configuration       The Configuration of the component.
+     * @param key                 The key used to retrieve the component.
+     * @return The Component
+     */
+    @NonNull
+    <T extends SavedStateRegistryOwner & ViewModelStoreOwner> ComponentT get(
+            @NonNull T owner,
+            @NonNull StoredPaymentMethod storedPaymentMethod,
+            @NonNull ConfigurationT configuration,
+            @Nullable String key
     ) throws CheckoutException;
 
     /**
@@ -51,7 +68,6 @@ public interface StoredPaymentComponentProvider<ComponentT extends PaymentCompon
      *                                ViewModels} if there is no previously saved state or previously saved state misses a value by such key
      * @return The Component
      */
-    @SuppressWarnings("LambdaLast")
     @NonNull
     ComponentT get(
             @NonNull SavedStateRegistryOwner savedStateRegistryOwner,
@@ -59,5 +75,27 @@ public interface StoredPaymentComponentProvider<ComponentT extends PaymentCompon
             @NonNull StoredPaymentMethod storedPaymentMethod,
             @NonNull ConfigurationT configuration,
             @Nullable Bundle defaultArgs
+    ) throws CheckoutException;
+
+    /**
+     * Get a {@link PaymentComponent} with a stored payment method.
+     *
+     * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
+     * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param storedPaymentMethod     The corresponding  {@link StoredPaymentMethod} object.
+     * @param configuration           The Configuration of the component.
+     * @param defaultArgs             Values from this {@code Bundle} will be used as defaults by {@link SavedStateHandle} passed in {@link ViewModel
+     *                                ViewModels} if there is no previously saved state or previously saved state misses a value by such key
+     * @param key                     The key used to retrieve the component.
+     * @return The Component
+     */
+    @NonNull
+    ComponentT get(
+            @NonNull SavedStateRegistryOwner savedStateRegistryOwner,
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull StoredPaymentMethod storedPaymentMethod,
+            @NonNull ConfigurationT configuration,
+            @Nullable Bundle defaultArgs,
+            @Nullable String key
     ) throws CheckoutException;
 }
