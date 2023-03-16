@@ -27,6 +27,9 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [ActionComponent] that is able to handle 3DS2 related actions.
+ */
 class Adyen3DS2Component internal constructor(
     override val delegate: Adyen3DS2Delegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
