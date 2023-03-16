@@ -36,6 +36,7 @@
     <string name="checkout_remove_stored_payment_method_body">%%storedPaymentMethod.disable.confirmation%%</string>
     <string name="checkout_stored_payment_confirmation_message">%%oneClick.confirmationAlert.title%%</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">%%cancelButton%%</string>
+    <string name="cashAppPayView_loadingText">%%paypal.processingPayment%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

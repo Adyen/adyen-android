@@ -22,6 +22,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
@@ -54,6 +55,7 @@ import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.CashAppPayComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GooglePayComponentDialogFragment
@@ -71,7 +73,6 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 
 private val TAG = LogUtil.getTag()
 
@@ -221,6 +222,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
         fragment.handleActivityResult(resultCode, data)
+    }
+
+    private fun isCashAppPayInProgress(): Boolean {
+        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? CashAppPayComponentDialogFragment
+        if (fragment != null) {
+            Logger.d(TAG, "CashAppPayComponentDialogFragment is loaded")
+            return true
+        }
+        return false
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -375,6 +385,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> BacsDirectDebitDialogFragment.newInstance(paymentMethod)
             GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GiftCardComponentDialogFragment.newInstance(paymentMethod)
             GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GooglePayComponentDialogFragment.newInstance(paymentMethod)
+            CashAppPayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> CashAppPayComponentDialogFragment.newInstance(paymentMethod)
             else -> GenericComponentDialogFragment.newInstance(paymentMethod)
         }
 
@@ -537,6 +548,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
         dropInViewModel.isWaitingResult = false
 
+        if (isCashAppPayInProgress()) {
+            // cash app pay fragment will handle the response automatically
+            return
+        }
+
         if (WeChatPayUtils.isResultIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
             actionHandler.handleWeChatPayResponse(intent)
@@ -553,7 +569,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 }
             }
             else -> {
-                Logger.e(TAG, "Unable to find action")
+                Logger.d(TAG, "No action in intent")
             }
         }
     }

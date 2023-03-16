@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Remover método de pagamento armazenado</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmar pagamento %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancelar</string>
+    <string name="cashAppPayView_loadingText">Processando pagamento…</string>
 </resources>

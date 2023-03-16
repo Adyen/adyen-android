@@ -36,6 +36,7 @@
     <string name="checkout_remove_stored_payment_method_body">Remove stored payment method</string>
     <string name="checkout_stored_payment_confirmation_message">Confirm %s payment</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancel</string>
+    <string name="cashAppPayView_loadingText">Processing payment…</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

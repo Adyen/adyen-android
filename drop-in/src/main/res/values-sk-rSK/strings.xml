@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Odstrániť uložený spôsob platby</string>
     <string name="checkout_stored_payment_confirmation_message">Potvrďte platbu pomocou %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Zrušiť</string>
+    <string name="cashAppPayView_loadingText">Platba sa spracúva.</string>
 </resources>

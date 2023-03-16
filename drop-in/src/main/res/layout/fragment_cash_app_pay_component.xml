@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 16/3/2023.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:id="@+id/progressBar_paymentInProgress"
+        style="@style/AdyenCheckout.DropIn.CashAppPay.ProgressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textView_paymentInProgress_description"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RequiredSize" />
+
+    <TextView
+        android:id="@+id/textView_paymentInProgress_description"
+        style="@style/AdyenCheckout.DropIn.CashAppPay.DescriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/progressBar_paymentInProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
+        app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Rimuovi il metodo di pagamento archiviato</string>
     <string name="checkout_stored_payment_confirmation_message">Conferma il pagamento di %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annulla</string>
+    <string name="cashAppPayView_loadingText">Elaborazione del pagamento in corso…</string>
 </resources>

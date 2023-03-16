@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">移除已儲存付款方式</string>
     <string name="checkout_stored_payment_confirmation_message">確認 %s 付款</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
+    <string name="cashAppPayView_loadingText">正在處理付款……</string>
 </resources>

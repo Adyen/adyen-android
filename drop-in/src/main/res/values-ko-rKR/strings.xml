@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">저장된 결제 수단 삭제</string>
     <string name="checkout_stored_payment_confirmation_message">%s 결제 확인</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">취소</string>
+    <string name="cashAppPayView_loadingText">결제 처리 중…</string>
 </resources>
