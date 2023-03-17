@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -38,9 +37,8 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,7 +50,8 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     private lateinit var binding: ActivityMainBinding
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
-    @Inject lateinit var keyValueStorage: KeyValueStorage
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -90,17 +89,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
-            this,
-            {
-                if (it != null) {
-                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                    if (isWaitingPaymentMethods) startDropIn(it)
-                } else {
-                    Logger.v(TAG, "API response is null")
-                }
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
+            if (it != null) {
+                Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
+                if (isWaitingPaymentMethods) startDropIn(it)
+            } else {
+                Logger.v(TAG, "API response is null")
             }
-        )
+        }
     }
 
     override fun onResume() {
@@ -168,10 +164,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .build()
 
-        val cashAppPayConfiguration = CashAppPayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .setReturnUrl(RedirectComponent.getReturnUrl(applicationContext))
-            .build()
-
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             ExampleFullAsyncDropInService::class.java,
@@ -183,7 +175,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .add3ds2ActionConfiguration(adyen3DS2Configuration)
-            .addCashAppPayConfiguration(cashAppPayConfiguration)
             .setEnableRemovingStoredPaymentMethods(true)
 
         try {

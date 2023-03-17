@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.cashapppay
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.paykit.core.CashAppPay
@@ -145,6 +146,18 @@ class CashAppPayComponent(
 
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.CASH_APP_PAY)
 
+        /**
+         * Returns the suggested value to be used as the `returnUrl` value in the /payments call and in the [CashAppPayConfiguration].
+         *
+         * @param context The context provides the package name which constitutes part of the ReturnUrl
+         * @return The suggested `returnUrl` to be used. Consists of "adyencheckout://" + App package name.
+         */
+        fun getReturnUrl(context: Context): String {
+            return REDIRECT_RESULT_SCHEME + context.packageName
+        }
+
         private val TAG = LogUtil.getTag()
+
+        private const val REDIRECT_RESULT_SCHEME = BuildConfig.checkoutRedirectScheme + "://"
     }
 }

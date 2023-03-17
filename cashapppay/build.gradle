@@ -28,6 +28,9 @@ android {
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
+
+        // Get scheme for redirect result
+        buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
     }
 
     compileOptions {
