@@ -58,6 +58,7 @@ internal class MainViewModel @Inject constructor(
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.CardWithSession))
             ComponentItem.Entry.CardWithSessionTakenOver ->
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.CardWithSessionTakenOver))
+            ComponentItem.Entry.GiftCard -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCardWithSession))
             ComponentItem.Entry.DropIn -> startDropInFlow()
             ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow()
             ComponentItem.Entry.DropInWithCustomSession -> startCustomSessionDropInFlow()

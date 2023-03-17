@@ -10,7 +10,10 @@ package com.adyen.checkout.giftcard.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -30,8 +33,12 @@ import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.GiftCardException
+import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
+import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -77,6 +84,8 @@ internal class DefaultGiftCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    private var cachedAmount: Amount? = null
 
     private var publicKey: String? = null
 
@@ -166,6 +175,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = outputData.isValid,
             isReady = false,
             lastFourDigits = null,
+            giftCardAction = GiftCardAction.Idle
         )
 
         if (!outputData.isValid) {
@@ -174,6 +184,7 @@ internal class DefaultGiftCardDelegate(
                 isInputValid = false,
                 isReady = true,
                 lastFourDigits = null,
+                giftCardAction = GiftCardAction.Idle
             )
         }
 
@@ -182,6 +193,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = false,
             isReady = true,
             lastFourDigits = null,
+            giftCardAction = GiftCardAction.Idle
         )
 
         val giftCardPaymentMethod = GiftCardPaymentMethod(
@@ -200,6 +212,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = true,
             isReady = true,
             lastFourDigits = lastDigits,
+            giftCardAction = GiftCardAction.CheckBalance
         )
     }
 
@@ -234,6 +247,76 @@ internal class DefaultGiftCardDelegate(
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
+
+    override fun resolveBalanceResult(balanceResult: BalanceResult) {
+        val balanceStatus = GiftCardBalanceUtils.checkBalance(
+            balance = balanceResult.balance,
+            transactionLimit = balanceResult.transactionLimit,
+            amountToBePaid = componentParams.amount
+        )
+
+        resolveBalanceStatus(balanceStatus)
+    }
+
+    private fun resolveBalanceStatus(balanceStatus: GiftCardBalanceStatus) {
+        val currentState = _componentStateFlow.value
+        when (balanceStatus) {
+            is GiftCardBalanceStatus.FullPayment -> {
+                val updatedState = currentState.copy(
+                    giftCardAction = GiftCardAction.SendPayment
+                )
+                _componentStateFlow.tryEmit(updatedState)
+                submitHandler.onSubmit(updatedState)
+            }
+            is GiftCardBalanceStatus.NonMatchingCurrencies -> {
+                exceptionChannel.trySend(
+                    GiftCardException("Currency of the gift card does not match the currency of transaction.")
+                )
+            }
+            is GiftCardBalanceStatus.PartialPayment -> {
+                val updatedState = if (order == null) {
+                    currentState.copy(giftCardAction = GiftCardAction.CreateOrder)
+                } else {
+                    currentState.copy(
+                        giftCardAction = GiftCardAction.SendPayment,
+                        data = currentState.data.copy(
+                            amount = balanceStatus.amountPaid
+                        )
+                    )
+                }
+                cachedAmount = balanceStatus.amountPaid
+                _componentStateFlow.tryEmit(updatedState)
+                submitHandler.onSubmit(updatedState)
+            }
+            is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
+                exceptionChannel.trySend(
+                    GiftCardException("Amount of the transaction is zero.")
+                )
+            }
+            is GiftCardBalanceStatus.ZeroBalance -> {
+                exceptionChannel.trySend(
+                    GiftCardException("Gift card has no balance.")
+                )
+            }
+        }
+    }
+
+    override fun resolveOrderResponse(orderResponse: OrderResponse) {
+        val currentState = _componentStateFlow.value
+        val updatedState = currentState.copy(
+            giftCardAction = GiftCardAction.SendPayment,
+            data = currentState.data.copy(
+                order = OrderRequest(
+                    orderData = orderResponse.orderData,
+                    pspReference = orderResponse.pspReference
+                ),
+                amount = cachedAmount
+            )
+        )
+        cachedAmount = null
+        _componentStateFlow.tryEmit(updatedState)
+        submitHandler.onSubmit(updatedState)
     }
 
     override fun onCleared() {

@@ -24,6 +24,8 @@ internal sealed class MainNavigation {
 
     object CardWithSession : MainNavigation()
 
+    object GiftCardWithSession : MainNavigation()
+
     object CardWithSessionTakenOver : MainNavigation()
 
     data class DropIn(

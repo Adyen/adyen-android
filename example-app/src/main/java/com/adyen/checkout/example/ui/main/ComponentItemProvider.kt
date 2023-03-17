@@ -16,5 +16,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Instant,
         ComponentItem.Entry.CardWithSession,
         ComponentItem.Entry.CardWithSessionTakenOver,
+        ComponentItem.Entry.GiftCard,
     )
 }
