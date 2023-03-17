@@ -14,13 +14,13 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -32,6 +32,7 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.PhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -49,13 +50,16 @@ internal class DefaultEContextDelegate<
     private val order: Order?,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler<EContextComponentStateT>,
+    private val phoneNumberDelegate: PhoneNumberDelegate,
     private val typedPaymentMethodFactory: () -> EContextPaymentMethodT,
     private val componentStateFactory: (
         data: PaymentComponentData<EContextPaymentMethodT>,
         isInputValid: Boolean,
         isReady: Boolean
     ) -> EContextComponentStateT
-) : EContextDelegate<EContextPaymentMethodT, EContextComponentStateT> {
+) :
+    EContextDelegate<EContextPaymentMethodT, EContextComponentStateT>,
+    PhoneNumberDelegate by phoneNumberDelegate {
 
     private val inputData: EContextInputData = EContextInputData()
 
@@ -73,6 +77,10 @@ internal class DefaultEContextDelegate<
     override val submitFlow: Flow<EContextComponentStateT> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    init {
+        phoneNumberDelegate.onInputDataChangedListener = { onInputDataChanged() }
+    }
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -101,7 +109,7 @@ internal class DefaultEContextDelegate<
         return EContextOutputData(
             firstNameState = validateFirstName(inputData.firstName),
             lastNameState = validateLastName(inputData.lastName),
-            phoneNumberState = validatePhoneNumber(inputData.mobileNumber, inputData.countryCode),
+            phoneNumberState = phoneNumberOutputData.phoneNumber,
             emailAddressState = validateEmailAddress(inputData.emailAddress)
         )
     }
@@ -146,17 +154,6 @@ internal class DefaultEContextDelegate<
             Validation.Invalid(R.string.checkout_econtext_last_name_invalid)
         }
         return FieldState(lastName, validation)
-    }
-
-    private fun validatePhoneNumber(phoneNumber: String, countryCode: String): FieldState<String> {
-        val sanitizedNumber = phoneNumber.trimStart('0')
-        val fullPhoneNumber = countryCode + sanitizedNumber
-        val validation = if (fullPhoneNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(fullPhoneNumber)) {
-            Validation.Valid
-        } else {
-            Validation.Invalid(R.string.checkout_econtext_phone_number_invalid)
-        }
-        return FieldState(fullPhoneNumber, validation)
     }
 
     private fun validateEmailAddress(emailAddress: String): FieldState<String> {

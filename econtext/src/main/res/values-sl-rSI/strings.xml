@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">Ime</string>
     <string name="checkout_econtext_last_name_hint">Priimek</string>
-    <string name="checkout_econtext_phone_number_hint">Telefonska številka</string>
     <string name="checkout_econtext_shopper_email_hint">Elektronski naslov</string>
 
-    <string name="checkout_econtext_first_name_invalid">Ime ni veljavno</string>
-    <string name="checkout_econtext_last_name_invalid">Priimek ni veljaven</string>
-    <string name="checkout_econtext_phone_number_invalid">Neveljavna telefonska številka</string>
+    <string name="checkout_econtext_first_name_invalid">Vnesite svoje ime</string>
+    <string name="checkout_econtext_last_name_invalid">Vnesite svoj priimek</string>
     <string name="checkout_econtext_shopper_email_invalid">Neveljaven elektronski naslov</string>
 </resources>

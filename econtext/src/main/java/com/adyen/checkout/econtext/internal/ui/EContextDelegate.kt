@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.PhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,8 @@ interface EContextDelegate<
     PaymentComponentDelegate<EContextComponentStateT>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UIStateDelegate {
+    UIStateDelegate,
+    PhoneNumberDelegate {
 
     val outputData: EContextOutputData
 

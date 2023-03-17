@@ -13,7 +13,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -23,7 +22,6 @@ import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
@@ -37,8 +35,6 @@ internal class EContextView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     private val binding: EcontextViewBinding = EcontextViewBinding.inflate(LayoutInflater.from(context), this)
-
-    private var countryAdapter: CountryAdapter? = null
 
     private lateinit var localizedContext: Context
 
@@ -59,8 +55,7 @@ internal class EContextView @JvmOverloads constructor(
 
         initFirstNameInput()
         initLastNameInput()
-        initCountryCodeInput()
-        initMobileNumberInput()
+        initPhoneNumberInput()
         initEmailAddressInput()
     }
 
@@ -81,14 +76,6 @@ internal class EContextView @JvmOverloads constructor(
                 }
                 binding.textInputLayoutLastName.error = localizedContext.getString(lastNameValidation.reason)
             }
-            val phoneNumberValidation = it.phoneNumberState.validation
-            if (phoneNumberValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.editTextMobileNumber.requestFocus()
-                }
-                binding.textInputLayoutMobileNumber.error = localizedContext.getString(phoneNumberValidation.reason)
-            }
             val emailAddressValidation = it.emailAddressState.validation
             if (emailAddressValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
@@ -98,6 +85,7 @@ internal class EContextView @JvmOverloads constructor(
                 binding.textInputLayoutEmailAddress.error = localizedContext.getString(emailAddressValidation.reason)
             }
         }
+        binding.phoneNumberInput.highlightValidationErrors(delegate.phoneNumberOutputData)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -107,10 +95,6 @@ internal class EContextView @JvmOverloads constructor(
         )
         binding.textInputLayoutLastName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_LastNameInput,
-            localizedContext
-        )
-        binding.textInputLayoutMobileNumber.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_EContext_PhoneNumberInput,
             localizedContext
         )
         binding.textInputLayoutEmailAddress.setLocalizedHintFromStyle(
@@ -155,8 +139,8 @@ internal class EContextView @JvmOverloads constructor(
         }
     }
 
-    private fun initCountryCodeInput() {
-        val countryAutoCompleteTextView = binding.autoCompleteTextViewCountry
+    private fun initPhoneNumberInput() {
+        binding.phoneNumberInput.initialize(delegate, localizedContext)
         val countries = CountryUtils.getCountries().map {
             CountryModel(
                 isoCode = it.isoCode,
@@ -165,45 +149,7 @@ internal class EContextView @JvmOverloads constructor(
                 emoji = it.emoji
             )
         }
-        countryAdapter = CountryAdapter(context, localizedContext).apply {
-            setItems(countries)
-        }
-        countryAutoCompleteTextView.apply {
-            inputType = 0
-            setAdapter(countryAdapter)
-            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                val country = countryAdapter?.getItem(position) ?: return@OnItemClickListener
-                onCountrySelected(country)
-            }
-            countries.firstOrNull()?.let {
-                setText(it.toShortString())
-                onCountrySelected(it)
-            }
-        }
-    }
-
-    private fun onCountrySelected(country: CountryModel) {
-        delegate.updateInputData {
-            countryCode = country.callingCode
-        }
-    }
-
-    private fun initMobileNumberInput() {
-        val mobileNumberEditText = binding.editTextMobileNumber as? AdyenTextInputEditText
-        mobileNumberEditText?.setOnChangeListener {
-            delegate.updateInputData {
-                mobileNumber = it.toString()
-            }
-            binding.textInputLayoutMobileNumber.error = null
-        }
-        mobileNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val phoneNumberValidation = delegate.outputData.phoneNumberState.validation
-            if (hasFocus) {
-                binding.textInputLayoutMobileNumber.error = null
-            } else if (phoneNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMobileNumber.error = localizedContext.getString(phoneNumberValidation.reason)
-            }
-        }
+        binding.phoneNumberInput.setCountries(countries)
     }
 
     private fun initEmailAddressInput() {

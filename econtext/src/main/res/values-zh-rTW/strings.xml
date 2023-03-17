@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">名字</string>
     <string name="checkout_econtext_last_name_hint">姓氏</string>
-    <string name="checkout_econtext_phone_number_hint">電話號碼</string>
     <string name="checkout_econtext_shopper_email_hint">電子郵件地址</string>
 
-    <string name="checkout_econtext_first_name_invalid">名字無效</string>
-    <string name="checkout_econtext_last_name_invalid">姓氏無效</string>
-    <string name="checkout_econtext_phone_number_invalid">電話號碼無效</string>
+    <string name="checkout_econtext_first_name_invalid">輸入您的名字</string>
+    <string name="checkout_econtext_last_name_invalid">輸入您的姓氏</string>
     <string name="checkout_econtext_shopper_email_invalid">電子郵件地址無效</string>
 </resources>

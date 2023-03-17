@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">Nome próprio</string>
     <string name="checkout_econtext_last_name_hint">Apelido</string>
-    <string name="checkout_econtext_phone_number_hint">Número de telefone</string>
     <string name="checkout_econtext_shopper_email_hint">Endereço de correio eletrónico</string>
 
-    <string name="checkout_econtext_first_name_invalid">O nome próprio não é válido</string>
-    <string name="checkout_econtext_last_name_invalid">O apelido não é válido</string>
-    <string name="checkout_econtext_phone_number_invalid">Número de telefone inválido</string>
+    <string name="checkout_econtext_first_name_invalid">Introduza o seu nome próprio</string>
+    <string name="checkout_econtext_last_name_invalid">Introduza o seu apelido</string>
     <string name="checkout_econtext_shopper_email_invalid">Endereço de e-mail inválido</string>
 </resources>

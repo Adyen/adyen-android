@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">Имя</string>
     <string name="checkout_econtext_last_name_hint">Фамилия</string>
-    <string name="checkout_econtext_phone_number_hint">Номер телефона</string>
     <string name="checkout_econtext_shopper_email_hint">Адрес эл. почты</string>
 
-    <string name="checkout_econtext_first_name_invalid">Неверное имя</string>
-    <string name="checkout_econtext_last_name_invalid">Неверная фамилия</string>
-    <string name="checkout_econtext_phone_number_invalid">Недействительный номер телефона</string>
+    <string name="checkout_econtext_first_name_invalid">Введите имя</string>
+    <string name="checkout_econtext_last_name_invalid">Введите фамилию</string>
     <string name="checkout_econtext_shopper_email_invalid">Недействительный адрес эл. почты</string>
 </resources>

@@ -15,7 +15,5 @@ import com.adyen.checkout.components.core.internal.ui.model.InputData
 data class EContextInputData(
     var firstName: String = "",
     var lastName: String = "",
-    var countryCode: String = "",
-    var mobileNumber: String = "",
     var emailAddress: String = ""
 ) : InputData

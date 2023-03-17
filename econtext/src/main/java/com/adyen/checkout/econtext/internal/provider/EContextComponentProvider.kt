@@ -17,11 +17,11 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -51,6 +51,7 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.ui.core.internal.ui.DefaultPhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -100,6 +101,7 @@ abstract class EContextComponentProvider<
                     order = order,
                     analyticsRepository = analyticsRepository,
                     submitHandler = SubmitHandler(savedStateHandle),
+                    phoneNumberDelegate = DefaultPhoneNumberDelegate(),
                     typedPaymentMethodFactory = { createPaymentMethod() },
                     componentStateFactory = ::createComponentState
                 )
@@ -160,6 +162,7 @@ abstract class EContextComponentProvider<
                     order = checkoutSession.order,
                     analyticsRepository = analyticsRepository,
                     submitHandler = SubmitHandler(savedStateHandle),
+                    phoneNumberDelegate = DefaultPhoneNumberDelegate(),
                     typedPaymentMethodFactory = { createPaymentMethod() },
                     componentStateFactory = ::createComponentState
                 )

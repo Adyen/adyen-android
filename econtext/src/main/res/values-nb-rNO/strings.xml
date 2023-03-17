@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">Fornavn</string>
     <string name="checkout_econtext_last_name_hint">Etternavn</string>
-    <string name="checkout_econtext_phone_number_hint">Telefonnummer</string>
     <string name="checkout_econtext_shopper_email_hint">E-postadresse</string>
 
-    <string name="checkout_econtext_first_name_invalid">Fornavnet er ikke gyldig</string>
-    <string name="checkout_econtext_last_name_invalid">Etternavnet er ikke gyldig</string>
-    <string name="checkout_econtext_phone_number_invalid">Ugyldig telefonnummer</string>
+    <string name="checkout_econtext_first_name_invalid">Skriv inn fornavnet ditt</string>
+    <string name="checkout_econtext_last_name_invalid">Skriv inn etternavnet ditt</string>
     <string name="checkout_econtext_shopper_email_invalid">Ugyldig e-postadresse</string>
 </resources>

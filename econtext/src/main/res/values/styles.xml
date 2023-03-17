@@ -19,11 +19,6 @@
         <item name="android:inputType">text|textPersonName|textCapWords</item>
     </style>
 
-    <style name="AdyenCheckout.EContext.PhoneNumberInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_econtext_phone_number_hint</item>
-        <item name="android:inputType">phone</item>
-    </style>
-
     <style name="AdyenCheckout.EContext.ShopperEmailInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_econtext_shopper_email_hint</item>
         <item name="android:inputType">text|textEmailAddress</item>

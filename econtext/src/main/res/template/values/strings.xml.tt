@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">%%firstName%%</string>
     <string name="checkout_econtext_last_name_hint">%%lastName%%</string>
-    <string name="checkout_econtext_phone_number_hint">%%telephoneNumber%%</string>
     <string name="checkout_econtext_shopper_email_hint">%%shopperEmail%%</string>
 
     <string name="checkout_econtext_first_name_invalid">%%firstName.invalid%%</string>
     <string name="checkout_econtext_last_name_invalid">%%lastName.invalid%%</string>
-    <string name="checkout_econtext_phone_number_invalid">%%telephoneNumber.invalid%%</string>
     <string name="checkout_econtext_shopper_email_invalid">%%shopperEmail.invalid%%</string>
 </resources>

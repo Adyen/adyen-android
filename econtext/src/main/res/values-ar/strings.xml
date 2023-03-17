@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">الاسم الأول</string>
     <string name="checkout_econtext_last_name_hint">الاسم الأخير</string>
-    <string name="checkout_econtext_phone_number_hint">رقم الهاتف</string>
     <string name="checkout_econtext_shopper_email_hint">عنوان البريد الإلكتروني</string>
 
-    <string name="checkout_econtext_first_name_invalid">الاسم الأول غير صحيح</string>
-    <string name="checkout_econtext_last_name_invalid">الاسم الأخير غير صحيح</string>
-    <string name="checkout_econtext_phone_number_invalid">رقم هاتف غير صحيح</string>
+    <string name="checkout_econtext_first_name_invalid">أدخل اسمك الأول</string>
+    <string name="checkout_econtext_last_name_invalid">أدخل اسمك الأخير</string>
     <string name="checkout_econtext_shopper_email_invalid">عنوان بريد إلكتروني غير صحيح</string>
 </resources>

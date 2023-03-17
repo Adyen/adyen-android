@@ -10,11 +10,9 @@
 <resources>
     <string name="checkout_econtext_first_name_hint">Nombre</string>
     <string name="checkout_econtext_last_name_hint">Apellidos</string>
-    <string name="checkout_econtext_phone_number_hint">Número de teléfono</string>
     <string name="checkout_econtext_shopper_email_hint">Dirección de correo electrónico</string>
 
-    <string name="checkout_econtext_first_name_invalid">El nombre no es válido</string>
-    <string name="checkout_econtext_last_name_invalid">El apellido no es válido</string>
-    <string name="checkout_econtext_phone_number_invalid">El número de teléfono no es válido</string>
+    <string name="checkout_econtext_first_name_invalid">Introduzca su nombre</string>
+    <string name="checkout_econtext_last_name_invalid">Introduzca su apellido</string>
     <string name="checkout_econtext_shopper_email_invalid">La dirección de correo electrónico no es válida</string>
 </resources>

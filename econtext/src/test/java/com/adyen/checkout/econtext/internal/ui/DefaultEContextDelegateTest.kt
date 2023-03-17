@@ -23,6 +23,7 @@ import com.adyen.checkout.econtext.TestEContextComponentState
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
+import com.adyen.checkout.ui.core.internal.ui.DefaultPhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.*
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -66,8 +67,6 @@ internal class DefaultEContextDelegateTest(
                 delegate.updateInputData {
                     firstName = ""
                     lastName = ""
-                    mobileNumber = ""
-                    countryCode = ""
                     emailAddress = ""
                 }
 
@@ -86,8 +85,6 @@ internal class DefaultEContextDelegateTest(
                 delegate.updateInputData {
                     firstName = ""
                     lastName = ""
-                    mobileNumber = ""
-                    countryCode = ""
                     emailAddress = ""
                 }
 
@@ -103,9 +100,11 @@ internal class DefaultEContextDelegateTest(
                 delegate.updateInputData {
                     firstName = "firstName"
                     lastName = "lastName"
-                    mobileNumber = "12345678"
-                    countryCode = "+31"
                     emailAddress = "abc@mail.com"
+                }
+                delegate.updatePhoneNumberInputData {
+                    countryCode = "+31"
+                    everythingAfterCountryCode = "12345678"
                 }
 
                 with(expectMostRecentItem()) {
@@ -234,6 +233,7 @@ internal class DefaultEContextDelegateTest(
         order = order,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
+        phoneNumberDelegate = DefaultPhoneNumberDelegate(),
         typedPaymentMethodFactory = { TestEContextPaymentMethod() },
         componentStateFactory = { data, isInputValid, isReady ->
             TestEContextComponentState(
