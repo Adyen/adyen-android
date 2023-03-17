@@ -10,6 +10,7 @@ package com.adyen.checkout.mbway.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class MBWayInputData(
-    var countryCode: String = "",
-    var localPhoneNumber: String = ""
+    // The input data is taken care of by PhoneNumberDelegate.
+    // We have a dummy field here just in case there will be extra input fields added later.
+    var dummy: String = "",
 ) : InputData

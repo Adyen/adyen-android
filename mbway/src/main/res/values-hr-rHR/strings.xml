@@ -8,6 +8,4 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_mobile_number">Broj mobilnog telefona</string>
-    <string name="checkout_mbway_phone_number_not_valid">Nevažeći telefonski broj</string>
 </resources>

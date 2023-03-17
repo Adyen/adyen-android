@@ -7,30 +7,13 @@
  */
 package com.adyen.checkout.mbway.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.ValidationUtils
-import com.adyen.checkout.mbway.R
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
-internal class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
-
-    val mobilePhoneNumberFieldState: FieldState<String> = validateMobileNumber(mobilePhoneNumber)
+internal data class MBWayOutputData(
+    val phoneNumber: FieldState<String>
+) : OutputData {
 
     override val isValid: Boolean
-        get() = mobilePhoneNumberFieldState.validation.isValid()
-
-    private fun validateMobileNumber(mobileNumber: String): FieldState<String> {
-        return if (mobileNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(mobileNumber)) {
-            FieldState(
-                mobileNumber,
-                Validation.Valid
-            )
-        } else {
-            FieldState(
-                mobileNumber,
-                Validation.Invalid(R.string.checkout_mbway_phone_number_not_valid)
-            )
-        }
-    }
+        get() = phoneNumber.validation.isValid()
 }

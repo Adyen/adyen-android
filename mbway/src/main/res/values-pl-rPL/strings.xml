@@ -8,6 +8,4 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_mobile_number">Numer telefonu komórkowego</string>
-    <string name="checkout_mbway_phone_number_not_valid">Nieprawidłowy numer telefonu</string>
 </resources>

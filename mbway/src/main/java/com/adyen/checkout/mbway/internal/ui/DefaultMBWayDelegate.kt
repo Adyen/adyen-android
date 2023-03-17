@@ -13,13 +13,13 @@ import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -30,13 +30,14 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.internal.ui.PhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -44,7 +45,8 @@ internal class DefaultMBWayDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsRepository: AnalyticsRepository,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
-) : MBWayDelegate {
+    private val phoneNumberDelegate: PhoneNumberDelegate,
+) : MBWayDelegate, PhoneNumberDelegate by phoneNumberDelegate {
 
     private val inputData = MBWayInputData()
 
@@ -67,6 +69,7 @@ internal class DefaultMBWayDelegate(
 
     init {
         updateComponentState(outputData)
+        phoneNumberDelegate.onInputDataChangedListener = { onInputDataChanged() }
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -117,8 +120,9 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun createOutputData(): MBWayOutputData {
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        return MBWayOutputData(inputData.countryCode + sanitizedNumber)
+        return MBWayOutputData(
+            phoneNumber = phoneNumberOutputData.phoneNumber,
+        )
     }
 
     private fun outputDataChanged(outputData: MBWayOutputData) {
@@ -136,7 +140,7 @@ internal class DefaultMBWayDelegate(
     ): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            telephoneNumber = outputData.mobilePhoneNumberFieldState.value
+            telephoneNumber = outputData.phoneNumber.value
         )
 
         val paymentComponentData = PaymentComponentData(

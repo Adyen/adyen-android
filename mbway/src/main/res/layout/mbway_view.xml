@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,50 +6,16 @@
   ~ Created by caiof on 14/8/2020.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <LinearLayout
-        android:id="@+id/layout_container"
+    <com.adyen.checkout.ui.core.internal.ui.view.PhoneNumberInputView
+        android:id="@+id/phoneNumberInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="DisableBaselineAlignment">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_country"
-            style="@style/AdyenCheckout.DropdownTextInputLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/standard_half_margin">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/autoCompleteTextView_country"
-                style="@style/AdyenCheckout.DropdownTextInputEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:dropDownAnchor="@id/layout_container"
-                android:minEms="7" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_mobileNumber"
-            style="@style/AdyenCheckout.TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-                android:id="@+id/editText_mobileNumber"
-                style="@style/AdyenCheckout.MBWay.MobileNumberInput"
-                android:autofillHints="phoneNational"
-                tools:ignore="RequiredSize" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </merge>

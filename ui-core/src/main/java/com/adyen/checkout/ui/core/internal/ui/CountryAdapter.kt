@@ -15,15 +15,16 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.core.databinding.CountryViewBinding
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 // We need context to inflate the views and localizedContext to fetch the strings
 // Do not remove localizedContext! It's not used at the moment, however it is kept to prevent usage of context
 // in case of the need to read strings.
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CountryAdapter(private val context: Context, private val localizedContext: Context) : BaseAdapter(), Filterable {
+internal class CountryAdapter(
+    private val context: Context,
+    private val localizedContext: Context
+) : BaseAdapter(), Filterable {
 
     private val countries: MutableList<CountryModel> = mutableListOf()
     private val countryFilter: CountryFilter = CountryFilter(countries)

@@ -14,6 +14,7 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.PhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +23,8 @@ internal interface MBWayDelegate :
     PaymentComponentDelegate<MBWayComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UIStateDelegate {
+    UIStateDelegate,
+    PhoneNumberDelegate {
 
     val outputData: MBWayOutputData
 

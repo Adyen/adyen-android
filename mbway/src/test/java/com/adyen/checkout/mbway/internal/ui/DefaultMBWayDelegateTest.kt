@@ -14,10 +14,13 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.ui.core.internal.ui.DefaultPhoneNumberDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -57,14 +60,16 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `input is invalid, then output data should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                skipItems(1)
                 delegate.updateInputData {
+                    dummy = "test"
+                }
+                delegate.updatePhoneNumberInputData {
                     countryCode = "+1"
-                    localPhoneNumber = "04023456"
+                    everythingAfterCountryCode = "04023456"
                 }
 
-                with(awaitItem()) {
-                    assertEquals("+14023456", mobilePhoneNumberFieldState.value)
+                with(expectMostRecentItem()) {
+                    assertEquals("+14023456", phoneNumber.value)
                     assertFalse(isValid)
                 }
 
@@ -75,13 +80,15 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                skipItems(1)
                 delegate.updateInputData {
+                    dummy = "test"
+                }
+                delegate.updatePhoneNumberInputData {
                     countryCode = "+23"
-                    localPhoneNumber = "0056778"
+                    everythingAfterCountryCode = "0056778"
                 }
 
-                with(awaitItem()) {
+                with(expectMostRecentItem()) {
                     assertEquals("+2356778", data.paymentMethod?.telephoneNumber)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -94,14 +101,16 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `input is valid, then output data should be propagated`() = runTest {
             delegate.outputDataFlow.test {
-                skipItems(1)
                 delegate.updateInputData {
+                    dummy = "test"
+                }
+                delegate.updatePhoneNumberInputData {
                     countryCode = "+351"
-                    localPhoneNumber = "234567890"
+                    everythingAfterCountryCode = "234567890"
                 }
 
-                with(awaitItem()) {
-                    assertEquals("+351234567890", mobilePhoneNumberFieldState.value)
+                with(expectMostRecentItem()) {
+                    assertEquals("+351234567890", phoneNumber.value)
                     assertTrue(isValid)
                 }
 
@@ -112,13 +121,15 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `input is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
-                skipItems(1)
                 delegate.updateInputData {
+                    dummy = "test"
+                }
+                delegate.updatePhoneNumberInputData {
                     countryCode = "+1"
-                    localPhoneNumber = "9257348920"
+                    everythingAfterCountryCode = "9257348920"
                 }
 
-                with(awaitItem()) {
+                with(expectMostRecentItem()) {
                     assertEquals("+19257348920", data.paymentMethod?.telephoneNumber)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
@@ -136,10 +147,9 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `output data is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateComponentState(MBWayOutputData("+7867676"))
+                delegate.updateComponentState(MBWayOutputData(FieldState("+7867676", Validation.Invalid(0))))
 
-                with(awaitItem()) {
+                with(expectMostRecentItem()) {
                     assertEquals("+7867676", data.paymentMethod?.telephoneNumber)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -152,10 +162,9 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `output data is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateComponentState(MBWayOutputData("+31666666666"))
+                delegate.updateComponentState(MBWayOutputData(FieldState("+31666666666", Validation.Valid)))
 
-                with(awaitItem()) {
+                with(expectMostRecentItem()) {
                     assertEquals("+31666666666", data.paymentMethod?.telephoneNumber)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
@@ -235,6 +244,7 @@ internal class DefaultMBWayDelegateTest(
         componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
+        phoneNumberDelegate = DefaultPhoneNumberDelegate(),
     )
 
     private fun getDefaultMBWayConfigurationBuilder() = MBWayConfiguration.Builder(
