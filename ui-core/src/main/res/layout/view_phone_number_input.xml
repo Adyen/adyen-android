@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 15/3/2023.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_country"
+        style="@style/AdyenCheckout.DropdownTextInputLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/standard_half_margin">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_country"
+            style="@style/AdyenCheckout.DropdownTextInputEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:dropDownAnchor="@id/textInputLayout_country" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_phoneNumber"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_phoneNumber"
+            style="@style/AdyenCheckout.PhoneNumberInput"
+            android:autofillHints="phoneNational"
+            tools:ignore="RequiredSize" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+</merge>

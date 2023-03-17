@@ -42,4 +42,7 @@
     <string name="checkout_address_form_province_territory_hint_optional">Επαρχία ή περιοχή (προαιρετικό)</string>
     <string name="checkout_address_form_city_town_hint_optional">Πόλη / Δήμος (προαιρετικό)</string>
 
+    <string name="checkout_phone_number_hint">Αριθμός τηλεφώνου</string>
+    <string name="checkout_phone_number_invalid">Μη έγκυρος αριθμός τηλεφώνου</string>
+
 </resources>

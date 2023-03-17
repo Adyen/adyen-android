@@ -42,6 +42,8 @@
     <string name="checkout_address_form_province_territory_hint_optional">Province or Territory (optional)</string>
     <string name="checkout_address_form_city_town_hint_optional">City / Town (optional)</string>
 
+    <string name="checkout_phone_number_hint">Telephone number</string>
+    <string name="checkout_phone_number_invalid">Invalid telephone number</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>

@@ -309,4 +309,9 @@
         <item name="android:text">@string/checkout_address_form_billing_address_title</item>
     </style>
 
+    <style name="AdyenCheckout.PhoneNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_phone_number_hint</item>
+        <item name="android:inputType">phone</item>
+    </style>
+
 </resources>

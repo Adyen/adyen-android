@@ -42,4 +42,7 @@
     <string name="checkout_address_form_province_territory_hint_optional">Province ou territoire (facultatif)</string>
     <string name="checkout_address_form_city_town_hint_optional">Ville (facultatif)</string>
 
+    <string name="checkout_phone_number_hint">Numéro de téléphone</string>
+    <string name="checkout_phone_number_invalid">Numéro de téléphone incorrect</string>
+
 </resources>

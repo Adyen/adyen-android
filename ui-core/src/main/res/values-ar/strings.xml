@@ -42,4 +42,7 @@
     <string name="checkout_address_form_province_territory_hint_optional">المقاطعة أو الإقليم (اختياري)</string>
     <string name="checkout_address_form_city_town_hint_optional">المدينة / البلدة (اختياري)</string>
 
+    <string name="checkout_phone_number_hint">رقم الهاتف</string>
+    <string name="checkout_phone_number_invalid">رقم هاتف غير صحيح</string>
+
 </resources>

@@ -42,4 +42,7 @@
     <string name="checkout_address_form_province_territory_hint_optional">Provincie sau teritoriu (opțional)</string>
     <string name="checkout_address_form_city_town_hint_optional">Oraș/localitate (opțional)</string>
 
+    <string name="checkout_phone_number_hint">Număr de telefon</string>
+    <string name="checkout_phone_number_invalid">Număr de telefon incorect</string>
+
 </resources>

@@ -42,4 +42,7 @@
     <string name="checkout_address_form_province_territory_hint_optional">省或地區（選用）</string>
     <string name="checkout_address_form_city_town_hint_optional">市／鎮（選用）</string>
 
+    <string name="checkout_phone_number_hint">電話號碼</string>
+    <string name="checkout_phone_number_invalid">電話號碼無效</string>
+
 </resources>
