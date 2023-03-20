@@ -25,6 +25,9 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [ActionComponent] that is able to handle every action.
+ */
 class GenericActionComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: ActionHandlingComponent,

@@ -28,7 +28,7 @@ import java.util.Locale
 import kotlin.collections.set
 
 /**
- * This is the base configuration for the Action handling component. You need to use the [Builder] to instantiate this
+ * This is the base configuration for [GenericActionComponent]. You need to use the [Builder] to instantiate this
  * class.
  * There you will find specific methods to add configurations for each specific [ActionComponent], to be able to
  * customize their behavior.
