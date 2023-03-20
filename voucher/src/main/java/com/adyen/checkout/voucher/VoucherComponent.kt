@@ -25,6 +25,9 @@ import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [ActionComponent] that is able to handle the 'voucher' action.
+ */
 class VoucherComponent internal constructor(
     override val delegate: VoucherDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
