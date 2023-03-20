@@ -13,6 +13,9 @@ object WeChatPayUtils {
 
     private const val RESULT_EXTRA_KEY = "_wxapi_baseresp_errstr"
 
+    /**
+     * This method can be used to make sure the passed [Intent] is coming from the WeChatPay SDK.
+     */
     fun isResultIntent(intent: Intent?): Boolean {
         return intent?.extras?.containsKey(RESULT_EXTRA_KEY) == true
     }

@@ -26,6 +26,9 @@ import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentPr
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [ActionComponent] that is able to handle the 'sdk' action.
+ */
 class WeChatPayActionComponent internal constructor(
     override val delegate: WeChatDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,

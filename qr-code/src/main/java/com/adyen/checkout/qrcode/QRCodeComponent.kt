@@ -26,6 +26,9 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [ActionComponent] that is able to handle the 'qrCode' action.
+ */
 class QRCodeComponent internal constructor(
     override val delegate: QRCodeDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
