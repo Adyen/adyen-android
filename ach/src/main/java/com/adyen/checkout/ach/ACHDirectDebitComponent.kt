@@ -31,6 +31,9 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * An [PaymentComponent] that supports the 'ach' payment method.
+ */
 class ACHDirectDebitComponent internal constructor(
     private val achDirectDebitDelegate: ACHDirectDebitDelegate,
     private val genericActionDelegate: GenericActionDelegate,
