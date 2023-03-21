@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 
+/**
+ * Represents the state of [SevenElevenComponent].
+ */
 data class SevenElevenComponentState(
     override val data: PaymentComponentData<SevenElevenPaymentMethod>,
     override val isInputValid: Boolean,
