@@ -13,16 +13,15 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.internal.ui.SepaDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -32,7 +31,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'sepadirectdebit' payment method.
  */
 class SepaComponent internal constructor(
     private val sepaDelegate: SepaDelegate,

@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 
+/**
+ * Represents the state of [MolpayComponent].
+ */
 data class MolpayComponentState(
     override val data: PaymentComponentData<MolpayPaymentMethod>,
     override val isInputValid: Boolean,

@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 
+/**
+ * Represents the state of [MBWayComponent].
+ */
 data class MBWayComponentState(
     override val data: PaymentComponentData<MBWayPaymentMethod>,
     override val isInputValid: Boolean,

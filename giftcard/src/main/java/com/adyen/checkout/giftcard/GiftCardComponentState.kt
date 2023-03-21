@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import kotlinx.parcelize.Parcelize
 
 /**
- * PaymentComponentState for GiftCardComponent with additional data.
+ * Represents the state of [GiftCardComponent].
  */
 @Parcelize
 data class GiftCardComponentState(

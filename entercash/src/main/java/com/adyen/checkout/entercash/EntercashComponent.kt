@@ -9,16 +9,16 @@ package com.adyen.checkout.entercash
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
-import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
 import com.adyen.checkout.entercash.internal.provider.EntercashComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'entercash' payment method.
  */
 class EntercashComponent internal constructor(
     delegate: IssuerListDelegate<EntercashPaymentMethod, EntercashComponentState>,

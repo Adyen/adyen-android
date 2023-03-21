@@ -10,13 +10,17 @@ package com.adyen.checkout.onlinebankingjp
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 
+/**
+ * A [PaymentComponent] that supports the 'econtext_online' payment method.
+ */
 class OnlineBankingJPComponent internal constructor(
     delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,
     genericActionDelegate: GenericActionDelegate,

@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
 import com.adyen.checkout.card.CardBrand
@@ -34,7 +33,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'bcmc' payment method.
  */
 class BcmcComponent internal constructor(
     private val bcmcDelegate: BcmcDelegate,

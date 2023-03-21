@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 
+/**
+ * Represents the state of [BcmcComponent].
+ */
 data class BcmcComponentState(
     override val data: PaymentComponentData<CardPaymentMethod>,
     override val isInputValid: Boolean,

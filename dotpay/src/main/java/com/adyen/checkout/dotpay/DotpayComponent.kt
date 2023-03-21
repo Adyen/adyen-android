@@ -9,16 +9,16 @@ package com.adyen.checkout.dotpay
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
-import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'dotpay' payment method.
  */
 class DotpayComponent internal constructor(
     delegate: IssuerListDelegate<DotpayPaymentMethod, DotpayComponentState>,

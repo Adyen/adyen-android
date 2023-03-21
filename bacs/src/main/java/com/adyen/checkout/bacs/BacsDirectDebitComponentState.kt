@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 
+/**
+ * Represents the state of [BacsDirectDebitComponent].
+ */
 data class BacsDirectDebitComponentState(
     override val data: PaymentComponentData<BacsDirectDebitPaymentMethod>,
     override val isInputValid: Boolean,

@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 
+/**
+ * Represents the state of [BlikComponent].
+ */
 data class BlikComponentState(
     override val data: PaymentComponentData<BlikPaymentMethod>,
     override val isInputValid: Boolean,

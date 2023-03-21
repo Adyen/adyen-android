@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.instant.InstantPaymentComponent.Companion.PROVIDER
 import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.internal.ui.InstantPaymentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -21,9 +20,7 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Payment component used for handling payment methods that do not require any input from the shopper.
- *
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] used for handling payment methods that do not require any input from the shopper.
  */
 class InstantPaymentComponent internal constructor(
     private val instantPaymentDelegate: InstantPaymentDelegate,

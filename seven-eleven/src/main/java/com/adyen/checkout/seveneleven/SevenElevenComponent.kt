@@ -10,13 +10,17 @@ package com.adyen.checkout.seveneleven
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 
+/**
+ * A [PaymentComponent] that supports the 'econtext_seven_eleven' payment method.
+ */
 class SevenElevenComponent internal constructor(
     delegate: EContextDelegate<SevenElevenPaymentMethod, SevenElevenComponentState>,
     genericActionDelegate: GenericActionDelegate,

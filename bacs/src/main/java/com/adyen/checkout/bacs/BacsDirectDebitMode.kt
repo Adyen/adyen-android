@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.bacs
 
+/**
+ * The different modes [BacsDirectDebitComponent] can be in.
+ */
 enum class BacsDirectDebitMode {
     INPUT,
     CONFIRMATION

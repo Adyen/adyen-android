@@ -9,16 +9,17 @@ package com.adyen.checkout.molpay
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'molpay_ebanking_fpx_MY', 'molpay_ebanking_TH' and 'molpay_ebanking_VN'
+ * payment methods.
  */
 class MolpayComponent internal constructor(
     delegate: IssuerListDelegate<MolpayPaymentMethod, MolpayComponentState>,
@@ -38,9 +39,9 @@ class MolpayComponent internal constructor(
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(
-            PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,
-            PaymentMethodTypes.MOLPAY_VIETNAM
+            PaymentMethodTypes.MOLPAY_THAILAND,
+            PaymentMethodTypes.MOLPAY_VIETNAM,
         )
     }
 }
