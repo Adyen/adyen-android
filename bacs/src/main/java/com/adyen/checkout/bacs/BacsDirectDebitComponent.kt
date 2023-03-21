@@ -14,7 +14,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
 import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
 import com.adyen.checkout.components.core.internal.ButtonComponent
@@ -33,7 +32,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * An [PaymentComponent] that supports the 'directdebit_GB' payment method.
  */
 class BacsDirectDebitComponent internal constructor(
     private val bacsDelegate: BacsDirectDebitDelegate,
