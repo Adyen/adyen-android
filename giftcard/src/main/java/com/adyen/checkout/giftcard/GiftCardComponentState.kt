@@ -21,5 +21,6 @@ data class GiftCardComponentState(
     override val data: PaymentComponentData<GiftCardPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean,
-    val lastFourDigits: String?
+    val lastFourDigits: String?,
+    val giftCardAction: GiftCardAction
 ) : PaymentComponentState<GiftCardPaymentMethod>, Parcelable

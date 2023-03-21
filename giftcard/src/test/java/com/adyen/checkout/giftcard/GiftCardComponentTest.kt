@@ -13,8 +13,11 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
@@ -157,6 +160,34 @@ internal class GiftCardComponentTest(
     }
 
     @Test
+    fun `when resolveBalanceResult is called and active delegate is the payment delegate, then delegate resolveBalanceResult is called`() {
+        whenever(component.delegate).thenReturn(giftCardDelegate)
+        component.resolveBalanceResult(BALANCE_RESULT)
+        verify(giftCardDelegate).resolveBalanceResult(BALANCE_RESULT)
+    }
+
+    @Test
+    fun `when resolveBalanceResult is called and active delegate is the action delegate, then delegate resolveBalanceResult is not called`() {
+        whenever(component.delegate).thenReturn(genericActionDelegate)
+        component.resolveBalanceResult(BALANCE_RESULT)
+        verify(giftCardDelegate, never()).resolveBalanceResult(BALANCE_RESULT)
+    }
+
+    @Test
+    fun `when resolveOrderResponse is called and active delegate is the payment delegate, then delegate resolveOrderResponse is called`() {
+        whenever(component.delegate).thenReturn(giftCardDelegate)
+        component.resolveOrderResponse(ORDER_RESPONSE)
+        verify(giftCardDelegate).resolveOrderResponse(ORDER_RESPONSE)
+    }
+
+    @Test
+    fun `when resolveOrderResponse is called and active delegate is the action delegate, then delegate resolveOrderResponse is not called`() {
+        whenever(component.delegate).thenReturn(genericActionDelegate)
+        component.resolveOrderResponse(ORDER_RESPONSE)
+        verify(giftCardDelegate, never()).resolveOrderResponse(ORDER_RESPONSE)
+    }
+
+    @Test
     fun `when submit is called and active delegate is the payment delegate, then delegate onSubmit is called`() {
         whenever(component.delegate).thenReturn(giftCardDelegate)
         component.submit()
@@ -168,5 +199,19 @@ internal class GiftCardComponentTest(
         whenever(component.delegate).thenReturn(genericActionDelegate)
         component.submit()
         verify(giftCardDelegate, never()).onSubmit()
+    }
+
+    companion object {
+        private val BALANCE_RESULT = BalanceResult(
+            balance = Amount.EMPTY,
+            transactionLimit = Amount.EMPTY
+        )
+
+        private val ORDER_RESPONSE = OrderResponse(
+            pspReference = "psp",
+            orderData = "orderData",
+            amount = null,
+            remainingAmount = null
+        )
     }
 }

@@ -9,17 +9,22 @@
 package com.adyen.checkout.giftcard.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.OrderResponse
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
+import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
@@ -86,6 +91,7 @@ internal class DefaultGiftCardDelegateTest(
 
                 assertFalse(componentState.isReady)
                 assertEquals(null, componentState.lastFourDigits)
+                assertEquals(GiftCardAction.Idle, componentState.giftCardAction)
             }
         }
 
@@ -101,6 +107,7 @@ internal class DefaultGiftCardDelegateTest(
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
                 assertEquals(null, componentState.lastFourDigits)
+                assertEquals(GiftCardAction.Idle, componentState.giftCardAction)
             }
         }
 
@@ -118,6 +125,7 @@ internal class DefaultGiftCardDelegateTest(
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
                 assertEquals(null, componentState.lastFourDigits)
+                assertEquals(GiftCardAction.Idle, componentState.giftCardAction)
             }
         }
 
@@ -135,6 +143,7 @@ internal class DefaultGiftCardDelegateTest(
                 assertTrue(componentState.isReady)
                 assertEquals("0000", componentState.lastFourDigits)
                 assertEquals(TEST_ORDER, componentState.data.order)
+                assertEquals(GiftCardAction.CheckBalance, componentState.giftCardAction)
             }
         }
     }
@@ -198,12 +207,132 @@ internal class DefaultGiftCardDelegateTest(
         }
     }
 
+    @Nested
+    inner class BalanceStatusTest {
+
+        @Test
+        fun `when delegate is initialized then initial giftCardAction should be Idle`() = runTest {
+            delegate.initialize(CoroutineScope((UnconfinedTestDispatcher())))
+            delegate.componentStateFlow.test {
+                val state = expectMostRecentItem()
+                assertEquals(GiftCardAction.Idle, state.giftCardAction)
+            }
+        }
+
+        @Test
+        fun `when balance result is FullPayment then giftCardAction should be SendPayment`() = runTest {
+            val fullPaymentBalanceStatus = GiftCardBalanceStatus.FullPayment(
+                amountPaid = Amount(value = 50_00, currency = "EUR"),
+                remainingBalance = Amount(value = 0L, currency = "EUR")
+            )
+            delegate.resolveBalanceStatus(fullPaymentBalanceStatus)
+
+            delegate.componentStateFlow.test {
+                val state = expectMostRecentItem()
+
+                verify(submitHandler).onSubmit(state)
+                assertEquals(GiftCardAction.SendPayment, state.giftCardAction)
+            }
+        }
+
+        @Test
+        fun `when balance result is PartialPayment and order is null then giftCardAction should be CreateOrder`() =
+            runTest {
+                delegate = createGiftCardDelegate(order = null)
+                val partialPaymentBalanceStatus = GiftCardBalanceStatus.PartialPayment(
+                    amountPaid = Amount(value = 50_00, currency = "EUR"),
+                    remainingBalance = Amount(value = 0L, currency = "EUR")
+                )
+                delegate.resolveBalanceStatus(partialPaymentBalanceStatus)
+
+                delegate.componentStateFlow.test {
+                    val state = expectMostRecentItem()
+
+                    verify(submitHandler).onSubmit(state)
+                    assertEquals(GiftCardAction.CreateOrder, state.giftCardAction)
+                }
+            }
+
+        @Test
+        fun `when balance result is PartialPayment and order is not null then giftCardAction should be SendPayment`() =
+            runTest {
+                val partialPaymentBalanceStatus = GiftCardBalanceStatus.PartialPayment(
+                    amountPaid = Amount(value = 50_00, currency = "EUR"),
+                    remainingBalance = Amount(value = 0L, currency = "EUR")
+                )
+                delegate.resolveBalanceStatus(partialPaymentBalanceStatus)
+
+                delegate.componentStateFlow.test {
+                    val state = expectMostRecentItem()
+
+                    verify(submitHandler).onSubmit(state)
+                    assertEquals(GiftCardAction.SendPayment, state.giftCardAction)
+                }
+            }
+
+        @Test
+        fun `when balance result is NonMatchingCurrencies then an exception should be thrown`() = runTest {
+            val nonMatchingCurrenciesBalanceStatus = GiftCardBalanceStatus.NonMatchingCurrencies
+            delegate.resolveBalanceStatus(nonMatchingCurrenciesBalanceStatus)
+
+            delegate.exceptionFlow.test {
+                val exception = expectMostRecentItem()
+                assert(exception is GiftCardException)
+            }
+        }
+
+        @Test
+        fun `when balance result is ZeroAmountToBePaid then an exception should be thrown`() = runTest {
+            val zeroAmountToBePaidBalanceStatus = GiftCardBalanceStatus.ZeroAmountToBePaid
+            delegate.resolveBalanceStatus(zeroAmountToBePaidBalanceStatus)
+
+            delegate.exceptionFlow.test {
+                val exception = expectMostRecentItem()
+                assert(exception is GiftCardException)
+            }
+        }
+
+        @Test
+        fun `when balance result is ZeroBalance then an exception should be thrown`() = runTest {
+            val zeroBalanceStatus = GiftCardBalanceStatus.ZeroBalance
+            delegate.resolveBalanceStatus(zeroBalanceStatus)
+
+            delegate.exceptionFlow.test {
+                val exception = expectMostRecentItem()
+                assert(exception is GiftCardException)
+            }
+        }
+    }
+
+    @Test
+    fun `when resolveOrderResponse is called giftCardAction should be SendPayment`() = runTest {
+        val orderResponse = OrderResponse(
+            pspReference = "test_psp",
+            orderData = "test_order_data",
+            amount = null,
+            remainingAmount = null
+        )
+        delegate.resolveOrderResponse(orderResponse)
+        delegate.componentStateFlow.test {
+            val state = expectMostRecentItem()
+
+            val expectedOrderRequest = OrderRequest(
+                orderData = "test_order_data",
+                pspReference = "test_psp"
+            )
+            assertEquals(expectedOrderRequest, state.data.order)
+            assertEquals(GiftCardAction.SendPayment, state.giftCardAction)
+            verify(submitHandler).onSubmit(state)
+        }
+    }
+
     private fun createGiftCardDelegate(
-        configuration: GiftCardConfiguration = getDefaultGiftCardConfigurationBuilder().build()
+        configuration: GiftCardConfiguration = getDefaultGiftCardConfigurationBuilder().build(),
+        order: OrderRequest? = TEST_ORDER
     ) = DefaultGiftCardDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
-        order = TEST_ORDER,
+        order = order,
         publicKeyRepository = publicKeyRepository,
         componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
         cardEncrypter = cardEncrypter,

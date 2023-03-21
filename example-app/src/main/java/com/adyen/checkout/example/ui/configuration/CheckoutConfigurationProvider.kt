@@ -18,6 +18,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -80,6 +81,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     fun getInstantConfiguration(): InstantPaymentConfiguration =
         InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey).build()
+
+    fun getGiftCardConfiguration(): GiftCardConfiguration =
+        GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(keyValueStorage.getAmount())
+            .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
         0 -> AddressConfiguration.None

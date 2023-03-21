@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.giftcard.internal.ui
 
+import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -35,4 +37,8 @@ internal interface GiftCardDelegate :
     fun updateInputData(update: GiftCardInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
+
+    fun resolveBalanceResult(balanceResult: BalanceResult)
+
+    fun resolveOrderResponse(orderResponse: OrderResponse)
 }

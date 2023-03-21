@@ -13,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -81,6 +83,16 @@ class GiftCardComponent internal constructor(
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         (delegate as? GiftCardDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
+    fun resolveBalanceResult(balanceResult: BalanceResult) {
+        (delegate as? GiftCardDelegate)?.resolveBalanceResult(balanceResult)
+            ?: Logger.e(TAG, "Payment component is not able to resolve balance result, ignoring.")
+    }
+
+    fun resolveOrderResponse(orderResponse: OrderResponse) {
+        (delegate as? GiftCardDelegate)?.resolveOrderResponse(orderResponse)
+            ?: Logger.e(TAG, "Payment component is not able to resolve order response, ignoring.")
     }
 
     override fun onCleared() {
