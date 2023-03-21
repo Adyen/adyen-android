@@ -32,7 +32,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * An [PaymentComponent] that supports the 'directdebit_GB' payment method.
+ * A [PaymentComponent] that supports the 'directdebit_GB' payment method.
  */
 class BacsDirectDebitComponent internal constructor(
     private val bacsDelegate: BacsDirectDebitDelegate,
