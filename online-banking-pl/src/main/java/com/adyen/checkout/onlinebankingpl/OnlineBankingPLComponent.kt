@@ -10,16 +10,16 @@ package com.adyen.checkout.onlinebankingpl
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PROVIDER
 import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'onlineBanking_PL' payment method.
  */
 class OnlineBankingPLComponent internal constructor(
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>,
