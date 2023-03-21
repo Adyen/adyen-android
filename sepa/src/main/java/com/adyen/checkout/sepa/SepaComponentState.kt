@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 
+/**
+ * Represents the state of [SepaComponent].
+ */
 data class SepaComponentState(
     override val data: PaymentComponentData<SepaPaymentMethod>,
     override val isInputValid: Boolean,
