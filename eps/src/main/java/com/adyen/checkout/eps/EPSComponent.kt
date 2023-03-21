@@ -9,16 +9,16 @@ package com.adyen.checkout.eps
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
-import com.adyen.checkout.eps.EPSComponent.Companion.PROVIDER
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'eps' payment method.
  */
 class EPSComponent internal constructor(
     delegate: IssuerListDelegate<EPSPaymentMethod, EPSComponentState>,

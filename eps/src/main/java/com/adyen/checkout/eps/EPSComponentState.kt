@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 
+/**
+ * Represents the state of [EPSComponent].
+ */
 data class EPSComponentState(
     override val data: PaymentComponentData<EPSPaymentMethod>,
     override val isInputValid: Boolean,
