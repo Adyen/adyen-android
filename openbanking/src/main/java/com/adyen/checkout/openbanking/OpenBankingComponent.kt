@@ -9,16 +9,16 @@ package com.adyen.checkout.openbanking
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
 import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the 'openbanking_UK' payment method.
  */
 class OpenBankingComponent internal constructor(
     delegate: IssuerListDelegate<OpenBankingPaymentMethod, OpenBankingComponentState>,

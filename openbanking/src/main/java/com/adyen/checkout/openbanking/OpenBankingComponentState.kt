@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 
+/**
+ * Represents the state of [OpenBankingComponent].
+ */
 data class OpenBankingComponentState(
     override val data: PaymentComponentData<OpenBankingPaymentMethod>,
     override val isInputValid: Boolean,
