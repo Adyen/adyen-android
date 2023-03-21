@@ -15,6 +15,16 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Pass this object to [GooglePayConfiguration.shippingAddressParameters] to the required shipping address details.
+ * This object is a mapping of the
+ * [ShippingAddressParameters](https://developers.google.com/pay/api/android/reference/request-objects#ShippingAddressParameters)
+ * object from the Google Pay SDK.
+ *
+ * @param allowedCountryCodes A list of ISO 3166-1 alpha-2 country code values where shipping is allowed.
+ * @param isPhoneNumberRequired Set to true if a phone number is required for the shipping address.
+ */
+@Suppress("MaxLineLength")
 @Parcelize
 data class ShippingAddressParameters(
     var allowedCountryCodes: List<String?>? = null,

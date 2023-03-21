@@ -14,6 +14,13 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Pass this object to [GooglePayConfiguration.merchantInfo] to set information about the merchant requesting the
+ * payment.
+ *
+ * @param merchantName The name of the merchant.
+ * @param merchantId The id of the merchant.
+ */
 @Parcelize
 data class MerchantInfo(
     var merchantName: String? = null,

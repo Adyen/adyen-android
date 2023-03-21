@@ -15,16 +15,15 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ActivityResultHandlingComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -32,7 +31,8 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.GOOGLE_PAY] and [PaymentMethodTypes.GOOGLE_PAY_LEGACY]
+ * payment methods.
  */
 class GooglePayComponent internal constructor(
     private val googlePayDelegate: GooglePayDelegate,
