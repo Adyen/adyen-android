@@ -29,6 +29,9 @@ import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * A [PaymentComponent] that supports the 'paybybank' payment method.
+ */
 class PayByBankComponent internal constructor(
     private val payByBankDelegate: PayByBankDelegate,
     private val genericActionDelegate: GenericActionDelegate,

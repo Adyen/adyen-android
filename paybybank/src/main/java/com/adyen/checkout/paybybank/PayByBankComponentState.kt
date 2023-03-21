@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 
+/**
+ * Represents the state of [PayByBankComponent].
+ */
 data class PayByBankComponentState(
     override val data: PaymentComponentData<PayByBankPaymentMethod>,
     override val isInputValid: Boolean,
