@@ -13,6 +13,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.components.util.CheckoutCurrency;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;
@@ -94,6 +95,10 @@ public class Amount extends ModelObject {
 
     public boolean isEmpty() {
         return EMPTY_CURRENCY.equals(currency) || value == EMPTY_VALUE;
+    }
+
+    public boolean isZero() {
+        return CheckoutCurrency.isSupported(currency) && value == 0L;
     }
 
     @Override

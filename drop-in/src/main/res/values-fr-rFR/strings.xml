@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Payer</string>
     <string name="pay_button_with_value">Payer %s</string>
+    <string name="confirm_preauthorization">Confirmer la pré-autorisation</string>
     <string name="payment_methods_header">Méthodes de paiement</string>
     <string name="error_dialog_title">Erreur</string>
     <string name="error_dialog_button">Ok</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Oui, supprimer</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuler</string>
     <string name="checkout_remove_stored_payment_method_body">Supprimer le mode de paiement enregistré</string>
+    <string name="checkout_stored_payment_confirmation_message">Confirmer paiement de %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Annuler</string>
 </resources>

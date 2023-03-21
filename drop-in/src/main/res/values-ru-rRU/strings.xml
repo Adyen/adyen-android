@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Заплатить</string>
     <string name="pay_button_with_value">Заплатить %s</string>
+    <string name="confirm_preauthorization">Подтвердить предавторизацию</string>
     <string name="payment_methods_header">Способы оплаты</string>
     <string name="error_dialog_title">Ошибка</string>
     <string name="error_dialog_button">ОК</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Да, удалить</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Отменить</string>
     <string name="checkout_remove_stored_payment_method_body">Удалить сохраненный способ оплаты</string>
+    <string name="checkout_stored_payment_confirmation_message">Подтвердить оплату %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Отменить</string>
 </resources>

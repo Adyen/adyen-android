@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Zaplatiť</string>
     <string name="pay_button_with_value">Zaplatiť %s</string>
+    <string name="confirm_preauthorization">Potvrďte predbežnú autorizáciu</string>
     <string name="payment_methods_header">Spôsob platby</string>
     <string name="error_dialog_title">Chyba</string>
     <string name="error_dialog_button">OK</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Áno, odstrániť</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušiť</string>
     <string name="checkout_remove_stored_payment_method_body">Odstrániť uložený spôsob platby</string>
+    <string name="checkout_stored_payment_confirmation_message">Potvrďte platbu pomocou %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Zrušiť</string>
 </resources>

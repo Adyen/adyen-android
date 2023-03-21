@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Maksa</string>
     <string name="pay_button_with_value">Maksa %s</string>
+    <string name="confirm_preauthorization">Vahvista ennakkolupa</string>
     <string name="payment_methods_header">Maksutavat</string>
     <string name="error_dialog_title">Virhe</string>
     <string name="error_dialog_button">Ok</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Kyllä, poista</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Peruuta</string>
     <string name="checkout_remove_stored_payment_method_body">Poista tallennettu maksutapa</string>
+    <string name="checkout_stored_payment_confirmation_message">Vahvista %s maksu</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Peruuta</string>
 </resources>

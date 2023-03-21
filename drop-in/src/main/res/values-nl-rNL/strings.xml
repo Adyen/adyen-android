@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Betaal</string>
     <string name="pay_button_with_value">%s betalen</string>
+    <string name="confirm_preauthorization">Preautorisatie bevestigen</string>
     <string name="payment_methods_header">Betaalmethodes</string>
     <string name="error_dialog_title">Fout</string>
     <string name="error_dialog_button">Oké</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, verwijderen</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuleren</string>
     <string name="checkout_remove_stored_payment_method_body">Opgeslagen betalingsmethode verwijderen</string>
+    <string name="checkout_stored_payment_confirmation_message">Bevestig %s betaling</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Annuleer</string>
 </resources>

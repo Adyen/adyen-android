@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Platiti</string>
     <string name="pay_button_with_value">Platiti %s</string>
+    <string name="confirm_preauthorization">Potvrdite prethodno odobrenje</string>
     <string name="payment_methods_header">Način plaćanja</string>
     <string name="error_dialog_title">Greška</string>
     <string name="error_dialog_button">U redu</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, ukloni</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Otkaži</string>
     <string name="checkout_remove_stored_payment_method_body">Uklonite pohranjeni način plaćanja</string>
+    <string name="checkout_stored_payment_confirmation_message">Potvrdite plaćanje: %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Otkaži</string>
 </resources>

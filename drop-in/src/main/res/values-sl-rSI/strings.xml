@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">Plačilo</string>
     <string name="pay_button_with_value">Plačilo %s</string>
+    <string name="confirm_preauthorization">Potrdi predhodno odobritev</string>
     <string name="payment_methods_header">Načini plačila</string>
     <string name="error_dialog_title">Napaka</string>
     <string name="error_dialog_button">OK</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, odstrani</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Prekliči</string>
     <string name="checkout_remove_stored_payment_method_body">Odstrani shranjen način plačila</string>
+    <string name="checkout_stored_payment_confirmation_message">Potrdite plačilo: %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Prekliči</string>
 </resources>

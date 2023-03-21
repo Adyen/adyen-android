@@ -9,6 +9,7 @@
 <resources>
     <string name="pay_button">支付</string>
     <string name="pay_button_with_value">支付 %s</string>
+    <string name="confirm_preauthorization">確認預先授權</string>
     <string name="payment_methods_header">付款方式</string>
     <string name="error_dialog_title">錯誤</string>
     <string name="error_dialog_button">確定</string>
@@ -33,4 +34,6 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">是，請移除</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">取消</string>
     <string name="checkout_remove_stored_payment_method_body">移除已儲存付款方式</string>
+    <string name="checkout_stored_payment_confirmation_message">確認 %s 付款</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
 </resources>
