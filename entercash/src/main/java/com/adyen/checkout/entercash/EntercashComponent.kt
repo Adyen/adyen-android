@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * A [PaymentComponent] that supports the 'entercash' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ENTERCASH] payment method.
  */
 class EntercashComponent internal constructor(
     delegate: IssuerListDelegate<EntercashPaymentMethod, EntercashComponentState>,

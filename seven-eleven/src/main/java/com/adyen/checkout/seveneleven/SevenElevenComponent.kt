@@ -19,7 +19,7 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'econtext_seven_eleven' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN] payment method.
  */
 class SevenElevenComponent internal constructor(
     delegate: EContextDelegate<SevenElevenPaymentMethod, SevenElevenComponentState>,

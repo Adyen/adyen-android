@@ -31,7 +31,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'mbway' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.MB_WAY] payment method.
  */
 class MBWayComponent internal constructor(
     private val mbWayDelegate: MBWayDelegate,

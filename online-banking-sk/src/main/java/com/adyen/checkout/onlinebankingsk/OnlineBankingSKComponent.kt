@@ -20,7 +20,7 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'onlineBanking_SK' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_SK] payment method.
  */
 class OnlineBankingSKComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod, OnlineBankingSKComponentState>,

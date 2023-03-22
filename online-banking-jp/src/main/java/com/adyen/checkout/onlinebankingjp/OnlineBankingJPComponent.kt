@@ -19,7 +19,7 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'econtext_online' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_ONLINE] payment method.
  */
 class OnlineBankingJPComponent internal constructor(
     delegate: EContextDelegate<OnlineBankingJPPaymentMethod, OnlineBankingJPComponentState>,

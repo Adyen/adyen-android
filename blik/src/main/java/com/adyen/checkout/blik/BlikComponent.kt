@@ -31,7 +31,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'blik' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.BLIK] payment method.
  */
 class BlikComponent internal constructor(
     private val blikDelegate: BlikDelegate,

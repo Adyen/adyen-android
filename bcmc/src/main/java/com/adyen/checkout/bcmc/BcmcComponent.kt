@@ -33,7 +33,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'bcmc' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.BCMC] payment method.
  */
 class BcmcComponent internal constructor(
     private val bcmcDelegate: BcmcDelegate,

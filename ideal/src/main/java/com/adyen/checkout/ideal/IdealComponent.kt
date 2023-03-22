@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * A [PaymentComponent] that supports the 'ideal' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.IDEAL] payment method.
  */
 class IdealComponent internal constructor(
     delegate: IssuerListDelegate<IdealPaymentMethod, IdealComponentState>,

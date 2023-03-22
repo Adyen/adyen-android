@@ -19,7 +19,7 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.onlinebankingpl.internal.provider.OnlineBankingPLComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'onlineBanking_PL' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_PL] payment method.
  */
 class OnlineBankingPLComponent internal constructor(
     delegate: IssuerListDelegate<OnlineBankingPLPaymentMethod, OnlineBankingPLComponentState>,

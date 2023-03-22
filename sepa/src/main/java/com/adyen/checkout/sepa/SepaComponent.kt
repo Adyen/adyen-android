@@ -31,7 +31,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'sepadirectdebit' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.SEPA] payment method.
  */
 class SepaComponent internal constructor(
     private val sepaDelegate: SepaDelegate,

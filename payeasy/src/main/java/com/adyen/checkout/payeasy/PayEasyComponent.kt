@@ -19,7 +19,7 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'econtext_atm' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_ATM] payment method.
  */
 class PayEasyComponent internal constructor(
     delegate: EContextDelegate<PayEasyPaymentMethod, PayEasyComponentState>,
