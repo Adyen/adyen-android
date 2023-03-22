@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'openbanking_UK' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.OPEN_BANKING] payment method.
  */
 class OpenBankingComponent internal constructor(
     delegate: IssuerListDelegate<OpenBankingPaymentMethod, OpenBankingComponentState>,

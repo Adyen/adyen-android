@@ -14,12 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
@@ -30,7 +30,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'paybybank' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.PAY_BY_BANK] payment method.
  */
 class PayByBankComponent internal constructor(
     private val payByBankDelegate: PayByBankDelegate,

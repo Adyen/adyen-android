@@ -32,7 +32,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'ach' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ACH] payment method.
  */
 class ACHDirectDebitComponent internal constructor(
     private val achDirectDebitDelegate: ACHDirectDebitDelegate,

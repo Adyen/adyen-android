@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * A [PaymentComponent] that supports the 'eps' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.EPS] payment method.
  */
 class EPSComponent internal constructor(
     delegate: IssuerListDelegate<EPSPaymentMethod, EPSComponentState>,

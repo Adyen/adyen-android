@@ -10,8 +10,8 @@ package com.adyen.checkout.conveniencestoresjp
 
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
@@ -19,7 +19,7 @@ import com.adyen.checkout.econtext.EContextComponent
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
 /**
- * A [PaymentComponent] that supports the 'econtext_stores' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ECONTEXT_STORES] payment method.
  */
 class ConvenienceStoresJPComponent internal constructor(
     delegate: EContextDelegate<ConvenienceStoresJPPaymentMethod, ConvenienceStoresJPComponentState>,

@@ -14,26 +14,26 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
-import com.adyen.checkout.upi.UPIComponent.Companion.PROVIDER
 import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.UPI], [PaymentMethodTypes.UPI_COLLECT] and
+ * [PaymentMethodTypes.UPI_QR] payment methods.
  */
 class UPIComponent internal constructor(
     private val upiDelegate: UPIDelegate,

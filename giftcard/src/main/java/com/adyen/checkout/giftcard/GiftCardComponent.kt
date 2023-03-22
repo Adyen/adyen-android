@@ -33,7 +33,7 @@ import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
- * A [PaymentComponent] that supports the 'giftcard' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.GIFTCARD] payment method.
  */
 class GiftCardComponent internal constructor(
     private val giftCardDelegate: GiftCardDelegate,

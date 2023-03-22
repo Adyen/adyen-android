@@ -18,7 +18,7 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**
- * A [PaymentComponent] that supports the 'dotpay' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.DOTPAY] payment method.
  */
 class DotpayComponent internal constructor(
     delegate: IssuerListDelegate<DotpayPaymentMethod, DotpayComponentState>,

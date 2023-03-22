@@ -18,8 +18,8 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'molpay_ebanking_fpx_MY', 'molpay_ebanking_TH' and 'molpay_ebanking_VN'
- * payment methods.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.MOLPAY_MALAYSIA], [PaymentMethodTypes.MOLPAY_THAILAND]
+ * and [PaymentMethodTypes.MOLPAY_VIETNAM] payment methods.
  */
 class MolpayComponent internal constructor(
     delegate: IssuerListDelegate<MolpayPaymentMethod, MolpayComponentState>,

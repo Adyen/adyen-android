@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 
+/**
+ * Represents the state of [UPIComponent].
+ */
 data class UPIComponentState(
     override val data: PaymentComponentData<UPIPaymentMethod>,
     override val isInputValid: Boolean,

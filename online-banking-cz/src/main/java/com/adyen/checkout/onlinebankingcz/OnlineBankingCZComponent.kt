@@ -20,7 +20,7 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 
 /**
- * A [PaymentComponent] that supports the 'onlineBanking_CZ' payment method.
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.ONLINE_BANKING_CZ] payment method.
  */
 class OnlineBankingCZComponent internal constructor(
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod, OnlineBankingCZComponentState>,
