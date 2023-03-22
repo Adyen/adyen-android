@@ -12,6 +12,9 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.google.android.gms.wallet.PaymentData
 
+/**
+ * Represents the state of [GooglePayComponent].
+ */
 data class GooglePayComponentState(
     override val data: PaymentComponentData<GooglePayPaymentMethod>,
     override val isInputValid: Boolean,
