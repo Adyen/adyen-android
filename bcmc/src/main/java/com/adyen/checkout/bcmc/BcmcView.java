@@ -230,7 +230,7 @@ public final class BcmcView
                     ? outputData.getCardHolderNameField().getValidation()
                     : null;
             if (hasFocus) {
-                setCardNumberError(null);
+                mCardHolderNameInput.setError(null);
             } else if (cardHolderValidation != null && !cardHolderValidation.isValid()) {
                 final int errorReasonResId = ((Validation.Invalid) cardHolderValidation).getReason();
                 mCardHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
