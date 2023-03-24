@@ -21,8 +21,7 @@
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_firstName"
-            style="@style/AdyenCheckout.EContext.FirstNameInput"
-            tools:ignore="RequiredSize" />
+            style="@style/AdyenCheckout.EContext.FirstNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,8 +32,7 @@
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_lastName"
-            style="@style/AdyenCheckout.EContext.LastNameInput"
-            tools:ignore="RequiredSize" />
+            style="@style/AdyenCheckout.EContext.LastNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -45,8 +43,7 @@
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_emailAddress"
-            style="@style/AdyenCheckout.EContext.ShopperEmailInput"
-            tools:ignore="RequiredSize" />
+            style="@style/AdyenCheckout.EContext.ShopperEmailInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -82,8 +79,7 @@
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_mobileNumber"
                 style="@style/AdyenCheckout.EContext.PhoneNumberInput"
-                android:autofillHints="phoneNational"
-                tools:ignore="RequiredSize" />
+                android:autofillHints="phoneNational" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </merge>

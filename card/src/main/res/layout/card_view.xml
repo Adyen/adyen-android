@@ -29,8 +29,7 @@
                 android:id="@+id/editText_cardNumber"
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@id/editText_expiryDate"
-                android:nextFocusForward="@id/editText_expiryDate"
-                tools:ignore="RequiredSize" />
+                android:nextFocusForward="@id/editText_expiryDate" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -105,8 +104,7 @@
                 android:id="@+id/editText_expiryDate"
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusDown="@id/editText_securityCode"
-                android:nextFocusForward="@id/editText_securityCode"
-                tools:ignore="RequiredSize" />
+                android:nextFocusForward="@id/editText_securityCode" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -121,8 +119,7 @@
                 android:id="@+id/editText_securityCode"
                 style="@style/AdyenCheckout.Card.SecurityCodeInput"
                 android:nextFocusDown="@id/editText_cardHolder"
-                android:nextFocusForward="@id/editText_cardHolder"
-                tools:ignore="RequiredSize" />
+                android:nextFocusForward="@id/editText_cardHolder" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -136,8 +133,7 @@
             android:id="@+id/editText_cardHolder"
             style="@style/AdyenCheckout.Card.HolderNameInput"
             android:nextFocusDown="@id/editText_postalCode"
-            android:nextFocusForward="@id/editText_postalCode"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -151,8 +147,7 @@
             style="@style/AdyenCheckout.PostalCodeInput"
             android:autofillHints="postalCode"
             android:nextFocusDown="@id/editText_socialSecurityNumber"
-            android:nextFocusForward="@id/editText_socialSecurityNumber"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_socialSecurityNumber" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -165,8 +160,7 @@
             android:id="@+id/editText_socialSecurityNumber"
             style="@style/AdyenCheckout.Card.SocialSecurityNumberInput"
             android:nextFocusDown="@id/editText_kcpBirthDateOrTaxNumber"
-            android:nextFocusForward="@id/editText_kcpBirthDateOrTaxNumber"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_kcpBirthDateOrTaxNumber" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -179,8 +173,7 @@
             android:id="@+id/editText_kcpBirthDateOrTaxNumber"
             style="@style/AdyenCheckout.Card.KcpBirthDateOrTaxNumber"
             android:nextFocusDown="@id/editText_kcpCardPassword"
-            android:nextFocusForward="@id/editText_kcpCardPassword"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_kcpCardPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -193,8 +186,7 @@
             android:id="@+id/editText_kcpCardPassword"
             style="@style/AdyenCheckout.Card.KcpCardPassword"
             android:nextFocusDown="@id/addressFormInput"
-            android:nextFocusForward="@id/addressFormInput"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/addressFormInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

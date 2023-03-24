@@ -24,8 +24,7 @@
             style="@style/AdyenCheckout.AddressInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_apartmentSuite"
-            android:nextFocusForward="@id/editText_apartmentSuite"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_apartmentSuite" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -39,8 +38,7 @@
             style="@style/AdyenCheckout.ApartmentSuiteInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_city"
-            android:nextFocusForward="@id/editText_city"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_city" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -54,8 +52,7 @@
             style="@style/AdyenCheckout.CityInput"
             android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_postalCode"
-            android:nextFocusForward="@id/editText_postalCode"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -67,8 +64,7 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
             style="@style/AdyenCheckout.PostalCodeInput"
-            android:autofillHints="postalCode"
-            tools:ignore="RequiredSize" />
+            android:autofillHints="postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -82,7 +78,6 @@
             style="@style/AdyenCheckout.DropdownTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="postalAddress"
-            tools:ignore="RequiredSize" />
+            android:autofillHints="postalAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>
