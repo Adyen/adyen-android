@@ -201,8 +201,9 @@ internal class DefaultAdyen3DS2Delegate(
 
         val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
         val configParameters = AdyenConfigParameters.Builder(
-            fingerprintToken.directoryServerId,
-            fingerprintToken.directoryServerPublicKey
+            /* directoryServerId = */ fingerprintToken.directoryServerId,
+            /* directoryServerPublicKey = */ fingerprintToken.directoryServerPublicKey,
+            /* directoryServerRootCertificates = */ fingerprintToken.directoryServerRootCertificates,
         ).build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
