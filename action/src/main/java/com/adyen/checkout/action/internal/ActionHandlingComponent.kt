@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.threeds2.customization.UiCustomization
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionHandlingComponent {
@@ -40,12 +39,4 @@ interface ActionHandlingComponent {
      * @param intent The received [Intent].
      */
     fun handleIntent(intent: Intent)
-
-    /**
-     * Set a [UiCustomization] object to be passed to the 3DS2 SDK for customizing the challenge screen.
-     * Needs to be set before handling any action.
-     *
-     * @param uiCustomization The customization object.
-     */
-    fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

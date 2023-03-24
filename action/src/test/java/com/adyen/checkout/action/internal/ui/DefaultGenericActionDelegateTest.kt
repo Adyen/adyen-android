@@ -16,7 +16,6 @@ import app.cash.turbine.test
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.RedirectAction
-import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -26,7 +25,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -206,46 +204,6 @@ internal class DefaultGenericActionDelegateTest(
 
         assertTrue(testDelegate.refreshStatusCalled)
     }
-
-    @Test
-    fun `when set3DS2UICustomization is called on the generic delegate after handleAction then it's also called on the 3DS2 delegate`() =
-        runTest {
-            val adyen3DS2Delegate = Test3DS2Delegate()
-            whenever(
-                actionDelegateProvider.getDelegate(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate
-
-            genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            genericActionDelegate.handleAction(Threeds2Action(), activity)
-
-            assertEquals(adyen3DS2Delegate, genericActionDelegate.delegate)
-
-            val uiCustomization = UiCustomization()
-            genericActionDelegate.set3DS2UICustomization(uiCustomization)
-
-            assertEquals(uiCustomization, adyen3DS2Delegate.uiCustomization)
-        }
-
-    @Test
-    fun `when set3DS2UICustomization is called on the generic delegate before handleAction then it's also called on the 3DS2 delegate`() =
-        runTest {
-            val adyen3DS2Delegate = Test3DS2Delegate()
-            whenever(
-                actionDelegateProvider.getDelegate(any(), any(), any(), any())
-            ) doReturn adyen3DS2Delegate
-
-            genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            val uiCustomization = UiCustomization()
-            genericActionDelegate.set3DS2UICustomization(uiCustomization)
-
-            genericActionDelegate.handleAction(Threeds2Action(), activity)
-
-            assertEquals(adyen3DS2Delegate, genericActionDelegate.delegate)
-
-            assertEquals(uiCustomization, adyen3DS2Delegate.uiCustomization)
-        }
 
     @Test
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {

@@ -32,7 +32,6 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -64,8 +63,6 @@ internal class DefaultGenericActionDelegate(
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
-
-    private var uiCustomization: UiCustomization? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
@@ -112,8 +109,6 @@ internal class DefaultGenericActionDelegate(
 
             delegate.initialize(coroutineScope)
 
-            set3DS2UICustomizationInDelegate(delegate)
-
             observeDetails(delegate)
             observeExceptions(delegate)
             observeViewFlow(delegate)
@@ -143,19 +138,6 @@ internal class DefaultGenericActionDelegate(
         delegate.viewFlow
             .onEach { _viewFlow.tryEmit(it) }
             .launchIn(coroutineScope)
-    }
-
-    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
-        this.uiCustomization = uiCustomization
-        set3DS2UICustomizationInDelegate(_delegate)
-    }
-
-    private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate?) {
-        if (delegate !is Adyen3DS2Delegate) return
-        if (uiCustomization != null) {
-            Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")
-        }
-        delegate.set3DS2UICustomization(uiCustomization)
     }
 
     override fun handleIntent(intent: Intent) {
@@ -190,7 +172,6 @@ internal class DefaultGenericActionDelegate(
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null
-        uiCustomization = null
     }
 
     companion object {

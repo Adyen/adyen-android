@@ -33,7 +33,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -132,15 +131,9 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(extraBufferCapacity = 1)
 
-    var uiCustomization: UiCustomization? = null
-
     var handleActionCalled = false
 
     override fun initialize(coroutineScope: CoroutineScope) = Unit
-
-    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
-        this.uiCustomization = uiCustomization
-    }
 
     override fun handleAction(action: Action, activity: Activity) {
         handleActionCalled = true

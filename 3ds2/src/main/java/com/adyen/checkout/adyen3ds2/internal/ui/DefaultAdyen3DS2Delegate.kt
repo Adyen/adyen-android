@@ -49,7 +49,6 @@ import com.adyen.threeds2.ProtocolErrorEvent
 import com.adyen.threeds2.RuntimeErrorEvent
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
-import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKAlreadyInitializedException
 import com.adyen.threeds2.exception.SDKNotInitializedException
@@ -93,8 +92,6 @@ internal class DefaultAdyen3DS2Delegate(
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
-
-    private var uiCustomization: UiCustomization? = null
 
     private var currentTransaction: Transaction? = null
 
@@ -380,10 +377,6 @@ internal class DefaultAdyen3DS2Delegate(
         } catch (e: CheckoutException) {
             exceptionChannel.trySend(e)
         }
-    }
-
-    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
-        this.uiCustomization = uiCustomization
     }
 
     override fun completed(completionEvent: CompletionEvent) {

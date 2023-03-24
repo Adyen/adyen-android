@@ -24,7 +24,6 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -50,16 +49,6 @@ class Adyen3DS2Component internal constructor(
 
     internal fun removeObserver() {
         delegate.removeObserver()
-    }
-
-    /**
-     * Set a [UiCustomization] object to be passed to the 3DS2 SDK for customizing the challenge screen.
-     * Needs to be set before handling any action.
-     *
-     * @param uiCustomization The customization object.
-     */
-    fun setUiCustomization(uiCustomization: UiCustomization?) {
-        delegate.set3DS2UICustomization(uiCustomization)
     }
 
     override fun handleAction(action: Action, activity: Activity) {
