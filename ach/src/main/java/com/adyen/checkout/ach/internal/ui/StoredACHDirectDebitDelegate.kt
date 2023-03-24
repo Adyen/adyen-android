@@ -15,34 +15,31 @@ import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitInputData
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
-
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -54,7 +51,6 @@ internal class StoredACHDirectDebitDelegate(
     private val analyticsRepository: AnalyticsRepository,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: OrderRequest?,
-    private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
 ) : ACHDirectDebitDelegate {
 
     private val inputData: ACHDirectDebitInputData = ACHDirectDebitInputData()
@@ -74,9 +70,8 @@ internal class StoredACHDirectDebitDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
-    override val submitFlow: Flow<ACHDirectDebitComponentState> = submitHandler.submitFlow
+    private val submitChannel = bufferedChannel<ACHDirectDebitComponentState>()
+    override val submitFlow: Flow<ACHDirectDebitComponentState> = submitChannel.receiveAsFlow()
 
     override val addressOutputData: AddressOutputData
         get() = outputData.addressState
@@ -92,16 +87,21 @@ internal class StoredACHDirectDebitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        submitHandler.initialize(coroutineScope, componentStateFlow)
         sendAnalyticsEvent(coroutineScope)
+
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
+    }
+
+    private fun onState(achDirectDebitComponentState: ACHDirectDebitComponentState) {
+        if (achDirectDebitComponentState.isValid) {
+            submitChannel.trySend(achDirectDebitComponentState)
+        }
     }
 
     override fun updateInputData(update: ACHDirectDebitInputData.() -> Unit) {
         Logger.e(TAG, "updateInputData should not be called in StoredACHDirectDebitDelegate")
-    }
-
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
@@ -172,17 +172,6 @@ internal class StoredACHDirectDebitDelegate(
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         Logger.e(TAG, "updateAddressInputData should not be called in StoredACHDirectDebitDelegate")
     }
-
-    override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(
-            state = state
-        )
-    }
-
-    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
-
-    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     companion object {
         private val TAG = LogUtil.getTag()

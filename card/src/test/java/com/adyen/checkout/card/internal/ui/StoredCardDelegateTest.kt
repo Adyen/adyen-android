@@ -29,6 +29,7 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
@@ -37,7 +38,6 @@ import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseCardEncrypter
@@ -96,6 +96,32 @@ internal class StoredCardDelegateTest(
             assertEquals(publicKeyRepository.errorResult.exceptionOrNull(), exception.cause)
 
             cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when component is initialized with cvc shown, then view flow emits CardComponentViewType`() = runTest {
+        delegate = createCardDelegate(
+            configuration = getDefaultCardConfigurationBuilder()
+                .setHideCvcStoredCard(false)
+                .build()
+        )
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.viewFlow.test {
+            assertEquals(CardComponentViewType, expectMostRecentItem())
+        }
+    }
+
+    @Test
+    fun `when component is initialized with cvc hidden, then view flow emits null`() = runTest {
+        delegate = createCardDelegate(
+            configuration = getDefaultCardConfigurationBuilder()
+                .setHideCvcStoredCard(true)
+                .build()
+        )
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.viewFlow.test {
+            assertEquals(null, expectMostRecentItem())
         }
     }
 
@@ -327,6 +353,7 @@ internal class StoredCardDelegateTest(
                     .setSubmitButtonVisible(false)
                     .build()
             )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             assertFalse(delegate.shouldShowSubmitButton())
         }
@@ -338,6 +365,7 @@ internal class StoredCardDelegateTest(
                     .setSubmitButtonVisible(true)
                     .build()
             )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             assertTrue(delegate.shouldShowSubmitButton())
         }

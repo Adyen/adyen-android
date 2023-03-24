@@ -14,16 +14,12 @@ import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface ACHDirectDebitDelegate :
     PaymentComponentDelegate<ACHDirectDebitComponentState>,
     ViewProvidingDelegate,
-    ButtonDelegate,
-    UIStateDelegate,
     AddressDelegate {
     val outputData: ACHDirectDebitOutputData
 
@@ -34,6 +30,4 @@ internal interface ACHDirectDebitDelegate :
     val exceptionFlow: Flow<CheckoutException>
 
     fun updateInputData(update: ACHDirectDebitInputData.() -> Unit)
-
-    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

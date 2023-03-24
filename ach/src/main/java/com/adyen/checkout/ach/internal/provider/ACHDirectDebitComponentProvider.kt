@@ -22,10 +22,10 @@ import com.adyen.checkout.ach.internal.ui.StoredACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
@@ -273,7 +273,6 @@ class ACHDirectDebitComponentProvider(
                 observerRepository = PaymentObserverRepository(),
                 storedPaymentMethod = storedPaymentMethod,
                 analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler(savedStateHandle),
                 componentParams = componentParams,
                 order = order
             )
@@ -333,7 +332,6 @@ class ACHDirectDebitComponentProvider(
                 observerRepository = PaymentObserverRepository(),
                 storedPaymentMethod = storedPaymentMethod,
                 analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler(savedStateHandle),
                 componentParams = componentParams,
                 order = checkoutSession.order
             )

@@ -13,16 +13,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
 import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
+import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
 import com.adyen.checkout.action.internal.ActionHandlingComponent
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -72,14 +73,15 @@ class ACHDirectDebitComponent internal constructor(
         genericActionDelegate.removeObserver()
     }
 
-    override fun isConfirmationRequired(): Boolean = achDirectDebitDelegate.isConfirmationRequired()
+    override fun isConfirmationRequired(): Boolean =
+        (achDirectDebitDelegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? ACHDirectDebitDelegate)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? DefaultACHDirectDebitDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
