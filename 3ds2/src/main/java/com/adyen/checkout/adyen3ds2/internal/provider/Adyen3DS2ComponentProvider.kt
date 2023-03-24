@@ -22,6 +22,7 @@ import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
@@ -32,7 +33,6 @@ import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHa
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.checkout.components.core.internal.util.get
@@ -49,7 +49,7 @@ class Adyen3DS2ComponentProvider(
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = Adyen3DS2ComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
