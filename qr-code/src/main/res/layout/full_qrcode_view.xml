@@ -35,8 +35,7 @@
         android:id="@+id/imageView_qrcode"
         style="@style/AdyenCheckout.QrCode.Image"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@null"
-        tools:ignore="RequiredSize" />
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/textview_amount"
