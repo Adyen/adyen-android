@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 
 /**
- * PaymentComponentState for CardComponent with additional data.
+ * Represents the state of [CardComponent].
  */
 data class CardComponentState(
     override val data: PaymentComponentData<CardPaymentMethod>,

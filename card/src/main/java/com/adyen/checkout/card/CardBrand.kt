@@ -10,6 +10,11 @@ package com.adyen.checkout.card
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
+/**
+ * This class represents a card scheme. The constructor allows for creating a [CardBrand] with a scheme that is not in
+ * the predefined list of [CardType]. Can be used to configure the supported card schemes with
+ * [CardConfiguration.Builder.setSupportedCardTypes].
+ */
 @Parcelize
 data class CardBrand constructor(val txVariant: String) : Parcelable {
 
