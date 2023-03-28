@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.internal.provider.OnlineBankingCZComponentProvider
 
