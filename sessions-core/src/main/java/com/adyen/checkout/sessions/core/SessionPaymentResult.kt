@@ -12,7 +12,9 @@ import android.os.Parcelable
 import com.adyen.checkout.components.core.OrderResponse
 import kotlinx.parcelize.Parcelize
 
-// TODO SESSIONS: docs
+/**
+ * The final result of a component initialized with the sessions flow.
+ */
 @Parcelize
 data class SessionPaymentResult(
     val sessionResult: String?,

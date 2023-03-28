@@ -23,13 +23,6 @@ import com.adyen.checkout.components.core.internal.util.requireApplication
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 
-// TODO SESSIONS docs
-/**
- * Provides an instance of the associated Component linked to provided lifecycle and config.
- *
- * @param <ComponentT>     The Component to be provided
- * @param <ConfigurationT> The Configuration for the Component to be provided
- */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SessionPaymentComponentProvider<
     ComponentT : PaymentComponent,
@@ -37,6 +30,22 @@ interface SessionPaymentComponentProvider<
     ComponentStateT : PaymentComponentState<*>
     > {
 
+    /**
+     * Get a [PaymentComponent] with a checkout session. You only need to integrate with the /sessions endpoint to
+     * create a session and the component will automatically handle the rest of the payment flow.
+     *
+     * @param fragment          The Fragment to associate the lifecycle.
+     * @param checkoutSession   The [CheckoutSession] object to launch this component.
+     * @param paymentMethod     The corresponding  [PaymentMethod] object.
+     * @param configuration     The Configuration of the component.
+     * @param componentCallback The callback to handle events from the [PaymentComponent].
+     * @param key               The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
     @Suppress("LongParameterList")
     fun get(
         fragment: Fragment,
@@ -59,6 +68,22 @@ interface SessionPaymentComponentProvider<
         )
     }
 
+    /**
+     * Get a [PaymentComponent] with a checkout session. You only need to integrate with the /sessions endpoint to
+     * create a session and the component will automatically handle the rest of the payment flow.
+     *
+     * @param activity      The Activity to associate the lifecycle.
+     * @param checkoutSession   The [CheckoutSession] object to launch this component.
+     * @param paymentMethod     The corresponding  [PaymentMethod] object.
+     * @param configuration     The Configuration of the component.
+     * @param componentCallback The callback to handle events from the [PaymentComponent].
+     * @param key               The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
     @Suppress("LongParameterList")
     fun get(
         activity: ComponentActivity,
@@ -81,6 +106,25 @@ interface SessionPaymentComponentProvider<
         )
     }
 
+    /**
+     * Get a [PaymentComponent] with a checkout session. You only need to integrate with the /sessions endpoint to
+     * create a session and the component will automatically handle the rest of the payment flow.
+     *
+     * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
+     * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param lifecycleOwner          The lifecycle owner, normally an Activity or Fragment.
+     * @param checkoutSession         The [CheckoutSession] object to launch this component.
+     * @param paymentMethod           The corresponding  [PaymentMethod] object.
+     * @param configuration           The Configuration of the component.
+     * @param application             Your main application class.
+     * @param componentCallback       The callback to handle events from the [PaymentComponent].
+     * @param key                     The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
     @Suppress("LongParameterList")
     fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

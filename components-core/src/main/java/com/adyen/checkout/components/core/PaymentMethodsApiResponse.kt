@@ -16,7 +16,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 /**
- * Object that parses and holds the response data from the paymentMethods/ endpoint.
+ * Object that parses and holds the response data from the /paymentMethods endpoint.
+ * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
 @Parcelize
 class PaymentMethodsApiResponse(

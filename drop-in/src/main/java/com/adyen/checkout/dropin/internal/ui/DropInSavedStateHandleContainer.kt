@@ -70,7 +70,7 @@ internal object DropInBundleHandler {
         putIntentExtras(
             intent,
             dropInConfiguration,
-            checkoutSession.sessionSetupResponse.paymentMethods ?: PaymentMethodsApiResponse(),
+            checkoutSession.sessionSetupResponse.paymentMethodsApiResponse ?: PaymentMethodsApiResponse(),
             service,
             packageName,
         )

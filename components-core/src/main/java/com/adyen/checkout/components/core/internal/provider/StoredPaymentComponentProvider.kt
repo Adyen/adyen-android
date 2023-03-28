@@ -14,11 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.ComponentCallback
-import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.requireApplication
@@ -36,7 +35,7 @@ interface StoredPaymentComponentProvider<
      * @param fragment              The Fragment to associate the lifecycle.
      * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
      * @param configuration         The Configuration of the component.
-     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param callback              The callback to handle events from the [PaymentComponent].
      * @param order                 An [Order] in case of an ongoing partial payment flow.
      * @param key                   The key to use to identify the [PaymentComponent].
      *
@@ -73,7 +72,7 @@ interface StoredPaymentComponentProvider<
      * @param activity              The Activity to associate the lifecycle.
      * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
      * @param configuration         The Configuration of the component.
-     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param callback              The callback to handle events from the [PaymentComponent].
      * @param order                 An [Order] in case of an ongoing partial payment flow.
      * @param key                   The key to use to identify the [PaymentComponent].
      *
@@ -109,10 +108,16 @@ interface StoredPaymentComponentProvider<
      *
      * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param lifecycleOwner          The lifecycle owner, normally an Activity or Fragment.
      * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
      * @param configuration           The Configuration of the component.
-     * @param key                     Key
-     * @param application             The [Application] instance used to handle actions with.
+     * @param application             Your main application class.
+     * @param componentCallback       The callback to handle events from the [PaymentComponent].
+     * @param order                   An [Order] in case of an ongoing partial payment flow.
+     * @param key                     The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
      *
      * @return The Component
      */

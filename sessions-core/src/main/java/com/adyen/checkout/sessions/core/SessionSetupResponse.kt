@@ -23,7 +23,7 @@ data class SessionSetupResponse(
     val sessionData: String,
     val amount: Amount?,
     val expiresAt: String,
-    val paymentMethods: PaymentMethodsApiResponse?,
+    val paymentMethodsApiResponse: PaymentMethodsApiResponse?,
     val returnUrl: String,
     val configuration: SessionSetupConfiguration?
 ) : ModelObject() {
@@ -48,7 +48,10 @@ data class SessionSetupResponse(
                     jsonObject.putOpt(EXPIRES_AT, modelObject.expiresAt)
                     jsonObject.putOpt(
                         PAYMENT_METHODS,
-                        ModelUtils.serializeOpt(modelObject.paymentMethods, PaymentMethodsApiResponse.SERIALIZER)
+                        ModelUtils.serializeOpt(
+                            modelObject.paymentMethodsApiResponse,
+                            PaymentMethodsApiResponse.SERIALIZER
+                        )
                     )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
                     jsonObject.putOpt(
@@ -68,7 +71,7 @@ data class SessionSetupResponse(
                         sessionData = jsonObject.optString(SESSION_DATA),
                         amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                         expiresAt = jsonObject.optString(EXPIRES_AT),
-                        paymentMethods = ModelUtils.deserializeOpt(
+                        paymentMethodsApiResponse = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
                             PaymentMethodsApiResponse.SERIALIZER
                         ),

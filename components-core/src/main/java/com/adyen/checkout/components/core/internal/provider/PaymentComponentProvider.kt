@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.requireApplication
@@ -37,7 +36,7 @@ interface PaymentComponentProvider<
      * @param fragment      The Fragment to associate the lifecycle.
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
-     * @param callback      The callback to handle events from the [ActionComponent].
+     * @param callback      The callback to handle events from the [PaymentComponent].
      * @param order         An [Order] in case of an ongoing partial payment flow.
      * @param key           The key to use to identify the [PaymentComponent].
      *
@@ -74,7 +73,7 @@ interface PaymentComponentProvider<
      * @param activity      The Activity to associate the lifecycle.
      * @param paymentMethod The corresponding  [PaymentMethod] object.
      * @param configuration The Configuration of the component.
-     * @param callback      The callback to handle events from the [ActionComponent].
+     * @param callback      The callback to handle events from the [PaymentComponent].
      * @param order         An [Order] in case of an ongoing partial payment flow.
      * @param key           The key to use to identify the [PaymentComponent].
      *
@@ -114,7 +113,7 @@ interface PaymentComponentProvider<
      * @param paymentMethod           The corresponding  [PaymentMethod] object.
      * @param configuration           The Configuration of the component.
      * @param application             Your main application class.
-     * @param componentCallback       The callback to handle events from the [ActionComponent].
+     * @param componentCallback       The callback to handle events from the [PaymentComponent].
      * @param order                   An [Order] in case of an ongoing partial payment flow.
      * @param key                     The key to use to identify the [PaymentComponent].
      *

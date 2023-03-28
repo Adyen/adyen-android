@@ -7,12 +7,17 @@
  */
 package com.adyen.checkout.sessions.core
 
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * Object that parses and holds the response data from the /sessions endpoint.
+ * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
+ */
 @Parcelize
 data class SessionModel(
     val id: String,

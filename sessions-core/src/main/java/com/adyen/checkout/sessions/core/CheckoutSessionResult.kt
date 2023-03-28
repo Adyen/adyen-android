@@ -10,11 +10,10 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.core.exception.CheckoutException
 
-// TODO docs
+/**
+ * The result of the API call to fetch a [CheckoutSession].
+ */
 sealed class CheckoutSessionResult {
-    // TODO docs
     class Success(val checkoutSession: CheckoutSession) : CheckoutSessionResult()
-
-    // TODO docs
     class Error(val exception: CheckoutException) : CheckoutSessionResult()
 }

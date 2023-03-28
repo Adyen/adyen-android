@@ -8,17 +8,17 @@
 
 package com.adyen.checkout.sessions.core.internal
 
-import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
@@ -29,26 +29,17 @@ internal class CheckoutSessionInitializer(
     private val sessionService = SessionService(httpClient)
     private val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
 
-    suspend fun setupSession(): CheckoutSessionResult {
+    suspend fun setupSession(): CheckoutSessionResult = withContext(Dispatchers.IO) {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
             order = order,
         ).fold(
             onSuccess = {
-                return CheckoutSessionResult.Success(CheckoutSession(it, order))
+                return@withContext CheckoutSessionResult.Success(CheckoutSession(it, order))
             },
             onFailure = {
-                return CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))
+                return@withContext CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))
             }
         )
-    }
-
-    fun setupSession(
-        coroutineScope: CoroutineScope,
-        callback: (CheckoutSessionResult) -> Unit
-    ) {
-        coroutineScope.launch {
-            callback(setupSession())
-        }
     }
 }
