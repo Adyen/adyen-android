@@ -10,6 +10,10 @@ package com.adyen.checkout.card
 
 import java.util.regex.Pattern
 
+/**
+ * Predefined list of card schemes. Can be used to configure the supported card schemes with
+ * [CardConfiguration.Builder.setSupportedCardTypes].
+ */
 enum class CardType(val txVariant: String, private val pattern: Pattern) {
 
     AMERICAN_EXPRESS("amex", Pattern.compile("^3[47][0-9]{0,13}$")),
