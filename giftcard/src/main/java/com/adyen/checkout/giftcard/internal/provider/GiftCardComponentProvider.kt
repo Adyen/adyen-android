@@ -41,10 +41,10 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
+import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
@@ -191,7 +191,7 @@ class GiftCardComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler = SessionComponentEventHandler<GiftCardComponentState>(
+            val sessionsGiftCardComponentEventHandler = SessionsGiftCardComponentEventHandler(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -200,7 +200,7 @@ class GiftCardComponentProvider(
                 giftCardDelegate = giftCardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, giftCardDelegate),
-                componentEventHandler = sessionComponentEventHandler,
+                componentEventHandler = sessionsGiftCardComponentEventHandler,
             )
         }
 
