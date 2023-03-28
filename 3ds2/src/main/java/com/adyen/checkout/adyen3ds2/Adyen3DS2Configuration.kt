@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
+import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
@@ -24,13 +25,16 @@ class Adyen3DS2Configuration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
-    override val amount: Amount
+    override val amount: Amount,
+    val uiCustomization: UiCustomization?,
 ) : Configuration {
 
     /**
      * Builder to create an [Adyen3DS2Configuration].
      */
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
+
+        private var uiCustomization: UiCustomization? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -58,6 +62,16 @@ class Adyen3DS2Configuration private constructor(
             clientKey
         )
 
+        /**
+         * Set a [UiCustomization] object to be passed to the 3DS2 SDK for customizing the challenge screen.
+         *
+         * @param uiCustomization The customization object.
+         */
+        fun setUiCustomization(uiCustomization: UiCustomization?): Builder {
+            this.uiCustomization = uiCustomization
+            return this
+        }
+
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(
                 shopperLocale = shopperLocale,
@@ -65,6 +79,7 @@ class Adyen3DS2Configuration private constructor(
                 clientKey = clientKey,
                 isAnalyticsEnabled = isAnalyticsEnabled,
                 amount = amount,
+                uiCustomization = uiCustomization,
             )
         }
     }

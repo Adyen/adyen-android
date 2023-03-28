@@ -21,6 +21,7 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
+import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParams
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.BaseThreeds2Action
@@ -33,7 +34,6 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.Base64Encoder
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -49,7 +49,6 @@ import com.adyen.threeds2.ProtocolErrorEvent
 import com.adyen.threeds2.RuntimeErrorEvent
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
-import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKAlreadyInitializedException
 import com.adyen.threeds2.exception.SDKNotInitializedException
@@ -71,7 +70,7 @@ import org.json.JSONObject
 internal class DefaultAdyen3DS2Delegate(
     private val observerRepository: ActionObserverRepository,
     override val savedStateHandle: SavedStateHandle,
-    override val componentParams: GenericComponentParams,
+    override val componentParams: Adyen3DS2ComponentParams,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
@@ -93,8 +92,6 @@ internal class DefaultAdyen3DS2Delegate(
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
-
-    private var uiCustomization: UiCustomization? = null
 
     private var currentTransaction: Transaction? = null
 
@@ -214,7 +211,7 @@ internal class DefaultAdyen3DS2Delegate(
         coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
-                threeDS2Service.initialize(activity, configParameters, null, uiCustomization)
+                threeDS2Service.initialize(activity, configParameters, null, componentParams.uiCustomization)
             } catch (e: SDKRuntimeException) {
                 exceptionChannel.trySend(ComponentException("Failed to initialize 3DS2 SDK", e))
                 return@launch
@@ -380,10 +377,6 @@ internal class DefaultAdyen3DS2Delegate(
         } catch (e: CheckoutException) {
             exceptionChannel.trySend(e)
         }
-    }
-
-    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
-        this.uiCustomization = uiCustomization
     }
 
     override fun completed(completionEvent: CompletionEvent) {

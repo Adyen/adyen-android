@@ -22,7 +22,6 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -122,13 +121,5 @@ internal class Adyen3DS2ComponentTest(
         component.handleIntent(intent)
 
         verify(adyen3DS2Delegate).handleIntent(intent)
-    }
-
-    @Test
-    fun `when setUiCustomization is called then setUiCustomization in delegate is called`() {
-        val uiCustomization = UiCustomization()
-        component.setUiCustomization(uiCustomization)
-
-        verify(adyen3DS2Delegate).set3DS2UICustomization(uiCustomization)
     }
 }
