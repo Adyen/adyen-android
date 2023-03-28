@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**

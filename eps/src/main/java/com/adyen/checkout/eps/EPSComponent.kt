@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
-import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 /**

@@ -37,8 +37,8 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.internal.IssuerListComponent
+import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.DefaultIssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper

@@ -5,7 +5,7 @@
  *
  * Created by caiof on 25/4/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner

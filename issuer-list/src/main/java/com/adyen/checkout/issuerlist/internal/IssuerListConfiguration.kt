@@ -5,7 +5,7 @@
  *
  * Created by caiof on 25/4/2019.
  */
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal
 
 import android.content.Context
 import androidx.annotation.RestrictTo
@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale
 
 abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
