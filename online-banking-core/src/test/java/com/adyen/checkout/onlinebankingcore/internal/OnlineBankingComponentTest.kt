@@ -6,7 +6,7 @@
  * Created by josephj on 13/12/2022.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope

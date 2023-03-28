@@ -38,8 +38,8 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
-import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
+import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.internal.ui.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener

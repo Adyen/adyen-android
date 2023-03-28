@@ -6,7 +6,7 @@
  * Created by ozgur on 31/1/2023.
  */
 
-package com.adyen.checkout.onlinebankingcore
+package com.adyen.checkout.onlinebankingcore.internal
 
 import android.content.Context
 import androidx.annotation.RestrictTo

@@ -11,7 +11,7 @@ package com.adyen.checkout.onlinebankingcore.utils
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 
 internal class TestOnlineBankingComponent internal constructor(
