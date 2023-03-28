@@ -17,10 +17,10 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -161,7 +161,7 @@ internal class PaymentMethodsListViewModel(
     }
 
     override fun onSubmit(state: PaymentComponentState<*>) {
-        eventsChannel.trySend(PaymentMethodListStoredEvent.RequestPaymentsCall(state))
+        // no ops
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
@@ -193,8 +193,9 @@ internal class PaymentMethodsListViewModel(
     }
 
     fun onClickConfirmationButton() {
+        val state = componentState ?: return
         if (componentState?.isValid == true) {
-            eventsChannel.trySend(PaymentMethodListStoredEvent.SubmitComponent)
+            eventsChannel.trySend(PaymentMethodListStoredEvent.RequestPaymentsCall(state))
         }
     }
 
@@ -260,8 +261,6 @@ internal sealed class PaymentMethodListStoredEvent {
 
     class ShowConfirmationPopup(val paymentMethodName: String, val storedPaymentMethodModel: StoredPaymentMethodModel) :
         PaymentMethodListStoredEvent()
-
-    object SubmitComponent : PaymentMethodListStoredEvent()
 
     data class RequestPaymentsCall(val state: PaymentComponentState<*>) : PaymentMethodListStoredEvent()
 

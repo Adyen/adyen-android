@@ -12,10 +12,10 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
@@ -53,7 +53,7 @@ internal class PreselectedStoredPaymentViewModel(
     }
 
     override fun onSubmit(state: PaymentComponentState<*>) {
-        eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(state))
+        // no ops
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
@@ -90,14 +90,15 @@ internal class PreselectedStoredPaymentViewModel(
             return
         }
 
-        // component does not require user input -> we should submit it directly instead of switching to a new screen
-        eventsChannel.trySend(PreselectedStoredEvent.SubmitComponent)
-
         if (!componentState.isValid) {
             // component is not yet ready for submitting -> show a loading indicator until the component indicates that
             // we can make the payments call (by emitting PaymentComponentEvent.Submit)
             val newState = _uiStateFlow.value.copy(buttonState = ButtonState.Loading)
             _uiStateFlow.tryEmit(newState)
+        } else {
+            // component does not require user input -> we should submit it directly instead of switching to a new
+            // screen
+            eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(componentState))
         }
     }
 }
@@ -115,7 +116,6 @@ internal sealed class ButtonState {
 
 internal sealed class PreselectedStoredEvent {
     object ShowStoredPaymentScreen : PreselectedStoredEvent()
-    object SubmitComponent : PreselectedStoredEvent()
     data class RequestPaymentsCall(val state: PaymentComponentState<*>) : PreselectedStoredEvent()
     data class ShowError(val componentError: ComponentError) : PreselectedStoredEvent()
 }

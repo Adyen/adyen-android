@@ -23,6 +23,7 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -31,7 +32,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
@@ -56,6 +56,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -103,7 +105,7 @@ internal class StoredCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
@@ -124,6 +126,20 @@ internal class StoredCardDelegate(
         sendAnalyticsEvent(coroutineScope)
         initializeInputData()
         fetchPublicKey()
+
+        val requiresShopperInput = !isCvcHidden()
+        if (requiresShopperInput) {
+            _viewFlow.tryEmit(CardComponentViewType)
+        } else {
+            // trigger submission as soon as state is ready
+            componentStateFlow.onEach { onState(it) }.launchIn(coroutineScope)
+        }
+    }
+
+    private fun onState(cardComponentState: CardComponentState) {
+        if (cardComponentState.isValid) {
+            submitHandler.onSubmit(cardComponentState)
+        }
     }
 
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {

@@ -20,7 +20,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -112,9 +111,6 @@ internal class PaymentMethodListDialogFragment :
                     }
                     is PaymentMethodListStoredEvent.ShowStoredComponentDialog -> {
                         protocol.showStoredComponentDialog(event.storedPaymentMethod, false)
-                    }
-                    PaymentMethodListStoredEvent.SubmitComponent -> {
-                        (component as? ButtonComponent)?.submit()
                     }
                     is PaymentMethodListStoredEvent.RequestPaymentsCall -> {
                         protocol.requestPaymentsCall(event.state)

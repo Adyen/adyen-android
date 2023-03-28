@@ -65,7 +65,7 @@ internal class DefaultACHDirectDebitDelegateTest(
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var genericEncrypter: TestGenericEncrypter
-    private lateinit var delegate: ACHDirectDebitDelegate
+    private lateinit var delegate: DefaultACHDirectDebitDelegate
 
     @BeforeEach
     fun setUp() {

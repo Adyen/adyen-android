@@ -116,17 +116,6 @@ internal class PreselectedStoredPaymentViewModelTest {
     }
 
     @Test
-    fun `when component emits a submit event then view model should emit to request a payments call`() = runTest {
-        viewModel.eventsFlow.test {
-            val componentState =
-                TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
-            viewModel.onSubmit(componentState)
-
-            assertEquals(PreselectedStoredEvent.RequestPaymentsCall(componentState), awaitItem())
-        }
-    }
-
-    @Test
     fun `when component emits an action event then view model should throw an exception`() = runTest {
         viewModel.eventsFlow.test {
             assertThrows<IllegalStateException> {
@@ -149,7 +138,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         }
 
     @Test
-    fun `when button is clicked with a valid input then view model should request submitting the component`() =
+    fun `when button is clicked with a valid input then view model should request payments call`() =
         runTest {
             viewModel.eventsFlow.test {
                 val componentState =
@@ -157,7 +146,7 @@ internal class PreselectedStoredPaymentViewModelTest {
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
-                assertEquals(PreselectedStoredEvent.SubmitComponent, awaitItem())
+                assertEquals(PreselectedStoredEvent.RequestPaymentsCall(componentState), awaitItem())
             }
         }
 

@@ -33,10 +33,12 @@ import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
@@ -67,7 +69,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val genericEncrypter: BaseGenericEncrypter,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
-) : ACHDirectDebitDelegate {
+) : ACHDirectDebitDelegate, ButtonDelegate, UIStateDelegate {
 
     private val inputData: ACHDirectDebitInputData = ACHDirectDebitInputData()
 
@@ -343,7 +345,7 @@ internal class DefaultACHDirectDebitDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+    internal fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 

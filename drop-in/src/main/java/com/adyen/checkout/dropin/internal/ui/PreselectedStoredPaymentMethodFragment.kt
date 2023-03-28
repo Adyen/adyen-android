@@ -18,7 +18,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
@@ -183,10 +182,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             when (event) {
                 is PreselectedStoredEvent.ShowStoredPaymentScreen -> {
                     protocol.showStoredComponentDialog(storedPaymentMethod, true)
-                }
-                is PreselectedStoredEvent.SubmitComponent -> {
-                    (component as? ButtonComponent)?.submit()
-                        ?: throw CheckoutException("Component must be of type ButtonComponent.")
                 }
                 is PreselectedStoredEvent.RequestPaymentsCall -> {
                     protocol.requestPaymentsCall(event.state)

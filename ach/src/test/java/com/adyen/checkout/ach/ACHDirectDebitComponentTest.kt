@@ -11,7 +11,8 @@ package com.adyen.checkout.ach
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.ach.internal.ui.ACHDirectDebitComponentViewType
-import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
+import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
+import com.adyen.checkout.ach.internal.ui.StoredACHDirectDebitDelegate
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
@@ -40,21 +41,31 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class ACHDirectDebitComponentTest(
-    @Mock private val achDelegate: ACHDirectDebitDelegate,
+    @Mock private val defaultAchDelegate: DefaultACHDirectDebitDelegate,
+    @Mock private val storedAchDelegate: StoredACHDirectDebitDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock private val componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
 ) {
 
-    private lateinit var component: ACHDirectDebitComponent
+    private lateinit var defaultAchComponent: ACHDirectDebitComponent
+    private lateinit var storedAchComponent: ACHDirectDebitComponent
 
     @BeforeEach
     fun before() {
-        whenever(achDelegate.viewFlow) doReturn MutableStateFlow(ACHDirectDebitComponentViewType)
+        whenever(defaultAchDelegate.viewFlow) doReturn MutableStateFlow(ACHDirectDebitComponentViewType)
+        whenever(storedAchDelegate.viewFlow) doReturn MutableStateFlow(null)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
-        component = ACHDirectDebitComponent(
-            achDelegate,
+        defaultAchComponent = ACHDirectDebitComponent(
+            defaultAchDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
+
+        storedAchComponent = ACHDirectDebitComponent(
+            storedAchDelegate,
             genericActionDelegate,
             actionHandlingComponent,
             componentEventHandler
@@ -62,17 +73,33 @@ internal class ACHDirectDebitComponentTest(
     }
 
     @Test
-    fun `when component is created then delegates are initialized`() {
-        verify(achDelegate).initialize(component.viewModelScope)
-        verify(genericActionDelegate).initialize(component.viewModelScope)
-        verify(componentEventHandler).initialize(component.viewModelScope)
+    fun `when default component is created then delegates are initialized`() {
+        verify(defaultAchDelegate).initialize(defaultAchComponent.viewModelScope)
+        verify(genericActionDelegate).initialize(defaultAchComponent.viewModelScope)
+        verify(componentEventHandler).initialize(defaultAchComponent.viewModelScope)
     }
 
     @Test
-    fun `when component is cleared then delegates are cleared`() {
-        component.invokeOnCleared()
+    fun `when stored component is created then delegates are initialized`() {
+        verify(storedAchDelegate).initialize(storedAchComponent.viewModelScope)
+        verify(genericActionDelegate).initialize(storedAchComponent.viewModelScope)
+        verify(componentEventHandler).initialize(storedAchComponent.viewModelScope)
+    }
 
-        verify(achDelegate).onCleared()
+    @Test
+    fun `when default component is cleared then delegates are cleared`() {
+        defaultAchComponent.invokeOnCleared()
+
+        verify(defaultAchDelegate).onCleared()
+        verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
+    }
+
+    @Test
+    fun `when stored component is cleared then delegates are cleared`() {
+        storedAchComponent.invokeOnCleared()
+
+        verify(storedAchDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
         verify(componentEventHandler).onCleared()
     }
@@ -82,68 +109,97 @@ internal class ACHDirectDebitComponentTest(
         val lifecycleOwner = mock<LifecycleOwner>()
         val callback: (PaymentComponentEvent<ACHDirectDebitComponentState>) -> Unit = {}
 
-        component.observe(lifecycleOwner, callback)
+        defaultAchComponent.observe(lifecycleOwner, callback)
 
-        verify(achDelegate).observe(lifecycleOwner, component.viewModelScope, callback)
-        verify(genericActionDelegate).observe(eq(lifecycleOwner), eq(component.viewModelScope), any())
+        verify(defaultAchDelegate).observe(lifecycleOwner, defaultAchComponent.viewModelScope, callback)
+        verify(genericActionDelegate).observe(eq(lifecycleOwner), eq(defaultAchComponent.viewModelScope), any())
     }
 
     @Test
     fun `when removeObserver is called then removeObserver in delegates is called`() {
-        component.removeObserver()
+        defaultAchComponent.removeObserver()
 
-        verify(achDelegate).removeObserver()
+        verify(defaultAchDelegate).removeObserver()
         verify(genericActionDelegate).removeObserver()
     }
 
     @Test
-    fun `when component is initialized then view flow should match ach delegate view flow`() = runTest {
-        val event = component.viewFlow.first()
+    fun `when default component is initialized then view flow should match default ach delegate view flow`() = runTest {
+        val event = defaultAchComponent.viewFlow.first()
         assertEquals(ACHDirectDebitComponentViewType, event)
     }
 
     @Test
-    fun `when ach delegate view flow emits a value then component view flow should match that value`() = runTest {
-        val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
-        whenever(achDelegate.viewFlow) doReturn achDelegateViewFlow
-        component =
-            ACHDirectDebitComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
-        assertEquals(TestComponentViewType.VIEW_TYPE_1, component.viewFlow.first())
-        achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-        assertEquals(TestComponentViewType.VIEW_TYPE_2, component.viewFlow.first())
+    fun `when stored component is initialized then view flow should match stored ach delegate view flow`() = runTest {
+        val event = storedAchComponent.viewFlow.first()
+        assertEquals(null, event)
     }
+
+    @Test
+    fun `when default ach delegate view flow emits a value then component view flow should match that value`() =
+        runTest {
+            val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
+            whenever(defaultAchDelegate.viewFlow) doReturn achDelegateViewFlow
+            defaultAchComponent =
+                ACHDirectDebitComponent(
+                    defaultAchDelegate,
+                    genericActionDelegate,
+                    actionHandlingComponent,
+                    componentEventHandler
+                )
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, defaultAchComponent.viewFlow.first())
+            achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+            assertEquals(TestComponentViewType.VIEW_TYPE_2, defaultAchComponent.viewFlow.first())
+        }
 
     @Test
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val achDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn achDelegateViewFlow
-        component =
-            ACHDirectDebitComponent(achDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        defaultAchComponent =
+            ACHDirectDebitComponent(
+                defaultAchDelegate,
+                genericActionDelegate,
+                actionHandlingComponent,
+                componentEventHandler
+            )
 
         // this value should match the value of the main delegate and not the action delegate
         // and in practice the initial value of the action delegate view flow is always null so it should be ignored
-        assertEquals(ACHDirectDebitComponentViewType, component.viewFlow.first())
+        assertEquals(ACHDirectDebitComponentViewType, defaultAchComponent.viewFlow.first())
         achDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-        assertEquals(TestComponentViewType.VIEW_TYPE_2, component.viewFlow.first())
+        assertEquals(TestComponentViewType.VIEW_TYPE_2, defaultAchComponent.viewFlow.first())
     }
 
     @Test
-    fun `when isConfirmationRequired, then delegate is called`() {
-        component.isConfirmationRequired()
-        verify(achDelegate).isConfirmationRequired()
+    fun `when default component isConfirmationRequired is called, then delegate is called`() {
+        defaultAchComponent.isConfirmationRequired()
+        verify(defaultAchDelegate).isConfirmationRequired()
+    }
+
+    @Test
+    fun `when stored component isConfirmationRequired is called, then it should return false`() {
+        assertEquals(false, storedAchComponent.isConfirmationRequired())
+    }
+
+    @Test
+    fun `when default component setInteractionBlocked is called, then delegate is called`() {
+        whenever(defaultAchComponent.delegate).thenReturn(defaultAchDelegate)
+        defaultAchComponent.setInteractionBlocked(true)
+        verify(defaultAchDelegate).setInteractionBlocked(true)
     }
 
     @Test
     fun `when submit is called and active delegate is the payment delegate, then delegate onSubmit is called`() {
-        whenever(component.delegate).thenReturn(achDelegate)
-        component.submit()
-        verify(achDelegate).onSubmit()
+        whenever(defaultAchComponent.delegate).thenReturn(defaultAchDelegate)
+        defaultAchComponent.submit()
+        verify(defaultAchDelegate).onSubmit()
     }
 
     @Test
     fun `when submit is called and active delegate is the action delegate, then delegate onSubmit is not called`() {
-        whenever(component.delegate).thenReturn(genericActionDelegate)
-        component.submit()
-        verify(achDelegate, never()).onSubmit()
+        whenever(defaultAchComponent.delegate).thenReturn(genericActionDelegate)
+        defaultAchComponent.submit()
+        verify(defaultAchDelegate, never()).onSubmit()
     }
 }
