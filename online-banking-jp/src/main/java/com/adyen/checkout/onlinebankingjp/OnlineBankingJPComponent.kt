@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
-import com.adyen.checkout.econtext.EContextComponent
+import com.adyen.checkout.econtext.internal.EContextComponent
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.internal.provider.OnlineBankingJPComponentProvider
 

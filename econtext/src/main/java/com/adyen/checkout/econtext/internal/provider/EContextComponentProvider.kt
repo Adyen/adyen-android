@@ -38,8 +38,8 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.econtext.EContextComponent
-import com.adyen.checkout.econtext.EContextConfiguration
+import com.adyen.checkout.econtext.internal.EContextComponent
+import com.adyen.checkout.econtext.internal.EContextConfiguration
 import com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegate
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession

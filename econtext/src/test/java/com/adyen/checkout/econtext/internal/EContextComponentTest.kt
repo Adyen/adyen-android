@@ -6,7 +6,7 @@
  * Created by ozgur on 13/2/2023.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
@@ -16,6 +16,9 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.econtext.TestEContextComponent
+import com.adyen.checkout.econtext.TestEContextComponentState
+import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.EContextComponentViewType
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.test.TestDispatcherExtension

@@ -6,7 +6,7 @@
  * Created by ozgur on 7/6/2022.
  */
 
-package com.adyen.checkout.econtext
+package com.adyen.checkout.econtext.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner

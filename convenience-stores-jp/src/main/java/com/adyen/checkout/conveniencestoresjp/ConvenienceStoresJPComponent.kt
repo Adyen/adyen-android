@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.ConvenienceStoresJPPaymentMethod
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
-import com.adyen.checkout.econtext.EContextComponent
+import com.adyen.checkout.econtext.internal.EContextComponent
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
 /**
