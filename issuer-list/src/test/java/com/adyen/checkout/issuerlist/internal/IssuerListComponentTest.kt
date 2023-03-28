@@ -6,7 +6,7 @@
  * Created by josephj on 13/12/2022.
  */
 
-package com.adyen.checkout.issuerlist
+package com.adyen.checkout.issuerlist.internal
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
@@ -16,6 +16,7 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.issuerlist.TestIssuerComponentState
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListComponentViewType
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.utils.TestIssuerListComponent

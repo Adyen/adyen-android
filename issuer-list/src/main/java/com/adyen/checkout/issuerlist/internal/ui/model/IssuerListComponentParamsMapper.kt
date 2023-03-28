@@ -11,7 +11,7 @@ package com.adyen.checkout.issuerlist.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
