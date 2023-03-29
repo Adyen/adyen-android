@@ -26,8 +26,6 @@ import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.DefaultCardDelegate.Companion.BIN_VALUE_EXTENDED_LENGTH
-import com.adyen.checkout.card.internal.ui.DefaultCardDelegate.Companion.BIN_VALUE_LENGTH
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
@@ -890,7 +888,7 @@ internal class DefaultCardDelegateTest(
 
                 val componentState = expectMostRecentItem()
 
-                assertEquals(BIN_VALUE_LENGTH, componentState.binValue.length)
+                assertEquals(DefaultCardDelegate.BIN_VALUE_LENGTH, componentState.binValue.length)
             }
         }
 
@@ -905,7 +903,7 @@ internal class DefaultCardDelegateTest(
 
                 val componentState = expectMostRecentItem()
 
-                assertEquals(BIN_VALUE_EXTENDED_LENGTH, componentState.binValue.length)
+                assertEquals(DefaultCardDelegate.BIN_VALUE_EXTENDED_LENGTH, componentState.binValue.length)
             }
         }
     }

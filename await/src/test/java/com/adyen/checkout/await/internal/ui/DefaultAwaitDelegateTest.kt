@@ -12,7 +12,6 @@ import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.await.AwaitConfiguration
-import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
@@ -99,7 +98,7 @@ internal class DefaultAwaitDelegateTest {
             delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
             val expectedDetails = JSONObject().apply {
-                put(PAYLOAD_DETAILS_KEY, "testpayload")
+                put(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY, "testpayload")
             }
 
             with(awaitItem()) {

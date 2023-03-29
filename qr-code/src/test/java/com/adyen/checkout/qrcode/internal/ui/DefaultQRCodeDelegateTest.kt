@@ -29,7 +29,6 @@ import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
-import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
@@ -159,7 +158,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -265,7 +264,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
 
                 cancelAndIgnoreRemainingEvents()
             }

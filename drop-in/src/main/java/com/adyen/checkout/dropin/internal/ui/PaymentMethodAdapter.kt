@@ -28,11 +28,6 @@ import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem
-import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
-import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.PAYMENT_METHOD
-import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.PAYMENT_METHODS_HEADER
-import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.PAYMENT_METHODS_NOTE
-import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
@@ -54,20 +49,22 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            PAYMENT_METHODS_HEADER -> HeaderVH(
+            PaymentMethodListItem.PAYMENT_METHODS_HEADER -> HeaderVH(
                 PaymentMethodsListHeaderBinding.inflate(inflater, parent, false)
             )
-            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
+            PaymentMethodListItem.STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
                 RemovablePaymentMethodsListItemBinding.inflate(inflater, parent, false),
                 onUnderlayExpandListener
             )
-            PAYMENT_METHOD -> PaymentMethodVH(
+            PaymentMethodListItem.PAYMENT_METHOD -> PaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
-            GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(
+            PaymentMethodListItem.GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
-            PAYMENT_METHODS_NOTE -> NoteVH(PaymentMethodsListNoteBinding.inflate(inflater, parent, false))
+            PaymentMethodListItem.PAYMENT_METHODS_NOTE -> NoteVH(
+                PaymentMethodsListNoteBinding.inflate(inflater, parent, false)
+            )
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
