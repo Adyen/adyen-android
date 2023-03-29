@@ -665,7 +665,7 @@ internal class SessionInteractorTest(
             val result = sessionInteractor.updatePaymentMethods(TEST_ORDER_RESPONSE)
 
             val expectedResult = SessionCallResult.UpdatePaymentMethods.Successful(
-                paymentMethods = requireNotNull(mockResponse.paymentMethods),
+                paymentMethods = requireNotNull(mockResponse.paymentMethodsApiResponse),
                 order = TEST_ORDER_RESPONSE,
             )
             assertEquals(expectedResult, result)
@@ -757,7 +757,7 @@ internal class SessionInteractorTest(
             sessionData = sessionData,
             amount = amount,
             expiresAt = expiresAt,
-            paymentMethods = paymentMethods,
+            paymentMethodsApiResponse = paymentMethods,
             returnUrl = returnUrl,
             configuration = configuration
         )

@@ -23,7 +23,7 @@ object GiftCardBalanceUtils {
      * @param transactionLimit the maximum amount for a single transaction of the gift card. Should be extracted
      * from the /paymentMethods/balance call.
      * @param amountToBePaid the desired amount to be paid using this gift card.
-     * @return the result of teh balance check.
+     * @return the result of the balance check.
      */
     fun checkBalance(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
         return when {
