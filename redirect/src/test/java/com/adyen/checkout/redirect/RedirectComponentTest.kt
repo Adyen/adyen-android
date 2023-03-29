@@ -16,6 +16,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.redirect.internal.ui.RedirectComponentViewType
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
@@ -47,7 +48,7 @@ internal class RedirectComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(redirectDelegate.viewFlow) doReturn MutableStateFlow(RedirectComponentViewType)
         component = RedirectComponent(redirectDelegate, actionComponentEventHandler)

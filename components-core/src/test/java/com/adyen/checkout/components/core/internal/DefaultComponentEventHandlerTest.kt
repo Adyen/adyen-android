@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.TestComponentState
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.Logger
 import org.junit.jupiter.api.BeforeEach
@@ -31,7 +32,7 @@ internal class DefaultComponentEventHandlerTest {
     @BeforeEach
     fun beforeEach() {
         componentEventHandler = DefaultComponentEventHandler()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

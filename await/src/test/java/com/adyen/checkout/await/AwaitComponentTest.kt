@@ -17,6 +17,7 @@ import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -46,7 +47,7 @@ internal class AwaitComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(awaitDelegate.viewFlow) doReturn MutableStateFlow(AwaitComponentViewType)
         component = AwaitComponent(awaitDelegate, actionComponentEventHandler)

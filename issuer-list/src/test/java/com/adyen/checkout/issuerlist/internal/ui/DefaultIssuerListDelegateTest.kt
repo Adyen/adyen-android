@@ -13,11 +13,12 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.TestIssuerComponentState
+import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
@@ -54,7 +55,7 @@ internal class DefaultIssuerListDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createIssuerListDelegate()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

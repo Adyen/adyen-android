@@ -9,11 +9,12 @@
 package com.adyen.checkout.instant.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.instant.InstantPaymentConfiguration
@@ -53,7 +54,7 @@ class DefaultInstantPaymentDelegateTest(
             componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             analyticsRepository = analyticsRepository
         )
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

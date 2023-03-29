@@ -35,18 +35,18 @@ object Logger {
     private const val MAX_LOGCAT_MSG_SIZE = 2048
 
     @LogLevel
-    private var logcatLevel = if (BuildConfig.DEBUG) Log.DEBUG else NONE
-    private var isLogcatLevelInitialized = false
-    fun updateDefaultLogcatLevel(isDebugBuild: Boolean) {
-        if (!isLogcatLevelInitialized) {
-            logcatLevel = if (isDebugBuild) Log.DEBUG else NONE
+    private var logLevel = if (BuildConfig.DEBUG) Log.DEBUG else NONE
+    private var isLogLevelInitialized = false
+
+    fun updateDefaultLogLevel(isDebugBuild: Boolean) {
+        if (!isLogLevelInitialized) {
+            logLevel = if (isDebugBuild) Log.DEBUG else NONE
         }
     }
 
-    @JvmStatic
-    fun setLogcatLevel(@LogLevel logcatLevel: Int) {
-        isLogcatLevelInitialized = true
-        Logger.logcatLevel = logcatLevel
+    internal fun setLogLevel(@LogLevel logLevel: Int) {
+        isLogLevelInitialized = true
+        this.logLevel = logLevel
     }
 
     @JvmStatic
@@ -108,7 +108,7 @@ object Logger {
      */
     @Suppress("unused")
     fun sensitiveLog(tag: String, msg: String) {
-        if (logcatLevel != SENSITIVE) {
+        if (logLevel != SENSITIVE) {
             throw SecurityException("Sensitive information should never be logged. Remove before committing.")
         } else {
             logToLogcat(SENSITIVE, tag, msg, null)
@@ -116,7 +116,7 @@ object Logger {
     }
 
     private fun logToLogcat(@LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
-        if (logcatLevel > logLevel) {
+        if (this.logLevel > logLevel) {
             return
         }
 

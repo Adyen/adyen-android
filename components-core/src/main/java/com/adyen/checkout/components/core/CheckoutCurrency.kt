@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.core
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import java.util.Collections
