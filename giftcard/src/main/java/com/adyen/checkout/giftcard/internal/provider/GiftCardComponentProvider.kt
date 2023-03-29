@@ -41,6 +41,7 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
+import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -206,8 +207,9 @@ class GiftCardComponentProvider(
 
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
             .also { component ->
+                val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(component, componentCallback)
                 component.observe(lifecycleOwner) {
-                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                    component.componentEventHandler.onPaymentComponentEvent(it, internalComponentCallback)
                 }
             }
     }
