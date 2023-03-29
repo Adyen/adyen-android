@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.components.core.internal.util.CheckoutCurrency
+import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException

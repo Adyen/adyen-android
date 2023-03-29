@@ -2,6 +2,7 @@ package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.core.exception.CheckoutException
 
 internal const val EMPTY_CURRENCY = "NONE"
