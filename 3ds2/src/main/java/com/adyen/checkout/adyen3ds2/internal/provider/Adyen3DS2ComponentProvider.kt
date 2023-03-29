@@ -23,11 +23,11 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParamsMapper
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
-import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
@@ -79,9 +79,11 @@ class Adyen3DS2ComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): Adyen3DS2Delegate {
+        val defaultThreeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(application)
         val componentParams = componentParamsMapper.mapToParams(
-            configuration,
-            null
+            adyen3DS2Configuration = configuration,
+            sessionParams = null,
+            defaultThreeDSRequestorAppURL = defaultThreeDSRequestorAppURL,
         )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
@@ -89,7 +91,6 @@ class Adyen3DS2ComponentProvider(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
         val redirectHandler = DefaultRedirectHandler()
-        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
         return DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
@@ -100,7 +101,6 @@ class Adyen3DS2ComponentProvider(
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             defaultDispatcher = Dispatchers.Default,
-            embeddedRequestorAppUrl = embeddedRequestorAppUrl,
             base64Encoder = AndroidBase64Encoder(),
             application = application,
         )
