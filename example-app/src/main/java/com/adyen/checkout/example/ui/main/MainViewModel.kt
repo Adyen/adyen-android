@@ -42,8 +42,11 @@ internal class MainViewModel @Inject constructor(
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<MainViewState>(getComponentItemsViewState())
-    val viewState: Flow<MainViewState> = _viewState
+    private val _listItems = MutableStateFlow(ComponentItemProvider.getDefaultItems())
+    val listItems: Flow<List<ComponentItem>> = _listItems
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: Flow<Boolean> = _isLoading
 
     private val _eventFlow = MutableSharedFlow<MainEvent>(extraBufferCapacity = 1)
     val eventFlow: Flow<MainEvent> = _eventFlow
@@ -60,18 +63,20 @@ internal class MainViewModel @Inject constructor(
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.CardWithSessionTakenOver))
             ComponentItem.Entry.GiftCard -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCardWithSession))
             ComponentItem.Entry.DropIn -> startDropInFlow()
-            ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow()
-            ComponentItem.Entry.DropInWithCustomSession -> startCustomSessionDropInFlow()
+            ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
+            ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
         }
     }
 
     private fun startDropInFlow() {
         viewModelScope.launch {
-            _viewState.emit(MainViewState.Loading)
+            _isLoading.emit(true)
 
             val paymentMethods = getPaymentMethods()
+
+            _isLoading.emit(false)
+
             if (paymentMethods != null) {
-                _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
                 val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropIn(paymentMethods, dropInConfiguration)))
             } else {
@@ -80,36 +85,23 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun startSessionDropInFlow() {
+    private fun startSessionDropInFlow(takeOverSession: Boolean) {
         viewModelScope.launch {
-            _viewState.emit(MainViewState.Loading)
+            _isLoading.emit(true)
 
             val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
 
             val session = getSession(dropInConfiguration)
 
-            if (session != null) {
-                _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
-                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropInWithSession(session, dropInConfiguration)))
-            } else {
-                onError("Something went wrong while starting session")
-            }
-        }
-    }
-
-    private fun startCustomSessionDropInFlow() {
-        viewModelScope.launch {
-            _viewState.emit(MainViewState.Loading)
-
-            val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
-
-            val session = getSession(dropInConfiguration)
+            _isLoading.emit(false)
 
             if (session != null) {
-                _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
-                _eventFlow.tryEmit(
-                    MainEvent.NavigateTo(MainNavigation.DropInWithCustomSession(session, dropInConfiguration))
-                )
+                val navigation = if (takeOverSession) {
+                    MainNavigation.DropInWithCustomSession(session, dropInConfiguration)
+                } else {
+                    MainNavigation.DropInWithSession(session, dropInConfiguration)
+                }
+                _eventFlow.tryEmit(MainEvent.NavigateTo(navigation))
             } else {
                 onError("Something went wrong while starting session")
             }
@@ -162,11 +154,17 @@ internal class MainViewModel @Inject constructor(
     }
 
     private fun onError(message: String) {
-        _viewState.tryEmit(getComponentItemsViewState())
         _eventFlow.tryEmit(MainEvent.Toast(message))
     }
 
-    private fun getComponentItemsViewState() = MainViewState.Result(ComponentItemProvider.getComponentItems())
+    fun onSessionsToggled(enable: Boolean) {
+        val items = if (enable) {
+            ComponentItemProvider.getSessionItems()
+        } else {
+            ComponentItemProvider.getDefaultItems()
+        }
+        _listItems.tryEmit(items)
+    }
 
     fun onDropInResult(dropInResult: DropInResult?) {
         val message = when (dropInResult) {
