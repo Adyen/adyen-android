@@ -81,7 +81,7 @@ internal class DefaultBoletoDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BoletoComponentState> = _componentStateFlow
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BoletoComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<BoletoComponentState> = submitHandler.submitFlow
