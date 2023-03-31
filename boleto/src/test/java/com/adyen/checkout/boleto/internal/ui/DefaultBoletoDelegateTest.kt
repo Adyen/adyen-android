@@ -1,0 +1,509 @@
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by atef on 31/3/2023.
+ */
+
+package com.adyen.checkout.boleto.internal.ui
+
+import app.cash.turbine.test
+import com.adyen.checkout.boleto.BoletoComponentState
+import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
+import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
+import java.util.Locale
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@ExtendWith(MockitoExtension::class)
+internal class DefaultBoletoDelegateTest(
+    @Mock private val submitHandler: SubmitHandler<BoletoComponentState>,
+    @Mock private val analyticsRepository: AnalyticsRepository,
+) {
+
+    private lateinit var delegate: DefaultBoletoDelegate
+
+    private val configuration = BoletoConfiguration.Builder(
+        Locale.US,
+        Environment.TEST,
+        TEST_CLIENT_KEY
+    ).build()
+
+    private lateinit var addressRepository: TestAddressRepository
+
+    @BeforeEach
+    fun beforeEach() {
+        addressRepository = TestAddressRepository()
+        delegate = createBoletoDelegate()
+        AdyenLogger.setLogLevel(Logger.NONE)
+    }
+
+    @Test
+    fun `when delegate is initialized then analytics event is sent`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        verify(analyticsRepository).sendAnalyticsEvent()
+    }
+
+    @Nested
+    @DisplayName("when input data changes and")
+    inner class InputDataChangedTest {
+
+        @Test
+        fun `input data is valid, then output must be valid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `all inputs are empty, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {}
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `first name is empty and other inputs are valid, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = " "
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `last name is empty and other inputs are valid, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = " "
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `social security number is empty and other inputs are valid, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = " "
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `social security number is invalid and other inputs are valid, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "123.456.789-0"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `address is empty and other inputs are valid, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `email is empty and isEmailCopySelected equals true, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = " "
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `email is invalid and isEmailCopySelected equals true, then output should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+            outputTestFlow.cancel()
+        }
+    }
+
+    @Nested
+    @DisplayName("when creating component state and")
+    inner class CreateComponentStateTest {
+
+        @Test
+        fun `output is valid, then component state should be valid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertTrue(isInputValid)
+                assertTrue(isValid)
+            }
+        }
+
+        @Test
+        fun `output is invalid, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {}
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+
+        @Test
+        fun `first name is empty and other inputs are valid, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = " "
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+
+        @Test
+        fun `last name is empty and other inputs are valid, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = " "
+                socialSecurityNumber = "568.617.525-09"
+                address = createAddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+
+        @Test
+        fun `social security number is empty and other inputs are valid, then component state should be invalid`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+                delegate.updateInputData {
+                    firstName = "Atef"
+                    lastName = "Etman"
+                    socialSecurityNumber = " "
+                    address = createAddressInputModel()
+                    isSendEmailSelected = true
+                    shopperEmail = "atef@test.com"
+                }
+
+                with(componentStateTestFlow.latestValue) {
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
+            }
+
+        @Test
+        fun `social security number is invalid input and other inputs are valid, then component state should be invalid`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+                delegate.updateInputData {
+                    firstName = "Atef"
+                    lastName = "Etman"
+                    socialSecurityNumber = "123.456.789-0"
+                    address = createAddressInputModel()
+                    isSendEmailSelected = true
+                    shopperEmail = "atef@test.com"
+                }
+
+                with(componentStateTestFlow.latestValue) {
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
+            }
+
+        @Test
+        fun `social security number is invalid pattern and other inputs are valid, then component state should be invalid`() =
+            runTest {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+                delegate.updateInputData {
+                    firstName = "Atef"
+                    lastName = "Etman"
+                    socialSecurityNumber = "56861752509"
+                    address = createAddressInputModel()
+                    isSendEmailSelected = true
+                    shopperEmail = "atef@test.com"
+                }
+
+                with(componentStateTestFlow.latestValue) {
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
+            }
+
+        @Test
+        fun `address is empty and other inputs are valid, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test.com"
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+
+        @Test
+        fun `email is empty and isEmailCopySelected equals true, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = " "
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+
+        @Test
+        fun `email is invalid and isEmailCopySelected equals true, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                firstName = "Atef"
+                lastName = "Etman"
+                socialSecurityNumber = "568.617.525-09"
+                address = AddressInputModel()
+                isSendEmailSelected = true
+                shopperEmail = "atef@test"
+            }
+
+            with(componentStateTestFlow.latestValue) {
+                assertFalse(isInputValid)
+                assertFalse(isValid)
+            }
+        }
+    }
+
+    @Nested
+    inner class SubmitHandlerTest {
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
+    private fun createBoletoDelegate(
+        submitHandler: SubmitHandler<BoletoComponentState> = this.submitHandler,
+        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        paymentMethod: PaymentMethod = PaymentMethod(),
+        addressRepository: TestAddressRepository = this.addressRepository,
+        order: Order? = TEST_ORDER
+    ) = DefaultBoletoDelegate(
+        submitHandler = submitHandler,
+        analyticsRepository = analyticsRepository,
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = paymentMethod,
+        order = order,
+        componentParams = BoletoComponentParamsMapper(null, null).mapToParams(configuration, null),
+        addressRepository = addressRepository
+    )
+
+    private fun createAddressInputModel(
+        postalCode: String = "12345678",
+        street: String = "Rua Funcionarios",
+        stateOrProvince: String = "SP",
+        houseNumberOrName: String = "952",
+        apartmentSuite: String = "",
+        city: String = "São Paulo",
+        country: String = BRAZIL_COUNTRY_CODE
+    ) = AddressInputModel(
+        postalCode = postalCode,
+        street = street,
+        stateOrProvince = stateOrProvince,
+        houseNumberOrName = houseNumberOrName,
+        apartmentSuite = apartmentSuite,
+        city = city,
+        country = country
+    )
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val BRAZIL_COUNTRY_CODE = "BR"
+    }
+}
