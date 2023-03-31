@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Personopplysninger</string>
+    <string name="checkout_boleto_first_name">Fornavn</string>
+    <string name="checkout_boleto_last_name">Etternavn</string>
+    <string name="checkout_boleto_send_email_copy">Send meg en kopi på e-post</string>
+    <string name="checkout_boleto_email">E-postadresse</string>
+    <string name="checkout_boleto_generate_btn_label">Generer Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Fornavnet er ikke gyldig</string>
+    <string name="checkout_boleto_last_name_invalid">Etternavnet er ikke gyldig</string>
+    <string name="checkout_boleto_email_invalid">Ugyldig e-postadresse</string>
+</resources>

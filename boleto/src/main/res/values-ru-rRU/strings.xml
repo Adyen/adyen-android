@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Личные данные</string>
+    <string name="checkout_boleto_first_name">Имя</string>
+    <string name="checkout_boleto_last_name">Фамилия</string>
+    <string name="checkout_boleto_send_email_copy">Отправить мне копию на эл. почту</string>
+    <string name="checkout_boleto_email">Адрес эл. почты</string>
+    <string name="checkout_boleto_generate_btn_label">Создать Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Неверное имя</string>
+    <string name="checkout_boleto_last_name_invalid">Неверная фамилия</string>
+    <string name="checkout_boleto_email_invalid">Недействительный адрес эл. почты</string>
+</resources>

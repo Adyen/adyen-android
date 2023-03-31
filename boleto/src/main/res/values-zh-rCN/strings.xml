@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">个人详细信息</string>
+    <string name="checkout_boleto_first_name">名字</string>
+    <string name="checkout_boleto_last_name">姓氏</string>
+    <string name="checkout_boleto_send_email_copy">将副本发送到我的电子邮箱</string>
+    <string name="checkout_boleto_email">电子邮件地址</string>
+    <string name="checkout_boleto_generate_btn_label">生成 Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">名字无效</string>
+    <string name="checkout_boleto_last_name_invalid">姓氏无效</string>
+    <string name="checkout_boleto_email_invalid">无效的邮件地址</string>
+</resources>

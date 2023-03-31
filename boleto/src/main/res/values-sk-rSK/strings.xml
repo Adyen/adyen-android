@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Osobné údaje</string>
+    <string name="checkout_boleto_first_name">Krstné meno</string>
+    <string name="checkout_boleto_last_name">Priezvisko</string>
+    <string name="checkout_boleto_send_email_copy">Zaslať kópiu na môj e-mail</string>
+    <string name="checkout_boleto_email">E-mailová adresa</string>
+    <string name="checkout_boleto_generate_btn_label">Generovať Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Meno nie je platné</string>
+    <string name="checkout_boleto_last_name_invalid">Priezvisko nie je platné</string>
+    <string name="checkout_boleto_email_invalid">Neplatná emailová adresa</string>
+</resources>
