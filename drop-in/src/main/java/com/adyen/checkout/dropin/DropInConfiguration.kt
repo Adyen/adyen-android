@@ -16,6 +16,7 @@ import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurati
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -348,6 +349,20 @@ class DropInConfiguration private constructor(
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
             availablePaymentConfigs[PaymentMethodTypes.UPI_COLLECT] = upiConfiguration
             availablePaymentConfigs[PaymentMethodTypes.UPI_QR] = upiConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Boleto payment method.
+         */
+        fun addBoletoDirectDebitConfiguration(boletoConfiguration: BoletoConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BRADESCO] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_HSBC] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_ITAU] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_SANTANDER] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETO_PRIMEIRO_PAY] = boletoConfiguration
             return this
         }
 

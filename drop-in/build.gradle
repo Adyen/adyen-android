@@ -51,6 +51,7 @@ dependencies {
     api project(':action')
     api project(':bacs')
     api project(':bcmc')
+    api project(':boleto')
     api project(':blik')
     api project(':card')
     api project(':convenience-stores-jp')
