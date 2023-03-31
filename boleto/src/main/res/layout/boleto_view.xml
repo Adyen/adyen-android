@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <TextView
+        android:id="@+id/textView_personal_information_header"
+        style="@style/AdyenCheckout.Boleto.PersonalDetailsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_firstName"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_firstName"
+            style="@style/AdyenCheckout.Boleto.FirstNameInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_lastName"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_lastName"
+            style="@style/AdyenCheckout.Boleto.LastNameInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_socialSecurityNumber"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.SocialSecurityNumberInput
+            android:id="@+id/editText_socialSecurityNumber"
+            style="@style/AdyenCheckout.Boleto.SocialNumberInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
+        android:id="@+id/addressFormInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:focusableInTouchMode="true" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_sendEmailCopy"
+        style="@style/AdyenCheckout.Boleto.EmailCopySwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_shopperEmail"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_shopperEmail"
+            style="@style/AdyenCheckout.Boleto.ShopperEmailInput" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</merge>
