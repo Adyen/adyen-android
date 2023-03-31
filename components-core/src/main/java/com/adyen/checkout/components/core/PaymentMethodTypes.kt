@@ -73,6 +73,7 @@ object PaymentMethodTypes {
     const val BOLETOBANCARIO_HSBC = "boletobancario_hsbc"
     const val BOLETOBANCARIO_ITAU = "boletobancario_itau"
     const val BOLETOBANCARIO_SANTANDER = "boletobancario_santander"
+    const val BOLETO_PRIMEIRO_PAY = "primeiropay_boleto"
     const val DRAGONPAY_EBANKING = "dragonpay_ebanking"
     const val DRAGONPAY_OTC_BANKING = "dragonpay_otc_banking"
     const val DRAGONPAY_OTC_NON_BANKING = "dragonpay_otc_non_banking"
@@ -164,6 +165,7 @@ object PaymentMethodTypes {
             BOLETOBANCARIO_HSBC,
             BOLETOBANCARIO_ITAU,
             BOLETOBANCARIO_SANTANDER,
+            BOLETO_PRIMEIRO_PAY,
             DRAGONPAY_EBANKING,
             DRAGONPAY_OTC_BANKING,
             DRAGONPAY_OTC_NON_BANKING,
