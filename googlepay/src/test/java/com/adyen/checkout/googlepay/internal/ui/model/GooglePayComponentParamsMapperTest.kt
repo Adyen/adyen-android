@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.Logger
@@ -36,7 +37,7 @@ internal class GooglePayComponentParamsMapperTest {
 
     @BeforeEach
     fun beforeEach() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

@@ -15,6 +15,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -46,7 +47,7 @@ internal class VoucherComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType)
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)

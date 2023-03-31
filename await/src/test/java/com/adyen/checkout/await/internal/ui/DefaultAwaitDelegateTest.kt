@@ -12,13 +12,13 @@ import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.await.AwaitConfiguration
-import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.Logger
@@ -57,7 +57,7 @@ internal class DefaultAwaitDelegateTest {
             statusRepository,
             paymentDataRepository
         )
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -98,7 +98,7 @@ internal class DefaultAwaitDelegateTest {
             delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
             val expectedDetails = JSONObject().apply {
-                put(PAYLOAD_DETAILS_KEY, "testpayload")
+                put(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY, "testpayload")
             }
 
             with(awaitItem()) {

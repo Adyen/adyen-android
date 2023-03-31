@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -49,7 +50,7 @@ internal class DefaultBlikDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createBlikDelegate()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

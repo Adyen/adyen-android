@@ -16,6 +16,7 @@ import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -47,7 +48,7 @@ internal class GenericActionComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(genericActionDelegate.delegate) doReturn actionDelegate
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)

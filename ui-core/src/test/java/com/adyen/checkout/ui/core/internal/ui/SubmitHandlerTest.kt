@@ -12,7 +12,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.ui.core.TestComponentState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler.Companion.IS_INTERACTION_BLOCKED
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +35,7 @@ internal class SubmitHandlerTest {
 
         @Test
         fun `isInteractionBlocked is set, then UI state should be emitted`() = runTest {
-            val savedStateHandle = SavedStateHandle(mapOf(IS_INTERACTION_BLOCKED to true))
+            val savedStateHandle = SavedStateHandle(mapOf(SubmitHandler.IS_INTERACTION_BLOCKED to true))
             submitHandler = createSubmitHandler(savedStateHandle)
 
             submitHandler.initialize(CoroutineScope(UnconfinedTestDispatcher()), flowOf())

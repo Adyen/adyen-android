@@ -11,7 +11,6 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.sepa.R
-import com.adyen.checkout.sepa.internal.ui.model.Iban.Companion.parse
 
 internal class SepaOutputData(ownerName: String, ibanNumber: String) : OutputData {
 
@@ -24,7 +23,7 @@ internal class SepaOutputData(ownerName: String, ibanNumber: String) : OutputDat
         }
     )
     val ibanNumberField: FieldState<String>
-    val iban: Iban? = parse(ibanNumber)
+    val iban: Iban? = Iban.parse(ibanNumber)
 
     override val isValid: Boolean
         get() = ownerNameField.validation.isValid() && ibanNumberField.validation.isValid()

@@ -8,8 +8,8 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.util.CheckoutCurrency.Companion.find
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -47,7 +47,7 @@ object AmountFormat {
     private fun getFractionDigits(currencyCode: String): Int {
         val normalizedCurrencyCode = currencyCode.replace("[^A-Z]".toRegex(), "").uppercase(Locale.ROOT)
         try {
-            val checkoutCurrency = find(normalizedCurrencyCode)
+            val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
             return checkoutCurrency.fractionDigits
         } catch (e: CheckoutException) {
             Logger.e(

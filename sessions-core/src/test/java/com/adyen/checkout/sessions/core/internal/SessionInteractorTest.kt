@@ -16,9 +16,10 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
+import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionModel
@@ -59,7 +60,7 @@ internal class SessionInteractorTest(
     @BeforeEach
     fun before() {
         sessionInteractor = createSessionInteractor()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

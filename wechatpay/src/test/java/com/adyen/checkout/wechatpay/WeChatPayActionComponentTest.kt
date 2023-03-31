@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.SdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -48,7 +49,7 @@ internal class WeChatPayActionComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(weChatDelegate.viewFlow) doReturn MutableStateFlow(WeChatComponentViewType)
         component = WeChatPayActionComponent(weChatDelegate, actionComponentEventHandler)

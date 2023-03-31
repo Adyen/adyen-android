@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.econtext.TestEContextComponentState
@@ -53,7 +54,7 @@ internal class DefaultEContextDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createEContextDelegate()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

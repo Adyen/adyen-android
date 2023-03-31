@@ -18,6 +18,7 @@ import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -47,7 +48,7 @@ internal class Adyen3DS2ComponentTest(
 
     @BeforeEach
     fun before() {
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
 
         whenever(adyen3DS2Delegate.viewFlow) doReturn MutableStateFlow(Adyen3DS2ComponentViewType)
         component = Adyen3DS2Component(adyen3DS2Delegate, actionComponentEventHandler)

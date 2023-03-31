@@ -16,16 +16,17 @@ import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -55,7 +56,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createBacsDelegate()
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

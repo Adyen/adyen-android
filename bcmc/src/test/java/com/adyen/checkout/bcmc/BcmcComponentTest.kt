@@ -17,6 +17,7 @@ import com.adyen.checkout.bcmc.internal.ui.BcmcComponentViewType
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -60,7 +61,7 @@ internal class BcmcComponentTest(
             actionHandlingComponent,
             componentEventHandler,
         )
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

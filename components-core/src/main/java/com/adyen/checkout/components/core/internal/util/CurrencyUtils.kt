@@ -8,9 +8,8 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.util.CheckoutCurrency.Companion.find
-import com.adyen.checkout.components.core.internal.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import java.math.BigDecimal
@@ -31,7 +30,7 @@ object CurrencyUtils {
      */
     fun formatAmount(amount: Amount, locale: Locale): String {
         val currencyCode = amount.currency
-        val checkoutCurrency = find(currencyCode.orEmpty())
+        val checkoutCurrency = CheckoutCurrency.find(currencyCode.orEmpty())
         val currency = Currency.getInstance(currencyCode)
         val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
         currencyFormat.currency = currency
@@ -42,7 +41,7 @@ object CurrencyUtils {
     }
 
     fun assertCurrency(currencyCode: String?) {
-        if (!isSupported(currencyCode)) {
+        if (!CheckoutCurrency.isSupported(currencyCode)) {
             throw CheckoutException("Currency $currencyCode not supported")
         }
     }

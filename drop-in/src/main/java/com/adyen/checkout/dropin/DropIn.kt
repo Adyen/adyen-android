@@ -167,12 +167,12 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         params: T,
     ) {
-        updateDefaultLogcatLevel(context)
+        updateDefaultLogLevel(context)
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
         dropInLauncher.launch(params)
     }
 
-    private fun updateDefaultLogcatLevel(context: Context) {
-        Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
+    private fun updateDefaultLogLevel(context: Context) {
+        Logger.updateDefaultLogLevel(BuildUtils.isDebugBuild(context))
     }
 }

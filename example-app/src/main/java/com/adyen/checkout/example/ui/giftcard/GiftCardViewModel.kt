@@ -11,7 +11,6 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.data.model.toStringPretty
@@ -229,7 +228,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
         return jsonResponse.getStringOrNull("resultCode")
-            .equals(other = StatusResponseUtils.RESULT_REFUSED, ignoreCase = true)
+            .equals(other = RESULT_REFUSED, ignoreCase = true)
     }
 
     private fun isNonFullyPaidOrder(jsonResponse: JSONObject): Boolean {
@@ -273,5 +272,6 @@ internal class GiftCardViewModel @Inject constructor(
 
     companion object {
         private val TAG = LogUtil.getTag()
+        private const val RESULT_REFUSED = "refused"
     }
 }

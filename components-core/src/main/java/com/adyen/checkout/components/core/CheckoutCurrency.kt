@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 31/7/2019.
+ * Created by josephj on 29/3/2023.
  */
-package com.adyen.checkout.components.core.internal.util
+package com.adyen.checkout.components.core
 
-import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import java.util.Collections
 
@@ -16,7 +16,6 @@ import java.util.Collections
  * @see [Adyen currency codes](https://docs.adyen.com/developers/currency-codes)
  */
 @Suppress("MagicNumber")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CheckoutCurrency(val fractionDigits: Int) {
     AED(2),
     ALL(2),

@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
@@ -20,7 +21,7 @@ import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
-import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -28,7 +29,6 @@ import com.adyen.checkout.core.internal.util.FileDownloader
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
-import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
@@ -87,7 +87,7 @@ internal class DefaultQRCodeDelegateTest(
             paymentDataRepository = paymentDataRepository,
             fileDownloader = fileDownloader
         )
-        Logger.setLogcatLevel(Logger.NONE)
+        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -158,7 +158,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -264,7 +264,7 @@ internal class DefaultQRCodeDelegateTest(
                     Activity(),
                 )
 
-                assertEquals("testpayload", awaitItem().details?.getString(PAYLOAD_DETAILS_KEY))
+                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
 
                 cancelAndIgnoreRemainingEvents()
             }
