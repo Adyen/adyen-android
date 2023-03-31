@@ -16,6 +16,7 @@
     <string name="paymentInProgressView_cancelButton">%%storedPaymentMethod.disable.cancelButton%%</string>
 
     <string name="checkout_address_form_field_not_valid">%%validationAlert.title%%</string>
+    <string name="checkout_social_security_number_not_valid">%%validationAlert.title%%</string>
 
     <string name="checkout_address_form_billing_address_title">%%billingAddress%%</string>
     <string name="checkout_address_form_street_hint">%%street%%</string>

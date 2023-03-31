@@ -16,6 +16,7 @@
     <string name="paymentInProgressView_cancelButton">Peruuta</string>
 
     <string name="checkout_address_form_field_not_valid">Ei-kelvollinen syöte</string>
+    <string name="checkout_social_security_number_not_valid">Ei-kelvollinen syöte</string>
 
     <string name="checkout_address_form_billing_address_title">Laskutusosoite</string>
     <string name="checkout_address_form_street_hint">Katu</string>
@@ -41,5 +42,4 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postinumero (valinnainen)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Maakunta tai alue (valinnainen)</string>
     <string name="checkout_address_form_city_town_hint_optional">Kaupunki / taajama (valinnainen)</string>
-
 </resources>

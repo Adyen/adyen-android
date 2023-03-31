@@ -6,15 +6,14 @@
  * Created by oscars on 15/2/2023.
  */
 
-package com.adyen.checkout.card.internal.ui.view
+package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
 import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
-import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 
 class SocialSecurityNumberInput constructor(
     context: Context,

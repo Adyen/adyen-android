@@ -16,6 +16,7 @@
     <string name="paymentInProgressView_cancelButton">キャンセル</string>
 
     <string name="checkout_address_form_field_not_valid">無効な入力</string>
+    <string name="checkout_social_security_number_not_valid">無効な入力</string>
 
     <string name="checkout_address_form_billing_address_title">ご請求住所</string>
     <string name="checkout_address_form_street_hint">番地</string>
@@ -41,5 +42,4 @@
     <string name="checkout_address_form_zip_code_hint_optional">郵便番号 (任意)</string>
     <string name="checkout_address_form_province_territory_hint_optional">州または準州 (任意)</string>
     <string name="checkout_address_form_city_town_hint_optional">市区町村 (任意)</string>
-
 </resources>
