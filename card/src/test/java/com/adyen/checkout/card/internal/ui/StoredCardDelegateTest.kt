@@ -35,7 +35,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
@@ -100,7 +99,7 @@ internal class StoredCardDelegateTest(
     }
 
     @Test
-    fun `when component is initialized with cvc shown, then view flow emits CardComponentViewType`() = runTest {
+    fun `when component is initialized with cvc shown, then view flow emits StoredCardView`() = runTest {
         delegate = createCardDelegate(
             configuration = getDefaultCardConfigurationBuilder()
                 .setHideCvcStoredCard(false)
@@ -108,7 +107,7 @@ internal class StoredCardDelegateTest(
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.viewFlow.test {
-            assertEquals(CardComponentViewType, expectMostRecentItem())
+            assertEquals(CardComponentViewType.StoredCardView, expectMostRecentItem())
         }
     }
 
@@ -512,7 +511,6 @@ internal class StoredCardDelegateTest(
             cardBrands = cardBrands,
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
-            componentMode = ComponentMode.STORED,
             isCardListVisible = isCardListVisible
         )
     }

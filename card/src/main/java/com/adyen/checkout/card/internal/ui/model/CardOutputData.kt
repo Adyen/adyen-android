@@ -13,7 +13,6 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 
 internal data class CardOutputData(
@@ -40,7 +39,6 @@ internal data class CardOutputData(
     val isDualBranded: Boolean,
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
-    val componentMode: ComponentMode,
     val isCardListVisible: Boolean
 ) : OutputData {
 

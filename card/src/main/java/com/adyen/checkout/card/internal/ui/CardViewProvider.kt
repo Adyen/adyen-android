@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.view.CardView
+import com.adyen.checkout.card.internal.ui.view.StoredCardView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -26,13 +27,17 @@ internal object CardViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            CardComponentViewType -> CardView(context, attrs, defStyleAttr)
+            CardComponentViewType.DefaultCardView -> CardView(context, attrs, defStyleAttr)
+            CardComponentViewType.StoredCardView -> StoredCardView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal object CardComponentViewType : AmountButtonComponentViewType {
+internal sealed class CardComponentViewType : AmountButtonComponentViewType {
+    object DefaultCardView : CardComponentViewType()
+    object StoredCardView : CardComponentViewType()
+
     override val viewProvider: ViewProvider = CardViewProvider
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

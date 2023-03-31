@@ -45,7 +45,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -1082,7 +1081,6 @@ internal class DefaultCardDelegateTest(
             cardBrands = cardBrands,
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
-            componentMode = ComponentMode.DEFAULT,
             isCardListVisible = isCardListVisible
         )
     }

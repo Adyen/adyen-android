@@ -29,7 +29,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -129,7 +128,7 @@ internal class StoredCardDelegate(
 
         val requiresShopperInput = !isCvcHidden()
         if (requiresShopperInput) {
-            _viewFlow.tryEmit(CardComponentViewType)
+            _viewFlow.tryEmit(CardComponentViewType.StoredCardView)
         } else {
             // trigger submission as soon as state is ready
             componentStateFlow.onEach { onState(it) }.launchIn(coroutineScope)
@@ -226,7 +225,6 @@ internal class StoredCardDelegate(
             cardBrands = emptyList(),
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
-            componentMode = ComponentMode.STORED,
             isCardListVisible = false
         )
     }
