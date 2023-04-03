@@ -67,7 +67,7 @@ internal class VoucherView @JvmOverloads constructor(
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_DescriptionTextAppearance,
+            R.style.AdyenCheckout_Voucher_Description_Bacs,
             localizedContext
         )
         binding.textViewDownload.setLocalizedTextFromStyle(

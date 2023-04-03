@@ -10,12 +10,40 @@
 
     <style name="AdyenCheckout.Voucher" />
 
-    <style name="AdyenCheckout.Voucher.DescriptionTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
+    <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
         <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
+        <item name="android:text">@string/checkout_voucher_introduction_boleto</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.Amount" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.PaymentReference" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:text">@string/checkout_voucher_payment_reference</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.CodeReference" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.DownloadTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
@@ -24,5 +52,28 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
         <item name="android:text">@string/checkout_voucher_download_pdf</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.ButtonCopyCode" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:text">@string/checkout_voucher_copy_code</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.ButtonDownloadPdf" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:text">@string/checkout_voucher_download_pdf</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.ExpirationDateLabel" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:text">@string/checkout_voucher_expiration_date</item>
+        <item name="android:layout_margin">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.ExpirationDate" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_margin">@dimen/standard_margin</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
