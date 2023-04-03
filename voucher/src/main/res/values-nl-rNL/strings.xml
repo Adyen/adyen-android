@@ -9,6 +9,11 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Download uw machtiging automatische incasso</string>
+    <string name="checkout_voucher_introduction_boleto">Bedankt voor uw aankoop. Gebruik deze coupon om uw betaling te voltooien.</string>
+    <string name="checkout_voucher_payment_reference">Betalingsreferentie</string>
+    <string name="checkout_voucher_expiration_date">Vervaldatum</string>
+    <string name="checkout_voucher_copy_code">Code kopiëren</string>
+    <string name="checkout_voucher_copied_toast">De code is naar het klembord gekopieerd</string>
     <string name="checkout_voucher_download_pdf">PDF downloaden</string>
     <string name="checkout_voucher_finish">Voltooien</string>
 </resources>

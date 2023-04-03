@@ -9,6 +9,11 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Загрузить распоряжение прямого дебетования (DDI / поручение)</string>
+    <string name="checkout_voucher_introduction_boleto">Благодарим за покупку. Для завершения оплаты используйте следующий купон.</string>
+    <string name="checkout_voucher_payment_reference">Код оплаты</string>
+    <string name="checkout_voucher_expiration_date">Срок действия</string>
+    <string name="checkout_voucher_copy_code">Скопировать код</string>
+    <string name="checkout_voucher_copied_toast">Код скопирован в буфер обмена</string>
     <string name="checkout_voucher_download_pdf">Загрузить PDF</string>
     <string name="checkout_voucher_finish">Готово</string>
 </resources>
