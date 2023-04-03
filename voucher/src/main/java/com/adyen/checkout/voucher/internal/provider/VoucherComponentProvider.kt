@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
@@ -68,7 +69,11 @@ class VoucherComponentProvider(
         application: Application,
     ): VoucherDelegate {
         val componentParams = componentParamsMapper.mapToParams(configuration, null)
-        return DefaultVoucherDelegate(ActionObserverRepository(), componentParams)
+        return DefaultVoucherDelegate(
+            observerRepository = ActionObserverRepository(),
+            componentParams = componentParams,
+            pdfOpener = PdfOpener()
+        )
     }
 
     override val supportedActionTypes: List<String>

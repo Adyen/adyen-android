@@ -9,6 +9,7 @@
 package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
@@ -19,6 +20,7 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
+    private val pdfOpener: PdfOpener,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -83,6 +86,14 @@ internal class DefaultVoucherDelegate(
         paymentMethodType = null,
         downloadUrl = null
     )
+
+    override fun downloadVoucher(context: Context) {
+        try {
+            pdfOpener.open(context, outputData.downloadUrl ?: "")
+        } catch (e: IllegalStateException) {
+            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+        }
+    }
 
     override fun onCleared() {
         removeObserver()
