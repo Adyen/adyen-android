@@ -22,6 +22,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
+import com.adyen.checkout.voucher.internal.ui.model.VoucherPaymentMethodConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +43,8 @@ internal class DefaultVoucherDelegate(
 
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
         // no ops
@@ -72,19 +74,37 @@ internal class DefaultVoucherDelegate(
             return
         }
 
-        _outputDataFlow.tryEmit(
-            VoucherOutputData(
-                isValid = true,
-                paymentMethodType = action.paymentMethodType,
-                downloadUrl = action.url
-            )
+        val viewType = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType).viewType
+
+        _viewFlow.tryEmit(viewType)
+
+        createOutputData(action)
+    }
+
+    private fun createOutputData(action: VoucherAction) {
+        val messageTextResource = VoucherPaymentMethodConfig
+            .getByPaymentMethodType(action.paymentMethodType).messageTextResource
+
+        val outputData = VoucherOutputData(
+            isValid = true,
+            paymentMethodType = action.paymentMethodType,
+            // TODO: remove action.url when it's fixed from backend side
+            downloadUrl = action.downloadUrl ?: action.url,
+            expiresAt = action.expiresAt,
+            reference = action.reference,
+            totalAmount = action.totalAmount,
+            messageTextResource = messageTextResource
         )
+        _outputDataFlow.tryEmit(outputData)
     }
 
     private fun createOutputData() = VoucherOutputData(
         isValid = false,
         paymentMethodType = null,
-        downloadUrl = null
+        downloadUrl = null,
+        expiresAt = null,
+        reference = null,
+        totalAmount = null
     )
 
     override fun downloadVoucher(context: Context) {
