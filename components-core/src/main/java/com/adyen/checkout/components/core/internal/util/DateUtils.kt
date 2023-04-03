@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.internal.util.Logger
+import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -17,6 +18,7 @@ import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DateUtils {
+    private const val DEFAULT_INPUT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 
     @JvmStatic
     fun parseDateToView(month: String, year: String): String {
@@ -48,6 +50,29 @@ object DateUtils {
         } catch (e: ParseException) {
             Logger.e("DateUtil", "Provided date $date does not match the given format $format")
             false
+        }
+    }
+
+    /**
+     * Format server date pattern to regular date pattern (30/03/2023).
+     *
+     * @param date date value coming from server
+     * @param shopperLocale
+     * @param inputFormat server date pattern
+     */
+    fun formatStringDate(
+        date: String,
+        shopperLocale: Locale,
+        inputFormat: String = DEFAULT_INPUT_DATE_FORMAT
+    ): String? {
+        return try {
+            val inputSimpleFormat = SimpleDateFormat(inputFormat, shopperLocale)
+            val outputSimpleFormat = DateFormat.getDateInstance(DateFormat.SHORT, shopperLocale)
+            val parsedDate = inputSimpleFormat.parse(date)
+            parsedDate?.let { outputSimpleFormat.format(it) }
+        } catch (e: ParseException) {
+            Logger.e("DateUtil", "Provided date $date does not match the given format $inputFormat")
+            null
         }
     }
 }
