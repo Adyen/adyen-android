@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        binding.switchSessions.setOnCheckedChangeListener { _, isChecked -> viewModel.onSessionsToggled(isChecked) }
+
         componentItemAdapter = ComponentItemAdapter(
             viewModel::onComponentEntryClick
         )
@@ -77,8 +79,9 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.viewState.collect(::onViewState) }
+                launch { viewModel.listItems.collect(::onListItems) }
                 launch { viewModel.eventFlow.collect(::onMainEvent) }
+                launch { viewModel.isLoading.collect(::setLoading) }
             }
         }
     }
@@ -98,14 +101,8 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun onViewState(viewState: MainViewState) {
-        when (viewState) {
-            MainViewState.Loading -> setLoading(true)
-            is MainViewState.Result -> {
-                setLoading(false)
-                componentItemAdapter?.items = viewState.items
-            }
-        }
+    private fun onListItems(items: List<ComponentItem>) {
+        componentItemAdapter?.submitList(items)
     }
 
     private fun onMainEvent(event: MainEvent) {

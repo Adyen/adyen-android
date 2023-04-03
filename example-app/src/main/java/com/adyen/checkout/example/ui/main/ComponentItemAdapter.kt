@@ -1,8 +1,9 @@
 package com.adyen.checkout.example.ui.main
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.adyen.checkout.example.databinding.ItemComponentEntryBinding
@@ -10,18 +11,9 @@ import com.adyen.checkout.example.databinding.ItemComponentTitleBinding
 
 internal class ComponentItemAdapter(
     private val onEntryClick: (ComponentItem.Entry) -> Unit,
-) : RecyclerView.Adapter<ComponentItemAdapter.ComponentItemViewHolder>() {
+) : ListAdapter<ComponentItem, ComponentItemAdapter.ComponentItemViewHolder>(DiffCallback) {
 
-    var items = emptyList<ComponentItem>()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    override fun getItemCount(): Int = items.size
-
-    override fun getItemViewType(position: Int): Int = when (items[position]) {
+    override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is ComponentItem.Title -> VIEW_TYPE_TITLE
         is ComponentItem.Entry -> VIEW_TYPE_ENTRY
     }
@@ -38,7 +30,7 @@ internal class ComponentItemAdapter(
     }
 
     override fun onBindViewHolder(holder: ComponentItemViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
     abstract class ComponentItemViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -66,5 +58,13 @@ internal class ComponentItemAdapter(
     companion object {
         private const val VIEW_TYPE_TITLE = 0
         private const val VIEW_TYPE_ENTRY = 1
+    }
+
+    private object DiffCallback : DiffUtil.ItemCallback<ComponentItem>() {
+        override fun areItemsTheSame(oldItem: ComponentItem, newItem: ComponentItem): Boolean =
+            oldItem == newItem
+
+        override fun areContentsTheSame(oldItem: ComponentItem, newItem: ComponentItem): Boolean =
+            oldItem == newItem
     }
 }
