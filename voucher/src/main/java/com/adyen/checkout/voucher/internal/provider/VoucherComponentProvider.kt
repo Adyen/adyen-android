@@ -83,6 +83,15 @@ class VoucherComponentProvider(
     }
 
     companion object {
-        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
+        private val PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.BACS,
+            PaymentMethodTypes.BOLETOBANCARIO,
+            PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL,
+            PaymentMethodTypes.BOLETOBANCARIO_BRADESCO,
+            PaymentMethodTypes.BOLETOBANCARIO_HSBC,
+            PaymentMethodTypes.BOLETOBANCARIO_ITAU,
+            PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
+            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY
+        )
     }
 }
