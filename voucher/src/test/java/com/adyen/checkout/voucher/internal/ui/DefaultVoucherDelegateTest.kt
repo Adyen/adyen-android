@@ -11,6 +11,7 @@ package com.adyen.checkout.voucher.internal.ui
 import android.app.Activity
 import android.content.Context
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
@@ -54,7 +55,7 @@ internal class DefaultVoucherDelegateTest(
             delegate.handleAction(
                 VoucherAction(
                     paymentMethodType = "payment_method_type",
-                    url = "download_url",
+                    downloadUrl = "download_url",
                     paymentData = "paymentData",
                 ),
                 activity,
@@ -68,11 +69,37 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
+    fun `handleAction for Bacs called, then simple voucher view flow is updated`() = runTest {
+        delegate.viewFlow.test {
+
+            delegate.handleAction(
+                VoucherAction(paymentMethodType = PaymentMethodTypes.BACS, paymentData = "paymentData"),
+                activity,
+            )
+
+            assertEquals(VoucherComponentViewType.SIMPLE_VOUCHER, expectMostRecentItem())
+        }
+    }
+
+    @Test
+    fun `handleAction for Boleto called, then simple voucher view flow is updated`() = runTest {
+        delegate.viewFlow.test {
+
+            delegate.handleAction(
+                VoucherAction(paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO, paymentData = "paymentData"),
+                activity,
+            )
+
+            assertEquals(VoucherComponentViewType.FULL_VOUCHER, expectMostRecentItem())
+        }
+    }
+
+    @Test
     fun `when download voucher is called, then pdf open should be called`() {
         delegate.handleAction(
             VoucherAction(
                 paymentMethodType = "payment_method_type",
-                url = "download_url",
+                downloadUrl = "download_url",
                 paymentData = "paymentData",
             ),
             activity,
