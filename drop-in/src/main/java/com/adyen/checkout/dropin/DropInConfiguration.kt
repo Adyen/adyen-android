@@ -346,6 +346,8 @@ class DropInConfiguration private constructor(
          */
         fun addUPIConfiguration(upiConfiguration: UPIConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.UPI_COLLECT] = upiConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.UPI_QR] = upiConfiguration
             return this
         }
 
