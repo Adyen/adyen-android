@@ -22,5 +22,6 @@ internal object ComponentItemProvider {
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.CardWithSession,
         ComponentItem.Entry.CardWithSessionTakenOver,
+        ComponentItem.Entry.GiftCardWithSession,
     )
 }

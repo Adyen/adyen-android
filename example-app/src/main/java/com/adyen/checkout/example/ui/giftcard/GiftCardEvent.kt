@@ -18,4 +18,8 @@ internal sealed class GiftCardEvent {
         val orderRequest: OrderRequest,
         val giftCardComponentData: GiftCardComponentData
     ) : GiftCardEvent()
+
+    data class ReloadComponentSessions(
+        val giftCardComponentData: SessionsGiftCardComponentData
+    ) : GiftCardEvent()
 }

@@ -34,6 +34,7 @@ import com.adyen.checkout.example.ui.card.SessionsCardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
+import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -153,8 +154,12 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, SessionsCardActivity::class.java)
                 startActivity(intent)
             }
-            MainNavigation.GiftCardWithSession -> {
+            MainNavigation.GiftCard -> {
                 val intent = Intent(this, GiftCardActivity::class.java)
+                startActivity(intent)
+            }
+            MainNavigation.GiftCardWithSession -> {
+                val intent = Intent(this, SessionsGiftCardActivity::class.java)
                 startActivity(intent)
             }
             MainNavigation.CardWithSessionTakenOver -> {

@@ -14,7 +14,7 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 
 interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardComponentState> {
 
-    fun onOrder(orderResponse: OrderResponse)
+    fun onOrder(orderResponse: OrderResponse) = Unit
 
-    fun onBalance(balanceResult: BalanceResult)
+    fun onBalance(balanceResult: BalanceResult) = Unit
 }

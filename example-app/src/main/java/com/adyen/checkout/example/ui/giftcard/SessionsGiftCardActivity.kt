@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityGiftCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -20,14 +19,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class GiftCardActivity : AppCompatActivity() {
+class SessionsGiftCardActivity : AppCompatActivity() {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private lateinit var binding: ActivityGiftCardBinding
 
-    private val giftCardViewModel: GiftCardViewModel by viewModels()
+    private val giftCardViewModel: SessionsGiftCardViewModel by viewModels()
 
     private var giftCardComponent: GiftCardComponent? = null
 
@@ -35,7 +34,7 @@ class GiftCardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
-        val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/giftcard"
+        val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/sessions/giftcard"
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
         binding = ActivityGiftCardBinding.inflate(layoutInflater)
@@ -68,8 +67,8 @@ class GiftCardActivity : AppCompatActivity() {
     private fun onGiftCardViewState(giftCardViewState: GiftCardViewState) {
         when (giftCardViewState) {
             GiftCardViewState.Loading -> {
-                // We are hiding the CardView here to display our own loading state. If you leave the view visible
-                // the built in loading state will be shown.
+                // We are hiding the AdyenComponentView here to display our own loading state. If you leave the view
+                // visible the built in loading state will be shown.
                 binding.progressIndicator.isVisible = true
                 binding.giftCardContainer.isVisible = false
                 binding.errorView.isVisible = false
@@ -87,12 +86,13 @@ class GiftCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupGiftCardView(giftCardComponentData: GiftCardComponentData) {
+    private fun setupGiftCardView(giftCardComponentData: SessionsGiftCardComponentData) {
         val giftCardComponent = GiftCardComponent.PROVIDER.get(
             activity = this,
+            checkoutSession = giftCardComponentData.checkoutSession,
             paymentMethod = giftCardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
-            callback = giftCardComponentData.callback,
+            componentCallback = giftCardComponentData.callback,
         )
 
         this.giftCardComponent = giftCardComponent
@@ -106,14 +106,16 @@ class GiftCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun reloadGiftCardWithOrder(giftCardComponentData: GiftCardComponentData, orderRequest: OrderRequest) {
+    private fun reloadGiftCardWithOrder(
+        giftCardComponentData: SessionsGiftCardComponentData,
+    ) {
         val giftCardComponent = GiftCardComponent.PROVIDER.get(
             activity = this,
+            checkoutSession = giftCardComponentData.checkoutSession,
             paymentMethod = giftCardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
-            callback = giftCardComponentData.callback,
-            order = orderRequest,
-            key = KEY_SECONDARY_GIFT_CARD_COMPONENT
+            componentCallback = giftCardComponentData.callback,
+            key = KEY_SECONDARY_GIFT_CARD_COMPONENT,
         )
 
         this.giftCardComponent = giftCardComponent
@@ -130,10 +132,10 @@ class GiftCardActivity : AppCompatActivity() {
             is GiftCardEvent.OrderCreated -> {
                 giftCardComponent?.resolveOrderResponse(event.order)
             }
-            is GiftCardEvent.ReloadComponent -> {
-                reloadGiftCardWithOrder(event.giftCardComponentData, event.orderRequest)
+            is GiftCardEvent.ReloadComponentSessions -> {
+                reloadGiftCardWithOrder(event.giftCardComponentData)
             }
-            is GiftCardEvent.ReloadComponentSessions -> Unit
+            is GiftCardEvent.ReloadComponent -> Unit
         }
     }
 
