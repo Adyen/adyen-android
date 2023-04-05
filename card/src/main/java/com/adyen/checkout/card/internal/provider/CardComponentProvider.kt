@@ -73,7 +73,11 @@ class CardComponentProvider(
         CardConfiguration,
         CardComponentState,
         ComponentCallback<CardComponentState>>,
-    StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    StoredPaymentComponentProvider<
+        CardComponent,
+        CardConfiguration,
+        CardComponentState,
+        ComponentCallback<CardComponentState>>,
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 

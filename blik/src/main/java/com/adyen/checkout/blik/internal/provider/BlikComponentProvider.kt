@@ -62,7 +62,11 @@ class BlikComponentProvider(
         BlikConfiguration,
         BlikComponentState,
         ComponentCallback<BlikComponentState>>,
-    StoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
+    StoredPaymentComponentProvider<
+        BlikComponent,
+        BlikConfiguration,
+        BlikComponentState,
+        ComponentCallback<BlikComponentState>>,
     SessionPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
     SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState> {
 
