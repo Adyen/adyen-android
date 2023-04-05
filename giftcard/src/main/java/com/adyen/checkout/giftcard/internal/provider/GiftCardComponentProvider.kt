@@ -40,6 +40,7 @@ import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
 import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
@@ -207,7 +208,11 @@ class GiftCardComponentProvider(
 
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
             .also { component ->
-                val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(component, componentCallback)
+                val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(
+                    component,
+                    // TODO remove casting after adding generic callback type
+                    componentCallback as SessionsGiftCardComponentCallback
+                )
                 component.observe(lifecycleOwner) {
                     component.componentEventHandler.onPaymentComponentEvent(it, internalComponentCallback)
                 }

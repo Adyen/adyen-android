@@ -11,6 +11,7 @@ package com.adyen.checkout.sessions.core.internal
 import android.os.Parcel
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
@@ -157,8 +158,10 @@ internal class SessionComponentEventHandlerTest(
             @Test
             fun `and result is NotFullyPaidOrder, then result should be propagated`() = runTest {
                 val result = createSessionPaymentResult()
+                val mockOrder = OrderRequest("psp", "orderdata")
+                val mockSessionModel = SessionModel("id", "data")
                 whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
-                    SessionCallResult.Payments.NotFullyPaidOrder(result)
+                    SessionCallResult.Payments.NotFullyPaidOrder(result, mockOrder, mockSessionModel)
                 val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(

@@ -11,7 +11,6 @@ package com.adyen.checkout.sessions.core
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
@@ -172,8 +171,6 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponent
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
     fun onOrderRequest(): Boolean = false
-
-    fun onOrderCancel(order: Order): Boolean = false // TODO remove this method?
 
     /**
      * Indicates that an API call is being executed by the component. Could be used to show a loading indicator in your

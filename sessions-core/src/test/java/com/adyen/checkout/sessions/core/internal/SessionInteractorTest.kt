@@ -130,18 +130,19 @@ internal class SessionInteractorTest(
 
                         val result = sessionInteractor.onPaymentsCallRequested(TEST_COMPONENT_STATE, { false }, "")
 
+                        val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                         val expectedResult = SessionCallResult.Payments.NotFullyPaidOrder(
                             SessionPaymentResult(
                                 sessionResult = mockResponse.sessionResult,
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
                                 order = mockResponse.order,
-                            )
+                            ),
+                            TEST_ORDER_REQUEST,
+                            expectedSessionModel
                         )
 
                         assertEquals(expectedResult, result)
-
-                        val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                         assertEquals(expectedSessionModel, expectMostRecentItem())
                     }
                 }

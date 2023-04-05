@@ -71,8 +71,7 @@ class SessionInteractor(
                         response.isRefusedInPartialPaymentFlow() ->
                             SessionCallResult.Payments.RefusedPartialPayment(response.mapToSessionPaymentResult())
                         action != null -> SessionCallResult.Payments.Action(action)
-                        response.order.isNonFullyPaid() ->
-                            SessionCallResult.Payments.NotFullyPaidOrder(response.mapToSessionPaymentResult())
+                        response.order.isNonFullyPaid() -> onNonFullyPaidOrder(response)
                         else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
                     }
                 },
@@ -268,6 +267,23 @@ class SessionInteractor(
 
     private fun updateSessionData(sessionData: String) {
         _sessionFlow.update { it.copy(sessionData = sessionData) }
+    }
+
+    private fun onNonFullyPaidOrder(response: SessionPaymentsResponse): SessionCallResult.Payments.NotFullyPaidOrder {
+        if (response.order != null) {
+            val orderRequest = OrderRequest(
+                orderData = response.order.orderData,
+                pspReference = response.order.pspReference
+            )
+            val sessionModel = SessionModel(sessionModel.id, response.sessionData)
+            return SessionCallResult.Payments.NotFullyPaidOrder(
+                result = response.mapToSessionPaymentResult(),
+                order = orderRequest,
+                sessionModel = sessionModel
+            )
+        }
+        // it's impossible for order to be null since we already check it where we call this function
+        throw CheckoutException("Order cannot be null.")
     }
 
     private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(

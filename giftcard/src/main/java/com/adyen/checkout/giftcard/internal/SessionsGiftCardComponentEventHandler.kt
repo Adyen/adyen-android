@@ -19,6 +19,7 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionPaymentResult
@@ -70,7 +71,7 @@ class SessionsGiftCardComponentEventHandler(
                     GiftCardAction.CheckBalance -> {
                         event.state.data.paymentMethod?.let {
                             checkBalance(it, sessionComponentCallback)
-                        }
+                        } ?: throw GiftCardException("Payment method is null.")
                     }
                     GiftCardAction.CreateOrder -> createOrder(sessionComponentCallback)
                     GiftCardAction.SendPayment -> onPaymentsCallRequested(event.state, sessionComponentCallback)
@@ -97,7 +98,9 @@ class SessionsGiftCardComponentEventHandler(
                 }
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result, sessionComponentCallback)
-                is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result, sessionComponentCallback)
+                is SessionCallResult.Payments.NotFullyPaidOrder -> {
+                    onPartialPayment(result, sessionComponentCallback)
+                }
                 is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(
                     result.result,
                     sessionComponentCallback
@@ -216,6 +219,18 @@ class SessionsGiftCardComponentEventHandler(
     ) {
         Logger.d(TAG, "Finished: ${result.resultCode}")
         sessionComponentCallback.onFinished(result)
+    }
+
+    private fun onPartialPayment(
+        sessionCallResult: SessionCallResult.Payments.NotFullyPaidOrder,
+        sessionComponentCallback: SessionsGiftCardComponentCallback
+    ) {
+        Logger.d(TAG, "Partial payment: ${sessionCallResult.result.order}")
+        sessionComponentCallback.onPartialPayment(
+            result = sessionCallResult.result,
+            order = sessionCallResult.order,
+            sessionModel = sessionCallResult.sessionModel
+        )
     }
 
     private fun setFlowTakenOver() {

@@ -48,6 +48,9 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     private val _events = MutableSharedFlow<GiftCardEvent>()
     internal val events: Flow<GiftCardEvent> = _events
 
+    private var order: Order? = null
+    private var sessionModel: SessionModel? = null
+
     private var currentSession: CheckoutSession? = null
 
     init {
@@ -67,7 +70,6 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         if (giftCardPaymentMethod == null) {
             _giftCardViewStateFlow.emit(GiftCardViewState.Error)
         } else {
-            currentSession = checkoutSession
             _giftCardComponentDataFlow.emit(
                 SessionsGiftCardComponentData(
                     checkoutSession = checkoutSession,
@@ -105,11 +107,13 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         sessionModel: SessionModel,
         order: Order? = null,
     ): CheckoutSession? {
-        return when (val result = CheckoutSessionProvider.createSession(
-            sessionModel = sessionModel,
-            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
-            order = order,
-        )) {
+        return when (
+            val result = CheckoutSessionProvider.createSession(
+                sessionModel = sessionModel,
+                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+                order = order
+            )
+        ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }
@@ -124,25 +128,32 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-         viewModelScope.launch {
-             val sessionModel = SessionModel(currentSession?.sessionSetupResponse?.id ?: "", result.sessionData)
-             val order = result.order?.let { Order(it.pspReference, it.orderData) }
-             currentSession = getCheckoutSession(sessionModel, order)
-             _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
-         }
+        viewModelScope.launch {
+            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
+        }
     }
 
     // no ops
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
+    override fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) {
+        this.order = order
+        this.sessionModel = sessionModel
+
+        viewModelScope.launch {
+            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
+        }
+    }
+
     fun reloadComponentWithOrder() {
         val giftCardComponentData = _giftCardComponentDataFlow.value
-        if (giftCardComponentData != null) {
+        val currentSession = this.currentSession
+        if (giftCardComponentData != null && currentSession != null) {
             viewModelScope.launch {
                 _events.emit(
                     GiftCardEvent.ReloadComponentSessions(
                         giftCardComponentData.copy(
-                            checkoutSession = currentSession!!
+                            checkoutSession = currentSession
                         )
                     )
                 )

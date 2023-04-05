@@ -11,6 +11,7 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
 import com.adyen.checkout.sessions.core.SessionComponentCallback
+import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import java.lang.ref.WeakReference
 
@@ -19,9 +20,10 @@ import java.lang.ref.WeakReference
  * [onBalance] methods so we can continue you the flow correctly with sessions. All other callback methods are
  * propagated to the merchants.
  */
+@Suppress("TooManyFunctions")
 internal class SessionsGiftCardComponentCallbackWrapper(
     component: GiftCardComponent,
-    private val componentCallback: SessionComponentCallback<GiftCardComponentState>,
+    private val componentCallback: SessionsGiftCardComponentCallback,
 ) : SessionsGiftCardComponentCallback {
 
     private val componentRef = WeakReference(component)
@@ -32,6 +34,10 @@ internal class SessionsGiftCardComponentCallbackWrapper(
 
     override fun onBalance(balanceResult: BalanceResult) {
         componentRef.get()?.resolveBalanceResult(balanceResult)
+    }
+
+    override fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) {
+        componentCallback.onPartialPayment(result, order, sessionModel)
     }
 
     override fun onStateChanged(state: GiftCardComponentState) {
@@ -64,10 +70,6 @@ internal class SessionsGiftCardComponentCallbackWrapper(
 
     override fun onOrderRequest(): Boolean {
         return componentCallback.onOrderRequest()
-    }
-
-    override fun onOrderCancel(order: Order): Boolean {
-        return componentCallback.onOrderCancel(order)
     }
 
     override fun onLoading(isLoading: Boolean) {
