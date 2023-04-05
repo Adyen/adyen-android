@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">검색...</string>
+    <string name="checkout_pay_by_bank_search">검색…</string>
     <string name="checkout_pay_by_bank_no_banks_found">검색한 내용에 일치하는 은행을 찾을 수 없습니다…</string>
 </resources>

@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">계속 진행하는 경우 %#이용약관%#에 동의하게 됩니다.</string>
+    <string name="checkout_online_banking_terms_and_conditions_text" formatted="false">계속 진행하는 경우 %#이용약관%#에 동의하게 됩니다.</string>
     <string name="checkout_online_banking_hint">은행 선택</string>
 </resources>

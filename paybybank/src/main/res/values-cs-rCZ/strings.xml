@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">Hledat...</string>
+    <string name="checkout_pay_by_bank_search">Hledat…</string>
     <string name="checkout_pay_by_bank_no_banks_found">Na váš vyhledávací dotaz nebyly nalezeny žádné banky…</string>
 </resources>

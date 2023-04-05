@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">Jatkamalla hyväksyt %#käyttöehdot%#</string>
+    <string name="checkout_online_banking_terms_and_conditions_text" formatted="false">Jatkamalla hyväksyt %#käyttöehdot%#</string>
     <string name="checkout_online_banking_hint">Valitse pankkisi</string>
 </resources>

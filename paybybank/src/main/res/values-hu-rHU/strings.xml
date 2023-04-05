@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">Keresés...</string>
+    <string name="checkout_pay_by_bank_search">Keresés…</string>
     <string name="checkout_pay_by_bank_no_banks_found">A keresési lekérdezéssel nem található bank…</string>
 </resources>

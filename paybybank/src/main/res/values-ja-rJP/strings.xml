@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">検索...</string>
+    <string name="checkout_pay_by_bank_search">検索…</string>
     <string name="checkout_pay_by_bank_no_banks_found">この検索クエリでは銀行は見つかりませんでした…</string>
 </resources>
