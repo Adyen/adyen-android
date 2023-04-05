@@ -72,7 +72,11 @@ class BlikComponentProvider(
         BlikConfiguration,
         BlikComponentState,
         SessionComponentCallback<BlikComponentState>>,
-    SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState> {
+    SessionStoredPaymentComponentProvider<
+        BlikComponent,
+        BlikConfiguration,
+        BlikComponentState,
+        SessionComponentCallback<BlikComponentState>> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
