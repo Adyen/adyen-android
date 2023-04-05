@@ -19,7 +19,7 @@ detekt {
 
     input = files("src")
 
-    config = files("$rootProject.rootDir/config/detekt/detekt-config.yml")
+    config = files("$rootProject.rootDir/config/detekt/detekt.yml")
     baseline = file("$rootProject.rootDir/config/detekt/detekt-baseline.xml")
 
     reports {

@@ -64,9 +64,10 @@ object LocaleUtil {
      */
     @JvmStatic
     fun isValidLocale(locale: Locale): Boolean {
+        @Suppress("SwallowedException")
         return try {
             Locale.Builder().setLocale(locale).build()
-            return true
+            true
         } catch (ex: IllformedLocaleException) {
             false
         }

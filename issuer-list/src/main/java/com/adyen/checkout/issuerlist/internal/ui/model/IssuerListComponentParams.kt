@@ -9,9 +9,9 @@
 package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import kotlinx.parcelize.Parcelize

@@ -9,10 +9,10 @@
 package com.adyen.checkout.cse.internal.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.UnencryptedCard
+import com.adyen.checkout.cse.internal.BaseCardEncrypter
 
 /**
  * Test implementation of [BaseCardEncrypter]. This class should never be used in not test code as it does not do

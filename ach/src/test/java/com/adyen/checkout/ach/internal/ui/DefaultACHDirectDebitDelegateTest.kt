@@ -262,9 +262,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { bankAccountNumber = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.bankAccountNumber.validation, Validation.Invalid(
-                    reason = R.string.checkout_ach_bank_account_number_invalid
-                )
+                outputData.bankAccountNumber.validation,
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_number_invalid)
             )
         }
 
@@ -282,9 +281,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { bankLocationId = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.bankLocationId.validation, Validation.Invalid(
-                    reason = R.string.checkout_ach_bank_account_location_invalid
-                )
+                outputData.bankLocationId.validation,
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_location_invalid)
             )
         }
 
@@ -302,9 +300,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { ownerName = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.ownerName.validation, Validation.Invalid(
-                    reason = R.string.checkout_ach_bank_account_holder_name_invalid
-                )
+                outputData.ownerName.validation,
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_holder_name_invalid)
             )
         }
     }
@@ -543,6 +540,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun createAddressOutputData(
         postalCode: FieldState<String> = FieldState("", Validation.Valid),
         street: FieldState<String> = FieldState("", Validation.Valid),
@@ -569,6 +567,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createAchDelegate(
         paymentMethod: PaymentMethod = PaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,

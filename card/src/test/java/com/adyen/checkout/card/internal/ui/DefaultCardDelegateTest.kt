@@ -41,13 +41,13 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.cse.internal.BaseGenericEncrypter
@@ -263,9 +263,8 @@ internal class DefaultCardDelegateTest(
                     assertEquals(addressInputModel.country, country.value)
                     assertEquals(expectedCountries, countryOptions)
                     assertEquals(
-                        stateOptions, AddressFormUtils.initializeStateOptions(
-                            TestAddressRepository.STATES
-                        )
+                        stateOptions,
+                        AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
                     )
                 }
             }
@@ -554,7 +553,6 @@ internal class DefaultCardDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-
                 val installmentModel = InstallmentModel(
                     textResId = R.string.checkout_card_installments_option_revolving,
                     value = 1,
@@ -966,6 +964,7 @@ internal class DefaultCardDelegateTest(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
@@ -1026,6 +1025,7 @@ internal class DefaultCardDelegateTest(
             .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
+    @Suppress("LongParameterList")
     private fun createOutputData(
         cardNumberState: FieldState<String> = FieldState(TEST_CARD_NUMBER, Validation.Valid),
         expiryDateState: FieldState<ExpiryDate> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
@@ -1085,6 +1085,7 @@ internal class DefaultCardDelegateTest(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createDetectedCardType(
         cardBrand: CardBrand = CardBrand(cardType = CardType.MASTERCARD),
         isReliable: Boolean = true,
@@ -1107,6 +1108,7 @@ internal class DefaultCardDelegateTest(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createAddressOutputData(
         postalCode: FieldState<String> = FieldState("", Validation.Valid),
         street: FieldState<String> = FieldState("", Validation.Valid),

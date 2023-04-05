@@ -15,12 +15,12 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import java.util.Locale
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.Locale
 
 internal class ACHDirectDebitComponentParamsMapperTest {
 
@@ -227,6 +227,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
     )
 
+    @Suppress("LongParameterList")
     private fun getAchComponentParams(
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,

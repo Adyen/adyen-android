@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.bacs
 
-import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 
 /**

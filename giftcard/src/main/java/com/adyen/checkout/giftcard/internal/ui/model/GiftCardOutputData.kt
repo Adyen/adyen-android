@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 

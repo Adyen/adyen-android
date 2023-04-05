@@ -15,9 +15,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.QrCodeAction
-import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository

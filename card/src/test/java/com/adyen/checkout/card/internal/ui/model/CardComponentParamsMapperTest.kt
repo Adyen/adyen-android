@@ -432,6 +432,7 @@ internal class CardComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1
     )
 
+    @Suppress("LongParameterList")
     private fun getCardComponentParams(
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,

@@ -21,6 +21,7 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.ActionDelegateProvider
 import com.adyen.checkout.action.internal.ui.DefaultGenericActionDelegate
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.action.QrCodeAction
@@ -30,7 +31,6 @@ import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.action.VoucherAction
-import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider

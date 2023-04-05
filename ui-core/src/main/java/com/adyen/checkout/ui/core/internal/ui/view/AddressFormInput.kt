@@ -142,7 +142,7 @@ class AddressFormInput @JvmOverloads constructor(
         this.localizedContext = localizedContext
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
         var isErrorFocused = isErrorFocusedPreviously
         val countryValidation = delegate.addressOutputData.country.validation

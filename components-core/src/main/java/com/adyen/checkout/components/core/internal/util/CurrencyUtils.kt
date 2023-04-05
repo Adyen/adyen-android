@@ -11,7 +11,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.Currency
@@ -19,7 +18,6 @@ import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CurrencyUtils {
-    private val TAG = LogUtil.getTag()
 
     /**
      * Format the [Amount] to be displayed to the user based on the Locale.

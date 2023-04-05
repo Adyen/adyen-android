@@ -63,7 +63,6 @@ fun getSessionRequest(
     isThreeds2Enabled: Boolean,
     isExecuteThreeD: Boolean,
     installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
-    force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false,
     shopperEmail: String? = null,
     allowedPaymentMethods: List<String>? = null,

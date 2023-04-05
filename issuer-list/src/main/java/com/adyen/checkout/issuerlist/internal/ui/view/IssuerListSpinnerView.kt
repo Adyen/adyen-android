@@ -14,11 +14,11 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
 internal class IssuerListSpinnerView @JvmOverloads constructor(
@@ -62,6 +62,7 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
         }
     }
 
+    @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
     private fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
     }

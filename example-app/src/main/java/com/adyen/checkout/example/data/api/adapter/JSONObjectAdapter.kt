@@ -17,7 +17,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class JSONObjectAdapter {
-    @Suppress("UNCHECKED_CAST")
+
+    @Suppress("UNCHECKED_CAST", "SwallowedException")
     @FromJson
     fun fromJson(reader: JsonReader): JSONObject? {
         return (reader.readJsonValue() as? Map<String, Any>)?.let { data ->

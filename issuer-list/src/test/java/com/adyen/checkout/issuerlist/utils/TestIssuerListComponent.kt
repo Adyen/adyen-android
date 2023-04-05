@@ -11,8 +11,8 @@ package com.adyen.checkout.issuerlist.utils
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.TestIssuerComponentState
+import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 internal class TestIssuerListComponent internal constructor(

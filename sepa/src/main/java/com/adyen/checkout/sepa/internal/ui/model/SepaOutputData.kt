@@ -7,8 +7,8 @@
  */
 package com.adyen.checkout.sepa.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.sepa.R
 

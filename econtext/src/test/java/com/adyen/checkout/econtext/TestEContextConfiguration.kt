@@ -17,7 +17,9 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
-internal class TestEContextConfiguration private constructor(
+internal class TestEContextConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val isSubmitButtonVisible: Boolean?,
     override val shopperLocale: Locale,
     override val environment: Environment,

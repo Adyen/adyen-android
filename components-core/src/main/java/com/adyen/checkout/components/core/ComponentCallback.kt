@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.components.core
 
-import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
+import com.adyen.checkout.components.core.internal.PaymentComponent
 import org.json.JSONObject
 
 /**

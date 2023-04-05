@@ -115,6 +115,7 @@ object Logger {
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun logToLogcat(@LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
         if (this.logLevel > logLevel) {
             return
@@ -122,18 +123,7 @@ object Logger {
 
         // Cut the message into multiple logs if it's too big
         if (msg.length > MAX_LOGCAT_MSG_SIZE) {
-            val divisions = msg.length / MAX_LOGCAT_MSG_SIZE
-            for (i in 0..divisions) {
-                val newMessage: String = if (i != divisions) {
-                    msg.substring(
-                        i * MAX_LOGCAT_MSG_SIZE,
-                        (i + 1) * MAX_LOGCAT_MSG_SIZE
-                    )
-                } else {
-                    msg.substring(i * MAX_LOGCAT_MSG_SIZE)
-                }
-                logToLogcat(logLevel, "$tag-$i", newMessage, tr)
-            }
+            logInChunks(logLevel, tag, msg, tr)
             return
         }
 
@@ -170,6 +160,21 @@ object Logger {
             }
             NONE -> {}
             else -> {}
+        }
+    }
+
+    private fun logInChunks(@LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
+        val divisions = msg.length / MAX_LOGCAT_MSG_SIZE
+        for (i in 0..divisions) {
+            val newMessage: String = if (i != divisions) {
+                msg.substring(
+                    i * MAX_LOGCAT_MSG_SIZE,
+                    (i + 1) * MAX_LOGCAT_MSG_SIZE
+                )
+            } else {
+                msg.substring(i * MAX_LOGCAT_MSG_SIZE)
+            }
+            logToLogcat(logLevel, "$tag-$i", newMessage, tr)
         }
     }
 }

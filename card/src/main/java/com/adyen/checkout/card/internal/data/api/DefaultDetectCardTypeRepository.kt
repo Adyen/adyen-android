@@ -10,15 +10,15 @@ package com.adyen.checkout.card.internal.data.api
 
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
-import com.adyen.checkout.card.internal.data.model.BinLookupResult
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
+import com.adyen.checkout.card.internal.data.model.BinLookupResult
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.Sha256
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.Sha256
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import kotlinx.coroutines.CoroutineScope

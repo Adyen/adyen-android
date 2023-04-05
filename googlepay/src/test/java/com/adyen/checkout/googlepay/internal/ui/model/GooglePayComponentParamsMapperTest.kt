@@ -62,7 +62,9 @@ internal class GooglePayComponentParamsMapperTest {
         val billingAddressParameters = BillingAddressParameters("FORMAT", true)
 
         val googlePayConfiguration = GooglePayConfiguration.Builder(
-            shopperLocale = Locale.FRANCE, environment = Environment.APSE, clientKey = TEST_CLIENT_KEY_2
+            shopperLocale = Locale.FRANCE,
+            environment = Environment.APSE,
+            clientKey = TEST_CLIENT_KEY_2
         ).setAmount(amount).setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
             .setMerchantAccount("MERCHANT_ACCOUNT").setAllowPrepaidCards(true).setCountryCode("ZZ")
             .setMerchantInfo(merchantInfo).setAllowedAuthMethods(allowedAuthMethods)
@@ -140,7 +142,9 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when merchantAccount is set in googlePayConfiguration then it takes priority over gatewayMerchantId in the paymentMethod configuration`() {
         val googlePayConfiguration = GooglePayConfiguration.Builder(
-            shopperLocale = Locale.US, environment = Environment.TEST, clientKey = TEST_CLIENT_KEY_1
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1
         ).setMerchantAccount("GATEWAY_MERCHANT_ID_1").build()
 
         val paymentMethod = PaymentMethod(
@@ -161,7 +165,9 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when merchantAccount is not set in googlePayConfiguration then gatewayMerchantId in the paymentMethod configuration is used`() {
         val googlePayConfiguration = GooglePayConfiguration.Builder(
-            shopperLocale = Locale.US, environment = Environment.TEST, clientKey = TEST_CLIENT_KEY_1
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1
         ).build()
 
         val paymentMethod = PaymentMethod(
@@ -182,7 +188,9 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when neither merchantAccount in googlePayConfiguration nor gatewayMerchantId in the paymentMethod configuration is set then exception is thrown`() {
         val googlePayConfiguration = GooglePayConfiguration.Builder(
-            shopperLocale = Locale.US, environment = Environment.TEST, clientKey = TEST_CLIENT_KEY_1
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1
         ).build()
 
         assertThrows<ComponentException> {
@@ -239,7 +247,9 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when google pay environment is not set and environment is a live one then google pay environment should be ENVIRONMENT_PRODUCTION`() {
         val googlePayConfiguration = GooglePayConfiguration.Builder(
-            shopperLocale = Locale.CHINA, environment = Environment.UNITED_STATES, clientKey = TEST_CLIENT_KEY_2
+            shopperLocale = Locale.CHINA,
+            environment = Environment.UNITED_STATES,
+            clientKey = TEST_CLIENT_KEY_2
         ).setMerchantAccount(TEST_GATEWAY_MERCHANT_ID).build()
 
         val params =
@@ -362,9 +372,12 @@ internal class GooglePayComponentParamsMapperTest {
     }
 
     private fun getGooglePayConfigurationBuilder() = GooglePayConfiguration.Builder(
-        shopperLocale = Locale.US, environment = Environment.TEST, clientKey = TEST_CLIENT_KEY_1
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY_1
     ).setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
 
+    @Suppress("LongParameterList")
     private fun getGooglePayComponentParams(
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,

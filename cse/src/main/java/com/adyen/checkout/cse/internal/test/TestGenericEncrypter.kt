@@ -9,8 +9,8 @@
 package com.adyen.checkout.cse.internal.test
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 
 /**
  * Test implementation of [BaseGenericEncrypter]. This class should never be used in not test code as it does not do
