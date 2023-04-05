@@ -65,7 +65,7 @@ abstract class OnlineBankingComponentProvider<
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)

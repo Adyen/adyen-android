@@ -60,8 +60,15 @@ class BcmcComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState>,
-    SessionPaymentComponentProvider<BcmcComponent, BcmcConfiguration, BcmcComponentState> {
+    PaymentComponentProvider<
+        BcmcComponent,
+        BcmcConfiguration,
+        BcmcComponentState,
+        ComponentCallback<BcmcComponentState>>,
+    SessionPaymentComponentProvider<
+        BcmcComponent,
+        BcmcConfiguration, BcmcComponentState
+        > {
 
     private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

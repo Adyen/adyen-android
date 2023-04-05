@@ -65,7 +65,7 @@ abstract class IssuerListComponentProvider<
     overrideSessionParams: SessionParams?,
     hideIssuerLogosDefaultValue: Boolean = false,
 ) :
-    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+    PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = IssuerListComponentParamsMapper(

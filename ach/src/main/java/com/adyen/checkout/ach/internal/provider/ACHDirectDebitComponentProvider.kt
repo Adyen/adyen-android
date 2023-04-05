@@ -67,7 +67,8 @@ class ACHDirectDebitComponentProvider(
     PaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        ACHDirectDebitComponentState
+        ACHDirectDebitComponentState,
+        ComponentCallback<ACHDirectDebitComponentState>
         >,
     StoredPaymentComponentProvider<
         ACHDirectDebitComponent,

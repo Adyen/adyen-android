@@ -53,7 +53,11 @@ class SepaComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<SepaComponent, SepaConfiguration, SepaComponentState>,
+    PaymentComponentProvider<
+        SepaComponent,
+        SepaConfiguration,
+        SepaComponentState,
+        ComponentCallback<SepaComponentState>>,
     SessionPaymentComponentProvider<SepaComponent, SepaConfiguration, SepaComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)

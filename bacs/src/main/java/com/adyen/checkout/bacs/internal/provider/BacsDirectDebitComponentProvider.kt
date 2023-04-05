@@ -56,7 +56,8 @@ class BacsDirectDebitComponentProvider(
     PaymentComponentProvider<
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
-        BacsDirectDebitComponentState>,
+        BacsDirectDebitComponentState,
+        ComponentCallback<BacsDirectDebitComponentState>>,
     SessionPaymentComponentProvider<
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,

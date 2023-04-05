@@ -63,7 +63,11 @@ class GooglePayComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
+    PaymentComponentProvider<
+        GooglePayComponent,
+        GooglePayConfiguration,
+        GooglePayComponentState,
+        ComponentCallback<GooglePayComponentState>>,
     SessionPaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 

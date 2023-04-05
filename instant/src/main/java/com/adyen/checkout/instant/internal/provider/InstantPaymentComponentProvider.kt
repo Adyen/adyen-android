@@ -56,7 +56,8 @@ class InstantPaymentComponentProvider(
     PaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
-        InstantComponentState>,
+        InstantComponentState,
+        ComponentCallback<InstantComponentState>>,
     SessionPaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,

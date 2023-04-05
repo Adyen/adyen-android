@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -38,6 +37,7 @@ import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
@@ -60,7 +60,11 @@ class GiftCardComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState>,
+    PaymentComponentProvider<
+        GiftCardComponent,
+        GiftCardConfiguration,
+        GiftCardComponentState,
+        GiftCardComponentCallback>,
     SessionPaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
@@ -72,7 +76,7 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<GiftCardComponentState>,
+        componentCallback: GiftCardComponentCallback,
         order: Order?,
         key: String?,
     ): GiftCardComponent {

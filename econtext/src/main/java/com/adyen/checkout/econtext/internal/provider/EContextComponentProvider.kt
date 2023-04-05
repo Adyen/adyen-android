@@ -58,12 +58,12 @@ abstract class EContextComponentProvider<
     ComponentT : EContextComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : EContextConfiguration,
     PaymentMethodT : EContextPaymentMethod,
-    ComponentStateT : PaymentComponentState<PaymentMethodT>
+    ComponentStateT : PaymentComponentState<PaymentMethodT>,
     >(
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams?,
     overrideSessionParams: SessionParams?,
-) : PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT>,
+) : PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)

@@ -57,7 +57,11 @@ class BlikComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
+    PaymentComponentProvider<
+        BlikComponent,
+        BlikConfiguration,
+        BlikComponentState,
+        ComponentCallback<BlikComponentState>>,
     StoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
     SessionPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState>,
     SessionStoredPaymentComponentProvider<BlikComponent, BlikConfiguration, BlikComponentState> {

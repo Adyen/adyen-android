@@ -67,7 +67,7 @@ import com.adyen.checkout.eps.EPSComponentState
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.internal.provider.EPSComponentProvider
 import com.adyen.checkout.giftcard.GiftCardComponent
-import com.adyen.checkout.giftcard.GiftCardComponentState
+import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
@@ -572,7 +572,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = giftcardConfiguration,
-                callback = componentCallback as ComponentCallback<GiftCardComponentState>,
+                callback = componentCallback as GiftCardComponentCallback,
             )
         }
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

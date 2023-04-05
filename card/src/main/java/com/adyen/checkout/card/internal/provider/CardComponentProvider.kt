@@ -68,7 +68,11 @@ class CardComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    PaymentComponentProvider<
+        CardComponent,
+        CardConfiguration,
+        CardComponentState,
+        ComponentCallback<CardComponentState>>,
     StoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
