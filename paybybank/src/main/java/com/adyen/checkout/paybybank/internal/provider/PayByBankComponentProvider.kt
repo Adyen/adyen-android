@@ -58,7 +58,11 @@ class PayByBankComponentProvider(
         PayByBankConfiguration,
         PayByBankComponentState,
         ComponentCallback<PayByBankComponentState>>,
-    SessionPaymentComponentProvider<PayByBankComponent, PayByBankConfiguration, PayByBankComponentState> {
+    SessionPaymentComponentProvider<
+        PayByBankComponent,
+        PayByBankConfiguration,
+        PayByBankComponentState,
+        SessionComponentCallback<PayByBankComponentState>> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

@@ -54,7 +54,11 @@ class UPIComponentProvider(
     overrideSessionParams: SessionParams? = null,
 ) :
     PaymentComponentProvider<UPIComponent, UPIConfiguration, UPIComponentState, ComponentCallback<UPIComponentState>>,
-    SessionPaymentComponentProvider<UPIComponent, UPIConfiguration, UPIComponentState> {
+    SessionPaymentComponentProvider<
+        UPIComponent,
+        UPIConfiguration,
+        UPIComponentState,
+        SessionComponentCallback<UPIComponentState>> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

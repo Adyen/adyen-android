@@ -61,7 +61,8 @@ class InstantPaymentComponentProvider(
     SessionPaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
-        InstantComponentState> {
+        InstantComponentState,
+        SessionComponentCallback<InstantComponentState>> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

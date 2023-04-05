@@ -46,7 +46,6 @@ import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWra
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
-import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
@@ -65,7 +64,11 @@ class GiftCardComponentProvider(
         GiftCardConfiguration,
         GiftCardComponentState,
         GiftCardComponentCallback>,
-    SessionPaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState> {
+    SessionPaymentComponentProvider<
+        GiftCardComponent,
+        GiftCardConfiguration,
+        GiftCardComponentState,
+        SessionsGiftCardComponentCallback> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
@@ -141,7 +144,7 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<GiftCardComponentState>,
+        componentCallback: SessionsGiftCardComponentCallback,
         key: String?
     ): GiftCardComponent {
         assertSupported(paymentMethod)
@@ -214,8 +217,7 @@ class GiftCardComponentProvider(
             .also { component ->
                 val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(
                     component,
-                    // TODO remove casting after adding generic callback type
-                    componentCallback as SessionsGiftCardComponentCallback
+                    componentCallback
                 )
                 component.observe(lifecycleOwner) {
                     component.componentEventHandler.onPaymentComponentEvent(it, internalComponentCallback)

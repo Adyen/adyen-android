@@ -78,7 +78,11 @@ class CardComponentProvider(
         CardConfiguration,
         CardComponentState,
         ComponentCallback<CardComponentState>>,
-    SessionPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState>,
+    SessionPaymentComponentProvider<
+        CardComponent,
+        CardConfiguration,
+        CardComponentState,
+        SessionComponentCallback<CardComponentState>>,
     SessionStoredPaymentComponentProvider<CardComponent, CardConfiguration, CardComponentState> {
 
     private val componentParamsMapper = CardComponentParamsMapper(

@@ -68,7 +68,11 @@ class GooglePayComponentProvider(
         GooglePayConfiguration,
         GooglePayComponentState,
         ComponentCallback<GooglePayComponentState>>,
-    SessionPaymentComponentProvider<GooglePayComponent, GooglePayConfiguration, GooglePayComponentState>,
+    SessionPaymentComponentProvider<
+        GooglePayComponent,
+        GooglePayConfiguration,
+        GooglePayComponentState,
+        SessionComponentCallback<GooglePayComponentState>>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
     private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams, overrideSessionParams)
