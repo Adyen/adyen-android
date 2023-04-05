@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout MOLPay component client for Adyen
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.molpay'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

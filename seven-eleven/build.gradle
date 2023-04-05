@@ -12,6 +12,7 @@ ext.mavenArtifactDescription = "Adyen checkout Seven Eleven Component client for
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.seveneleven'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

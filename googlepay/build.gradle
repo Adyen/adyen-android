@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout Google Pay component client for A
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.googlepay'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

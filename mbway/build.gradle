@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout MB WAY component client for Adyen
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.mbway'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

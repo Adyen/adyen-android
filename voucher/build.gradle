@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout voucher component for Adyen's Che
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.voucher'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

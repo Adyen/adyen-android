@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout WeChat Pay component client for A
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.wechatpay'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout EPS component client for Adyen's 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.eps'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

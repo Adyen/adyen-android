@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout BACS Direct Debit component clien
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.bacs'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
