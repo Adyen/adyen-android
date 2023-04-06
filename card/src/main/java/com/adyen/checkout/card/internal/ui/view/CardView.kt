@@ -43,7 +43,6 @@ import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
-import com.adyen.checkout.components.core.internal.ui.model.ComponentMode
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.exception.CheckoutException
@@ -172,8 +171,6 @@ internal class CardView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(cardOutputData: CardOutputData) {
-        if (isStoredPaymentMethod(cardOutputData)) setStoredCardInterface(cardOutputData)
-
         onCardNumberValidated(cardOutputData)
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
@@ -358,7 +355,6 @@ internal class CardView @JvmOverloads constructor(
 
     private fun setCardErrorState(hasFocus: Boolean) {
         val outputData = cardDelegate.outputData
-        if (isStoredPaymentMethod(outputData)) return
 
         val cardNumberValidation = outputData.cardNumberState.validation
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
@@ -697,24 +693,6 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setStoredCardInterface(outputData: CardOutputData) {
-        binding.editTextCardNumber.isEnabled = false
-        binding.editTextCardNumber.setText(
-            localizedContext.getString(
-                R.string.card_number_4digit,
-                outputData.cardNumberState.value
-            )
-        )
-        binding.editTextExpiryDate.isEnabled = false
-        binding.editTextExpiryDate.date = outputData.expiryDateState.value
-        binding.switchStorePaymentMethod.isVisible = false
-        binding.textInputLayoutCardHolder.isVisible = false
-        binding.textInputLayoutPostalCode.isVisible = false
-        binding.addressFormInput.isVisible = false
-
-        binding.textInputLayoutSecurityCode.takeIf { isVisible }?.requestFocus()
-    }
-
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
             cardDelegate.updateInputData { installmentOption = it }
@@ -738,10 +716,6 @@ internal class CardView @JvmOverloads constructor(
             }
             cardListAdapter?.submitList(cards)
         }
-    }
-
-    private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {
-        return outputData.componentMode == ComponentMode.STORED
     }
 
     override fun getView(): View = this
