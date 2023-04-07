@@ -11,7 +11,7 @@
     <string name="card_component_with_session_entry">Card</string>
     <string name="card_component_with_session_taken_over_entry">Card (take over)</string>
     <string name="gift_card_component_entry">Gift Card</string>
-    <string name="gift_card_with_session_component_entry">Gift Card with session</string>
+    <string name="gift_card_with_session_component_entry">Gift Card</string>
 
     <string name="country_code_error">Your country code must be %s</string>
     <string name="currency_code_error">Your currency code must be %s</string>
