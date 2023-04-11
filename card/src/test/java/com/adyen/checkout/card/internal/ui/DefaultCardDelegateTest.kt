@@ -567,7 +567,7 @@ internal class DefaultCardDelegateTest(
                     socialSecurityNumber = "123.123.123-12"
                     kcpBirthDateOrTaxNumber = "9011672845"
                     kcpCardPassword = "12"
-                    isStorePaymentSelected = true
+                    isStorePaymentMethodSwitchChecked = true
                     selectedCardIndex = 0
                     installmentOption = installmentModel
                     address.apply {
@@ -623,7 +623,7 @@ internal class DefaultCardDelegateTest(
                     kcpCardPasswordState = FieldState("12", Validation.Valid),
                     installmentState = FieldState(installmentModel, Validation.Valid),
                     addressState = expectedAddressOutputData,
-                    isStoredPaymentMethodEnable = true,
+                    shouldStorePaymentMethod = true,
                     cvcUIState = InputFieldUIState.HIDDEN,
                     expiryDateUIState = InputFieldUIState.REQUIRED,
                     holderNameUIState = InputFieldUIState.REQUIRED,
@@ -815,7 +815,7 @@ internal class DefaultCardDelegateTest(
                         kcpCardPasswordState = FieldState("12", Validation.Valid),
                         addressState = addressOutputData,
                         installmentState = FieldState(installmentModel, Validation.Valid),
-                        isStoredPaymentMethodEnable = true,
+                        shouldStorePaymentMethod = true,
                         cvcUIState = InputFieldUIState.REQUIRED,
                         expiryDateUIState = InputFieldUIState.REQUIRED,
                         detectedCardTypes = detectedCardTypes,
@@ -1036,7 +1036,7 @@ internal class DefaultCardDelegateTest(
         kcpCardPasswordState: FieldState<String> = FieldState("", Validation.Valid),
         addressState: AddressOutputData = createAddressOutputData(),
         installmentState: FieldState<InstallmentModel?> = FieldState(null, Validation.Valid),
-        isStoredPaymentMethodEnable: Boolean = false,
+        shouldStorePaymentMethod: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
@@ -1068,7 +1068,7 @@ internal class DefaultCardDelegateTest(
             kcpCardPasswordState = kcpCardPasswordState,
             addressState = addressState,
             installmentState = installmentState,
-            isStoredPaymentMethodEnable = isStoredPaymentMethodEnable,
+            shouldStorePaymentMethod = shouldStorePaymentMethod,
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
             holderNameUIState = holderNameUIState,

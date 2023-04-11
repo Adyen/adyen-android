@@ -352,13 +352,13 @@ internal class DefaultBcmcDelegateTest(
         cardNumber: FieldState<String>,
         expiryDate: FieldState<ExpiryDate>,
         cardHolder: FieldState<String>,
-        isStoredPaymentMethodEnable: Boolean = false
+        shouldStorePaymentMethod: Boolean = false
     ): BcmcOutputData {
         return BcmcOutputData(
             cardNumber,
             expiryDate,
             cardHolder,
-            isStoredPaymentMethodEnable
+            shouldStorePaymentMethod
         )
     }
 

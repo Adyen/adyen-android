@@ -136,7 +136,7 @@ internal class StoredACHDirectDebitDelegate(
             ownerName = FieldState(ownerName, Validation.Valid),
             addressState = AddressValidationUtils.makeValidEmptyAddressOutput(inputData.address),
             addressUIState = AddressFormUIState.NONE,
-            isStoredPaymentMethodEnabled = isStorePaymentSelected,
+            shouldStorePaymentMethod = isStorePaymentMethodSwitchChecked,
             showStorePaymentField = false,
         )
     }

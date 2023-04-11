@@ -160,7 +160,7 @@ internal class DefaultBcmcDelegate(
         cardNumberField = validateCardNumber(inputData.cardNumber),
         expiryDateField = CardValidationUtils.validateExpiryDate(inputData.expiryDate, Brand.FieldPolicy.REQUIRED),
         cardHolderNameField = validateHolderName(inputData.cardHolderName),
-        isStoredPaymentMethodEnabled = inputData.isStorePaymentSelected
+        shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked
     )
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
@@ -229,7 +229,7 @@ internal class DefaultBcmcDelegate(
         }
         paymentComponentData.apply {
             paymentMethod = cardPaymentMethod
-            storePaymentMethod = outputData.isStoredPaymentMethodEnabled
+            storePaymentMethod = outputData.shouldStorePaymentMethod
             shopperReference = componentParams.shopperReference
         }
 

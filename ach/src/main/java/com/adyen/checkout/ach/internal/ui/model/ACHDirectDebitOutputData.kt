@@ -19,7 +19,7 @@ internal data class ACHDirectDebitOutputData(
     var ownerName: FieldState<String>,
     val addressState: AddressOutputData,
     val addressUIState: AddressFormUIState,
-    val isStoredPaymentMethodEnabled: Boolean,
+    val shouldStorePaymentMethod: Boolean,
     val showStorePaymentField: Boolean,
 ) : OutputData {
 

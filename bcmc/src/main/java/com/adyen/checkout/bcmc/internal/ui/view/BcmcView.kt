@@ -138,7 +138,7 @@ internal class BcmcView @JvmOverloads constructor(
     private fun initStorePaymentMethodSwitch() {
         binding.switchStorePaymentMethod.isVisible = delegate.componentParams.isStorePaymentFieldVisible
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            delegate.updateInputData { isStorePaymentSelected = isChecked }
+            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
         }
     }
 

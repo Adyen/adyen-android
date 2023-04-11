@@ -65,7 +65,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
         initAccountHolderName()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            delegate.updateInputData { isStorePaymentSelected = isChecked }
+            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
         }
     }
 

@@ -25,7 +25,7 @@ internal data class CardOutputData(
     val kcpCardPasswordState: FieldState<String>,
     val addressState: AddressOutputData,
     val installmentState: FieldState<InstallmentModel?>,
-    val isStoredPaymentMethodEnable: Boolean,
+    val shouldStorePaymentMethod: Boolean,
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
     val holderNameUIState: InputFieldUIState,
