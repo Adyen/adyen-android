@@ -25,7 +25,7 @@ import org.json.JSONObject
 @Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var paymentMethod: PaymentMethodDetailsT? = null,
-    var storePaymentMethod: Boolean = false,
+    var storePaymentMethod: Boolean? = null,
     var shopperReference: String? = null,
     var amount: Amount? = null,
     var billingAddress: Address? = null,

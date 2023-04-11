@@ -304,7 +304,7 @@ internal class StoredCardDelegateTest(
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
-                    assertFalse(storePaymentMethod)
+                    assertNull(storePaymentMethod)
                     assertEquals(TEST_ORDER, order)
                     assertNull(shopperReference)
                     assertNull(socialSecurityNumber)

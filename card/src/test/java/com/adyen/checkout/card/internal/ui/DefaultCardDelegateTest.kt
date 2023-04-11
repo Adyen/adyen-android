@@ -740,7 +740,7 @@ internal class DefaultCardDelegateTest(
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
-                    assertFalse(storePaymentMethod)
+                    assertEquals(false, storePaymentMethod)
                     assertNull(shopperReference)
                     assertNull(socialSecurityNumber)
                     assertNull(billingAddress)
@@ -843,7 +843,7 @@ internal class DefaultCardDelegateTest(
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
-                    assertTrue(storePaymentMethod)
+                    assertEquals(true, storePaymentMethod)
                     assertEquals("shopper_android", shopperReference)
                     assertEquals("0108", socialSecurityNumber)
                     assertEquals(expectedAddress, billingAddress)
