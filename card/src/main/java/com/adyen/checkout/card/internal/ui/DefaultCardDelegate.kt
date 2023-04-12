@@ -697,7 +697,7 @@ internal class DefaultCardDelegate(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData(
             paymentMethod = cardPaymentMethod,
-            storePaymentMethod = stateOutputData.shouldStorePaymentMethod,
+            storePaymentMethod = if (showStorePaymentField()) stateOutputData.shouldStorePaymentMethod else null,
             shopperReference = componentParams.shopperReference,
             order = order,
         ).apply {

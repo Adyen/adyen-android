@@ -160,7 +160,8 @@ internal class DefaultBcmcDelegate(
         cardNumberField = validateCardNumber(inputData.cardNumber),
         expiryDateField = CardValidationUtils.validateExpiryDate(inputData.expiryDate, Brand.FieldPolicy.REQUIRED),
         cardHolderNameField = validateHolderName(inputData.cardHolderName),
-        shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked
+        shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
+        showStorePaymentField = showStorePaymentField(),
     )
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
@@ -181,6 +182,10 @@ internal class DefaultBcmcDelegate(
                 Validation.Valid
             )
         }
+    }
+
+    private fun showStorePaymentField(): Boolean {
+        return componentParams.isStorePaymentFieldVisible
     }
 
     @VisibleForTesting
@@ -229,7 +234,7 @@ internal class DefaultBcmcDelegate(
         }
         paymentComponentData.apply {
             paymentMethod = cardPaymentMethod
-            storePaymentMethod = outputData.shouldStorePaymentMethod
+            storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null
             shopperReference = componentParams.shopperReference
         }
 

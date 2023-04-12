@@ -296,7 +296,7 @@ internal class DefaultACHDirectDebitDelegate(
             )
             val paymentComponentData = PaymentComponentData(
                 order = order,
-                storePaymentMethod = outputData.shouldStorePaymentMethod,
+                storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
                 paymentMethod = achPaymentMethod
             )
 

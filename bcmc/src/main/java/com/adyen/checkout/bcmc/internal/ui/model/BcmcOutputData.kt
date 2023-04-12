@@ -15,7 +15,8 @@ internal data class BcmcOutputData internal constructor(
     val cardNumberField: FieldState<String>,
     val expiryDateField: FieldState<ExpiryDate>,
     val cardHolderNameField: FieldState<String>,
-    val shouldStorePaymentMethod: Boolean
+    val showStorePaymentField: Boolean,
+    val shouldStorePaymentMethod: Boolean,
 ) : OutputData {
     override val isValid: Boolean
         get() = (
