@@ -48,9 +48,6 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     private val _events = MutableSharedFlow<GiftCardEvent>()
     internal val events: Flow<GiftCardEvent> = _events
 
-    private var order: Order? = null
-    private var sessionModel: SessionModel? = null
-
     private var currentSession: CheckoutSession? = null
 
     init {
@@ -137,10 +134,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
     override fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) {
-        this.order = order
-        this.sessionModel = sessionModel
-
         viewModelScope.launch {
+            currentSession = getCheckoutSession(sessionModel, order)
             _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
         }
     }
