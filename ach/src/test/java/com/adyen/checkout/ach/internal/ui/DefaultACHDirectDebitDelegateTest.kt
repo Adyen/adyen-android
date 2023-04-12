@@ -50,6 +50,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -486,6 +489,47 @@ internal class DefaultACHDirectDebitDelegateTest(
                     assertEquals(paymentMethod?.encryptedBankAccountNumber, TEST_BANK_ACCOUNT_NUMBER)
                 }
             }
+
+        @ParameterizedTest
+        @MethodSource(
+            "com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegateTest#shouldStorePaymentMethodSource"
+        )
+        fun `storePaymentMethod in component state should match store switch visibility and state`(
+            isStorePaymentMethodSwitchVisible: Boolean,
+            isStorePaymentMethodSwitchChecked: Boolean,
+            expectedStorePaymentMethod: Boolean?,
+        ) = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val configuration = getAchConfigurationBuilder()
+                .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
+                .build()
+            delegate = createAchDelegate(configuration = configuration)
+
+            val adddressInputModel = AddressInputModel(
+                postalCode = "34220",
+                street = "Street Name",
+                stateOrProvince = "province",
+                houseNumberOrName = "44",
+                apartmentSuite = "aparment",
+                city = "Istanbul",
+                country = "Turkey"
+            )
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                ownerName = TEST_OWNER_NAME
+                address = adddressInputModel
+                this.isStorePaymentMethodSwitchChecked = isStorePaymentMethodSwitchChecked
+            }
+
+            val componentState = delegate.componentStateFlow.first()
+
+            assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
+        }
     }
 
     @Nested
@@ -602,5 +646,14 @@ internal class DefaultACHDirectDebitDelegateTest(
         private const val TEST_OWNER_NAME = "Joseph"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
+
+        @JvmStatic
+        fun shouldStorePaymentMethodSource() = listOf(
+            // isStorePaymentMethodSwitchVisible, isStorePaymentMethodSwitchChecked, expectedStorePaymentMethod
+            arguments(false, false, null),
+            arguments(false, true, null),
+            arguments(true, false, false),
+            arguments(true, true, true),
+        )
     }
 }
