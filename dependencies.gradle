@@ -41,7 +41,7 @@ ext {
     constraintlayout_version = '2.1.4'
 
     // Adyen Dependencies
-    adyen3ds2_version = "2.2.12"
+    adyen3ds2_version = "2.2.13"
 
     // External Dependencies
     okhttp_version = "4.10.0"
