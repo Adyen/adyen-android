@@ -12,7 +12,7 @@ import android.os.CountDownTimer
 
 internal class QRCodeCountDownTimer {
 
-    private lateinit var countDownTimer: CountDownTimer
+    private var countDownTimer: CountDownTimer? = null
 
     fun attach(
         millisInFuture: Long,
@@ -29,10 +29,10 @@ internal class QRCodeCountDownTimer {
     }
 
     fun start() {
-        countDownTimer.start()
+        countDownTimer?.start()
     }
 
     fun cancel() {
-        countDownTimer.cancel()
+        countDownTimer?.cancel()
     }
 }
