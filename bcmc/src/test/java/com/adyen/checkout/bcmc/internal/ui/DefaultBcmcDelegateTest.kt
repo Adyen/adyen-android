@@ -213,7 +213,8 @@ internal class DefaultBcmcDelegateTest(
                 delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(
-                            "12345678", Validation.Invalid(R.string.checkout_card_number_not_valid)
+                            "12345678",
+                            Validation.Invalid(R.string.checkout_card_number_not_valid)
                         ),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
                         cardHolder = FieldState("Name", Validation.Valid)

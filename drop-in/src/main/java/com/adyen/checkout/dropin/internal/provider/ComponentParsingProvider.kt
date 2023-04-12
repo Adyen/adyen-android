@@ -33,17 +33,17 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.ComponentAvailableCallback
+import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
-import com.adyen.checkout.components.core.ComponentAvailableCallback
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
@@ -191,7 +191,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     return builder.build() as T
 }
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
@@ -345,6 +345,7 @@ private inline fun <reified T : Configuration> getConfigurationForPaymentMethodO
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
 ): T? {
+    @Suppress("SwallowedException")
     return try {
         getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
     } catch (e: CheckoutException) {
@@ -462,7 +463,7 @@ internal fun getComponentFor(
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("LongMethod", "UNCHECKED_CAST", "LongParameterList")
+@Suppress("LongMethod", "UNCHECKED_CAST", "LongParameterList", "CyclomaticComplexMethod")
 internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,

@@ -586,7 +586,8 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        private val TEST_FINGERPRINT_TOKEN = """
+        private val TEST_FINGERPRINT_TOKEN =
+            """
             {
                 "directoryServerId":"id",
                 "directoryServerPublicKey":"key",

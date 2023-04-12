@@ -23,7 +23,11 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 // Do not remove localizedContext! It's not used at the moment, however it is kept to prevent usage of context
 // in case of the need to read strings.
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CountryAdapter(private val context: Context, private val localizedContext: Context) : BaseAdapter(), Filterable {
+class CountryAdapter(
+    private val context: Context,
+    @Suppress("UnusedPrivateMember")
+    private val localizedContext: Context
+) : BaseAdapter(), Filterable {
 
     private val countries: MutableList<CountryModel> = mutableListOf()
     private val countryFilter: CountryFilter = CountryFilter(countries)

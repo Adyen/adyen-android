@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout base UI component client for Adye
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.ui.core'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

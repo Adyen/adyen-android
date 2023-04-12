@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout Online Banking Czech Republic com
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.onlinebankingcz'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout Card component client for Adyen's
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.card'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">Hae...</string>
+    <string name="checkout_pay_by_bank_search">Hae…</string>
     <string name="checkout_pay_by_bank_no_banks_found">Hakukyselylläsi ei löytynyt yhtään pankkia.</string>
 </resources>

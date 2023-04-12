@@ -33,6 +33,7 @@ fun JSONObject.getIntOrNull(key: String): Int? {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.toStringPretty(): String {
+    @Suppress("SwallowedException")
     return try {
         toString(INDENTATION_SPACES)
     } catch (e: JSONException) {
@@ -52,6 +53,7 @@ fun JSONObject.optIntList(key: String): List<Int>? {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONArray.toStringPretty(): String {
+    @Suppress("SwallowedException")
     return try {
         toString(INDENTATION_SPACES)
     } catch (e: JSONException) {

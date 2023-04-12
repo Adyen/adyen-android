@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">Αναζήτηση...</string>
+    <string name="checkout_pay_by_bank_search">Αναζήτηση…</string>
     <string name="checkout_pay_by_bank_no_banks_found">Δεν βρέθηκαν τράπεζες που αντιστοιχούν στον όρο αναζήτησης…</string>
 </resources>

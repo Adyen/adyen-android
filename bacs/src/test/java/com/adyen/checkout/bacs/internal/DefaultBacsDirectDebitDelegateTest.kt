@@ -366,8 +366,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = false,
                         mode = BacsDirectDebitMode.CONFIRMATION,
-
-                        )
+                    )
                 )
 
                 with(expectMostRecentItem()) {

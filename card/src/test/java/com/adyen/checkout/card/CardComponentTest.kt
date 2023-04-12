@@ -15,11 +15,11 @@ import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
 import com.adyen.checkout.card.internal.ui.CardComponentViewType
 import com.adyen.checkout.card.internal.ui.CardDelegate
-import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest

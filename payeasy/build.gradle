@@ -12,6 +12,7 @@ ext.mavenArtifactDescription = "Adyen checkout Pay Easy Component client for Ady
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.payeasy'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

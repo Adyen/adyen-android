@@ -12,7 +12,6 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
@@ -46,7 +45,6 @@ class SessionSavedStateHandleContainer(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         private const val SESSION_KEY = "SESSION_KEY"
         private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"

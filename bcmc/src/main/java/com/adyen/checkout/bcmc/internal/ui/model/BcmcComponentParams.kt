@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.bcmc.internal.ui.model
 
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

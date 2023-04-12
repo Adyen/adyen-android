@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.adyen3ds2'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

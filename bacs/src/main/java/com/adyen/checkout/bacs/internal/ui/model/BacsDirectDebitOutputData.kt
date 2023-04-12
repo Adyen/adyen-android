@@ -9,8 +9,8 @@
 package com.adyen.checkout.bacs.internal.ui.model
 
 import com.adyen.checkout.bacs.BacsDirectDebitMode
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
 internal data class BacsDirectDebitOutputData(
     val holderNameState: FieldState<String>,

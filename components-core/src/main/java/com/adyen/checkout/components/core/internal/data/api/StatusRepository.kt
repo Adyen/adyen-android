@@ -9,9 +9,9 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.data.model.StatusRequest
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
+import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runSuspendCatching

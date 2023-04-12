@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout QR code component client for Adye
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.qrcode'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

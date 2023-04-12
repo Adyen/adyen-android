@@ -73,7 +73,8 @@ internal class ValidationUtilsTest {
             arguments("\"john..doe\"@example.org", true),
             arguments("mailhost!username@example.org", true),
             arguments(
-                "\"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual\"@strange.example.com", true
+                "\"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual\"@strange.example.com",
+                true
             ),
             arguments("user%example.com@example.org", true),
             arguments("user-@example.org", true),
@@ -85,17 +86,20 @@ internal class ValidationUtilsTest {
             arguments("john!#$%&'*+-/=?^_`{|}~.smith@[12.2.344.45]", true),
             arguments(
                 "john!#$%&'*+-/=?^_`{|}~.smith!#$%&'*+-/=?^_`{|}~" +
-                    ".efwe!#$%&'*+-/=?^_`{|}~.weoihefw.!#$%&'*+-/=?^_`{|}~@[12.2.344.45]", true
+                    ".efwe!#$%&'*+-/=?^_`{|}~.weoihefw.!#$%&'*+-/=?^_`{|}~@[12.2.344.45]",
+                true
             ),
             arguments("\" ewc429 (%($^)*_)*(&&R%$&$&^$#     \"@mohamed12.eldoheiri", true),
 
             // Domain part is an one or more alpha-numeric strings separated by a dot.
             arguments("john.smith@abc-12CB-FVCbh45.co", true),
             arguments(
-                "john.smith@abc-12CB-FVCbh45-979HVU.uk.us.mrweew.co", true
+                "john.smith@abc-12CB-FVCbh45-979HVU.uk.us.mrweew.co",
+                true
             ),
             arguments(
-                "john.smith@abc-12CB-FVCbh45-979HVU.uk-weoh-238y23-ewfioh234.us-wefwef.mrweew.co", true
+                "john.smith@abc-12CB-FVCbh45-979HVU.uk-weoh-238y23-ewfioh234.us-wefwef.mrweew.co",
+                true
             ),
             // Quoted local part can contain any character except for line terminators
             arguments("\"UYFG)O^R&|.:;(%&*]T*T*[&GIU\"@gmail.com", true),

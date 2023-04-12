@@ -397,6 +397,7 @@ internal class StoredCardDelegateTest(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
@@ -424,6 +425,7 @@ internal class StoredCardDelegateTest(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun getStoredPaymentMethod(
         id: String = TEST_STORED_PM_ID,
         type: String = CardPaymentMethod.PAYMENT_METHOD_TYPE,
@@ -465,6 +467,7 @@ internal class StoredCardDelegateTest(
             .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
+    @Suppress("LongParameterList")
     private fun createOutputData(
         cardNumberState: FieldState<String> = FieldState(TEST_CARD_LAST_FOUR, Validation.Valid),
         expiryDateState: FieldState<ExpiryDate> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
@@ -515,6 +518,7 @@ internal class StoredCardDelegateTest(
         )
     }
 
+    @Suppress("LongParameterList")
     private fun createDetectedCardType(
         cardBrand: CardBrand = TEST_CARD_TYPE,
         isReliable: Boolean = true,

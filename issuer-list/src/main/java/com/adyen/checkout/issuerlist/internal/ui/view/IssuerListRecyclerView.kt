@@ -56,6 +56,7 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         }
     }
 
+    @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
     private fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
     }

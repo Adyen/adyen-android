@@ -19,7 +19,6 @@ import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.MethodNotImplementedException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
@@ -284,8 +283,4 @@ class SessionInteractor(
         resultCode = resultCode,
         order = order,
     )
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

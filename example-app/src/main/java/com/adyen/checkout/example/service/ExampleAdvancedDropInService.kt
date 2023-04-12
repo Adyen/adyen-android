@@ -101,6 +101,7 @@ class ExampleAdvancedDropInService : DropInService() {
     /**
      * This is an example on how to fetch additional data
      */
+    @Suppress("UnusedPrivateMember", "UNUSED_VARIABLE")
     private fun checkAdditionalData() {
         val additionalData = getAdditionalData()
         // read bundle and handle it

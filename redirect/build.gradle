@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout redirect component client for Ady
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.redirect'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

@@ -123,7 +123,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     private fun handleBalanceResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.getStringOrNull("resultCode")) {
                 "Success" -> {
                     viewModelScope.launch {
                         _events.emit(
@@ -160,7 +160,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     private fun handleOrderResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.getStringOrNull("resultCode")) {
                 "Success" -> viewModelScope.launch {
                     val orderResponse = OrderResponse.SERIALIZER.deserialize(jsonResponse)
                     _events.emit(GiftCardEvent.OrderCreated(orderResponse))

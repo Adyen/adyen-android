@@ -49,8 +49,6 @@ afterEvaluate {
 
                     assert checksum == calculatedChecksum: "Checksum ($algorithm) does not match: $dependency.name"
                 }
-
-                logger.lifecycle("\u2705 $configuration: $dependency.name")
             }
         }
     }

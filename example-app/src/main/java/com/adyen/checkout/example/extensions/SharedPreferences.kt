@@ -23,6 +23,7 @@ inline fun <reified T> SharedPreferences.get(appContext: Context, @StringRes str
         String::class -> return this.getString(key, defaultValue as String) as T
         else -> {
             if (defaultValue is Set<*>) {
+                @Suppress("UNCHECKED_CAST")
                 return this.getStringSet(key, defaultValue as Set<String>) as T
             }
         }

@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout UPI component client for Adyen's 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.upi'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

@@ -52,10 +52,6 @@ class BlikActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setTitle(R.string.blik_title)
 
-        binding.toolbar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 launch { blikViewModel.blikViewState.collect(::onBlikViewState) }

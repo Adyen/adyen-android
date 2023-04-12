@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout SEPA component client for Adyen's
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.sepa'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

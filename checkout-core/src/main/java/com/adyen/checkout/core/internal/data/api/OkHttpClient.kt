@@ -97,6 +97,7 @@ internal class OkHttpClient(
     private fun Map<String, String>.combineToHeaders() =
         (defaultHeaders + this).toHeaders()
 
+    @Suppress("SwallowedException")
     private fun Response.errorBody(): ErrorResponseBody? = try {
         body?.string()
             ?.let { JSONObject(it) }

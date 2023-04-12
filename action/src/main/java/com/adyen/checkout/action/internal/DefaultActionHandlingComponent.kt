@@ -13,9 +13,9 @@ import android.content.Intent
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.components.core.action.Action
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultActionHandlingComponent(

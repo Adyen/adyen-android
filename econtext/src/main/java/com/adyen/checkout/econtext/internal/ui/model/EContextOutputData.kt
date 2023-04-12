@@ -9,8 +9,8 @@
 package com.adyen.checkout.econtext.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class EContextOutputData(

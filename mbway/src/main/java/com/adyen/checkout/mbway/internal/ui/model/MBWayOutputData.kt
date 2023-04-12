@@ -7,8 +7,8 @@
  */
 package com.adyen.checkout.mbway.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.mbway.R

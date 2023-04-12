@@ -12,13 +12,15 @@ import android.content.Context
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
-import java.util.Locale
+import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
 @Parcelize
-class TestIssuerListConfiguration private constructor(
+class TestIssuerListConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

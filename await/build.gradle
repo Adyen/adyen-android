@@ -19,6 +19,7 @@ ext.mavenArtifactDescription = "Adyen checkout await component for Adyen's Check
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.await'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

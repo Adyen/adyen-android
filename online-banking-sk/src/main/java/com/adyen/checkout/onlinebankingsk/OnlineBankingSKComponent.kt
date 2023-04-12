@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.internal.provider.OnlineBankingSKComponentProvider
@@ -34,7 +33,6 @@ class OnlineBankingSKComponent internal constructor(
     componentEventHandler
 ) {
     companion object {
-        private val TAG = LogUtil.getTag()
 
         internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf"
 

@@ -20,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout Open Banking component client for
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.openbanking'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

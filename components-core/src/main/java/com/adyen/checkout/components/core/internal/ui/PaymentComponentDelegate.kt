@@ -10,8 +10,8 @@ package com.adyen.checkout.components.core.internal.ui
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

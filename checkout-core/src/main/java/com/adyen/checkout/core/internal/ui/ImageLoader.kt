@@ -59,6 +59,7 @@ class DefaultImageLoader(context: Context) : ImageLoader {
 
         val call = okHttpClient.newCall(request)
 
+        @Suppress("SwallowedException")
         try {
             val response = call.execute()
 

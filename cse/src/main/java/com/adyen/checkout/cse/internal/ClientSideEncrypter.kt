@@ -36,7 +36,7 @@ import kotlin.text.Charsets.UTF_8
 class ClientSideEncrypter {
 
     @Throws(EncryptionException::class)
-    @Suppress("ThrowsCount", "LongMethod")
+    @Suppress("ThrowsCount", "LongMethod", "CyclomaticComplexMethod")
     fun encrypt(publicKeyString: String, plainText: String): String {
         if (!ValidationUtils.isPublicKeyValid(publicKeyString)) {
             throw EncryptionException("Invalid public key: $publicKeyString", null)

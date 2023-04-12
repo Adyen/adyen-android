@@ -197,9 +197,12 @@ internal class DefaultAdyen3DS2Delegate(
 
         val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
         val configParameters = AdyenConfigParameters.Builder(
-            /* directoryServerId = */ fingerprintToken.directoryServerId,
-            /* directoryServerPublicKey = */ fingerprintToken.directoryServerPublicKey,
-            /* directoryServerRootCertificates = */ fingerprintToken.directoryServerRootCertificates,
+            /* directoryServerId = */
+            fingerprintToken.directoryServerId,
+            /* directoryServerPublicKey = */
+            fingerprintToken.directoryServerPublicKey,
+            /* directoryServerRootCertificates = */
+            fingerprintToken.directoryServerRootCertificates,
         ).build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -208,6 +211,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
 
         coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
+            @Suppress("SwallowedException")
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
                 threeDS2Service.initialize(activity, configParameters, null, componentParams.uiCustomization)
@@ -430,6 +434,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun cleanUp3DS2() {
+        @Suppress("SwallowedException")
         try {
             ThreeDS2Service.INSTANCE.cleanup(application)
         } catch (e: SDKNotInitializedException) {

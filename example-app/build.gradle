@@ -33,6 +33,7 @@ android {
 
     defaultConfig {
         applicationId "com.adyen.checkout.example"
+        namespace "com.adyen.checkout.example"
 
         minSdkVersion min_sdk_version
         targetSdkVersion target_sdk_version
