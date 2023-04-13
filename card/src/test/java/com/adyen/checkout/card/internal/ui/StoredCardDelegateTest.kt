@@ -28,6 +28,7 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -60,6 +61,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -334,6 +338,27 @@ internal class StoredCardDelegateTest(
                 }
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.card.internal.ui.StoredCardDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultCardConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createCardDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    securityCode = TEST_SECURITY_CODE
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Test
@@ -549,5 +574,14 @@ internal class StoredCardDelegateTest(
         private const val TEST_STORED_PM_ID = "1337"
         private val TEST_CARD_TYPE = CardBrand(cardType = CardType.MASTERCARD)
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

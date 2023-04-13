@@ -16,6 +16,7 @@ import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -39,6 +40,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -420,6 +424,34 @@ internal class DefaultBacsDirectDebitDelegateTest(
                 }
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.bacs.internal.DefaultBacsDirectDebitDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultBacsConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createBacsDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                    mode = BacsDirectDebitMode.CONFIRMATION
+                }
+
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Test
@@ -545,5 +577,14 @@ internal class DefaultBacsDirectDebitDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

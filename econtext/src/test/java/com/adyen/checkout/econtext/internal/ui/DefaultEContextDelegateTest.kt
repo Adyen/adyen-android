@@ -9,6 +9,7 @@
 package com.adyen.checkout.econtext.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -37,6 +38,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
@@ -154,14 +158,41 @@ internal class DefaultEContextDelegateTest(
                     )
                 )
                 with(expectMostRecentItem()) {
-                    assertEquals("firstName", data.paymentMethod?.firstName)
-                    assertEquals("lastName", data.paymentMethod?.lastName)
-                    assertEquals("phoneNumber", data.paymentMethod?.telephoneNumber)
-                    assertEquals("emailAddress", data.paymentMethod?.shopperEmail)
+                    with(requireNotNull(data.paymentMethod)) {
+                        assertEquals("firstName", firstName)
+                        assertEquals("lastName", lastName)
+                        assertEquals("phoneNumber", telephoneNumber)
+                        assertEquals("emailAddress", shopperEmail)
+                    }
                     assertEquals(TEST_ORDER, data.order)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultTestEContextConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createEContextDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "firstName"
+                    lastName = "lastName"
+                    mobileNumber = "12345678"
+                    countryCode = "+31"
+                    emailAddress = "abc@mail.com"
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
         }
     }
@@ -254,5 +285,14 @@ internal class DefaultEContextDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

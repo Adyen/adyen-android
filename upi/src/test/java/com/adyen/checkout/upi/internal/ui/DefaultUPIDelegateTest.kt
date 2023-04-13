@@ -9,6 +9,7 @@
 package com.adyen.checkout.upi.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -39,6 +40,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -52,12 +56,6 @@ internal class DefaultUPIDelegateTest(
 ) {
 
     private lateinit var delegate: DefaultUPIDelegate
-
-    private val configuration = UPIConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    ).build()
 
     @BeforeEach
     fun beforeEach() {
@@ -164,6 +162,28 @@ internal class DefaultUPIDelegateTest(
                 assertTrue(isValid)
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.upi.internal.ui.DefaultUPIDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultUPIConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createUPIDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    mode = UPIMode.VPA
+                    virtualPaymentAddress = "somevpa"
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Nested
@@ -193,8 +213,17 @@ internal class DefaultUPIDelegateTest(
         }
     }
 
+    private fun getDefaultUPIConfigurationBuilder(): UPIConfiguration.Builder {
+        return UPIConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        )
+    }
+
     private fun createUPIDelegate(
-        order: Order? = TEST_ORDER
+        order: Order? = TEST_ORDER,
+        configuration: UPIConfiguration = getDefaultUPIConfigurationBuilder().build()
     ) = DefaultUPIDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
@@ -207,5 +236,14 @@ internal class DefaultUPIDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

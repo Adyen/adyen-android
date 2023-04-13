@@ -16,6 +16,7 @@ import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -315,6 +316,28 @@ internal class DefaultBcmcDelegateTest(
                 assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.bcmc.internal.ui.DefaultBcmcDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultBcmcConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createBcmcDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Test
@@ -425,6 +448,15 @@ internal class DefaultBcmcDelegateTest(
             arguments(false, true, null),
             arguments(true, false, false),
             arguments(true, true, true),
+        )
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
         )
     }
 }

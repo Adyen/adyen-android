@@ -40,6 +40,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -144,6 +147,28 @@ internal class DefaultGiftCardDelegateTest(
                 assertEquals("0000", componentState.lastFourDigits)
                 assertEquals(TEST_ORDER, componentState.data.order)
                 assertEquals(GiftCardAction.CheckBalance, componentState.giftCardAction)
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultGiftCardConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createGiftCardDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = "5555444433330000"
+                    pin = "737"
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
         }
     }
@@ -349,5 +374,14 @@ internal class DefaultGiftCardDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }
