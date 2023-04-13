@@ -76,6 +76,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -567,7 +570,7 @@ internal class DefaultCardDelegateTest(
                     socialSecurityNumber = "123.123.123-12"
                     kcpBirthDateOrTaxNumber = "9011672845"
                     kcpCardPassword = "12"
-                    isStorePaymentSelected = true
+                    isStorePaymentMethodSwitchChecked = true
                     selectedCardIndex = 0
                     installmentOption = installmentModel
                     address.apply {
@@ -623,7 +626,7 @@ internal class DefaultCardDelegateTest(
                     kcpCardPasswordState = FieldState("12", Validation.Valid),
                     installmentState = FieldState(installmentModel, Validation.Valid),
                     addressState = expectedAddressOutputData,
-                    isStoredPaymentMethodEnable = true,
+                    shouldStorePaymentMethod = true,
                     cvcUIState = InputFieldUIState.HIDDEN,
                     expiryDateUIState = InputFieldUIState.REQUIRED,
                     holderNameUIState = InputFieldUIState.REQUIRED,
@@ -740,7 +743,7 @@ internal class DefaultCardDelegateTest(
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
-                    assertFalse(storePaymentMethod)
+                    assertEquals(false, storePaymentMethod)
                     assertNull(shopperReference)
                     assertNull(socialSecurityNumber)
                     assertNull(billingAddress)
@@ -815,7 +818,7 @@ internal class DefaultCardDelegateTest(
                         kcpCardPasswordState = FieldState("12", Validation.Valid),
                         addressState = addressOutputData,
                         installmentState = FieldState(installmentModel, Validation.Valid),
-                        isStoredPaymentMethodEnable = true,
+                        shouldStorePaymentMethod = true,
                         cvcUIState = InputFieldUIState.REQUIRED,
                         expiryDateUIState = InputFieldUIState.REQUIRED,
                         detectedCardTypes = detectedCardTypes,
@@ -843,7 +846,7 @@ internal class DefaultCardDelegateTest(
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
-                    assertTrue(storePaymentMethod)
+                    assertNull(storePaymentMethod)
                     assertEquals("shopper_android", shopperReference)
                     assertEquals("0108", socialSecurityNumber)
                     assertEquals(expectedAddress, billingAddress)
@@ -901,6 +904,32 @@ internal class DefaultCardDelegateTest(
                 val componentState = expectMostRecentItem()
 
                 assertEquals(DefaultCardDelegate.BIN_VALUE_EXTENDED_LENGTH, componentState.binValue.length)
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.card.internal.ui.DefaultCardDelegateTest#shouldStorePaymentMethodSource")
+        fun `storePaymentMethod in component state should match store switch visibility and state`(
+            isStorePaymentMethodSwitchVisible: Boolean,
+            isStorePaymentMethodSwitchChecked: Boolean,
+            expectedStorePaymentMethod: Boolean?,
+        ) = runTest {
+            val configuration = getDefaultCardConfigurationBuilder()
+                .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
+                .build()
+            delegate = createCardDelegate(configuration = configuration)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                    this.isStorePaymentMethodSwitchChecked = isStorePaymentMethodSwitchChecked
+                }
+
+                val componentState = expectMostRecentItem()
+                assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
             }
         }
     }
@@ -1036,7 +1065,7 @@ internal class DefaultCardDelegateTest(
         kcpCardPasswordState: FieldState<String> = FieldState("", Validation.Valid),
         addressState: AddressOutputData = createAddressOutputData(),
         installmentState: FieldState<InstallmentModel?> = FieldState(null, Validation.Valid),
-        isStoredPaymentMethodEnable: Boolean = false,
+        shouldStorePaymentMethod: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
@@ -1068,7 +1097,7 @@ internal class DefaultCardDelegateTest(
             kcpCardPasswordState = kcpCardPasswordState,
             addressState = addressState,
             installmentState = installmentState,
-            isStoredPaymentMethodEnable = isStoredPaymentMethodEnable,
+            shouldStorePaymentMethod = shouldStorePaymentMethod,
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
             holderNameUIState = holderNameUIState,
@@ -1141,5 +1170,14 @@ internal class DefaultCardDelegateTest(
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun shouldStorePaymentMethodSource() = listOf(
+            // isStorePaymentMethodSwitchVisible, isStorePaymentMethodSwitchChecked, expectedStorePaymentMethod
+            arguments(false, false, null),
+            arguments(false, true, null),
+            arguments(true, false, false),
+            arguments(true, true, true),
+        )
     }
 }

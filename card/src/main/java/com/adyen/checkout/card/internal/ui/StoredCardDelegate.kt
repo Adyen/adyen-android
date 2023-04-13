@@ -212,7 +212,7 @@ internal class StoredCardDelegate(
             kcpCardPasswordState = FieldState(kcpCardPassword, Validation.Valid),
             addressState = AddressValidationUtils.makeValidEmptyAddressOutput(inputData.address),
             installmentState = FieldState(inputData.installmentOption, Validation.Valid),
-            isStoredPaymentMethodEnable = isStorePaymentSelected,
+            shouldStorePaymentMethod = isStorePaymentMethodSwitchChecked,
             cvcUIState = makeCvcUIState(storedDetectedCardTypes.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes.expiryDatePolicy),
             holderNameUIState = InputFieldUIState.HIDDEN,

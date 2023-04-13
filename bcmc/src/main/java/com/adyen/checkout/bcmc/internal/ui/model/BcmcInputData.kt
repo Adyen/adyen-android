@@ -14,5 +14,5 @@ internal data class BcmcInputData(
     var cardNumber: String = "",
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
     var cardHolderName: String = "",
-    var isStorePaymentSelected: Boolean = false,
+    var isStorePaymentMethodSwitchChecked: Boolean = false,
 ) : InputData

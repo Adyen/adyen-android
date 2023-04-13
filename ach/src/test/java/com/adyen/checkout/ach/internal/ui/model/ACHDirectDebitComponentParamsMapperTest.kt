@@ -18,7 +18,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
@@ -261,20 +261,20 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(
             // configurationValue, sessionsValue, expectedValue
-            Arguments.arguments(false, false, false),
-            Arguments.arguments(false, true, true),
-            Arguments.arguments(true, false, false),
-            Arguments.arguments(true, true, true),
-            Arguments.arguments(false, null, false),
-            Arguments.arguments(true, null, true),
+            arguments(false, false, false),
+            arguments(false, true, true),
+            arguments(true, false, false),
+            arguments(true, true, true),
+            arguments(false, null, false),
+            arguments(true, null, true),
         )
 
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, dropInValue, sessionsValue, expectedValue
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            Arguments.arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

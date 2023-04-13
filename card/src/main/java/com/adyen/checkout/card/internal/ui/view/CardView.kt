@@ -116,7 +116,7 @@ internal class CardView @JvmOverloads constructor(
         initAddressFormInput(coroutineScope)
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            delegate.updateInputData { isStorePaymentSelected = isChecked }
+            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
         }
     }
 

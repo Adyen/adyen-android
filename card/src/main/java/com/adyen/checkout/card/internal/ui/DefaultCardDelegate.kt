@@ -329,7 +329,7 @@ internal class DefaultCardDelegate(
                 updatedStateOptions
             ),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
-            isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
+            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             holderNameUIState = getHolderNameUIState(),
@@ -697,7 +697,7 @@ internal class DefaultCardDelegate(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData(
             paymentMethod = cardPaymentMethod,
-            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable,
+            storePaymentMethod = if (showStorePaymentField()) stateOutputData.shouldStorePaymentMethod else null,
             shopperReference = componentParams.shopperReference,
             order = order,
         ).apply {

@@ -21,7 +21,7 @@ internal data class CardInputData(
     var kcpCardPassword: String = "",
     var postalCode: String = "",
     var address: AddressInputModel = AddressInputModel(),
-    var isStorePaymentSelected: Boolean = false,
+    var isStorePaymentMethodSwitchChecked: Boolean = false,
     var selectedCardIndex: Int = -1,
     var installmentOption: InstallmentModel? = null
 ) : InputData

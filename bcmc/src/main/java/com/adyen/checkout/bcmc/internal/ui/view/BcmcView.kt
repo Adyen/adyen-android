@@ -20,6 +20,7 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.bcmc.R
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
+import com.adyen.checkout.bcmc.internal.ui.model.BcmcOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -29,7 +30,10 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
+@Suppress("TooManyFunctions")
 internal class BcmcView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -56,6 +60,8 @@ internal class BcmcView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
+        observeDelegate(delegate, coroutineScope)
+
         initCardNumberInput()
         initExpiryDateInput()
         initCardHolderInput()
@@ -81,6 +87,20 @@ internal class BcmcView @JvmOverloads constructor(
                 localizedContext
             )
         }
+    }
+
+    private fun observeDelegate(delegate: BcmcDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun outputDataChanged(bcmcOutputData: BcmcOutputData) {
+        setStorePaymentSwitchVisibility(bcmcOutputData.showStorePaymentField)
+    }
+
+    private fun setStorePaymentSwitchVisibility(showStorePaymentField: Boolean) {
+        binding.switchStorePaymentMethod.isVisible = showStorePaymentField
     }
 
     private fun initExpiryDateInput() {
@@ -136,9 +156,8 @@ internal class BcmcView @JvmOverloads constructor(
     }
 
     private fun initStorePaymentMethodSwitch() {
-        binding.switchStorePaymentMethod.isVisible = delegate.componentParams.isStorePaymentFieldVisible
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            delegate.updateInputData { isStorePaymentSelected = isChecked }
+            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
         }
     }
 

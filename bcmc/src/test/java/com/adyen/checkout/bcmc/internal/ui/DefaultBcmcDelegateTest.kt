@@ -39,6 +39,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -287,6 +290,31 @@ internal class DefaultBcmcDelegateTest(
                 }
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.bcmc.internal.ui.DefaultBcmcDelegateTest#shouldStorePaymentMethodSource")
+        fun `storePaymentMethod in component state should match store switch visibility and state`(
+            isStorePaymentMethodSwitchVisible: Boolean,
+            isStorePaymentMethodSwitchChecked: Boolean,
+            expectedStorePaymentMethod: Boolean?,
+        ) = runTest {
+            val configuration = getDefaultBcmcConfigurationBuilder()
+                .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
+                .build()
+            delegate = createBcmcDelegate(configuration = configuration)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    expiryDate = TEST_EXPIRY_DATE
+                    this.isStorePaymentMethodSwitchChecked = isStorePaymentMethodSwitchChecked
+                }
+
+                val componentState = expectMostRecentItem()
+                assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
+            }
+        }
     }
 
     @Test
@@ -352,13 +380,15 @@ internal class DefaultBcmcDelegateTest(
         cardNumber: FieldState<String>,
         expiryDate: FieldState<ExpiryDate>,
         cardHolder: FieldState<String>,
-        isStoredPaymentMethodEnable: Boolean = false
+        showStorePaymentField: Boolean = false,
+        shouldStorePaymentMethod: Boolean = false
     ): BcmcOutputData {
         return BcmcOutputData(
-            cardNumber,
-            expiryDate,
-            cardHolder,
-            isStoredPaymentMethodEnable
+            cardNumberField = cardNumber,
+            expiryDateField = expiryDate,
+            cardHolderNameField = cardHolder,
+            showStorePaymentField = showStorePaymentField,
+            shouldStorePaymentMethod = shouldStorePaymentMethod,
         )
     }
 
@@ -387,5 +417,14 @@ internal class DefaultBcmcDelegateTest(
         private const val TEST_CARD_NUMBER = "5555444433331111"
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun shouldStorePaymentMethodSource() = listOf(
+            // isStorePaymentMethodSwitchVisible, isStorePaymentMethodSwitchChecked, expectedStorePaymentMethod
+            arguments(false, false, null),
+            arguments(false, true, null),
+            arguments(true, false, false),
+            arguments(true, true, true),
+        )
     }
 }

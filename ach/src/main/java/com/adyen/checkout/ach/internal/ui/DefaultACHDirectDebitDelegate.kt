@@ -172,7 +172,7 @@ internal class DefaultACHDirectDebitDelegate(
                 false
             ),
             addressUIState = addressFormUIState,
-            isStoredPaymentMethodEnabled = inputData.isStorePaymentSelected,
+            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
             showStorePaymentField = showStorePaymentField()
         )
     }
@@ -296,7 +296,7 @@ internal class DefaultACHDirectDebitDelegate(
             )
             val paymentComponentData = PaymentComponentData(
                 order = order,
-                storePaymentMethod = outputData.isStoredPaymentMethodEnabled,
+                storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
                 paymentMethod = achPaymentMethod
             )
 
