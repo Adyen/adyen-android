@@ -271,7 +271,7 @@ internal class DefaultACHDirectDebitDelegate(
         val publicKey = publicKey
         if (!outputData.isValid || publicKey == null) {
             return ACHDirectDebitComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null
             )
@@ -313,7 +313,7 @@ internal class DefaultACHDirectDebitDelegate(
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
             return ACHDirectDebitComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = false,
                 isReady = true
             )

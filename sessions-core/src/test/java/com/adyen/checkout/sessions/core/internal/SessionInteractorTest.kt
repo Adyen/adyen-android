@@ -784,7 +784,7 @@ internal class SessionInteractorTest(
         )
 
         private val TEST_COMPONENT_STATE = TestComponentState(
-            data = PaymentComponentData(TestPaymentMethod()),
+            data = PaymentComponentData(TestPaymentMethod(), null, null),
             isInputValid = true,
             isReady = true,
         )

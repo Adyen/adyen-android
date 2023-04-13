@@ -389,7 +389,7 @@ internal class DefaultCardDelegate(
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
             return CardComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
                 cardBrand = firstCardBrand,
@@ -419,7 +419,7 @@ internal class DefaultCardDelegate(
             exceptionChannel.trySend(e)
 
             return CardComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = false,
                 isReady = true,
                 cardBrand = firstCardBrand,

@@ -205,14 +205,14 @@ internal class DefaultBcmcDelegate(
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
             return BcmcComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
             )
         }
 
         val encryptedCard = encryptCardData(outputData, publicKey) ?: return BcmcComponentState(
-            data = PaymentComponentData(),
+            data = PaymentComponentData(null, null, null),
             isInputValid = false,
             isReady = true,
         )
