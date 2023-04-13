@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -158,7 +159,8 @@ internal class DefaultOnlineBankingDelegate<
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = issuerListPaymentMethod,
-            order = order
+            order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
         )
 
         return componentStateFactory(paymentComponentData, outputData.isValid, true)

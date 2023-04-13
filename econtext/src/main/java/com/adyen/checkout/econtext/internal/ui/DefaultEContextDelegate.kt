@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -125,7 +126,8 @@ internal class DefaultEContextDelegate<
         val isInputValid = outputData.isValid
         val paymentComponentData = PaymentComponentData(
             paymentMethod = eContextPaymentMethod,
-            order = this@DefaultEContextDelegate.order,
+            order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
         )
         return componentStateFactory(paymentComponentData, isInputValid, true)
     }
