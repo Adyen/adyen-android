@@ -13,6 +13,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
+import androidx.annotation.RestrictTo
 import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
@@ -30,6 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 private val TAG = LogUtil.getTag()
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var protocol: Protocol
