@@ -122,6 +122,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             is StoredCardModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(R.string.card_number_4digit, storedPaymentMethodModel.lastFour)
+                binding.storedPaymentMethodItem.imageViewLogo.borderEnabled = storedPaymentMethodModel.drawIconBorder
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
                     environment = dropInViewModel.dropInConfiguration.environment,
                     txVariant = storedPaymentMethodModel.imageId,

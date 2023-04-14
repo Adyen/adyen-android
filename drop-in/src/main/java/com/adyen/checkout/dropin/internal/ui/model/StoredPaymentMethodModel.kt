@@ -25,6 +25,7 @@ internal data class StoredCardModel(
     val lastFour: String,
     val expiryMonth: String,
     val expiryYear: String,
+    val drawIconBorder: Boolean,
     // We need the environment to load the logo
     val environment: Environment,
 ) : StoredPaymentMethodModel()

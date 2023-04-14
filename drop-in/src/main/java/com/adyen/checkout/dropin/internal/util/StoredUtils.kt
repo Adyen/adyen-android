@@ -29,6 +29,7 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 lastFour = lastFour.orEmpty(),
                 expiryMonth = expiryMonth.orEmpty(),
                 expiryYear = expiryYear.orEmpty(),
+                drawIconBorder = !brand.orEmpty().contains(PaymentMethodTypes.GOOGLE_PAY),
                 environment = environment,
             )
         }

@@ -52,19 +52,24 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             PaymentMethodListItem.PAYMENT_METHODS_HEADER -> HeaderVH(
                 PaymentMethodsListHeaderBinding.inflate(inflater, parent, false)
             )
+
             PaymentMethodListItem.STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
                 RemovablePaymentMethodsListItemBinding.inflate(inflater, parent, false),
                 onUnderlayExpandListener
             )
+
             PaymentMethodListItem.PAYMENT_METHOD -> PaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
+
             PaymentMethodListItem.GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
+
             PaymentMethodListItem.PAYMENT_METHODS_NOTE -> NoteVH(
                 PaymentMethodsListNoteBinding.inflate(inflater, parent, false)
             )
+
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
@@ -78,10 +83,12 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                 onStoredPaymentRemovedCallback,
                 onPaymentMethodSelectedCallback
             )
+
             is PaymentMethodVH -> holder.bind(
                 item as PaymentMethodModel,
                 onPaymentMethodSelectedCallback
             )
+
             is GiftCardPaymentMethodVH -> holder.bind(item as GiftCardPaymentMethodModel)
             is NoteVH -> holder.bind(item as PaymentMethodNote)
         }
@@ -127,10 +134,13 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             with(binding) {
                 val context = root.context
                 textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
+
+                imageViewLogo.borderEnabled = model.drawIconBorder
                 imageViewLogo.loadLogo(
                     environment = model.environment,
                     txVariant = model.imageId,
                 )
+
                 textViewDetail.apply {
                     text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
                     isVisible = true
