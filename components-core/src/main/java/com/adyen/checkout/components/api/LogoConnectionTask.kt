@@ -8,6 +8,7 @@
 package com.adyen.checkout.components.api
 
 import android.graphics.drawable.BitmapDrawable
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.api.ConnectionTask
 import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.log.LogUtil
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeoutException
 /**
  * Task that wraps a Connection to get a Logo.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class LogoConnectionTask(
     private val logoApi: LogoApi,
     val logoUrl: String,

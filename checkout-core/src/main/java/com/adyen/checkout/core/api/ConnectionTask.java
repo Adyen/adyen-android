@@ -10,6 +10,7 @@ package com.adyen.checkout.core.api;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
 
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeoutException;
  *
  * @param <T> The type returned by the {@link Connection}
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public abstract class ConnectionTask<T> extends FutureTask<T> {
     private static final String TAG = LogUtil.getTag();
 

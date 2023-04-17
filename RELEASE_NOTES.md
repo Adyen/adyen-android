@@ -9,30 +9,15 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-* The `CardComponentState.binValue` now reports 8 digit bins in case of card numbers with 16 or more digits.
-* The new `CardBrand` class can be used to define unknown card brands. This can be used along with `CardType`.
-* When adding new card brands through `CardConfiguration`, you can now use the new `CardBrand`to add brands that are not already defined in `CardType`. 
-  For example:
+* For BLIK, one-click is now supported.
+* For 3D Secure 2, the `threeDSRequestorAppURL` can now be overridden from the configuration so that you can now use the [Android App Link](https://developer.android.com/studio/write/app-link-indexing) format (HTTP).
 
 ```kotlin
-CardConfiguration.Builder([SHOPPER_LOCALE], [ENVIRONMENT], [CLIENT_KEY])
-.setSupportedCardTypes(CardBrand(txVariant = "[CARD_BRAND1]"), CardBrand(txVariant = "[CARD_BRAND2]"))
-.build()
+Adyen3DSConfiguration.Builder(locale, environment, clientKey)
+    .setThreeDSRequestorURL("https://{your app.com}/adyen3ds2")
+    .build()
 ```
-
-## Changed
-* Upgraded the 3D Secure 2 SDK version to v2.2.11.
-* Upgraded `compileSdkVersion` and `targetSdkVersion` to 32.
-* Upgraded Kotlin version to 1.6.21.
-* Upgraded Kotlin coroutines version to 1.6.1.
-* Upgraded Fragment version to 1.5.5.
-* Upgraded AppCompat version to 1.5.1.
+⚠️Because of recent updates to the 3D Secure protocol, we strongly recommend that you provide the threeDSRequestorAppURL parameter as an Android App Link instead of custom link. This requires your app to handle the provided Android App Link. More details on how to handle Android App Link can be found on docs [page](https://docs.adyen.com/online-payments/classic-integrations/api-integration-ecommerce/3d-secure/native-3ds2/android-sdk-integration#handling-android-app-links).
 
 ## Fixed
-* For cards, you can now add unknown card types that aren't defined in `CardType`. Previously, 
-  `CardType.UNKNOWN` was not working correctly.
-* There is no longer a conflict with the 3D Secure 2 SDK that causes a runtime exception. This fixes the [known issue in v4.9.0.](https://github.com/Adyen/adyen-android/releases/tag/4.9.0)
-
-## Deprecated
-* The `CardType.UNKNOWN` property. Use `CardBrand(txVariant = "[CARD_BRAND]")` instead.
-* The `CardType.setTxVariant()` method. No longer needed as it was used with `CardType.UNKNOWN`.
+* For BCMC, errors are now correctly highlighted.
