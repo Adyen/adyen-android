@@ -123,7 +123,7 @@ import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
-import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.sessions.core.internal.data.model.mapToParams
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
@@ -388,7 +388,7 @@ internal fun getPaymentMethodAvailabilityCheck(
     sessionDetails: SessionDetails?,
 ): PaymentMethodAvailabilityCheck<Configuration> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    val sessionParams = sessionDetails?.let { SessionParamsFactory.create(it) }
+    val sessionParams = sessionDetails?.mapToParams(amount)
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
@@ -415,7 +415,7 @@ internal fun getComponentFor(
     sessionDetails: SessionDetails?,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    val sessionParams = sessionDetails?.let { SessionParamsFactory.create(it) }
+    val sessionParams = sessionDetails?.mapToParams(amount)
     return when {
         ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val achConfig: ACHDirectDebitConfiguration =
@@ -473,7 +473,7 @@ internal fun getComponentFor(
     sessionDetails: SessionDetails?,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
-    val sessionParams = sessionDetails?.let { SessionParamsFactory.create(it) }
+    val sessionParams = sessionDetails?.mapToParams(amount)
     return when {
         ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val configuration: ACHDirectDebitConfiguration =

@@ -302,6 +302,7 @@ internal class DropInViewModel(
         } else {
             currentOrder = orderModel
             amount = orderModel.remainingAmount
+            sessionDetails = sessionDetails?.copy(amount = orderModel.remainingAmount)
             Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
             Logger.d(TAG, "handleOrderResponse - Order cached")
         }

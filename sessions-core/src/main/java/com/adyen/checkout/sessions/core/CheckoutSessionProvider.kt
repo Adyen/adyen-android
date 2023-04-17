@@ -32,7 +32,7 @@ object CheckoutSessionProvider {
         configuration: Configuration,
         order: Order? = null,
     ): CheckoutSessionResult {
-        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession()
+        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession(null)
     }
 
     /**
@@ -58,6 +58,7 @@ object CheckoutSessionProvider {
         val order = sessionPaymentResult.order?.let { orderResponse ->
             Order(orderResponse.pspReference, orderResponse.orderData)
         }
-        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession()
+        return CheckoutSessionInitializer(sessionModel, configuration, order)
+            .setupSession(sessionPaymentResult.order?.remainingAmount)
     }
 }
