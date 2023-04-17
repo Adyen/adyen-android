@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -166,12 +167,8 @@ internal class DefaultGiftCardDelegate(
     private fun createComponentState(
         outputData: GiftCardOutputData = this.outputData
     ): GiftCardComponentState {
-        val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>(
-            order = order,
-        )
-
         val publicKey = publicKey ?: return GiftCardComponentState(
-            data = paymentComponentData,
+            data = PaymentComponentData(null, null, null),
             isInputValid = outputData.isValid,
             isReady = false,
             lastFourDigits = null,
@@ -180,7 +177,7 @@ internal class DefaultGiftCardDelegate(
 
         if (!outputData.isValid) {
             return GiftCardComponentState(
-                data = paymentComponentData,
+                data = PaymentComponentData(null, null, null),
                 isInputValid = false,
                 isReady = true,
                 lastFourDigits = null,
@@ -189,7 +186,7 @@ internal class DefaultGiftCardDelegate(
         }
 
         val encryptedCard = encryptCard(outputData, publicKey) ?: return GiftCardComponentState(
-            data = paymentComponentData,
+            data = PaymentComponentData(null, null, null),
             isInputValid = false,
             isReady = true,
             lastFourDigits = null,
@@ -205,7 +202,11 @@ internal class DefaultGiftCardDelegate(
 
         val lastDigits = outputData.giftcardNumberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
 
-        paymentComponentData.paymentMethod = giftCardPaymentMethod
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = giftCardPaymentMethod,
+            order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
+        )
 
         return GiftCardComponentState(
             data = paymentComponentData,

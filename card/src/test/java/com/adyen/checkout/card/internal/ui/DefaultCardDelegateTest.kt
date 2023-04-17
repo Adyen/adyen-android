@@ -39,6 +39,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -852,7 +853,6 @@ internal class DefaultCardDelegateTest(
                     assertEquals(expectedAddress, billingAddress)
                     assertEquals(expectedInstallments, installments)
                     assertEquals(TEST_ORDER, order)
-                    assertNull(amount)
                     assertNull(dateOfBirth)
                     assertNull(deliveryAddress)
                     assertNull(shopperEmail)
@@ -930,6 +930,29 @@ internal class DefaultCardDelegateTest(
 
                 val componentState = expectMostRecentItem()
                 assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.card.internal.ui.DefaultCardDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultCardConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createCardDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
         }
     }
@@ -1178,6 +1201,15 @@ internal class DefaultCardDelegateTest(
             arguments(false, true, null),
             arguments(true, false, false),
             arguments(true, true, true),
+        )
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
         )
     }
 }

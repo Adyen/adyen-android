@@ -9,6 +9,7 @@
 package com.adyen.checkout.paybybank.internal.ui
 
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
@@ -37,6 +38,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -50,12 +54,6 @@ internal class DefaultPayByBankDelegateTest(
 ) {
 
     private lateinit var delegate: DefaultPayByBankDelegate
-
-    private val configuration = PayByBankConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    ).build()
 
     @BeforeEach
     fun beforeEach() {
@@ -143,6 +141,53 @@ internal class DefaultPayByBankDelegateTest(
                 }
             }
         }
+
+        @Test
+        fun `when issuers is empty, then component state should be valid`() = runTest {
+            val configuration = getPayByBankConfigurationBuilder().build()
+            delegate = createPayByBankDelegate(
+                issuers = emptyList(),
+                configuration = configuration,
+            )
+            delegate.componentStateFlow.test {
+                with(expectMostRecentItem()) {
+                    assertNull(data.paymentMethod?.issuer)
+                    assertEquals(TEST_ORDER, data.order)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.paybybank.internal.ui.DefaultPayByBankDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            val configuration = getPayByBankConfigurationBuilder()
+                .apply {
+                    configurationValue?.let {
+                        setAmount(it)
+                    }
+                }
+                .build()
+            delegate = createPayByBankDelegate(
+                issuers = listOf(Issuer(id = "issuer-id", name = "issuer-name")),
+                configuration = configuration,
+            )
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                val issuer = IssuerModel(id = "issuer-id", name = "issuer-name", environment = Environment.TEST)
+                delegate.updateComponentState(
+                    PayByBankOutputData(
+                        issuer,
+                        listOf(issuer)
+                    )
+                )
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Test
@@ -210,9 +255,18 @@ internal class DefaultPayByBankDelegateTest(
             }
     }
 
+    private fun getPayByBankConfigurationBuilder(): PayByBankConfiguration.Builder {
+        return PayByBankConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        )
+    }
+
     private fun createPayByBankDelegate(
         issuers: List<Issuer>,
         order: Order? = TEST_ORDER,
+        configuration: PayByBankConfiguration = getPayByBankConfigurationBuilder().build(),
     ): DefaultPayByBankDelegate {
         return DefaultPayByBankDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -229,5 +283,14 @@ internal class DefaultPayByBankDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

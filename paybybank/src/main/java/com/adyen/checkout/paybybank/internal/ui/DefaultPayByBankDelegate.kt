@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -135,37 +136,27 @@ internal class DefaultPayByBankDelegate(
         _componentStateFlow.tryEmit(createComponentState(outputData))
     }
 
+    private fun createValidComponentState(): PayByBankComponentState {
+        return createComponentState(null)
+    }
+
     private fun createComponentState(
-        outputData: PayByBankOutputData = this.outputData
+        outputData: PayByBankOutputData? = this.outputData
     ): PayByBankComponentState {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType(),
-            issuer = outputData.selectedIssuer?.id.orEmpty()
+            issuer = outputData?.selectedIssuer?.id,
         )
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = payByBankPaymentMethod,
-            order = order
+            order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
         )
 
         return PayByBankComponentState(
             data = paymentComponentData,
-            isInputValid = outputData.isValid,
-            isReady = true
-        )
-    }
-
-    private fun createValidComponentState(): PayByBankComponentState {
-        val payByBankPaymentMethod = PayByBankPaymentMethod(
-            type = getPaymentMethodType()
-        )
-
-        val paymentComponentData = PaymentComponentData(
-            paymentMethod = payByBankPaymentMethod
-        )
-        return PayByBankComponentState(
-            data = paymentComponentData,
-            isInputValid = true,
+            isInputValid = outputData?.isValid ?: true,
             isReady = true
         )
     }

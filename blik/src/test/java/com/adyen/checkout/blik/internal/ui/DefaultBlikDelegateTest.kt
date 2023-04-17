@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -33,6 +34,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -151,10 +155,9 @@ internal class DefaultBlikDelegateTest(
         @Test
         fun `output data is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
-                skipItems(1)
                 delegate.updateComponentState(BlikOutputData("777134"))
 
-                with(awaitItem()) {
+                with(expectMostRecentItem()) {
                     assertEquals("777134", data.paymentMethod?.blikCode)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
@@ -162,6 +165,27 @@ internal class DefaultBlikDelegateTest(
                 }
 
                 cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.blik.internal.ui.DefaultBlikDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultBlikConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createBlikDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    blikCode = "545897"
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
         }
     }
@@ -245,5 +269,14 @@ internal class DefaultBlikDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
+        )
     }
 }

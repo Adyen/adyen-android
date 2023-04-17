@@ -316,7 +316,7 @@ internal class SessionComponentEventHandlerTest(
     }
 
     private fun createPaymentComponentState() = TestComponentState(
-        data = PaymentComponentData(),
+        data = PaymentComponentData(null, null, null),
         isInputValid = false,
         isReady = false,
     )

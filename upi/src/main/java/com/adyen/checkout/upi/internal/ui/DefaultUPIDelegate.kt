@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -139,6 +140,7 @@ internal class DefaultUPIDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
         )
 
         return UPIComponentState(

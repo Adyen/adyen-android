@@ -14,6 +14,7 @@ import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.R
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -447,15 +448,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when all fields in outputdata are valid, payment method in component state should be the same value in outputdata`() =
             runTest {
-                val adddressInputModel = AddressInputModel(
-                    postalCode = "34220",
-                    street = "Street Name",
-                    stateOrProvince = "province",
-                    houseNumberOrName = "44",
-                    apartmentSuite = "aparment",
-                    city = "Istanbul",
-                    country = "Turkey"
-                )
+                val adddressInputModel = getValidAddressInputData()
 
                 val addressOutputData = createAddressOutputData(
                     postalCode = FieldState(adddressInputModel.postalCode, Validation.Valid),
@@ -484,9 +477,12 @@ internal class DefaultACHDirectDebitDelegateTest(
 
                 with(componentState.data) {
                     assertEquals(expectedAddress, billingAddress)
-                    assertEquals(paymentMethod?.ownerName, TEST_OWNER_NAME)
-                    assertEquals(paymentMethod?.encryptedBankLocationId, TEST_BANK_BANK_LOCATION_ID)
-                    assertEquals(paymentMethod?.encryptedBankAccountNumber, TEST_BANK_ACCOUNT_NUMBER)
+
+                    with(requireNotNull(paymentMethod)) {
+                        assertEquals(ownerName, TEST_OWNER_NAME)
+                        assertEquals(encryptedBankLocationId, TEST_BANK_BANK_LOCATION_ID)
+                        assertEquals(encryptedBankAccountNumber, TEST_BANK_ACCOUNT_NUMBER)
+                    }
                 }
             }
 
@@ -529,6 +525,30 @@ internal class DefaultACHDirectDebitDelegateTest(
             val componentState = delegate.componentStateFlow.first()
 
             assertEquals(expectedStorePaymentMethod, componentState.data.storePaymentMethod)
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getAchConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createAchDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateInputData {
+                bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                ownerName = TEST_OWNER_NAME
+                address = getValidAddressInputData()
+            }
+
+            val componentState = delegate.componentStateFlow.first()
+            assertEquals(expectedComponentStateValue, componentState.data.amount)
         }
     }
 
@@ -639,6 +659,18 @@ internal class DefaultACHDirectDebitDelegateTest(
         clientKey = TEST_CLIENT_KEY,
     )
 
+    private fun getValidAddressInputData(): AddressInputModel {
+        return AddressInputModel(
+            postalCode = "34220",
+            street = "Street Name",
+            stateOrProvince = "province",
+            houseNumberOrName = "44",
+            apartmentSuite = "aparment",
+            city = "Istanbul",
+            country = "Turkey"
+        )
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_BANK_ACCOUNT_NUMBER = "123456"
@@ -654,6 +686,15 @@ internal class DefaultACHDirectDebitDelegateTest(
             arguments(false, true, null),
             arguments(true, false, false),
             arguments(true, true, true),
+        )
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(Amount.EMPTY, null),
+            arguments(null, null),
         )
     }
 }

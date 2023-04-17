@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -120,6 +121,7 @@ internal class StoredACHDirectDebitDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
         )
 
         return ACHDirectDebitComponentState(

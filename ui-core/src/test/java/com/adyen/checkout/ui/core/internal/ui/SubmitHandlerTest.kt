@@ -132,7 +132,7 @@ internal class SubmitHandlerTest {
         isInputValid: Boolean = false,
         isReady: Boolean = false,
     ) = TestComponentState(
-        data = PaymentComponentData(),
+        data = PaymentComponentData(null, null, null),
         isInputValid = isInputValid,
         isReady = isReady,
     )

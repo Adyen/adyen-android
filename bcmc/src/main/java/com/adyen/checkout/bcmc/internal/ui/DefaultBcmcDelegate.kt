@@ -32,6 +32,7 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -199,23 +200,19 @@ internal class DefaultBcmcDelegate(
     private fun createComponentState(
         outputData: BcmcOutputData = this.outputData
     ): BcmcComponentState {
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>(
-            order = order,
-        )
-
         val publicKey = publicKey
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid || publicKey == null) {
             return BcmcComponentState(
-                data = PaymentComponentData(),
+                data = PaymentComponentData(null, null, null),
                 isInputValid = outputData.isValid,
                 isReady = publicKey != null,
             )
         }
 
         val encryptedCard = encryptCardData(outputData, publicKey) ?: return BcmcComponentState(
-            data = PaymentComponentData(),
+            data = PaymentComponentData(null, null, null),
             isInputValid = false,
             isReady = true,
         )
@@ -232,11 +229,14 @@ internal class DefaultBcmcDelegate(
                 holderName = outputData.cardHolderNameField.value
             }
         }
-        paymentComponentData.apply {
-            paymentMethod = cardPaymentMethod
-            storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null
-            shopperReference = componentParams.shopperReference
-        }
+
+        val paymentComponentData = PaymentComponentData(
+            order = order,
+            paymentMethod = cardPaymentMethod,
+            storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
+            shopperReference = componentParams.shopperReference,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
+        )
 
         return BcmcComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }

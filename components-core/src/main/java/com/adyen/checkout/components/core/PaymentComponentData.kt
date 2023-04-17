@@ -24,10 +24,11 @@ import org.json.JSONObject
  */
 @Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
-    var paymentMethod: PaymentMethodDetailsT? = null,
+    var paymentMethod: PaymentMethodDetailsT?,
+    var order: OrderRequest?,
+    var amount: Amount?,
     var storePaymentMethod: Boolean? = null,
     var shopperReference: String? = null,
-    var amount: Amount? = null,
     var billingAddress: Address? = null,
     var deliveryAddress: Address? = null,
     var shopperName: ShopperName? = null,
@@ -36,7 +37,6 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var dateOfBirth: String? = null,
     var socialSecurityNumber: String? = null,
     var installments: Installments? = null,
-    var order: OrderRequest? = null,
 ) : ModelObject() {
 
     companion object {

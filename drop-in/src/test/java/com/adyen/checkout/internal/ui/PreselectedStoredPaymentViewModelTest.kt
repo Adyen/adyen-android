@@ -86,7 +86,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = false, isReady = true)
                 viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.ContinueButton(), awaitItem().buttonState)
@@ -98,7 +98,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
 
                 assertEquals(ButtonState.PayButton(TEST_AMOUNT, Locale.US), expectMostRecentItem().buttonState)
@@ -129,7 +129,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.eventsFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = false, isReady = true)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = false, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -142,7 +142,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.eventsFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -155,7 +155,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = false)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = false)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
@@ -168,7 +168,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         runTest {
             viewModel.uiStateFlow.test {
                 val componentState =
-                    TestComponentState(PaymentComponentData(), isInputValid = true, isReady = true)
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
 
