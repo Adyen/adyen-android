@@ -9,15 +9,12 @@
 package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
 
@@ -115,62 +112,6 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponent
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
     fun onAdditionalDetails(actionComponentData: ActionComponentData): Boolean = false
-
-    /**
-     * Only applicable for partial payments flow.
-     *
-     * Override this method if you want to take over the sessions flow and make a network call to the
-     * /paymentMethods/balance endpoint of the Checkout API through your server. This method is called right after the
-     * user enters their partial payment method details and submits them.
-     *
-     * You need to return [true] if you want to take over the sessions flow, otherwise the API calls will still be
-     * handled internally by the SDK. This could be useful in case you want to handle the flow yourself only in certain
-     * conditions, then you can return [false] if these conditions are not met.
-     *
-     * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [MethodNotImplementedException] will be thrown.
-     *
-     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
-     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
-     *
-     * You should eventually call [component.resolveBalanceResult] with a [BalanceResult] containing the result of the
-     * network request.
-     *
-     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
-     * to be thrown.
-     *
-     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
-     *
-     * @param paymentMethodDetails The data from the partial payment method component.
-     * @return [true] if you took over the sessions flow, [false] otherwise.
-     */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
-
-    /**
-     * Only applicable for partial payments flow.
-     *
-     * Override this method if you want to take over the sessions flow and make a network call to the /orders endpoint
-     * of the Checkout API through your server. This method is called when the user is trying to pay a part of the
-     * Drop-in amount using a partial payment method.
-     *
-     * You need to return [true] if you want to take over the sessions flow, otherwise the API calls will still be
-     * handled internally by the SDK. This could be useful in case you want to handle the flow yourself only in certain
-     * conditions, then you can return [false] if these conditions are not met.
-     *
-     * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
-     * [MethodNotImplementedException] will be thrown.
-     *
-     * You should eventually call [component.resolveOrderResponse] with an [OrderResponse] containing the result of the
-     * network request.
-     *
-     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
-     * to be thrown.
-     *
-     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
-     *
-     * @return [true] if you took over the sessions flow, [false] otherwise.
-     */
-    fun onOrderRequest(): Boolean = false
 
     /**
      * Indicates that an API call is being executed by the component. Could be used to show a loading indicator in your

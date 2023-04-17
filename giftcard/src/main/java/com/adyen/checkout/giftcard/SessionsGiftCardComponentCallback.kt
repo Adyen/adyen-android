@@ -8,33 +8,21 @@
 
 package com.adyen.checkout.giftcard
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
+import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
+import org.json.JSONObject
 
 /**
  * Implement this callback to interact with a [GiftCardComponent] initialized with a session.
  */
 interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardComponentState> {
-
-    /**
-     * Indicates that an order has been created. You can implement this optional callback to access the response
-     * returned from order creation.
-     *
-     * @param orderResponse The order that has been created to make the payment using gift cards.
-     */
-    fun onOrder(orderResponse: OrderResponse) = Unit
-
-    /**
-     * Indicates that balance check has been done. You can implement this optional callback to access the response
-     * returned from balance check.
-     *
-     * @param balanceResult The result of the balance for the gift card that has been added.
-     */
-    fun onBalance(balanceResult: BalanceResult) = Unit
 
     /**
      * Indicates that a partial payment has been done. This means an order for this payment has been created and
@@ -47,5 +35,69 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
      * @param sessionModel The object that contains the necessary information about the session that's used to make
      * the payment. To complete the payment for the remaining amount this has to be passed while creating a new session.
      */
-    fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) = Unit
+    fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel)
+
+    // API Events
+    /**
+     * Only applicable for partial payments flow.
+     *
+     * Override this method if you want to take over the sessions flow and make a network call to the
+     * /paymentMethods/balance endpoint of the Checkout API through your server. This method is called right after the
+     * user enters their partial payment method details and submits them.
+     *
+     * You need to return [true] if you want to take over the sessions flow, otherwise the API calls will still be
+     * handled internally by the SDK. This could be useful in case you want to handle the flow yourself only in certain
+     * conditions, then you can return [false] if these conditions are not met.
+     *
+     * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
+     * [MethodNotImplementedException] will be thrown.
+     *
+     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
+     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
+     *
+     * You should eventually call [component.resolveBalanceResult] with a [BalanceResult] containing the result of the
+     * network request.
+     *
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param paymentMethodDetails The data from the partial payment method component.
+     * @return [true] if you took over the sessions flow, [false] otherwise.
+     */
+    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
+
+    /**
+     * Only applicable for partial payments flow.
+     *
+     * Override this method if you want to take over the sessions flow and make a network call to the /orders endpoint
+     * of the Checkout API through your server. This method is called when the user is trying to pay a part of the
+     * Drop-in amount using a partial payment method.
+     *
+     * You need to return [true] if you want to take over the sessions flow, otherwise the API calls will still be
+     * handled internally by the SDK. This could be useful in case you want to handle the flow yourself only in certain
+     * conditions, then you can return [false] if these conditions are not met.
+     *
+     * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
+     * [MethodNotImplementedException] will be thrown.
+     *
+     * You should eventually call [component.resolveOrderResponse] with an [OrderResponse] containing the result of the
+     * network request.
+     *
+     * Note that not overriding this method while enabling partial payments will cause a [MethodNotImplementedException]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @return [true] if you took over the sessions flow, [false] otherwise.
+     */
+    fun onOrderRequest(): Boolean = false
+
+    // Internal Events
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun onOrder(orderResponse: OrderResponse) = Unit
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun onBalance(balanceResult: BalanceResult) = Unit
 }

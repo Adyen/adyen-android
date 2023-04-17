@@ -25,7 +25,7 @@ interface GiftCardComponentCallback : ComponentCallback<GiftCardComponentState> 
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
-    fun onRequestOrder() = Unit
+    fun onRequestOrder()
 
     /**
      * In this method you should make a network call to the /paymentMethods/balance endpoint of the Checkout API through
@@ -42,5 +42,5 @@ interface GiftCardComponentCallback : ComponentCallback<GiftCardComponentState> 
      *
      * @param paymentMethodDetails The data from the partial payment method component.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) = Unit
+    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails)
 }
