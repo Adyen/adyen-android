@@ -116,6 +116,20 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getCheckoutSession(
+        sessionPaymentResult: SessionPaymentResult
+    ): CheckoutSession? {
+        return when (
+            val result = CheckoutSessionProvider.createSession(
+                sessionPaymentResult = sessionPaymentResult,
+                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            )
+        ) {
+            is CheckoutSessionResult.Success -> result.checkoutSession
+            is CheckoutSessionResult.Error -> null
+        }
+    }
+
     override fun onAction(action: Action) {
         _events.tryEmit(GiftCardEvent.AdditionalAction(action))
     }
@@ -133,9 +147,9 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     // no ops
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
-    override fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) {
+    override fun onPartialPayment(result: SessionPaymentResult) {
         viewModelScope.launch {
-            currentSession = getCheckoutSession(sessionModel, order)
+            currentSession = getCheckoutSession(result)
             _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
         }
     }

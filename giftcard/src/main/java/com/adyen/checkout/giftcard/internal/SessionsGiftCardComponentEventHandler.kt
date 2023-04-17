@@ -226,11 +226,7 @@ class SessionsGiftCardComponentEventHandler(
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
         Logger.d(TAG, "Partial payment: ${sessionCallResult.result.order}")
-        sessionComponentCallback.onPartialPayment(
-            result = sessionCallResult.result,
-            order = sessionCallResult.order,
-            sessionModel = sessionCallResult.sessionModel
-        )
+        sessionComponentCallback.onPartialPayment(sessionCallResult.result)
     }
 
     private fun setFlowTakenOver() {

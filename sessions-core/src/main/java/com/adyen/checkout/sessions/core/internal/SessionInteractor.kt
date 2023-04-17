@@ -271,15 +271,8 @@ class SessionInteractor(
 
     private fun onNonFullyPaidOrder(response: SessionPaymentsResponse): SessionCallResult.Payments.NotFullyPaidOrder {
         if (response.order != null) {
-            val orderRequest = OrderRequest(
-                orderData = response.order.orderData,
-                pspReference = response.order.pspReference
-            )
-            val sessionModel = SessionModel(sessionModel.id, response.sessionData)
             return SessionCallResult.Payments.NotFullyPaidOrder(
                 result = response.mapToSessionPaymentResult(),
-                order = orderRequest,
-                sessionModel = sessionModel
             )
         }
         // it's impossible for order to be null since we already check it where we call this function
@@ -287,6 +280,7 @@ class SessionInteractor(
     }
 
     private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,
@@ -294,6 +288,7 @@ class SessionInteractor(
     )
 
     private fun SessionDetailsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,

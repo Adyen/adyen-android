@@ -52,6 +52,7 @@ internal class SessionDropInResultContract :
                 val result = data.getStringExtra(DropIn.RESULT_KEY)
                 SessionDropInResult.Finished(
                     SessionPaymentResult(
+                        sessionId = null,
                         sessionResult = null,
                         sessionData = null,
                         resultCode = result,

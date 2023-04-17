@@ -82,6 +82,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Payments.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -133,13 +134,12 @@ internal class SessionInteractorTest(
                         val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                         val expectedResult = SessionCallResult.Payments.NotFullyPaidOrder(
                             SessionPaymentResult(
+                                sessionId = TEST_SESSION_ID,
                                 sessionResult = mockResponse.sessionResult,
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
                                 order = mockResponse.order,
-                            ),
-                            TEST_ORDER_REQUEST,
-                            expectedSessionModel
+                            )
                         )
 
                         assertEquals(expectedResult, result)
@@ -160,6 +160,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Payments.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -189,6 +190,7 @@ internal class SessionInteractorTest(
 
                         val expectedResult = SessionCallResult.Payments.RefusedPartialPayment(
                             SessionPaymentResult(
+                                sessionId = TEST_SESSION_ID,
                                 sessionResult = mockResponse.sessionResult,
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
@@ -276,6 +278,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Details.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -767,6 +770,8 @@ internal class SessionInteractorTest(
     }
 
     companion object {
+        private const val TEST_SESSION_ID = "session_id"
+
         private val TEST_SESSION_MODEL = SessionModel(
             id = "session_id",
             sessionData = "session_data_initial"

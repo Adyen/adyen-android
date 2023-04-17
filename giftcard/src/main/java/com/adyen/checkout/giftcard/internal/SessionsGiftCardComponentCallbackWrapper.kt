@@ -3,7 +3,6 @@ package com.adyen.checkout.giftcard.internal
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -11,7 +10,6 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import java.lang.ref.WeakReference
 
@@ -36,8 +34,8 @@ internal class SessionsGiftCardComponentCallbackWrapper(
         componentRef.get()?.resolveBalanceResult(balanceResult)
     }
 
-    override fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel) {
-        componentCallback.onPartialPayment(result, order, sessionModel)
+    override fun onPartialPayment(result: SessionPaymentResult) {
+        componentCallback.onPartialPayment(result)
     }
 
     override fun onStateChanged(state: GiftCardComponentState) {

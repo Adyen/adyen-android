@@ -17,6 +17,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class SessionPaymentResult(
+    val sessionId: String?,
     val sessionResult: String?,
     val sessionData: String?,
     val resultCode: String?,

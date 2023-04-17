@@ -10,10 +10,8 @@ package com.adyen.checkout.sessions.core.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
-import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.components.core.action.Action as ActionResponse
 
@@ -22,12 +20,7 @@ interface SessionCallResult {
 
     sealed class Payments : SessionCallResult {
         data class Finished(val result: SessionPaymentResult) : Payments()
-        data class NotFullyPaidOrder(
-            val result: SessionPaymentResult,
-            val order: Order,
-            val sessionModel: SessionModel
-        ) : Payments()
-
+        data class NotFullyPaidOrder(val result: SessionPaymentResult) : Payments()
         data class Action(val action: ActionResponse) : Payments()
         data class Error(val throwable: Throwable) : Payments()
         data class RefusedPartialPayment(val result: SessionPaymentResult) : Payments()

@@ -10,12 +10,10 @@ package com.adyen.checkout.giftcard
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
-import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import org.json.JSONObject
 
@@ -30,12 +28,8 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
      * be able to create a new session to complete the payment for the remaining amount.
      *
      * @param result The result of the payment.
-     * @param order The order that's been created and used to make the partial payment. To complete the payment
-     * for the remaining amount this has to be passed while creating a new session.
-     * @param sessionModel The object that contains the necessary information about the session that's used to make
-     * the payment. To complete the payment for the remaining amount this has to be passed while creating a new session.
      */
-    fun onPartialPayment(result: SessionPaymentResult, order: Order, sessionModel: SessionModel)
+    fun onPartialPayment(result: SessionPaymentResult)
 
     // API Events
     /**
