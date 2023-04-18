@@ -130,9 +130,11 @@ fun createPaymentRequest(
 
 fun createBalanceRequest(
     paymentComponentData: JSONObject,
+    amount: JSONObject,
     merchantAccount: String,
 ) = BalanceRequest(
     paymentMethod = paymentComponentData,
+    amount = amount,
     merchantAccount = merchantAccount
 )
 

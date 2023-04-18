@@ -10,10 +10,11 @@ package com.adyen.checkout.giftcard.internal
 
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -70,7 +71,7 @@ class SessionsGiftCardComponentEventHandler(
                 when (event.state.giftCardAction) {
                     GiftCardAction.CheckBalance -> {
                         event.state.data.paymentMethod?.let {
-                            checkBalance(it, sessionComponentCallback)
+                            checkBalance(event.state.data, sessionComponentCallback)
                         } ?: throw GiftCardException("Payment method is null.")
                     }
                     GiftCardAction.CreateOrder -> createOrder(sessionComponentCallback)
@@ -137,12 +138,12 @@ class SessionsGiftCardComponentEventHandler(
     }
 
     private fun checkBalance(
-        paymentMethodData: PaymentMethodDetails,
+        paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>,
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
         coroutineScope.launchWithLoadingState(sessionComponentCallback) {
             val result = sessionInteractor.checkBalance(
-                paymentMethodData,
+                paymentComponentData,
                 sessionComponentCallback::onBalanceCheck,
                 sessionComponentCallback::onBalanceCheck.name,
             )

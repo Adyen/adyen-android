@@ -11,11 +11,11 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -38,14 +38,12 @@ internal class GiftCardViewModel(
         }
     }
 
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
         val currentState = componentState
         if (currentState != null) {
             viewModelScope.launch {
                 val stateWithPaymentMethod = currentState.copy(
-                    data = currentState.data.copy(
-                        paymentMethod = paymentMethodDetails as GiftCardPaymentMethod
-                    )
+                    data = paymentComponentData
                 )
                 Logger.d(TAG, "Sending check balance event")
                 eventChannel.send(

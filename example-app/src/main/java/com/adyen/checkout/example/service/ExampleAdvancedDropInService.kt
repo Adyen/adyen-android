@@ -10,6 +10,7 @@ package com.adyen.checkout.example.service
 
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
@@ -17,7 +18,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.data.model.toStringPretty
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -205,32 +208,45 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    override fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    override fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "checkBalance")
+            val amount = paymentComponentData.amount
+            val paymentMethod = paymentComponentData.paymentMethod
+            if (paymentMethod != null && amount != null) {
+                val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethod)
+                val amountJson = Amount.SERIALIZER.serialize(amount)
 
-            val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodDetails)
-            Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
+                val request = createBalanceRequest(
+                    paymentMethodJson,
+                    amountJson,
+                    keyValueStorage.getMerchantAccount()
+                )
 
-            val request = createBalanceRequest(
-                paymentMethodJson,
-                keyValueStorage.getMerchantAccount()
-            )
-
-            val response = paymentsRepository.getBalance(request)
-            val result = handleBalanceResponse(response)
-            sendBalanceResult(result)
+                val response = paymentsRepository.getBalance(request)
+                val result = handleBalanceResponse(response)
+                sendBalanceResult(result)
+            } else {
+                sendBalanceResult(BalanceDropInServiceResult.Error("amount or paymentMethod is null."))
+            }
         }
     }
 
+    @Suppress("SwallowedException")
     private fun handleBalanceResponse(jsonResponse: JSONObject?): BalanceDropInServiceResult {
         return if (jsonResponse != null) {
             when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
                 "Success" -> BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
-                "NotEnoughBalance" -> BalanceDropInServiceResult.Error(
-                    reason = "Not enough balance",
-                    dismissDropIn = false
-                )
+                "NotEnoughBalance" -> {
+                    try {
+                        BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
+                    } catch (e: ModelSerializationException) {
+                        BalanceDropInServiceResult.Error(
+                            reason = "Not enough balance",
+                            dismissDropIn = false
+                        )
+                    }
+                }
                 else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
         } else {

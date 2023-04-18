@@ -18,9 +18,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -123,9 +124,9 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         // no ops
     }
 
-    override fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    override fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
         Logger.d(TAG, "onBalanceCheck")
-        giftCardViewModel.onBalanceCheck(paymentMethodDetails)
+        giftCardViewModel.onBalanceCheck(paymentComponentData)
     }
 
     override fun onSubmit(state: GiftCardComponentState) {

@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
@@ -94,7 +95,7 @@ interface DropInServiceContract {
      *
      * @param paymentMethodDetails The data from the partial payment method component.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
         throw MethodNotImplementedException("Method onBalanceCheck is not implemented.")
     }
 

@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
@@ -122,7 +123,7 @@ interface SessionDropInServiceContract {
      * @param paymentMethodDetails The data from the partial payment method component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
+    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>): Boolean = false
 
     /**
      * Only applicable for partial payments flow.

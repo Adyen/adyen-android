@@ -9,6 +9,8 @@
 package com.adyen.checkout.giftcard
 
 import com.adyen.checkout.components.core.ComponentCallback
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import org.json.JSONObject
 
@@ -40,7 +42,7 @@ interface GiftCardComponentCallback : ComponentCallback<GiftCardComponentState> 
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodDetails The data from the partial payment method component.
+     * @param paymentComponentData The data from the partial payment method component.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails)
+    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>)
 }

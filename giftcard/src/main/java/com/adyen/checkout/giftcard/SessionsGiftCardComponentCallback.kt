@@ -11,6 +11,8 @@ package com.adyen.checkout.giftcard
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -60,7 +62,7 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
      * @param paymentMethodDetails The data from the partial payment method component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails): Boolean = false
+    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>): Boolean = false
 
     /**
      * Only applicable for partial payments flow.
