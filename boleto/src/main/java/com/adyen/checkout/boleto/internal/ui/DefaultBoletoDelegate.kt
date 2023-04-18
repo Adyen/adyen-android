@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -234,6 +235,7 @@ internal class DefaultBoletoDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = GenericPaymentMethod(paymentMethod.type),
             order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
             socialSecurityNumber = outputData.socialSecurityNumberState.value,
             shopperName = ShopperName(
                 firstName = outputData.firstNameState.value,
