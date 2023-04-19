@@ -40,14 +40,12 @@ internal class GooglePayComponentDialogFragment :
 
     private lateinit var paymentMethod: PaymentMethod
     private lateinit var component: GooglePayComponent
-    private var navigatedFromPreselected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
         arguments?.let {
             paymentMethod = it.getParcelable(PAYMENT_METHOD) ?: throw IllegalArgumentException("Payment method is null")
-            navigatedFromPreselected = it.getBoolean(NAVIGATED_FROM_PRESELECTED, false)
         }
 
         googlePayViewModel.fragmentLoaded()
@@ -110,7 +108,7 @@ internal class GooglePayComponentDialogFragment :
     }
 
     override fun onBackPressed(): Boolean {
-        Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
+        Logger.d(TAG, "onBackPressed")
         return performBackAction()
     }
 
@@ -129,7 +127,6 @@ internal class GooglePayComponentDialogFragment :
 
     private fun performBackAction(): Boolean {
         when {
-            navigatedFromPreselected -> protocol.showPreselectedDialog()
             dropInViewModel.shouldSkipToSinglePaymentMethod() -> protocol.terminateDropIn()
             else -> protocol.showPaymentMethodsDialog()
         }
@@ -143,8 +140,6 @@ internal class GooglePayComponentDialogFragment :
     companion object {
 
         private val TAG = LogUtil.getTag()
-
-        private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
         private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
         fun newInstance(
