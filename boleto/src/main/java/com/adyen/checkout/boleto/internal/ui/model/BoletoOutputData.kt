@@ -19,6 +19,7 @@ internal data class BoletoOutputData(
     val socialSecurityNumberState: FieldState<String>,
     val addressState: AddressOutputData,
     val addressUIState: AddressFormUIState,
+    val isEmailVisible: Boolean,
     val isSendEmailSelected: Boolean,
     val shopperEmailState: FieldState<String>
 ) : OutputData {

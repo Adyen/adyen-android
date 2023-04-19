@@ -42,7 +42,7 @@ internal class BoletoComponentParamsMapper(
                 supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
                 addressFieldPolicy = AddressFieldPolicyParams.Required
             ),
-            isSendEmailVisible = isSendEmailVisible ?: false
+            isEmailVisible = isEmailVisible ?: false
         )
     }
 

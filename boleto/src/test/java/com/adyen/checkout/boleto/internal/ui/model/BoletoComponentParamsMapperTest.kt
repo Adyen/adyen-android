@@ -37,7 +37,7 @@ internal class BoletoComponentParamsMapperTest {
     @Test
     fun `when parent configuration is null and custom fields are set then all fields should match`() {
         val boletoConfiguration = getBoletoConfigurationBuilder()
-            .setIsSendEmailFieldVisibility(true)
+            .setEmailVisibility(true)
             .build()
 
         val params = getBoletoComponentParamsMapper().mapToParams(boletoConfiguration, null)
@@ -93,7 +93,7 @@ internal class BoletoComponentParamsMapperTest {
     @Test
     fun `when send email is set, them params should match`() {
         val boletoConfiguration = getBoletoConfigurationBuilder()
-            .setIsSendEmailFieldVisibility(true)
+            .setEmailVisibility(true)
             .build()
 
         val params = getBoletoComponentParamsMapper().mapToParams(boletoConfiguration, null)
@@ -165,7 +165,7 @@ internal class BoletoComponentParamsMapperTest {
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         addressParams = addressParams,
-        isSendEmailVisible = isSendEmailVisible
+        isEmailVisible = isSendEmailVisible
     )
 
     private fun getBoletoComponentParamsMapper(

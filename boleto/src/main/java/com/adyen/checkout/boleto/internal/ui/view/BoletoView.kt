@@ -60,11 +60,7 @@ internal class BoletoView @JvmOverloads constructor(
         initLastNameInput()
         initSocialSecurityNumberInput()
         initAddressFormInput(coroutineScope)
-        initShopperEmailInput()
-        binding.switchSendEmailCopy.setOnCheckedChangeListener { _, isChecked ->
-            delegate.updateInputData { isSendEmailSelected = isChecked }
-            binding.textInputLayoutShopperEmail.isVisible = isChecked
-        }
+        initEmail(delegate.outputData.isEmailVisible)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -146,7 +142,18 @@ internal class BoletoView @JvmOverloads constructor(
         binding.addressFormInput.attachDelegate(boletoDelegate, coroutineScope)
     }
 
-    private fun initShopperEmailInput() {
+    private fun initEmail(isEmailVisible: Boolean) {
+        binding.switchSendEmailCopy.isVisible = isEmailVisible
+        if (isEmailVisible) {
+            binding.switchSendEmailCopy.setOnCheckedChangeListener { _, isChecked ->
+                boletoDelegate.updateInputData { isSendEmailSelected = isChecked }
+                binding.textInputLayoutShopperEmail.isVisible = isChecked
+            }
+            initEmailInput()
+        }
+    }
+
+    private fun initEmailInput() {
         binding.editTextShopperEmail.setOnChangeListener {
             boletoDelegate.updateInputData { shopperEmail = it.toString().trim() }
             binding.textInputLayoutShopperEmail.hideError()
@@ -196,6 +203,7 @@ internal class BoletoView @JvmOverloads constructor(
             val shopperEmailValidation = it.shopperEmailState.validation
             if (shopperEmailValidation is Validation.Invalid && binding.textInputLayoutShopperEmail.isVisible) {
                 if (!isErrorFocused) {
+                    @Suppress("UNUSED_VALUE")
                     isErrorFocused = true
                     binding.textInputLayoutShopperEmail.requestFocus()
                 }

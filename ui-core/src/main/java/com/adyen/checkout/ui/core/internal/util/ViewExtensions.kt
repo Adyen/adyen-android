@@ -21,6 +21,7 @@ inline var TextInputLayout.isVisible: Boolean
         this.visibility = visibility
         editText?.apply {
             this.visibility = visibility
+            isFocusable = value
         }
     }
 

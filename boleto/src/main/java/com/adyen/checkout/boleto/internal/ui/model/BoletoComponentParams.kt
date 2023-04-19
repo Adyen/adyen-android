@@ -26,5 +26,5 @@ internal data class BoletoComponentParams(
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
     val addressParams: AddressParams,
-    val isSendEmailVisible: Boolean
+    val isEmailVisible: Boolean,
 ) : ComponentParams, ButtonParams

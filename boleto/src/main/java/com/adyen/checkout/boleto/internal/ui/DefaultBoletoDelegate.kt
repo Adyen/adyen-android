@@ -214,6 +214,7 @@ internal class DefaultBoletoDelegate(
                 false
             ),
             addressUIState = addressFormUIState,
+            isEmailVisible = componentParams.isEmailVisible,
             isSendEmailSelected = inputData.isSendEmailSelected,
             shopperEmailState = BoletoValidationUtils.validateShopperEmail(
                 inputData.isSendEmailSelected,

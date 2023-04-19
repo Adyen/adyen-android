@@ -32,7 +32,7 @@ class BoletoConfiguration private constructor(
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
     val genericActionConfiguration: GenericActionConfiguration,
-    val isSendEmailVisible: Boolean?
+    val isEmailVisible: Boolean?
 ) : Configuration, ButtonConfiguration {
 
     /**
@@ -42,7 +42,7 @@ class BoletoConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<BoletoConfiguration, Builder>,
         ButtonConfigurationBuilder {
         private var isSubmitButtonVisible: Boolean? = null
-        private var isSendEmailVisible: Boolean? = null
+        private var isEmailVisible: Boolean? = null
 
         /**
          * Constructor for Builder with default values.
@@ -83,13 +83,13 @@ class BoletoConfiguration private constructor(
         }
 
         /**
-         * Sets the visibility of send email copy filed
+         * Sets the visibility of the "send email copy"-switch and email input field.
          *
          * Default value is false
-         * @param isSendEmailVisible
+         * @param isEmailVisible
          */
-        fun setIsSendEmailFieldVisibility(isSendEmailVisible: Boolean): Builder {
-            this.isSendEmailVisible = isSendEmailVisible
+        fun setEmailVisibility(isEmailVisible: Boolean): Builder {
+            this.isEmailVisible = isEmailVisible
             return this
         }
 
@@ -101,7 +101,7 @@ class BoletoConfiguration private constructor(
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible,
             genericActionConfiguration = genericActionConfigurationBuilder.build(),
-            isSendEmailVisible = isSendEmailVisible
+            isEmailVisible = isEmailVisible
         )
     }
 }
