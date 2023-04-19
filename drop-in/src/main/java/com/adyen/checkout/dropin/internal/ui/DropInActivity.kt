@@ -425,7 +425,6 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
-            is DropInServiceResult.FinishedWithSessions -> sendResult(dropInServiceResult.result)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
@@ -461,6 +460,7 @@ internal class DropInActivity :
             is SessionDropInServiceResult.SessionTakenOverUpdated ->
                 dropInViewModel.onSessionTakenOverUpdated(dropInServiceResult.isFlowTakenOver)
             is SessionDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+            is SessionDropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
         }
     }
 

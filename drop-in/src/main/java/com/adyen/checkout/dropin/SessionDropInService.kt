@@ -90,7 +90,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Payments.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
+                is SessionCallResult.Payments.Finished -> SessionDropInServiceResult.Finished(result.result)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(reason = "Payment is refused while making a partial payment.")
@@ -100,7 +100,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 }
             }
 
-            sendResult(dropInServiceResult)
+            emitResult(dropInServiceResult)
         }
     }
 
@@ -116,14 +116,14 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(reason = result.throwable.message, dismissDropIn = true)
-                is SessionCallResult.Details.Finished -> DropInServiceResult.FinishedWithSessions(result.result)
+                is SessionCallResult.Details.Finished -> SessionDropInServiceResult.Finished(result.result)
                 SessionCallResult.Details.TakenOver -> {
                     sendFlowTakenOverUpdatedResult()
                     return@launch
                 }
             }
 
-            sendResult(dropInServiceResult)
+            emitResult(dropInServiceResult)
         }
     }
 
