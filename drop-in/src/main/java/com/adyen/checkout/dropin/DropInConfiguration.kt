@@ -91,12 +91,12 @@ class DropInConfiguration private constructor(
         /**
          * Create a [DropInConfiguration]
          *
-         * @param context A context
+         * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
             environment,
             clientKey
         )
@@ -104,12 +104,12 @@ class DropInConfiguration private constructor(
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param shopperLocale The [Locale] of the shopper.
+         * @param context A context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
-            shopperLocale,
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
             environment,
             clientKey
         )
@@ -355,7 +355,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Boleto payment method.
          */
-        fun addBoletoDirectDebitConfiguration(boletoConfiguration: BoletoConfiguration): Builder {
+        fun addBoletoConfiguration(boletoConfiguration: BoletoConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BRADESCO] = boletoConfiguration
