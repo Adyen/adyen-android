@@ -142,6 +142,7 @@ internal class BoletoComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
     )
 
+    @Suppress("LongParameterList")
     private fun getBoletoComponentParams(
         isSubmitButtonVisible: Boolean = true,
         shopperLocale: Locale = Locale.US,

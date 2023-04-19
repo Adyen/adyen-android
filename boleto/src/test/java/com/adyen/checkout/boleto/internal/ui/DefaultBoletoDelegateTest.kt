@@ -483,6 +483,7 @@ internal class DefaultBoletoDelegateTest(
         addressRepository = addressRepository
     )
 
+    @Suppress("LongParameterList")
     private fun createAddressInputModel(
         postalCode: String = "12345678",
         street: String = "Rua Funcionarios",

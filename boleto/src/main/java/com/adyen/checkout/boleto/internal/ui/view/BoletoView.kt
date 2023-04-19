@@ -177,6 +177,7 @@ internal class BoletoView @JvmOverloads constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     override fun highlightValidationErrors() {
         boletoDelegate.outputData.let {
             var isErrorFocused = false

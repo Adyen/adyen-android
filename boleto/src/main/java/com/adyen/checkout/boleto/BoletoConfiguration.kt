@@ -45,11 +45,11 @@ class BoletoConfiguration private constructor(
         private var isEmailVisible: Boolean? = null
 
         /**
-         * Constructor for Builder with default values.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param context   A context
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A Context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
@@ -58,11 +58,11 @@ class BoletoConfiguration private constructor(
         )
 
         /**
-         * Builder with required parameters.
+         * Builder with parameters for a [BoletoConfiguration].
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
