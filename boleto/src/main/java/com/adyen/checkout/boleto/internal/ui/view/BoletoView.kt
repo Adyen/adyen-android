@@ -23,10 +23,12 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.hideKeyboard
 import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
 
 @Suppress("TooManyFunctions")
@@ -146,8 +148,15 @@ internal class BoletoView @JvmOverloads constructor(
         binding.switchSendEmailCopy.isVisible = isEmailVisible
         if (isEmailVisible) {
             binding.switchSendEmailCopy.setOnCheckedChangeListener { _, isChecked ->
-                boletoDelegate.updateInputData { isSendEmailSelected = isChecked }
                 binding.textInputLayoutShopperEmail.isVisible = isChecked
+                if (isChecked) {
+                    binding.editTextShopperEmail.requestFocus()
+                    binding.editTextShopperEmail.showKeyboard()
+                } else {
+                    binding.editTextShopperEmail.clearFocus()
+                    hideKeyboard()
+                }
+                boletoDelegate.updateInputData { isSendEmailSelected = isChecked }
             }
             initEmailInput()
         }
