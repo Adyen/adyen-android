@@ -54,8 +54,17 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class BoletoComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
-) : PaymentComponentProvider<BoletoComponent, BoletoConfiguration, BoletoComponentState>,
-    SessionPaymentComponentProvider<BoletoComponent, BoletoConfiguration, BoletoComponentState> {
+) :
+    PaymentComponentProvider<
+        BoletoComponent,
+        BoletoConfiguration,
+        BoletoComponentState,
+        ComponentCallback<BoletoComponentState>>,
+    SessionPaymentComponentProvider<
+        BoletoComponent,
+        BoletoConfiguration,
+        BoletoComponentState,
+        SessionComponentCallback<BoletoComponentState>> {
 
     private val componentParamsMapper = BoletoComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

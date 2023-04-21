@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -29,6 +30,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -36,6 +38,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
@@ -49,12 +54,6 @@ internal class DefaultBoletoDelegateTest(
 ) {
 
     private lateinit var delegate: DefaultBoletoDelegate
-
-    private val configuration = BoletoConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    ).build()
 
     private lateinit var addressRepository: TestAddressRepository
 
@@ -439,6 +438,27 @@ internal class DefaultBoletoDelegateTest(
                 assertFalse(isValid)
             }
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.boleto.internal.ui.DefaultBoletoDelegateTest#amountSource")
+        fun `when input data is valid then amount is propagated in component state if set`(
+            configurationValue: Amount?,
+            expectedComponentStateValue: Amount?,
+        ) = runTest {
+            if (configurationValue != null) {
+                val configuration = getDefaultBoletoConfigurationBuilder()
+                    .setAmount(configurationValue)
+                    .build()
+                delegate = createBoletoDelegate(configuration = configuration)
+            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "Test"
+                }
+                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
+            }
+        }
     }
 
     @Nested
@@ -467,12 +487,14 @@ internal class DefaultBoletoDelegateTest(
         }
     }
 
+    @Suppress("LongParameterList")
     private fun createBoletoDelegate(
         submitHandler: SubmitHandler<BoletoComponentState> = this.submitHandler,
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         paymentMethod: PaymentMethod = PaymentMethod(),
         addressRepository: TestAddressRepository = this.addressRepository,
-        order: Order? = TEST_ORDER
+        order: Order? = TEST_ORDER,
+        configuration: BoletoConfiguration = getDefaultBoletoConfigurationBuilder().build(),
     ) = DefaultBoletoDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
@@ -502,9 +524,22 @@ internal class DefaultBoletoDelegateTest(
         country = country
     )
 
+    private fun getDefaultBoletoConfigurationBuilder(): BoletoConfiguration.Builder {
+        return BoletoConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val BRAZIL_COUNTRY_CODE = "BR"
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            Arguments.arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            Arguments.arguments(Amount("USD", 0), Amount("USD", 0)),
+            Arguments.arguments(Amount.EMPTY, null),
+            Arguments.arguments(null, null),
+        )
     }
 }
