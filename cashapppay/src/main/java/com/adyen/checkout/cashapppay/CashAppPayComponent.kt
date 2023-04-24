@@ -21,7 +21,6 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.paymentmethods.Configuration
 import com.adyen.checkout.components.model.payments.request.CashAppPayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -34,8 +33,8 @@ import kotlinx.coroutines.launch
 
 class CashAppPayComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: CashAppPayConfiguration
+    private val paymentMethodDelegate: GenericPaymentMethodDelegate,
+    private val configuration: CashAppPayConfiguration
 ) : BasePaymentComponent<CashAppPayConfiguration, CashAppPayInputData, CashAppPayOutputData, GenericComponentState<CashAppPayPaymentMethod>>(
     savedStateHandle,
     paymentMethodDelegate,
@@ -43,20 +42,23 @@ class CashAppPayComponent(
 ) {
 
     private val cashAppPay: CashAppPay
+    internal val inputData = CashAppPayInputData()
 
     init {
-        val cashAppParams = getCashAppParams(paymentMethodDelegate.paymentMethod.configuration, configuration)
+        val cashAppParams = getCashAppParams()
         cashAppPay = initCashAppPay(cashAppParams)
-        initiateCashAppPayment(cashAppParams)
+        if (!isUserInteractionRequired()) {
+            initiateCashAppPayment(cashAppParams)
+        }
     }
 
-    private fun getCashAppParams(paymentMethodConfiguration: Configuration?, cashAppPayConfiguration: CashAppPayConfiguration): CashAppParams {
+    private fun getCashAppParams(): CashAppParams {
         return CashAppParams(
-            clientId = paymentMethodConfiguration?.clientId
+            clientId = paymentMethodDelegate.paymentMethod.configuration?.clientId
                 ?: throw ComponentException("Cannot launch Cash App Pay, clientId is missing from the payment method object"),
-            scopeId = paymentMethodConfiguration.scopeId
+            scopeId = paymentMethodDelegate.paymentMethod.configuration?.scopeId
                 ?: throw ComponentException("Cannot launch Cash App Pay, scopeId is missing from the payment method object"),
-            returnUrl = cashAppPayConfiguration.returnUrl
+            returnUrl = configuration.returnUrl
                 ?: throw ComponentException("Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"),
         )
     }
@@ -71,22 +73,48 @@ class CashAppPayComponent(
     }
 
     private fun initiateCashAppPayment(cashAppParams: CashAppParams) {
+        val actions = listOfNotNull(
+            getOneTimeAction(cashAppParams),
+            getOnFileAction(cashAppParams),
+        )
+
+        if (actions.isEmpty()) {
+            throw ComponentException("Cannot launch Cash App Pay, you need to either pass an amount or store the shopper account")
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            // must be called from a background thread according to Cash App Pay docs
+            cashAppPay.createCustomerRequest(actions, cashAppParams.returnUrl)
+        }
+    }
+
+    private fun getOneTimeAction(cashAppParams: CashAppParams): CashAppPayPaymentAction.OneTimeAction? {
         val amount = configuration.amount
+
+        // we don't create a OneTimeAction from transactions with no amount
+        if (amount.value <= 0) return null
 
         val cashAppPayCurrency = when (amount.currency) {
             CheckoutCurrency.USD.name -> CashAppPayCurrency.USD
             else -> throw ComponentException("Unsupported currency: ${amount.currency}")
         }
 
-        val request = CashAppPayPaymentAction.OneTimeAction(
+        return CashAppPayPaymentAction.OneTimeAction(
             amount = amount.value,
             currency = cashAppPayCurrency,
             scopeId = cashAppParams.scopeId,
         )
-        viewModelScope.launch(Dispatchers.IO) {
-            // must be called from a background thread according to Cash App Pay docs
-            cashAppPay.createCustomerRequest(request, cashAppParams.returnUrl)
-        }
+    }
+
+    private fun getOnFileAction(cashAppParams: CashAppParams): CashAppPayPaymentAction.OnFileAction? {
+        val isStorePaymentSelected = outputData?.isStorePaymentSelected ?: false
+
+        // we don't create a OneTimeAction from transactions with no amount
+        if (!isStorePaymentSelected) return null
+
+        return CashAppPayPaymentAction.OnFileAction(
+            scopeId = cashAppParams.scopeId,
+        )
     }
 
     private fun onCashAppPayStateChanged(newState: CashAppPayState) {
@@ -95,21 +123,36 @@ class CashAppPayComponent(
             is CashAppPayState.ReadyToAuthorize -> {
                 cashAppPay.authorizeCustomerRequest()
             }
+
             is CashAppPayState.Approved -> {
                 Logger.i(TAG, "Cash App Pay authorization request approved")
-                notifyStateChanged(CashAppPayOutputData(grantId = newState.responseData.grants?.firstOrNull()?.id))
+                val newOutputData = outputData?.copy(
+                    grantId = newState.responseData.grants?.firstOrNull()?.id
+                ) ?: return
+                notifyStateChanged(newOutputData)
             }
+
             CashAppPayState.Declined -> {
                 Logger.i(TAG, "Cash App Pay authorization request declined")
                 notifyException(ComponentException("Cash App Pay authorization request declined"))
             }
+
             is CashAppPayState.CashAppPayExceptionState -> {
                 notifyException(ComponentException("Cash App Pay has encountered an error", newState.exception))
             }
+
             else -> {
                 // no ops
             }
         }
+    }
+
+    internal fun showStorePaymentField(): Boolean {
+        return configuration.showStorePaymentField
+    }
+
+    internal fun isUserInteractionRequired(): Boolean {
+        return showStorePaymentField()
     }
 
     override fun onCleared() {
@@ -134,10 +177,24 @@ class CashAppPayComponent(
     }
 
     override fun onInputDataChanged(inputData: CashAppPayInputData): CashAppPayOutputData {
-        return CashAppPayOutputData()
+        return CashAppPayOutputData(
+            isStorePaymentSelected = inputData.isStorePaymentSelected
+        )
     }
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
+
+    /**
+     * Call this to indicate that the shopper has clicked the Pay button and Cash App Pay is ready to authorize the request.
+     * You should only call this method when the component requires user interaction, which means when the "Store payment method" switch is shown.
+     * You can check this value using [CashAppPayView.isConfirmationRequired].
+     */
+    fun submit() {
+        val cashAppParams = getCashAppParams()
+        if (isUserInteractionRequired()) {
+            initiateCashAppPayment(cashAppParams)
+        }
+    }
 
     companion object {
         @JvmStatic
