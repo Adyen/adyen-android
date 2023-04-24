@@ -12,4 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.base.InputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CashAppPayInputData : InputData
+data class CashAppPayInputData(
+    var isStorePaymentSelected: Boolean = false,
+) : InputData

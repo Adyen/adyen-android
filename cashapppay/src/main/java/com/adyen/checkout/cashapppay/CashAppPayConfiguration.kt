@@ -20,6 +20,7 @@ import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.util.ParcelUtils
 import java.util.Locale
 
 class CashAppPayConfiguration : Configuration, AmountConfiguration {
@@ -27,6 +28,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
     val cashAppPayEnvironment: CashAppPayEnvironment
     override val amount: Amount
     val returnUrl: String?
+    val showStorePaymentField: Boolean
 
     companion object {
         @JvmField
@@ -46,12 +48,14 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         cashAppPayEnvironment = builder.cashAppPayEnvironment
         amount = builder.amount
         returnUrl = builder.returnUrl
+        showStorePaymentField = builder.showStorePaymentField
     }
 
     internal constructor(parcel: Parcel) : super(parcel) {
         cashAppPayEnvironment = CashAppPayEnvironment.valueOf(requireNotNull(parcel.readString()))
         amount = Amount.CREATOR.createFromParcel(parcel)
         returnUrl = parcel.readString()
+        showStorePaymentField = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -59,6 +63,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         parcel.writeString(cashAppPayEnvironment.name)
         JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
         parcel.writeString(returnUrl)
+        ParcelUtils.writeBoolean(parcel, showStorePaymentField)
     }
 
     /**
@@ -67,9 +72,13 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
     class Builder : BaseConfigurationBuilder<CashAppPayConfiguration>, AmountConfigurationBuilder {
 
         internal var cashAppPayEnvironment: CashAppPayEnvironment = getDefaultCashAppPayEnvironment(builderEnvironment)
+            private set
         internal var amount: Amount = Amount.EMPTY
             private set
         internal var returnUrl: String? = null
+            private set
+        internal var showStorePaymentField: Boolean = true
+            private set
 
         private var isCashAppPayEnvironmentSetManually = false
 
@@ -104,6 +113,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
             cashAppPayEnvironment = configuration.cashAppPayEnvironment
             amount = configuration.amount
             returnUrl = configuration.returnUrl
+            showStorePaymentField = configuration.showStorePaymentField
         }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
@@ -154,6 +164,19 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
          */
         fun setReturnUrl(returnUrl: String): Builder {
             this.returnUrl = returnUrl
+            return this
+        }
+
+        /**
+         * Set if the option to store the shopper's account for future payments should be shown as an input field.
+         *
+         * Default is true.
+         *
+         * @param showStorePaymentField [Boolean]
+         * @return [CashAppPayConfiguration.Builder]
+         */
+        fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
+            this.showStorePaymentField = showStorePaymentField
             return this
         }
 

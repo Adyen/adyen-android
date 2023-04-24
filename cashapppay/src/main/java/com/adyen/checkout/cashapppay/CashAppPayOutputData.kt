@@ -13,6 +13,7 @@ import com.adyen.checkout.components.base.OutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CashAppPayOutputData(
+    var isStorePaymentSelected: Boolean = false,
     val grantId: String? = null,
 ) : OutputData {
     override fun isValid(): Boolean {
