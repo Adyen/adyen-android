@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 21/4/2023.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.CashAppPay" />
+
+    <style name="AdyenCheckout.CashAppPay.StorePaymentSwitch" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/store_payment_method</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>

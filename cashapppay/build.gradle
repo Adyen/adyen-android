@@ -41,12 +41,17 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     // Checkout
-    api project(':components-core')
+    api project(':ui-core')
 
     // Dependencies
     api "app.cash.paykit:core:$cash_app_pay_version"
+    implementation "com.google.android.material:material:$material_version"
 }
