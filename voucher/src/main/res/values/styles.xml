@@ -34,7 +34,10 @@
     <style name="AdyenCheckout.Voucher.PaymentReference" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_voucher_payment_reference</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:gravity">center_horizontal</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:baselineAlignBottom">false</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.CodeReference" parent="AdyenCheckout.TextAppearance.Primary">

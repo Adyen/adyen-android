@@ -26,7 +26,7 @@
         android:id="@+id/imageView_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_one_half_margin"
         android:contentDescription="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,32 +56,30 @@
         android:id="@+id/paymentReferenceSeparator"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/standard_margin"
         android:background="@color/voucherBorderColor"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_paymentReference"
         app:layout_constraintEnd_toStartOf="@id/textView_paymentReference"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_amount" />
+        app:layout_constraintTop_toTopOf="@+id/textView_paymentReference" />
 
     <TextView
         android:id="@+id/textView_paymentReference"
         style="@style/AdyenCheckout.Voucher.PaymentReference"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/paymentReferenceSeparator"
         app:layout_constraintEnd_toStartOf="@id/paymentReferenceSeparator2"
         app:layout_constraintStart_toEndOf="@id/paymentReferenceSeparator"
-        app:layout_constraintTop_toTopOf="@id/paymentReferenceSeparator" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_amount" />
 
     <View
         android:id="@+id/paymentReferenceSeparator2"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/voucherBorderColor"
-        app:layout_constraintBottom_toBottomOf="@id/paymentReferenceSeparator"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_paymentReference"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/textView_paymentReference"
-        app:layout_constraintTop_toTopOf="@id/paymentReferenceSeparator" />
+        app:layout_constraintTop_toTopOf="@+id/textView_paymentReference" />
 
     <TextView
         android:id="@+id/textView_reference_code"
@@ -99,7 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/button_downloadPdf"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
@@ -111,7 +108,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/button_copyCode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_copyCode"
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code"
         app:layout_constraintTop_toTopOf="@id/button_copyCode" />
