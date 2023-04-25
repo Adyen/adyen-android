@@ -134,36 +134,31 @@ class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun updateCodeReference(codeReference: String?) {
-        if (!codeReference.isNullOrEmpty()) {
-            binding.textViewReferenceCode.isVisible = true
-            binding.buttonCopyCode.isVisible = true
-            binding.textViewReferenceCode.text = codeReference
-        } else {
-            binding.textViewReferenceCode.isVisible = false
-            binding.buttonCopyCode.isVisible = false
-        }
+        binding.textViewReferenceCode.text = codeReference
+
+        val isVisible = !codeReference.isNullOrEmpty()
+        binding.textViewReferenceCode.isVisible = isVisible
+        binding.buttonCopyCode.isVisible = isVisible
     }
 
     private fun updateExpirationDate(expiresAt: String?) {
-        if (!expiresAt.isNullOrEmpty()) {
-            binding.textViewExpirationLabel.isVisible = true
-            binding.textViewExpirationDate.isVisible = true
-            binding.expiryDateSeparator.isVisible = true
-            binding.textViewExpirationDate.text = DateUtils.formatStringDate(
+        binding.textViewExpirationDate.text = expiresAt?.let {
+            DateUtils.formatStringDate(
                 expiresAt,
                 delegate.componentParams.shopperLocale
             )
-        } else {
-            binding.textViewExpirationLabel.isVisible = false
-            binding.textViewExpirationDate.isVisible = false
-            binding.expiryDateSeparator.isVisible = false
         }
+
+        val isVisible = !expiresAt.isNullOrEmpty()
+        binding.textViewExpirationLabel.isVisible = isVisible
+        binding.textViewExpirationDate.isVisible = isVisible
+        binding.expiryDateSeparator.isVisible = isVisible
     }
 
     private fun copyCode(codeReference: String?) {
         codeReference ?: return
         context.copyTextToClipboard(
-            "Boleto",
+            COPY_LABEL,
             codeReference,
             localizedContext.getString(R.string.checkout_voucher_copied_toast)
         )
@@ -177,5 +172,7 @@ class FullVoucherView @JvmOverloads constructor(
 
     companion object {
         private val TAG = LogUtil.getTag()
+        // TODO: should we translate this?
+        private const val COPY_LABEL = "Voucher code reference"
     }
 }
