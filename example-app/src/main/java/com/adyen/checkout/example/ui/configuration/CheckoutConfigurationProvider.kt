@@ -71,6 +71,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setShopperReference(keyValueStorage.getShopperReference())
             .setAddressConfiguration(getAddressConfiguration())
             .setInstallmentConfigurations(getInstallmentConfiguration())
+            .setAmount(amount)
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
@@ -84,7 +85,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(keyValueStorage.getAmount())
+            .setAmount(amount)
             .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
