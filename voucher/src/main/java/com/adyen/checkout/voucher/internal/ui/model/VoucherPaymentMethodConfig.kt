@@ -8,62 +8,36 @@
 
 package com.adyen.checkout.voucher.internal.ui.model
 
-import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.PaymentMethodTypes
-import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType
 
 internal enum class VoucherPaymentMethodConfig(
-    private val paymentMethodType: String,
     val viewType: VoucherComponentViewType,
-    @StringRes
-    val messageTextResource: Int?
 ) {
 
-    DEFAULT(
-        paymentMethodType = "",
+    BACS(
         viewType = VoucherComponentViewType.SIMPLE_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_bacs
     ),
-    BOLETOBANCARIO(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO,
+    BOLETO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETOBANCARIO_BANCODOBRASIL(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETOBANCARIO_BRADESCO(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO_BRADESCO,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETOBANCARIO_HSBC(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO_HSBC,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETOBANCARIO_ITAU(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO_ITAU,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETOBANCARIO_SANTANDER(
-        paymentMethodType = PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
-    ),
-    BOLETO_PRIMEIRO_PAY(
-        paymentMethodType = PaymentMethodTypes.BOLETO_PRIMEIRO_PAY,
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
-        messageTextResource = R.string.checkout_voucher_introduction_boleto
     );
 
     companion object {
-        fun getByPaymentMethodType(paymentMethodType: String?): VoucherPaymentMethodConfig {
-            return values().firstOrNull { it.paymentMethodType == paymentMethodType } ?: DEFAULT
+
+        fun getByPaymentMethodType(paymentMethodType: String?): VoucherPaymentMethodConfig? {
+            return when (paymentMethodType) {
+                PaymentMethodTypes.BACS -> BACS
+
+                PaymentMethodTypes.BOLETOBANCARIO,
+                PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL,
+                PaymentMethodTypes.BOLETOBANCARIO_BRADESCO,
+                PaymentMethodTypes.BOLETOBANCARIO_HSBC,
+                PaymentMethodTypes.BOLETOBANCARIO_ITAU,
+                PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
+                PaymentMethodTypes.BOLETO_PRIMEIRO_PAY -> BOLETO
+
+                else -> null
+            }
         }
     }
 }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.voucher.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
@@ -21,5 +20,4 @@ data class VoucherOutputData(
     val expiresAt: String?,
     val reference: String?,
     val totalAmount: Amount?,
-    @StringRes val messageTextResource: Int? = null
 ) : OutputData

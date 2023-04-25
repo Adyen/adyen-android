@@ -172,7 +172,6 @@ class FullVoucherView @JvmOverloads constructor(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        // TODO: should we translate this?
         private const val COPY_LABEL = "Voucher code reference"
     }
 }
