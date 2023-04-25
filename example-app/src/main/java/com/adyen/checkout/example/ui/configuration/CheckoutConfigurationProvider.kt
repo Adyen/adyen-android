@@ -44,27 +44,19 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    fun getDropInConfiguration(): DropInConfiguration {
-        val dropInConfigurationBuilder = DropInConfiguration.Builder(
-            shopperLocale,
-            environment,
-            clientKey,
-        )
-            .addCardConfiguration(getCardConfiguration())
-            .addBcmcConfiguration(getBcmcConfiguration())
-            .addGooglePayConfiguration(getGooglePayConfiguration())
-            .add3ds2ActionConfiguration(get3DS2Configuration())
-            .addRedirectActionConfiguration(getRedirectConfiguration())
-            .setEnableRemovingStoredPaymentMethods(true)
-
-        try {
-            dropInConfigurationBuilder.setAmount(amount)
-        } catch (e: CheckoutException) {
-            Logger.e(TAG, "Amount $amount not valid", e)
-        }
-
-        return dropInConfigurationBuilder.build()
-    }
+    fun getDropInConfiguration(): DropInConfiguration = DropInConfiguration.Builder(
+        shopperLocale,
+        environment,
+        clientKey,
+    )
+        .addCardConfiguration(getCardConfiguration())
+        .addBcmcConfiguration(getBcmcConfiguration())
+        .addGooglePayConfiguration(getGooglePayConfiguration())
+        .add3ds2ActionConfiguration(get3DS2Configuration())
+        .addRedirectActionConfiguration(getRedirectConfiguration())
+        .setEnableRemovingStoredPaymentMethods(true)
+        .setAmount(amount)
+        .build()
 
     fun getCardConfiguration(): CardConfiguration =
         CardConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -75,13 +67,19 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
-        BlikConfiguration.Builder(shopperLocale, environment, clientKey).build()
+        BlikConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(amount)
+            .build()
 
     fun getBacsConfiguration(): BacsDirectDebitConfiguration =
-        BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).build()
+        BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(amount)
+            .build()
 
     fun getInstantConfiguration(): InstantPaymentConfiguration =
-        InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey).build()
+        InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(amount)
+            .build()
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -104,6 +102,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShowStorePaymentField(true)
+            .setAmount(amount)
             .build()
 
     private fun getGooglePayConfiguration(): GooglePayConfiguration =
@@ -114,10 +113,12 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private fun get3DS2Configuration(): Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(amount)
             .build()
 
     private fun getRedirectConfiguration(): RedirectConfiguration =
         RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAmount(amount)
             .build()
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
