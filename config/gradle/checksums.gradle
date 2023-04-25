@@ -42,7 +42,7 @@ if (!hasProperty("checksums")) {
         "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:8ae40b8665f98587e716b4593401aef2:MD5",
 
         // OkHttp
-        "com.squareup.okhttp3:okhttp:4.10.0:9a229b2af8b8ffcc41508f82ef5e3e72:MD5"
+        "com.squareup.okhttp3:okhttp:4.11.0:8f53e26319679de3ea22261b1899a99c:MD5"
     ]
 
     ext.checksums = checksums
