@@ -12,9 +12,6 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -152,8 +149,4 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             )
         )
     )
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }
