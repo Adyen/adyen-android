@@ -29,6 +29,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
     override val amount: Amount
     val returnUrl: String?
     val showStorePaymentField: Boolean
+    val storePaymentMethod: Boolean
 
     companion object {
         @JvmField
@@ -49,6 +50,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         amount = builder.amount
         returnUrl = builder.returnUrl
         showStorePaymentField = builder.showStorePaymentField
+        storePaymentMethod = builder.storePaymentMethod
     }
 
     internal constructor(parcel: Parcel) : super(parcel) {
@@ -56,6 +58,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         amount = Amount.CREATOR.createFromParcel(parcel)
         returnUrl = parcel.readString()
         showStorePaymentField = ParcelUtils.readBoolean(parcel)
+        storePaymentMethod = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -64,6 +67,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
         parcel.writeString(returnUrl)
         ParcelUtils.writeBoolean(parcel, showStorePaymentField)
+        ParcelUtils.writeBoolean(parcel, storePaymentMethod)
     }
 
     /**
@@ -78,6 +82,8 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
         internal var returnUrl: String? = null
             private set
         internal var showStorePaymentField: Boolean = true
+            private set
+        internal var storePaymentMethod: Boolean = false
             private set
 
         private var isCashAppPayEnvironmentSetManually = false
@@ -114,6 +120,7 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
             amount = configuration.amount
             returnUrl = configuration.returnUrl
             showStorePaymentField = configuration.showStorePaymentField
+            storePaymentMethod = configuration.storePaymentMethod
         }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
@@ -177,6 +184,21 @@ class CashAppPayConfiguration : Configuration, AmountConfiguration {
          */
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             this.showStorePaymentField = showStorePaymentField
+            return this
+        }
+
+        /**
+         * Set if the shopper's account should be stored, when the store payment method switch is not presented to the shopper.
+         *
+         * Only applicable if [showStorePaymentField] is false.
+         *
+         * Default is false.
+         *
+         * @param storePaymentMethod [Boolean]
+         * @return [CashAppPayConfiguration.Builder]
+         */
+        fun setStorePaymentMethod(storePaymentMethod: Boolean): Builder {
+            this.storePaymentMethod = storePaymentMethod
             return this
         }
 

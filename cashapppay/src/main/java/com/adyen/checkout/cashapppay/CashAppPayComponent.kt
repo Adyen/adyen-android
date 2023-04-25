@@ -109,10 +109,16 @@ class CashAppPayComponent(
     }
 
     private fun getOnFileAction(cashAppParams: CashAppParams): CashAppPayPaymentAction.OnFileAction? {
-        val isStorePaymentSelected = outputData?.isStorePaymentSelected ?: false
+        val shouldStorePaymentMethod = when {
+            // shopper is presented with store switch and selected it
+            configuration.showStorePaymentField && outputData?.isStorePaymentSelected == true -> true
+            // shopper is not presented with store switch and configuration indicates storing the payment method
+            !configuration.showStorePaymentField && configuration.storePaymentMethod -> true
+            else -> false
+        }
 
-        // we don't create a OneTimeAction from transactions with no amount
-        if (!isStorePaymentSelected) return null
+        // we don't create a OnFileAction when storing is not required
+        if (!shouldStorePaymentMethod) return null
 
         return CashAppPayPaymentAction.OnFileAction(
             scopeId = cashAppParams.scopeId,
