@@ -14,9 +14,27 @@ import com.adyen.checkout.components.base.OutputData
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CashAppPayOutputData(
     var isStorePaymentSelected: Boolean = false,
-    val grantId: String? = null,
+    val authorizationData: CashAppPayAuthorizationData? = null,
 ) : OutputData {
     override fun isValid(): Boolean {
-        return grantId != null
+        return authorizationData != null
     }
 }
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CashAppPayAuthorizationData(
+    val oneTimeData: CashAppPayOneTimeData?,
+    val onFileData: CashAppPayOnFileData?,
+)
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CashAppPayOneTimeData(
+    val grantId: String?,
+)
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CashAppPayOnFileData(
+    val grantId: String?,
+    val cashTag: String?,
+    val customerId: String?,
+)

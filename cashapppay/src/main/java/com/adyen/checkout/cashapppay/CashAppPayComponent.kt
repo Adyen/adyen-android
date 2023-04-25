@@ -14,6 +14,8 @@ import androidx.lifecycle.viewModelScope
 import app.cash.paykit.core.CashAppPay
 import app.cash.paykit.core.CashAppPayFactory
 import app.cash.paykit.core.CashAppPayState
+import app.cash.paykit.core.models.response.CustomerResponseData
+import app.cash.paykit.core.models.response.GrantType
 import app.cash.paykit.core.models.sdk.CashAppPayCurrency
 import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.adyen.checkout.components.GenericComponentState
@@ -127,7 +129,7 @@ class CashAppPayComponent(
             is CashAppPayState.Approved -> {
                 Logger.i(TAG, "Cash App Pay authorization request approved")
                 val newOutputData = outputData?.copy(
-                    grantId = newState.responseData.grants?.firstOrNull()?.id
+                    authorizationData = getCashAppPayAuthorizationData(newState.responseData)
                 ) ?: return
                 notifyStateChanged(newOutputData)
             }
@@ -147,6 +149,31 @@ class CashAppPayComponent(
         }
     }
 
+    private fun getCashAppPayAuthorizationData(responseData: CustomerResponseData): CashAppPayAuthorizationData {
+        return CashAppPayAuthorizationData(
+            oneTimeData = getCashAppPayOneTimeData(responseData),
+            onFileData = getCashAppPayOnFileData(responseData),
+        )
+    }
+
+    private fun getCashAppPayOneTimeData(responseData: CustomerResponseData): CashAppPayOneTimeData? {
+        val grants = responseData.grants.orEmpty()
+        val oneTimeGrant = grants.find { it.type == GrantType.ONE_TIME } ?: return null
+        return CashAppPayOneTimeData(
+            grantId = oneTimeGrant.id,
+        )
+    }
+
+    private fun getCashAppPayOnFileData(responseData: CustomerResponseData): CashAppPayOnFileData? {
+        val grants = responseData.grants.orEmpty()
+        val onFileGrant = grants.find { it.type == GrantType.EXTENDED } ?: return null
+        return CashAppPayOnFileData(
+            grantId = onFileGrant.id,
+            cashTag = responseData.customerProfile?.cashTag,
+            customerId = responseData.customerProfile?.id,
+        )
+    }
+
     internal fun showStorePaymentField(): Boolean {
         return configuration.showStorePaymentField
     }
@@ -162,12 +189,20 @@ class CashAppPayComponent(
 
     override fun createComponentState(): GenericComponentState<CashAppPayPaymentMethod> {
         val outputData = outputData
-        val cashAppPayPaymentMethod = CashAppPayPaymentMethod().apply {
+        val oneTimeData = outputData?.authorizationData?.oneTimeData
+        val onFileData = outputData?.authorizationData?.onFileData
+
+        val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
+            grantId = oneTimeData?.grantId,
+            customerId = onFileData?.customerId,
+            onFileGrantId = onFileData?.grantId,
+            cashtag = onFileData?.cashTag,
+        ).apply {
             type = CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE
-            grantId = outputData?.grantId
         }
         val paymentComponentData = PaymentComponentData<CashAppPayPaymentMethod>().apply {
             paymentMethod = cashAppPayPaymentMethod
+            setStorePaymentMethod(onFileData != null)
         }
         return GenericComponentState(
             paymentComponentData,
