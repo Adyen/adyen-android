@@ -19,7 +19,6 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.Logger
@@ -389,13 +388,7 @@ internal class SessionInteractorTest(
 
                     whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
 
-                    val paymentComponentData = PaymentComponentData(
-                        GiftCardPaymentMethod(),
-                        TEST_ORDER_REQUEST,
-                        Amount.EMPTY,
-                    )
-
-                    val result = sessionInteractor.checkBalance(paymentComponentData, { false }, "")
+                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                     val expectedResult = SessionCallResult.Balance.Successful(
                         BalanceResult(
@@ -422,13 +415,7 @@ internal class SessionInteractorTest(
 
                     whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
 
-                    val paymentComponentData = PaymentComponentData(
-                        GiftCardPaymentMethod(),
-                        TEST_ORDER_REQUEST,
-                        Amount.EMPTY,
-                    )
-
-                    val result = sessionInteractor.checkBalance(paymentComponentData, { false }, "")
+                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                     assertTrue(result is SessionCallResult.Balance.Error)
                     require(result is SessionCallResult.Balance.Error)
@@ -449,13 +436,7 @@ internal class SessionInteractorTest(
 
                 whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.failure(exception)
 
-                val paymentComponentData = PaymentComponentData(
-                    GiftCardPaymentMethod(),
-                    TEST_ORDER_REQUEST,
-                    Amount.EMPTY,
-                )
-
-                val result = sessionInteractor.checkBalance(paymentComponentData, { false }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                 val expectedResult = SessionCallResult.Balance.Error(exception)
 
@@ -464,13 +445,7 @@ internal class SessionInteractorTest(
 
             @Test
             fun `merchant handles call then TakenOver is returned and isFlowTakenOver is set to true`() = runTest {
-                val paymentComponentData = PaymentComponentData(
-                    GiftCardPaymentMethod(),
-                    TEST_ORDER_REQUEST,
-                    Amount.EMPTY,
-                )
-
-                val result = sessionInteractor.checkBalance(paymentComponentData, { true }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { true }, "")
                 val expectedResult = SessionCallResult.Balance.TakenOver
                 assertEquals(expectedResult, result)
 
@@ -489,13 +464,7 @@ internal class SessionInteractorTest(
 
             @Test
             fun `merchant handles call then TakenOver is returned and isFlowTakenOver stays true`() = runTest {
-                val paymentComponentData = PaymentComponentData(
-                    GiftCardPaymentMethod(),
-                    TEST_ORDER_REQUEST,
-                    Amount.EMPTY,
-                )
-
-                val result = sessionInteractor.checkBalance(paymentComponentData, { true }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { true }, "")
                 val expectedResult = SessionCallResult.Balance.TakenOver
                 assertEquals(expectedResult, result)
 
@@ -507,12 +476,7 @@ internal class SessionInteractorTest(
                 assertThrows<CheckoutException>(
                     "Sessions flow was already taken over in a previous call, makeBalance should be implemented"
                 ) {
-                    val paymentComponentData = PaymentComponentData(
-                        GiftCardPaymentMethod(),
-                        TEST_ORDER_REQUEST,
-                        Amount.EMPTY,
-                    )
-                    sessionInteractor.checkBalance(paymentComponentData, { false }, "makeBalance")
+                    sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "makeBalance")
                 }
 
                 assertTrue(sessionInteractor.isFlowTakenOver)
@@ -825,8 +789,10 @@ internal class SessionInteractorTest(
             remainingAmount = Amount("USD", 100),
         )
 
+        private val TEST_AMOUNT = Amount("USD", 1337)
+
         private val TEST_COMPONENT_STATE = TestComponentState(
-            data = PaymentComponentData(TestPaymentMethod(), null, null),
+            data = PaymentComponentData(TestPaymentMethod(), TEST_ORDER_REQUEST, TEST_AMOUNT),
             isInputValid = true,
             isReady = true,
         )

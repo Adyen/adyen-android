@@ -36,6 +36,8 @@ object CheckoutSessionProvider {
     }
 
     /**
+     * Only to be used for initializing a component for partial payment flow.
+     *
      * Allows creating a [CheckoutSession] from the response of the /sessions endpoint.
      * This is a suspend function that executes a network call on the IO thread.
      *

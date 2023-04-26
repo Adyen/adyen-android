@@ -365,7 +365,7 @@ internal class DropInActivity :
 
     override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
         Logger.d(TAG, "requestCheckBalanceCall")
-        val paymentMethod = dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
+        dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
             Logger.e(TAG, "requestBalanceCall - service is disconnected")
             balanceDataQueue = giftCardComponentState
@@ -373,7 +373,7 @@ internal class DropInActivity :
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        dropInService?.requestBalanceCall(paymentMethod)
+        dropInService?.requestBalanceCall(giftCardComponentState)
     }
 
     private fun requestOrdersCall() {

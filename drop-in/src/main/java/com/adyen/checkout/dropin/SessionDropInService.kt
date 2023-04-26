@@ -11,9 +11,7 @@ package com.adyen.checkout.dropin
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
-import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -127,10 +125,10 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         }
     }
 
-    final override fun requestBalanceCall(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
+    final override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
         launch {
             val result = sessionInteractor.checkBalance(
-                paymentComponentData,
+                paymentComponentState,
                 ::onBalanceCheck,
                 ::onBalanceCheck.name,
             )

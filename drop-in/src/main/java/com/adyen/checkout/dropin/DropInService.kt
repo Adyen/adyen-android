@@ -10,9 +10,7 @@ package com.adyen.checkout.dropin
 
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
@@ -38,9 +36,9 @@ abstract class DropInService : BaseDropInService(), DropInServiceContract {
         onAdditionalDetails(actionComponentData)
     }
 
-    final override fun requestBalanceCall(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
+    final override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
         Logger.d(TAG, "requestBalanceCall")
-        onBalanceCheck(paymentComponentData)
+        onBalanceCheck(paymentComponentState)
     }
 
     final override fun requestOrdersCall() {

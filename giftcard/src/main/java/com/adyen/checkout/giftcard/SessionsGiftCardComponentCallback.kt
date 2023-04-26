@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -48,8 +48,9 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
      * Once you take over the flow you will need to handle all the necessary subsequent network calls, otherwise a
      * [MethodNotImplementedException] will be thrown.
      *
-     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
-     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
+     * We provide a [PaymentComponentState] which has a [PaymentComponentData] object containing a non-serialized
+     * version of the partial payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a
+     * [JSONObject].
      *
      * You should eventually call [component.resolveBalanceResult] with a [BalanceResult] containing the result of the
      * network request.
@@ -59,10 +60,10 @@ interface SessionsGiftCardComponentCallback : SessionComponentCallback<GiftCardC
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodDetails The data from the partial payment method component.
+     * @param paymentComponentState The state from the partial payment method component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>): Boolean = false
+    fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>): Boolean = false
 
     /**
      * Only applicable for partial payments flow.

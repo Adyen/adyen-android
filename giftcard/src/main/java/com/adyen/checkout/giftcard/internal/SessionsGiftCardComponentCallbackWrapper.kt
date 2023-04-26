@@ -4,9 +4,8 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.OrderResponse
-import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
@@ -63,8 +62,8 @@ internal class SessionsGiftCardComponentCallbackWrapper(
         return componentCallback.onAdditionalDetails(actionComponentData)
     }
 
-    override fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>): Boolean {
-        return componentCallback.onBalanceCheck(paymentComponentData)
+    override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>): Boolean {
+        return componentCallback.onBalanceCheck(paymentComponentState)
     }
 
     override fun onOrderRequest(): Boolean {

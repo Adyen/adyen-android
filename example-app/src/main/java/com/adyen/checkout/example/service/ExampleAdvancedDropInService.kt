@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
@@ -208,11 +207,11 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    override fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>) {
+    override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "checkBalance")
-            val amount = paymentComponentData.amount
-            val paymentMethod = paymentComponentData.paymentMethod
+            val amount = paymentComponentState.data.amount
+            val paymentMethod = paymentComponentState.data.paymentMethod
             if (paymentMethod != null && amount != null) {
                 val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethod)
                 val amountJson = Amount.SERIALIZER.serialize(amount)

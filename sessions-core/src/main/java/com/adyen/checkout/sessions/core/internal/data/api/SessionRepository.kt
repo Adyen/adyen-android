@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.sessions.core.SessionModel
@@ -77,12 +77,12 @@ class SessionRepository(
 
     suspend fun checkBalance(
         sessionModel: SessionModel,
-        paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>
+        paymentComponentState: PaymentComponentState<*>
     ): Result<SessionBalanceResponse> = runSuspendCatching {
         val request = SessionBalanceRequest(
             sessionModel.sessionData.orEmpty(),
-            paymentComponentData.paymentMethod,
-            paymentComponentData.amount
+            paymentComponentState.data.paymentMethod,
+            paymentComponentState.data.amount
         )
         sessionService.checkBalance(
             request = request,

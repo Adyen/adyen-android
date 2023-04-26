@@ -12,7 +12,6 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
@@ -106,8 +105,9 @@ interface SessionDropInServiceContract {
      * [MethodNotImplementedException] will be thrown. You can use the [isFlowTakenOver] field to check whether you did
      * take over the flow in a previous call or not.
      *
-     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
-     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
+     * We provide a [PaymentComponentState] which has a [PaymentComponentData] object containing a non-serialized
+     * version of the partial payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a
+     * [JSONObject].
      *
      * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
      * operation is made on a background thread.
@@ -120,10 +120,10 @@ interface SessionDropInServiceContract {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodDetails The data from the partial payment method component.
+     * @param paymentComponentState The state from the partial payment method component.
      * @return [true] if you took over the sessions flow, [false] otherwise.
      */
-    fun onBalanceCheck(paymentComponentData: PaymentComponentData<GiftCardPaymentMethod>): Boolean = false
+    fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>): Boolean = false
 
     /**
      * Only applicable for partial payments flow.
