@@ -123,7 +123,6 @@ internal class DefaultBacsDirectDebitDelegate(
     }
 
     override fun onSubmit() {
-        // TODO improve
         val state = _componentStateFlow.value
         when (inputData.mode) {
             BacsDirectDebitMode.INPUT -> {

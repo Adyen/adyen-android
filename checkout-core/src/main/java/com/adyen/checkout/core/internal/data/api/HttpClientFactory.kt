@@ -25,10 +25,4 @@ object HttpClientFactory {
     fun getHttpClient(environment: Environment): HttpClient {
         return InternalOkHttpClient(okHttpClient, environment.baseUrl, defaultHeaders)
     }
-
-    // TODO remove this method when LogoService is refactored
-    @Deprecated("Internally deprecated, remove this method when LogoService is refactored")
-    fun getHttpClient(baseUrl: String): HttpClient {
-        return InternalOkHttpClient(okHttpClient, baseUrl, defaultHeaders)
-    }
 }
