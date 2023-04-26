@@ -18,10 +18,12 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object SessionParamsFactory {
+    // Used for components
     fun create(checkoutSession: CheckoutSession): SessionParams {
         return create(checkoutSession.sessionSetupResponse.configuration, checkoutSession.sessionSetupResponse.amount)
     }
 
+    // Used for Drop-in
     fun create(sessionDetails: SessionDetails): SessionParams {
         return create(sessionDetails.sessionSetupConfiguration, sessionDetails.amount)
     }

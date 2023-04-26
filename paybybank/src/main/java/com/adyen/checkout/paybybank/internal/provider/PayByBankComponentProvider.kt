@@ -52,8 +52,17 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class PayByBankComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
-) : PaymentComponentProvider<PayByBankComponent, PayByBankConfiguration, PayByBankComponentState>,
-    SessionPaymentComponentProvider<PayByBankComponent, PayByBankConfiguration, PayByBankComponentState> {
+) :
+    PaymentComponentProvider<
+        PayByBankComponent,
+        PayByBankConfiguration,
+        PayByBankComponentState,
+        ComponentCallback<PayByBankComponentState>>,
+    SessionPaymentComponentProvider<
+        PayByBankComponent,
+        PayByBankConfiguration,
+        PayByBankComponentState,
+        SessionComponentCallback<PayByBankComponentState>> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

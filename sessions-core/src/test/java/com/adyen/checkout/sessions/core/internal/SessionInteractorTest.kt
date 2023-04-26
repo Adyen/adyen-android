@@ -82,6 +82,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Payments.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -130,8 +131,10 @@ internal class SessionInteractorTest(
 
                         val result = sessionInteractor.onPaymentsCallRequested(TEST_COMPONENT_STATE, { false }, "")
 
+                        val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                         val expectedResult = SessionCallResult.Payments.NotFullyPaidOrder(
                             SessionPaymentResult(
+                                sessionId = TEST_SESSION_ID,
                                 sessionResult = mockResponse.sessionResult,
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
@@ -140,8 +143,6 @@ internal class SessionInteractorTest(
                         )
 
                         assertEquals(expectedResult, result)
-
-                        val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                         assertEquals(expectedSessionModel, expectMostRecentItem())
                     }
                 }
@@ -159,6 +160,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Payments.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -188,6 +190,7 @@ internal class SessionInteractorTest(
 
                         val expectedResult = SessionCallResult.Payments.RefusedPartialPayment(
                             SessionPaymentResult(
+                                sessionId = TEST_SESSION_ID,
                                 sessionResult = mockResponse.sessionResult,
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
@@ -275,6 +278,7 @@ internal class SessionInteractorTest(
 
                     val expectedResult = SessionCallResult.Details.Finished(
                         SessionPaymentResult(
+                            sessionId = TEST_SESSION_ID,
                             sessionResult = mockResponse.sessionResult,
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
@@ -384,7 +388,7 @@ internal class SessionInteractorTest(
 
                     whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
 
-                    val result = sessionInteractor.checkBalance(TestPaymentMethod(), { false }, "")
+                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                     val expectedResult = SessionCallResult.Balance.Successful(
                         BalanceResult(
@@ -411,7 +415,7 @@ internal class SessionInteractorTest(
 
                     whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
 
-                    val result = sessionInteractor.checkBalance(TestPaymentMethod(), { false }, "")
+                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                     assertTrue(result is SessionCallResult.Balance.Error)
                     require(result is SessionCallResult.Balance.Error)
@@ -432,7 +436,7 @@ internal class SessionInteractorTest(
 
                 whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.failure(exception)
 
-                val result = sessionInteractor.checkBalance(TestPaymentMethod(), { false }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
 
                 val expectedResult = SessionCallResult.Balance.Error(exception)
 
@@ -441,7 +445,7 @@ internal class SessionInteractorTest(
 
             @Test
             fun `merchant handles call then TakenOver is returned and isFlowTakenOver is set to true`() = runTest {
-                val result = sessionInteractor.checkBalance(TestPaymentMethod(), { true }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { true }, "")
                 val expectedResult = SessionCallResult.Balance.TakenOver
                 assertEquals(expectedResult, result)
 
@@ -460,7 +464,7 @@ internal class SessionInteractorTest(
 
             @Test
             fun `merchant handles call then TakenOver is returned and isFlowTakenOver stays true`() = runTest {
-                val result = sessionInteractor.checkBalance(TestPaymentMethod(), { true }, "")
+                val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { true }, "")
                 val expectedResult = SessionCallResult.Balance.TakenOver
                 assertEquals(expectedResult, result)
 
@@ -472,7 +476,7 @@ internal class SessionInteractorTest(
                 assertThrows<CheckoutException>(
                     "Sessions flow was already taken over in a previous call, makeBalance should be implemented"
                 ) {
-                    sessionInteractor.checkBalance(TestPaymentMethod(), { false }, "makeBalance")
+                    sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "makeBalance")
                 }
 
                 assertTrue(sessionInteractor.isFlowTakenOver)
@@ -766,6 +770,8 @@ internal class SessionInteractorTest(
     }
 
     companion object {
+        private const val TEST_SESSION_ID = "session_id"
+
         private val TEST_SESSION_MODEL = SessionModel(
             id = "session_id",
             sessionData = "session_data_initial"
@@ -783,8 +789,10 @@ internal class SessionInteractorTest(
             remainingAmount = Amount("USD", 100),
         )
 
+        private val TEST_AMOUNT = Amount("USD", 1337)
+
         private val TEST_COMPONENT_STATE = TestComponentState(
-            data = PaymentComponentData(TestPaymentMethod(), null, null),
+            data = PaymentComponentData(TestPaymentMethod(), TEST_ORDER_REQUEST, TEST_AMOUNT),
             isInputValid = true,
             isReady = true,
         )

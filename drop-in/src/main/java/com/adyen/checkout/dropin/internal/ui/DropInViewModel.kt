@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -24,7 +25,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.isEmpty
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -204,14 +205,16 @@ internal class DropInViewModel(
     /**
      * @return the payment method details required to request the balance, or null if invalid
      */
-    fun onBalanceCallRequested(giftCardComponentState: GiftCardComponentState): PaymentMethodDetails? {
+    fun onBalanceCallRequested(
+        giftCardComponentState: GiftCardComponentState
+    ): PaymentComponentData<GiftCardPaymentMethod>? {
         val paymentMethod = giftCardComponentState.data.paymentMethod
         if (paymentMethod == null) {
             Logger.e(TAG, "onBalanceCallRequested - paymentMethod is null")
             return null
         }
         cachedGiftCardComponentState = giftCardComponentState
-        return paymentMethod
+        return giftCardComponentState.data
     }
 
     fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
@@ -302,6 +305,7 @@ internal class DropInViewModel(
         } else {
             currentOrder = orderModel
             amount = orderModel.remainingAmount
+            sessionDetails = sessionDetails?.copy(amount = orderModel.remainingAmount)
             Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
             Logger.d(TAG, "handleOrderResponse - Order cached")
         }

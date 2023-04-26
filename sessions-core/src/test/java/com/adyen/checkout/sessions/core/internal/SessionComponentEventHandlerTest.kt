@@ -333,6 +333,7 @@ internal class SessionComponentEventHandlerTest(
     }
 
     private fun createSessionPaymentResult() = SessionPaymentResult(
+        sessionId = "sessionId",
         sessionResult = "sessionResult",
         sessionData = "sessionData",
         resultCode = "resultCode",

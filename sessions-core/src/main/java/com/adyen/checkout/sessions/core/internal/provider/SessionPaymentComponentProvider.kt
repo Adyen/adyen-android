@@ -27,7 +27,8 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 interface SessionPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,
-    ComponentStateT : PaymentComponentState<*>
+    ComponentStateT : PaymentComponentState<*>,
+    ComponentCallbackT : SessionComponentCallback<ComponentStateT>
     > {
 
     /**
@@ -52,7 +53,7 @@ interface SessionPaymentComponentProvider<
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
-        componentCallback: SessionComponentCallback<ComponentStateT>,
+        componentCallback: ComponentCallbackT,
         key: String? = null,
     ): ComponentT {
         return get(
@@ -90,7 +91,7 @@ interface SessionPaymentComponentProvider<
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
-        componentCallback: SessionComponentCallback<ComponentStateT>,
+        componentCallback: ComponentCallbackT,
         key: String? = null,
     ): ComponentT {
         return get(
@@ -134,7 +135,7 @@ interface SessionPaymentComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: SessionComponentCallback<ComponentStateT>,
+        componentCallback: ComponentCallbackT,
         key: String?,
     ): ComponentT
 }

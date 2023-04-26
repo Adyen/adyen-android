@@ -37,7 +37,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
                 when (event.state.giftCardAction) {
                     is GiftCardAction.CheckBalance -> {
                         event.state.data.paymentMethod?.let {
-                            callback.onBalanceCheck(it)
+                            callback.onBalanceCheck(event.state)
                         } ?: throw GiftCardException(
                             "onBalanceCheck cannot be performed due to payment method being null."
                         )

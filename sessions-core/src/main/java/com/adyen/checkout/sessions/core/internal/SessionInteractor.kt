@@ -16,7 +16,6 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import com.adyen.checkout.sessions.core.SessionModel
@@ -71,8 +70,7 @@ class SessionInteractor(
                         response.isRefusedInPartialPaymentFlow() ->
                             SessionCallResult.Payments.RefusedPartialPayment(response.mapToSessionPaymentResult())
                         action != null -> SessionCallResult.Payments.Action(action)
-                        response.order.isNonFullyPaid() ->
-                            SessionCallResult.Payments.NotFullyPaidOrder(response.mapToSessionPaymentResult())
+                        response.order.isNonFullyPaid() -> onNonFullyPaidOrder(response)
                         else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
                     }
                 },
@@ -120,22 +118,22 @@ class SessionInteractor(
     }
 
     suspend fun checkBalance(
-        paymentMethodData: PaymentMethodDetails,
-        merchantCall: (PaymentMethodDetails) -> Boolean,
+        paymentComponentState: PaymentComponentState<*>,
+        merchantCall: (PaymentComponentState<*>) -> Boolean,
         merchantCallName: String,
     ): SessionCallResult.Balance {
         return checkIfCallWasHandled(
-            merchantCall = { merchantCall(paymentMethodData) },
-            internalCall = { makeCheckBalanceCallInternal(paymentMethodData) },
+            merchantCall = { merchantCall(paymentComponentState) },
+            internalCall = { makeCheckBalanceCallInternal(paymentComponentState) },
             merchantMethodName = merchantCallName,
             takenOverFactory = { SessionCallResult.Balance.TakenOver },
         )
     }
 
     private suspend fun makeCheckBalanceCallInternal(
-        paymentMethodData: PaymentMethodDetails
+        paymentComponentState: PaymentComponentState<*>
     ): SessionCallResult.Balance {
-        sessionRepository.checkBalance(sessionModel, paymentMethodData)
+        sessionRepository.checkBalance(sessionModel, paymentComponentState)
             .fold(
                 onSuccess = { response ->
                     updateSessionData(response.sessionData)
@@ -270,7 +268,18 @@ class SessionInteractor(
         _sessionFlow.update { it.copy(sessionData = sessionData) }
     }
 
+    private fun onNonFullyPaidOrder(response: SessionPaymentsResponse): SessionCallResult.Payments.NotFullyPaidOrder {
+        if (response.order != null) {
+            return SessionCallResult.Payments.NotFullyPaidOrder(
+                result = response.mapToSessionPaymentResult(),
+            )
+        }
+        // it's impossible for order to be null since we already check it where we call this function
+        throw CheckoutException("Order cannot be null.")
+    }
+
     private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,
@@ -278,6 +287,7 @@ class SessionInteractor(
     )
 
     private fun SessionDetailsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,

@@ -78,8 +78,9 @@ interface DropInServiceContract {
      * your server. This method is called right after the user enters their partial payment method details and submits
      * them.
      *
-     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
-     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
+     * We provide a [PaymentComponentState] which has a [PaymentComponentData] object containing a non-serialized
+     * version of the partial payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a
+     * [JSONObject].
      *
      * NOTICE: this method runs on the main thread, you should make sure the API call and any other long running
      * operation is made on a background thread.
@@ -92,9 +93,9 @@ interface DropInServiceContract {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodDetails The data from the partial payment method component.
+     * @param paymentComponentState The state from the partial payment method component.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
         throw MethodNotImplementedException("Method onBalanceCheck is not implemented.")
     }
 

@@ -1,19 +1,29 @@
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ozgur on 21/4/2023.
+ */
+
 package com.adyen.checkout.example.ui.giftcard
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import com.adyen.checkout.core.internal.data.model.toStringPretty
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -104,23 +114,31 @@ internal class GiftCardViewModel @Inject constructor(
     // no ops
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
-    override fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) {
+    override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
         viewModelScope.launch(Dispatchers.IO) {
             Logger.d(TAG, "checkBalance")
 
-            val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodDetails)
-            Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
+            val amount = paymentComponentState.data.amount
+            val paymentMethod = paymentComponentState.data.paymentMethod
+            if (paymentMethod != null && amount != null) {
+                val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethod)
+                val amountJson = Amount.SERIALIZER.serialize(amount)
 
-            val request = createBalanceRequest(
-                paymentMethodJson,
-                keyValueStorage.getMerchantAccount()
-            )
+                val request = createBalanceRequest(
+                    paymentMethodJson,
+                    amountJson,
+                    keyValueStorage.getMerchantAccount()
+                )
 
-            val response = paymentsRepository.getBalance(request)
-            handleBalanceResponse(response)
+                val response = paymentsRepository.getBalance(request)
+                handleBalanceResponse(response)
+            } else {
+                _giftCardViewStateFlow.emit(GiftCardViewState.Error)
+            }
         }
     }
 
+    @Suppress("SwallowedException")
     private fun handleBalanceResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
             when (jsonResponse.getStringOrNull("resultCode")) {
@@ -135,7 +153,21 @@ internal class GiftCardViewModel @Inject constructor(
                         )
                     }
                 }
-                "NotEnoughBalance" -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
+                "NotEnoughBalance" -> {
+                    try {
+                        viewModelScope.launch {
+                            _events.emit(
+                                GiftCardEvent.Balance(
+                                    BalanceResult.SERIALIZER.deserialize(
+                                        jsonResponse
+                                    )
+                                )
+                            )
+                        }
+                    } catch (e: ModelSerializationException) {
+                        viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
+                    }
+                }
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {

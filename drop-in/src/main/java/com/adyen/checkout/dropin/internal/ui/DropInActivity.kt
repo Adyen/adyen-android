@@ -365,7 +365,7 @@ internal class DropInActivity :
 
     override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
         Logger.d(TAG, "requestCheckBalanceCall")
-        val paymentMethod = dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
+        dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
             Logger.e(TAG, "requestBalanceCall - service is disconnected")
             balanceDataQueue = giftCardComponentState
@@ -373,7 +373,7 @@ internal class DropInActivity :
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        dropInService?.requestBalanceCall(paymentMethod)
+        dropInService?.requestBalanceCall(giftCardComponentState)
     }
 
     private fun requestOrdersCall() {
@@ -425,7 +425,6 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
-            is DropInServiceResult.FinishedWithSessions -> sendResult(dropInServiceResult.result)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
@@ -461,6 +460,7 @@ internal class DropInActivity :
             is SessionDropInServiceResult.SessionTakenOverUpdated ->
                 dropInViewModel.onSessionTakenOverUpdated(dropInServiceResult.isFlowTakenOver)
             is SessionDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+            is SessionDropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
         }
     }
 

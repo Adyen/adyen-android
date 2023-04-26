@@ -12,7 +12,6 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.sessions.core.SessionModel
@@ -21,7 +20,7 @@ internal interface BaseDropInServiceInterface {
     suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
-    fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
+    fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>)
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
     fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)

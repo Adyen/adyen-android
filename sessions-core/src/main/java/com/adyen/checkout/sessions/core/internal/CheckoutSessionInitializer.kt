@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.sessions.core.internal
 
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.exception.CheckoutException
@@ -29,13 +30,20 @@ internal class CheckoutSessionInitializer(
     private val sessionService = SessionService(httpClient)
     private val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
 
-    suspend fun setupSession(): CheckoutSessionResult = withContext(Dispatchers.IO) {
+    // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
+    //  override Amount
+    suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(Dispatchers.IO) {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
             order = order,
         ).fold(
-            onSuccess = {
-                return@withContext CheckoutSessionResult.Success(CheckoutSession(it, order))
+            onSuccess = { sessionSetupResponse ->
+                return@withContext CheckoutSessionResult.Success(
+                    CheckoutSession(
+                        sessionSetupResponse.copy(amount = overrideAmount ?: sessionSetupResponse.amount),
+                        order
+                    )
+                )
             },
             onFailure = {
                 return@withContext CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))

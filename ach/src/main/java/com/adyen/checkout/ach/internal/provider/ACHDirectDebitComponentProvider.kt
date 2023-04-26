@@ -67,23 +67,23 @@ class ACHDirectDebitComponentProvider(
     PaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        ACHDirectDebitComponentState
-        >,
+        ACHDirectDebitComponentState,
+        ComponentCallback<ACHDirectDebitComponentState>>,
     StoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        ACHDirectDebitComponentState
-        >,
+        ACHDirectDebitComponentState,
+        ComponentCallback<ACHDirectDebitComponentState>>,
     SessionPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        ACHDirectDebitComponentState
-        >,
+        ACHDirectDebitComponentState,
+        SessionComponentCallback<ACHDirectDebitComponentState>>,
     SessionStoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
-        ACHDirectDebitComponentState
-        > {
+        ACHDirectDebitComponentState,
+        SessionComponentCallback<ACHDirectDebitComponentState>> {
 
     private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(
         overrideComponentParams,

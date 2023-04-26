@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -38,13 +37,15 @@ import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
 import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
+import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
+import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.sessions.core.CheckoutSession
-import com.adyen.checkout.sessions.core.SessionComponentCallback
-import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
@@ -58,8 +59,16 @@ class GiftCardComponentProvider(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
-    PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState>,
-    SessionPaymentComponentProvider<GiftCardComponent, GiftCardConfiguration, GiftCardComponentState> {
+    PaymentComponentProvider<
+        GiftCardComponent,
+        GiftCardConfiguration,
+        GiftCardComponentState,
+        GiftCardComponentCallback>,
+    SessionPaymentComponentProvider<
+        GiftCardComponent,
+        GiftCardConfiguration,
+        GiftCardComponentState,
+        SessionsGiftCardComponentCallback> {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
@@ -70,7 +79,7 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<GiftCardComponentState>,
+        componentCallback: GiftCardComponentCallback,
         order: Order?,
         key: String?,
     ): GiftCardComponent {
@@ -135,7 +144,7 @@ class GiftCardComponentProvider(
         paymentMethod: PaymentMethod,
         configuration: GiftCardConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<GiftCardComponentState>,
+        componentCallback: SessionsGiftCardComponentCallback,
         key: String?
     ): GiftCardComponent {
         assertSupported(paymentMethod)
@@ -191,7 +200,7 @@ class GiftCardComponentProvider(
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
             )
 
-            val sessionComponentEventHandler = SessionComponentEventHandler<GiftCardComponentState>(
+            val sessionsGiftCardComponentEventHandler = SessionsGiftCardComponentEventHandler(
                 sessionInteractor = sessionInteractor,
                 sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
             )
@@ -200,14 +209,18 @@ class GiftCardComponentProvider(
                 giftCardDelegate = giftCardDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, giftCardDelegate),
-                componentEventHandler = sessionComponentEventHandler,
+                componentEventHandler = sessionsGiftCardComponentEventHandler,
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory)[key, GiftCardComponent::class.java]
             .also { component ->
+                val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(
+                    component,
+                    componentCallback
+                )
                 component.observe(lifecycleOwner) {
-                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                    component.componentEventHandler.onPaymentComponentEvent(it, internalComponentCallback)
                 }
             }
     }

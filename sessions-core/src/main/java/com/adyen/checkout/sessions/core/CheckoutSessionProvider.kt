@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.sessions.core.internal.CheckoutSessionInitializer
 
 object CheckoutSessionProvider {
@@ -31,6 +32,35 @@ object CheckoutSessionProvider {
         configuration: Configuration,
         order: Order? = null,
     ): CheckoutSessionResult {
-        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession()
+        return CheckoutSessionInitializer(sessionModel, configuration, order).setupSession(null)
+    }
+
+    /**
+     * Only to be used for initializing a component for partial payment flow.
+     *
+     * Allows creating a [CheckoutSession] from the response of the /sessions endpoint.
+     * This is a suspend function that executes a network call on the IO thread.
+     *
+     * @param sessionPaymentResult The [SessionPaymentResult] object to initialize the session. You will get this
+     * object via [com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback.onPartialPayment] callback after
+     * a partial payment has been done.
+     * @param configuration A [Configuration] to initialize the session. You can use the same configuration required to
+     * initialize Drop-in or a component.
+     *
+     * @return The result of the API call.
+     */
+    suspend fun createSession(
+        sessionPaymentResult: SessionPaymentResult,
+        configuration: Configuration,
+    ): CheckoutSessionResult {
+        if (sessionPaymentResult.sessionId == null) {
+            throw CheckoutException("sessionId must not be null to create a session.")
+        }
+        val sessionModel = SessionModel(sessionPaymentResult.sessionId, sessionPaymentResult.sessionData)
+        val order = sessionPaymentResult.order?.let { orderResponse ->
+            Order(orderResponse.pspReference, orderResponse.orderData)
+        }
+        return CheckoutSessionInitializer(sessionModel, configuration, order)
+            .setupSession(sessionPaymentResult.order?.remainingAmount)
     }
 }

@@ -81,8 +81,6 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : DropInServiceResult(), DropInServiceResultError
-
-    internal class FinishedWithSessions(val result: SessionPaymentResult) : DropInServiceResult()
 }
 
 sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
@@ -183,4 +181,6 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : SessionDropInServiceResult(), DropInServiceResultError
+
+    internal class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()
 }

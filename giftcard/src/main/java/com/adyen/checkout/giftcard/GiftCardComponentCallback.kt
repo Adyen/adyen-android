@@ -9,6 +9,8 @@
 package com.adyen.checkout.giftcard
 
 import com.adyen.checkout.components.core.ComponentCallback
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import org.json.JSONObject
 
@@ -25,22 +27,23 @@ interface GiftCardComponentCallback : ComponentCallback<GiftCardComponentState> 
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
-    fun onRequestOrder() = Unit
+    fun onRequestOrder()
 
     /**
      * In this method you should make a network call to the /paymentMethods/balance endpoint of the Checkout API through
      * your server. This method is called right after the user enters their partial payment method details and submits
      * them.
      *
-     * We provide a [PaymentMethodDetails] object that contains a non-serialized version of the partial payment method
-     * JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a [JSONObject].
+     * We provide a [PaymentComponentState] which has a [PaymentComponentData] object containing a non-serialized
+     * version of the partial payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it to a
+     * [JSONObject].
      *
      * You should eventually call [GiftCardComponent.resolveBalanceResult] with a
      * [com.adyen.checkout.components.core.BalanceResult] that you will receive in the response of the API call.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentMethodDetails The data from the partial payment method component.
+     * @param paymentComponentState The state from the partial payment method component.
      */
-    fun onBalanceCheck(paymentMethodDetails: PaymentMethodDetails) = Unit
+    fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>)
 }

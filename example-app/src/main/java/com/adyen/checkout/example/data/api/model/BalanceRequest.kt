@@ -12,5 +12,6 @@ import org.json.JSONObject
 
 data class BalanceRequest(
     val paymentMethod: JSONObject,
+    val amount: JSONObject,
     val merchantAccount: String
 )

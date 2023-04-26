@@ -26,7 +26,8 @@ import com.adyen.checkout.components.core.internal.util.requireApplication
 interface StoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,
-    ComponentStateT : PaymentComponentState<*>
+    ComponentStateT : PaymentComponentState<*>,
+    ComponentCallbackT : ComponentCallback<ComponentStateT>
     > {
 
     /**
@@ -49,7 +50,7 @@ interface StoredPaymentComponentProvider<
         fragment: Fragment,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        callback: ComponentCallback<ComponentStateT>,
+        callback: ComponentCallbackT,
         order: Order? = null,
         key: String? = null,
     ): ComponentT {
@@ -86,7 +87,7 @@ interface StoredPaymentComponentProvider<
         activity: ComponentActivity,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
-        callback: ComponentCallback<ComponentStateT>,
+        callback: ComponentCallbackT,
         order: Order? = null,
         key: String? = null,
     ): ComponentT {
@@ -129,7 +130,7 @@ interface StoredPaymentComponentProvider<
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT,
         application: Application,
-        componentCallback: ComponentCallback<ComponentStateT>,
+        componentCallback: ComponentCallbackT,
         order: Order?,
         key: String?,
     ): ComponentT
