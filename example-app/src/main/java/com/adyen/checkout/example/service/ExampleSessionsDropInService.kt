@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
-// TODO SESSIONS: docs
 @AndroidEntryPoint
 class ExampleSessionsDropInService : SessionDropInService() {
 

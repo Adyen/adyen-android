@@ -69,7 +69,7 @@ internal class DefaultPayByBankDelegate(
         if (!hasIssuers) {
             val state = createValidComponentState()
             _componentStateFlow.tryEmit(state)
-            submitHandler.onSubmit(state) // TODO sessions: test
+            submitHandler.onSubmit(state)
         } else {
             _viewFlow.tryEmit(PayByBankComponentViewType)
         }

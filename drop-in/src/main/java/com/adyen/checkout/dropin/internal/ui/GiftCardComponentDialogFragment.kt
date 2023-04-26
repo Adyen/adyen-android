@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -123,9 +124,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
 
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        // TODO find a way to show an error dialog unless the payment is cancelled by the user
-        //  then move back to the payment methods screen afterwards
-        performBackAction()
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     override fun onBackPressed(): Boolean {

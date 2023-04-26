@@ -66,7 +66,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    // TODO improve
     private fun setDialogToFullScreen(dialog: Dialog) {
         dialog.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog
