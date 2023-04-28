@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
 import org.json.JSONObject
 
+@Keep
 data class BalanceRequest(
     val paymentMethod: JSONObject,
     val amount: JSONObject,
