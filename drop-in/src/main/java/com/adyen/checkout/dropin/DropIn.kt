@@ -17,8 +17,6 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
-import com.adyen.checkout.dropin.internal.DropInResultContract
-import com.adyen.checkout.dropin.internal.SessionDropInResultContract
 import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
 import com.adyen.checkout.dropin.internal.ui.model.SessionDropInResultContractParams
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
