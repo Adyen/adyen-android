@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.example.repositories.PaymentsRepositoryImpl
 import org.json.JSONObject
@@ -16,11 +17,13 @@ import org.json.JSONObject
  * Data inside this class will not be sent as shown, instead paymentComponentData and requestData will
  * both be merged into the same JSON object. Check [PaymentsRepositoryImpl] for implementation.
  */
+@Keep
 data class PaymentsRequest(
     val paymentComponentData: JSONObject,
     val requestData: PaymentsRequestData
 )
 
+@Keep
 data class PaymentsRequestData(
     val shopperReference: String,
     val amount: Amount,

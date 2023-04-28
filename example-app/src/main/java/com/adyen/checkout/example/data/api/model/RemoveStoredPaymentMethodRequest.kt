@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class RemoveStoredPaymentMethodRequest(
     val recurringDetailReference: String,
     val merchantAccount: String,

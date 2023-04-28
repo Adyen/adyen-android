@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class AdditionalData(
     val allow3DS2: String = "false",
     val executeThreeD: String = "false"

@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
 import java.util.Date
 
+@Keep
 data class Item(
     val quantity: Int = 2,
     val amountExcludingTax: Int = 100,

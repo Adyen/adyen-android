@@ -7,6 +7,9 @@
  */
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class ThreeDS2RequestDataRequest(
     val deviceChannel: String = "app",
     val challengeIndicator: String = "requestChallenge"

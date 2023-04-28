@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 
+@Keep
 data class PaymentMethodsRequest(
     val merchantAccount: String,
     val shopperReference: String,

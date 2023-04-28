@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.example.data.api.model
 
+import androidx.annotation.Keep
+
+@Keep
 enum class InstallmentPlan(val plan: String) {
     REGULAR("regular"),
     REVOLVING("revolving")
