@@ -13,69 +13,108 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.core.view.isVisible
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.CashAppPayPaymentMethod
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentCashAppPayComponentBinding
 import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 @Suppress("TooManyFunctions")
-class CashAppPayComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<GenericComponentState<CashAppPayPaymentMethod>> {
+class CashAppPayComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
+    private lateinit var binding: FragmentCashAppPayComponentBinding
 
-        private const val PAYMENT_METHOD = "PAYMENT_METHOD"
+    private lateinit var paymentMethod: PaymentMethod
+    private lateinit var cashAppPayComponent: CashAppPayComponent
 
-        fun newInstance(
-            paymentMethod: PaymentMethod
-        ): CashAppPayComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(PAYMENT_METHOD, paymentMethod)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            paymentMethod = it.getParcelable(PAYMENT_METHOD) ?: throw CheckoutException("Cannot launch fragment without payment method")
+        }
 
-            return CashAppPayComponentDialogFragment().apply {
-                arguments = args
-            }
+        try {
+            cashAppPayComponent = getComponentFor(
+                this,
+                paymentMethod,
+                dropInViewModel.dropInConfiguration,
+                dropInViewModel.amount
+            ) as CashAppPayComponent
+        } catch (e: ClassCastException) {
+            throw CheckoutException("Cannot load CashAppPayComponent")
         }
     }
 
-    private lateinit var paymentMethod: PaymentMethod
-    private lateinit var component: CashAppPayComponent
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(TAG, "onCreateView")
-        return inflater.inflate(R.layout.fragment_cash_app_pay_component, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentCashAppPayComponentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
 
-        arguments?.let {
-            paymentMethod = it.getParcelable(PAYMENT_METHOD) ?: throw IllegalArgumentException("Payment method is null")
+        if (!dropInViewModel.amount.isEmpty) {
+            val value = CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
+            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
-        try {
-            component = getComponentFor(this, paymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount) as CashAppPayComponent
-            component.observe(viewLifecycleOwner, this)
-            component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-        } catch (e: CheckoutException) {
-            handleError(ComponentError(e))
-            return
-        } catch (e: ClassCastException) {
-            throw CheckoutException("Component is not CashAppPayComponent")
+        cashAppPayComponent.observe(viewLifecycleOwner) { state ->
+            if (state.isValid) {
+                protocol.requestPaymentsCall(state)
+            }
         }
+        cashAppPayComponent.observeErrors(viewLifecycleOwner) { error ->
+            if (error == null) return@observeErrors
+            Logger.e(TAG, "ComponentError", error.exception)
+            handleError(error)
+        }
+
+        binding.header.text = paymentMethod.name
+
+        binding.cashAppPayView.attach(cashAppPayComponent, viewLifecycleOwner)
+
+        if (binding.cashAppPayView.isConfirmationRequired) {
+            binding.payButton.setOnClickListener {
+                // we need to trigger the Cash App Pay here to start the transaction
+                // this is different from other components as the component state only gets created after this method is called and Cash App Pay
+                // redirects back to the app
+                cashAppPayComponent.submit()
+                setPaymentInProgress(true)
+            }
+            setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
+            binding.cashAppPayView.requestFocus()
+            setPaymentInProgress(false)
+        } else {
+            setPaymentInProgress(true)
+        }
+    }
+
+    private fun setPaymentInProgress(isPaymentInProgress: Boolean) {
+        binding.containerComponent.isVisible = !isPaymentInProgress
+        binding.containerPaymentInProgress.isVisible = isPaymentInProgress
+    }
+
+    private fun handleError(componentError: ComponentError) {
+        Logger.e(TAG, componentError.errorMessage)
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     override fun onBackPressed(): Boolean {
         Logger.d(TAG, "onBackPressed")
-        return performBackAction()
+
+        when {
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> protocol.terminateDropIn()
+            else -> protocol.showPaymentMethodsDialog()
+        }
+        return true
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -84,31 +123,20 @@ class CashAppPayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obs
         protocol.terminateDropIn()
     }
 
-    private fun createErrorHandlerObserver(): Observer<ComponentError> {
-        return Observer {
-            if (it != null) {
-                Logger.e(TAG, "ComponentError", it.exception)
-                handleError(it)
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val PAYMENT_METHOD = "PAYMENT_METHOD"
+
+        fun newInstance(
+            paymentMethod: PaymentMethod
+        ): CashAppPayComponentDialogFragment {
+            val args = Bundle().apply {
+                putParcelable(PAYMENT_METHOD, paymentMethod)
             }
-        }
-    }
 
-    private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
-    }
-
-    private fun performBackAction(): Boolean {
-        when {
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> protocol.terminateDropIn()
-            else -> protocol.showPaymentMethodsDialog()
-        }
-        return true
-    }
-
-    override fun onChanged(state: GenericComponentState<CashAppPayPaymentMethod>?) {
-        if (state?.isValid == true) {
-            protocol.requestPaymentsCall(state)
+            return CashAppPayComponentDialogFragment().apply {
+                arguments = args
+            }
         }
     }
 }
