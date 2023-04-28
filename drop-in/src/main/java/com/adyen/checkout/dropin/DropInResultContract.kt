@@ -6,19 +6,17 @@
  * Created by josephj on 2/8/2021.
  */
 
-package com.adyen.checkout.dropin.internal
+package com.adyen.checkout.dropin
 
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
-import com.adyen.checkout.dropin.DropIn
-import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
 
-internal class DropInResultContract : ActivityResultContract<DropInResultContractParams, DropInResult?>() {
+class DropInResultContract : ActivityResultContract<DropInResultContractParams, DropInResult?>() {
     override fun createIntent(context: Context, input: DropInResultContractParams): Intent {
         return DropInActivity.createIntent(
             context = context,
