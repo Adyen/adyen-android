@@ -20,17 +20,14 @@ internal class Adyen3DS2ComponentParamsMapper(
     fun mapToParams(
         adyen3DS2Configuration: Adyen3DS2Configuration,
         sessionParams: SessionParams?,
-        defaultThreeDSRequestorAppURL: String,
     ): Adyen3DS2ComponentParams {
         return adyen3DS2Configuration
-            .mapToParamsInternal(defaultThreeDSRequestorAppURL)
+            .mapToParamsInternal()
             .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun Adyen3DS2Configuration.mapToParamsInternal(
-        defaultThreeDSRequestorAppURL: String,
-    ): Adyen3DS2ComponentParams {
+    private fun Adyen3DS2Configuration.mapToParamsInternal(): Adyen3DS2ComponentParams {
         return Adyen3DS2ComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -39,7 +36,7 @@ internal class Adyen3DS2ComponentParamsMapper(
             isCreatedByDropIn = false,
             amount = amount,
             uiCustomization = uiCustomization,
-            threeDSRequestorAppURL = threeDSRequestorAppURL ?: defaultThreeDSRequestorAppURL,
+            threeDSRequestorAppURL = threeDSRequestorAppURL,
         )
     }
 

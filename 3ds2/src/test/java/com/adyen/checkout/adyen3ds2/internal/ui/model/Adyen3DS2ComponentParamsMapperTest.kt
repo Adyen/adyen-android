@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale
 
@@ -25,11 +25,11 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             .build()
 
         val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
+            .mapToParams(adyen3DS2Configuration, null)
 
         val expected = getAdyen3DS2ComponentParams()
 
-        Assertions.assertEquals(expected, params)
+        assertEquals(expected, params)
     }
 
     @Test
@@ -43,14 +43,14 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             .build()
 
         val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
+            .mapToParams(adyen3DS2Configuration, null)
 
         val expected = getAdyen3DS2ComponentParams(
             uiCustomization = uiCustomization,
             threeDSRequestorAppURL = testUrl,
         )
 
-        Assertions.assertEquals(expected, params)
+        assertEquals(expected, params)
     }
 
     @Test
@@ -73,7 +73,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         )
 
         val params = Adyen3DS2ComponentParamsMapper(overrideParams, null)
-            .mapToParams(adyen3DS2Configuration, null, TEST_REQUESTOR_APP_URL)
+            .mapToParams(adyen3DS2Configuration, null)
 
         val expected = getAdyen3DS2ComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -87,7 +87,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             ),
         )
 
-        Assertions.assertEquals(expected, params)
+        assertEquals(expected, params)
     }
 
     private fun getAdyen3DS2ConfigurationBuilder() = Adyen3DS2Configuration.Builder(
@@ -105,7 +105,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         uiCustomization: UiCustomization? = null,
-        threeDSRequestorAppURL: String = TEST_REQUESTOR_APP_URL,
+        threeDSRequestorAppURL: String? = null,
     ) = Adyen3DS2ComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -120,6 +120,5 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
-        private const val TEST_REQUESTOR_APP_URL = "TEST_REQUESTOR_APP_URL"
     }
 }

@@ -91,7 +91,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
             componentParams = Adyen3DS2ComponentParamsMapper(null, null)
-                .mapToParams(configuration, null, "embeddedRequestorAppUrl"),
+                .mapToParams(configuration, null),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,

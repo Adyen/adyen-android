@@ -40,7 +40,6 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
-import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -79,11 +78,9 @@ class Adyen3DS2ComponentProvider(
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): Adyen3DS2Delegate {
-        val defaultThreeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(application)
         val componentParams = componentParamsMapper.mapToParams(
             adyen3DS2Configuration = configuration,
             sessionParams = null,
-            defaultThreeDSRequestorAppURL = defaultThreeDSRequestorAppURL,
         )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
