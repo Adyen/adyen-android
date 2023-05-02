@@ -40,7 +40,7 @@ public class ShippingAddressParameters extends ModelObject {
             final JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.putOpt(ALLOWED_COUNTRY_CODES, JsonUtils.serializeOptStringList(modelObject.getAllowedCountryCodes()));
-                jsonObject.putOpt(ALLOWED_COUNTRY_CODES, modelObject.isPhoneNumberRequired());
+                jsonObject.putOpt(PHONE_NUMBER_REQUIRED, modelObject.isPhoneNumberRequired());
 
             } catch (JSONException e) {
                 throw new ModelSerializationException(ShippingAddressParameters.class, e);
@@ -52,7 +52,7 @@ public class ShippingAddressParameters extends ModelObject {
         @Override
         public ShippingAddressParameters deserialize(@NonNull JSONObject jsonObject) {
             final ShippingAddressParameters shippingAddressParameters = new ShippingAddressParameters();
-            shippingAddressParameters.setAllowedCountryCodes(JsonUtils.parseOptStringList(jsonObject.optJSONArray(PHONE_NUMBER_REQUIRED)));
+            shippingAddressParameters.setAllowedCountryCodes(JsonUtils.parseOptStringList(jsonObject.optJSONArray(ALLOWED_COUNTRY_CODES)));
             shippingAddressParameters.setPhoneNumberRequired(jsonObject.optBoolean(PHONE_NUMBER_REQUIRED));
             return shippingAddressParameters;
         }
