@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function release_version() {
-    local build_file="${GITHUB_WORKSPACE}/dependencies.gradle"
-    local version_name_key="version_name"
+    local build_file="${GITHUB_WORKSPACE}/build.gradle"
+    local version_name_key="ext.version_name"
     local version_name_regex="^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}(-(alpha|beta|rc)[0-9]{2}){0,1}$"
 
     local version
