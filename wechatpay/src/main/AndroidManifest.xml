@@ -1,2 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.checkout.wechatpay" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <queries>
+        <package android:name="com.tencent.mm" />
+    </queries>
+
+</manifest>

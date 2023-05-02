@@ -9,65 +9,65 @@
 package com.adyen.checkout.voucher
 
 import android.app.Activity
-import android.app.Application
-import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.BaseActionComponent
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.VoucherAction
-import com.adyen.checkout.core.exception.ComponentException
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ActionComponent
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
+import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
+import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
+import kotlinx.coroutines.flow.Flow
 
-class VoucherComponent(
-    savedStateHandle: SavedStateHandle,
-    application: Application,
-    configuration: VoucherConfiguration,
-) : BaseActionComponent<VoucherConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<VoucherOutputData, VoucherConfiguration, ActionComponentData> {
+/**
+ * An [ActionComponent] that is able to handle the 'voucher' action.
+ */
+class VoucherComponent internal constructor(
+    override val delegate: VoucherDelegate,
+    internal val actionComponentEventHandler: ActionComponentEventHandler,
+) : ViewModel(),
+    ActionComponent,
+    ViewableComponent {
 
-    private val mOutputLiveData = MutableLiveData<VoucherOutputData>()
-    private var url: String? = null
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+
+    init {
+        delegate.initialize(viewModelScope)
+    }
+
+    internal fun observe(lifecycleOwner: LifecycleOwner, callback: (ActionComponentEvent) -> Unit) {
+        delegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    internal fun removeObserver() {
+        delegate.removeObserver()
+    }
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<VoucherOutputData>) {
-        mOutputLiveData.observe(lifecycleOwner, observer)
+    override fun handleAction(action: Action, activity: Activity) {
+        delegate.handleAction(action, activity)
     }
 
-    override fun getOutputData(): VoucherOutputData? {
-        return mOutputLiveData.value
-    }
-
-    override fun sendAnalyticsEvent(context: Context) {
-        // no ops
-    }
-
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        if (action !is VoucherAction) throw ComponentException("Unsupported action")
-        url = action.url
-
-        mOutputLiveData.postValue(
-            VoucherOutputData(
-                true,
-                action.paymentMethodType
-            )
-        )
-    }
-
-    fun getDownloadUrl(): String? {
-        return url
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        delegate.onCleared()
     }
 
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
-        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration> = VoucherComponentProvider()
+        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> =
+            VoucherComponentProvider()
     }
 }

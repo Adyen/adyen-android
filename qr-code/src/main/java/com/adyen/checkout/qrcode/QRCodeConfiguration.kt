@@ -8,70 +8,64 @@
 package com.adyen.checkout.qrcode
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.core.api.Environment
-import java.util.*
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
+import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
-class QRCodeConfiguration : Configuration {
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<QRCodeConfiguration?> = object : Parcelable.Creator<QRCodeConfiguration?> {
-            override fun createFromParcel(source: Parcel?): QRCodeConfiguration? {
-                if (source == null) return null
-                return QRCodeConfiguration(source)
-            }
-
-            override fun newArray(size: Int): Array<QRCodeConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
-    internal constructor(parcel: Parcel) : super(parcel)
+/**
+ * Configuration class for the [QRCodeComponent].
+ */
+@Parcelize
+class QRCodeConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount
+) : Configuration {
 
     /**
      * Builder to create a [QRCodeConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<QRCodeConfiguration> {
-        /**
-         * Constructor for Builder with default values.
-         *
-         * @param context   A context
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+    class Builder : BaseConfigurationBuilder<QRCodeConfiguration, Builder> {
 
         /**
-         * Builder with required parameters.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
-         * Constructor that copies an existing configuration.
+         * Initialize a configuration builder with the required fields.
          *
-         * @param configuration A configuration to initialize the builder.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(configuration: QRCodeConfiguration) : super(configuration)
-
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
-        }
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         override fun buildInternal(): QRCodeConfiguration {
-            return QRCodeConfiguration(this)
+            return QRCodeConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
+            )
         }
     }
 }

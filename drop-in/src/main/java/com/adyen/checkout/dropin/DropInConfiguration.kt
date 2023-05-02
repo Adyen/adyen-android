@@ -8,108 +8,62 @@
 
 package com.adyen.checkout.dropin
 
-import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.util.CheckoutCurrency
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.core.util.ParcelUtils
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
-import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
+import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
-import java.util.*
+import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.upi.UPIConfiguration
+import kotlinx.parcelize.Parcelize
+import java.util.Locale
 import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
- * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to customize their behavior.
+ * There you will find specific methods to add configurations for each specific component, to be able to customize
+ * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
-@SuppressWarnings("TooManyFunctions")
-class DropInConfiguration : Configuration, Parcelable {
-
-    private val availablePaymentConfigs: HashMap<String, Configuration>
-    private val availableActionConfigs: HashMap<Class<*>, Configuration>
-    val serviceComponentName: ComponentName
-    val amount: Amount
-    val showPreselectedStoredPaymentMethod: Boolean
-    val skipListWhenSinglePaymentMethod: Boolean
-    val isRemovingStoredPaymentMethodsEnabled: Boolean
-    val additionalDataForDropInService: Bundle?
-
-    companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<DropInConfiguration> {
-            override fun createFromParcel(parcel: Parcel) = DropInConfiguration(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<DropInConfiguration>(size)
-        }
-    }
-
-    @Suppress("LongParameterList")
-    constructor(
-        builder: Builder
-    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
-        this.availablePaymentConfigs = builder.availablePaymentConfigs
-        this.availableActionConfigs = builder.availableActionConfigs
-        this.serviceComponentName = builder.serviceComponentName
-        this.amount = builder.amount
-        this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
-        this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
-        this.isRemovingStoredPaymentMethodsEnabled = builder.isRemovingStoredPaymentMethodsEnabled
-        this.additionalDataForDropInService = builder.additionalDataForDropInService
-    }
-
-    constructor(parcel: Parcel) : super(parcel) {
-        @Suppress("UNCHECKED_CAST")
-        availablePaymentConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
-        @Suppress("UNCHECKED_CAST")
-        availableActionConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
-        serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
-        amount = Amount.CREATOR.createFromParcel(parcel)
-        showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
-        skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
-        isRemovingStoredPaymentMethodsEnabled = ParcelUtils.readBoolean(parcel)
-        additionalDataForDropInService = parcel.readBundle(Bundle::class.java.classLoader)
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        super.writeToParcel(dest, flags)
-        dest.writeMap(availablePaymentConfigs)
-        dest.writeMap(availableActionConfigs)
-        dest.writeParcelable(serviceComponentName, flags)
-        JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
-        ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
-        ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
-        ParcelUtils.writeBoolean(dest, isRemovingStoredPaymentMethodsEnabled)
-        dest.writeBundle(additionalDataForDropInService)
-    }
+@Parcelize
+@Suppress("LongParameterList")
+class DropInConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
+    private val availablePaymentConfigs: HashMap<String, Configuration>,
+    internal val genericActionConfiguration: GenericActionConfiguration,
+    val showPreselectedStoredPaymentMethod: Boolean,
+    val skipListWhenSinglePaymentMethod: Boolean,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean,
+    val additionalDataForDropInService: Bundle?,
+) : Configuration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
         if (availablePaymentConfigs.containsKey(paymentMethod)) {
@@ -119,92 +73,45 @@ class DropInConfiguration : Configuration, Parcelable {
         return null
     }
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            @Suppress("UNCHECKED_CAST")
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
-
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
-    class Builder : BaseConfigurationBuilder<DropInConfiguration> {
+    @Suppress("unused", "TooManyFunctions")
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder> {
 
-        companion object {
-            val TAG = LogUtil.getTag()
-        }
+        private val availablePaymentConfigs = HashMap<String, Configuration>()
 
-        val availablePaymentConfigs = HashMap<String, Configuration>()
-        val availableActionConfigs = HashMap<Class<*>, Configuration>()
-
-        var serviceComponentName: ComponentName
-            private set
-        var amount: Amount = Amount.EMPTY
-            private set
-        var showPreselectedStoredPaymentMethod: Boolean = true
-            private set
-        var skipListWhenSinglePaymentMethod: Boolean = false
-            private set
-        var isRemovingStoredPaymentMethodsEnabled: Boolean = false
-            private set
-        var additionalDataForDropInService: Bundle? = null
-            private set
-
-        private val packageName: String
-        private val serviceClassName: String
+        private var showPreselectedStoredPaymentMethod: Boolean = true
+        private var skipListWhenSinglePaymentMethod: Boolean = false
+        private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
+        private var additionalDataForDropInService: Bundle? = null
 
         /**
-         *
          * Create a [DropInConfiguration]
          *
-         * @param context
-         * @param serviceClass Service that extended from [DropInService] that would handle network requests.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) : super(context, clientKey) {
-            this.packageName = context.packageName
-            this.serviceClassName = serviceClass.name
-            this.serviceComponentName = ComponentName(packageName, serviceClassName)
-        }
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
-         * Create a Builder with the same values of an existing Configuration object.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
+         *
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
-            packageName = dropInConfiguration.serviceComponentName.packageName
-            serviceClassName = dropInConfiguration.serviceComponentName.className
-
-            serviceComponentName = dropInConfiguration.serviceComponentName
-            amount = dropInConfiguration.amount
-            showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
-            skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
-            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
-            additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
-        }
-
-        fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
-            this.serviceComponentName = serviceComponentName
-            return this
-        }
-
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
-        }
-
-        fun setAmount(amount: Amount): Builder {
-            if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
-                throw CheckoutException("Currency is not valid.")
-            }
-            this.amount = amount
-            return this
-        }
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         /**
          * When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.
@@ -215,11 +122,12 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method available and no stored
-         * payment methods.
+         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method
+         * available and no storedpayment methods.
          *
-         * This only applies to payment methods that require a component (user input). Which means redirect payment methods, SDK payment methods,
-         * etc will not be skipped even if this flag is set to true and a single payment method is present.
+         * This only applies to payment methods that require a component (user input). Which means redirect payment
+         * methods, SDK payment methods, etc will not be skipped even if this flag is set to true and a single payment
+         * method is present.
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
@@ -227,9 +135,10 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in the payment methods screen.
+         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in
+         * the payment methods screen.
          *
-         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
@@ -237,7 +146,8 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using [DropInService.getAdditionalData].
+         * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using
+         * [DropInService.getAdditionalData].
          */
         fun setAdditionalDataForDropInService(additionalDataForDropInService: Bundle): Builder {
             this.additionalDataForDropInService = additionalDataForDropInService
@@ -289,6 +199,30 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addDotpayConfiguration(dotpayConfiguration: DotpayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.DOTPAY] = dotpayConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Czech Republic payment method.
+         */
+        fun addOnlineBankingCZConfiguration(onlineBankingCZConfiguration: OnlineBankingCZConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_CZ] = onlineBankingCZConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Poland payment method.
+         */
+        fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Slovakia payment method.
+         */
+        fun addOnlineBankingSKConfiguration(onlineBankingSKConfiguration: OnlineBankingSKConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_SK] = onlineBankingSKConfiguration
             return this
         }
 
@@ -366,55 +300,71 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for 3DS2 action.
+         * Add configuration for Seven Eleven payment method.
          */
-        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addSevenElevenConfiguration(sevenElevenConfiguration: SevenElevenConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN] = sevenElevenConfiguration
             return this
         }
 
         /**
-         * Add configuration for Await action.
+         * Add configuration for Online Banking Japan payment method.
          */
-        fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addOnlineBankingJPConfiguration(onlineBankingJPConfiguration: OnlineBankingJPConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ONLINE] = onlineBankingJPConfiguration
             return this
         }
 
         /**
-         * Add configuration for QR code action.
+         * Add configuration for Convenience Stores Japan payment method.
          */
-        fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addConvenienceStoresJPConfiguration(
+            convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration
+        ): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_STORES] = convenienceStoresJPConfiguration
             return this
         }
 
         /**
-         * Add configuration for Redirect action.
+         * Add configuration for Pay Easy payment method.
          */
-        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addPayEasyConfiguration(payEasyConfiguration: PayEasyConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ATM] = payEasyConfiguration
             return this
         }
 
         /**
-         * Add configuration for WeChat Pay action.
+         * Add configuration for ACH Direct Debit payment method.
          */
-        fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addAchDirectDebitConfiguration(achDirectDebitConfiguration: ACHDirectDebitConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ACH] = achDirectDebitConfiguration
             return this
         }
 
         /**
-         * Add configuration for Voucher action.
+         * Add configuration for UPI payment method.
          */
-        fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
-            availableActionConfigs[configuration::class.java] = configuration
+        fun addUPIConfiguration(upiConfiguration: UPIConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.UPI_COLLECT] = upiConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.UPI_QR] = upiConfiguration
             return this
         }
 
         override fun buildInternal(): DropInConfiguration {
-            return DropInConfiguration(this)
+            return DropInConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
+                availablePaymentConfigs = availablePaymentConfigs,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
+                amount = amount,
+                showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,
+                skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,
+                isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
+                additionalDataForDropInService = additionalDataForDropInService,
+            )
         }
     }
 }

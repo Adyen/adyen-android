@@ -9,16 +9,25 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.DropDownPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.databinding.ActivitySettingsBinding
+import com.adyen.checkout.example.ui.NightTheme
+import com.adyen.checkout.example.ui.NightThemeRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConfigurationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setttings)
-        setSupportActionBar(findViewById(R.id.toolbar))
+        val binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settingsContainer, ConfigurationFragment())
@@ -27,10 +36,25 @@ class ConfigurationActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    @AndroidEntryPoint
     class ConfigurationFragment : PreferenceFragmentCompat() {
+
+        @Inject
+        internal lateinit var nightThemeRepository: NightThemeRepository
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, rootKey)
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+
+            preferenceManager.preferenceScreen
+                .findPreference<DropDownPreference>(requireContext().getString(R.string.night_theme_title))
+                ?.setOnPreferenceChangeListener { _, newValue ->
+                    nightThemeRepository.theme = NightTheme.findByPreferenceValue(newValue as String?)
+                    true
+                }
         }
     }
 }

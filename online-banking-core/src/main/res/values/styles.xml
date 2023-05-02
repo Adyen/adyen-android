@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 20/9/2022.
+  -->
+<resources>
+
+
+    <style name="AdyenCheckout.OnlineBanking" />
+
+    <style name="AdyenCheckout.OnlineBanking.TermsAndConditionsTextView">
+        <item name="android:text">@string/checkout_online_banking_terms_and_conditions_text</item>
+        <item name="android:minHeight">@dimen/termsAndConditions_minHeight</item>
+        <item name="android:paddingStart">@dimen/termsAndConditions_paddingStart</item>
+        <item name="android:paddingEnd">@dimen/termsAndConditions_paddingEnd</item>
+        <item name="android:textSize">@dimen/termsAndConditions_text_size</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="AdyenCheckout.OnlineBanking.TermsAndConditionsInputLayout" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:minHeight">64dp</item>
+        <item name="android:layout_marginEnd">@dimen/issuersSpinner_side_margin</item>
+        <item name="android:layout_marginStart">@dimen/issuersSpinner_side_margin</item>
+        <item name="android:hint">@string/checkout_online_banking_hint</item>
+    </style>
+
+</resources>

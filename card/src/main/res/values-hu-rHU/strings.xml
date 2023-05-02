@@ -16,10 +16,11 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kártyatulajdonos születési dátuma (ÉÉHHNN) vagy cégjegyzékszám (10 számjegyű)</string>
     <string name="checkout_kcp_tax_number_hint">Cégjegyzékszám (10 számjegyű)</string>
     <string name="checkout_kcp_password_hint">Kártya jelszavának első 2 számjegye</string>
-    <string name="checkout_card_postal_code_hint">Irányítószám</string>
 
     <string name="checkout_card_number_not_valid">Érvénytelen kártyaszám</string>
     <string name="checkout_expiry_date_not_valid">Érvénytelen lejárati dátum</string>
+    <string name="checkout_expiry_date_not_valid_too_old">A kártya túl régi</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Túl távoli jövőbeli dátum</string>
     <string name="checkout_security_code_not_valid">A CVC/CVV formátuma érvénytelen</string>
     <string name="checkout_holder_name_not_valid">A tulajdonos neve érvénytelen</string>
     <string name="checkout_social_security_number_not_valid">Érvénytelen bevitel</string>

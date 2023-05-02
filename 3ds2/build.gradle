@@ -9,6 +9,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 // Maven artifact
@@ -19,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.adyen3ds2'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -31,26 +33,22 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
     // Checkout
-    api project(':components-core')
-    api project(':redirect')
+    api project(':ui-core')
 
     // Dependencies
-    api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
+    api libraries.adyen3ds2
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation project(':test-core')
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
 }

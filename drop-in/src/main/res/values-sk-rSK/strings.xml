@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Zaplatiť</string>
-    <string name="pay_button_with_value">Zaplatiť %s</string>
     <string name="payment_methods_header">Spôsob platby</string>
     <string name="error_dialog_title">Chyba</string>
     <string name="error_dialog_button">OK</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Vyberte iný spôsob</string>
     <string name="continue_button">Pokračovať</string>
     <string name="change_payment_method">Zmeniť spôsob platby</string>
-    <string name="checkout_giftcard_redeem_button">Uplatniť</string>
     <string name="checkout_giftcard_error_zero_balance">Táto darčeková karta má nulový zostatok</string>
     <string name="checkout_giftcard_error_currency">Darčekové karty sú platné iba v mene, v ktorej boli vydané</string>
     <string name="checkout_giftcard_remaining_balance_text">Zvyšný zostatok bude %s</string>
@@ -33,4 +30,9 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Áno, odstrániť</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušiť</string>
     <string name="checkout_remove_stored_payment_method_body">Odstrániť uložený spôsob platby</string>
+    <string name="checkout_permission_not_granted">Povolenie nebolo udelené</string>
+    <string name="checkout_rationale_title_storage_permission">Požiadajte o povolenie na ukladanie</string>
+    <string name="checkout_rationale_message_storage_permission">Ak chcete tento obrázok uložiť do zariadenia, musíte zapnúť povolenie na ukladanie</string>
+    <string name="checkout_stored_payment_confirmation_message">Potvrďte platbu pomocou %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Zrušiť</string>
 </resources>

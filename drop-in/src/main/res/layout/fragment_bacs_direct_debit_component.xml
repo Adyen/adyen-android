@@ -10,8 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/standard_margin">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/header"
@@ -32,16 +31,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/viewContainer"
+            <com.adyen.checkout.ui.core.AdyenComponentView
+                android:id="@+id/bacs_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/payButton"
-                style="@style/AdyenCheckout.Button.Colored"
-                android:text="@string/pay_button" />
 
             <androidx.core.widget.ContentLoadingProgressBar
                 android:id="@+id/progressBar"

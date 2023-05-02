@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Potvrđujem da je račun na moje ime i da sam jedini potpisnik potreban za autorizaciju izravnog terećenja na ovom računu.</string>
     <string name="bacs_consent_amount">Slažem se da se gore navedeni iznos oduzme s mog bankovnog računa.</string>
     <string name="bacs_consent_amount_specified">Slažem se da će moj bankovni račun biti terećen za %s.</string>
+    <string name="bacs_consent_invalid">Ovo polje zahtijeva vaše djelovanje</string>
 
     <string name="bacs_continue">Nastavi</string>
     <string name="bacs_confirm_and_pay">Potvrdi i plati</string>

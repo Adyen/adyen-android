@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Potvrdzujem, že účet je na moje meno a som jediný podpisovateľ, ktorý je povinný autorizovať inkaso v tomto účte.</string>
     <string name="bacs_consent_amount">Súhlasím s tým, že nižšie uvedená čiastka bude odpísaná z môjho bankového účtu.</string>
     <string name="bacs_consent_amount_specified">Súhlasím s úhradou čiastky %s z môjho bankového účtu.</string>
+    <string name="bacs_consent_invalid">Pre toto pole treba vykonať činnosť</string>
 
     <string name="bacs_continue">Pokračovať</string>
     <string name="bacs_confirm_and_pay">Potvrdiť a zaplatiť</string>

@@ -8,70 +8,88 @@
 package com.adyen.checkout.giftcard
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.core.api.Environment
-import java.util.*
+import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
+import kotlinx.parcelize.Parcelize
+import java.util.Locale
 
-class GiftCardConfiguration : Configuration {
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<GiftCardConfiguration?> = object : Parcelable.Creator<GiftCardConfiguration?> {
-            override fun createFromParcel(source: Parcel?): GiftCardConfiguration? {
-                if (source == null) return null
-                return GiftCardConfiguration(source)
-            }
-
-            override fun newArray(size: Int): Array<GiftCardConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
-    internal constructor(parcel: Parcel) : super(parcel)
+/**
+ * Configuration class for the [GiftCardComponent].
+ */
+@Parcelize
+@Suppress("LongParameterList")
+class GiftCardConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
+    internal val genericActionConfiguration: GenericActionConfiguration,
+) : Configuration, ButtonConfiguration {
 
     /**
      * Builder to create a [GiftCardConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<GiftCardConfiguration> {
-        /**
-         * Constructor for Builder with default values.
-         *
-         * @param context   A context
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<GiftCardConfiguration, Builder>,
+        ButtonConfigurationBuilder {
+
+        private var isSubmitButtonVisible: Boolean? = null
 
         /**
-         * Builder with required parameters.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
-         * Constructor that copies an existing configuration.
+         * Initialize a configuration builder with the required fields.
          *
-         * @param configuration A configuration to initialize the builder.
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(configuration: GiftCardConfiguration) : super(configuration)
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible Is submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
         }
 
         override fun buildInternal(): GiftCardConfiguration {
-            return GiftCardConfiguration(this)
+            return GiftCardConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
+                isSubmitButtonVisible = isSubmitButtonVisible,
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
+            )
         }
     }
 }

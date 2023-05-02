@@ -6,5 +6,4 @@
   ~ Created by arman on 12/6/2019.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.checkout.openbanking" />
+<manifest />

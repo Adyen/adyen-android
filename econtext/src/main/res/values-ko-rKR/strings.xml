@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">이름</string>
+    <string name="checkout_econtext_last_name_hint">성</string>
+    <string name="checkout_econtext_phone_number_hint">전화번호</string>
+    <string name="checkout_econtext_shopper_email_hint">이메일 주소</string>
+
+    <string name="checkout_econtext_first_name_invalid">이름이 올바르지 않습니다</string>
+    <string name="checkout_econtext_last_name_invalid">성이 올바르지 않습니다</string>
+    <string name="checkout_econtext_phone_number_invalid">유효하지 않은 전화번호</string>
+    <string name="checkout_econtext_shopper_email_invalid">유효하지 않은 이메일 주소</string>
+</resources>

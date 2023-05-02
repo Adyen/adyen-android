@@ -9,6 +9,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 // Maven artifact
@@ -19,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout base UI component client for Adye
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.ui.core'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -31,13 +33,8 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    buildFeatures {
+        viewBinding true
     }
 }
 
@@ -46,12 +43,15 @@ dependencies {
     api project(':components-core')
 
     // Dependencies
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "com.google.android.material:material:$material_version"
+    implementation libraries.androidx.appcompat
+    api libraries.androidx.constraintlayout
+    implementation libraries.androidx.recyclerview
+    implementation libraries.material
+    implementation libraries.androidx.browser
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.robolectric
 }

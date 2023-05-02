@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">본인이 이 계좌의 예금주이며, 이 계좌에서의 자동 이체를 승인하기 위해 필요한 유일한 서명인입니다.</string>
     <string name="bacs_consent_amount">계좌에서 위의 금액을 이체하는 것에 동의합니다.</string>
     <string name="bacs_consent_amount_specified">은행 계좌에서 %s이(가) 출금되는 것에 동의합니다.</string>
+    <string name="bacs_consent_invalid">이 필드는 귀하의 조치가 필요합니다</string>
 
     <string name="bacs_continue">계속</string>
     <string name="bacs_confirm_and_pay">확인 및 결제</string>

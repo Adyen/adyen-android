@@ -6,5 +6,4 @@
   ~ Created by caiof on 7/5/2019.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.adyen.checkout.adyen3ds2"/>
+<manifest />

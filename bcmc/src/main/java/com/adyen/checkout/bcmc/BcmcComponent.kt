@@ -7,152 +7,100 @@
  */
 package com.adyen.checkout.bcmc
 
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.CardValidationMapper
-import com.adyen.checkout.card.CardValidationUtils
-import com.adyen.checkout.card.api.model.Brand
-import com.adyen.checkout.card.data.CardType
-import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.GenericComponentState
-import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
-import com.adyen.threeds2.ThreeDS2Service
-import kotlinx.coroutines.launch
-
-private val TAG = LogUtil.getTag()
-
-private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
+import com.adyen.checkout.bcmc.internal.ui.BcmcDelegate
+import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.card.CardType
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Constructs a [BcmcComponent] object.
- *
- * @param paymentMethodDelegate [GenericPaymentMethodDelegate] represents payment method.
- * @param configuration [BcmcConfiguration].
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.BCMC] payment method.
  */
-class BcmcComponent(
-    savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: BcmcConfiguration,
-    private val publicKeyRepository: PublicKeyRepository,
-    private val cardValidationMapper: CardValidationMapper
-) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-    GenericComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+class BcmcComponent internal constructor(
+    private val bcmcDelegate: BcmcDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<BcmcComponentState>,
+) : ViewModel(),
+    PaymentComponent,
+    ViewableComponent,
+    ButtonComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    companion object {
-        @JvmField
-        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-        @JvmField
-        val SUPPORTED_CARD_TYPE = CardType.BCMC
-    }
-
-    private var publicKey: String? = null
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        bcmcDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
-        viewModelScope.launch {
-            try {
-                publicKey = fetchPublicKey()
-                notifyStateChanged()
-            } catch (e: CheckoutException) {
-                notifyException(ComponentException("Unable to fetch publicKey.", e))
-            }
-        }
+        bcmcDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    private suspend fun fetchPublicKey(): String {
-        return publicKeyRepository.fetchPublicKey(
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        )
+    internal fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<BcmcComponentState>) -> Unit
+    ) {
+        bcmcDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun onInputDataChanged(inputData: BcmcInputData): BcmcOutputData {
-        Logger.v(TAG, "onInputDataChanged")
-        return BcmcOutputData(
-            validateCardNumber(inputData.cardNumber),
-            validateExpiryDate(inputData.expiryDate),
-            inputData.isStorePaymentSelected
-        )
+    internal fun removeObserver() {
+        bcmcDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> {
-        return PAYMENT_METHOD_TYPES
+    override fun isConfirmationRequired(): Boolean = bcmcDelegate.isConfirmationRequired()
+
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
-    @SuppressWarnings("ReturnCount")
-    override fun createComponentState(): GenericComponentState<CardPaymentMethod> {
-        Logger.v(TAG, "createComponentState")
-
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-        val outputData = outputData
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
-
-        val publicKey = publicKey
-
-        // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (outputData?.isValid != true || publicKey == null) {
-            val isInputValid = outputData?.isValid ?: false
-            val isReady = publicKey != null
-            return GenericComponentState(paymentComponentData, isInputValid, isReady)
-        }
-        val encryptedCard = try {
-            unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)
-            val expiryDateResult = outputData.expiryDateField.value
-            if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
-                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
-            }
-            CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
-        } catch (e: EncryptionException) {
-            notifyException(e)
-            return GenericComponentState(paymentComponentData, false, true)
-        }
-
-        // BCMC payment method is scheme type.
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-            encryptedCardNumber = encryptedCard.encryptedCardNumber
-            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
-            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
-            try {
-                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
-            } catch (e: ClassNotFoundException) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            } catch (e: NoClassDefFoundError) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            }
-        }
-        paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnabled)
-        paymentComponentData.shopperReference = configuration.shopperReference
-        return GenericComponentState(paymentComponentData, true, true)
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? BcmcDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
-    fun isCardNumberSupported(cardNumber: String?): Boolean {
-        if (cardNumber.isNullOrEmpty()) return false
-        return CardType.estimate(cardNumber).contains(SUPPORTED_CARD_TYPE)
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        bcmcDelegate.onCleared()
+        genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
-    private fun validateCardNumber(cardNumber: String): FieldState<String> {
-        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true, isBrandSupported = true)
-        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
-    }
+    companion object {
+        private val TAG = LogUtil.getTag()
 
-    private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return CardValidationUtils.validateExpiryDate(expiryDate, Brand.FieldPolicy.REQUIRED)
+        @JvmField
+        val PROVIDER = BcmcComponentProvider()
+
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BCMC)
+
+        internal val SUPPORTED_CARD_TYPE = CardBrand(cardType = CardType.BCMC)
     }
 }

@@ -8,7 +8,26 @@
 
 <resources>
     <!-- Placeholder to be overridden by main app -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge" />
+    <style name="AppTheme" parent="Adyen" />
+
+    <!-- These attributes can be overridden by extending AppTheme -->
+    <style name="Adyen" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorAccent">@color/primaryColor</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorBackgroundFloating">@color/white</item>
+        <item name="colorOnBackground">@color/textColor</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/textColor</item>
+
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:textColorSecondary">@color/text_color_primary</item>
+        <item name="android:textColorTertiary">@color/text_color_primary</item>
+        <item name="android:textColorLink">@color/textColorLink</item>
+        <item name="bottomSheetDialogTheme">@style/AdyenCheckout.BottomSheetDialogTheme</item>
+    </style>
 
     <!-- Base theme for Checkout -->
     <style name="AdyenCheckout" parent="AppTheme" />
@@ -33,14 +52,15 @@
     </style>
 
     <style name="AdyenCheckout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="boxStrokeColor">@color/primaryColor</item>
-        <item name="hintTextColor">@color/primaryColor</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="hintTextColor">?attr/colorPrimary</item>
         <item name="android:minHeight">@dimen/input_layout_height</item>
     </style>
 
     <style name="AdyenCheckout.DropdownTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <item name="boxStrokeColor">@color/primaryColor</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
         <item name="android:minHeight">@dimen/input_layout_height</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
     </style>
 
     <style name="AdyenCheckout.TextInputEditText">
@@ -51,6 +71,7 @@
         <!-- The textDirection and textAlignment attributes ensure consistent display behaviour with RTL locales -->
         <item name="android:textDirection">ltr</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:inputType">text</item>
     </style>
 
     <style name="AdyenCheckout.DropdownTextInputEditText">
@@ -77,7 +98,7 @@
 
     <style name="AdyenCheckout.Image" />
 
-    <style name="AdyenCheckout.Image.Logo" parent="AdyenCheckout.Image">
+    <style name="AdyenCheckout.Image.Logo">
         <item name="android:layout_width">@dimen/logo_width</item>
         <item name="android:layout_height">@dimen/logo_height</item>
         <item name="android:minHeight">@dimen/logo_height</item>
@@ -89,7 +110,7 @@
         <item name="android:contentDescription">@null</item>
     </style>
 
-    <style name="AdyenCheckout.Image.Logo.Large" parent="AdyenCheckout.Image.Logo">
+    <style name="AdyenCheckout.Image.Logo.Large">
         <item name="android:layout_width">@dimen/logo_large_width</item>
         <item name="android:layout_height">@dimen/logo_large_height</item>
         <item name="android:minHeight">@dimen/logo_large_width</item>
@@ -106,20 +127,19 @@
     <style name="AdyenCheckout.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:theme">@style/AdyenCheckout.SwitchTheme</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/textColor</item>
-        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
-        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
 
     <style name="AdyenCheckout.SwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/primaryColor</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
     </style>
 
     <style name="AdyenCheckout.HyperTextView">
-        <item name="android:textColorLink">@color/primaryColor</item>
+        <item name="android:textColorLink">?attr/colorPrimary</item>
     </style>
 
     <style name="AdyenCheckout.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
@@ -127,27 +147,166 @@
     </style>
 
     <style name="AdyenCheckout.CheckBoxTheme" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorAccent">@color/primaryColor</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
-    <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored">
+    <style name="AdyenCheckout.Button.Colored" parent="AdyenCheckout.Button.Primary">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/primary_button_height</item>
         <item name="android:layout_marginStart">@dimen/standard_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
 
-    <style name="AdyenCheckout.PrimaryFlatButton" parent="AdyenCheckout">
-        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
-        <item name="colorAccent">@color/primaryColor</item>
+    <style name="AdyenCheckout.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
-    <style name="AdyenCheckout.SecondaryFlatButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/primaryColor</item>
+    <style name="AdyenCheckout.Button.Secondary" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:layout_marginStart">@dimen/standard_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.SimpleTextItemTextView" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.TitleTextView" parent="AdyenCheckout">
+        <item name="android:text">@string/paymentInProgressView_title</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:textAppearance">@style/AdyenCheckout.TextAppearance.Primary</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.ProgressBar" parent="AdyenCheckout">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginTop">48dp</item>
+        <item name="android:indeterminateTint">?android:attr/colorPrimary</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.DescriptionTextView" parent="AdyenCheckout">
+        <item name="android:text">@string/paymentInProgressView_loadingText</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView.CancelButton" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:text">@string/paymentInProgressView_cancelButton</item>
+        <item name="android:layout_marginTop">48dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="AdyenCheckout.StreetInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_street_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.StreetInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_street_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_address_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_address_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.HouseNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_house_number_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.HouseNumberInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_house_number_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_postal_code_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.PostalCodeInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_postal_code_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ZipCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_zip_code_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ZipCodeInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_zip_code_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.CityInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_city_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.CityInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_city_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.CityTownInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_city_town_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.CityTownInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_city_town_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ApartmentSuiteInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_apartment_suite_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ApartmentSuiteInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_apartment_suite_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ProvinceTerritoryInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_province_territory_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.ProvinceTerritoryInput.Optional" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_address_form_province_territory_hint_optional</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.CountryInput" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">@string/checkout_address_form_country_hint</item>
+    </style>
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.StatesInput" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">@string/checkout_address_form_states_hint</item>
+    </style>
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.ProvinceTerritoryInput" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">@string/checkout_address_form_province_territory_hint</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressForm.HeaderTextAppearance" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:text">@string/checkout_address_form_billing_address_title</item>
     </style>
 
 </resources>

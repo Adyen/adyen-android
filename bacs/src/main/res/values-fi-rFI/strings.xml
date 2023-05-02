@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Vahvistan, että tili on nimessäni ja olen ainoa allekirjoittaja, joka vaaditaan valtuuttamaan suoraveloitus tällä tilillä.</string>
     <string name="bacs_consent_amount">Hyväksyn, että alla oleva summa veloitetaan pankkitililtäni.</string>
     <string name="bacs_consent_amount_specified">Hyväksyn, että %s veloitetaan pankkitililtäni.</string>
+    <string name="bacs_consent_invalid">Tämä kenttä edellyttää sinun toimintaasi</string>
 
     <string name="bacs_continue">Jatka</string>
     <string name="bacs_confirm_and_pay">Vahvista ja maksa</string>

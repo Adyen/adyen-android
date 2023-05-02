@@ -6,7 +6,8 @@
   ~ Created by caiof on 14/8/2019.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/merchant_information">
 
@@ -60,6 +61,38 @@
         <SwitchPreference
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
+
+        <DropDownPreference
+            android:entries="@array/enable_card_address_form_entries"
+            android:entryValues="@array/enable_card_address_form_entry_values"
+            android:key="@string/enable_card_address_form_key"
+            android:title="@string/enable_card_address_form_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:entries="@array/card_installment_options_mode_entries"
+            android:entryValues="@array/card_installment_options_mode_entry_values"
+            android:key="@string/card_installment_options_mode_key"
+            android:title="@string/card_installment_options_mode_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:entries="@array/instant_payment_method_type_entries"
+            android:entryValues="@array/instant_payment_method_type_values"
+            android:key="@string/instant_payment_method_type_key"
+            android:title="@string/instant_payment_method_type_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/app_title">
+
+        <DropDownPreference
+            android:entries="@array/night_theme_entries"
+            android:entryValues="@array/night_theme_entry_values"
+            android:key="@string/night_theme_title"
+            android:title="@string/night_theme_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

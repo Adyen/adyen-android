@@ -14,11 +14,11 @@
     tools:parentTag="android.widget.LinearLayout">
 
     <TextView
-        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:id="@+id/textView_blikHeader"
+        style="@style/AdyenCheckout.Blik.BlikHeaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/standard_margin"
-        android:text="@string/checkout_blik_helper_text" />
+        android:layout_marginBottom="@dimen/standard_margin" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_blikCode"
@@ -26,9 +26,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-            style="@style/AdyenCheckout.Blik.BlikCodeInput"
-            tools:ignore="RequiredSize" />
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_blikCode"
+            style="@style/AdyenCheckout.Blik.BlikCodeInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </merge>

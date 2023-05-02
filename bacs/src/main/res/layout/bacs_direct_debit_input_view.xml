@@ -19,12 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_holderName"
             style="@style/AdyenCheckout.Bacs.HolderNameInput"
             android:nextFocusDown="@id/editText_bankAccountNumber"
-            android:nextFocusForward="@id/editText_bankAccountNumber"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_bankAccountNumber" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,12 +32,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_bankAccountNumber"
             style="@style/AdyenCheckout.Bacs.AccountNumberInput"
             android:nextFocusDown="@id/editText_sortCode"
-            android:nextFocusForward="@id/editText_sortCode"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_sortCode" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -47,12 +45,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_sortCode"
             style="@style/AdyenCheckout.Bacs.SortCodeInput"
             android:nextFocusDown="@id/editText_shopperEmail"
-            android:nextFocusForward="@id/editText_shopperEmail"
-            tools:ignore="RequiredSize" />
+            android:nextFocusForward="@id/editText_shopperEmail" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -61,10 +58,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_shopperEmail"
             style="@style/AdyenCheckout.Bacs.ShopperEmailInput"
-            tools:ignore="RequiredSize" />
+            android:autofillHints="emailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.SwitchCompat
@@ -73,9 +70,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/textView_errorConsentAmount"
+        style="@style/AdyenCheckout.Bacs.InvalidSwitchTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_consentAccount"
         style="@style/AdyenCheckout.Bacs.Switch.Account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView_errorConsentAccount"
+        style="@style/AdyenCheckout.Bacs.InvalidSwitchTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:visibility="gone" />
 </merge>

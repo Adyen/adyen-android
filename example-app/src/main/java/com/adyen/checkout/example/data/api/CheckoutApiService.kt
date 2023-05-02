@@ -8,19 +8,20 @@
 
 package com.adyen.checkout.example.data.api
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.example.BuildConfig
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
-import kotlinx.coroutines.Deferred
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
+import com.adyen.checkout.example.data.api.model.BalanceRequest
+import com.adyen.checkout.example.data.api.model.CancelOrderRequest
+import com.adyen.checkout.example.data.api.model.CreateOrderRequest
+import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.SessionRequest
+import com.adyen.checkout.sessions.core.SessionModel
+import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface CheckoutApiService {
+internal interface CheckoutApiService {
 
     companion object {
         private const val defaultGradleUrl = "<YOUR_SERVER_URL>"
@@ -30,37 +31,30 @@ interface CheckoutApiService {
         }
     }
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
+    @POST("sessions")
+    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): SessionModel
+
     @POST("paymentMethods")
-    fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Deferred<Response<PaymentMethodsApiResponse>>
+    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse
 
-    // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments")
-    fun payments(@Body paymentsRequest: RequestBody): Call<ResponseBody>
+    fun payments(@Body paymentsRequest: JSONObject): Call<JSONObject>
 
-    // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments")
-    fun paymentsAsync(@Body paymentsRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun paymentsAsync(@Body paymentsRequest: JSONObject): JSONObject
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
-    fun details(@Body detailsRequest: RequestBody): Call<ResponseBody>
+    fun details(@Body detailsRequest: JSONObject): Call<JSONObject>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
-    fun detailsAsync(@Body detailsRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun detailsAsync(@Body detailsRequest: JSONObject): JSONObject
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods/balance")
-    fun checkBalanceAsync(@Body balanceRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun checkBalanceAsync(@Body request: BalanceRequest): JSONObject
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders")
-    fun createOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun createOrderAsync(@Body orderRequest: CreateOrderRequest): JSONObject
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders/cancel")
-    fun cancelOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun cancelOrderAsync(@Body request: CancelOrderRequest): JSONObject
 }

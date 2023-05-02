@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">我確認該帳戶以我的名義開設，並且我是授權從該帳戶直接扣款的唯一簽署人。</string>
     <string name="bacs_consent_amount">我同意從我的銀行帳戶扣除上述金額。</string>
     <string name="bacs_consent_amount_specified">我同意從我的銀行帳戶扣除 %s。</string>
+    <string name="bacs_consent_invalid">此欄位需要您採取動作</string>
 
     <string name="bacs_continue">繼續</string>
     <string name="bacs_confirm_and_pay">確認並支付</string>

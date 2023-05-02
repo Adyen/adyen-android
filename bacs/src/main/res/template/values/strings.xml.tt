@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">%%bacs.consent.account%%</string>
     <string name="bacs_consent_amount">%%bacs.consent.amount%%</string>
     <string name="bacs_consent_amount_specified">%%bacs.consent.amount.specified%%</string>
+    <string name="bacs_consent_invalid">%%bacs.consent.invalid%%</string>
 
     <string name="bacs_continue">%%continue%%</string>
     <string name="bacs_confirm_and_pay">%%bacs.confirm%%</string>

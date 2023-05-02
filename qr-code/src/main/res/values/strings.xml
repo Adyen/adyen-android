@@ -9,9 +9,17 @@
 
 <resources>
     <string name="checkout_qr_code_pix">Copy the code, then open the app with the registered PIX key, choose Pay with PIX and paste the code there.</string>
+    <string name="checkout_qr_code_upi">Take a screenshot to upload in the UPI app or scan the QR code using your preferred UPI app to complete the payment.</string>
     <string name="checkout_qr_code_copy_button">Copy code</string>
     <string name="checkout_qr_code_timer_text">You have %s to pay</string>
     <string name="checkout_qr_code_copied_toast">Code copied to clipboard</string>
+    <string name="checkout_qr_code_duit_now">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>
+    <string name="checkout_qr_code_prompt_pay">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>
     <!-- Untranslatable strings -->
     <string name="checkout_qr_code_time_left_format" translatable="false">%02d:%02d</string>
+    <string name="checkout_qr_code_pay_now">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">This QR code is valid for %s</string>
+    <string name="checkout_qr_code_save_button">Save as image</string>
+    <string name="checkout_qr_code_download_image_succeeded">Downloading image succeeded</string>
+    <string name="checkout_qr_code_download_image_failed">Downloading image failed</string>
 </resources>

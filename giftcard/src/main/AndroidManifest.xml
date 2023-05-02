@@ -6,5 +6,4 @@
   ~ Created by josephj on 9/9/2021.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.checkout.giftcard" />
+<manifest />

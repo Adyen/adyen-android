@@ -18,13 +18,13 @@
     android:focusable="true"
     android:orientation="horizontal" >
 
-    <com.adyen.checkout.components.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo"
-        app:strokeColor="@color/stroke_color"/>
+        app:adyenStrokeColor="@color/stroke_color"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_text"
+        android:id="@+id/textView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/AdyenCheckout.ListItemText"

@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Ik bevestig dat de rekening op mijn naam staat en dat ik de enige ondertekenaar ben die toestemming kan geven voor automatische incasso\'s vanaf deze rekening.</string>
     <string name="bacs_consent_amount">Ik ga ermee akkoord dat het bovengenoemde bedrag van mijn bankrekening wordt afgeschreven.</string>
     <string name="bacs_consent_amount_specified">Ik ga ermee akkoord dat er %s van mijn bankrekening wordt afgeschreven.</string>
+    <string name="bacs_consent_invalid">Uw actie is vereist voor dit veld</string>
 
     <string name="bacs_continue">Doorgaan</string>
     <string name="bacs_confirm_and_pay">Bevestigen en betalen</string>

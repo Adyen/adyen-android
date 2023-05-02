@@ -15,18 +15,20 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         
-      # Setup Java 1.8
+      # Setup Java 11
       # https://github.com/marketplace/actions/setup-java-jdk
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: 11
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       # Run gradlew check
       - name: Gradle check
-        run: ./gradlew check
+        run: ./gradlew check --no-daemon

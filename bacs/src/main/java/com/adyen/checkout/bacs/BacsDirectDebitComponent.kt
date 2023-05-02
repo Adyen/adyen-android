@@ -8,72 +8,124 @@
 
 package com.adyen.checkout.bacs
 
-import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
+import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import kotlinx.coroutines.flow.Flow
 
-class BacsDirectDebitComponent(
-    savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: BacsDirectDebitConfiguration
-) :
-    BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
-        BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
+/**
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.BACS] payment method.
+ */
+class BacsDirectDebitComponent internal constructor(
+    private val bacsDelegate: BacsDirectDebitDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<BacsDirectDebitComponentState>
+) : ViewModel(),
+    PaymentComponent,
+    ViewableComponent,
+    ButtonComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
-        return BacsDirectDebitOutputData(
-            holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-            bankAccountNumberState = BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
-            sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
-            shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
-            isAmountConsentChecked = inputData.isAmountConsentChecked,
-            isAccountConsentChecked = inputData.isAccountConsentChecked
-        )
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        bacsDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
+
+    init {
+        bacsDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    override fun createComponentState(): BacsDirectDebitComponentState {
-        val paymentComponentData = PaymentComponentData<BacsDirectDebitPaymentMethod>()
-        val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod().apply {
-            type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE
-            holderName = outputData?.holderNameState?.value
-            bankAccountNumber = outputData?.bankAccountNumberState?.value
-            bankLocationId = outputData?.sortCodeState?.value
-        }
-
-        paymentComponentData.apply {
-            shopperEmail = outputData?.shopperEmailState?.value
-            paymentMethod = bacsDirectDebitPaymentMethod
-        }
-
-        return BacsDirectDebitComponentState(
-            paymentComponentData = paymentComponentData,
-            isInputValid = outputData?.isValid ?: false,
-            isReady = true,
-            mode = mLatestInputData?.mode ?: BacsDirectDebitMode.INPUT
-        )
+    internal fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<BacsDirectDebitComponentState>) -> Unit
+    ) {
+        bacsDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    fun setInputMode() {
-        mLatestInputData?.mode = BacsDirectDebitMode.INPUT
-        notifyStateChanged()
+    internal fun removeObserver() {
+        bacsDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
-    fun setConfirmationMode() {
-        mLatestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
-        notifyStateChanged()
+    /**
+     * Sets the displayed BACS view as the final confirmation view.
+     * Should only be called if the form is valid.
+     *
+     * @return whether the view was successfully changed.
+     */
+    fun setConfirmationMode(): Boolean {
+        return (delegate as? BacsDirectDebitDelegate)?.setMode(BacsDirectDebitMode.CONFIRMATION) ?: false
+    }
+
+    /**
+     * Resets the displayed BACS view back to the form input view.
+     *
+     * @return whether the view was successfully changed.
+     */
+    fun setInputMode(): Boolean {
+        return (delegate as? BacsDirectDebitDelegate)?.setMode(BacsDirectDebitMode.INPUT) ?: false
+    }
+
+    /**
+     * Handle back press in [BacsDirectDebitComponent] if necessary.
+     *
+     * @return Whether back press has been handled or not.
+     */
+    fun handleBackPress(): Boolean {
+        return (delegate as? BacsDirectDebitDelegate)?.handleBackPress() ?: false
+    }
+
+    override fun isConfirmationRequired(): Boolean = bacsDelegate.isConfirmationRequired()
+
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? BacsDirectDebitDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        bacsDelegate.onCleared()
+        genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
-        @JvmStatic
-        val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
-            GenericPaymentComponentProvider(BacsDirectDebitComponent::class.java)
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
+        private val TAG = LogUtil.getTag()
+
+        @JvmField
+        val PROVIDER = BacsDirectDebitComponentProvider()
+
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.BACS)
     }
 }

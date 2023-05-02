@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 14/3/2022.
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+}
+
+ext.mavenArtifactId = "sessions-core"
+ext.mavenArtifactName = "Adyen Checkout sessions core module"
+ext.mavenArtifactDescription = "Core module for Adyen Checkout sessions."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    namespace 'com.adyen.checkout.sessions.core'
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':components-core')
+
+    // Dependencies
+    api libraries.kotlinCoroutines
+
+    //Tests
+    testImplementation project(':test-core')
+    testImplementation testLibraries.androidx.lifecycle
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.robolectric
+}

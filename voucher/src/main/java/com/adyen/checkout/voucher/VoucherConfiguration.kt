@@ -9,67 +9,64 @@
 package com.adyen.checkout.voucher
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class VoucherConfiguration : Configuration {
+/**
+ * Configuration class for the [VoucherComponent].
+ */
+@Parcelize
+class VoucherConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val isAnalyticsEnabled: Boolean?,
+    override val amount: Amount,
+) : Configuration {
 
-    private constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
-
-    private constructor(parcel: Parcel) : super(parcel)
-
-    class Builder : BaseConfigurationBuilder<VoucherConfiguration> {
-        /**
-         * Constructor for Builder with default values.
-         *
-         * @param context   A context
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
-
-        /**
-         * Builder with required parameters.
-         *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+    /**
+     * Builder to create a [VoucherConfiguration].
+     */
+    class Builder : BaseConfigurationBuilder<VoucherConfiguration, Builder> {
 
         /**
-         * Constructor that copies an existing configuration.
+         * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param configuration A configuration to initialize the builder.
+         * @param context A context
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(configuration: VoucherConfiguration) : super(configuration)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
-        }
+        /**
+         * Initialize a configuration builder with the required fields.
+         *
+         * @param shopperLocale The [Locale] of the shopper.
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         override fun buildInternal(): VoucherConfiguration {
-            return VoucherConfiguration(this)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<VoucherConfiguration> = object : Parcelable.Creator<VoucherConfiguration> {
-            override fun createFromParcel(`in`: Parcel): VoucherConfiguration {
-                return VoucherConfiguration(`in`)
-            }
-
-            override fun newArray(size: Int): Array<VoucherConfiguration?> {
-                return arrayOfNulls(size)
-            }
+            return VoucherConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                isAnalyticsEnabled = isAnalyticsEnabled,
+                amount = amount,
+            )
         }
     }
 }

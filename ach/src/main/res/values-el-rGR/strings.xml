@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Τραπεζικός λογαριασμός</string>
+    <string name="checkout_ach_bank_account_holder_name">Όνομα κατόχου λογαριασμού</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Μη έγκυρο όνομα κατόχου λογαριασμού</string>
+    <string name="checkout_ach_bank_account_number">Αριθμός λογαριασμού</string>
+    <string name="checkout_ach_bank_account_number_invalid">Μη έγκυρος αριθμός λογαριασμού</string>
+    <string name="checkout_ach_bank_account_location">Αριθμός δρομολόγησης ABA</string>
+    <string name="checkout_ach_bank_account_location_invalid">Μη έγκυρος αριθμός δρομολόγησης ABA</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Αποθήκευση για την επόμενη πληρωμή μου</string>
+</resources>

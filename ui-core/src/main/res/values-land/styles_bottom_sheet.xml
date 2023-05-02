@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AdyenCheckout.BottomSheetDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/AdyenCheckout.BottomSheet</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+
+        <!-- If the navigation bar color is not fully opaque the window insets are not taken into
+             account. This causes it to appear not centered in landscape. -->
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+    </style>
+
+</resources>

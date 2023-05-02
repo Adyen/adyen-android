@@ -12,4 +12,5 @@
     <string name="checkout_giftcard_pin_hint">PIN-kod</string>
     <string name="checkout_giftcard_number_not_valid">Ogiltigt kortnummer</string>
     <string name="checkout_giftcard_pin_not_valid">Ogiltig inmatning</string>
+    <string name="checkout_giftcard_redeem_button">Lös in</string>
 </resources>

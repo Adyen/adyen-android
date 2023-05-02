@@ -1,0 +1,155 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 21/9/2022.
+ */
+
+package com.adyen.checkout.action.internal.ui
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Parcel
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
+import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.Locale
+
+internal class TestActionDelegate :
+    ActionDelegate,
+    DetailsEmittingDelegate,
+    ViewableDelegate<OutputData>,
+    IntentHandlingDelegate,
+    StatusPollingDelegate,
+    ViewProvidingDelegate {
+
+    override val outputDataFlow: MutableStateFlow<QRCodeOutputData> = MutableStateFlow(
+        QRCodeOutputData(
+            isValid = false,
+            paymentMethodType = null,
+            qrCodeData = null
+        )
+    )
+
+    override val outputData: QRCodeOutputData get() = outputDataFlow.value
+
+    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSharedFlow(extraBufferCapacity = 1)
+
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
+
+    override val timerFlow: MutableStateFlow<TimerData> = MutableStateFlow(TimerData(0, 0))
+
+    override val viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+
+    private val configuration: Configuration = object : Configuration {
+        override val shopperLocale: Locale = Locale.US
+        override val environment: Environment = Environment.TEST
+        override val clientKey: String = ""
+        override val isAnalyticsEnabled: Boolean? = null
+        override val amount: Amount = Amount.EMPTY
+
+        override fun describeContents(): Int {
+            throw NotImplementedError("This method shouldn't be used in tests")
+        }
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            throw NotImplementedError("This method shouldn't be used in tests")
+        }
+    }
+    override val componentParams: ComponentParams =
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
+
+    var initializeCalled = false
+    override fun initialize(coroutineScope: CoroutineScope) {
+        initializeCalled = true
+    }
+
+    var onClearedCalled = false
+    override fun onCleared() {
+        onClearedCalled = true
+    }
+
+    var handleActionCalled = false
+    override fun handleAction(action: Action, activity: Activity) {
+        handleActionCalled = true
+    }
+
+    var handleIntentCalled = false
+    override fun handleIntent(intent: Intent) {
+        handleIntentCalled = true
+    }
+
+    var refreshStatusCalled = false
+    override fun refreshStatus() {
+        refreshStatusCalled = true
+    }
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
+}
+
+internal class Test3DS2Delegate : Adyen3DS2Delegate {
+
+    private val configuration: Adyen3DS2Configuration =
+        Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+
+    override val componentParams: ComponentParams =
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
+
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
+
+    override val exceptionFlow: Flow<CheckoutException> = MutableSharedFlow(extraBufferCapacity = 1)
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableSharedFlow(extraBufferCapacity = 1)
+
+    var handleActionCalled = false
+
+    override fun initialize(coroutineScope: CoroutineScope) = Unit
+
+    override fun handleAction(action: Action, activity: Activity) {
+        handleActionCalled = true
+    }
+
+    override fun handleIntent(intent: Intent) = Unit
+
+    override fun observe(
+        lifecycleOwner: LifecycleOwner,
+        coroutineScope: CoroutineScope,
+        callback: (ActionComponentEvent) -> Unit
+    ) = Unit
+
+    override fun removeObserver() = Unit
+
+    override fun onCleared() = Unit
+}
+
+private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

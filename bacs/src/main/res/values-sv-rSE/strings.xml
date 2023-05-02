@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Jag bekräftar att jag är kontoinnehavare och att jag är den enda person vars godkännande krävs för att auktorisera autogiro från detta konto.</string>
     <string name="bacs_consent_amount">Jag godkänner att ovanstående belopp dras från mitt bankkonto.</string>
     <string name="bacs_consent_amount_specified">Jag godkänner att %s kommer att dras från mitt bankkonto.</string>
+    <string name="bacs_consent_invalid">Fältet kräver en åtgärd av dig</string>
 
     <string name="bacs_continue">Fortsätt</string>
     <string name="bacs_confirm_and_pay">Bekräfta och betala</string>

@@ -1,0 +1,45 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">支付</string>
+    <string name="pay_button_with_value">支付 %s</string>
+    <string name="confirm_preauthorization">確認預先授權</string>
+
+    <string name="paymentInProgressView_title">仍在處理付款程序</string>
+    <string name="paymentInProgressView_loadingText">正在等待完成……</string>
+    <string name="paymentInProgressView_cancelButton">取消</string>
+
+    <string name="checkout_address_form_field_not_valid">輸入無效</string>
+
+    <string name="checkout_address_form_billing_address_title">帳單地址</string>
+    <string name="checkout_address_form_street_hint">街道</string>
+    <string name="checkout_address_form_address_hint">地址</string>
+    <string name="checkout_address_form_house_number_hint">門牌號</string>
+    <string name="checkout_address_form_apartment_suite_hint">公寓／套房</string>
+    <string name="checkout_address_form_city_hint">城市</string>
+    <string name="checkout_address_form_country_hint">國家/地區</string>
+    <string name="checkout_address_form_states_hint">州</string>
+    <string name="checkout_address_postal_code_hint">郵遞區號</string>
+    <string name="checkout_address_form_zip_code_hint">郵遞區號</string>
+    <string name="checkout_address_form_province_territory_hint">省或地區</string>
+    <string name="checkout_address_form_city_town_hint">市／鎮</string>
+
+    <string name="checkout_address_form_street_hint_optional">街道（選用）</string>
+    <string name="checkout_address_form_address_hint_optional">地址（選用）</string>
+    <string name="checkout_address_form_house_number_hint_optional">門牌號（選用）</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">公寓／套房（選用）</string>
+    <string name="checkout_address_form_city_hint_optional"> 城市（選用）</string>
+    <string name="checkout_address_form_country_hint_optional">國家/地區（選用）</string>
+    <string name="checkout_address_form_states_hint_optional">州（選用）</string>
+    <string name="checkout_address_postal_code_hint_optional">郵遞區號（選用）</string>
+    <string name="checkout_address_form_zip_code_hint_optional">郵遞區號（選用）</string>
+    <string name="checkout_address_form_province_territory_hint_optional">省或地區（選用）</string>
+    <string name="checkout_address_form_city_town_hint_optional">市／鎮（選用）</string>
+
+</resources>

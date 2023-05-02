@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import com.adyen.checkout.dropin.service.DropInService
-import com.adyen.checkout.dropin.service.DropInServiceResult
-
 /**
  * A class that contains the final result of Drop-in.
  */
@@ -26,7 +23,7 @@ sealed class DropInResult {
      *
      * Two scenarios could trigger this result:
      * - An exception occurred during Drop-in.
-     * - [DropInServiceResult.Error] was returned in [DropInService]. In this case, the [reason]
+     * - [DropInServiceResult.Error] was returned in your implementation of [DropInService]. In this case, the [reason]
      * parameter will have the same value as [DropInServiceResult.Error.reason].
      *
      * @param reason The reason of the error.
@@ -35,7 +32,7 @@ sealed class DropInResult {
 
     /**
      * Drop-in has completed.
-     * This occurs after returning [DropInServiceResult.Finished] in the [DropInService].
+     * This occurs after returning [DropInServiceResult.Finished] in your implementation of [DropInService].
      *
      * @param result The result of Drop-in, mirrors the value of [DropInServiceResult.Finished.result].
      */

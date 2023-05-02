@@ -16,10 +16,11 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortholders fødselsdato (ÅÅMMDD) eller virksomheds registreringsnummer (10 cifre)</string>
     <string name="checkout_kcp_tax_number_hint">Virksomheds registreringsnummer (10 cifre)</string>
     <string name="checkout_kcp_password_hint">Første 2 cifre i adgangskode til kort</string>
-    <string name="checkout_card_postal_code_hint">Postnummer</string>
 
     <string name="checkout_card_number_not_valid">Ugyldigt kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ugyldig udløbsdato</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Kort for gammelt</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Dato for langt ude i fremtiden</string>
     <string name="checkout_security_code_not_valid">Ugyldigt format for CVC/CVV</string>
     <string name="checkout_holder_name_not_valid">Ugyldigt kontohavernavn</string>
     <string name="checkout_social_security_number_not_valid">Ugyldig indtastning</string>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Όνομα</string>
+    <string name="checkout_econtext_last_name_hint">Επώνυμο</string>
+    <string name="checkout_econtext_phone_number_hint">Αριθμός τηλεφώνου</string>
+    <string name="checkout_econtext_shopper_email_hint">Διεύθυνση email</string>
+
+    <string name="checkout_econtext_first_name_invalid">Το όνομα δεν είναι έγκυρο</string>
+    <string name="checkout_econtext_last_name_invalid">Το επώνυμο δεν είναι έγκυρο</string>
+    <string name="checkout_econtext_phone_number_invalid">Μη έγκυρος αριθμός τηλεφώνου</string>
+    <string name="checkout_econtext_shopper_email_invalid">Μη έγκυρη διεύθυνση email</string>
+</resources>

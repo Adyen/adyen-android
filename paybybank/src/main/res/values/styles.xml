@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 28/9/2022.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.PayByBank.SearchQueryInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_pay_by_bank_search</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.PayByBank.NoMatchingIssuers" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:hint">@string/checkout_pay_by_bank_no_banks_found</item>
+    </style>
+</resources>

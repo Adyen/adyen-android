@@ -16,10 +16,11 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">%%creditCard.taxNumber.label%%</string>
     <string name="checkout_kcp_tax_number_hint">%%creditCard.taxNumber.labelAlt%%</string>
     <string name="checkout_kcp_password_hint">%%creditCard.encryptedPassword.label%%</string>
-    <string name="checkout_card_postal_code_hint">%%postalCode%%</string>
 
     <string name="checkout_card_number_not_valid">%%creditCard.numberField.invalid%%</string>
     <string name="checkout_expiry_date_not_valid">%%creditCard.expiryDateField.invalid%%</string>
+    <string name="checkout_expiry_date_not_valid_too_old">%%error.va.sf-cc-dat.01%%</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">%%error.va.sf-cc-dat.02%%</string>
     <string name="checkout_security_code_not_valid">%%creditCard.oneClickVerification.invalidInput.title%%</string>
     <string name="checkout_holder_name_not_valid">%%sepa.ownerName.invalid%%</string>
     <string name="checkout_social_security_number_not_valid">%%validationAlert.title%%</string>

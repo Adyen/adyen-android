@@ -9,6 +9,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 // Maven artifact
@@ -19,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout redirect component client for Ady
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.redirect'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -34,13 +36,8 @@ android {
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -48,12 +45,10 @@ dependencies {
     // Checkout
     api project(':ui-core')
 
-    // Dependencies
-    implementation "androidx.browser:browser:$browser_version"
-
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.robolectric:robolectric:$robolectric_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation project(':test-core')
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
 }

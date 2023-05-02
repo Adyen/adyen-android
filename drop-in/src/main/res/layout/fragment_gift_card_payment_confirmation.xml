@@ -6,11 +6,11 @@
   ~
   ~ Created by josephj on 1/10/2021.
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/standard_half_margin"
     android:orientation="vertical"
     tools:context=".ui.stored.PreselectedStoredPaymentMethodFragment">
@@ -29,10 +29,11 @@
         android:clipToPadding="false"
         android:layout_marginTop="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_half_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
         tools:listitem="@layout/payment_methods_list_item"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
@@ -54,10 +55,10 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/change_payment_method_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AdyenCheckout.SecondaryFlatButton"
+        style="@style/AdyenCheckout.Button.Secondary"
         android:text="@string/change_payment_method" />
 </LinearLayout>

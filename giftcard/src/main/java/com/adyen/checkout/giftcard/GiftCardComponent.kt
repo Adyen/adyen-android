@@ -7,125 +7,122 @@
  */
 package com.adyen.checkout.giftcard
 
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.repository.PublicKeyRepository
-import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.exception.EncryptionException
-import kotlinx.coroutines.launch
-
-private val TAG = LogUtil.getTag()
-
-private const val LAST_FOUR_LENGTH = 4
+import com.adyen.checkout.action.internal.ActionHandlingComponent
+import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.OrderResponse
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ButtonComponent
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
+import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Component should not be instantiated directly. Instead use the PROVIDER object.
- *
- * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
- * @param configuration [GiftCardConfiguration]
+ * A [PaymentComponent] that supports the [PaymentMethodTypes.GIFTCARD] payment method.
  */
-class GiftCardComponent(
-    savedStateHandle: SavedStateHandle,
-    private val paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: GiftCardConfiguration,
-    private val publicKeyRepository: PublicKeyRepository
-) :
-    BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
-        savedStateHandle,
-        paymentMethodDelegate,
-        configuration
-    ) {
+class GiftCardComponent internal constructor(
+    private val giftCardDelegate: GiftCardDelegate,
+    private val genericActionDelegate: GenericActionDelegate,
+    private val actionHandlingComponent: DefaultActionHandlingComponent,
+    internal val componentEventHandler: ComponentEventHandler<GiftCardComponentState>,
+) : ViewModel(),
+    PaymentComponent,
+    ViewableComponent,
+    ButtonComponent,
+    ActionHandlingComponent by actionHandlingComponent {
 
-    companion object {
-        @JvmStatic
-        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
-    }
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    private var publicKey: String? = null
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        giftCardDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
-        viewModelScope.launch {
-            try {
-                publicKey = fetchPublicKey()
-                notifyStateChanged()
-            } catch (e: CheckoutException) {
-                notifyException(ComponentException("Unable to fetch publicKey.", e))
-            }
-        }
+        giftCardDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
     }
 
-    private suspend fun fetchPublicKey(): String {
-        return publicKeyRepository.fetchPublicKey(
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        )
+    internal fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<GiftCardComponentState>) -> Unit
+    ) {
+        giftCardDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    override fun onInputDataChanged(inputData: GiftCardInputData): GiftCardOutputData {
-        Logger.v(TAG, "onInputDataChanged")
-        return GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
+    internal fun removeObserver() {
+        giftCardDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
-    @Suppress("ReturnCount")
-    override fun createComponentState(): GiftCardComponentState {
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-        val outputData = outputData
-        val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
+    override fun isConfirmationRequired(): Boolean = giftCardDelegate.isConfirmationRequired()
 
-        val publicKey = publicKey
-
-        // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (outputData?.isValid != true || publicKey == null) {
-            val isInputValid = outputData?.isValid ?: false
-            val isReady = publicKey != null
-            return GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = isInputValid,
-                isReady = isReady,
-                lastFourDigits = null
-            )
-        }
-        val encryptedCard = try {
-            unencryptedCardBuilder.setNumber(outputData.giftcardNumberFieldState.value)
-            unencryptedCardBuilder.setCvc(outputData.giftcardPinFieldState.value)
-            CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
-        } catch (e: EncryptionException) {
-            notifyException(e)
-            return GiftCardComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = false,
-                isReady = true,
-                lastFourDigits = null
-            )
-        }
-
-        val giftCardPaymentMethod = GiftCardPaymentMethod().apply {
-            type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE
-            encryptedCardNumber = encryptedCard.encryptedCardNumber
-            encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-            brand = paymentMethodDelegate.paymentMethod.brand
-        }
-        paymentComponentData.paymentMethod = giftCardPaymentMethod
-        val lastFour = outputData.giftcardNumberFieldState.value.takeLast(LAST_FOUR_LENGTH)
-        return GiftCardComponentState(
-            paymentComponentData = paymentComponentData,
-            isInputValid = true,
-            isReady = true,
-            lastFourDigits = lastFour
-        )
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        (delegate as? GiftCardDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
+    /**
+     * Pass the [BalanceResult] you get from the call to the /paymentMethods/balance endpoint of the Checkout API to
+     * continue the gift card flow. You should make this call in the [GiftCardComponentCallback.onBalanceCheck]
+     * callback. Deserialize the response using [BalanceResult.SERIALIZER].
+     *
+     * @param balanceResult The deserialized response from the /paymentMethods/balance endpoint.
+     */
+    fun resolveBalanceResult(balanceResult: BalanceResult) {
+        (delegate as? GiftCardDelegate)?.resolveBalanceResult(balanceResult)
+            ?: Logger.e(TAG, "Payment component is not able to resolve balance result, ignoring.")
+    }
+
+    /**
+     * Pass the [OrderResponse] you get from the call to the /orders endpoint of the Checkout API to continue the gift
+     * card flow. You should make this call in the [GiftCardComponentCallback.onRequestOrder] callback. Deserialize the
+     * response using [OrderResponse.SERIALIZER].
+     *
+     * @param orderResponse The deserialized response from the /orders endpoint.
+     */
+    fun resolveOrderResponse(orderResponse: OrderResponse) {
+        (delegate as? GiftCardDelegate)?.resolveOrderResponse(orderResponse)
+            ?: Logger.e(TAG, "Payment component is not able to resolve order response, ignoring.")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        giftCardDelegate.onCleared()
+        genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        @JvmField
+        val PROVIDER = GiftCardComponentProvider()
+
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.GIFTCARD)
+    }
 }

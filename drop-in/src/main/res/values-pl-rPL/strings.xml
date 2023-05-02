@@ -7,8 +7,6 @@
   -->
 
 <resources>
-    <string name="pay_button">Zapłać</string>
-    <string name="pay_button_with_value">Zapłać %s</string>
     <string name="payment_methods_header">Metody płatności</string>
     <string name="error_dialog_title">Błąd</string>
     <string name="error_dialog_button">Ok</string>
@@ -20,7 +18,6 @@
     <string name="other_payment_methods">Wybierz inną metodę</string>
     <string name="continue_button">Kontynuuj</string>
     <string name="change_payment_method">Zmień metodę płatności</string>
-    <string name="checkout_giftcard_redeem_button">Wykorzystaj</string>
     <string name="checkout_giftcard_error_zero_balance">Saldo karty podarunkowej jest puste</string>
     <string name="checkout_giftcard_error_currency">Karty podarunkowe są ważne tylko w walucie, w której zostały wydane</string>
     <string name="checkout_giftcard_remaining_balance_text">Pozostałe saldo wynosi %s</string>
@@ -33,4 +30,9 @@
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Tak, usuń</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anuluj</string>
     <string name="checkout_remove_stored_payment_method_body">Usuń zapisaną metodę płatności</string>
+    <string name="checkout_permission_not_granted">Zezwolenie nie zostało udzielone</string>
+    <string name="checkout_rationale_title_storage_permission">Zażądaj zezwolenia na przechowywanie</string>
+    <string name="checkout_rationale_message_storage_permission">Aby zapisać ten obraz w urządzeniu, należy włączyć zezwolenie na przechowywanie</string>
+    <string name="checkout_stored_payment_confirmation_message">Potwierdź płatność %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Anuluj</string>
 </resources>

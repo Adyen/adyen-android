@@ -9,6 +9,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 // Maven artifact
@@ -19,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen checkout BCMC component client for Adyen's
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    namespace 'com.adyen.checkout.bcmc'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -31,28 +33,30 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+    buildFeatures {
+        viewBinding true
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
     // Checkout
+    api project(":action")
     api project(":card")
+    api project(":sessions-core")
 
     // If 3DS2 SDK is present.
-    compileOnly "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
+    compileOnly libraries.adyen3ds2
 
     // Dependencies
-    implementation "com.google.android.material:material:$material_version"
+    implementation libraries.material
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation project(':test-core')
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 16/12/2020.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/standard_three_quarters_margin">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        android:textSize="16sp"
+        tools:text="🇳🇱" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_country"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        tools:text="Netherlands (+31)" />
+
+</LinearLayout>

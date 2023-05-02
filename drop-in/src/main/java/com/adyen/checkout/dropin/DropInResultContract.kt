@@ -8,16 +8,43 @@
 
 package com.adyen.checkout.dropin
 
+import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
+import com.adyen.checkout.dropin.internal.ui.DropInActivity
+import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
 
-internal class DropInResultContract : ActivityResultContract<Intent, DropInResult?>() {
-    override fun createIntent(context: Context, input: Intent): Intent {
-        return input
+class DropInResultContract : ActivityResultContract<DropInResultContractParams, DropInResult?>() {
+    override fun createIntent(context: Context, input: DropInResultContractParams): Intent {
+        return DropInActivity.createIntent(
+            context = context,
+            dropInConfiguration = input.dropInConfiguration,
+            paymentMethodsApiResponse = input.paymentMethodsApiResponse,
+            service = ComponentName(context, input.serviceClass),
+        )
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): DropInResult? {
-        return DropIn.handleActivityResult(DropIn.DROP_IN_REQUEST_CODE, resultCode, intent)
+        return handleActivityResult(resultCode, intent)
+    }
+
+    private fun handleActivityResult(resultCode: Int, data: Intent?): DropInResult? {
+        return when {
+            data == null -> null
+            resultCode == Activity.RESULT_CANCELED && data.hasExtra(DropIn.ERROR_REASON_KEY) -> {
+                val reason = data.getStringExtra(DropIn.ERROR_REASON_KEY) ?: ""
+                if (reason == DropIn.ERROR_REASON_USER_CANCELED) {
+                    DropInResult.CancelledByUser()
+                } else {
+                    DropInResult.Error(reason)
+                }
+            }
+            resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.RESULT_KEY) -> {
+                DropInResult.Finished(data.getStringExtra(DropIn.RESULT_KEY) ?: "")
+            }
+            else -> null
+        }
     }
 }

@@ -8,355 +8,169 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
-import androidx.fragment.app.Fragment
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.BuildUtils
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.internal.util.BuildUtils
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
-import com.adyen.checkout.dropin.service.DropInService
-import com.adyen.checkout.dropin.service.DropInServiceResult
-import com.adyen.checkout.dropin.ui.DropInActivity
+import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
+import com.adyen.checkout.dropin.internal.ui.model.SessionDropInResultContractParams
+import com.adyen.checkout.dropin.internal.util.DropInPrefs
+import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 
 /**
- * Drop-in is our pre-built checkout UI for accepting payments. You only need to provide
- * the /paymentMethods response and some configuration data - Drop-in will handle the rest of the
- * payment flow.
+ * Drop-in is our pre-built checkout UI for accepting payments. You only need to integrate through your backend with the
+ * /sessions API endpoint and provide some configuration data. Drop-in will handle the rest of the checkout flow.
  *
- * To start the payment flow, first extend the [DropInService] class, and add it to your manifest
- * file. Then call [startPayment].
+ * Alternatively you can opt for a more advanced implementation with the 3 main API endpoints: /paymentMethods,
+ * /payments and /payments/details.
+ *
+ * To start the checkout flow, register you activity or fragment using [registerForDropInResult] to receive the result
+ * of Drop-in. Then call one of the [startPayment] methods.
  */
 object DropIn {
     private val TAG = LogUtil.getTag()
 
-    const val DROP_IN_REQUEST_CODE = 529
-
-    const val RESULT_KEY = "payment_result"
-    const val ERROR_REASON_KEY = "error_reason"
-    const val ERROR_REASON_USER_CANCELED = "Canceled by user"
-    const val FINISHED_WITH_ACTION = "finish_with_action"
+    internal const val RESULT_KEY = "payment_result"
+    internal const val SESSION_RESULT_KEY = "session_payment_result"
+    internal const val ERROR_REASON_KEY = "error_reason"
+    internal const val ERROR_REASON_USER_CANCELED = "Canceled by user"
+    internal const val FINISHED_WITH_ACTION = "finish_with_action"
 
     /**
-     * Register your Activity or Fragment with the Activity Result API and receive the final
-     * Drop-in result using the [DropInCallback].
+     * Register your Activity or Fragment with the Activity Result API and receive the final Drop-in result using the
+     * [SessionDropInCallback].
      *
-     * This *must* be called unconditionally, as part of initialization path, typically as a field
-     * initializer of an Activity or Fragment.
+     * This *must* be called unconditionally, as part of the initialization path, typically as a field initializer of an
+     * Activity or Fragment.
+     *
+     * You will receive the Drop-in result in the [SessionDropInCallback.onDropInResult] method. Check out
+     * [SessionDropInResult] class for all the possible results you might receive.
      *
      * @param caller The class that needs to launch Drop-in and receive its callback.
      * @param callback Callback for the Drop-in result.
      *
-     * @return The launcher that can be used to start Drop-in.
+     * @return The [ActivityResultLauncher] required to receive the result of Drop-in.
      */
     @JvmStatic
-    fun registerForDropInResult(caller: ActivityResultCaller, callback: DropInCallback): ActivityResultLauncher<Intent> {
+    fun registerForDropInResult(
+        caller: ActivityResultCaller,
+        callback: SessionDropInCallback
+    ): ActivityResultLauncher<SessionDropInResultContractParams> {
+        return caller.registerForActivityResult(SessionDropInResultContract(), callback::onDropInResult)
+    }
+
+    /**
+     * Starts the checkout flow to be handled by the Drop-in solution. With this solution your backend only needs to
+     * integrate the /sessions endpoint to start the checkout flow.
+     *
+     * Call [registerForDropInResult] to create a launcher when initializing your Activity or Fragment and receive the
+     * final result of Drop-in.
+     *
+     * Use [dropInConfiguration] to configure Drop-in and the components that will be loaded inside it.
+     *
+     * Optionally, you can extend [SessionDropInService] with your own implementation and add it to your manifest file.
+     * This allows you to interact with Drop-in, and take over the checkout flow.
+     *
+     * @param context The context to start the Checkout flow with.
+     * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
+     * @param checkoutSession The result from the /sessions endpoint passed onto [CheckoutSessionProvider.createSession]
+     * to create this object.
+     * @param dropInConfiguration Additional required configuration data.
+     * @param serviceClass Service that extends from [SessionDropInService] to optionally take over the checkout flow.
+     */
+    @JvmStatic
+    fun startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
+        checkoutSession: CheckoutSession,
+        dropInConfiguration: DropInConfiguration,
+        serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
+    ) {
+        Logger.d(TAG, "startPayment with sessions")
+        val sessionDropInResultContractParams = SessionDropInResultContractParams(
+            dropInConfiguration,
+            checkoutSession,
+            serviceClass,
+        )
+        startPayment(context, dropInLauncher, dropInConfiguration, sessionDropInResultContractParams)
+    }
+
+    /**
+     * Register your Activity or Fragment with the Activity Result API and receive the final Drop-in result using the
+     * [DropInCallback].
+     *
+     * This *must* be called unconditionally, as part of the initialization path, typically as a field initializer of an
+     * Activity or Fragment.
+     *
+     * You will receive the Drop-in result in the [DropInCallback.onDropInResult] method. Check out [DropInResult] for
+     * all the possible results you might receive.
+     *
+     * @param caller The class that needs to launch Drop-in and receive its callback.
+     * @param callback Callback for the Drop-in result.
+     *
+     * @return The [ActivityResultLauncher] required to receive the result of Drop-in.
+     */
+    @JvmStatic
+    fun registerForDropInResult(
+        caller: ActivityResultCaller,
+        callback: DropInCallback
+    ): ActivityResultLauncher<DropInResultContractParams> {
         return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
     }
 
     /**
-     * Starts the checkout flow to be handled by the Drop-in solution.
-     * Make sure you have [DropInService] set up before calling this.
-     * Call [registerForDropInResult] to create a launcher when initializing your Activity.
-     * You can pass a [resultHandlerIntent] that will be launched after the Drop-in has completed
-     * without any errors.
-     * We suggest that you set up the [resultHandlerIntent] with the appropriate flags to clear
-     * the stack of the checkout activities.
+     * Starts the advanced checkout flow to be handled by the Drop-in solution. With this solution your backend needs to
+     * integrate the 3 main API endpoints: /paymentMethods, /payments and /payments/details.
      *
-     * You will receive the Drop-in result in the [DropInCallback] parameter specified when
-     * calling [registerForDropInResult].
+     * Extend [DropInService] with your own implementation and add it to your manifest file. This class allows you to
+     * interact with Drop-in during the checkout flow.
      *
-     * 3 states can occur from this operation:
-     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
-     * has occurred.
-     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
+     * Call [registerForDropInResult] to create a launcher when initializing your Activity or Fragment and receive the
+     * final result of Drop-in.
      *
-     * You should always handle the cases of cancellation and error in [DropInCallback.onDropInResult].
+     * Use [dropInConfiguration] to configure Drop-in and the components that will be loaded inside it.
      *
-     * As for the Drop-in finished case, if you did not specify a [resultHandlerIntent], you will
-     * also receive the result in [DropInCallback.onDropInResult].
-     * However, if you do specify a [resultHandlerIntent], [DropInCallback.onDropInResult] will not
-     * receive the result. Instead, that [resultHandlerIntent] will be launched when the
-     * payment is finished and will contain the result. You can use the
-     * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
-     * extras with key [RESULT_KEY].
-     *
-     * @param activity An activity to start the Checkout flow.
+     * @param context The context to start the Checkout flow with.
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
-     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
+     * @param paymentMethodsApiResponse The result from the /paymentMethods endpoint.
      * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent Intent to be called after Drop-in has finished.
-     *
+     * @param serviceClass Service that extends from [DropInService] to interact with Drop-in during the checkout flow.
      */
     @JvmStatic
     fun startPayment(
-        activity: Activity,
-        dropInLauncher: ActivityResultLauncher<Intent>,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
-    ) {
-        updateDefaultLogcatLevel(activity)
-        Logger.d(TAG, "startPayment from Activity")
-
-        val intent = preparePayment(
-            activity,
-            paymentMethodsApiResponse,
-            dropInConfiguration,
-            resultHandlerIntent
-        )
-        dropInLauncher.launch(intent)
-    }
-
-    /**
-     * Starts the checkout flow to be handled by the Drop-in solution.
-     * Make sure you have [DropInService] set up before calling this.
-     * Call [registerForDropInResult] to create a launcher when initializing your Fragment.
-     * You can pass a [resultHandlerIntent] that will be launched after the Drop-in has completed
-     * without any errors.
-     * We suggest that you set up the [resultHandlerIntent] with the appropriate flags to clear
-     * the stack of the checkout activities.
-     *
-     * You will receive the Drop-in result in the [DropInCallback] parameter specified when
-     * calling [registerForDropInResult].
-     *
-     * 3 states can occur from this operation:
-     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
-     * has occurred.
-     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
-     *
-     * You should always handle the cases of cancellation and error in [DropInCallback.onDropInResult].
-     *
-     * As for the Drop-in finished case, if you did not specify a [resultHandlerIntent], you will
-     * also receive the result in [DropInCallback.onDropInResult].
-     * However, if you do specify a [resultHandlerIntent], [DropInCallback.onDropInResult] will not
-     * receive the result. Instead, that [resultHandlerIntent] will be launched when the
-     * payment is finished and will contain the result. You can use the
-     * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
-     * extras with key [RESULT_KEY].
-     *
-     * @param fragment A fragment to start the Checkout flow.
-     * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
-     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-     * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent Intent to be called after Drop-in has finished.
-     *
-     */
-    @JvmStatic
-    fun startPayment(
-        fragment: Fragment,
-        dropInLauncher: ActivityResultLauncher<Intent>,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
-    ) {
-        updateDefaultLogcatLevel(fragment.requireContext())
-        Logger.d(TAG, "startPayment from Fragment")
-
-        val intent = preparePayment(
-            fragment.requireContext(),
-            paymentMethodsApiResponse,
-            dropInConfiguration,
-            resultHandlerIntent
-        )
-        dropInLauncher.launch(intent)
-    }
-
-    /**
-     * Starts the checkout flow to be handled by the Drop-in solution.
-     * Make sure you have [DropInService] set up before calling this.
-     * You can pass a [resultHandlerIntent] that will be launched after the Drop-in has completed
-     * without any errors.
-     * We suggest that you set up the [resultHandlerIntent] with the appropriate flags to clear
-     * the stack of the checkout activities.
-     *
-     * 3 states can occur from this operation:
-     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
-     * has occurred.
-     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
-     *
-     * You should always handle the cases of cancellation and error in [Activity.onActivityResult]
-     * (request code [DROP_IN_REQUEST_CODE]).
-     * You can make use of the [handleActivityResult] helper method to get a [DropInResult] object.
-     * If you prefer to handle the activity result manually, you should expect an
-     * [Activity.RESULT_CANCELED] result code (for both error and cancellation). The data
-     * intent will contain the error reason extra with key [ERROR_REASON_KEY]. Its value will be
-     * [ERROR_REASON_USER_CANCELED] in case of user cancellation or the error reason otherwise.
-     *
-     * As for the Drop-in finished case, if you did not specify a [resultHandlerIntent], you will
-     * also receive the result in [Activity.onActivityResult]. You can make use of the
-     * [handleActivityResult] helper method. If you prefer to handle the activity result
-     * manually, you should expect an [Activity.RESULT_OK] result code. The data intent will
-     * contain the result string extra with key [RESULT_KEY] and will hold the same value as the
-     * [DropInServiceResult.Finished.result] returned inside the [DropInService].
-     *
-     * However, if you do specify a [resultHandlerIntent], [Activity.onActivityResult] will not
-     * receive the result. Instead, that [resultHandlerIntent] will be launched when the
-     * payment is finished and will contain the result. You can use the
-     * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
-     * extras with key [RESULT_KEY].
-     *
-     * @param activity An activity to start the Checkout flow.
-     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-     * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent Intent to be called after Drop-in has finished.
-     *
-     */
-    @JvmStatic
-    fun startPayment(
-        activity: Activity,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
-    ) {
-        updateDefaultLogcatLevel(activity)
-        Logger.d(TAG, "startPayment from Activity")
-
-        val intent = preparePayment(
-            activity,
-            paymentMethodsApiResponse,
-            dropInConfiguration,
-            resultHandlerIntent
-        )
-        activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
-    }
-
-    /**
-     * Starts the checkout flow to be handled by the Drop-in solution.
-     * Make sure you have [DropInService] set up before calling this.
-     * You can pass a [resultHandlerIntent] that will be launched after the Drop-in has completed
-     * without any errors.
-     * We suggest that you set up the [resultHandlerIntent] with the appropriate flags to clear
-     * the stack of the checkout activities.
-     *
-     * 3 states can occur from this operation:
-     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
-     * has occurred.
-     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
-     *
-     * You should always handle the cases of cancellation and error in [Fragment.onActivityResult]
-     * (request code [DROP_IN_REQUEST_CODE]).
-     * You can make use of the [handleActivityResult] helper method to get a [DropInResult] object.
-     * If you prefer to handle the activity result manually, you should expect an
-     * [Activity.RESULT_CANCELED] result code (for both error and cancellation). The data
-     * intent will contain the error reason extra with key [ERROR_REASON_KEY]. Its value will be
-     * [ERROR_REASON_USER_CANCELED] in case of user cancellation or the error reason otherwise.
-     *
-     * As for the Drop-in finished case, if you did not specify a [resultHandlerIntent], you will
-     * also receive the result in [Fragment.onActivityResult]. You can make use of the
-     * [handleActivityResult] helper method. If you prefer to handle the activity result
-     * manually, you should expect an [Activity.RESULT_OK] result code. The data intent will
-     * contain the result string extra with key [RESULT_KEY] and will hold the same value as the
-     * [DropInServiceResult.Finished.result] returned inside the [DropInService].
-     *
-     * However, if you do specify a [resultHandlerIntent], [Fragment.onActivityResult] will not
-     * receive the result. Instead, that [resultHandlerIntent] will be launched when the
-     * payment is finished and will contain the result. You can use the
-     * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
-     * extras with key [RESULT_KEY].
-     *
-     * @param fragment A fragment to start the Checkout flow.
-     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-     * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent Intent to be called after Drop-in has finished.
-     *
-     */
-    @JvmStatic
-    fun startPayment(
-        fragment: Fragment,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
-    ) {
-        updateDefaultLogcatLevel(fragment.requireContext())
-        Logger.d(TAG, "startPayment from Fragment")
-
-        val intent = preparePayment(
-            fragment.requireContext(),
-            paymentMethodsApiResponse,
-            dropInConfiguration,
-            resultHandlerIntent
-        )
-        fragment.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
-    }
-
-    private fun preparePayment(
         context: Context,
+        dropInLauncher: ActivityResultLauncher<DropInResultContractParams>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent?
-    ): Intent {
-        // Add locale to prefs
-        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
-
-        return DropInActivity.createIntent(
-            context,
+        serviceClass: Class<out DropInService>,
+    ) {
+        Logger.d(TAG, "startPayment with payment methods")
+        val dropInResultContractParams = DropInResultContractParams(
             dropInConfiguration,
             paymentMethodsApiResponse,
-            resultHandlerIntent
+            serviceClass,
         )
+        startPayment(context, dropInLauncher, dropInConfiguration, dropInResultContractParams)
     }
 
-    private fun updateDefaultLogcatLevel(context: Context) {
-        Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
+    private fun <T> startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<T>,
+        dropInConfiguration: DropInConfiguration,
+        params: T,
+    ) {
+        updateDefaultLogLevel(context)
+        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
+        dropInLauncher.launch(params)
     }
 
-    /**
-     * Helper method to transform the activity result into a [DropInResult].
-     *
-     * The returned value could be:
-     * * [DropInResult.CancelledByUser] if the operation was cancelled by the user.
-     * * [DropInResult.Error] if an unexpected error has occurred during Drop-in, the
-     * [DropInResult.Error.reason] field will contain the error detail.
-     * * [DropInResult.Error] if a [DropInServiceResult.Error] was returned to the
-     * [DropInService]. The [DropInResult.Error.reason] field will hold the same value as
-     * [DropInServiceResult.Error.reason].
-     * * [DropInResult.Finished] if a [DropInServiceResult.Finished] was returned to the
-     * [DropInService]. The [DropInResult.Finished.result] field will hold the same value as
-     * [DropInServiceResult.Finished.result].
-     * * [null] if the activity result does not correspond to the Drop-in.
-     *
-     * Note that [DropInResult.Finished] will be returned here only if a result intent was
-     * provided to the [startPayment] method.
-     *
-     * @return the result of the Drop-in.
-     *
-     */
-    @JvmStatic
-    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?): DropInResult? {
-        return when {
-            requestCode != DROP_IN_REQUEST_CODE || data == null -> null
-            resultCode == Activity.RESULT_CANCELED && data.hasExtra(ERROR_REASON_KEY) -> {
-                val reason = data.getStringExtra(ERROR_REASON_KEY) ?: ""
-                if (reason == ERROR_REASON_USER_CANCELED) DropInResult.CancelledByUser()
-                else DropInResult.Error(reason)
-            }
-            resultCode == Activity.RESULT_OK && data.hasExtra(RESULT_KEY) -> {
-                DropInResult.Finished(data.getStringExtra(RESULT_KEY) ?: "")
-            }
-            else -> null
-        }
-    }
-
-    /**
-     * Helper method to fetch the Drop-in result string from the result intent provided to
-     * [startPayment].
-     *
-     * Returns the value of [DropInServiceResult.Finished.result] or [null] if the intent does
-     * not correspond to the Drop-in.
-     *
-     * @return the result of a finished Drop-in
-     */
-    @JvmStatic
-    fun getDropInResultFromIntent(intent: Intent): String? {
-        return intent.getStringExtra(RESULT_KEY)
+    private fun updateDefaultLogLevel(context: Context) {
+        Logger.updateDefaultLogLevel(BuildUtils.isDebugBuild(context))
     }
 }

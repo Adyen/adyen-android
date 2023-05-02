@@ -34,7 +34,7 @@ android {
 
 dependencies {
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.junit5
+    androidTestImplementation testLibraries.androidTest
+    androidTestImplementation testLibraries.espresso
 }

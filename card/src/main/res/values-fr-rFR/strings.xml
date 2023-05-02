@@ -16,10 +16,11 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Date de naissance du porteur de carte (au format AAMMJJ) ou numéro d\'identification de l\'entreprise (à 10 chiffres)</string>
     <string name="checkout_kcp_tax_number_hint">Numéro d\'identification de l\'entreprise (à 10 chiffres)</string>
     <string name="checkout_kcp_password_hint">Les deux premiers chiffres du code de votre carte</string>
-    <string name="checkout_card_postal_code_hint">Code postal</string>
 
     <string name="checkout_card_number_not_valid">Numéro de carte non valide</string>
     <string name="checkout_expiry_date_not_valid">Date d\'expiration incorrecte</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Carte trop ancienne</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">La date doit être plus proche</string>
     <string name="checkout_security_code_not_valid">Format CVC/CVV incorrect</string>
     <string name="checkout_holder_name_not_valid">Nom du titulaire incorrect</string>
     <string name="checkout_social_security_number_not_valid">Saisie incorrecte</string>

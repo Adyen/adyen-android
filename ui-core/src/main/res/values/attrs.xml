@@ -9,8 +9,8 @@
 
 <resources>
     <declare-styleable name="RoundCornerImageView">
-        <attr name="radius" format="dimension"/>
-        <attr name="strokeWidth" format="dimension"/>
-        <attr name="strokeColor" format="color"/>
+        <attr name="adyenRadius" format="dimension"/>
+        <attr name="adyenStrokeWidth" format="dimension"/>
+        <attr name="adyenStrokeColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -1,43 +1,68 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 10/8/2022.
+ */
+
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.cse.exception.EncryptionException
-import org.json.JSONException
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
+import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.ClientSideEncrypter
+import com.adyen.checkout.cse.internal.DateGenerator
+import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 
+/**
+ * Allows the encryption of any type of data to be sent to Adyen's APIs.
+ * Use this class with custom component integrations.
+ */
 object GenericEncrypter {
 
-    private const val ENCRYPTION_FAILED_MESSAGE = "Encryption failed."
-    private val GENERATION_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
+    private val encrypter = provideGenericEncrypter()
 
-    const val KCP_PASSWORD_KEY = "password"
-
-    @JvmStatic
+    /**
+     * Encrypts a single field into a block of content.
+     *
+     * @param fieldKeyToEncrypt The key of the field to be encrypted.
+     * @param fieldValueToEncrypt The value of the field to be encrypted.
+     * @param publicKey The key to be used for encryption.
+     * @return The encrypted string.
+     * @throws EncryptionException in case the encryption fails.
+     */
+    @Throws(EncryptionException::class)
     fun encryptField(
-        encryptionKey: String,
-        fieldToEncrypt: Any,
-        publicKey: String
+        fieldKeyToEncrypt: String,
+        fieldValueToEncrypt: Any?,
+        publicKey: String,
     ): String {
-        val encrypter = ClientSideEncrypter(publicKey)
-        return try {
-            val jsonToEncrypt = JSONObject()
-            jsonToEncrypt.put(encryptionKey, fieldToEncrypt)
-            jsonToEncrypt.put(CardEncrypter.GENERATION_TIME_KEY, makeGenerationTime())
-            encrypter.encrypt(jsonToEncrypt.toString())
-        } catch (e: JSONException) {
-            throw EncryptionException(ENCRYPTION_FAILED_MESSAGE, e)
-        }
+        return encrypter.encryptField(
+            fieldKeyToEncrypt = fieldKeyToEncrypt,
+            fieldValueToEncrypt = fieldValueToEncrypt,
+            publicKey = publicKey,
+        )
     }
 
-    @JvmStatic
-    fun makeGenerationTime(generationTime: Date? = null): String {
-        return GENERATION_DATE_FORMAT.format(assureGenerationTime(generationTime))
+    /**
+     * Encrypts multiple fields into a single block of content.
+     *
+     * @param publicKey The key to be used for encryption.
+     * @param fieldsToEncrypt The fields to be encrypted.
+     * @return The encrypted string.
+     * @throws EncryptionException in case the encryption fails.
+     */
+    @Throws(EncryptionException::class)
+    fun encryptFields(
+        publicKey: String,
+        vararg fieldsToEncrypt: Pair<String, Any?>,
+    ): String {
+        return encrypter.encryptFields(
+            fieldsToEncrypt = fieldsToEncrypt,
+            publicKey = publicKey,
+        )
     }
 
-    private fun assureGenerationTime(generationTime: Date?): Date {
-        return generationTime ?: Date()
+    private fun provideGenericEncrypter(): BaseGenericEncrypter {
+        return DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator())
     }
 }
