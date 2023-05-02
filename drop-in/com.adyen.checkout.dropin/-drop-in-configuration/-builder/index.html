@@ -1,0 +1,649 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Builder</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+<a href="../../../../index.html">
+<span>adyen-android</span>            </a>    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":drop-in:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="drop-in::com.adyen.checkout.dropin/DropInConfiguration.Builder///PointingToDeclaration//812263874">
+  <div class="breadcrumbs"><a href="../../../index.html">drop-in</a><span class="delimiter">/</span><a href="../../index.html">com.adyen.checkout.dropin</a><span class="delimiter">/</span><a href="../index.html">DropInConfiguration</a><span class="delimiter">/</span><span class="current">Builder</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Builder</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Builder</a> : <a href="../../../../action/com.adyen.checkout.action.internal/-action-handling-payment-method-configuration-builder/index.html">ActionHandlingPaymentMethodConfigurationBuilder</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../index.html">DropInConfiguration</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="index.html">DropInConfiguration.Builder</a><span class="token operator">&gt; </span></div><p class="paragraph">Builder for creating a <a href="../index.html">DropInConfiguration</a> where you can set specific Configurations for a Payment Method</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,FUNCTION,PROPERTY">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1871457393%2FConstructors%2F812263874" anchor-label="Builder" id="1871457393%2FConstructors%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-builder.html"><span><span>Builder</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1871457393%2FConstructors%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Create a <a href="../index.html">DropInConfiguration</a></p></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">shopperLocale<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Locale.html">Locale</a><span class="token punctuation">, </span></span><span class="parameter ">environment<span class="token operator">: </span><a href="../../../../checkout-core/com.adyen.checkout.core/-environment/index.html">Environment</a><span class="token punctuation">, </span></span><span class="parameter ">clientKey<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Alternative constructor that uses the context to fetch the user locale and use it as a shopper locale.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-654838394%2FFunctions%2F812263874" anchor-label="add3ds2ActionConfiguration" id="-654838394%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-654838394%2FFunctions%2F812263874"><span>add3ds2Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-654838394%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-654838394%2FFunctions%2F812263874"><span class="token function">add3ds2ActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../3ds2/com.adyen.checkout.adyen3ds2/-adyen3-d-s2-configuration/index.html">Adyen3DS2Configuration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-505562767%2FFunctions%2F812263874" anchor-label="addAchDirectDebitConfiguration" id="-505562767%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-ach-direct-debit-configuration.html"><span>add</span><wbr><span>Ach</span><wbr><span>Direct</span><wbr><span>Debit</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-505562767%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-ach-direct-debit-configuration.html"><span class="token function">addAchDirectDebitConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">achDirectDebitConfiguration<span class="token operator">: </span><a href="../../../../ach/com.adyen.checkout.ach/-a-c-h-direct-debit-configuration/index.html">ACHDirectDebitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for ACH Direct Debit payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-975888984%2FFunctions%2F812263874" anchor-label="addAwaitActionConfiguration" id="-975888984%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-975888984%2FFunctions%2F812263874"><span>add</span><wbr><span>Await</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-975888984%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-975888984%2FFunctions%2F812263874"><span class="token function">addAwaitActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../await/com.adyen.checkout.await/-await-configuration/index.html">AwaitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1710229868%2FFunctions%2F812263874" anchor-label="addBacsDirectDebitConfiguration" id="-1710229868%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-bacs-direct-debit-configuration.html"><span>add</span><wbr><span>Bacs</span><wbr><span>Direct</span><wbr><span>Debit</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1710229868%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-bacs-direct-debit-configuration.html"><span class="token function">addBacsDirectDebitConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bacsDirectDebitConfiguration<span class="token operator">: </span><a href="../../../../bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/index.html">BacsDirectDebitConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for BACS Direct Debit payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1662467586%2FFunctions%2F812263874" anchor-label="addBcmcConfiguration" id="-1662467586%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-bcmc-configuration.html"><span>add</span><wbr><span>Bcmc</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1662467586%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-bcmc-configuration.html"><span class="token function">addBcmcConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">bcmcConfiguration<span class="token operator">: </span><a href="../../../../bcmc/com.adyen.checkout.bcmc/-bcmc-configuration/index.html">BcmcConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for BCMC payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1481363753%2FFunctions%2F812263874" anchor-label="addBlikConfiguration" id="1481363753%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-blik-configuration.html"><span>add</span><wbr><span>Blik</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1481363753%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-blik-configuration.html"><span class="token function">addBlikConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">blikConfiguration<span class="token operator">: </span><a href="../../../../blik/com.adyen.checkout.blik/-blik-configuration/index.html">BlikConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Blik payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2099842821%2FFunctions%2F812263874" anchor-label="addCardConfiguration" id="2099842821%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-card-configuration.html"><span>add</span><wbr><span>Card</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2099842821%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-card-configuration.html"><span class="token function">addCardConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cardConfiguration<span class="token operator">: </span><a href="../../../../card/com.adyen.checkout.card/-card-configuration/index.html">CardConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Credit Card payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1014841388%2FFunctions%2F812263874" anchor-label="addConvenienceStoresJPConfiguration" id="1014841388%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-convenience-stores-j-p-configuration.html"><span>add</span><wbr><span>Convenience</span><wbr><span>Stores</span><wbr><span><span>JPConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1014841388%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-convenience-stores-j-p-configuration.html"><span class="token function">addConvenienceStoresJPConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">convenienceStoresJPConfiguration<span class="token operator">: </span><a href="../../../../convenience-stores-jp/com.adyen.checkout.conveniencestoresjp/-convenience-stores-j-p-configuration/index.html">ConvenienceStoresJPConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Convenience Stores Japan payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1613123818%2FFunctions%2F812263874" anchor-label="addDotpayConfiguration" id="-1613123818%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-dotpay-configuration.html"><span>add</span><wbr><span>Dotpay</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1613123818%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-dotpay-configuration.html"><span class="token function">addDotpayConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">dotpayConfiguration<span class="token operator">: </span><a href="../../../../dotpay/com.adyen.checkout.dotpay/-dotpay-configuration/index.html">DotpayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for DotPay payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="958173576%2FFunctions%2F812263874" anchor-label="addEntercashConfiguration" id="958173576%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-entercash-configuration.html"><span>add</span><wbr><span>Entercash</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="958173576%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-entercash-configuration.html"><span class="token function">addEntercashConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">entercashConfiguration<span class="token operator">: </span><a href="../../../../entercash/com.adyen.checkout.entercash/-entercash-configuration/index.html">EntercashConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for EnterCash payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1813671163%2FFunctions%2F812263874" anchor-label="addEpsConfiguration" id="-1813671163%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-eps-configuration.html"><span>add</span><wbr><span>Eps</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1813671163%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-eps-configuration.html"><span class="token function">addEpsConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">epsConfiguration<span class="token operator">: </span><a href="../../../../eps/com.adyen.checkout.eps/-e-p-s-configuration/index.html">EPSConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for EPS payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1086570804%2FFunctions%2F812263874" anchor-label="addGooglePayConfiguration" id="-1086570804%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-google-pay-configuration.html"><span>add</span><wbr><span>Google</span><wbr><span>Pay</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1086570804%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-google-pay-configuration.html"><span class="token function">addGooglePayConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">googlePayConfiguration<span class="token operator">: </span><a href="../../../../googlepay/com.adyen.checkout.googlepay/-google-pay-configuration/index.html">GooglePayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Google Pay payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1783933934%2FFunctions%2F812263874" anchor-label="addIdealConfiguration" id="-1783933934%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-ideal-configuration.html"><span>add</span><wbr><span>Ideal</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1783933934%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-ideal-configuration.html"><span class="token function">addIdealConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">idealConfiguration<span class="token operator">: </span><a href="../../../../ideal/com.adyen.checkout.ideal/-ideal-configuration/index.html">IdealConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for iDeal payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="913161943%2FFunctions%2F812263874" anchor-label="addMBWayConfiguration" id="913161943%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-m-b-way-configuration.html"><span>add</span><wbr><span>MBWay</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="913161943%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-m-b-way-configuration.html"><span class="token function">addMBWayConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">mbwayConfiguration<span class="token operator">: </span><a href="../../../../mbway/com.adyen.checkout.mbway/-m-b-way-configuration/index.html">MBWayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for MB WAY payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1886939611%2FFunctions%2F812263874" anchor-label="addMolpayMalasyaConfiguration" id="-1886939611%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-molpay-malasya-configuration.html"><span>add</span><wbr><span>Molpay</span><wbr><span>Malasya</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1886939611%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-molpay-malasya-configuration.html"><span class="token function">addMolpayMalasyaConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">molpayConfiguration<span class="token operator">: </span><a href="../../../../molpay/com.adyen.checkout.molpay/-molpay-configuration/index.html">MolpayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for MolPay Malasya payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="35130416%2FFunctions%2F812263874" anchor-label="addMolpayThailandConfiguration" id="35130416%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-molpay-thailand-configuration.html"><span>add</span><wbr><span>Molpay</span><wbr><span>Thailand</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="35130416%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-molpay-thailand-configuration.html"><span class="token function">addMolpayThailandConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">molpayConfiguration<span class="token operator">: </span><a href="../../../../molpay/com.adyen.checkout.molpay/-molpay-configuration/index.html">MolpayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for MolPay Thailand payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="409859391%2FFunctions%2F812263874" anchor-label="addMolpayVietnamConfiguration" id="409859391%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-molpay-vietnam-configuration.html"><span>add</span><wbr><span>Molpay</span><wbr><span>Vietnam</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="409859391%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-molpay-vietnam-configuration.html"><span class="token function">addMolpayVietnamConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">molpayConfiguration<span class="token operator">: </span><a href="../../../../molpay/com.adyen.checkout.molpay/-molpay-configuration/index.html">MolpayConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for MolPay Vietnam payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1908540089%2FFunctions%2F812263874" anchor-label="addOnlineBankingCZConfiguration" id="-1908540089%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-online-banking-c-z-configuration.html"><span>add</span><wbr><span>Online</span><wbr><span>Banking</span><wbr><span><span>CZConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1908540089%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-online-banking-c-z-configuration.html"><span class="token function">addOnlineBankingCZConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlineBankingCZConfiguration<span class="token operator">: </span><a href="../../../../online-banking-cz/com.adyen.checkout.onlinebankingcz/-online-banking-c-z-configuration/index.html">OnlineBankingCZConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Online Banking Czech Republic payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1450760586%2FFunctions%2F812263874" anchor-label="addOnlineBankingJPConfiguration" id="-1450760586%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-online-banking-j-p-configuration.html"><span>add</span><wbr><span>Online</span><wbr><span>Banking</span><wbr><span><span>JPConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1450760586%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-online-banking-j-p-configuration.html"><span class="token function">addOnlineBankingJPConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlineBankingJPConfiguration<span class="token operator">: </span><a href="../../../../online-banking-jp/com.adyen.checkout.onlinebankingjp/-online-banking-j-p-configuration/index.html">OnlineBankingJPConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Online Banking Japan payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2105523948%2FFunctions%2F812263874" anchor-label="addOnlineBankingPLConfiguration" id="2105523948%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-online-banking-p-l-configuration.html"><span>add</span><wbr><span>Online</span><wbr><span>Banking</span><wbr><span><span>PLConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2105523948%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-online-banking-p-l-configuration.html"><span class="token function">addOnlineBankingPLConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlineBankingPLConfiguration<span class="token operator">: </span><a href="../../../../online-banking-pl/com.adyen.checkout.onlinebankingpl/-online-banking-p-l-configuration/index.html">OnlineBankingPLConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Online Banking Poland payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1354544328%2FFunctions%2F812263874" anchor-label="addOnlineBankingSKConfiguration" id="1354544328%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-online-banking-s-k-configuration.html"><span>add</span><wbr><span>Online</span><wbr><span>Banking</span><wbr><span><span>SKConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1354544328%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-online-banking-s-k-configuration.html"><span class="token function">addOnlineBankingSKConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onlineBankingSKConfiguration<span class="token operator">: </span><a href="../../../../online-banking-sk/com.adyen.checkout.onlinebankingsk/-online-banking-s-k-configuration/index.html">OnlineBankingSKConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Online Banking Slovakia payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-527574279%2FFunctions%2F812263874" anchor-label="addOpenBankingConfiguration" id="-527574279%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-open-banking-configuration.html"><span>add</span><wbr><span>Open</span><wbr><span>Banking</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-527574279%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-open-banking-configuration.html"><span class="token function">addOpenBankingConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">openBankingConfiguration<span class="token operator">: </span><a href="../../../../openbanking/com.adyen.checkout.openbanking/-open-banking-configuration/index.html">OpenBankingConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Open Banking payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1705187897%2FFunctions%2F812263874" anchor-label="addPayEasyConfiguration" id="-1705187897%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-pay-easy-configuration.html"><span>add</span><wbr><span>Pay</span><wbr><span>Easy</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1705187897%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-pay-easy-configuration.html"><span class="token function">addPayEasyConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">payEasyConfiguration<span class="token operator">: </span><a href="../../../../payeasy/com.adyen.checkout.payeasy/-pay-easy-configuration/index.html">PayEasyConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Pay Easy payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-847854522%2FFunctions%2F812263874" anchor-label="addQRCodeActionConfiguration" id="-847854522%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-847854522%2FFunctions%2F812263874"><span>add</span><wbr><span>QRCode</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-847854522%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-847854522%2FFunctions%2F812263874"><span class="token function">addQRCodeActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../qr-code/com.adyen.checkout.qrcode/-q-r-code-configuration/index.html">QRCodeConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="772722488%2FFunctions%2F812263874" anchor-label="addRedirectActionConfiguration" id="772722488%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#772722488%2FFunctions%2F812263874"><span>add</span><wbr><span>Redirect</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="772722488%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#772722488%2FFunctions%2F812263874"><span class="token function">addRedirectActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../redirect/com.adyen.checkout.redirect/-redirect-configuration/index.html">RedirectConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1036976686%2FFunctions%2F812263874" anchor-label="addSepaConfiguration" id="-1036976686%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-sepa-configuration.html"><span>add</span><wbr><span>Sepa</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1036976686%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-sepa-configuration.html"><span class="token function">addSepaConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sepaConfiguration<span class="token operator">: </span><a href="../../../../sepa/com.adyen.checkout.sepa/-sepa-configuration/index.html">SepaConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Sepa payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-175522517%2FFunctions%2F812263874" anchor-label="addSevenElevenConfiguration" id="-175522517%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-seven-eleven-configuration.html"><span>add</span><wbr><span>Seven</span><wbr><span>Eleven</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-175522517%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-seven-eleven-configuration.html"><span class="token function">addSevenElevenConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sevenElevenConfiguration<span class="token operator">: </span><a href="../../../../seven-eleven/com.adyen.checkout.seveneleven/-seven-eleven-configuration/index.html">SevenElevenConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for Seven Eleven payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="354333643%2FFunctions%2F812263874" anchor-label="addUPIConfiguration" id="354333643%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-u-p-i-configuration.html"><span>add</span><wbr><span><span>UPIConfiguration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="354333643%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="add-u-p-i-configuration.html"><span class="token function">addUPIConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">upiConfiguration<span class="token operator">: </span><a href="../../../../upi/com.adyen.checkout.upi/-u-p-i-configuration/index.html">UPIConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Add configuration for UPI payment method.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="106655552%2FFunctions%2F812263874" anchor-label="addVoucherActionConfiguration" id="106655552%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#106655552%2FFunctions%2F812263874"><span>add</span><wbr><span>Voucher</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="106655552%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#106655552%2FFunctions%2F812263874"><span class="token function">addVoucherActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../voucher/com.adyen.checkout.voucher/-voucher-configuration/index.html">VoucherConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1536737622%2FFunctions%2F812263874" anchor-label="addWeChatPayActionConfiguration" id="-1536737622%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1536737622%2FFunctions%2F812263874"><span>add</span><wbr><span>We</span><wbr><span>Chat</span><wbr><span>Pay</span><wbr><span>Action</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1536737622%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">override </span><span class="token keyword">fun </span><a href="index.html#-1536737622%2FFunctions%2F812263874"><span class="token function">addWeChatPayActionConfiguration</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">configuration<span class="token operator">: </span><a href="../../../../wechatpay/com.adyen.checkout.wechatpay/-we-chat-pay-action-configuration/index.html">WeChatPayActionConfiguration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="35561497%2FFunctions%2F812263874" anchor-label="build" id="35561497%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#35561497%2FFunctions%2F812263874"><span><span>build</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="35561497%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#35561497%2FFunctions%2F812263874"><span class="token function">build</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">DropInConfiguration</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="738246068%2FFunctions%2F812263874" anchor-label="setAdditionalDataForDropInService" id="738246068%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-additional-data-for-drop-in-service.html"><span>set</span><wbr><span>Additional</span><wbr><span>Data</span><wbr><span>For</span><wbr><span>Drop</span><wbr><span>In</span><wbr><span><span>Service</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="738246068%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-additional-data-for-drop-in-service.html"><span class="token function">setAdditionalDataForDropInService</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">additionalDataForDropInService<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/os/Bundle.html">Bundle</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">Pass a custom Bundle to Drop-in. This Bundle will passed to the <a href="../../-drop-in-service/index.html">DropInService</a> and can be read using <a href="../../../../drop-in/com.adyen.checkout.dropin/-drop-in-service/get-additional-data.html">DropInService.getAdditionalData</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1617939930%2FFunctions%2F812263874" anchor-label="setAmount" id="1617939930%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1617939930%2FFunctions%2F812263874"><span>set</span><wbr><span><span>Amount</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617939930%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#1617939930%2FFunctions%2F812263874"><span class="token function">setAmount</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">amount<span class="token operator">: </span><a href="../../../../components-core/com.adyen.checkout.components.core/-amount/index.html">Amount</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="792474703%2FFunctions%2F812263874" anchor-label="setAnalyticsEnabled" id="792474703%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#792474703%2FFunctions%2F812263874"><span>set</span><wbr><span>Analytics</span><wbr><span><span>Enabled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="792474703%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="index.html#792474703%2FFunctions%2F812263874"><span class="token function">setAnalyticsEnabled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isAnalyticsEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1263052804%2FFunctions%2F812263874" anchor-label="setEnableRemovingStoredPaymentMethods" id="-1263052804%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-enable-removing-stored-payment-methods.html"><span>set</span><wbr><span>Enable</span><wbr><span>Removing</span><wbr><span>Stored</span><wbr><span>Payment</span><wbr><span><span>Methods</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1263052804%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-enable-removing-stored-payment-methods.html"><span class="token function">setEnableRemovingStoredPaymentMethods</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isEnabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">When set to true, users can remove their stored payment methods by swiping left on the corresponding row in the payment methods screen.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-319663764%2FFunctions%2F812263874" anchor-label="setShowPreselectedStoredPaymentMethod" id="-319663764%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-show-preselected-stored-payment-method.html"><span>set</span><wbr><span>Show</span><wbr><span>Preselected</span><wbr><span>Stored</span><wbr><span>Payment</span><wbr><span><span>Method</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-319663764%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-show-preselected-stored-payment-method.html"><span class="token function">setShowPreselectedStoredPaymentMethod</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">showStoredPaymentMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-851930387%2FFunctions%2F812263874" anchor-label="setSkipListWhenSinglePaymentMethod" id="-851930387%2FFunctions%2F812263874" data-filterable-set=":drop-in:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-skip-list-when-single-payment-method.html"><span>set</span><wbr><span>Skip</span><wbr><span>List</span><wbr><span>When</span><wbr><span>Single</span><wbr><span>Payment</span><wbr><span><span>Method</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-851930387%2FFunctions%2F812263874"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-skip-list-when-single-payment-method.html"><span class="token function">setSkipListWhenSinglePaymentMethod</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">skipListWhenSinglePaymentMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">DropInConfiguration.Builder</a></div><div class="brief "><p class="paragraph">When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method available and no storedpayment methods.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+

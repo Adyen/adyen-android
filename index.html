@@ -1,267 +1,520 @@
+<!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>All modules</title>
-<link href="images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "";</script><script type="text/javascript" src="scripts/sourceset_dependencies.js" async="async"></script><link href="styles/style.css" rel="Stylesheet"><link href="styles/logo-styles.css" rel="Stylesheet"><link href="styles/jetbrains-mono.css" rel="Stylesheet"><link href="styles/main.css" rel="Stylesheet"><script type="text/javascript" src="scripts/clipboard.js" async="async"></script><script type="text/javascript" src="scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="scripts/main.js" async="async"></script><link href="styles/multimodule.css" rel="Stylesheet">  </head>
-  <body>
-    <div id="container">
-      <div id="leftColumn"><a href="index.html">
-          <div id="logo"></div>
-        </a>
-        <div id="paneSearch"></div>
+    <link href="images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="scripts/sourceset_dependencies.js" async="async"></script>
+<link href="styles/style.css" rel="Stylesheet">
+<link href="styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="styles/main.css" rel="Stylesheet">
+<link href="styles/prism.css" rel="Stylesheet">
+<link href="styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="index.html">
+                    <span>adyen-android</span>
+            </a>
+    </div>
+    <div>
+    </div>
+    <div class="pull-right d-flex">
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
         <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div id="leftToggler"><span class="icon-toggler"></span></div>
-<script type="text/javascript" src="scripts/main.js"></script>        <div class="main-content" id="content" pageIds="adyen-android::.ext/allModules///PointingToDeclaration//0">
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <div class="breadcrumbs"></div>
-            <div class="pull-right d-flex">
-              <div id="searchBar"></div>
-            </div>
-          </div>
-          <div class="cover ">
-            <h2 class="">All modules:</h2>
-            <div class="table"><a data-name="-1603713781%2FMain%2F0" anchor-label="wechatpay" id="-1603713781%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="wechatpay/index.html">wechatpay</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1603713781%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-28865889%2FMain%2F0" anchor-label="voucher" id="-28865889%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="voucher/index.html">voucher</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28865889%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="786311509%2FMain%2F0" anchor-label="ui-core" id="786311509%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="ui-core/index.html">ui-core</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="786311509%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1682681358%2FMain%2F0" anchor-label="sepa" id="-1682681358%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="sepa/index.html">sepa</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1682681358%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1617008121%2FMain%2F0" anchor-label="redirect" id="1617008121%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="redirect/index.html">redirect</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617008121%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1478669932%2FMain%2F0" anchor-label="qr-code" id="-1478669932%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="qr-code/index.html">qr-code</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1478669932%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="468813937%2FMain%2F0" anchor-label="openbanking" id="468813937%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="openbanking/index.html">openbanking</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="468813937%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-388110409%2FMain%2F0" anchor-label="molpay" id="-388110409%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="molpay/index.html">molpay</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-388110409%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-153903981%2FMain%2F0" anchor-label="mbway" id="-153903981%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="mbway/index.html">mbway</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-153903981%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1883226981%2FMain%2F0" anchor-label="issuer-list" id="-1883226981%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="issuer-list/index.html">issuer-list</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1883226981%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1074067928%2FMain%2F0" anchor-label="ideal" id="1074067928%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="ideal/index.html">ideal</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1074067928%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1578005090%2FMain%2F0" anchor-label="googlepay" id="-1578005090%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="googlepay/index.html">googlepay</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1578005090%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1498593813%2FMain%2F0" anchor-label="giftcard" id="1498593813%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="giftcard/index.html">giftcard</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1498593813%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="625834853%2FMain%2F0" anchor-label="eps" id="625834853%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="eps/index.html">eps</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="625834853%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1502908702%2FMain%2F0" anchor-label="entercash" id="-1502908702%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="entercash/index.html">entercash</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1502908702%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="475151914%2FMain%2F0" anchor-label="drop-in" id="475151914%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="drop-in/index.html">drop-in</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="475151914%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1999503734%2FMain%2F0" anchor-label="dotpay" id="1999503734%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="dotpay/index.html">dotpay</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1999503734%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-709094600%2FMain%2F0" anchor-label="cse" id="-709094600%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="cse/index.html">cse</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-709094600%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="210383447%2FMain%2F0" anchor-label="components-core" id="210383447%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="components-core/index.html">components-core</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="210383447%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1952657287%2FMain%2F0" anchor-label="checkout-core" id="1952657287%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="checkout-core/index.html">checkout-core</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1952657287%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1147140283%2FMain%2F0" anchor-label="card" id="-1147140283%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="card/index.html">card</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1147140283%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-194829591%2FMain%2F0" anchor-label="blik" id="-194829591%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="blik/index.html">blik</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-194829591%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1401129630%2FMain%2F0" anchor-label="bcmc" id="1401129630%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="bcmc/index.html">bcmc</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1401129630%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1380714054%2FMain%2F0" anchor-label="bacs" id="1380714054%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="bacs/index.html">bacs</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1380714054%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="1637651447%2FMain%2F0" anchor-label="await" id="1637651447%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="await/index.html">await</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1637651447%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-<a data-name="-1409869339%2FMain%2F0" anchor-label="3ds2" id="-1409869339%2FMain%2F0" data-filterable-set=""></a>
-              <div class="table-row">
-                <div class="main-subrow ">
-                  <div class="w-100"><span class="inline-flex"><a href="3ds2/index.html">3ds2</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1409869339%2FMain%2F0"></span>
-                        <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                      </span></span></div>
-                  <div><span class="brief-comment"></span></div>
-                </div>
-              </div>
-            </div>
-          </div>
+    </div>
+    <div id="main">
+<div class="main-content" id="content" pageIds="adyen-android::.ext/allModules///PointingToDeclaration//0">
+  <div class="breadcrumbs"></div>
+  <div class="cover ">
+    <h2 class="">All modules:</h2>
+    <div class="table"><a data-name="-1409869339%2FMain%2F0" anchor-label="3ds2" id="-1409869339%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="3ds2/index.html">3ds2</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1409869339%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+<a data-name="1687482823%2FMain%2F0" anchor-label="ach" id="1687482823%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="ach/index.html">ach</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1687482823%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1464024609%2FMain%2F0" anchor-label="action" id="-1464024609%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="action/index.html">action</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1464024609%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1637651447%2FMain%2F0" anchor-label="await" id="1637651447%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="await/index.html">await</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1637651447%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1380714054%2FMain%2F0" anchor-label="bacs" id="1380714054%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="bacs/index.html">bacs</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1380714054%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1401129630%2FMain%2F0" anchor-label="bcmc" id="1401129630%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="bcmc/index.html">bcmc</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1401129630%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-194829591%2FMain%2F0" anchor-label="blik" id="-194829591%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="blik/index.html">blik</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-194829591%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1147140283%2FMain%2F0" anchor-label="card" id="-1147140283%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="card/index.html">card</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1147140283%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1952657287%2FMain%2F0" anchor-label="checkout-core" id="1952657287%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="checkout-core/index.html">checkout-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1952657287%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="210383447%2FMain%2F0" anchor-label="components-core" id="210383447%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="components-core/index.html">components-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="210383447%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1339939326%2FMain%2F0" anchor-label="convenience-stores-jp" id="-1339939326%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="convenience-stores-jp/index.html">convenience-stores-jp</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1339939326%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-709094600%2FMain%2F0" anchor-label="cse" id="-709094600%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="cse/index.html">cse</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-709094600%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1999503734%2FMain%2F0" anchor-label="dotpay" id="1999503734%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="dotpay/index.html">dotpay</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1999503734%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="475151914%2FMain%2F0" anchor-label="drop-in" id="475151914%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="drop-in/index.html">drop-in</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="475151914%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-609048597%2FMain%2F0" anchor-label="econtext" id="-609048597%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="econtext/index.html">econtext</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-609048597%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1502908702%2FMain%2F0" anchor-label="entercash" id="-1502908702%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="entercash/index.html">entercash</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1502908702%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="625834853%2FMain%2F0" anchor-label="eps" id="625834853%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="eps/index.html">eps</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="625834853%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1498593813%2FMain%2F0" anchor-label="giftcard" id="1498593813%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="giftcard/index.html">giftcard</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1498593813%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1578005090%2FMain%2F0" anchor-label="googlepay" id="-1578005090%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="googlepay/index.html">googlepay</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1578005090%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1074067928%2FMain%2F0" anchor-label="ideal" id="1074067928%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="ideal/index.html">ideal</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1074067928%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="766862028%2FMain%2F0" anchor-label="instant" id="766862028%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="instant/index.html">instant</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="766862028%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1883226981%2FMain%2F0" anchor-label="issuer-list" id="-1883226981%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="issuer-list/index.html">issuer-list</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1883226981%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-153903981%2FMain%2F0" anchor-label="mbway" id="-153903981%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="mbway/index.html">mbway</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-153903981%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-388110409%2FMain%2F0" anchor-label="molpay" id="-388110409%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="molpay/index.html">molpay</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-388110409%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1299880595%2FMain%2F0" anchor-label="online-banking-core" id="-1299880595%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="online-banking-core/index.html">online-banking-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1299880595%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1720783275%2FMain%2F0" anchor-label="online-banking-cz" id="-1720783275%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="online-banking-cz/index.html">online-banking-cz</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1720783275%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="405349478%2FMain%2F0" anchor-label="online-banking-jp" id="405349478%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="online-banking-jp/index.html">online-banking-jp</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="405349478%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1755987056%2FMain%2F0" anchor-label="online-banking-pl" id="1755987056%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="online-banking-pl/index.html">online-banking-pl</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1755987056%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="314842004%2FMain%2F0" anchor-label="online-banking-sk" id="314842004%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="online-banking-sk/index.html">online-banking-sk</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="314842004%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="468813937%2FMain%2F0" anchor-label="openbanking" id="468813937%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="openbanking/index.html">openbanking</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="468813937%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="258648370%2FMain%2F0" anchor-label="paybybank" id="258648370%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="paybybank/index.html">paybybank</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="258648370%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1754887133%2FMain%2F0" anchor-label="payeasy" id="-1754887133%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="payeasy/index.html">payeasy</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1754887133%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1478669932%2FMain%2F0" anchor-label="qr-code" id="-1478669932%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="qr-code/index.html">qr-code</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1478669932%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1617008121%2FMain%2F0" anchor-label="redirect" id="1617008121%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="redirect/index.html">redirect</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617008121%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1682681358%2FMain%2F0" anchor-label="sepa" id="-1682681358%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="sepa/index.html">sepa</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1682681358%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-820215650%2FMain%2F0" anchor-label="sessions-core" id="-820215650%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="sessions-core/index.html">sessions-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-820215650%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="1104010100%2FMain%2F0" anchor-label="seven-eleven" id="1104010100%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="seven-eleven/index.html">seven-eleven</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1104010100%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="786311509%2FMain%2F0" anchor-label="ui-core" id="786311509%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="ui-core/index.html">ui-core</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="786311509%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="534819359%2FMain%2F0" anchor-label="upi" id="534819359%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="upi/index.html">upi</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="534819359%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-28865889%2FMain%2F0" anchor-label="voucher" id="-28865889%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="voucher/index.html">voucher</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-28865889%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
+      </div>
+<a data-name="-1603713781%2FMain%2F0" anchor-label="wechatpay" id="-1603713781%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="wechatpay/index.html">wechatpay</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1603713781%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment"></span></div>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
 </html>
-
