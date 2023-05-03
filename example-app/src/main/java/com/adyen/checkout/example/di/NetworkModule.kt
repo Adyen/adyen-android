@@ -12,7 +12,6 @@ import android.os.Build
 import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
-import com.adyen.checkout.example.data.api.RecurringApiService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -38,11 +37,6 @@ object NetworkModule {
 
     private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable())
         BuildConfig.MERCHANT_SERVER_URL
-    else
-        "http://myserver.com/my/endpoint/"
-
-    private val BASE_URL_RECURRING = if (RecurringApiService.isRealUrlAvailable())
-        BuildConfig.MERCHANT_RECURRING_SERVER_URL
     else
         "http://myserver.com/my/endpoint/"
 
@@ -92,25 +86,7 @@ object NetworkModule {
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
-    @Singleton
-    @Provides
-    @Named("RetrofitRecurring")
-    fun provideRetrofitRecurring(
-        okHttpClient: OkHttpClient,
-        converterFactory: Converter.Factory,
-    ): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(BASE_URL_RECURRING)
-            .client(okHttpClient)
-            .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build()
-
     @Provides
     fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
         retrofit.create(CheckoutApiService::class.java)
-
-    @Provides
-    fun provideRecurringApiService(@Named("RetrofitRecurring") retrofit: Retrofit): RecurringApiService =
-        retrofit.create(RecurringApiService::class.java)
 }

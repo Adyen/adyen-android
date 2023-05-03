@@ -25,6 +25,11 @@ interface PaymentsRepository {
     suspend fun balanceRequestAsync(balanceRequest: RequestBody): ResponseBody?
     suspend fun createOrderAsync(orderRequest: RequestBody): ResponseBody?
     suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody?
+    suspend fun removeStoredPaymentMethod(
+        storedPaymentMethodId: String,
+        merchantAccount: String,
+        shopperReference: String,
+    ): ResponseBody?
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
@@ -70,6 +75,22 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
     override suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody? {
         return safeApiCall(
             call = { checkoutApiService.cancelOrderAsync(orderRequest).await() }
+        )
+    }
+
+    override suspend fun removeStoredPaymentMethod(
+        storedPaymentMethodId: String,
+        merchantAccount: String,
+        shopperReference: String,
+    ): ResponseBody? {
+        return safeApiCall(
+            call = {
+                checkoutApiService.removeStoredPaymentMethodAsync(
+                    recurringId = storedPaymentMethodId,
+                    merchantAccount = merchantAccount,
+                    shopperReference = shopperReference,
+                ).await()
+            }
         )
     }
 }
