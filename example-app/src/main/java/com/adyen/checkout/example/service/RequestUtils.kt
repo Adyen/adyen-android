@@ -13,6 +13,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.paymentsRequest.RecurringProcessingModel
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -41,7 +42,8 @@ fun createPaymentRequest(
     additionalData: AdditionalData,
     force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false,
-    shopperEmail: String? = null
+    shopperEmail: String? = null,
+    recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
 ): JSONObject {
 
     return JSONObject(paymentComponentData.toString()).apply {
@@ -64,6 +66,7 @@ fun createPaymentRequest(
             put("threeDS2RequestData", threeDS2RequestData)
         }
         put("shopperEmail", shopperEmail)
+        put("recurringProcessingModel", recurringProcessingModel)
     }
 }
 
