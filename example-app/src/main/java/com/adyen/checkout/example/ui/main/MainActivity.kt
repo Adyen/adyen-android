@@ -80,10 +80,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.listItems.collect(::onListItems) }
+                launch { viewModel.mainViewState.collect(::onMainViewState) }
                 launch { viewModel.eventFlow.collect(::onMainEvent) }
-                launch { viewModel.isLoading.collect(::setLoading) }
-                launch { viewModel.useSessions.collect(::setUseSessionsSwitchChecked) }
             }
         }
     }
@@ -101,6 +99,12 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun onMainViewState(mainViewState: MainViewState) {
+        onListItems(mainViewState.listItems)
+        setLoading(mainViewState.showLoading)
+        setUseSessionsSwitchChecked(mainViewState.useSessions)
     }
 
     private fun onListItems(items: List<ComponentItem>) {
