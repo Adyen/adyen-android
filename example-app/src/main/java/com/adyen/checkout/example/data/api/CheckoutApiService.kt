@@ -18,8 +18,12 @@ import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.sessions.core.SessionModel
 import org.json.JSONObject
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 internal interface CheckoutApiService {
 
@@ -57,4 +61,11 @@ internal interface CheckoutApiService {
 
     @POST("orders/cancel")
     suspend fun cancelOrderAsync(@Body request: CancelOrderRequest): JSONObject
+
+    @DELETE("storedPaymentMethods/{recurringId}")
+    suspend fun removeStoredPaymentMethodAsync(
+        @Path("recurringId") recurringId: String,
+        @Query("merchantAccount") merchantAccount: String,
+        @Query("shopperReference") shopperReference: String,
+    ): Response<Unit>
 }

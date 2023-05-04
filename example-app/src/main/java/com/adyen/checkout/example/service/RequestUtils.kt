@@ -22,7 +22,6 @@ import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.RecurringProcessingModel
-import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
 import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
@@ -153,16 +152,6 @@ fun createCancelOrderRequest(
 ) = CancelOrderRequest(
     order = orderJson,
     merchantAccount = merchantAccount
-)
-
-fun createRemoveStoredPaymentMethodRequest(
-    recurringDetailReference: String,
-    merchantAccount: String,
-    shopperReference: String
-) = RemoveStoredPaymentMethodRequest(
-    recurringDetailReference = recurringDetailReference,
-    merchantAccount = merchantAccount,
-    shopperReference = shopperReference
 )
 
 private const val SHOPPER_IP = "142.12.31.22"
