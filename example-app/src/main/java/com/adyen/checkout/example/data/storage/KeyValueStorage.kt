@@ -10,6 +10,7 @@ package com.adyen.checkout.example.data.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
@@ -29,6 +30,8 @@ interface KeyValueStorage {
     fun isAddressFormEnabled(): Int
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): Int
+    fun useSessions(): Boolean
+    fun setUseSessions(useSessions: Boolean)
 }
 
 @Suppress("TooManyFunctions")
@@ -105,6 +108,20 @@ internal class DefaultKeyValueStorage(
         ).toInt()
     }
 
+    override fun useSessions(): Boolean {
+        return sharedPreferences.get(
+            appContext,
+            R.string.use_sessions_key,
+            DEFAULT_USE_SESSIONS
+        )
+    }
+
+    override fun setUseSessions(useSessions: Boolean) {
+        sharedPreferences.edit {
+            putBoolean(appContext.getString(R.string.use_sessions_key), useSessions)
+        }
+    }
+
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
         private const val DEFAULT_LOCALE = "en-US"
@@ -116,5 +133,6 @@ internal class DefaultKeyValueStorage(
         private const val DEFAULT_ENABLE_ADDRESS_FORM = "0"
         private const val DEFAULT_INSTALLMENT_OPTIONS_MODE = "0"
         private const val DEFAULT_INSTANT_PAYMENT_METHOD = "paypal"
+        private const val DEFAULT_USE_SESSIONS = true
     }
 }

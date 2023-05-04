@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
                 launch { viewModel.listItems.collect(::onListItems) }
                 launch { viewModel.eventFlow.collect(::onMainEvent) }
                 launch { viewModel.isLoading.collect(::setLoading) }
+                launch { viewModel.useSessions.collect(::setUseSessionsSwitchChecked) }
             }
         }
     }
@@ -178,6 +179,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.progressIndicator.hide()
         }
+    }
+
+    private fun setUseSessionsSwitchChecked(isChecked: Boolean) {
+        binding.switchSessions.isChecked = isChecked
     }
 
     override fun onDestroy() {

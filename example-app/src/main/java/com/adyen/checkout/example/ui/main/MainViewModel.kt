@@ -48,6 +48,9 @@ internal class MainViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
 
+    private val _useSessions = MutableStateFlow(keyValueStorage.useSessions())
+    val useSessions: Flow<Boolean> = _useSessions
+
     private val _eventFlow = MutableSharedFlow<MainEvent>(extraBufferCapacity = 1)
     val eventFlow: Flow<MainEvent> = _eventFlow
 
@@ -160,6 +163,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun onSessionsToggled(enable: Boolean) {
+        _useSessions.value = enable
+        keyValueStorage.setUseSessions(enable)
         val items = if (enable) {
             ComponentItemProvider.getSessionItems()
         } else {
