@@ -257,7 +257,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     /**
-     * Allow asynchronously sending the results of the Recurring/ network call.
+     * Allow asynchronously sending the results of the DELETE /storedPaymentMethods network call.
      *
      * Call this method after making a network call to remove a stored payment method
      * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
@@ -445,14 +445,14 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * Only applicable to removing stored payment methods.
      *
      * In this method you should make the network call to tell your server to make a call to the
-     * Recurring/<version_number>/disable endpoint. This method is called when the user initiates
+     * DELETE /storedPaymentMethods endpoint. This method is called when the user initiates
      * removing a stored payment method using the remove button.
      *
      * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
      * in the field [StoredPaymentMethod.id].
      *
      * Asynchronous handling: since this method runs on the main thread, you should make sure the
-     * Recurring/<version>/disable call and any other long running operation is made on a background thread.
+     * DELETE /storedPaymentMethods call and any other long running operation is made on a background thread.
      *
      * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
      * to be thrown.

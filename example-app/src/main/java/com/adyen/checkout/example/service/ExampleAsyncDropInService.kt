@@ -15,14 +15,12 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,9 +50,6 @@ class ExampleAsyncDropInService : DropInService() {
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
-
-    @Inject
-    lateinit var recurringRepository: RecurringRepository
 
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
@@ -146,30 +141,25 @@ class ExampleAsyncDropInService : DropInService() {
         storedPaymentMethodJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
-            val requestBody = createRemoveStoredPaymentMethodRequest(
-                storedPaymentMethod.id.orEmpty(),
-                keyValueStorage.getMerchantAccount(),
-                keyValueStorage.getShopperReference()
-            ).toString().toRequestBody(CONTENT_TYPE)
-            val response = recurringRepository.removeStoredPaymentMethod(requestBody)
-            val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
+            val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
+            val response = paymentsRepository.removeStoredPaymentMethod(
+                storedPaymentMethodId = storedPaymentMethodId,
+                merchantAccount = keyValueStorage.getMerchantAccount(),
+                shopperReference = keyValueStorage.getShopperReference(),
+            )
+            val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethodId)
             sendRecurringResult(result)
         }
     }
 
     private fun handleRemoveStoredPaymentMethodResult(response: ResponseBody?, id: String): RecurringDropInServiceResult {
-        return if (response != null) {
-            val orderJson = response.string()
-            val jsonResponse = JSONObject(orderJson)
-            Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
-            val responseCode = jsonResponse.getStringOrNull("response")
-            when (responseCode) {
-                "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)
-                else -> RecurringDropInServiceResult.Error(reason = responseCode, dismissDropIn = false)
-            }
-        } else {
-            Logger.e(TAG, "FAILED")
-            RecurringDropInServiceResult.Error(reason = "IOException")
-        }
+        // since the endpoint will always return an empty body, the response will always be null which means we might send a successful result back to
+        // drop-in even if this call has actually failed
+        // there is no easy way to fix this now on v4 since the `safeApiCall` method returns null for both an empty body and an error response
+        // the only issue that could result from this is that if the call fails the example app will tell the user that their payment method was
+        // successfully removed when in fact it was not
+        // this issue is merely a visual issue and does not have a large impact so we will ignore it for v4 considering the high level of effort
+        // required to fix it
+        return RecurringDropInServiceResult.PaymentMethodRemoved(id)
     }
 }

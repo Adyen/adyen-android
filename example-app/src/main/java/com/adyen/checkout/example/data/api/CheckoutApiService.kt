@@ -17,8 +17,11 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CheckoutApiService {
 
@@ -63,4 +66,12 @@ interface CheckoutApiService {
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders/cancel")
     fun cancelOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
+
+    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
+    @DELETE("storedPaymentMethods/{recurringId}")
+    fun removeStoredPaymentMethodAsync(
+        @Path("recurringId") recurringId: String,
+        @Query("merchantAccount") merchantAccount: String,
+        @Query("shopperReference") shopperReference: String,
+    ): Deferred<Response<ResponseBody>>
 }
