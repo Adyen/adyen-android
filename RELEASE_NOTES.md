@@ -13,3 +13,7 @@
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.1** (requires Java 17)  |
+
+## New
+- Payment methods:
+  - [Boleto Bancário](https://docs.adyen.com/payment-methods/boleto-bancario). Payment method type: *boletobancario*.
