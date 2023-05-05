@@ -33,8 +33,9 @@ import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 
+class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class VoucherComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {

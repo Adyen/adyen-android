@@ -22,8 +22,9 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponentState
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 
+class OnlineBankingPLComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class OnlineBankingPLComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<

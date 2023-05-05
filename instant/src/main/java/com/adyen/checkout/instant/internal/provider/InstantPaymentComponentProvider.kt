@@ -48,8 +48,9 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 
+class InstantPaymentComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class InstantPaymentComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :

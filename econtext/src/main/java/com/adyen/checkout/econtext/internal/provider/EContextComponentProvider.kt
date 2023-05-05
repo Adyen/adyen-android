@@ -53,13 +53,14 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class EContextComponentProvider<
     ComponentT : EContextComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : EContextConfiguration,
     PaymentMethodT : EContextPaymentMethod,
     ComponentStateT : PaymentComponentState<PaymentMethodT>,
-    >(
+    >
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams?,
     overrideSessionParams: SessionParams?,

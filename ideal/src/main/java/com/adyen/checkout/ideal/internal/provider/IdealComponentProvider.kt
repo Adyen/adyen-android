@@ -22,8 +22,9 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
+class IdealComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class IdealComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod, IdealComponentState>(

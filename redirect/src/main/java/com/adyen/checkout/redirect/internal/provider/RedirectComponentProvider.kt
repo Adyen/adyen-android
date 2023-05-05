@@ -33,8 +33,9 @@ import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 
+class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class RedirectComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
