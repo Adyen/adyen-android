@@ -16,6 +16,7 @@
     <string name="paymentInProgressView_cancelButton">Avbryt</string>
 
     <string name="checkout_address_form_field_not_valid">Ugyldige inndata</string>
+    <string name="checkout_social_security_number_not_valid">Ugyldige inndata</string>
 
     <string name="checkout_address_form_billing_address_title">Faktureringsadresse</string>
     <string name="checkout_address_form_street_hint">Gate</string>
@@ -41,5 +42,4 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valgfritt)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valgfritt)</string>
     <string name="checkout_address_form_city_town_hint_optional">By (valgfritt)</string>
-
 </resources>

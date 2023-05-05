@@ -31,7 +31,6 @@ import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
-import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -67,6 +66,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
+import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel

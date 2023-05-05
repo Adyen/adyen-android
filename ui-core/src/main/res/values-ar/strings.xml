@@ -16,6 +16,7 @@
     <string name="paymentInProgressView_cancelButton">إلغاء</string>
 
     <string name="checkout_address_form_field_not_valid">إدخال غير صحيح</string>
+    <string name="checkout_social_security_number_not_valid">إدخال غير صحيح</string>
 
     <string name="checkout_address_form_billing_address_title">عنوان الفواتير</string>
     <string name="checkout_address_form_street_hint">الشارع</string>
@@ -41,5 +42,4 @@
     <string name="checkout_address_form_zip_code_hint_optional">الرمز البريدي (اختياري)</string>
     <string name="checkout_address_form_province_territory_hint_optional">المقاطعة أو الإقليم (اختياري)</string>
     <string name="checkout_address_form_city_town_hint_optional">المدينة / البلدة (اختياري)</string>
-
 </resources>

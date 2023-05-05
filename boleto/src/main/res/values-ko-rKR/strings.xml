@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">개인 정보</string>
+    <string name="checkout_boleto_first_name">이름</string>
+    <string name="checkout_boleto_last_name">성</string>
+    <string name="checkout_boleto_send_email_copy">내 이메일로 사본 보내기</string>
+    <string name="checkout_boleto_email">이메일 주소</string>
+    <string name="checkout_boleto_generate_btn_label">Boleto 생성</string>
+
+    <string name="checkout_boleto_first_name_invalid">이름이 올바르지 않습니다</string>
+    <string name="checkout_boleto_last_name_invalid">성이 올바르지 않습니다</string>
+    <string name="checkout_boleto_email_invalid">유효하지 않은 이메일 주소</string>
+</resources>

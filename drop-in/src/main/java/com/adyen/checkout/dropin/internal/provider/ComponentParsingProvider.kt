@@ -28,6 +28,10 @@ import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
+import com.adyen.checkout.boleto.BoletoComponent
+import com.adyen.checkout.boleto.BoletoComponentState
+import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.internal.provider.BoletoComponentProvider
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -219,6 +223,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey = clientKey
         )
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> BlikConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+        BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> BoletoConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -513,6 +522,16 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
                 callback = componentCallback as ComponentCallback<BlikComponentState>,
+            )
+        }
+        BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val boletoConfiguration: BoletoConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            BoletoComponentProvider(dropInParams, sessionParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = boletoConfiguration,
+                callback = componentCallback as ComponentCallback<BoletoComponentState>,
             )
         }
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {

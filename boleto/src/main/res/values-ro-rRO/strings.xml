@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Informații personale</string>
+    <string name="checkout_boleto_first_name">Prenume</string>
+    <string name="checkout_boleto_last_name">Nume de familie</string>
+    <string name="checkout_boleto_send_email_copy">Trimite o copie la adresa mea de e-mail</string>
+    <string name="checkout_boleto_email">Adresă de e-mail</string>
+    <string name="checkout_boleto_generate_btn_label">Generare Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Prenumele nu este valabil</string>
+    <string name="checkout_boleto_last_name_invalid">Numele de familie nu este valabil</string>
+    <string name="checkout_boleto_email_invalid">Adresă de e-mail incorectă</string>
+</resources>

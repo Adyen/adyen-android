@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">البيانات الشخصية</string>
+    <string name="checkout_boleto_first_name">الاسم الأول</string>
+    <string name="checkout_boleto_last_name">الاسم الأخير</string>
+    <string name="checkout_boleto_send_email_copy">إرسال نسخة إلى بريدي الإلكتروني</string>
+    <string name="checkout_boleto_email">عنوان البريد الإلكتروني</string>
+    <string name="checkout_boleto_generate_btn_label">إنشاء طريقة دفع Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">الاسم الأول غير صحيح</string>
+    <string name="checkout_boleto_last_name_invalid">الاسم الأخير غير صحيح</string>
+    <string name="checkout_boleto_email_invalid">عنوان بريد إلكتروني غير صحيح</string>
+</resources>

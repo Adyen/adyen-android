@@ -6,15 +6,17 @@
  * Created by oscars on 15/2/2023.
  */
 
-package com.adyen.checkout.card.internal.util
+package com.adyen.checkout.ui.core.internal.util
 
-import com.adyen.checkout.card.R
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.ui.core.R
 import java.util.regex.Pattern
 
 @Suppress("MagicNumber")
-internal object SocialSecurityNumberUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object SocialSecurityNumberUtils {
 
     private const val CPF_DIGIT_LIMIT = 11
     private const val CPF_REGEX = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"
