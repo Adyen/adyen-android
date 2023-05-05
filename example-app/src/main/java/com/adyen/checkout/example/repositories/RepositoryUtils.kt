@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.core.internal.util.Logger
+import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -20,7 +20,7 @@ internal suspend fun <T> safeApiCall(call: suspend () -> T): T? = withContext(Di
     } catch (e: CancellationException) {
         throw e
     } catch (e: Throwable) {
-        Logger.e("safeApiCall", "API call failed", e)
+        Log.e("CO.safeApiCall", "API call failed", e)
         null
     }
 }

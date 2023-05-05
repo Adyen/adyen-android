@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.giftcard
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,9 +24,8 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createBalanceRequest
 import com.adyen.checkout.example.service.createOrderRequest
@@ -115,7 +115,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
         viewModelScope.launch(Dispatchers.IO) {
-            Logger.d(TAG, "checkBalance")
+            Log.d(TAG, "checkBalance")
 
             val amount = paymentComponentState.data.amount
             val paymentMethod = paymentComponentState.data.paymentMethod
@@ -170,13 +170,13 @@ internal class GiftCardViewModel @Inject constructor(
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
-            Logger.e(TAG, "FAILED")
+            Log.e(TAG, "FAILED")
         }
     }
 
     override fun onRequestOrder() {
         viewModelScope.launch(Dispatchers.IO) {
-            Logger.d(TAG, "createOrder")
+            Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
                 keyValueStorage.getAmount(),
@@ -203,7 +203,7 @@ internal class GiftCardViewModel @Inject constructor(
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
-            Logger.e(TAG, "FAILED")
+            Log.e(TAG, "FAILED")
             viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
         }
     }
@@ -302,7 +302,7 @@ internal class GiftCardViewModel @Inject constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"
     }
 }
