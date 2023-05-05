@@ -54,6 +54,8 @@ final theTeamName = "Checkout"
 final theScmConnection = "scm:git:git://github.com/Adyen/adyen-android.git"
 final theScmUrl = "https://github.com/Adyen/adyen-android"
 
+group theGroupId
+
 project.afterEvaluate {
     publishing {
         publications {
