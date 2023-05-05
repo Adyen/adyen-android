@@ -12,4 +12,4 @@
 - Dependency versions:
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
-  | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.0** (requires Java 17)  |
+  | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.1** (requires Java 17)  |
