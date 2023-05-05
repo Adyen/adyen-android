@@ -20,8 +20,9 @@ import org.json.JSONObject
  * The classes extending [ModelObject] are data classes designed to work standalone or in association with JSON
  * libraries like GSON and Moshi.
  */
+abstract class ModelObject
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class ModelObject : Parcelable {
+constructor() : Parcelable {
 
     override fun describeContents(): Int {
         return Parcelable.CONTENTS_FILE_DESCRIPTOR
