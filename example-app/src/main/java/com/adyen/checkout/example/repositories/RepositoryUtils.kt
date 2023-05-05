@@ -9,17 +9,18 @@
 package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.runSuspendCatching
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+@Suppress("TooGenericExceptionCaught")
 internal suspend fun <T> safeApiCall(call: suspend () -> T): T? = withContext(Dispatchers.IO) {
-    runSuspendCatching { call() }
-        .fold(
-            onSuccess = { it },
-            onFailure = { e ->
-                Logger.e("safeApiCall", "API call failed", e)
-                null
-            }
-        )
+    return@withContext try {
+        call()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Throwable) {
+        Logger.e("safeApiCall", "API call failed", e)
+        null
+    }
 }
