@@ -19,11 +19,11 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
-import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingComponentState
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingPaymentMethod
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

@@ -19,7 +19,6 @@ import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,7 +48,7 @@ internal class VoucherComponentTest(
     fun before() {
         AdyenLogger.setLogLevel(Logger.NONE)
 
-        whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType)
+        whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType.SIMPLE_VOUCHER)
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
     }
 
@@ -83,24 +82,34 @@ internal class VoucherComponentTest(
     }
 
     @Test
-    fun `when component is initialized then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for BACS then view flow should match delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertEquals(VoucherComponentViewType, awaitItem())
+            assertEquals(VoucherComponentViewType.SIMPLE_VOUCHER, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when component is initialized for Boleto then view flow should match delegate view flow`() = runTest {
+        whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType.FULL_VOUCHER)
+        component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
+        component.viewFlow.test {
+            assertEquals(VoucherComponentViewType.FULL_VOUCHER, awaitItem())
             expectNoEvents()
         }
     }
 
     @Test
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
-        val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
+        val delegateViewFlow = MutableStateFlow(VoucherComponentViewType.SIMPLE_VOUCHER)
         whenever(voucherDelegate.viewFlow) doReturn delegateViewFlow
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+            assertEquals(VoucherComponentViewType.SIMPLE_VOUCHER, awaitItem())
 
-            delegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
+            delegateViewFlow.emit(VoucherComponentViewType.FULL_VOUCHER)
+            assertEquals(VoucherComponentViewType.FULL_VOUCHER, awaitItem())
 
             expectNoEvents()
         }

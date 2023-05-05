@@ -9,6 +9,7 @@
 package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
@@ -19,7 +20,9 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
+import com.adyen.checkout.voucher.internal.ui.model.VoucherPaymentMethodConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -29,6 +32,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
+    private val pdfOpener: PdfOpener,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -39,7 +43,8 @@ internal class DefaultVoucherDelegate(
 
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
         // no ops
@@ -69,20 +74,49 @@ internal class DefaultVoucherDelegate(
             return
         }
 
-        _outputDataFlow.tryEmit(
-            VoucherOutputData(
-                isValid = true,
-                paymentMethodType = action.paymentMethodType,
-                downloadUrl = action.url
+        val viewType = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)?.viewType
+
+        if (viewType == null) {
+            exceptionChannel.trySend(
+                ComponentException("Payment method ${action.paymentMethodType} not supported for this action")
             )
+            return
+        }
+
+        _viewFlow.tryEmit(viewType)
+
+        createOutputData(action)
+    }
+
+    private fun createOutputData(action: VoucherAction) {
+        val outputData = VoucherOutputData(
+            isValid = true,
+            paymentMethodType = action.paymentMethodType,
+            // TODO: remove action.url when it's fixed from backend side
+            downloadUrl = action.downloadUrl ?: action.url,
+            expiresAt = action.expiresAt,
+            reference = action.reference,
+            totalAmount = action.totalAmount,
         )
+        _outputDataFlow.tryEmit(outputData)
     }
 
     private fun createOutputData() = VoucherOutputData(
         isValid = false,
         paymentMethodType = null,
-        downloadUrl = null
+        downloadUrl = null,
+        expiresAt = null,
+        reference = null,
+        totalAmount = null
     )
+
+    override fun downloadVoucher(context: Context) {
+        try {
+            pdfOpener.open(context, outputData.downloadUrl ?: "")
+        } catch (e: IllegalStateException) {
+            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+        }
+    }
 
     override fun onCleared() {
         removeObserver()
