@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.data.model.toStringPretty
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -161,7 +160,7 @@ class ExampleAdvancedDropInService : DropInService() {
         isRefused(jsonResponse) && isNonFullyPaidOrder(jsonResponse)
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
-        return jsonResponse.getStringOrNull("resultCode")
+        return jsonResponse.optString("resultCode")
             .equals(other = RESULT_REFUSED, ignoreCase = true)
     }
 
@@ -234,7 +233,7 @@ class ExampleAdvancedDropInService : DropInService() {
     @Suppress("SwallowedException")
     private fun handleBalanceResponse(jsonResponse: JSONObject?): BalanceDropInServiceResult {
         return if (jsonResponse != null) {
-            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
+            when (val resultCode = jsonResponse.optString("resultCode")) {
                 "Success" -> BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
                 "NotEnoughBalance" -> {
                     try {
@@ -273,7 +272,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
     private fun handleOrderResponse(jsonResponse: JSONObject?): OrderDropInServiceResult {
         return if (jsonResponse != null) {
-            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
+            when (val resultCode = jsonResponse.optString("resultCode")) {
                 "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
                 else -> OrderDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
@@ -304,7 +303,7 @@ class ExampleAdvancedDropInService : DropInService() {
     ): DropInServiceResult? {
         return if (jsonResponse != null) {
             Logger.v(TAG, "cancelOrder response - ${jsonResponse.toStringPretty()}")
-            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
+            when (val resultCode = jsonResponse.optString("resultCode")) {
                 "Received" -> {
                     if (shouldUpdatePaymentMethods) fetchPaymentMethods()
                     null

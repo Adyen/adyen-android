@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -141,7 +140,7 @@ internal class GiftCardViewModel @Inject constructor(
     @Suppress("SwallowedException")
     private fun handleBalanceResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.optString("resultCode")) {
                 "Success" -> {
                     viewModelScope.launch {
                         _events.emit(
@@ -192,7 +191,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     private fun handleOrderResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.optString("resultCode")) {
                 "Success" -> viewModelScope.launch {
                     val orderResponse = OrderResponse.SERIALIZER.deserialize(jsonResponse)
                     _events.emit(GiftCardEvent.OrderCreated(orderResponse))
@@ -250,7 +249,7 @@ internal class GiftCardViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
+                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(GiftCardEvent.PaymentResult("Failed"))
     }
@@ -259,7 +258,7 @@ internal class GiftCardViewModel @Inject constructor(
         isRefused(jsonResponse) && isNonFullyPaidOrder(jsonResponse)
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
-        return jsonResponse.getStringOrNull("resultCode")
+        return jsonResponse.optString("resultCode")
             .equals(other = RESULT_REFUSED, ignoreCase = true)
     }
 
