@@ -58,12 +58,14 @@ constructor(
         PayByBankComponent,
         PayByBankConfiguration,
         PayByBankComponentState,
-        ComponentCallback<PayByBankComponentState>>,
+        ComponentCallback<PayByBankComponentState>
+        >,
     SessionPaymentComponentProvider<
         PayByBankComponent,
         PayByBankConfiguration,
         PayByBankComponentState,
-        SessionComponentCallback<PayByBankComponentState>> {
+        SessionComponentCallback<PayByBankComponentState>
+        > {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

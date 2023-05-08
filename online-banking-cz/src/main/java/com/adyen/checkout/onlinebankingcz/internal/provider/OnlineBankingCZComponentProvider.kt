@@ -31,7 +31,8 @@ constructor(
     OnlineBankingCZComponent,
     OnlineBankingCZConfiguration,
     OnlineBankingCZPaymentMethod,
-    OnlineBankingCZComponentState>(
+    OnlineBankingCZComponentState
+    >(
     componentClass = OnlineBankingCZComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

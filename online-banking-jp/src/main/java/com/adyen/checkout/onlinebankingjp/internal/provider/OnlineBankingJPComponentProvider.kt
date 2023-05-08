@@ -31,7 +31,8 @@ constructor(
     OnlineBankingJPComponent,
     OnlineBankingJPConfiguration,
     OnlineBankingJPPaymentMethod,
-    OnlineBankingJPComponentState>(
+    OnlineBankingJPComponentState
+    >(
     componentClass = OnlineBankingJPComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

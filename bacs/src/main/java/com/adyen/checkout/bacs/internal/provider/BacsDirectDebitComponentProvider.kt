@@ -58,12 +58,14 @@ constructor(
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        ComponentCallback<BacsDirectDebitComponentState>>,
+        ComponentCallback<BacsDirectDebitComponentState>
+        >,
     SessionPaymentComponentProvider<
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        SessionComponentCallback<BacsDirectDebitComponentState>> {
+        SessionComponentCallback<BacsDirectDebitComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

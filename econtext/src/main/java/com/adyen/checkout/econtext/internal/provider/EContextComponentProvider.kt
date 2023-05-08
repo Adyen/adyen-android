@@ -69,7 +69,8 @@ constructor(
         ComponentT,
         ConfigurationT,
         ComponentStateT,
-        SessionComponentCallback<ComponentStateT>> {
+        SessionComponentCallback<ComponentStateT>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

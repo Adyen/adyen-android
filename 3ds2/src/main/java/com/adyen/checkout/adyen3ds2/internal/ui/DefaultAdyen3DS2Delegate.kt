@@ -197,11 +197,11 @@ internal class DefaultAdyen3DS2Delegate(
 
         val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
         val configParameters = AdyenConfigParameters.Builder(
-            /* directoryServerId = */
+            // directoryServerId
             fingerprintToken.directoryServerId,
-            /* directoryServerPublicKey = */
+            // directoryServerPublicKey
             fingerprintToken.directoryServerPublicKey,
-            /* directoryServerRootCertificates = */
+            // directoryServerRootCertificates
             fingerprintToken.directoryServerRootCertificates,
         ).build()
 

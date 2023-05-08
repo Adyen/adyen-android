@@ -60,12 +60,14 @@ constructor(
         BoletoComponent,
         BoletoConfiguration,
         BoletoComponentState,
-        ComponentCallback<BoletoComponentState>>,
+        ComponentCallback<BoletoComponentState>
+        >,
     SessionPaymentComponentProvider<
         BoletoComponent,
         BoletoConfiguration,
         BoletoComponentState,
-        SessionComponentCallback<BoletoComponentState>> {
+        SessionComponentCallback<BoletoComponentState>
+        > {
 
     private val componentParamsMapper = BoletoComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

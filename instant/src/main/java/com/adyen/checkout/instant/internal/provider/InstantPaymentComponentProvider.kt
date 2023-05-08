@@ -58,12 +58,14 @@ constructor(
         InstantPaymentComponent,
         InstantPaymentConfiguration,
         InstantComponentState,
-        ComponentCallback<InstantComponentState>>,
+        ComponentCallback<InstantComponentState>
+        >,
     SessionPaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
         InstantComponentState,
-        SessionComponentCallback<InstantComponentState>> {
+        SessionComponentCallback<InstantComponentState>
+        > {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

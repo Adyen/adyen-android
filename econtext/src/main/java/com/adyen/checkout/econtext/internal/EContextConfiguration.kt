@@ -28,7 +28,8 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
      */
     abstract class Builder<
         EContextConfigurationT : EContextConfiguration,
-        BuilderT : Builder<EContextConfigurationT, BuilderT>> :
+        BuilderT : Builder<EContextConfigurationT, BuilderT>
+        > :
         ActionHandlingPaymentMethodConfigurationBuilder<EContextConfigurationT, BuilderT>,
         ButtonConfigurationBuilder {
 

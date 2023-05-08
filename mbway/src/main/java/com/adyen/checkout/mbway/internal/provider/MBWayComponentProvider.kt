@@ -58,12 +58,14 @@ constructor(
         MBWayComponent,
         MBWayConfiguration,
         MBWayComponentState,
-        ComponentCallback<MBWayComponentState>>,
+        ComponentCallback<MBWayComponentState>
+        >,
     SessionPaymentComponentProvider<
         MBWayComponent,
         MBWayConfiguration,
         MBWayComponentState,
-        SessionComponentCallback<MBWayComponentState>> {
+        SessionComponentCallback<MBWayComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

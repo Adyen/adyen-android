@@ -58,12 +58,14 @@ constructor(
         SepaComponent,
         SepaConfiguration,
         SepaComponentState,
-        ComponentCallback<SepaComponentState>>,
+        ComponentCallback<SepaComponentState>
+        >,
     SessionPaymentComponentProvider<
         SepaComponent,
         SepaConfiguration,
         SepaComponentState,
-        SessionComponentCallback<SepaComponentState>> {
+        SessionComponentCallback<SepaComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

@@ -73,22 +73,26 @@ constructor(
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>>,
+        ComponentCallback<CardComponentState>
+        >,
     StoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>>,
+        ComponentCallback<CardComponentState>
+        >,
     SessionPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>>,
+        SessionComponentCallback<CardComponentState>
+        >,
     SessionStoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>> {
+        SessionComponentCallback<CardComponentState>
+        > {
 
     private val componentParamsMapper = CardComponentParamsMapper(
         installmentsParamsMapper = InstallmentsParamsMapper(),
