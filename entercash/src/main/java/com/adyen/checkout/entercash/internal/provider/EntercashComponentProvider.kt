@@ -22,8 +22,9 @@ import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
+class EntercashComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class EntercashComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<

@@ -8,18 +8,18 @@
 
 package com.adyen.checkout.example.service
 
+import android.util.Log
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.data.model.toStringPretty
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.SessionDropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +30,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ExampleSessionsDropInService : SessionDropInService() {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
@@ -49,7 +45,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
             state is CardComponentState
         ) {
             launch(Dispatchers.IO) {
-                Logger.d(TAG, "onPaymentsCallRequested")
+                Log.d(TAG, "onPaymentsCallRequested")
 
                 // Check out the documentation of this method on the parent DropInService class
                 val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(state.data)
@@ -65,7 +61,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                     shopperEmail = keyValueStorage.getShopperEmail()
                 )
 
-                Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
+                Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
                 val response = paymentsRepository.makePaymentsRequest(paymentRequest)
 
                 val result = handleResponse(response)
@@ -82,7 +78,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
     ): Boolean {
         return if (isFlowTakenOver) {
             launch(Dispatchers.IO) {
-                Logger.d(TAG, "onDetailsCallRequested")
+                Log.d(TAG, "onDetailsCallRequested")
 
                 val response = paymentsRepository.makeDetailsRequest(
                     ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -100,16 +96,16 @@ class ExampleSessionsDropInService : SessionDropInService() {
     private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult {
         return when {
             jsonResponse == null -> {
-                Logger.e(TAG, "FAILED")
+                Log.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
             }
             isAction(jsonResponse) -> {
-                Logger.d(TAG, "Received action")
+                Log.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
                 DropInServiceResult.Action(action)
             }
             else -> {
-                Logger.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
                 val resultCode = if (jsonResponse.has("resultCode")) {
                     jsonResponse.get("resultCode").toString()
                 } else {
@@ -122,5 +118,9 @@ class ExampleSessionsDropInService : SessionDropInService() {
 
     private fun isAction(jsonResponse: JSONObject): Boolean {
         return jsonResponse.has("action")
+    }
+
+    companion object {
+        private val TAG = getLogTag()
     }
 }

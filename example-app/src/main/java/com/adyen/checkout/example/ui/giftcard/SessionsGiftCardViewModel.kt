@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.giftcard
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,9 +16,8 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
@@ -66,7 +66,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         val paymentMethodType = PaymentMethodTypes.GIFTCARD
         val checkoutSession = getSession(paymentMethodType)
         if (checkoutSession == null) {
-            Logger.e(TAG, "Failed to fetch session")
+            Log.e(TAG, "Failed to fetch session")
             _giftCardViewStateFlow.emit(GiftCardViewState.Error)
             return
         }
@@ -179,6 +179,6 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
     }
 }

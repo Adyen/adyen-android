@@ -48,8 +48,9 @@ import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.internal.ui.DefaultUPIDelegate
 
+class UPIComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class UPIComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :

@@ -48,7 +48,7 @@ object DateUtils {
             dateFormat.parse(date)
             true
         } catch (e: ParseException) {
-            Logger.e("DateUtil", "Provided date $date does not match the given format $format")
+            Logger.e("CO.DateUtil", "Provided date $date does not match the given format $format")
             false
         }
     }

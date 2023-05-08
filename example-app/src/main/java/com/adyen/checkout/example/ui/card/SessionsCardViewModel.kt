@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.card
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,9 +17,8 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
@@ -65,13 +65,13 @@ internal class SessionsCardViewModel @Inject constructor(
         val paymentMethodType = PaymentMethodTypes.SCHEME
         val checkoutSession = getSession(paymentMethodType)
         if (checkoutSession == null) {
-            Logger.e(TAG, "Failed to fetch session")
+            Log.e(TAG, "Failed to fetch session")
             _cardViewState.emit(CardViewState.Error)
             return
         }
         val paymentMethod = checkoutSession.getPaymentMethod(paymentMethodType)
         if (paymentMethod == null) {
-            Logger.e(TAG, "Session does not contain SCHEME payment method")
+            Log.e(TAG, "Session does not contain SCHEME payment method")
             _cardViewState.emit(CardViewState.Error)
             return
         }
@@ -136,16 +136,16 @@ internal class SessionsCardViewModel @Inject constructor(
 
     override fun onLoading(isLoading: Boolean) {
         val state = if (isLoading) {
-            Logger.d(TAG, "Show loading")
+            Log.d(TAG, "Show loading")
             CardViewState.Loading
         } else {
-            Logger.d(TAG, "Don't show loading")
+            Log.d(TAG, "Don't show loading")
             CardViewState.ShowComponent
         }
         _cardViewState.tryEmit(state)
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
     }
 }

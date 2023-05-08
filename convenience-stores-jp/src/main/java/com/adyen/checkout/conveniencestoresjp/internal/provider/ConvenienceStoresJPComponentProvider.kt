@@ -22,8 +22,9 @@ import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 
+class ConvenienceStoresJPComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ConvenienceStoresJPComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : EContextComponentProvider<

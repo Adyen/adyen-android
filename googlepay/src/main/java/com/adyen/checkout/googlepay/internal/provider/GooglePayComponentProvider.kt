@@ -56,10 +56,9 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.wallet.Wallet
 import java.lang.ref.WeakReference
 
-private val TAG = LogUtil.getTag()
-
+class GooglePayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GooglePayComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -255,5 +254,9 @@ class GooglePayComponentProvider(
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
         return GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -22,8 +22,9 @@ import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 
+class SevenElevenComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SevenElevenComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : EContextComponentProvider<

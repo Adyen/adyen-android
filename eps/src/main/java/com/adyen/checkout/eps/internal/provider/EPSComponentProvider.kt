@@ -22,8 +22,9 @@ import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
+class EPSComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class EPSComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<EPSComponent, EPSConfiguration, EPSPaymentMethod, EPSComponentState>(

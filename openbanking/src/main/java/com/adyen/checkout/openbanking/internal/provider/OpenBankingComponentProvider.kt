@@ -22,8 +22,9 @@ import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 
+class OpenBankingComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class OpenBankingComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<

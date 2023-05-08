@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,13 +19,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.SessionDropInCallback
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.service.ExampleAdvancedDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, RedirectComponent.getReturnUrl(applicationContext))
 
-        Logger.d(TAG, "onCreate")
+        Log.d(TAG, "onCreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Logger.d(TAG, "onOptionsItemSelected")
+        Log.d(TAG, "onOptionsItemSelected")
         if (item.itemId == R.id.settings) {
             val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
             startActivity(intent)
@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }

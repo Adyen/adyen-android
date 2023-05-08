@@ -16,7 +16,6 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -123,7 +122,7 @@ internal class InstantViewModel @Inject constructor(
                     _instantViewState.tryEmit(InstantViewState.ShowComponent)
                     _events.emit(InstantEvent.AdditionalAction(action))
                 }
-                else -> _events.emit(InstantEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
+                else -> _events.emit(InstantEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(InstantEvent.PaymentResult("Failed"))
     }

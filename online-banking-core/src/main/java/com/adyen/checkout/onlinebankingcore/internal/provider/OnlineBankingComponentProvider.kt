@@ -54,13 +54,14 @@ import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class OnlineBankingComponentProvider<
     ComponentT : OnlineBankingComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : OnlineBankingConfiguration,
     PaymentMethodT : IssuerListPaymentMethod,
     ComponentStateT : PaymentComponentState<PaymentMethodT>
-    >(
+    >
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,

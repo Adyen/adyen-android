@@ -42,8 +42,9 @@ import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.Dispatchers
 
+class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class Adyen3DS2ComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
