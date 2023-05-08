@@ -64,12 +64,14 @@ constructor(
         GiftCardComponent,
         GiftCardConfiguration,
         GiftCardComponentState,
-        GiftCardComponentCallback>,
+        GiftCardComponentCallback
+        >,
     SessionPaymentComponentProvider<
         GiftCardComponent,
         GiftCardConfiguration,
         GiftCardComponentState,
-        SessionsGiftCardComponentCallback> {
+        SessionsGiftCardComponentCallback
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

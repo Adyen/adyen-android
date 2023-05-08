@@ -31,7 +31,8 @@ constructor(
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,
     OnlineBankingSKPaymentMethod,
-    OnlineBankingSKComponentState>(
+    OnlineBankingSKComponentState
+    >(
     componentClass = OnlineBankingSKComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

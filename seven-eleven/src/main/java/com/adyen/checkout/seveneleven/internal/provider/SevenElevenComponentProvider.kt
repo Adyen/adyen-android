@@ -31,7 +31,8 @@ constructor(
     SevenElevenComponent,
     SevenElevenConfiguration,
     SevenElevenPaymentMethod,
-    SevenElevenComponentState>(
+    SevenElevenComponentState
+    >(
     componentClass = SevenElevenComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

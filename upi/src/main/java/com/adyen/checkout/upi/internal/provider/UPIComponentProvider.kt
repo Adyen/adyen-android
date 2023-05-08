@@ -59,7 +59,8 @@ constructor(
         UPIComponent,
         UPIConfiguration,
         UPIComponentState,
-        SessionComponentCallback<UPIComponentState>> {
+        SessionComponentCallback<UPIComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

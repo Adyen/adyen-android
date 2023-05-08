@@ -31,7 +31,8 @@ constructor(
     ConvenienceStoresJPComponent,
     ConvenienceStoresJPConfiguration,
     ConvenienceStoresJPPaymentMethod,
-    ConvenienceStoresJPComponentState>(
+    ConvenienceStoresJPComponentState
+    >(
     componentClass = ConvenienceStoresJPComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

@@ -62,22 +62,26 @@ constructor(
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>>,
+        ComponentCallback<BlikComponentState>
+        >,
     StoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>>,
+        ComponentCallback<BlikComponentState>
+        >,
     SessionPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>>,
+        SessionComponentCallback<BlikComponentState>
+        >,
     SessionStoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>> {
+        SessionComponentCallback<BlikComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
