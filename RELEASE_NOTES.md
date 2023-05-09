@@ -13,6 +13,11 @@
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.1** (requires Java 17)  |
+- 3DS2 and WeChat are no longer shipped with standalone components by default. In case you want to handle 3DS2 and/or WeChat actions you have to add the dependencies in your `build.gradle`:
+```Groovy
+implementation 'com.adyen.checkout:3ds2:{your version}'
+implementation 'com.adyen.checkout:wechatpay:{your version}'
+```
 
 ## New
 - Payment methods:
