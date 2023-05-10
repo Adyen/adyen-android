@@ -271,6 +271,11 @@ internal fun getComponentFor(
             val blikConfig: BlikConfiguration = getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK, dropInConfiguration, amount, context)
             BlikComponent.PROVIDER.get(fragment, storedPaymentMethod, blikConfig, storedPaymentMethod.id)
         }
+        PaymentMethodTypes.CASH_APP_PAY -> {
+            val cashAppPayConfig: CashAppPayConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.CASH_APP_PAY, dropInConfiguration, amount, context)
+            CashAppPayComponent.PROVIDER.get(fragment, storedPaymentMethod, cashAppPayConfig, storedPaymentMethod.id)
+        }
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }

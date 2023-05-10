@@ -22,6 +22,7 @@ data class CashAppPayPaymentMethod(
     var onFileGrantId: String? = null,
     var customerId: String? = null,
     var cashtag: String? = null,
+    var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -31,6 +32,7 @@ data class CashAppPayPaymentMethod(
         private const val ON_FILE_GRANT_ID = "onFileGrantId"
         private const val CUSTOMER_ID = "customerId"
         private const val CASH_TAG = "cashtag"
+        private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
 
         @JvmField
         val CREATOR: Parcelable.Creator<CashAppPayPaymentMethod> = Creator(CashAppPayPaymentMethod::class.java)
@@ -46,6 +48,7 @@ data class CashAppPayPaymentMethod(
                         putOpt(ON_FILE_GRANT_ID, modelObject.onFileGrantId)
                         putOpt(CUSTOMER_ID, modelObject.customerId)
                         putOpt(CASH_TAG, modelObject.cashtag)
+                        putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(CashAppPayPaymentMethod::class.java, e)
@@ -59,6 +62,7 @@ data class CashAppPayPaymentMethod(
                     onFileGrantId = jsonObject.getStringOrNull(ON_FILE_GRANT_ID)
                     customerId = jsonObject.getStringOrNull(CUSTOMER_ID)
                     cashtag = jsonObject.getStringOrNull(CASH_TAG)
+                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID)
                 }
             }
         }

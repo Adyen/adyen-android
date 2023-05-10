@@ -80,9 +80,8 @@ class CashAppPayView :
         Logger.v(TAG, "CashAppPayOutputData changed")
     }
 
-
     override fun isConfirmationRequired(): Boolean {
-        return component.isUserInteractionRequired()
+        return component.requiresInput()
     }
 
     override fun highlightValidationErrors() {

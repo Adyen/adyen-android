@@ -129,10 +129,11 @@ class PaymentMethodListDialogFragment :
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
         Logger.d(TAG, "onStoredPaymentMethodSelected")
         val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
-        when (storedPaymentMethod.type) {
-            PaymentMethodTypes.BLIK -> {
+        when {
+            ONE_CLICK_STORED_PAYMENT_METHODS.contains(storedPaymentMethod.type) -> {
                 showStoredConfirmation(storedPaymentMethod)
             }
+
             else -> {
                 protocol.showStoredComponentDialog(storedPaymentMethod, false)
             }
@@ -148,10 +149,12 @@ class PaymentMethodListDialogFragment :
                 Logger.d(TAG, "onPaymentMethodSelected: payment method does not need a component, sending payment")
                 sendPayment(paymentMethod.type)
             }
+
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
                 protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
             }
+
             else -> {
                 Logger.d(TAG, "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect")
                 sendPayment(paymentMethod.type)
@@ -246,5 +249,9 @@ class PaymentMethodListDialogFragment :
             Logger.e(TAG, error.errorMessage)
             protocol.showError(getString(R.string.component_error), error.errorMessage, true)
         }
+    }
+
+    companion object {
+        private val ONE_CLICK_STORED_PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.CASH_APP_PAY)
     }
 }
