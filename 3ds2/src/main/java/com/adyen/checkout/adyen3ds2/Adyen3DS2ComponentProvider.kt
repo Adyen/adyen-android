@@ -23,8 +23,9 @@ import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAc
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.redirect.RedirectDelegate
 
+class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
+constructor() : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
 
     override fun <T> get(
         owner: T,
