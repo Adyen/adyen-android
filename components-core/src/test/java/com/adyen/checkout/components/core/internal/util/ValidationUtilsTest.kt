@@ -80,13 +80,13 @@ internal class ValidationUtilsTest {
             arguments("user-@example.org", true),
             arguments("postmaster@[123.123.123.123]", true),
             arguments("john.smith@mohamed12.eldoheiri", true),
-            arguments("john.smith@[12.2.344.45]", true),
+            arguments("john.smith@[12.2.255.45]", true),
 
-            arguments("john.smith!#$%&'*+-/=?^_`{|}~@[12.2.344.45]", true),
-            arguments("john!#$%&'*+-/=?^_`{|}~.smith@[12.2.344.45]", true),
+            arguments("john.smith!#$%&'*+-/=?^_`{|}~@[12.2.255.45]", true),
+            arguments("john!#$%&'*+-/=?^_`{|}~.smith@[12.2.255.45]", true),
             arguments(
                 "john!#$%&'*+-/=?^_`{|}~.smith!#$%&'*+-/=?^_`{|}~" +
-                    ".efwe!#$%&'*+-/=?^_`{|}~.weoihefw.!#$%&'*+-/=?^_`{|}~@[12.2.344.45]",
+                    ".efwe!#$%&'*+-/=?^_`{|}~.weoihefw.!#$%&'*+-/=?^_`{|}~@[12.2.255.45]",
                 true
             ),
             arguments("\" ewc429 (%($^)*_)*(&&R%$&$&^$#     \"@mohamed12.eldoheiri", true),
@@ -136,6 +136,9 @@ internal class ValidationUtilsTest {
 
             // Domain part can be an IP address of four of 1-3 long numbers separated by a dot.
             arguments("john.smith@[12.2.344.45].com", false),
+
+            // The IP address is out of bounds
+            arguments("john.smith@[12.2.344.45]", false),
 
             // The Domain part is not a valid IP address.
             arguments("john.smith@[12.2.344]", false),

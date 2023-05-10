@@ -11,7 +11,7 @@ object ValidationUtils {
 
     @Suppress("ktlint:max-line-length", "MaxLineLength")
     private const val EMAIL_REGEX =
-        "^(([a-zA-Z0-9!#\$%&'\\*\\+\\-\\/=\\?\\^_`\\{\\|\\}~]+(\\.[a-zA-Z0-9!#\$%&'\\*\\+\\-\\/=\\?\\^_`\\{\\|\\}~]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|((([a-zA-Z0-9]+[\\-]*)*[a-zA-Z0-9]+\\.)+[a-zA-Z]{2,}))$"
+        "^(([a-z0-9!#$%&'*+\\-/=?^_`{|}~]+(\\.[a-z0-9!#$%&'*+\\-/=?^_`{|}~]+)*)|(\".+\"))@((\\[((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}])|((?!-)[a-z0-9-]{1,63}(?<!-)(\\.[a-z0-9-]{1,63}(?<!-))*\\.[a-z]{2,}))$"
     private val EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE)
 
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
