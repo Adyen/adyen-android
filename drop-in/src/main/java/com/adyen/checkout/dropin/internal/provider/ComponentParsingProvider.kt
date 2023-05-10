@@ -45,6 +45,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.NotAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
@@ -55,6 +56,7 @@ import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStore
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -177,16 +179,19 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
                 environment = environment,
                 clientKey = clientKey
             )
+
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> CardConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         else -> throw CheckoutException(
             errorMessage = "Unable to find component configuration for storedPaymentMethod - $storedPaymentMethod"
         )
@@ -211,138 +216,164 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment = environment,
             clientKey = clientKey
         )
+
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             BacsDirectDebitConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> BcmcConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> BoletoConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> CardConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             ConvenienceStoresJPConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> DotpayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> EntercashConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> EPSConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> GiftCardConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             GooglePayConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> IdealConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> InstantPaymentConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> MBWayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> MolpayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingCZConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingJPConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingPLConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
             OnlineBankingSKConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey
             )
+
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> OpenBankingConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> PayByBankConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> PayEasyConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SepaConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> SevenElevenConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
         )
+
         UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> UPIConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
         )
+
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
 
@@ -398,13 +429,22 @@ internal fun getPaymentMethodAvailabilityCheck(
 ): PaymentMethodAvailabilityCheck<Configuration> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
+
     @Suppress("UNCHECKED_CAST")
-    return when (paymentMethodType) {
+    val availabilityCheck = when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
-        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayComponentProvider(dropInParams, sessionParams)
-        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> runCompileOnly {
+            GooglePayComponentProvider(
+                dropInParams,
+                sessionParams
+            )
+        }
+
+        PaymentMethodTypes.WECHAT_PAY_SDK -> runCompileOnly { WeChatPayProvider() }
         else -> AlwaysAvailablePaymentMethod()
-    } as PaymentMethodAvailabilityCheck<Configuration>
+    } as? PaymentMethodAvailabilityCheck<Configuration>
+
+    return availabilityCheck ?: NotAvailablePaymentMethod()
 }
 
 /**
@@ -437,6 +477,7 @@ internal fun getComponentFor(
                 key = storedPaymentMethod.id
             )
         }
+
         CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
@@ -448,6 +489,7 @@ internal fun getComponentFor(
                 key = storedPaymentMethod.id
             )
         }
+
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
             val blikConfig: BlikConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
@@ -459,6 +501,7 @@ internal fun getComponentFor(
                 key = storedPaymentMethod.id
             )
         }
+
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
@@ -494,6 +537,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
             )
         }
+
         BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -504,6 +548,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<BacsDirectDebitComponentState>,
             )
         }
+
         BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -514,6 +559,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<BcmcComponentState>,
             )
         }
+
         BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val blikConfiguration: BlikConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -524,6 +570,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<BlikComponentState>,
             )
         }
+
         BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val boletoConfiguration: BoletoConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -534,6 +581,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<BoletoComponentState>,
             )
         }
+
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -544,6 +592,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<CardComponentState>,
             )
         }
+
         ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -554,6 +603,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<ConvenienceStoresJPComponentState>,
             )
         }
+
         DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -564,6 +614,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<DotpayComponentState>,
             )
         }
+
         EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val entercashConfig: EntercashConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -574,6 +625,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<EntercashComponentState>,
             )
         }
+
         EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val epsConfig: EPSConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -584,6 +636,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<EPSComponentState>,
             )
         }
+
         GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val giftcardConfiguration: GiftCardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -594,6 +647,7 @@ internal fun getComponentFor(
                 callback = componentCallback as GiftCardComponentCallback,
             )
         }
+
         GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val googlePayConfiguration: GooglePayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -604,6 +658,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<GooglePayComponentState>,
             )
         }
+
         IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -614,6 +669,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<IdealComponentState>,
             )
         }
+
         InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -624,6 +680,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<InstantComponentState>,
             )
         }
+
         MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val mbWayConfiguration: MBWayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -634,6 +691,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<MBWayComponentState>,
             )
         }
+
         MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -644,6 +702,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<MolpayComponentState>,
             )
         }
+
         OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingCZConfig: OnlineBankingCZConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -654,6 +713,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<OnlineBankingCZComponentState>,
             )
         }
+
         OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingJPConfig: OnlineBankingJPConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -664,6 +724,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<OnlineBankingJPComponentState>,
             )
         }
+
         OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -674,6 +735,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<OnlineBankingPLComponentState>,
             )
         }
+
         OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val onlineBankingSKConfig: OnlineBankingSKConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -684,6 +746,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<OnlineBankingSKComponentState>,
             )
         }
+
         OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -694,6 +757,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<OpenBankingComponentState>,
             )
         }
+
         PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val payByBankConfig: PayByBankConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -704,6 +768,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<PayByBankComponentState>,
             )
         }
+
         PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val payEasyConfiguration: PayEasyConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -714,6 +779,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<PayEasyComponentState>,
             )
         }
+
         SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val sepaConfiguration: SepaConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -724,6 +790,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<SepaComponentState>,
             )
         }
+
         SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val sevenElevenConfiguration: SevenElevenConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -734,6 +801,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<SevenElevenComponentState>,
             )
         }
+
         UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
             val upiConfiguration: UPIConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
@@ -744,6 +812,7 @@ internal fun getComponentFor(
                 callback = componentCallback as ComponentCallback<UPIComponentState>,
             )
         }
+
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
