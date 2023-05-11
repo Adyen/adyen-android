@@ -43,7 +43,7 @@ android {
 
 dependencies {
     // Checkout
-    api project(':action')
+    api project(':action-core')
     api project(':cse')
     api project(':ui-core')
     api project(':sessions-core')

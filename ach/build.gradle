@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    api project(':action')
+    api project(':action-core')
     api project(':ui-core')
     api project(':cse')
     api project(':sessions-core')

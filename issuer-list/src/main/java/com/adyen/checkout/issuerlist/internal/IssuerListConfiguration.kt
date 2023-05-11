@@ -9,8 +9,8 @@ package com.adyen.checkout.issuerlist.internal
 
 import android.content.Context
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration

@@ -8,9 +8,10 @@
 package com.adyen.checkout.card
 
 import android.content.Context
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
@@ -148,8 +149,7 @@ class CardConfiguration private constructor(
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the
-         * [com.adyen.checkout.components.model.payments.request.PaymentComponentData] for convenience.
+         * This value will simply be passed back to you in the [PaymentComponentData] for convenience.
          *
          * @param shopperReference The unique shopper reference
          * @return [CardConfiguration.Builder]

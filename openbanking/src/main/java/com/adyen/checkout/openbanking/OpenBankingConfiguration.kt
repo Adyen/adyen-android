@@ -8,7 +8,7 @@
 package com.adyen.checkout.openbanking
 
 import android.content.Context
-import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
