@@ -11,7 +11,7 @@ package com.adyen.checkout.core.internal.util
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-inline fun <R> runCompileOnly(block: () -> R): R? {
+inline fun <R : Any> runCompileOnly(block: () -> R): R? {
     try {
         return block()
     } catch (e: ClassNotFoundException) {
