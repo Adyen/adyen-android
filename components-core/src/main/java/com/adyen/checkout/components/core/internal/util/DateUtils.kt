@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import java.text.DateFormat
 import java.text.ParseException
@@ -19,6 +20,8 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DateUtils {
     private const val DEFAULT_INPUT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+
+    private val TAG = LogUtil.getTag()
 
     @JvmStatic
     fun parseDateToView(month: String, year: String): String {
@@ -48,7 +51,7 @@ object DateUtils {
             dateFormat.parse(date)
             true
         } catch (e: ParseException) {
-            Logger.e("CO.DateUtil", "Provided date $date does not match the given format $format")
+            Logger.e(TAG, "Provided date $date does not match the given format $format")
             false
         }
     }
@@ -71,7 +74,7 @@ object DateUtils {
             val parsedDate = inputSimpleFormat.parse(date)
             parsedDate?.let { outputSimpleFormat.format(it) }
         } catch (e: ParseException) {
-            Logger.e("DateUtil", "Provided date $date does not match the given format $inputFormat")
+            Logger.e(TAG, "Provided date $date does not match the given format $inputFormat")
             null
         }
     }

@@ -15,9 +15,9 @@ inline fun <R> runCompileOnly(block: () -> R): R? {
     try {
         return block()
     } catch (e: ClassNotFoundException) {
-        Logger.w("CO.runCompileOnly", "Class not found. Are you missing a dependency?", e)
+        Logger.w(LogUtil.getTag(), "Class not found. Are you missing a dependency?", e)
     } catch (e: NoClassDefFoundError) {
-        Logger.w("CO.runCompileOnly", "Class not found. Are you missing a dependency?", e)
+        Logger.w(LogUtil.getTag(), "Class not found. Are you missing a dependency?", e)
     }
 
     return null
