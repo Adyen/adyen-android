@@ -38,6 +38,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -223,7 +224,7 @@ internal class DefaultBcmcDelegate(
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
-            threeDS2SdkVersion = get3DS2SdkVersion(),
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
         ).apply {
             if (componentParams.isHolderNameRequired) {
                 holderName = outputData.cardHolderNameField.value
@@ -264,16 +265,6 @@ internal class DefaultBcmcDelegate(
         cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         exceptionChannel.trySend(e)
-        null
-    }
-
-    private fun get3DS2SdkVersion(): String? = try {
-        ThreeDS2Service.INSTANCE.sdkVersion
-    } catch (e: ClassNotFoundException) {
-        Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-        null
-    } catch (e: NoClassDefFoundError) {
-        Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
         null
     }
 

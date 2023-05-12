@@ -38,6 +38,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -332,16 +333,7 @@ internal class StoredCardDelegate(
                 encryptedSecurityCode = encryptedCard.encryptedSecurityCode
             }
 
-            try {
-                // This call will throw an exception in case the merchant did not include our 3DS2 component/SDK
-                // in their app. They can opt to use the standalone card component without 3DS2 or with another 3DS2
-                // library.
-                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
-            } catch (e: ClassNotFoundException) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            } catch (e: NoClassDefFoundError) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            }
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
         }
 
         val paymentComponentData = makePaymentComponentData(cardPaymentMethod)
@@ -394,6 +386,7 @@ internal class StoredCardDelegate(
             // is typing the card number.
             cvcPolicy == Brand.FieldPolicy.OPTIONAL ||
                 cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+
             else -> InputFieldUIState.REQUIRED
         }
     }
