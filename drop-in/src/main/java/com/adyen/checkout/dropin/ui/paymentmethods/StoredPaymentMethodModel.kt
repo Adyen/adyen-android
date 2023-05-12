@@ -29,5 +29,6 @@ data class GenericStoredModel(
     override val id: String,
     override val imageId: String,
     override val isRemovable: Boolean,
-    val name: String
+    val name: String,
+    val description: String?,
 ) : StoredPaymentMethodModel()
