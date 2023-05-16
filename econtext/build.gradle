@@ -48,7 +48,9 @@ dependencies {
     implementation libraries.material
 
     //Tests
+    testImplementation project(':3ds2')
     testImplementation project(':test-core')
+    testImplementation project(':wechatpay')
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito

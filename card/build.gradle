@@ -44,6 +44,7 @@ android {
 
 dependencies {
     // Checkout
+    api project(':3ds2')
     api project(':action')
     api project(':cse')
     api project(':ui-core')

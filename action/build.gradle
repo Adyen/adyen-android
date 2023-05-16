@@ -35,15 +35,17 @@ android {
 
 dependencies {
     // Checkout
-    api project(':3ds2')
+    compileOnly project(':3ds2')
     api project(':await')
     api project(':qr-code')
     api project(':redirect')
-    api project(':wechatpay')
+    compileOnly project(':wechatpay')
     api project(':voucher')
 
     //Tests
+    testImplementation project(':3ds2')
     testImplementation project(':test-core')
+    testImplementation project(':wechatpay')
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
