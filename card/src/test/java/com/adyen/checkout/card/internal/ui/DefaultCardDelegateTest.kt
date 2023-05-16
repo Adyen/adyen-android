@@ -764,11 +764,11 @@ internal class DefaultCardDelegateTest(
                     assertEquals(TEST_EXPIRY_DATE.expiryYear.toString(), encryptedExpiryYear)
                     assertEquals(TEST_SECURITY_CODE, encryptedSecurityCode)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
+                    assertEquals(CardType.VISA.txVariant, brand)
                     assertNull(holderName)
                     assertNull(taxNumber)
                     assertNull(encryptedPassword)
                     assertNull(fundingSource)
-                    assertNull(brand)
                     assertNull(storedPaymentMethodId)
                     assertEquals("2.2.13", threeDS2SdkVersion)
                 }

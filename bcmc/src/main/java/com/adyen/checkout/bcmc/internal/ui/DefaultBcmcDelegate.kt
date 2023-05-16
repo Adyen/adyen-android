@@ -225,6 +225,7 @@ internal class DefaultBcmcDelegate(
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            brand = PaymentMethodTypes.BCMC
         ).apply {
             if (componentParams.isHolderNameRequired) {
                 holderName = outputData.cardHolderNameField.value

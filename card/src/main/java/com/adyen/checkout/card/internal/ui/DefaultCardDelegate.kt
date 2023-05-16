@@ -647,11 +647,7 @@ internal class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
-                brand = DetectedCardTypesUtils.getSelectedCardType(
-                    detectedCardTypes = stateOutputData.detectedCardTypes
-                )?.cardBrand?.txVariant
-            }
+            brand = getCardBrand(stateOutputData.detectedCardTypes)
 
             fundingSource = getFundingSource()
 
@@ -727,6 +723,18 @@ internal class DefaultCardDelegate(
                 environment = componentParams.environment,
             )
         }
+    }
+
+    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
+        return if (isDualBrandedFlow(detectedCardTypes)) {
+            DetectedCardTypesUtils.getSelectedCardType(
+                detectedCardTypes = detectedCardTypes
+            )
+        } else {
+            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
+            val firstDetectedBrand = detectedCardTypes.firstOrNull()
+            reliableCardBrand ?: firstDetectedBrand
+        }?.cardBrand?.txVariant
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType

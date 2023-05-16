@@ -19,6 +19,7 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
@@ -288,6 +289,7 @@ internal class DefaultBcmcDelegateTest(
                     assertTrue(isValid)
                     assertTrue(isInputValid)
                     assertEquals(TEST_ORDER, data.order)
+                    assertEquals(PaymentMethodTypes.BCMC, data.paymentMethod?.brand)
                 }
             }
         }
