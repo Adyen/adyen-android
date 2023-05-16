@@ -1,36 +1,25 @@
+buildscript {
+    apply from: './dependencies.gradle'
+}
+
+plugins {
+    id 'com.android.application' version "$android_gradle_plugin_version" apply false
+    id 'com.android.library' version "$android_gradle_plugin_version" apply false
+    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
+    id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
+    id "io.gitlab.arturbosch.detekt" version "$detekt_gradle_plugin_version"
+    id "org.jetbrains.dokka" version "$dokka_version"
+}
+
 apply from: "config/gradle/checksums.gradle"
 apply from: "config/gradle/dependenciesCheck.gradle"
+apply from: "config/gradle/dokkaRoot.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"
 }
 
-buildscript {
-    apply from: './dependencies.gradle'
-
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath "com.android.tools.build:gradle:$android_gradle_plugin_version"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_gradle_plugin_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
-    }
-}
-
-apply from: "config/gradle/dokkaRoot.gradle"
-
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-
     tasks.withType(Test) {
         useJUnitPlatform()
     }
