@@ -11,8 +11,6 @@ plugins {
     id "org.jetbrains.dokka" version "$dokka_version"
 }
 
-apply from: "config/gradle/checksums.gradle"
-apply from: "config/gradle/dependenciesCheck.gradle"
 apply from: "config/gradle/dokkaRoot.gradle"
 
 ext {
