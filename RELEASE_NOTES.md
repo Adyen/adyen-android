@@ -13,7 +13,8 @@
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.1** (requires Java 17)  |
-- The `:action` module no longer comes with the `:3ds2` and `:wechatpay` modules by default. If you are using standalone components and want to handle these actions you have to add the dependencies for these modules like below. The `:card` and `:bcmc` modules do come with `:3ds2`, so it's not needed to add extra dependencies there.
+- All classes in `com.adyen.checkout.action` are moved to `com.adyen.checkout.action.core`. Please update your imports if applicable.
+- Standalone payment components no longer come with the 3DS2 and WeChat Pay actions. If you are using standalone components and want to handle these actions you have to add the dependencies like below. The `CardComponent` and `BcmcComponent` are able to handle 3DS2 actions, so it's not needed to add extra dependencies.
 ```Groovy
 implementation 'com.adyen.checkout:3ds2:{your version}'
 implementation 'com.adyen.checkout:wechatpay:{your version}'
