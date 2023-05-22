@@ -49,7 +49,7 @@ ext {
     wechat_pay_version = "6.6.4"
 
     // Example app
-    leak_canary_version = '2.10'
+    leak_canary_version = '2.11'
     moshi_adapters_version = '1.14.0'
     moshi_kotlin_adapter_version = '1.14.0'
     okhttp_logging_version = "4.11.0"
