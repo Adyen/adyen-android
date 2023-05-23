@@ -1,6 +1,7 @@
 include ':3ds2',
         ':ach',
         ':action',
+        ':action-core',
         ':await',
         ':bacs',
         ':bcmc',

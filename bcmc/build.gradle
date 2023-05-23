@@ -45,9 +45,9 @@ android {
 dependencies {
     // Checkout
     api project(':3ds2')
-    api project(":action")
-    api project(":card")
-    api project(":sessions-core")
+    api project(':action-core')
+    api project(':card')
+    api project(':sessions-core')
 
     // If 3DS2 SDK is present.
     compileOnly libraries.adyen3ds2

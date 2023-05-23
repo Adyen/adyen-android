@@ -49,7 +49,7 @@ dependencies {
     // Checkout
     api project(':3ds2')
     api project(':ach')
-    api project(':action')
+    api project(':action-core')
     api project(':bacs')
     api project(':bcmc')
     api project(':boleto')

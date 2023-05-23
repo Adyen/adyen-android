@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration

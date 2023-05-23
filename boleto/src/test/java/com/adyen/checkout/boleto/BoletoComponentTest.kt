@@ -10,8 +10,8 @@ package com.adyen.checkout.boleto
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.boleto.internal.ui.BoletoComponentViewType
 import com.adyen.checkout.boleto.internal.ui.BoletoDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler

@@ -10,8 +10,8 @@
 package com.adyen.checkout.googlepay
 
 import android.content.Context
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
@@ -315,6 +315,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param amount Amount of the transaction.
          */
+        @Suppress("RedundantOverride")
         override fun setAmount(amount: Amount): Builder {
             return super.setAmount(amount)
         }
