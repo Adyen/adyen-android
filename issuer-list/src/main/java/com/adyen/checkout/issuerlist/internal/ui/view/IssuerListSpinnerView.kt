@@ -44,7 +44,7 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
     private lateinit var issuerListDelegate: IssuerListDelegate<*, *>
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is IssuerListDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is IssuerListDelegate<*, *>) { "Unsupported delegate type" }
         issuerListDelegate = delegate
 
         this.localizedContext = localizedContext

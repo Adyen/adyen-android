@@ -111,7 +111,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 redirectUrl = savedStateHandle.get<String>(SessionsCardTakenOverActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
@@ -174,7 +174,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(SessionsCardTakenOverActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )

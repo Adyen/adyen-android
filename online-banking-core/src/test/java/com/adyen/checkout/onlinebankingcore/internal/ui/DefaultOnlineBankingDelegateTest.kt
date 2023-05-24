@@ -59,7 +59,8 @@ internal class DefaultOnlineBankingDelegateTest(
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
-        TestOnlineBankingComponentState>
+        TestOnlineBankingComponentState
+        >
 
     @BeforeEach
     fun setup() {

@@ -24,7 +24,7 @@ internal object Adyen3DS2ViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView = when (viewType) {
         Adyen3DS2ComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
-        else -> throw IllegalStateException("Unsupported view type")
+        else -> error("Unsupported view type")
     }
 }
 

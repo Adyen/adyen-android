@@ -52,7 +52,7 @@ internal class BoletoView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is BoletoDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is BoletoDelegate) { "Unsupported delegate type" }
         boletoDelegate = delegate
 
         this.localizedContext = localizedContext

@@ -98,7 +98,7 @@ internal class CardView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is CardDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is CardDelegate) { "Unsupported delegate type" }
         cardDelegate = delegate
 
         this.localizedContext = localizedContext

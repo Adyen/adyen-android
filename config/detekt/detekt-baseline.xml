@@ -11,5 +11,14 @@
     <ManuallySuppressedIssues>
     </ManuallySuppressedIssues>
     <CurrentIssues>
+        <ID>ForbiddenComment:Logger.kt$Logger$// TODO: 14/02/2019 The idea is for this class to have a system where we can send a stream of logs to the merchant</ID>
+        <ID>ForbiddenComment:CardView.kt$CardView$// TODO: 29/01/2021 get this logic from OutputData</ID>
+        <ID>ForbiddenComment:VoucherAction.kt$VoucherAction$// TODO: remove url when it's fixed from backend side</ID>
+        <ID>ForbiddenComment:ActionComponentDialogFragment.kt$ActionComponentDialogFragment$// TODO: trigger download image flow when user accept storage permission after checking permission type</ID>
+        <ID>ForbiddenComment:ActionComponentDialogFragment.kt$ActionComponentDialogFragment$// TODO: checkout_rationale_title_storage_permission and checkout_rationale_message_storage_permission</ID>
+        <ID>ForbiddenComment:ActionComponentDialogFragment.kt$ActionComponentDialogFragment$// TODO: can be reused based on required permission</ID>
+        <ID>ForbiddenComment:DefaultVoucherDelegate.kt$DefaultVoucherDelegate$// TODO: remove action.url when it's fixed from backend side</ID>
+        <ID>ForbiddenComment:CheckoutSessionInitializer.kt$CheckoutSessionInitializer$// TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of</ID>
+        <ID>ForbiddenComment:SessionDetails.kt$// TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails</ID>
     </CurrentIssues>
 </SmellBaseline>

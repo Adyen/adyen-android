@@ -64,7 +64,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is BacsDirectDebitDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is BacsDirectDebitDelegate) { "Unsupported delegate type" }
         bacsDelegate = delegate
 
         this.localizedContext = localizedContext

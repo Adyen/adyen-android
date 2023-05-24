@@ -59,7 +59,7 @@ class FullVoucherView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is VoucherDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is VoucherDelegate) { "Unsupported delegate type" }
 
         this.delegate = delegate
 

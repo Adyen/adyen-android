@@ -52,7 +52,7 @@ internal class GiftCardView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is GiftCardDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is GiftCardDelegate) { "Unsupported delegate type" }
         giftCardDelegate = delegate
 
         this.localizedContext = localizedContext

@@ -54,7 +54,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is ACHDirectDebitDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is ACHDirectDebitDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
