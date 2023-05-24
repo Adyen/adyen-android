@@ -23,3 +23,11 @@ implementation 'com.adyen.checkout:wechatpay:{your version}'
 ## New
 - Payment methods:
   - [Boleto Bancário](https://docs.adyen.com/payment-methods/boleto-bancario). Payment method type: *boletobancario*.
+- It is now possible to safely exclude unnecessary third-party dependencies. You can do this by excluding the Adyen Checkout SDK module that uses the third-party dependency. For example:
+```Groovy
+implementation('com.adyen.checkout:drop-in:{your version}') {
+    exclude group: 'com.adyen.checkout', module: '3ds2'
+    exclude group: 'com.adyen.checkout', module: 'wechatpay'
+}
+```
+⚠️ Make sure you don't include a payment method that corresponds to a module you excluded.
