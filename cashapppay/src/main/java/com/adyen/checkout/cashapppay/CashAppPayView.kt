@@ -28,25 +28,18 @@ import com.adyen.checkout.core.log.Logger
  * This view is not needed if you disabled the store payment switch, the component will automatically submit in this case. You can also use the
  * [isConfirmationRequired] function to check whether you need to show this view or not.
  */
-class CashAppPayView :
-    AdyenLinearLayout<CashAppPayOutputData, CashAppPayConfiguration, GenericComponentState<CashAppPayPaymentMethod>, CashAppPayComponent>,
+class CashAppPayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenLinearLayout<
+        CashAppPayOutputData,
+        CashAppPayConfiguration,
+        GenericComponentState<CashAppPayPaymentMethod>,
+        CashAppPayComponent
+        >(context, attrs, defStyleAttr),
     Observer<CashAppPayOutputData> {
 
     private val binding: CashAppPayViewBinding = CashAppPayViewBinding.inflate(LayoutInflater.from(context), this)
 
-    constructor(context: Context) : super(context) {
-        init()
-    }
-
-    constructor(context: Context, attributeSet: AttributeSet) : super(context, attributeSet) {
-        init()
-    }
-
-    constructor(context: Context, attributeSet: AttributeSet, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
-        init()
-    }
-
-    private fun init() {
+    init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
