@@ -26,7 +26,7 @@ ext {
     hilt_version = "2.46.1"
 
     // Code quality
-    detekt_version = "1.22.0"
+    detekt_version = "1.23.0"
     ktlint_version = '0.49.1'
 
     // Android Dependencies
