@@ -65,6 +65,8 @@ internal class GiftCardViewModel @Inject constructor(
 
     private var order: OrderRequest? = null
 
+    private var currentBalance: BalanceResult? = null
+
     init {
         viewModelScope.launch { fetchPaymentMethods() }
     }
@@ -142,6 +144,7 @@ internal class GiftCardViewModel @Inject constructor(
         if (jsonResponse != null) {
             when (jsonResponse.optString("resultCode")) {
                 "Success" -> {
+                    currentBalance = BalanceResult.SERIALIZER.deserialize(jsonResponse)
                     viewModelScope.launch {
                         _events.emit(
                             GiftCardEvent.Balance(
@@ -152,6 +155,7 @@ internal class GiftCardViewModel @Inject constructor(
                         )
                     }
                 }
+
                 "NotEnoughBalance" -> {
                     try {
                         viewModelScope.launch {
@@ -163,10 +167,12 @@ internal class GiftCardViewModel @Inject constructor(
                                 )
                             )
                         }
+                        currentBalance = BalanceResult.SERIALIZER.deserialize(jsonResponse)
                     } catch (e: ModelSerializationException) {
                         viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
                     }
                 }
+
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
@@ -200,6 +206,7 @@ internal class GiftCardViewModel @Inject constructor(
                         pspReference = orderResponse.pspReference
                     )
                 }
+
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
@@ -238,9 +245,11 @@ internal class GiftCardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
+
                 isRefusedInPartialPaymentFlow(json) -> {
-                    _events.emit(GiftCardEvent.PaymentResult("Refused in Partial Payment Flow"))
+                    _events.emit(GiftCardEvent.PaymentResult("Refused in Partial Payment Flow", null))
                 }
+
                 isNonFullyPaidOrder(json) -> {
                     order = getOrderFromResponse(json).let {
                         Order(
@@ -248,10 +257,28 @@ internal class GiftCardViewModel @Inject constructor(
                             orderData = it.orderData
                         )
                     }
+                    _events.emit(
+                        GiftCardEvent.PaymentResult(
+                            "Success: ${json.optString("resultCode")}",
+                            currentBalance
+                        )
+                    )
+                    currentBalance = null
+                    _giftCardViewStateFlow.emit(GiftCardViewState.HideComponent)
                 }
-                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
+
+                else -> {
+                    _events.emit(
+                        GiftCardEvent.PaymentResult(
+                            "Success: ${json.optString("resultCode")}",
+                            currentBalance
+                        )
+                    )
+                    currentBalance = null
+                    _giftCardViewStateFlow.emit(GiftCardViewState.HideComponent)
+                }
             }
-        } ?: _events.emit(GiftCardEvent.PaymentResult("Failed"))
+        } ?: _events.emit(GiftCardEvent.PaymentResult("Failed", null))
     }
 
     private fun isRefusedInPartialPaymentFlow(jsonResponse: JSONObject) =
@@ -283,20 +310,21 @@ internal class GiftCardViewModel @Inject constructor(
     }
 
     private fun onComponentError(error: ComponentError) {
-        viewModelScope.launch { _events.emit(GiftCardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+        viewModelScope.launch { _events.emit(GiftCardEvent.PaymentResult("Failed: ${error.errorMessage}", null)) }
     }
 
-    fun reloadComponentWithOrder() {
+    fun onNewGiftCard() {
         val order = this.order
         val giftCardComponentData = _giftCardComponentDataFlow.value
-        if (order != null && giftCardComponentData != null) {
+        if (giftCardComponentData != null) {
             viewModelScope.launch {
                 _events.emit(
-                    GiftCardEvent.ReloadComponent(
+                    GiftCardEvent.NewGiftCardComponent(
                         order,
                         giftCardComponentData
                     )
                 )
+                _giftCardViewStateFlow.emit(GiftCardViewState.ShowComponent)
             }
         }
     }

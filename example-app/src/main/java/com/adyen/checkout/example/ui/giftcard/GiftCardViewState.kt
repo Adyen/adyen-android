@@ -14,5 +14,7 @@ internal sealed class GiftCardViewState {
 
     object ShowComponent : GiftCardViewState()
 
+    object HideComponent : GiftCardViewState()
+
     object Error : GiftCardViewState()
 }

@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityGiftCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -24,9 +25,11 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class SessionsGiftCardActivity : AppCompatActivity() {
 
     @Inject
@@ -51,8 +54,6 @@ class SessionsGiftCardActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        setupReloadButton()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -81,15 +82,23 @@ class SessionsGiftCardActivity : AppCompatActivity() {
                 binding.giftCardContainer.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             GiftCardViewState.ShowComponent -> {
                 binding.giftCardContainer.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             GiftCardViewState.Error -> {
                 binding.errorView.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.giftCardContainer.isVisible = false
+            }
+
+            GiftCardViewState.HideComponent -> {
+                binding.giftCardContainer.isVisible = false
+                binding.progressIndicator.isVisible = false
+                binding.errorView.isVisible = false
             }
         }
     }
@@ -106,12 +115,6 @@ class SessionsGiftCardActivity : AppCompatActivity() {
         this.giftCardComponent = giftCardComponent
 
         binding.giftCardView.attach(giftCardComponent, this)
-    }
-
-    private fun setupReloadButton() {
-        binding.loadNewGiftCard.setOnClickListener {
-            giftCardViewModel.reloadComponentWithOrder()
-        }
     }
 
     private fun reloadGiftCardWithOrder(
@@ -137,14 +140,33 @@ class SessionsGiftCardActivity : AppCompatActivity() {
             is GiftCardEvent.Balance -> {
                 giftCardComponent?.resolveBalanceResult(event.balanceResult)
             }
+
             is GiftCardEvent.OrderCreated -> {
                 giftCardComponent?.resolveOrderResponse(event.order)
             }
+
             is GiftCardEvent.ReloadComponentSessions -> {
                 reloadGiftCardWithOrder(event.giftCardComponentData)
             }
-            is GiftCardEvent.ReloadComponent -> Unit
+
+            is GiftCardEvent.NewGiftCardComponent -> {
+                setupNewGiftCard(event.giftCardComponentData, event.orderRequest)
+            }
         }
+    }
+
+    private fun setupNewGiftCard(giftCardComponentData: GiftCardComponentData, orderRequest: OrderRequest?) {
+        val giftCardComponent = GiftCardComponent.PROVIDER.get(
+            activity = this,
+            paymentMethod = giftCardComponentData.paymentMethod,
+            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            callback = giftCardComponentData.callback,
+            order = orderRequest,
+            key = UUID.randomUUID().toString()
+        )
+
+        this.giftCardComponent = giftCardComponent
+        binding.giftCardView.attach(giftCardComponent, this)
     }
 
     private fun onPaymentResult(result: String) {

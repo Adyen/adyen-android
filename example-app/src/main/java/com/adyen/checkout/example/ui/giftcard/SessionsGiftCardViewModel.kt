@@ -143,12 +143,12 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     }
 
     override fun onError(componentError: ComponentError) {
-        _events.tryEmit(GiftCardEvent.PaymentResult("Failed: ${componentError.errorMessage}"))
+        _events.tryEmit(GiftCardEvent.PaymentResult("Failed: ${componentError.errorMessage}", null))
     }
 
     override fun onFinished(result: SessionPaymentResult) {
         viewModelScope.launch {
-            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
+            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty(), null))
         }
     }
 
@@ -158,7 +158,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     override fun onPartialPayment(result: SessionPaymentResult) {
         viewModelScope.launch {
             currentSession = getCheckoutSession(result)
-            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty()))
+            _events.emit(GiftCardEvent.PaymentResult(result.resultCode.orEmpty(), null))
         }
     }
 

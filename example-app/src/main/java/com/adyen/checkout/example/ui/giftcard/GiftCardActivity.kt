@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityGiftCardBinding
@@ -25,9 +26,11 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@Suppress("TooManyFunctions")
 class GiftCardActivity : AppCompatActivity() {
 
     @Inject
@@ -38,6 +41,8 @@ class GiftCardActivity : AppCompatActivity() {
     private val giftCardViewModel: GiftCardViewModel by viewModels()
 
     private var giftCardComponent: GiftCardComponent? = null
+
+    private var giftCardAdapter: GiftCardAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +58,8 @@ class GiftCardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        setupReloadButton()
+        setupNewGiftCardButton()
+        setupRecyclerView()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -82,15 +88,23 @@ class GiftCardActivity : AppCompatActivity() {
                 binding.giftCardContainer.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             GiftCardViewState.ShowComponent -> {
                 binding.giftCardContainer.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             GiftCardViewState.Error -> {
                 binding.errorView.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.giftCardContainer.isVisible = false
+            }
+
+            GiftCardViewState.HideComponent -> {
+                binding.giftCardContainer.isVisible = false
+                binding.progressIndicator.isVisible = false
+                binding.errorView.isVisible = false
             }
         }
     }
@@ -108,20 +122,25 @@ class GiftCardActivity : AppCompatActivity() {
         binding.giftCardView.attach(giftCardComponent, this)
     }
 
-    private fun setupReloadButton() {
-        binding.loadNewGiftCard.setOnClickListener {
-            giftCardViewModel.reloadComponentWithOrder()
+    private fun setupNewGiftCardButton() {
+        binding.addNewGiftCard.setOnClickListener {
+            giftCardViewModel.onNewGiftCard()
         }
     }
 
-    private fun reloadGiftCardWithOrder(giftCardComponentData: GiftCardComponentData, orderRequest: OrderRequest) {
+    private fun setupRecyclerView() {
+        giftCardAdapter = GiftCardAdapter()
+        binding.addedGiftCards.adapter = giftCardAdapter
+    }
+
+    private fun setupNewGiftCard(giftCardComponentData: GiftCardComponentData, orderRequest: OrderRequest?) {
         val giftCardComponent = GiftCardComponent.PROVIDER.get(
             activity = this,
             paymentMethod = giftCardComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
             callback = giftCardComponentData.callback,
             order = orderRequest,
-            key = KEY_SECONDARY_GIFT_CARD_COMPONENT
+            key = UUID.randomUUID().toString()
         )
 
         this.giftCardComponent = giftCardComponent
@@ -130,22 +149,31 @@ class GiftCardActivity : AppCompatActivity() {
 
     private fun onGiftCardEvent(event: GiftCardEvent) {
         when (event) {
-            is GiftCardEvent.PaymentResult -> onPaymentResult(event.result)
+            is GiftCardEvent.PaymentResult -> onPaymentResult(event.result, event.balanceResult)
             is GiftCardEvent.AdditionalAction -> onAction(event.action)
             is GiftCardEvent.Balance -> {
                 giftCardComponent?.resolveBalanceResult(event.balanceResult)
             }
+
             is GiftCardEvent.OrderCreated -> {
                 giftCardComponent?.resolveOrderResponse(event.order)
             }
-            is GiftCardEvent.ReloadComponent -> {
-                reloadGiftCardWithOrder(event.giftCardComponentData, event.orderRequest)
-            }
+
             is GiftCardEvent.ReloadComponentSessions -> Unit
+            is GiftCardEvent.NewGiftCardComponent -> {
+                setupNewGiftCard(event.giftCardComponentData, event.orderRequest)
+            }
         }
     }
 
-    private fun onPaymentResult(result: String) {
+    private fun onPaymentResult(result: String, balanceResult: BalanceResult?) {
+        if (balanceResult != null) {
+            val giftCardModel = GiftCardModel(
+                UUID.randomUUID().toString(),
+                balanceResult.balance
+            )
+            giftCardAdapter?.submitList(giftCardAdapter?.currentList?.toMutableList().orEmpty() + giftCardModel)
+        }
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
@@ -160,7 +188,5 @@ class GiftCardActivity : AppCompatActivity() {
 
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
-
-        private const val KEY_SECONDARY_GIFT_CARD_COMPONENT = "KEY_SECONDARY_GIFT_CARD_COMPONENT"
     }
 }
