@@ -42,10 +42,10 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     }
 
     /**
-     * Returns the suggested value to be used as the `returnUrl` value in the payments/ call.
+     * Returns the suggested value to be used as the `returnUrl` value in the /payments call.
      *
      * @param context The context provides the package name which constitutes part of the ReturnUrl
-     * @return The suggested `returnUrl` to be used. Consists of {@link RedirectUtil#REDIRECT_RESULT_SCHEME} + App package name.
+     * @return The suggested `returnUrl` to be used. Consists of "adyencheckout://" + App package name.
      */
     @NonNull
     public static String getReturnUrl(@NonNull Context context) {

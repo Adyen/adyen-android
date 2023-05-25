@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Fjern gemt betalingsmåde</string>
     <string name="checkout_stored_payment_confirmation_message">Bekræft %s-betaling</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuller</string>
+    <string name="cashAppPayView_loadingText">Behandler betaling …</string>
 </resources>

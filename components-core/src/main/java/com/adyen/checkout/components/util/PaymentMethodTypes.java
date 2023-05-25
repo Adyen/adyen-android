@@ -42,6 +42,7 @@ public final class PaymentMethodTypes {
     public static final String BLIK = "blik";
     public static final String GIFTCARD = "giftcard";
     public static final String ONLINE_BANKING_PL = "onlineBanking_PL";
+    public static final String CASH_APP_PAY = "cashapp";
 
     // Payment methods that do not need a payment component, but only an action component
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
@@ -97,6 +98,7 @@ public final class PaymentMethodTypes {
     static {
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
                 BCMC,
+                CASH_APP_PAY,
                 DOTPAY,
                 ENTERCASH,
                 EPS,

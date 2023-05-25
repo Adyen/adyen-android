@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Poista tallennettu maksutapa</string>
     <string name="checkout_stored_payment_confirmation_message">Vahvista %s maksu</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Peruuta</string>
+    <string name="cashAppPayView_loadingText">Maksua käsitellään…</string>
 </resources>

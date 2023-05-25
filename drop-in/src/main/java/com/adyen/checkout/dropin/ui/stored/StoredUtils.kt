@@ -18,19 +18,33 @@ internal fun makeStoredModel(storedPaymentMethod: StoredPaymentMethod, isRemovin
     return when (storedPaymentMethod.type) {
         PaymentMethodTypes.SCHEME -> {
             StoredCardModel(
-                storedPaymentMethod.id.orEmpty(),
-                storedPaymentMethod.brand.orEmpty(),
-                isRemovingEnabled,
-                storedPaymentMethod.lastFour.orEmpty(),
-                storedPaymentMethod.expiryMonth.orEmpty(),
-                storedPaymentMethod.expiryYear.orEmpty()
+                id = storedPaymentMethod.id.orEmpty(),
+                imageId = storedPaymentMethod.brand.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                lastFour = storedPaymentMethod.lastFour.orEmpty(),
+                expiryMonth = storedPaymentMethod.expiryMonth.orEmpty(),
+                expiryYear = storedPaymentMethod.expiryYear.orEmpty()
             )
         }
-        else -> GenericStoredModel(
-            storedPaymentMethod.id.orEmpty(),
-            storedPaymentMethod.type.orEmpty(),
-            isRemovingEnabled,
-            storedPaymentMethod.name.orEmpty()
-        )
+
+        PaymentMethodTypes.CASH_APP_PAY -> {
+            GenericStoredModel(
+                id = storedPaymentMethod.id.orEmpty(),
+                imageId = storedPaymentMethod.type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                name = storedPaymentMethod.cashtag.orEmpty(),
+                description = storedPaymentMethod.name.orEmpty(),
+            )
+        }
+
+        else -> {
+            GenericStoredModel(
+                id = storedPaymentMethod.id.orEmpty(),
+                imageId = storedPaymentMethod.type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                name = storedPaymentMethod.name.orEmpty(),
+                description = null,
+            )
+        }
     }
 }

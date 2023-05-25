@@ -86,4 +86,20 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="AdyenCheckout.DropIn.CashAppPay.ProgressBar" parent="AdyenCheckout">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:indeterminateTint">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.DropIn.CashAppPay.DescriptionTextView" parent="AdyenCheckout">
+        <item name="android:text">@string/cashAppPayView_loadingText</item>
+        <item name="android:textColor">@color/label_color</item>
+        <item name="android:textIsSelectable">false</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
 </resources>

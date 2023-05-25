@@ -34,12 +34,12 @@ import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
+import com.adyen.checkout.dropin.ui.viewModelsFactory
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredPaymentViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
 import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
-import com.adyen.checkout.dropin.ui.viewModelsFactory
-import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredPaymentViewModel
 
 private val TAG = LogUtil.getTag()
 private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
@@ -161,9 +161,11 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                         DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
                     binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
                 }
+
                 is GenericStoredModel -> {
                     binding.storedPaymentMethodItem.textViewText.text = it.name
-                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
+                    binding.storedPaymentMethodItem.textViewDetail.isVisible = !it.description.isNullOrEmpty()
+                    binding.storedPaymentMethodItem.textViewDetail.text = it.description
                     imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                 }
             }

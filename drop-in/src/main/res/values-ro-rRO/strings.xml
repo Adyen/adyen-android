@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Ștergeți metoda de plată memorată</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmați plata %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Anulare</string>
+    <string name="cashAppPayView_loadingText">Se prelucrează plata…</string>
 </resources>

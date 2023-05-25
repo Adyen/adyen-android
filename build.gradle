@@ -68,6 +68,7 @@ allprojects {
     // External Dependencies
     ext.play_services_wallet_version = '18.1.3'
     ext.wechat_pay_version = "6.6.4"
+    ext.cash_app_pay_version = '2.1.0'
 
     // Drop-in
 

@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">إزالة طريقة الدفع المخزنة</string>
     <string name="checkout_stored_payment_confirmation_message">تأكيد الدفع باستخدام %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">إلغاء</string>
+    <string name="cashAppPayView_loadingText">جارِ معالجة المدفوعات…</string>
 </resources>

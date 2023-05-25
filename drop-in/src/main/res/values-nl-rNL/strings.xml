@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Opgeslagen betalingsmethode verwijderen</string>
     <string name="checkout_stored_payment_confirmation_message">Bevestig %s betaling</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuleer</string>
+    <string name="cashAppPayView_loadingText">Betaling wordt verwerkt…</string>
 </resources>

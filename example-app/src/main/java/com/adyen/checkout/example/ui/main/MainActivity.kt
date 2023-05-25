@@ -38,7 +38,7 @@ import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     private lateinit var binding: ActivityMainBinding
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
-    @Inject lateinit var keyValueStorage: KeyValueStorage
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -88,17 +89,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
-            this,
-            {
-                if (it != null) {
-                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                    if (isWaitingPaymentMethods) startDropIn(it)
-                } else {
-                    Logger.v(TAG, "API response is null")
-                }
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
+            if (it != null) {
+                Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
+                if (isWaitingPaymentMethods) startDropIn(it)
+            } else {
+                Logger.v(TAG, "API response is null")
             }
-        )
+        }
     }
 
     override fun onResume() {

@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>
     <string name="checkout_stored_payment_confirmation_message">%sのお支払いをご確認下さい</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">キャンセル</string>
+    <string name="cashAppPayView_loadingText">支払いを処理しています…</string>
 </resources>

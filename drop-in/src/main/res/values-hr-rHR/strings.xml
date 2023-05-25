@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Uklonite pohranjeni način plaćanja</string>
     <string name="checkout_stored_payment_confirmation_message">Potvrdite plaćanje: %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Otkaži</string>
+    <string name="cashAppPayView_loadingText">Obrada plaćanja u tijeku…</string>
 </resources>

@@ -28,7 +28,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredP
 class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
     private val componentRequiresInput: Boolean,
-    private val isRemovingEnabled: Boolean
+    isRemovingEnabled: Boolean
 ) : ViewModel() {
 
     companion object {

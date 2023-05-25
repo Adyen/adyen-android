@@ -39,6 +39,7 @@ public class StoredPaymentMethod extends ModelObject {
     private static final String LAST_FOUR = "lastFour";
     private static final String SHOPPER_EMAIL = "shopperEmail";
     private static final String SUPPORTED_SHOPPER_INTERACTIONS = "supportedShopperInteractions";
+    private static final String CASH_TAG = "cashtag";
 
     private static final String ECOMMERCE = "Ecommerce";
 
@@ -59,6 +60,7 @@ public class StoredPaymentMethod extends ModelObject {
                 jsonObject.putOpt(LAST_FOUR, modelObject.getLastFour());
                 jsonObject.putOpt(SHOPPER_EMAIL, modelObject.getShopperEmail());
                 jsonObject.putOpt(SUPPORTED_SHOPPER_INTERACTIONS, new JSONArray(modelObject.getSupportedShopperInteractions()));
+                jsonObject.putOpt(CASH_TAG, modelObject.getCashtag());
 
             } catch (JSONException e) {
                 throw new ModelSerializationException(StoredPaymentMethod.class, e);
@@ -86,6 +88,7 @@ public class StoredPaymentMethod extends ModelObject {
             if (supportedShopperInteractions != null) {
                 storedPaymentMethod.setSupportedShopperInteractions(supportedShopperInteractions);
             }
+            storedPaymentMethod.setCashtag(jsonObject.optString(CASH_TAG));
 
             return storedPaymentMethod;
         }
@@ -101,6 +104,7 @@ public class StoredPaymentMethod extends ModelObject {
     private String lastFour;
     private String shopperEmail;
     private List<String> supportedShopperInteractions = Collections.emptyList();
+    private String cashtag;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -157,6 +161,11 @@ public class StoredPaymentMethod extends ModelObject {
         return supportedShopperInteractions;
     }
 
+    @Nullable
+    public String getCashtag() {
+        return cashtag;
+    }
+
     public void setType(@Nullable String type) {
         this.type = type;
     }
@@ -195,6 +204,10 @@ public class StoredPaymentMethod extends ModelObject {
 
     public void setSupportedShopperInteractions(@Nullable List<String> supportedShopperInteractions) {
         this.supportedShopperInteractions = supportedShopperInteractions;
+    }
+
+    public void setCashtag(@Nullable String cashtag) {
+        this.cashtag = cashtag;
     }
 
     public boolean isEcommerce() {

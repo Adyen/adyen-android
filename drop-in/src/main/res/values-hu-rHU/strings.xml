@@ -36,4 +36,5 @@
     <string name="checkout_remove_stored_payment_method_body">Tárolt fizetési mód eltávolítása</string>
     <string name="checkout_stored_payment_confirmation_message">%s használatával történő fizetés jóváhagyása</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Mégse</string>
+    <string name="cashAppPayView_loadingText">Fizetés feldolgozása…</string>
 </resources>
