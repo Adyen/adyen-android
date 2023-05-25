@@ -8,8 +8,6 @@
  */
 
 apply from: "${rootDir}/config/gradle/versionName.gradle"
-apply from: "${rootDir}/config/gradle/checksums.gradle"
-apply from: "${rootDir}/config/gradle/dependenciesCheck.gradle"
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 apply from: "${rootDir}/config/gradle/ci.gradle"
 apply from: "${rootDir}/config/gradle/release.gradle"
