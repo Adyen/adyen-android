@@ -20,17 +20,21 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class CardParameters(
-    var allowedAuthMethods: List<String?>? = null,
-    var allowedCardNetworks: List<String?>? = null,
-    var isAllowPrepaidCards: Boolean = false,
-    var isBillingAddressRequired: Boolean = false,
-    var billingAddressParameters: BillingAddressParameters? = null
+    var allowedAuthMethods: List<String?>?,
+    var allowedCardNetworks: List<String?>?,
+    var isAllowPrepaidCards: Boolean,
+    var isAllowCreditCards: Boolean?,
+    var isAssuranceDetailsRequired: Boolean?,
+    var isBillingAddressRequired: Boolean,
+    var billingAddressParameters: BillingAddressParameters?,
 ) : ModelObject() {
 
     companion object {
         private const val ALLOWED_AUTH_METHODS = "allowedAuthMethods"
         private const val ALLOWED_CARD_NETWORKS = "allowedCardNetworks"
         private const val ALLOW_PREPAID_CARDS = "allowPrepaidCards"
+        private const val ALLOW_CREDIT_CARDS = "allowCreditCards"
+        private const val ASSURANCE_DETAILS_REQUIRED = "assuranceDetailsRequired"
         private const val BILLING_ADDRESS_REQUIRED = "billingAddressRequired"
         private const val BILLING_ADDRESS_PARAMETERS = "billingAddressParameters"
 
@@ -42,6 +46,8 @@ internal data class CardParameters(
                         putOpt(ALLOWED_AUTH_METHODS, serializeOptStringList(modelObject.allowedAuthMethods))
                         putOpt(ALLOWED_CARD_NETWORKS, serializeOptStringList(modelObject.allowedCardNetworks))
                         putOpt(ALLOW_PREPAID_CARDS, modelObject.isAllowPrepaidCards)
+                        putOpt(ALLOW_CREDIT_CARDS, modelObject.isAllowCreditCards)
+                        putOpt(ASSURANCE_DETAILS_REQUIRED, modelObject.isAssuranceDetailsRequired)
                         putOpt(BILLING_ADDRESS_REQUIRED, modelObject.isBillingAddressRequired)
                         putOpt(
                             BILLING_ADDRESS_PARAMETERS,
@@ -57,6 +63,8 @@ internal data class CardParameters(
                 allowedAuthMethods = parseOptStringList(jsonObject.optJSONArray(ALLOWED_AUTH_METHODS)),
                 allowedCardNetworks = parseOptStringList(jsonObject.optJSONArray(ALLOWED_CARD_NETWORKS)),
                 isAllowPrepaidCards = jsonObject.optBoolean(ALLOW_PREPAID_CARDS),
+                isAllowCreditCards = jsonObject.optBoolean(ALLOW_CREDIT_CARDS),
+                isAssuranceDetailsRequired = jsonObject.optBoolean(ASSURANCE_DETAILS_REQUIRED),
                 isBillingAddressRequired = jsonObject.optBoolean(BILLING_ADDRESS_REQUIRED),
                 billingAddressParameters = deserializeOpt(
                     jsonObject.optJSONObject(BILLING_ADDRESS_PARAMETERS),

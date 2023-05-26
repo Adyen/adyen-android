@@ -66,12 +66,22 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2
         ).setAmount(amount).setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
-            .setMerchantAccount("MERCHANT_ACCOUNT").setAllowPrepaidCards(true).setCountryCode("ZZ")
-            .setMerchantInfo(merchantInfo).setAllowedAuthMethods(allowedAuthMethods)
-            .setAllowedCardNetworks(allowedCardNetworks).setBillingAddressParameters(billingAddressParameters)
-            .setBillingAddressRequired(true).setEmailRequired(true).setExistingPaymentMethodRequired(true)
-            .setShippingAddressParameters(shippingAddressParameters).setShippingAddressRequired(true)
-            .setTotalPriceStatus("STATUS").build()
+            .setMerchantAccount("MERCHANT_ACCOUNT")
+            .setAllowPrepaidCards(true)
+            .setAllowCreditCards(true)
+            .setAssuranceDetailsRequired(true)
+            .setCountryCode("ZZ")
+            .setMerchantInfo(merchantInfo)
+            .setAllowedAuthMethods(allowedAuthMethods)
+            .setAllowedCardNetworks(allowedCardNetworks)
+            .setBillingAddressParameters(billingAddressParameters)
+            .setBillingAddressRequired(true)
+            .setEmailRequired(true)
+            .setExistingPaymentMethodRequired(true)
+            .setShippingAddressParameters(shippingAddressParameters)
+            .setShippingAddressRequired(true)
+            .setTotalPriceStatus("STATUS")
+            .build()
 
         val params =
             GooglePayComponentParamsMapper(null, null).mapToParams(googlePayConfiguration, PaymentMethod(), null)
@@ -89,6 +99,8 @@ internal class GooglePayComponentParamsMapperTest {
             allowedAuthMethods = allowedAuthMethods,
             allowedCardNetworks = allowedCardNetworks,
             isAllowPrepaidCards = true,
+            isAllowCreditCards = true,
+            isAssuranceDetailsRequired = true,
             isEmailRequired = true,
             isExistingPaymentMethodRequired = true,
             isShippingAddressRequired = true,
@@ -393,6 +405,8 @@ internal class GooglePayComponentParamsMapperTest {
         allowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods,
         allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
         isAllowPrepaidCards: Boolean = false,
+        isAllowCreditCards: Boolean? = null,
+        isAssuranceDetailsRequired: Boolean? = null,
         isEmailRequired: Boolean = false,
         isExistingPaymentMethodRequired: Boolean = false,
         isShippingAddressRequired: Boolean = false,
@@ -414,6 +428,8 @@ internal class GooglePayComponentParamsMapperTest {
         allowedAuthMethods = allowedAuthMethods,
         allowedCardNetworks = allowedCardNetworks,
         isAllowPrepaidCards = isAllowPrepaidCards,
+        isAllowCreditCards = isAllowCreditCards,
+        isAssuranceDetailsRequired = isAssuranceDetailsRequired,
         isEmailRequired = isEmailRequired,
         isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
         isShippingAddressRequired = isShippingAddressRequired,

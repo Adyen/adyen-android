@@ -57,6 +57,8 @@ internal class GooglePayComponentParamsMapper(
             countryCode = countryCode,
             merchantInfo = merchantInfo,
             isAllowPrepaidCards = isAllowPrepaidCards ?: false,
+            isAllowCreditCards = isAllowCreditCards,
+            isAssuranceDetailsRequired = isAssuranceDetailsRequired,
             isEmailRequired = isEmailRequired ?: false,
             isExistingPaymentMethodRequired = isExistingPaymentMethodRequired ?: false,
             isShippingAddressRequired = isShippingAddressRequired ?: false,
