@@ -17,7 +17,6 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -60,11 +59,6 @@ class CashAppPayComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-
-        if (!dropInViewModel.amount.isEmpty) {
-            val value = CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
-            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
-        }
 
         cashAppPayComponent.observe(viewLifecycleOwner) { state ->
             if (state.isValid) {
