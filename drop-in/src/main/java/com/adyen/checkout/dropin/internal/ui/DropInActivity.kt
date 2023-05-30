@@ -35,6 +35,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.dropin.DropIn
@@ -182,7 +183,7 @@ internal class DropInActivity :
     }
 
     private fun createLocalizedContext(baseContext: Context?): Context? {
-        if (baseContext == null) return baseContext
+        if (baseContext == null) return null
 
         // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't
         // have the Config object yet.
@@ -190,6 +191,8 @@ internal class DropInActivity :
         return baseContext.createLocalizedContext(locale)
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("deprecation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         checkGooglePayActivityResult(requestCode, resultCode, data)
@@ -338,12 +341,16 @@ internal class DropInActivity :
         val dialogFragment = when {
             CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 CardComponentDialogFragment.newInstance(paymentMethod)
+
             BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 BacsDirectDebitDialogFragment.newInstance(paymentMethod)
+
             GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 GiftCardComponentDialogFragment.newInstance(paymentMethod)
+
             GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
                 GooglePayComponentDialogFragment.newInstance(paymentMethod)
+
             else -> GenericComponentDialogFragment.newInstance(paymentMethod)
         }
 
@@ -449,6 +456,7 @@ internal class DropInActivity :
         when (dropInServiceResult) {
             is RecurringDropInServiceResult.PaymentMethodRemoved ->
                 handleRemovePaymentMethodResult(dropInServiceResult.id)
+
             is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -457,8 +465,10 @@ internal class DropInActivity :
         when (dropInServiceResult) {
             is SessionDropInServiceResult.SessionDataChanged ->
                 dropInViewModel.onSessionDataChanged(dropInServiceResult.sessionData)
+
             is SessionDropInServiceResult.SessionTakenOverUpdated ->
                 dropInViewModel.onSessionTakenOverUpdated(dropInServiceResult.isFlowTakenOver)
+
             is SessionDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
             is SessionDropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
         }
@@ -522,7 +532,7 @@ internal class DropInActivity :
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
         dropInViewModel.isWaitingResult = false
 
-        if (WeChatPayUtils.isResultIntent(intent)) {
+        if (isWeChatPayIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
             handleActionIntentResponse(intent)
         }
@@ -537,11 +547,15 @@ internal class DropInActivity :
                     Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
                 }
             }
+
             else -> {
                 Logger.e(TAG, "Unable to find action")
             }
         }
     }
+
+    private fun isWeChatPayIntent(intent: Intent): Boolean =
+        runCompileOnly { WeChatPayUtils.isResultIntent(intent) } ?: false
 
     private fun handleActionIntentResponse(intent: Intent) {
         val actionFragment = getActionFragment() ?: return
@@ -569,6 +583,7 @@ internal class DropInActivity :
                 setLoading(false)
                 showPaymentMethodsDialog()
             }
+
             is DropInActivityEvent.CancelOrder -> requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
             is DropInActivityEvent.CancelDropIn -> terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
             is DropInActivityEvent.NavigateTo -> loadFragment(event.destination)
@@ -624,6 +639,7 @@ internal class DropInActivity :
                 result.reason,
                 result.terminateDropIn
             )
+
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
             is GiftCardBalanceResult.RequestOrderCreation -> requestOrdersCall()
             is GiftCardBalanceResult.RequestPartialPayment -> requestPartialPayment()
