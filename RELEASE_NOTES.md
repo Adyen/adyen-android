@@ -8,26 +8,18 @@
 [//]: # ( # Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Breaking Changes
-- Dependency versions:
-  | Name                                                                                                   | Version                       |
-  |--------------------------------------------------------------------------------------------------------|-------------------------------|
-  | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.0.1** (requires Java 17)  |
-- All classes in `com.adyen.checkout.action` are moved to `com.adyen.checkout.action.core`. Please update your imports if applicable.
-- Standalone payment components no longer come with the 3DS2 and WeChat Pay actions. If you are using standalone components and want to handle these actions you have to add the dependencies like below. The `CardComponent` and `BcmcComponent` are able to handle 3DS2 actions, so it's not needed to add extra dependencies.
-```Groovy
-implementation 'com.adyen.checkout:3ds2:{your version}'
-implementation 'com.adyen.checkout:wechatpay:{your version}'
-```
-
 ## New
-- Payment methods:
-  - [Boleto Bancário](https://docs.adyen.com/payment-methods/boleto-bancario). Payment method type: *boletobancario*.
-- It is now possible to safely exclude unnecessary third-party dependencies. You can do this by excluding the Adyen Checkout SDK module that uses the third-party dependency. For example:
-```Groovy
-implementation('com.adyen.checkout:drop-in:{your version}') {
-    exclude group: 'com.adyen.checkout', module: '3ds2'
-    exclude group: 'com.adyen.checkout', module: 'wechatpay'
-}
+* Payment method: Cash App Pay.
+
+## Fixed
+- For Google Pay, serializing the shipping address parameters no longer causes an error.
+- For WeChat Pay on Android 11, an API restriction no longer causes an error.
+
+## Removed
+* For 3D Secure 2, the `threeDSRequestorAppURL` will not have a default value anymore. You can set it manually using:
+
+```kotlin
+Adyen3DS2Configuration.Builder(locale, environment, clientKey)
+    .setThreeDSRequestorURL("https://{your app.com}/adyen3ds2")
+    .build()
 ```
-⚠️ Make sure you don't include a payment method that corresponds to a module you excluded.
