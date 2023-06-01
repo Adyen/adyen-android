@@ -23,5 +23,5 @@ enum class TestComponentViewType : ComponentViewType {
     VIEW_TYPE_3;
 
     override val viewProvider: ViewProvider
-        get() = throw IllegalStateException("Method should not be called in tests.")
+        get() = error("Method should not be called in tests.")
 }

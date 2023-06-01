@@ -526,7 +526,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         override fun getProgressView(p0: Activity?): ProgressDialog {
-            throw IllegalStateException("This method should not be used")
+            error("This method should not be used")
         }
 
         override fun close() = Unit

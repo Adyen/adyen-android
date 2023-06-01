@@ -30,7 +30,7 @@ class PdfOpener {
 
         Logger.e(TAG, "Couldn't open pdf with url: $uri")
 
-        throw IllegalStateException("Couldn't open pdf with url: $uri")
+        error("Couldn't open pdf with url: $uri")
     }
 
     private fun open(context: Context, uri: Uri): Boolean {

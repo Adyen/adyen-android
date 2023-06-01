@@ -47,7 +47,8 @@ import org.mockito.kotlin.whenever
 internal class OnlineBankingComponentTest(
     @Mock private val onlineBankingDelegate: OnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
-        TestOnlineBankingComponentState>,
+        TestOnlineBankingComponentState
+        >,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock

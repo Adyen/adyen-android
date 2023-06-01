@@ -53,7 +53,7 @@ internal class AwaitView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is AwaitDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is AwaitDelegate) { "Unsupported delegate type" }
 
         this.delegate = delegate
 

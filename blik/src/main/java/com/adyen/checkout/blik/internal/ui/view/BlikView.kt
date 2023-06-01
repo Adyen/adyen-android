@@ -52,7 +52,7 @@ internal class BlikView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is BlikDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is BlikDelegate) { "Unsupported delegate type" }
         blikDelegate = delegate
 
         this.localizedContext = localizedContext

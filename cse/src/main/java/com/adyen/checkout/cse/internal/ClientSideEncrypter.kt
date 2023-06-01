@@ -104,6 +104,7 @@ class ClientSideEncrypter {
         return try {
             encryptedAesKey = rsaCipher.doFinal(aesKey.encoded)
             String.format(
+                Locale.ROOT,
                 "%s%s%s%s%s%s",
                 PREFIX,
                 VERSION,

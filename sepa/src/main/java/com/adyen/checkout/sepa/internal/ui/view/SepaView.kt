@@ -53,7 +53,7 @@ internal class SepaView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is SepaDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is SepaDelegate) { "Unsupported delegate type" }
         sepaDelegate = delegate
 
         this.localizedContext = localizedContext

@@ -55,7 +55,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is OnlineBankingDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is OnlineBankingDelegate<*, *>) { "Unsupported delegate type" }
         onlineBankingDelegate = delegate
 
         this.localizedContext = localizedContext

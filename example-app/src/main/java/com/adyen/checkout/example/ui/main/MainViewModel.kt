@@ -145,7 +145,7 @@ internal class MainViewModel @Inject constructor(
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
             )

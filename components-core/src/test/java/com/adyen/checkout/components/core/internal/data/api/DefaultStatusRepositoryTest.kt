@@ -53,7 +53,7 @@ internal class DefaultStatusRepositoryTest(
     }
 
     @Test
-    fun `when refreshing the status, then the result is emitted immediately`() = runTest() {
+    fun `when refreshing the status, then the result is emitted immediately`() = runTest {
         val refreshResponse = StatusResponse(resultCode = "refresh")
         whenever(statusService.checkStatus(any(), any()))
             // return final result first, so polling stops
