@@ -6,7 +6,7 @@
  * Created by josephj on 17/5/2023.
  */
 
-package com.adyen.checkout.dropin.internal
+package com.adyen.checkout.dropin.compose
 
 import android.annotation.SuppressLint
 import android.app.Application
