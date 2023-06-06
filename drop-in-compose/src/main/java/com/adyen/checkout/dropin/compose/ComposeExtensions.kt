@@ -12,6 +12,7 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.DropIn
@@ -75,11 +76,14 @@ fun DropIn.startPayment(
     dropInConfiguration: DropInConfiguration,
     serviceClass: Class<out DropInService>,
 ) {
-    startPayment(
-        context = LocalContext.current,
-        dropInLauncher = dropInLauncher,
-        paymentMethodsApiResponse = paymentMethodsApiResponse,
-        dropInConfiguration = dropInConfiguration,
-        serviceClass = serviceClass
-    )
+    val currentContext = LocalContext.current
+    LaunchedEffect(Unit) {
+        startPayment(
+            context = currentContext,
+            dropInLauncher = dropInLauncher,
+            paymentMethodsApiResponse = paymentMethodsApiResponse,
+            dropInConfiguration = dropInConfiguration,
+            serviceClass = serviceClass
+        )
+    }
 }
