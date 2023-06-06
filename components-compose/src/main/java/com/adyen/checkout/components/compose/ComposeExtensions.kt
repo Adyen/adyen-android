@@ -10,6 +10,7 @@ package com.adyen.checkout.components.compose
 
 import android.app.Application
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
@@ -152,11 +153,17 @@ fun <
 
 // TODO docs
 @Composable
-fun <T> AdyenComponentViewComposable(component: T) where T : ViewableComponent, T : Component {
+fun <T> AdyenComponent(
+    component: T,
+    modifier: Modifier = Modifier,
+) where T : ViewableComponent, T : Component {
     val lifecycleOwner = LocalLifecycleOwner.current
-    AndroidView(factory = {
-        AdyenComponentView(it).apply {
-            attach(component, lifecycleOwner)
-        }
-    })
+    AndroidView(
+        factory = {
+            AdyenComponentView(it).apply {
+                attach(component, lifecycleOwner)
+            }
+        },
+        modifier = modifier,
+    )
 }
