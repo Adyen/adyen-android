@@ -18,6 +18,7 @@ include ':3ds2',
         ':ach',
         ':action',
         ':action-core',
+        ':atome',
         ':await',
         ':bacs',
         ':bcmc',
@@ -59,4 +60,3 @@ include ':3ds2',
         ':upi',
         ':voucher',
         ':wechatpay'
-

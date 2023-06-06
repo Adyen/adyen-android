@@ -17,6 +17,7 @@ object PaymentMethodTypes {
 
     // Type of the payment method as received by the paymentMethods/ API
     const val ACH = "ach"
+    const val ATOME = "atome"
     const val BACS = "directdebit_GB"
     const val BCMC = "bcmc"
     const val BLIK = "blik"
