@@ -46,7 +46,7 @@ dependencies {
     implementation libraries.androidx.appcompat
     api libraries.androidx.constraintlayout
     implementation libraries.androidx.recyclerview
-    implementation libraries.material
+    api libraries.material
     implementation libraries.androidx.browser
 
     //Tests

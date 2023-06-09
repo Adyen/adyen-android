@@ -91,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@id/paymentReferenceSeparator"
         tools:text="12345.1234.12345.12345.12345678901 123456789012345" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_copyCode"
         style="@style/AdyenCheckout.Voucher.ButtonCopyCode"
         android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_downloadPdf"
         style="@style/AdyenCheckout.Voucher.ButtonDownloadPdf"
         android:layout_width="wrap_content"
