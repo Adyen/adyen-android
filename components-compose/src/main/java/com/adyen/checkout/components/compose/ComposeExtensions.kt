@@ -34,8 +34,6 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.ui.core.AdyenComponentView
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 
-// TODO test different instances of the same component
-
 /**
  * Get a [PaymentComponent] from a [Composable].
  *
@@ -60,9 +58,8 @@ fun <
     paymentMethod: PaymentMethod,
     configuration: ConfigurationT,
     componentCallback: ComponentCallbackT,
+    key: String?,
     order: Order? = null,
-    // TODO check if we should make this key mandatory to bring awareness to the lifecycle/view model issue
-    key: String? = null,
 ): ComponentT {
     return get(
         savedStateRegistryOwner = LocalSavedStateRegistryOwner.current,
@@ -102,8 +99,8 @@ fun <
     storedPaymentMethod: StoredPaymentMethod,
     configuration: ConfigurationT,
     componentCallback: ComponentCallbackT,
+    key: String?,
     order: Order? = null,
-    key: String? = null,
 ): ComponentT {
     return get(
         savedStateRegistryOwner = LocalSavedStateRegistryOwner.current,
@@ -145,7 +142,7 @@ fun <
     paymentMethod: PaymentMethod,
     configuration: ConfigurationT,
     componentCallback: ComponentCallbackT,
-    key: String? = null,
+    key: String,
 ): ComponentT {
     return get(
         savedStateRegistryOwner = LocalSavedStateRegistryOwner.current,
@@ -188,7 +185,7 @@ fun <
     storedPaymentMethod: StoredPaymentMethod,
     configuration: ConfigurationT,
     componentCallback: ComponentCallbackT,
-    key: String? = null,
+    key: String?,
 ): ComponentT {
     return get(
         savedStateRegistryOwner = LocalSavedStateRegistryOwner.current,
