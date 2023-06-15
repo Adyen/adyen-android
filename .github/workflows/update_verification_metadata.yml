@@ -5,7 +5,7 @@ on:
     branches:
       - 'renovate/**'
     paths:
-      - './dependencies.gradle'
+      - 'dependencies.gradle'
 
 jobs:
   gradle-update-verification-metadata:
