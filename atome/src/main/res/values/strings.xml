@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 13/6/2023.
+  -->
+
+<resources>
+    <string name="checkout_atome_first_name_hint" translatable="false">First name</string>
+    <string name="checkout_atome_last_name_hint" translatable="false">Last name</string>
+    <string name="checkout_atome_phone_number_hint" translatable="false">Telephone number</string>
+    <string name="checkout_atome_shopper_email_hint" translatable="false">Email address</string>
+
+    <string name="checkout_atome_first_name_invalid" translatable="false">First name is not valid</string>
+    <string name="checkout_atome_last_name_invalid" translatable="false">Last name is not valid</string>
+    <string name="checkout_atome_phone_number_invalid" translatable="false">Invalid telephone number</string>
+    <string name="checkout_atome_shopper_email_invalid" translatable="false">Invalid email address</string>
+</resources>

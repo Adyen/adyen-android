@@ -12,6 +12,7 @@ import com.adyen.checkout.atome.AtomeComponentState
 import com.adyen.checkout.atome.internal.ui.model.AtomeInputData
 import com.adyen.checkout.atome.internal.ui.model.AtomeOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
@@ -21,7 +22,8 @@ internal interface AtomeDelegate :
     PaymentComponentDelegate<AtomeComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UIStateDelegate {
+    UIStateDelegate,
+    AddressDelegate {
 
     val outputData: AtomeOutputData
 

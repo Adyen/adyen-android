@@ -8,9 +8,19 @@
 
 package com.adyen.checkout.atome.internal.ui.model
 
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
-class AtomeOutputData : OutputData {
+class AtomeOutputData(
+    val firstNameState: FieldState<String>,
+    val lastNameState: FieldState<String>,
+    val phoneNumberState: FieldState<String>,
+    val billingAddressState: AddressOutputData,
+) : OutputData {
     override val isValid: Boolean
-        get() = TODO("Not yet implemented")
+        get() = firstNameState.validation.isValid() &&
+            lastNameState.validation.isValid() &&
+            phoneNumberState.validation.isValid() &&
+            billingAddressState.isValid
 }

@@ -29,7 +29,6 @@ internal object AtomeViewProvider : ViewProvider {
 }
 
 internal object AtomeComponentViewType : ButtonComponentViewType {
-    override val buttonTextResId: Int
-        get() = TODO("Not yet implemented")
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
     override val viewProvider: ViewProvider = AtomeViewProvider
 }

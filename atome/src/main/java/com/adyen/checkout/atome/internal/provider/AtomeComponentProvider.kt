@@ -20,6 +20,7 @@ import com.adyen.checkout.atome.AtomeComponent
 import com.adyen.checkout.atome.AtomeComponentState
 import com.adyen.checkout.atome.AtomeConfiguration
 import com.adyen.checkout.atome.internal.ui.DefaultAtomeDelegate
+import com.adyen.checkout.atome.internal.ui.model.AtomeComponentParamsMapper
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -30,7 +31,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -46,6 +46,8 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.ui.core.internal.data.api.AddressService
+import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class AtomeComponentProvider
@@ -67,7 +69,7 @@ constructor(
         SessionComponentCallback<AtomeComponentState>
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = AtomeComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -94,10 +96,12 @@ constructor(
                 analyticsMapper = AnalyticsMapper(),
             )
 
+            val addressService = AddressService(httpClient)
             val atomeDelegate = DefaultAtomeDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsRepository = analyticsRepository,
                 observerRepository = PaymentObserverRepository(),
+                addressRepository = DefaultAddressRepository(addressService),
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
@@ -164,10 +168,12 @@ constructor(
                 analyticsMapper = AnalyticsMapper(),
             )
 
+            val addressService = AddressService(httpClient)
             val atomeDelegate = DefaultAtomeDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsRepository = analyticsRepository,
                 observerRepository = PaymentObserverRepository(),
+                addressRepository = DefaultAddressRepository(addressService),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,

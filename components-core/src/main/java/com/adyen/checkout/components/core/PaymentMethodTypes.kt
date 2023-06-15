@@ -92,6 +92,7 @@ object PaymentMethodTypes {
     // List of all payment method types.
     val SUPPORTED_PAYMENT_METHODS: List<String> = listOf(
         ACH,
+        ATOME,
         BACS,
         BCMC,
         BLIK,

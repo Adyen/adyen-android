@@ -8,6 +8,16 @@
 
 package com.adyen.checkout.atome.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.InputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
-class AtomeInputData : InputData
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class AtomeInputData(
+    var firstName: String = "",
+    var lastName: String = "",
+    var countryCode: String = "",
+    var mobileNumber: String = "",
+    var billingAddress: AddressInputModel = AddressInputModel(),
+    var shippingAddress: AddressInputModel = AddressInputModel(),
+) : InputData

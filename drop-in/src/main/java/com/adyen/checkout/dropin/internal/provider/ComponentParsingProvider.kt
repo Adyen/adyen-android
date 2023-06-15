@@ -16,6 +16,10 @@ import com.adyen.checkout.ach.ACHDirectDebitComponent
 import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.provider.ACHDirectDebitComponentProvider
+import com.adyen.checkout.atome.AtomeComponent
+import com.adyen.checkout.atome.AtomeComponentState
+import com.adyen.checkout.atome.AtomeConfiguration
+import com.adyen.checkout.atome.internal.provider.AtomeComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -212,6 +216,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<*, *> = when {
         ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> ACHDirectDebitConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+
+        AtomeComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> AtomeConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -535,6 +545,17 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = configuration,
                 callback = componentCallback as ComponentCallback<ACHDirectDebitComponentState>,
+            )
+        }
+
+        AtomeComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val configuration: AtomeConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            AtomeComponentProvider(dropInParams, sessionParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = configuration,
+                callback = componentCallback as ComponentCallback<AtomeComponentState>
             )
         }
 
