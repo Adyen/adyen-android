@@ -34,11 +34,22 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.ui.core.AdyenComponentView
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 
-// TODO this file is in drop-in for now to make testing easier, it should be split into multiple files and moved into
-//  2 different modules: one for components and another for drop-in
-
 // TODO test different instances of the same component
-// TODO docs
+
+/**
+ * Get a [PaymentComponent] from a [Composable].
+ *
+ * @param paymentMethod           The corresponding  [PaymentMethod] object.
+ * @param configuration           The Configuration of the component.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param order                   An [Order] in case of an ongoing partial payment flow.
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -48,7 +59,7 @@ fun <
     > PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallbackT>.get(
     paymentMethod: PaymentMethod,
     configuration: ConfigurationT,
-    callback: ComponentCallbackT,
+    componentCallback: ComponentCallbackT,
     order: Order? = null,
     // TODO check if we should make this key mandatory to bring awareness to the lifecycle/view model issue
     key: String? = null,
@@ -61,13 +72,26 @@ fun <
         paymentMethod = paymentMethod,
         configuration = configuration,
         application = LocalContext.current.applicationContext as Application,
-        componentCallback = callback,
+        componentCallback = componentCallback,
         order = order,
         key = key,
     )
 }
 
-// TODO docs
+/**
+ * Get a [PaymentComponent] with a stored payment method from a [Composable].
+ *
+ * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
+ * @param configuration           The Configuration of the component.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param order                   An [Order] in case of an ongoing partial payment flow.
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -77,7 +101,7 @@ fun <
     > StoredPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallbackT>.get(
     storedPaymentMethod: StoredPaymentMethod,
     configuration: ConfigurationT,
-    callback: ComponentCallbackT,
+    componentCallback: ComponentCallbackT,
     order: Order? = null,
     key: String? = null,
 ): ComponentT {
@@ -89,13 +113,27 @@ fun <
         storedPaymentMethod = storedPaymentMethod,
         configuration = configuration,
         application = LocalContext.current.applicationContext as Application,
-        componentCallback = callback,
+        componentCallback = componentCallback,
         order = order,
         key = key,
     )
 }
 
-// TODO docs
+/**
+ * Get a [PaymentComponent] with a checkout session from a [Composable]. You only need to integrate with the /sessions
+ * endpoint to create a session and the component will automatically handle the rest of the payment flow.
+ *
+ * @param checkoutSession         The [CheckoutSession] object to launch this component.
+ * @param paymentMethod           The corresponding  [PaymentMethod] object.
+ * @param configuration           The Configuration of the component.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -106,7 +144,7 @@ fun <
     checkoutSession: CheckoutSession,
     paymentMethod: PaymentMethod,
     configuration: ConfigurationT,
-    callback: ComponentCallbackT,
+    componentCallback: ComponentCallbackT,
     key: String? = null,
 ): ComponentT {
     return get(
@@ -118,12 +156,27 @@ fun <
         paymentMethod = paymentMethod,
         configuration = configuration,
         application = LocalContext.current.applicationContext as Application,
-        componentCallback = callback,
+        componentCallback = componentCallback,
         key = key,
     )
 }
 
-// TODO docs
+/**
+ * Get a [PaymentComponent]  with a stored payment method and a checkout session from a [Composable]. You only need to
+ * integrate with the /sessions endpoint to create a session and the component will automatically handle the rest of
+ * the payment flow.
+ *
+ * @param checkoutSession         The [CheckoutSession] object to launch this component.
+ * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
+ * @param configuration           The Configuration of the component.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
 @Composable
 fun <
     ComponentT : PaymentComponent,
@@ -134,7 +187,7 @@ fun <
     checkoutSession: CheckoutSession,
     storedPaymentMethod: StoredPaymentMethod,
     configuration: ConfigurationT,
-    callback: ComponentCallbackT,
+    componentCallback: ComponentCallbackT,
     key: String? = null,
 ): ComponentT {
     return get(
@@ -146,12 +199,15 @@ fun <
         storedPaymentMethod = storedPaymentMethod,
         configuration = configuration,
         application = LocalContext.current.applicationContext as Application,
-        componentCallback = callback,
+        componentCallback = componentCallback,
         key = key,
     )
 }
 
-// TODO docs
+/**
+ * A [Composable] that can display input and fill in details for a [Component].
+ */
+@Suppress("unused")
 @Composable
 fun <T> AdyenComponent(
     component: T,
