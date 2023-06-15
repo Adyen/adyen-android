@@ -1,0 +1,32 @@
+name: Update verification metadata
+
+on:
+  push:
+    branches:
+      - 'renovate/**'
+    paths:
+      - './dependencies.gradle'
+
+jobs:
+  gradle-update-verification-metadata:
+    # https://github.com/actions/virtual-environments/
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # https://github.com/marketplace/actions/checkout
+      - uses: actions/checkout@v3
+
+      # Setup Java 17
+      # https://github.com/marketplace/actions/setup-java-jdk
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      # Run gradlew check
+      - name: Gradle update verification metadata
+        run: ./gradlew --write-verification-metadata sha256 build --no-daemon
