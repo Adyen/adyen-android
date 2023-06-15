@@ -30,3 +30,16 @@ jobs:
       # Run gradlew check
       - name: Gradle update verification metadata
         run: ./gradlew --write-verification-metadata sha256 build --no-daemon
+
+      - name: Commit
+        run: |
+          git config --local user.email 'action@github.com'
+          git config --local user.name 'GitHub Action'
+          git add .
+          git commit -am 'Update verification metadata'
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref }}
