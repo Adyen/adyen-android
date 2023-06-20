@@ -31,10 +31,15 @@ jobs:
       - name: Gradle update verification metadata
         run: ./gradlew --write-verification-metadata sha256 build --no-daemon
 
-      - name: Commit Push
+      - name: Commit
         run: |
-          git config --local user.email 'action@github.com'
-          git config --local user.name 'GitHub Action'
+          git config --local user.email ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
+          git config --local user.name 'AdyenAutomationBot'
           git add .
           git commit -am 'Update verification metadata'
-          git push
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
+          branch: ${{ github.ref }}
