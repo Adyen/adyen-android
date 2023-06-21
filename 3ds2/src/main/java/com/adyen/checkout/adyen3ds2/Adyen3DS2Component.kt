@@ -210,6 +210,8 @@ class Adyen3DS2Component(
             notifyException(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
         viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+            // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
+            closeTransaction(getApplication())
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
                 ThreeDS2Service.INSTANCE.initialize(activity, configParameters, null, mUiCustomization)
