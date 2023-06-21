@@ -123,6 +123,10 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
 
     @StringRes
     private Integer getMessageTextResource() {
+        if (mPaymentMethodType == null) {
+            return null;
+        }
+
         switch (mPaymentMethodType) {
             case PaymentMethodTypes.BLIK:
                 return R.string.checkout_await_message_blik;
