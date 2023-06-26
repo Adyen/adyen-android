@@ -31,6 +31,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -40,4 +44,5 @@ dependencies {
     api project(':ui-core')
 
     api libraries.cashAppPay
+    implementation libraries.material
 }

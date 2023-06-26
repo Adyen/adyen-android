@@ -6,4 +6,6 @@
   ~ Created by oscars on 26/6/2023.
   -->
 
-<manifest />
+<resources>
+    <string name="cash_app_store_payment_method">Save for my next payment</string>
+</resources>
