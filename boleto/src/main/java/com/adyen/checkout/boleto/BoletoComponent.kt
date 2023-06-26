@@ -48,7 +48,7 @@ class BoletoComponent internal constructor(
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    override val delegate: ComponentDelegate = actionHandlingComponent.activeDelegate
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
     override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
         viewModelScope,
