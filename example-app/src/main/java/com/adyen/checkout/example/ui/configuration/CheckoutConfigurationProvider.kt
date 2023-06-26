@@ -10,6 +10,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -47,6 +48,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         clientKey,
     )
         .addCardConfiguration(getCardConfiguration())
+        .addCashAppPayConfiguration(getCashAppPayConfiguration())
         .addBcmcConfiguration(getBcmcConfiguration())
         .addGooglePayConfiguration(getGooglePayConfiguration())
         .add3ds2ActionConfiguration(get3DS2Configuration())
@@ -61,6 +63,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAddressConfiguration(getAddressConfiguration())
             .setInstallmentConfigurations(getInstallmentConfiguration())
             .setAmount(amount)
+            .build()
+
+    fun getCashAppPayConfiguration(): CashAppPayConfiguration =
+        CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setReturnUrl("adyencheckout://com.adyen.checkout.example")
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =

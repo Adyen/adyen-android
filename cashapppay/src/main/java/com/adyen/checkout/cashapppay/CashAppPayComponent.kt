@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvider
 import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
@@ -74,5 +75,11 @@ class CashAppPayComponent internal constructor(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        @JvmField
+        val PROVIDER = CashAppPayComponentProvider()
+
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.CASH_APP_PAY)
     }
 }

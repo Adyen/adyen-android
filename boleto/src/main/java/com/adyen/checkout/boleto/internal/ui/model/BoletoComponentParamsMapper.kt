@@ -61,7 +61,7 @@ internal class BoletoComponentParamsMapper(
     }
 
     private fun BoletoComponentParams.override(
-        sessionParams: SessionParams? = null
+        sessionParams: SessionParams?
     ): BoletoComponentParams {
         if (sessionParams == null) return this
         return copy(

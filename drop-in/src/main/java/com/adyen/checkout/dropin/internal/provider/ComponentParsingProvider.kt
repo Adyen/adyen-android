@@ -36,6 +36,10 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
+import com.adyen.checkout.cashapppay.CashAppPayComponent
+import com.adyen.checkout.cashapppay.CashAppPayComponentState
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
+import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvider
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
@@ -243,6 +247,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         )
 
         CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> CardConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+
+        CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> CashAppPayConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey
@@ -590,6 +600,17 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
                 callback = componentCallback as ComponentCallback<CardComponentState>,
+            )
+        }
+
+        CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) -> {
+            val cashAppPayConfiguration: CashAppPayConfiguration =
+                getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration)
+            CashAppPayComponentProvider(dropInParams, sessionParams).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                configuration = cashAppPayConfiguration,
+                callback = componentCallback as ComponentCallback<CashAppPayComponentState>,
             )
         }
 
