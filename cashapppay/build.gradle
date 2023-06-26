@@ -33,7 +33,9 @@ android {
 }
 
 dependencies {
+    api project(':action-core')
     api project(':components-core')
+    api project(':ui-core')
 
     api libraries.cashAppPay
 }

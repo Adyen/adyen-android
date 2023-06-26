@@ -27,6 +27,7 @@ object PaymentMethodTypes {
     const val BOLETOBANCARIO_ITAU = "boletobancario_itau"
     const val BOLETOBANCARIO_SANTANDER = "boletobancario_santander"
     const val BOLETO_PRIMEIRO_PAY = "primeiropay_boleto"
+    const val CASH_APP_PAY = "cashapp"
     const val DOTPAY = "dotpay"
     const val ENTERCASH = "entercash"
     const val EPS = "eps"
