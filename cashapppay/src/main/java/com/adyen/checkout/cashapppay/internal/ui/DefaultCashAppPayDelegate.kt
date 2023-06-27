@@ -35,8 +35,10 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -46,8 +48,10 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -69,6 +73,8 @@ internal class DefaultCashAppPayDelegate(
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CashAppPayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
 
     override val submitFlow: Flow<CashAppPayComponentState> = submitHandler.submitFlow
 
@@ -118,7 +124,7 @@ internal class DefaultCashAppPayDelegate(
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
-            exceptionFlow = null,
+            exceptionFlow = exceptionChannel.receiveAsFlow(),
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
@@ -260,10 +266,13 @@ internal class DefaultCashAppPayDelegate(
 
             CashAppPayState.Declined -> {
                 Logger.i(TAG, "Cash App Pay authorization request declined")
+                exceptionChannel.trySend(ComponentException("Cash App Pay authorization request declined"))
             }
 
             is CashAppPayState.CashAppPayExceptionState -> {
-
+                exceptionChannel.trySend(
+                    ComponentException("Cash App Pay has encountered an error", newState.exception)
+                )
             }
 
             else -> Unit
