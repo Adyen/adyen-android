@@ -40,6 +40,8 @@ internal class CashAppPayComponentParamsMapper(
         returnUrl = returnUrl ?: throw ComponentException(
             "returnUrl is not configured. Make sure it is set in CashAppPayComponent.Builder"
         ),
+        showStorePaymentField = showStorePaymentField ?: true,
+        storePaymentMethod = storePaymentMethod ?: false,
     )
 
     private fun getDefaultCashAppPayEnvironment(configuration: CashAppPayConfiguration): CashAppPayEnvironment {
@@ -69,7 +71,9 @@ internal class CashAppPayComponentParamsMapper(
     ): CashAppPayComponentParams {
         if (sessionParams == null) return this
         return copy(
-            amount = sessionParams.amount ?: amount
+            amount = sessionParams.amount ?: amount,
+            // TODO: Check how this should be overridden
+            showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
             // TODO: Check if returnUrl can be overridden
         )
     }

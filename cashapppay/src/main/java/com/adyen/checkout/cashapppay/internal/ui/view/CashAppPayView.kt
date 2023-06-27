@@ -13,9 +13,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.adyen.checkout.cashapppay.R
 import com.adyen.checkout.cashapppay.databinding.CashAppPayViewBinding
 import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
@@ -54,6 +56,8 @@ internal class CashAppPayView @JvmOverloads constructor(
     }
 
     private fun initSwitch() {
+        binding.switchStorePaymentMethod.isVisible =
+            (delegate.componentParams as CashAppPayComponentParams).showStorePaymentField
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentSelected = isChecked }
         }

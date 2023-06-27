@@ -35,6 +35,8 @@ private constructor(
     val genericActionConfiguration: GenericActionConfiguration,
     val cashAppPayEnvironment: CashAppPayEnvironment?,
     val returnUrl: String?,
+    val showStorePaymentField: Boolean?,
+    val storePaymentMethod: Boolean?,
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
@@ -44,6 +46,8 @@ private constructor(
         private var isSubmitButtonVisible: Boolean? = null
         private var cashAppPayEnvironment: CashAppPayEnvironment? = null
         private var returnUrl: String? = null
+        private var showStorePaymentField: Boolean? = null
+        private var storePaymentMethod: Boolean? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -95,9 +99,37 @@ private constructor(
         }
 
         /**
+         * Set if the option to store the shopper's account for future payments should be shown as an input field.
+         *
+         * Default is true.
+         *
+         * @param showStorePaymentField [Boolean]
+         * @return [CashAppPayConfiguration.Builder]
+         */
+        fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
+            this.showStorePaymentField = showStorePaymentField
+            return this
+        }
+
+        /**
+         * Set if the shopper's account should be stored, when the store payment method switch is not presented to the shopper.
+         *
+         * Only applicable if [showStorePaymentField] is false.
+         *
+         * Default is false.
+         *
+         * @param storePaymentMethod [Boolean]
+         * @return [CashAppPayConfiguration.Builder]
+         */
+        fun setStorePaymentMethod(storePaymentMethod: Boolean): Builder {
+            this.storePaymentMethod = storePaymentMethod
+            return this
+        }
+
+        /**
          * Sets if submit button will be visible or not.
          *
-         * Default is True.
+         * Default is true.
          *
          * @param isSubmitButtonVisible If submit button should be visible or not.
          */
@@ -116,6 +148,8 @@ private constructor(
             genericActionConfiguration = genericActionConfigurationBuilder.build(),
             cashAppPayEnvironment = cashAppPayEnvironment,
             returnUrl = returnUrl,
+            showStorePaymentField = showStorePaymentField,
+            storePaymentMethod = storePaymentMethod,
         )
     }
 }

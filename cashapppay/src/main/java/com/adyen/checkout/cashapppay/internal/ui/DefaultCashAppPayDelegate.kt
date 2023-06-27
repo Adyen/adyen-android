@@ -234,10 +234,9 @@ internal class DefaultCashAppPayDelegate(
     ): CashAppPayPaymentAction.OnFileAction? {
         val shouldStorePaymentMethod = when {
             // Shopper is presented with store switch and selected it
-            // TODO
-            /* componentParams.showStorePaymentField && */ outputData.isStorePaymentSelected -> true
-            // shopper is not presented with store switch and configuration indicates storing the payment method
-//            !componentParams.showStorePaymentField && componentParams.storePaymentMethod -> true
+            componentParams.showStorePaymentField && outputData.isStorePaymentSelected -> true
+            // Shopper is not presented with store switch and configuration indicates storing the payment method
+            !componentParams.showStorePaymentField && componentParams.storePaymentMethod -> true
             else -> false
         }
 

@@ -27,4 +27,6 @@ internal data class CashAppPayComponentParams(
     override val amount: Amount,
     val cashAppPayEnvironment: CashAppPayEnvironment,
     val returnUrl: String,
+    val showStorePaymentField: Boolean,
+    val storePaymentMethod: Boolean,
 ) : ComponentParams, ButtonParams
