@@ -22,11 +22,11 @@ internal class CashAppPayComponentParamsMapper(
 
     fun mapToParams(
         configuration: CashAppPayConfiguration,
-        sessionsParams: SessionParams?,
+        sessionParams: SessionParams?,
     ): CashAppPayComponentParams = configuration
         .mapToParamsInternal()
         .override(overrideComponentParams)
-        .override(sessionsParams ?: overrideSessionParams)
+        .override(sessionParams ?: overrideSessionParams)
 
     private fun CashAppPayConfiguration.mapToParamsInternal() = CashAppPayComponentParams(
         isSubmitButtonVisible = isSubmitButtonVisible ?: true,
@@ -65,11 +65,11 @@ internal class CashAppPayComponentParamsMapper(
     }
 
     private fun CashAppPayComponentParams.override(
-        sessionsParams: SessionParams?,
+        sessionParams: SessionParams?,
     ): CashAppPayComponentParams {
-        if (sessionsParams == null) return this
+        if (sessionParams == null) return this
         return copy(
-            amount = sessionsParams.amount ?: amount
+            amount = sessionParams.amount ?: amount
             // TODO: Check if returnUrl can be overridden
         )
     }

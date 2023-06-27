@@ -42,8 +42,14 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
+import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
+import com.adyen.checkout.sessions.core.internal.SessionInteractor
+import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
+import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
+import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentComponentProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class CashAppPayComponentProvider
@@ -201,7 +207,72 @@ constructor(
         componentCallback: SessionComponentCallback<CashAppPayComponentState>,
         key: String?
     ): CashAppPayComponent {
-        TODO("Not yet implemented")
+        assertSupported(paymentMethod)
+
+        val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(
+                configuration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession)
+            )
+
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val cashAppPayDelegate = DefaultCashAppPayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
+                analyticsRepository = analyticsRepository,
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                componentParams = componentParams,
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+
+            val sessionComponentEventHandler = SessionComponentEventHandler<CashAppPayComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
+
+            CashAppPayComponent(
+                cashAppPayDelegate = cashAppPayDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                componentEventHandler = sessionComponentEventHandler,
+            )
+        }
+
+        return ViewModelProvider(viewModelStoreOwner, viewModelFactory)[key, CashAppPayComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
+            }
     }
 
     override fun get(
@@ -215,7 +286,71 @@ constructor(
         componentCallback: SessionComponentCallback<CashAppPayComponentState>,
         key: String?
     ): CashAppPayComponent {
-        TODO("Not yet implemented")
+        assertSupported(storedPaymentMethod)
+
+        val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(
+                configuration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession)
+            )
+
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val analyticsService = AnalyticsService(httpClient)
+            val analyticsRepository = DefaultAnalyticsRepository(
+                packageName = application.packageName,
+                locale = componentParams.shopperLocale,
+                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsService = analyticsService,
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val cashAppPayDelegate = StoredCashAppPayDelegate(
+                analyticsRepository = analyticsRepository,
+                observerRepository = PaymentObserverRepository(),
+                paymentMethod = storedPaymentMethod,
+                order = checkoutSession.order,
+                componentParams = componentParams,
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                configuration = configuration.genericActionConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+            )
+
+            val sessionComponentEventHandler = SessionComponentEventHandler<CashAppPayComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
+
+            CashAppPayComponent(
+                cashAppPayDelegate = cashAppPayDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                componentEventHandler = sessionComponentEventHandler,
+            )
+        }
+
+        return ViewModelProvider(viewModelStoreOwner, viewModelFactory)[key, CashAppPayComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
+            }
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
