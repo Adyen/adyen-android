@@ -21,7 +21,7 @@ internal fun StoredPaymentMethod.mapStoredModel(
     environment: Environment
 ): StoredPaymentMethodModel {
     return when (this.type) {
-        PaymentMethodTypes.SCHEME -> with(this) {
+        PaymentMethodTypes.SCHEME -> {
             StoredCardModel(
                 id = id.orEmpty(),
                 imageId = brand.orEmpty(),
@@ -32,7 +32,8 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 environment = environment,
             )
         }
-        PaymentMethodTypes.ACH -> with(this) {
+
+        PaymentMethodTypes.ACH -> {
             StoredACHDirectDebitModel(
                 id = id.orEmpty(),
                 imageId = type.orEmpty(),
@@ -41,11 +42,24 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 environment = environment,
             )
         }
+
+        PaymentMethodTypes.CASH_APP_PAY -> {
+            GenericStoredModel(
+                id = id.orEmpty(),
+                imageId = type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                name = cashtag.orEmpty(),
+                description = name,
+                environment = environment,
+            )
+        }
+
         else -> GenericStoredModel(
             id = id.orEmpty(),
             imageId = type.orEmpty(),
             isRemovable = isRemovingEnabled,
             name = name.orEmpty(),
+            description = null,
             environment = environment,
         )
     }
