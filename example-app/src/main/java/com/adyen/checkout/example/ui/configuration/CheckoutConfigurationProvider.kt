@@ -65,7 +65,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAmount(amount)
             .build()
 
-    fun getCashAppPayConfiguration(): CashAppPayConfiguration =
+    private fun getCashAppPayConfiguration(): CashAppPayConfiguration =
         CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setReturnUrl("adyencheckout://com.adyen.checkout.example")
             .build()

@@ -94,10 +94,15 @@ internal class DefaultCashAppPayDelegate(
 
     private fun createCashAppPayParams() = CashAppPayParams(
         clientId = paymentMethod.configuration?.clientId
-            ?: throw ComponentException("Cannot launch Cash App Pay, clientId is missing the payment method object."),
+            ?: throw ComponentException(
+                "Cannot launch Cash App Pay, clientId is missing in the payment method object."
+            ),
         scopeId = paymentMethod.configuration?.scopeId
-            ?: throw ComponentException("Cannot launch Cash App Pay, scopeId is missing the payment method object."),
-        returnUrl = componentParams.returnUrl,
+            ?: throw ComponentException("Cannot launch Cash App Pay, scopeId is missing in the payment method object."),
+        returnUrl = componentParams.returnUrl
+            ?: throw ComponentException(
+                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
+            ),
     )
 
     private fun initCashAppPay(cashAppPayParams: CashAppPayParams): CashAppPay {

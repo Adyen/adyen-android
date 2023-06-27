@@ -13,7 +13,6 @@ import com.adyen.checkout.cashapppay.CashAppPayEnvironment
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
 
 internal class CashAppPayComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
@@ -37,9 +36,7 @@ internal class CashAppPayComponentParamsMapper(
         isCreatedByDropIn = false,
         amount = amount,
         cashAppPayEnvironment = cashAppPayEnvironment ?: getDefaultCashAppPayEnvironment(this),
-        returnUrl = returnUrl ?: throw ComponentException(
-            "returnUrl is not configured. Make sure it is set in CashAppPayComponent.Builder"
-        ),
+        returnUrl = returnUrl,
         showStorePaymentField = showStorePaymentField ?: true,
         storePaymentMethod = storePaymentMethod ?: false,
     )

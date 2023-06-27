@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.cashapppay
 
+import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -91,5 +92,18 @@ class CashAppPayComponent internal constructor(
 
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(PaymentMethodTypes.CASH_APP_PAY)
+
+        private const val REDIRECT_RESULT_SCHEME = BuildConfig.checkoutRedirectScheme + "://"
+
+        /**
+         * Returns the suggested value to be used as the `returnUrl` value in the /payments call and in the
+         * [CashAppPayConfiguration].
+         *
+         * @param context The context provides the package name which constitutes part of the ReturnUrl
+         * @return The suggested `returnUrl` to be used. Consists of "adyencheckout://" + App package name.
+         */
+        fun getReturnUrl(context: Context): String {
+            return REDIRECT_RESULT_SCHEME + context.packageName
+        }
     }
 }
