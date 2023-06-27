@@ -196,6 +196,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey = clientKey
         )
 
+        CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> CashAppPayConfiguration.Builder(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey
+        )
+
         else -> throw CheckoutException(
             errorMessage = "Unable to find component configuration for storedPaymentMethod - $storedPaymentMethod"
         )
@@ -496,6 +502,18 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
                 callback = componentCallback as ComponentCallback<CardComponentState>,
+                key = storedPaymentMethod.id
+            )
+        }
+
+        CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> {
+            val cashAppPayConfig: CashAppPayConfiguration =
+                getConfigurationForPaymentMethod(storedPaymentMethod, dropInConfiguration)
+            CashAppPayComponentProvider(dropInParams, sessionParams).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                configuration = cashAppPayConfig,
+                callback = componentCallback as ComponentCallback<CashAppPayComponentState>,
                 key = storedPaymentMethod.id
             )
         }

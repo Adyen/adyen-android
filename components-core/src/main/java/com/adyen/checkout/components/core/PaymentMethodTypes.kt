@@ -102,6 +102,7 @@ object PaymentMethodTypes {
         BOLETOBANCARIO_ITAU,
         BOLETOBANCARIO_SANTANDER,
         BOLETO_PRIMEIRO_PAY,
+        CASH_APP_PAY,
         DOTPAY,
         DUIT_NOW,
         ENTERCASH,

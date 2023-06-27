@@ -16,6 +16,7 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvider
 import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
+import com.adyen.checkout.cashapppay.internal.ui.DefaultCashAppPayDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -70,7 +71,7 @@ class CashAppPayComponent internal constructor(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (delegate as? CashAppPayDelegate)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? DefaultCashAppPayDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 

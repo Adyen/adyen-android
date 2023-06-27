@@ -41,6 +41,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +58,7 @@ internal class DefaultCashAppPayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
-) : CashAppPayDelegate, CashAppPayListener {
+) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
 
@@ -290,7 +291,7 @@ internal class DefaultCashAppPayDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+    internal fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 

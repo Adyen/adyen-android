@@ -11,18 +11,14 @@ package com.adyen.checkout.cashapppay.internal.ui
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayInputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface CashAppPayDelegate :
     PaymentComponentDelegate<CashAppPayComponentState>,
-    ViewProvidingDelegate,
-    ButtonDelegate {
+    ViewProvidingDelegate {
 
     val componentStateFlow: Flow<CashAppPayComponentState>
 
     fun updateInputData(update: CashAppPayInputData.() -> Unit)
-
-    fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
