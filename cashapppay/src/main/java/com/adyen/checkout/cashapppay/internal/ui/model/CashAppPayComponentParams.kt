@@ -10,6 +10,7 @@ package com.adyen.checkout.cashapppay.internal.ui.model
 
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
@@ -17,6 +18,7 @@ import java.util.Locale
 
 @Parcelize
 internal data class CashAppPayComponentParams(
+    override val isSubmitButtonVisible: Boolean,
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
@@ -25,4 +27,4 @@ internal data class CashAppPayComponentParams(
     override val amount: Amount,
     val cashAppPayEnvironment: CashAppPayEnvironment,
     val returnUrl: String,
-) : ComponentParams
+) : ComponentParams, ButtonParams

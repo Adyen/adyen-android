@@ -64,8 +64,7 @@ internal class DefaultBoletoDelegate(
 ) : BoletoDelegate {
     private val inputData = BoletoInputData()
 
-    override val outputData: BoletoOutputData
-        get() = _outputDataFlow.value
+    override val outputData: BoletoOutputData get() = _outputDataFlow.value
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BoletoOutputData> = _outputDataFlow

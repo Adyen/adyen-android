@@ -29,6 +29,7 @@ internal class CashAppPayComponentParamsMapper(
         .override(sessionsParams ?: overrideSessionParams)
 
     private fun CashAppPayConfiguration.mapToParamsInternal() = CashAppPayComponentParams(
+        isSubmitButtonVisible = isSubmitButtonVisible ?: true,
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
@@ -43,8 +44,11 @@ internal class CashAppPayComponentParamsMapper(
     )
 
     private fun getDefaultCashAppPayEnvironment(configuration: CashAppPayConfiguration): CashAppPayEnvironment {
-        return if (configuration.environment == Environment.TEST) CashAppPayEnvironment.SANDBOX
-        else CashAppPayEnvironment.PRODUCTION
+        return if (configuration.environment == Environment.TEST) {
+            CashAppPayEnvironment.SANDBOX
+        } else {
+            CashAppPayEnvironment.PRODUCTION
+        }
     }
 
     private fun CashAppPayComponentParams.override(

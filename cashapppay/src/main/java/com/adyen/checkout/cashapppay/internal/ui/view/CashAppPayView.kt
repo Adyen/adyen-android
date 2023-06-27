@@ -55,7 +55,7 @@ internal class CashAppPayView @JvmOverloads constructor(
 
     private fun initSwitch() {
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            // TODO
+            delegate.updateInputData { isStorePaymentSelected = isChecked }
         }
     }
 

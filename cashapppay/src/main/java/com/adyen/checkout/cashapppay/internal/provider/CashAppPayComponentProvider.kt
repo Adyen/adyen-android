@@ -40,6 +40,7 @@ import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class CashAppPayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -87,6 +88,7 @@ constructor(
             )
 
             val cashAppPayDelegate = DefaultCashAppPayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
                 analyticsRepository = analyticsRepository,
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,

@@ -8,21 +8,34 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayInputData
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOutputData
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.util.isEmpty
+import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 internal class DefaultCashAppPayDelegate(
+    private val submitHandler: SubmitHandler<CashAppPayComponentState>,
     private val analyticsRepository: AnalyticsRepository,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -30,13 +43,28 @@ internal class DefaultCashAppPayDelegate(
     override val componentParams: CashAppPayComponentParams,
 ) : CashAppPayDelegate {
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CashAppPayComponentViewType)
+    private val inputData = CashAppPayInputData()
 
-    override val submitFlow: Flow<CashAppPayComponentState>
-        get() = TODO("Not yet implemented")
+    private var outputData = createOutputData()
+
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<CashAppPayComponentState> = _componentStateFlow
+
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(CashAppPayComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
+    override val submitFlow: Flow<CashAppPayComponentState> = submitHandler.submitFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        // TODO
+        submitHandler.initialize(coroutineScope, componentStateFlow)
+        sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "sendAnalyticsEvent")
+        coroutineScope.launch {
+            analyticsRepository.sendAnalyticsEvent()
+        }
     }
 
     override fun observe(
@@ -44,11 +72,70 @@ internal class DefaultCashAppPayDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<CashAppPayComponentState>) -> Unit
     ) {
-        // TODO
+        observerRepository.addObservers(
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            submitFlow = submitFlow,
+            lifecycleOwner = lifecycleOwner,
+            coroutineScope = coroutineScope,
+            callback = callback
+        )
     }
 
     override fun removeObserver() {
-        // TODO
+        observerRepository.removeObservers()
+    }
+
+    override fun updateInputData(update: CashAppPayInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        outputData = createOutputData()
+        updateComponentState(outputData)
+    }
+
+    private fun createOutputData(): CashAppPayOutputData {
+        return CashAppPayOutputData(
+            isStorePaymentSelected = inputData.isStorePaymentSelected,
+            authorizationData = null, // TODO
+        )
+    }
+
+    @VisibleForTesting
+    internal fun updateComponentState(outputData: CashAppPayOutputData) {
+        Logger.v(TAG, "updateComponentState")
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: CashAppPayOutputData = this.outputData
+    ): CashAppPayComponentState {
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = CashAppPayPaymentMethod(paymentMethod.type, ""),
+            order = order,
+            amount = componentParams.amount.takeUnless { it.isEmpty },
+        )
+
+        return CashAppPayComponentState(
+            data = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = true
+        )
+    }
+
+    override fun onSubmit() {
+        submitHandler.onSubmit(_componentStateFlow.value)
+    }
+
+    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
+
+    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     override fun getPaymentMethodType(): String {
@@ -56,6 +143,10 @@ internal class DefaultCashAppPayDelegate(
     }
 
     override fun onCleared() {
-        // TODO
+        removeObserver()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

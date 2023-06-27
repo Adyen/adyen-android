@@ -54,34 +54,38 @@ abstract class PaymentMethodDetails : ModelObject() {
         @Suppress("CyclomaticComplexMethod")
         fun getChildSerializer(paymentMethodType: String): Serializer<PaymentMethodDetails> {
             val serializer = when (paymentMethodType) {
-                IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
+                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
+                BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
+                BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
                 CardPaymentMethod.PAYMENT_METHOD_TYPE -> CardPaymentMethod.SERIALIZER
+                CashAppPayPaymentMethod.PAYMENT_METHOD_TYPE -> CashAppPayPaymentMethod.SERIALIZER
+                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER
+                DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
+                EPSPaymentMethod.PAYMENT_METHOD_TYPE -> EPSPaymentMethod.SERIALIZER
+                EntercashPaymentMethod.PAYMENT_METHOD_TYPE -> EntercashPaymentMethod.SERIALIZER
+                GiftCardPaymentMethod.PAYMENT_METHOD_TYPE -> GiftCardPaymentMethod.SERIALIZER
+                IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
+                MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
+                OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
+                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
+                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
+                OnlineBankingSKPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingSKPaymentMethod.SERIALIZER
+                OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE -> OpenBankingPaymentMethod.SERIALIZER
+                PayByBankPaymentMethod.PAYMENT_METHOD_TYPE -> PayByBankPaymentMethod.SERIALIZER
+                PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
+                PaymentMethodTypes.GOOGLE_PAY,
+                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayPaymentMethod.SERIALIZER
+
                 PaymentMethodTypes.MOLPAY_MALAYSIA,
                 PaymentMethodTypes.MOLPAY_THAILAND,
                 PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayPaymentMethod.SERIALIZER
-                DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
-                OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
-                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
-                OnlineBankingSKPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingSKPaymentMethod.SERIALIZER
-                EPSPaymentMethod.PAYMENT_METHOD_TYPE -> EPSPaymentMethod.SERIALIZER
-                OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE -> OpenBankingPaymentMethod.SERIALIZER
-                EntercashPaymentMethod.PAYMENT_METHOD_TYPE -> EntercashPaymentMethod.SERIALIZER
-                GiftCardPaymentMethod.PAYMENT_METHOD_TYPE -> GiftCardPaymentMethod.SERIALIZER
-                PaymentMethodTypes.GOOGLE_PAY,
-                PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayPaymentMethod.SERIALIZER
-                SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
-                MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
-                BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
-                BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
-                PayByBankPaymentMethod.PAYMENT_METHOD_TYPE -> PayByBankPaymentMethod.SERIALIZER
-                ConvenienceStoresJPPaymentMethod.PAYMENT_METHOD_TYPE -> ConvenienceStoresJPPaymentMethod.SERIALIZER
-                OnlineBankingJPPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingJPPaymentMethod.SERIALIZER
-                PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
-                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
-                ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> ACHDirectDebitPaymentMethod.SERIALIZER
+
                 PaymentMethodTypes.UPI,
                 PaymentMethodTypes.UPI_COLLECT,
                 PaymentMethodTypes.UPI_QR -> UPIPaymentMethod.SERIALIZER
+
+                SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
+                SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")

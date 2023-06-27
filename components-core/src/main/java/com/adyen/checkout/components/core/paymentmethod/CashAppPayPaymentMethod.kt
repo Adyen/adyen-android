@@ -5,7 +5,6 @@ import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 
-
 @Parcelize
 data class CashAppPayPaymentMethod(
     override var type: String? = null,

@@ -12,6 +12,8 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
@@ -21,19 +23,25 @@ import java.util.Locale
  * Configuration class for the [CashAppPayComponent].
  */
 @Parcelize
-class CashAppPayConfiguration private constructor(
+class CashAppPayConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val isAnalyticsEnabled: Boolean?,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean?,
     val genericActionConfiguration: GenericActionConfiguration,
     val cashAppPayEnvironment: CashAppPayEnvironment?,
     val returnUrl: String?,
-) : Configuration {
+) : Configuration, ButtonConfiguration {
 
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<CashAppPayConfiguration, Builder> {
+    class Builder :
+        ActionHandlingPaymentMethodConfigurationBuilder<CashAppPayConfiguration, Builder>,
+        ButtonConfigurationBuilder {
 
+        private var isSubmitButtonVisible: Boolean? = null
         private var cashAppPayEnvironment: CashAppPayEnvironment? = null
         private var returnUrl: String? = null
 
@@ -86,7 +94,20 @@ class CashAppPayConfiguration private constructor(
             return this
         }
 
+        /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is True.
+         *
+         * @param isSubmitButtonVisible If submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): ButtonConfigurationBuilder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
         override fun buildInternal() = CashAppPayConfiguration(
+            isSubmitButtonVisible = isSubmitButtonVisible,
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,

@@ -70,7 +70,8 @@ class CashAppPayComponent internal constructor(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        TODO("Not yet implemented")
+        (delegate as? CashAppPayDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
     override fun onCleared() {

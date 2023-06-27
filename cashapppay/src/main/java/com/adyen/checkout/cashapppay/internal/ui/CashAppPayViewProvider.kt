@@ -11,6 +11,7 @@ package com.adyen.checkout.cashapppay.internal.ui
 import android.content.Context
 import android.util.AttributeSet
 import com.adyen.checkout.cashapppay.internal.ui.view.CashAppPayView
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
@@ -28,6 +29,8 @@ internal object CashAppPayViewProvider : ViewProvider {
     }
 }
 
-internal object CashAppPayComponentViewType : ComponentViewType {
+internal object CashAppPayComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = CashAppPayViewProvider
+
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }
