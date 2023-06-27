@@ -10,10 +10,24 @@ package com.adyen.checkout.cashapppay.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import app.cash.paykit.core.CashAppPay
+import app.cash.paykit.core.CashAppPayFactory
+import app.cash.paykit.core.CashAppPayListener
+import app.cash.paykit.core.CashAppPayState
+import app.cash.paykit.core.models.response.CustomerResponseData
+import app.cash.paykit.core.models.response.GrantType
+import app.cash.paykit.core.models.sdk.CashAppPayCurrency
+import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
+import com.adyen.checkout.cashapppay.CashAppPayEnvironment
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayAuthorizationData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayInputData
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOnFileData
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOneTimeData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOutputData
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayParams
+import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -23,12 +37,14 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -41,7 +57,7 @@ internal class DefaultCashAppPayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
-) : CashAppPayDelegate {
+) : CashAppPayDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
 
@@ -55,9 +71,36 @@ internal class DefaultCashAppPayDelegate(
 
     override val submitFlow: Flow<CashAppPayComponentState> = submitHandler.submitFlow
 
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    private lateinit var cashAppPay: CashAppPay
+
     override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
+
+        cashAppPay = initCashAppPay(createCashAppPayParams())
+
         sendAnalyticsEvent(coroutineScope)
+    }
+
+    private fun createCashAppPayParams() = CashAppPayParams(
+        clientId = paymentMethod.configuration?.clientId
+            ?: throw ComponentException("Cannot launch Cash App Pay, clientId is missing the payment method object."),
+        scopeId = paymentMethod.configuration?.scopeId
+            ?: throw ComponentException("Cannot launch Cash App Pay, scopeId is missing the payment method object."),
+        returnUrl = componentParams.returnUrl,
+    )
+
+    private fun initCashAppPay(cashAppPayParams: CashAppPayParams): CashAppPay {
+        return if (componentParams.cashAppPayEnvironment == CashAppPayEnvironment.SANDBOX) {
+            CashAppPayFactory.createSandbox(cashAppPayParams.clientId)
+        } else {
+            CashAppPayFactory.createSandbox(cashAppPayParams.clientId)
+        }.apply {
+            registerForStateUpdates(this@DefaultCashAppPayDelegate)
+        }
     }
 
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
@@ -99,7 +142,7 @@ internal class DefaultCashAppPayDelegate(
     private fun createOutputData(): CashAppPayOutputData {
         return CashAppPayOutputData(
             isStorePaymentSelected = inputData.isStorePaymentSelected,
-            authorizationData = null, // TODO
+            authorizationData = inputData.authorizationData,
         )
     }
 
@@ -113,10 +156,22 @@ internal class DefaultCashAppPayDelegate(
     private fun createComponentState(
         outputData: CashAppPayOutputData = this.outputData
     ): CashAppPayComponentState {
+        val oneTimeData = outputData.authorizationData?.oneTimeData
+        val onFileData = outputData.authorizationData?.onFileData
+
+        val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
+            type = paymentMethod.type,
+            grantId = oneTimeData?.grantId,
+            customerId = onFileData?.customerId,
+            onFileGrantId = onFileData?.grantId,
+            cashtag = onFileData?.cashTag,
+        )
+
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = CashAppPayPaymentMethod(paymentMethod.type, ""),
+            paymentMethod = cashAppPayPaymentMethod,
             order = order,
             amount = componentParams.amount.takeUnless { it.isEmpty },
+            storePaymentMethod = onFileData != null,
         )
 
         return CashAppPayComponentState(
@@ -127,7 +182,108 @@ internal class DefaultCashAppPayDelegate(
     }
 
     override fun onSubmit() {
-        submitHandler.onSubmit(_componentStateFlow.value)
+        initiatePayment()
+    }
+
+    private fun initiatePayment() {
+        val params = createCashAppPayParams()
+        val actions = listOfNotNull(
+            getOneTimeAction(params),
+            getOnFileAction(params, outputData),
+        )
+
+        if (actions.isEmpty()) {
+            throw ComponentException(
+                "Cannot launch Cash App Pay, you need to either pass an amount or store the shopper account."
+            )
+        }
+
+        coroutineScope.launch(Dispatchers.IO) {
+            cashAppPay.createCustomerRequest(actions, params.returnUrl)
+        }
+    }
+
+    private fun getOneTimeAction(cashAppParams: CashAppPayParams): CashAppPayPaymentAction.OneTimeAction? {
+        val amount = componentParams.amount
+
+        // we don't create a OneTimeAction from transactions with no amount
+        if (amount.value <= 0) return null
+
+        val cashAppPayCurrency = when (amount.currency) {
+            CheckoutCurrency.USD.name -> CashAppPayCurrency.USD
+            else -> throw ComponentException("Unsupported currency: ${amount.currency}")
+        }
+
+        return CashAppPayPaymentAction.OneTimeAction(
+            amount = amount.value.toInt(),
+            currency = cashAppPayCurrency,
+            scopeId = cashAppParams.scopeId,
+        )
+    }
+
+    private fun getOnFileAction(
+        cashAppParams: CashAppPayParams,
+        outputData: CashAppPayOutputData,
+    ): CashAppPayPaymentAction.OnFileAction? {
+        val shouldStorePaymentMethod = when {
+            // Shopper is presented with store switch and selected it
+            // TODO
+            /* componentParams.showStorePaymentField && */ outputData.isStorePaymentSelected -> true
+            // shopper is not presented with store switch and configuration indicates storing the payment method
+//            !componentParams.showStorePaymentField && componentParams.storePaymentMethod -> true
+            else -> false
+        }
+
+        // We don't create an OnFileAction when storing is not required
+        if (!shouldStorePaymentMethod) return null
+
+        return CashAppPayPaymentAction.OnFileAction(
+            scopeId = cashAppParams.scopeId,
+        )
+    }
+
+    override fun cashAppPayStateDidChange(newState: CashAppPayState) {
+        Logger.d(TAG, "CashAppPayState state changed: ${newState::class.simpleName}")
+        when (newState) {
+            is CashAppPayState.ReadyToAuthorize -> {
+                cashAppPay.authorizeCustomerRequest()
+            }
+
+            is CashAppPayState.Approved -> {
+                Logger.i(TAG, "Cash App Pay authorization request approved")
+                updateInputData {
+                    authorizationData = createAuthorizationData(newState.responseData)
+                }
+                submitHandler.onSubmit(_componentStateFlow.value)
+            }
+
+            CashAppPayState.Declined -> {
+                Logger.i(TAG, "Cash App Pay authorization request declined")
+            }
+
+            is CashAppPayState.CashAppPayExceptionState -> {
+
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun createAuthorizationData(customerResponseData: CustomerResponseData): CashAppPayAuthorizationData {
+        val grants = customerResponseData.grants.orEmpty()
+        val oneTimeData = grants.find { it.type == GrantType.ONE_TIME }?.let { CashAppPayOneTimeData(it.id) }
+        val onFileData = grants.find { it.type == GrantType.EXTENDED }?.let {
+            CashAppPayOnFileData(
+                grantId = it.id,
+                cashTag = customerResponseData.customerProfile?.cashTag,
+                customerId = customerResponseData.customerProfile?.id
+            )
+        }
+
+        return CashAppPayAuthorizationData(
+            oneTimeData = oneTimeData,
+            onFileData = onFileData,
+        )
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
@@ -143,7 +299,9 @@ internal class DefaultCashAppPayDelegate(
     }
 
     override fun onCleared() {
+        _coroutineScope = null
         removeObserver()
+        cashAppPay.unregisterFromStateUpdates()
     }
 
     companion object {

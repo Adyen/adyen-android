@@ -12,4 +12,5 @@ import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class CashAppPayInputData(
     var isStorePaymentSelected: Boolean = false,
+    var authorizationData: CashAppPayAuthorizationData? = null,
 ) : InputData

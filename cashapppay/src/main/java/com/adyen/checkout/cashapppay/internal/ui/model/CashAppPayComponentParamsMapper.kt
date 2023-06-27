@@ -37,7 +37,6 @@ internal class CashAppPayComponentParamsMapper(
         isCreatedByDropIn = false,
         amount = amount,
         cashAppPayEnvironment = cashAppPayEnvironment ?: getDefaultCashAppPayEnvironment(this),
-        // TODO: Check if ok to throw exception
         returnUrl = returnUrl ?: throw ComponentException(
             "returnUrl is not configured. Make sure it is set in CashAppPayComponent.Builder"
         ),
