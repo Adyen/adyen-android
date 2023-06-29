@@ -211,6 +211,9 @@ internal class DefaultAdyen3DS2Delegate(
         }
 
         coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
+            // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
+            closeTransaction()
+
             @Suppress("SwallowedException")
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
