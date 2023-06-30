@@ -210,6 +210,8 @@ internal class DefaultCashAppPayDelegate(
             )
         }
 
+        _viewFlow.tryEmit(PaymentInProgressViewType)
+
         coroutineScope.launch(Dispatchers.IO) {
             cashAppPay.createCustomerRequest(actions, params.returnUrl)
         }
