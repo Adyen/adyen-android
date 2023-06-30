@@ -11,8 +11,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.widget.Button
 import android.widget.LinearLayout
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
@@ -32,6 +32,7 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import com.adyen.checkout.ui.core.internal.util.createLocalizedContext
 import com.adyen.checkout.ui.core.internal.util.hideKeyboard
@@ -123,8 +124,6 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
-        binding.payButton.setText(viewType, componentParams, localizedContext)
-
         val view = componentView.getView()
         binding.frameLayoutComponentContainer.addView(view)
         view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
@@ -144,20 +143,23 @@ class AdyenComponentView @JvmOverloads constructor(
                 }
             }?.launchIn(coroutineScope)
 
-            binding.payButton.isVisible = buttonDelegate.shouldShowSubmitButton()
-            binding.payButton.setOnClickListener {
+            binding.frameLayoutButtonContainer.isVisible = buttonDelegate.shouldShowSubmitButton()
+            val buttonView = (viewType as ButtonComponentViewType)
+                .buttonViewProvider.getButton(context, attrs, defStyleAttr)
+            buttonView.setText(viewType, componentParams, localizedContext)
+            buttonView.setOnClickListener {
                 buttonDelegate.onSubmit()
             }
+            binding.frameLayoutButtonContainer.addView(buttonView)
         } else {
-            binding.payButton.isVisible = false
-            binding.payButton.setOnClickListener(null)
+            binding.frameLayoutButtonContainer.isVisible = false
         }
     }
 
     private fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         this.isInteractionBlocked = isInteractionBlocked
 
-        binding.payButton.isEnabled = !isInteractionBlocked
+        binding.frameLayoutButtonContainer.children.forEach { it.isEnabled = !isInteractionBlocked }
 
         if (isInteractionBlocked) {
             resetFocus()
@@ -165,21 +167,30 @@ class AdyenComponentView @JvmOverloads constructor(
         }
     }
 
-    private fun Button.setText(
+    private fun PayButton.setText(
         viewType: ComponentViewType,
         componentParams: ComponentParams,
         localizedContext: Context
     ) {
-        if (viewType is AmountButtonComponentViewType) {
-            text = PayButtonFormatter.getPayButtonText(
-                amount = componentParams.amount,
-                locale = componentParams.shopperLocale,
-                localizedContext = localizedContext,
-                emptyAmountStringResId = viewType.buttonTextResId
-            )
-        } else if (viewType is ButtonComponentViewType) {
-            text = localizedContext.getString(viewType.buttonTextResId)
+        val text = when (viewType) {
+            is AmountButtonComponentViewType -> {
+                PayButtonFormatter.getPayButtonText(
+                    amount = componentParams.amount,
+                    locale = componentParams.shopperLocale,
+                    localizedContext = localizedContext,
+                    emptyAmountStringResId = viewType.buttonTextResId
+                )
+            }
+
+            is ButtonComponentViewType -> {
+                localizedContext.getString(viewType.buttonTextResId)
+            }
+
+            else -> {
+                null
+            }
         }
+        setText(text)
     }
 
     /**

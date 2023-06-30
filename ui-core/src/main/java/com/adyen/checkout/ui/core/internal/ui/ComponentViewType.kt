@@ -19,6 +19,9 @@ interface ComponentViewType {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ButtonComponentViewType : ComponentViewType {
+
+    val buttonViewProvider: ButtonViewProvider get() = DefaultButtonViewProvider()
+
     val buttonTextResId: Int
         @StringRes get
 

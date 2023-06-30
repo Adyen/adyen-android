@@ -19,10 +19,11 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/payButton"
-        style="@style/AdyenCheckout.Button.Colored"
-        android:visibility="gone"
-        tools:text="Pay" />
+    <FrameLayout
+        android:id="@+id/frameLayout_buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/standard_margin"
+        android:visibility="gone" />
 
 </merge>
