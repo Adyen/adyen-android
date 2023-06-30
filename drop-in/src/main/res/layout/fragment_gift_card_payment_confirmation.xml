@@ -12,8 +12,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/standard_half_margin"
-    android:orientation="vertical"
-    tools:context=".ui.stored.PreselectedStoredPaymentMethodFragment">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/bottom_sheet_indicator"
@@ -33,7 +32,7 @@
         tools:itemCount="2"
         tools:listitem="@layout/payment_methods_list_item"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
@@ -55,7 +54,7 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/change_payment_method_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

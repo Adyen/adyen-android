@@ -7,6 +7,13 @@ complexity:
       - '**/test/**'
       - '**/androidTest/**'
 
+naming:
+  active: true
+  FunctionNaming:
+    active: true
+    ignoreAnnotated:
+      - 'Composable'
+
 style:
   active: true
   MaxLineLength:

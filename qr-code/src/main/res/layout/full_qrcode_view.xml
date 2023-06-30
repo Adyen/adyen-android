@@ -64,7 +64,7 @@
         tools:text="This QR code is valid for 01:46" />
 
     <!-- Reset margin to null, because the parent view already adds margin -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_saveImage"
         style="@style/AdyenCheckout.QrCode.SaveButton"
         android:layout_marginStart="@null"

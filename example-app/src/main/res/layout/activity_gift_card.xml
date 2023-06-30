@@ -29,7 +29,7 @@
 
     </ScrollView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loadNewGiftCard"
         style="@style/AdyenCheckout.Button.Colored"
         android:text="Reload"

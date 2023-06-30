@@ -19,7 +19,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
         android:visibility="gone"

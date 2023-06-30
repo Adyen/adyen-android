@@ -42,7 +42,7 @@
         app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
         app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_paymentInProgress_cancel"
         style="@style/AdyenCheckout.PaymentInProgressView.CancelButton"
         android:layout_width="wrap_content"

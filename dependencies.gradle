@@ -24,6 +24,7 @@ ext {
     detekt_gradle_plugin_version = "1.23.0"
     dokka_version = "1.8.20"
     hilt_version = "2.46.1"
+    compose_compiler_version = '1.4.8'
 
     // Code quality
     detekt_version = "1.23.0"
@@ -39,6 +40,11 @@ ext {
     material_version = "1.9.0"
     recyclerview_version = "1.3.0"
     constraintlayout_version = '2.1.4'
+
+    // Compose Dependencies
+    compose_activity_version = '1.7.2'
+    compose_bom_version = '2023.06.01'
+    compose_viewmodel_version = '2.6.1'
 
     // Adyen Dependencies
     adyen3ds2_version = "2.2.13"
@@ -83,6 +89,11 @@ ext {
             ],
             preference      : "androidx.preference:preference-ktx:$preference_version",
             recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
+        ],
+        compose           : [
+            activity : "androidx.activity:activity-compose:$compose_activity_version",
+            bom      : "androidx.compose:compose-bom:$compose_bom_version",
+            viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
         hilt              : "com.google.dagger:hilt-android:$hilt_version",
         hiltCompiler      : "com.google.dagger:hilt-compiler:$hilt_version",

@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_finish"
                 style="@style/AdyenCheckout.Button.Colored"
                 android:layout_width="match_parent"
