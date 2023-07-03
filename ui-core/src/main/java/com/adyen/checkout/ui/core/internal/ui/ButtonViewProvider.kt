@@ -23,7 +23,6 @@ interface ButtonViewProvider {
     ): PayButton
 }
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 internal class DefaultButtonViewProvider : ButtonViewProvider {
 
     override fun getButton(context: Context, attrs: AttributeSet?, defStyleAttr: Int): PayButton =

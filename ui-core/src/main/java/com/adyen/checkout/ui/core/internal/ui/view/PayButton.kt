@@ -11,7 +11,9 @@ package com.adyen.checkout.ui.core.internal.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.annotation.RestrictTo
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class PayButton(
     context: Context,
     attrs: AttributeSet?,
