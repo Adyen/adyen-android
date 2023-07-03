@@ -112,7 +112,8 @@ private constructor(
         }
 
         /**
-         * Set if the shopper's account should be stored, when the store payment method switch is not presented to the shopper.
+         * Set if the shopper's account should be stored, when the store payment method switch is not presented to the
+         * shopper.
          *
          * Only applicable if [showStorePaymentField] is false.
          *

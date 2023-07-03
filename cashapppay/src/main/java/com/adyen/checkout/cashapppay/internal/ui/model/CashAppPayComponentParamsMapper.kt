@@ -69,9 +69,8 @@ internal class CashAppPayComponentParamsMapper(
         if (sessionParams == null) return this
         return copy(
             amount = sessionParams.amount ?: amount,
-            // TODO: Check how this should be overridden
             showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
-            // TODO: Check if returnUrl can be overridden
+            returnUrl = sessionParams.returnUrl,
         )
     }
 }

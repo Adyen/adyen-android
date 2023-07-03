@@ -1,5 +1,6 @@
 package com.adyen.checkout.example.ui.configuration
 
+import android.content.Context
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
@@ -10,6 +11,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.Environment
@@ -20,6 +22,7 @@ import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,6 +31,7 @@ import javax.inject.Singleton
 @Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
+    @ApplicationContext private val context: Context,
 ) {
 
     private val shopperLocale: Locale
@@ -67,7 +71,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private fun getCashAppPayConfiguration(): CashAppPayConfiguration =
         CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setReturnUrl("adyencheckout://com.adyen.checkout.example")
+            .setReturnUrl(CashAppPayComponent.getReturnUrl(context))
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
