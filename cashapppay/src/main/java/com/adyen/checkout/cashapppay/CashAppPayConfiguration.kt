@@ -103,6 +103,9 @@ private constructor(
          *
          * Default is true.
          *
+         * When using `sessions` show store payment field will be ignored and replaced with the value sent to
+         * `/sessions` call.
+         *
          * @param showStorePaymentField [Boolean]
          * @return [CashAppPayConfiguration.Builder]
          */
