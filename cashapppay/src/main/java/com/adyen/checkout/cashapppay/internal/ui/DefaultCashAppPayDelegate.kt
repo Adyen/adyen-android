@@ -26,7 +26,6 @@ import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayInputData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOnFileData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOneTimeData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOutputData
-import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayParams
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -87,29 +86,16 @@ internal class DefaultCashAppPayDelegate(
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        cashAppPay = initCashAppPay(createCashAppPayParams())
+        cashAppPay = initCashAppPay()
 
         sendAnalyticsEvent(coroutineScope)
     }
 
-    private fun createCashAppPayParams() = CashAppPayParams(
-        clientId = paymentMethod.configuration?.clientId
-            ?: throw ComponentException(
-                "Cannot launch Cash App Pay, clientId is missing in the payment method object."
-            ),
-        scopeId = paymentMethod.configuration?.scopeId
-            ?: throw ComponentException("Cannot launch Cash App Pay, scopeId is missing in the payment method object."),
-        returnUrl = componentParams.returnUrl
-            ?: throw ComponentException(
-                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
-            ),
-    )
-
-    private fun initCashAppPay(cashAppPayParams: CashAppPayParams): CashAppPay {
+    private fun initCashAppPay(): CashAppPay {
         return if (componentParams.cashAppPayEnvironment == CashAppPayEnvironment.SANDBOX) {
-            CashAppPayFactory.createSandbox(cashAppPayParams.clientId)
+            CashAppPayFactory.createSandbox(componentParams.requireClientId())
         } else {
-            CashAppPayFactory.createSandbox(cashAppPayParams.clientId)
+            CashAppPayFactory.create(componentParams.requireClientId())
         }.apply {
             registerForStateUpdates(this@DefaultCashAppPayDelegate)
         }
@@ -198,10 +184,9 @@ internal class DefaultCashAppPayDelegate(
     }
 
     private fun initiatePayment() {
-        val params = createCashAppPayParams()
         val actions = listOfNotNull(
-            getOneTimeAction(params),
-            getOnFileAction(params, outputData),
+            getOneTimeAction(),
+            getOnFileAction(outputData),
         )
 
         if (actions.isEmpty()) {
@@ -213,11 +198,11 @@ internal class DefaultCashAppPayDelegate(
         _viewFlow.tryEmit(PaymentInProgressViewType)
 
         coroutineScope.launch(Dispatchers.IO) {
-            cashAppPay.createCustomerRequest(actions, params.returnUrl)
+            cashAppPay.createCustomerRequest(actions, componentParams.returnUrl)
         }
     }
 
-    private fun getOneTimeAction(cashAppParams: CashAppPayParams): CashAppPayPaymentAction.OneTimeAction? {
+    private fun getOneTimeAction(): CashAppPayPaymentAction.OneTimeAction? {
         val amount = componentParams.amount
 
         // we don't create a OneTimeAction from transactions with no amount
@@ -231,12 +216,11 @@ internal class DefaultCashAppPayDelegate(
         return CashAppPayPaymentAction.OneTimeAction(
             amount = amount.value.toInt(),
             currency = cashAppPayCurrency,
-            scopeId = cashAppParams.scopeId,
+            scopeId = componentParams.scopeId,
         )
     }
 
     private fun getOnFileAction(
-        cashAppParams: CashAppPayParams,
         outputData: CashAppPayOutputData,
     ): CashAppPayPaymentAction.OnFileAction? {
         val shouldStorePaymentMethod = when {
@@ -251,7 +235,7 @@ internal class DefaultCashAppPayDelegate(
         if (!shouldStorePaymentMethod) return null
 
         return CashAppPayPaymentAction.OnFileAction(
-            scopeId = cashAppParams.scopeId,
+            scopeId = componentParams.scopeId,
         )
     }
 

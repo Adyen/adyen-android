@@ -10,9 +10,12 @@ package com.adyen.checkout.cashapppay.internal.ui.model
 
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.ComponentException
 
 internal class CashAppPayComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
@@ -22,12 +25,33 @@ internal class CashAppPayComponentParamsMapper(
     fun mapToParams(
         configuration: CashAppPayConfiguration,
         sessionParams: SessionParams?,
+        paymentMethod: PaymentMethod,
     ): CashAppPayComponentParams = configuration
-        .mapToParamsInternal()
+        .mapToParamsInternal(
+            clientId = paymentMethod.configuration?.clientId ?: throw ComponentException(
+                "Cannot launch Cash App Pay, clientId is missing in the payment method object."
+            ),
+            scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
+                "Cannot launch Cash App Pay, scopeId is missing in the payment method object."
+            ),
+        )
         .override(overrideComponentParams)
         .override(sessionParams ?: overrideSessionParams)
 
-    private fun CashAppPayConfiguration.mapToParamsInternal() = CashAppPayComponentParams(
+    fun mapToParams(
+        configuration: CashAppPayConfiguration,
+        sessionParams: SessionParams?,
+        @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
+    ): CashAppPayComponentParams = configuration
+        // clientId and scopeId are not needed in the stored flow.
+        .mapToParamsInternal(null, null)
+        .override(overrideComponentParams)
+        .override(sessionParams ?: overrideSessionParams)
+
+    private fun CashAppPayConfiguration.mapToParamsInternal(
+        clientId: String?,
+        scopeId: String?,
+    ) = CashAppPayComponentParams(
         isSubmitButtonVisible = isSubmitButtonVisible ?: true,
         shopperLocale = shopperLocale,
         environment = environment,
@@ -35,17 +59,21 @@ internal class CashAppPayComponentParamsMapper(
         isAnalyticsEnabled = isAnalyticsEnabled ?: true,
         isCreatedByDropIn = false,
         amount = amount,
-        cashAppPayEnvironment = cashAppPayEnvironment ?: getDefaultCashAppPayEnvironment(this),
-        returnUrl = returnUrl,
+        cashAppPayEnvironment = getDefaultCashAppPayEnvironment(),
+        returnUrl = returnUrl ?: throw ComponentException(
+            "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
+        ),
         showStorePaymentField = showStorePaymentField ?: true,
         storePaymentMethod = storePaymentMethod ?: false,
+        clientId = clientId,
+        scopeId = scopeId,
     )
 
-    private fun getDefaultCashAppPayEnvironment(configuration: CashAppPayConfiguration): CashAppPayEnvironment {
-        return if (configuration.environment == Environment.TEST) {
-            CashAppPayEnvironment.SANDBOX
-        } else {
-            CashAppPayEnvironment.PRODUCTION
+    private fun CashAppPayConfiguration.getDefaultCashAppPayEnvironment(): CashAppPayEnvironment {
+        return when {
+            cashAppPayEnvironment != null -> cashAppPayEnvironment
+            environment == Environment.TEST -> CashAppPayEnvironment.SANDBOX
+            else -> CashAppPayEnvironment.PRODUCTION
         }
     }
 

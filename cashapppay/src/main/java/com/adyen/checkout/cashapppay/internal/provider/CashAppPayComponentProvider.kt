@@ -99,7 +99,7 @@ constructor(
         assertSupported(paymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -155,7 +155,7 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null, storedPaymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsService = AnalyticsService(httpClient)
             val analyticsRepository = DefaultAnalyticsRepository(
@@ -212,7 +212,8 @@ constructor(
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
                 configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod,
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -291,7 +292,8 @@ constructor(
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
                 configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = storedPaymentMethod,
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
