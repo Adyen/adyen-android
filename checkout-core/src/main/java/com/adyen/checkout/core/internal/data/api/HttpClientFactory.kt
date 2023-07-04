@@ -23,6 +23,18 @@ object HttpClientFactory {
     private val okHttpClient: OkHttpClient by lazy { OkHttpClient() }
 
     fun getHttpClient(environment: Environment): HttpClient {
-        return InternalOkHttpClient(okHttpClient, environment.baseUrl, defaultHeaders)
+        return InternalOkHttpClient(
+            okHttpClient,
+            environment.checkoutShopperBaseUrl.toString(),
+            defaultHeaders
+        )
+    }
+
+    fun getAnalyticsHttpClient(environment: Environment): HttpClient {
+        return InternalOkHttpClient(
+            okHttpClient,
+            environment.checkoutShopperBaseUrl.toString(),
+            defaultHeaders
+        )
     }
 }

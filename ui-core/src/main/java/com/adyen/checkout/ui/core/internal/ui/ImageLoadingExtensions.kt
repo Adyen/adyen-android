@@ -75,7 +75,7 @@ fun ImageView.load(
     @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
-    load(environment.baseUrl + path, imageLoader, placeholder, errorFallback)
+    load(environment.checkoutShopperBaseUrl.toString() + path, imageLoader, placeholder, errorFallback)
 }
 
 @Suppress("LongParameterList")

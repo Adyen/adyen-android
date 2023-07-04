@@ -209,7 +209,11 @@ internal class DefaultQRCodeDelegate(
         var qrImageUrl: String? = null
         if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
             val encodedQrCodeData = Uri.encode(action.qrCodeData)
-            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, encodedQrCodeData)
+            qrImageUrl = String.format(
+                QR_IMAGE_BASE_PATH,
+                componentParams.environment.checkoutShopperBaseUrl.toString(),
+                encodedQrCodeData
+            )
         }
 
         var messageTextResource: Int? = null
