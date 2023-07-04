@@ -51,7 +51,7 @@ ext {
 
     // External Dependencies
     okhttp_version = "4.11.0"
-    play_services_wallet_version = '19.1.0'
+    play_services_wallet_version = '19.2.0'
     wechat_pay_version = "6.6.4"
 
     // Example app
