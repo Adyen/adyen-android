@@ -94,13 +94,16 @@ constructor(
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, null)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val googlePayDelegate = DefaultGooglePayDelegate(
@@ -153,13 +156,16 @@ constructor(
         )
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val googlePayDelegate = DefaultGooglePayDelegate(

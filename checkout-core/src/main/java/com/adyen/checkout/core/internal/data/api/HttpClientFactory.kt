@@ -33,7 +33,7 @@ object HttpClientFactory {
     fun getAnalyticsHttpClient(environment: Environment): HttpClient {
         return InternalOkHttpClient(
             okHttpClient,
-            environment.checkoutShopperBaseUrl.toString(),
+            environment.checkoutAnalyticsBaseUrl.toString(),
             defaultHeaders
         )
     }

@@ -12,23 +12,33 @@ import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.BuildConfig
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsMapper {
-    internal fun getQueryParameters(packageName: String, locale: Locale, source: AnalyticsSource): Map<String, String> {
-        return mapOf(
-            PAYLOAD_VERSION_KEY to CURRENT_PAYLOAD_VERSION_VALUE,
-            VERSION_KEY to BuildConfig.CHECKOUT_VERSION,
-            FLAVOR_KEY to getFlavorQueryParameter(source),
-            COMPONENT_KEY to getComponentQueryParameter(source),
-            LOCALE_KEY to locale.toString(),
-            PLATFORM_KEY to ANDROID_PLATFORM_VALUE,
-            REFERER_KEY to packageName,
-            DEVICE_BRAND_KEY to Build.BRAND,
-            DEVICE_MODEL_KEY to Build.MODEL,
-            SYSTEM_VERSION_KEY to Build.VERSION.SDK_INT.toString(),
+    internal fun getAnalyticsSetupRequest(
+        packageName: String,
+        locale: Locale,
+        source: AnalyticsSource
+    ): AnalyticsSetupRequest {
+        return AnalyticsSetupRequest(
+            version = BuildConfig.CHECKOUT_VERSION,
+            channel = ANDROID_CHANNEL,
+            platform = ANDROID_PLATFORM,
+            locale = locale.toString(),
+            component = getComponentQueryParameter(source),
+            flavor = getFlavorQueryParameter(source),
+            deviceBrand = Build.BRAND,
+            deviceModel = Build.MODEL,
+            referrer = packageName,
+            systemVersion = Build.VERSION.SDK_INT.toString(),
+            screenWidth = null, // TODO implement
+            paymentMethods = null, // TODO implement
+            amount = null, // TODO implement
+            level = null, // TODO implement
+            containerWidth = null, // unused for Android
         )
     }
 
@@ -45,7 +55,7 @@ class AnalyticsMapper {
     @VisibleForTesting
     internal fun getComponentQueryParameter(source: AnalyticsSource): String {
         return when (source) {
-            is AnalyticsSource.DropIn -> DROP_IN_COMPONENT_VALUE
+            is AnalyticsSource.DropIn -> DROP_IN_COMPONENT
             is AnalyticsSource.PaymentComponent -> source.paymentMethodType
         }
     }
@@ -56,19 +66,8 @@ class AnalyticsMapper {
     }
 
     companion object {
-        private const val PAYLOAD_VERSION_KEY = "payload_version"
-        private const val VERSION_KEY = "version"
-        private const val FLAVOR_KEY = "flavor"
-        private const val COMPONENT_KEY = "component"
-        private const val LOCALE_KEY = "locale"
-        private const val PLATFORM_KEY = "platform"
-        private const val REFERER_KEY = "referer"
-        private const val DEVICE_BRAND_KEY = "device_brand"
-        private const val DEVICE_MODEL_KEY = "device_model"
-        private const val SYSTEM_VERSION_KEY = "system_version"
-
-        private const val DROP_IN_COMPONENT_VALUE = "dropin"
-        private const val CURRENT_PAYLOAD_VERSION_VALUE = "1"
-        private const val ANDROID_PLATFORM_VALUE = "android"
+        private const val DROP_IN_COMPONENT = "dropin"
+        private const val ANDROID_PLATFORM = "android"
+        private const val ANDROID_CHANNEL = "Android"
     }
 }
