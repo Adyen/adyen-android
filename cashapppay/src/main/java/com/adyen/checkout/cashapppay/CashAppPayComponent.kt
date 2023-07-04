@@ -19,6 +19,7 @@ import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvid
 import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
 import com.adyen.checkout.cashapppay.internal.ui.DefaultCashAppPayDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -26,6 +27,7 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
@@ -42,6 +44,7 @@ class CashAppPayComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -74,6 +77,14 @@ class CashAppPayComponent internal constructor(
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         (delegate as? DefaultCashAppPayDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+    }
+
+    override fun isConfirmationRequired(): Boolean =
+        (cashAppPayDelegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
+
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit()
+            ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
     override fun onCleared() {
