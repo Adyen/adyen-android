@@ -89,6 +89,10 @@ internal class DefaultCashAppPayDelegate(
         cashAppPay = initCashAppPay()
 
         sendAnalyticsEvent(coroutineScope)
+
+        if (!isConfirmationRequired()) {
+            initiatePayment()
+        }
     }
 
     private fun initCashAppPay(): CashAppPay {
@@ -286,7 +290,9 @@ internal class DefaultCashAppPayDelegate(
         )
     }
 
-    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
+    override fun isConfirmationRequired(): Boolean =
+        _viewFlow.value is ButtonComponentViewType &&
+            componentParams.showStorePaymentField
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
