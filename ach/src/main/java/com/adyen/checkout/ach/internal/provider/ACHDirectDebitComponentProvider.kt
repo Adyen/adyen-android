@@ -112,7 +112,9 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val dateGenerator = DateGenerator()
@@ -124,6 +126,7 @@ constructor(
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val achDelegate = DefaultACHDirectDebitDelegate(
@@ -182,7 +185,9 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val dateGenerator = DateGenerator()
@@ -194,6 +199,7 @@ constructor(
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val achDelegate = DefaultACHDirectDebitDelegate(
@@ -264,14 +270,16 @@ constructor(
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val achDelegate = StoredACHDirectDebitDelegate(
@@ -324,13 +332,16 @@ constructor(
                 sessionParams = SessionParamsFactory.create(checkoutSession)
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val achDelegate = StoredACHDirectDebitDelegate(

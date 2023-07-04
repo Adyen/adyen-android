@@ -95,14 +95,16 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
             val issuerListDelegate = DefaultIssuerListDelegate(
                 observerRepository = PaymentObserverRepository(),
@@ -157,13 +159,16 @@ constructor(
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
             val issuerListDelegate = DefaultIssuerListDelegate(
                 observerRepository = PaymentObserverRepository(),

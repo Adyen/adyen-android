@@ -98,13 +98,16 @@ constructor(
         val clientSideEncrypter = ClientSideEncrypter()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-        val analyticsService = AnalyticsService(httpClient)
+        val analyticsService = AnalyticsService(
+            HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+        )
         val analyticsRepository = DefaultAnalyticsRepository(
             packageName = application.packageName,
             locale = componentParams.shopperLocale,
             source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
             analyticsService = analyticsService,
             analyticsMapper = AnalyticsMapper(),
+            clientKey = componentParams.clientKey,
         )
 
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
@@ -166,13 +169,16 @@ constructor(
         val clientSideEncrypter = ClientSideEncrypter()
         val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-        val analyticsService = AnalyticsService(httpClient)
+        val analyticsService = AnalyticsService(
+            HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+        )
         val analyticsRepository = DefaultAnalyticsRepository(
             packageName = application.packageName,
             locale = componentParams.shopperLocale,
             source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
             analyticsService = analyticsService,
             analyticsMapper = AnalyticsMapper(),
+            clientKey = componentParams.clientKey,
         )
 
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->

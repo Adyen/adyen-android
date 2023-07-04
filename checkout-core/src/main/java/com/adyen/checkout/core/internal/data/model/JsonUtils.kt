@@ -32,6 +32,11 @@ fun JSONObject.getIntOrNull(key: String): Int? {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.getLongOrNull(key: String): Long? {
+    return if (has(key)) getLong(key) else null
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.toStringPretty(): String {
     @Suppress("SwallowedException")
     return try {

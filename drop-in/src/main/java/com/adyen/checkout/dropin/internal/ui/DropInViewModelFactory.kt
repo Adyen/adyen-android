@@ -36,8 +36,11 @@ internal class DropInViewModelFactory(
             packageName = packageName,
             locale = dropInConfiguration.shopperLocale,
             source = AnalyticsSource.DropIn(),
-            analyticsService = AnalyticsService(httpClient),
+            analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)
+            ),
             analyticsMapper = AnalyticsMapper(),
+            clientKey = dropInConfiguration.clientKey,
         )
 
         @Suppress("UNCHECKED_CAST")

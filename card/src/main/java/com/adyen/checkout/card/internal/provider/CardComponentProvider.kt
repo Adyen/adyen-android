@@ -132,13 +132,16 @@ constructor(
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val cardValidationMapper = CardValidationMapper()
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = DefaultCardDelegate(
@@ -209,13 +212,16 @@ constructor(
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val cardValidationMapper = CardValidationMapper()
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = DefaultCardDelegate(
@@ -295,13 +301,16 @@ constructor(
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = StoredCardDelegate(
@@ -363,13 +372,16 @@ constructor(
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
-            val analyticsService = AnalyticsService(httpClient)
+            val analyticsService = AnalyticsService(
+                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+            )
             val analyticsRepository = DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
                 analyticsService = analyticsService,
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = StoredCardDelegate(
