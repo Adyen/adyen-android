@@ -25,13 +25,13 @@ class DefaultAnalyticsRepository(
     private val clientKey: String,
 ) : AnalyticsRepository {
 
-    override suspend fun sendAnalyticsEvent() {
+    override suspend fun setupAnalytics() {
         runSuspendCatching {
             val analyticsSetupRequest = analyticsMapper.getAnalyticsSetupRequest(packageName, locale, source)
             analyticsService.setupAnalytics(analyticsSetupRequest, clientKey)
-            Logger.v(TAG, "Analytics event sent")
+            Logger.v(TAG, "Analytics setup call successful")
         }
-            .onFailure { e -> Logger.e(TAG, "Failed to send analytics event", e) }
+            .onFailure { e -> Logger.e(TAG, "Failed to send analytics setup call", e) }
     }
 
     companion object {

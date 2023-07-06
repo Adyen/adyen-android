@@ -89,7 +89,7 @@ internal class DefaultCashAppPayDelegateTest(
         @Test
         fun `then analytics event is sent`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsRepository).sendAnalyticsEvent()
+            verify(analyticsRepository).setupAnalytics()
         }
 
         @Test
