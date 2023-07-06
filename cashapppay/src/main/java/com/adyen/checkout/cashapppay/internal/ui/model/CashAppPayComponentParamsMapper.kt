@@ -34,6 +34,7 @@ internal class CashAppPayComponentParamsMapper(
             scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
                 "Cannot launch Cash App Pay, scopeId is missing in the payment method object."
             ),
+            returnUrl = configuration.getReturnUrlOrThrow(sessionParams ?: overrideSessionParams),
         )
         .override(overrideComponentParams)
         .override(sessionParams ?: overrideSessionParams)
@@ -44,13 +45,24 @@ internal class CashAppPayComponentParamsMapper(
         @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
     ): CashAppPayComponentParams = configuration
         // clientId and scopeId are not needed in the stored flow.
-        .mapToParamsInternal(null, null)
+        .mapToParamsInternal(null, null, configuration.getReturnUrlOrThrow(sessionParams ?: overrideSessionParams))
         .override(overrideComponentParams)
         .override(sessionParams ?: overrideSessionParams)
+
+    @Suppress("IfThenToElvis")
+    private fun CashAppPayConfiguration.getReturnUrlOrThrow(sessionParams: SessionParams?): String =
+        if (sessionParams != null) {
+            sessionParams.returnUrl
+        } else {
+            returnUrl ?: throw ComponentException(
+                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
+            )
+        }
 
     private fun CashAppPayConfiguration.mapToParamsInternal(
         clientId: String?,
         scopeId: String?,
+        returnUrl: String,
     ) = CashAppPayComponentParams(
         isSubmitButtonVisible = isSubmitButtonVisible ?: true,
         shopperLocale = shopperLocale,
@@ -60,9 +72,7 @@ internal class CashAppPayComponentParamsMapper(
         isCreatedByDropIn = false,
         amount = amount,
         cashAppPayEnvironment = getCashAppPayEnvironment(),
-        returnUrl = returnUrl ?: throw ComponentException(
-            "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
-        ),
+        returnUrl = returnUrl,
         showStorePaymentField = showStorePaymentField ?: true,
         storePaymentMethod = storePaymentMethod ?: false,
         clientId = clientId,
@@ -98,7 +108,6 @@ internal class CashAppPayComponentParamsMapper(
         return copy(
             amount = sessionParams.amount ?: amount,
             showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
-            returnUrl = sessionParams.returnUrl,
         )
     }
 }

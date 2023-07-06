@@ -200,6 +200,20 @@ internal class CashAppPayComponentParamsMapperTest {
     }
 
     @Test
+    fun `when returnUrl is not set and session params are provided, then the return url from sessions should be used`() {
+        val configuration = getConfigurationBuilder()
+            .build()
+
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
+            configuration = configuration,
+            sessionParams = SessionParams(false, null, null, "sessionReturnUrl"),
+            paymentMethod = getDefaultPaymentMethod(),
+        )
+
+        assertEquals("sessionReturnUrl", params.returnUrl)
+    }
+
+    @Test
     fun `when clientId is not available, then an exception is thrown`() {
         assertThrows<ComponentException> {
             val configuration = getConfigurationBuilder()
