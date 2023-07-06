@@ -190,7 +190,9 @@ constructor(
     }
 
     override fun onSubmit() {
-        initiatePayment()
+        if (isConfirmationRequired()) {
+            initiatePayment()
+        }
     }
 
     private fun initiatePayment() {

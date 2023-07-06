@@ -59,6 +59,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -319,6 +320,24 @@ internal class DefaultCashAppPayDelegateTest(
                     ),
                     TEST_RETURN_URL
                 )
+            }
+
+        @Test
+        fun `the component doesn't require confirmation, then the Cash App SDK should not be called`() =
+            runTest {
+                delegate = createDefaultCashAppPayDelegate(
+                    getConfigurationBuilder()
+                        .setAmount(Amount("USD", 0L))
+                        .setShowStorePaymentField(false)
+                        .setStorePaymentMethod(true)
+                        .build()
+                )
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.onSubmit()
+
+                // Called once on initialization, but shouldn't be called by onSubmit
+                verify(cashAppPay, times(1)).createCustomerRequest(paymentActions = any(), redirectUri = anyOrNull())
             }
     }
 
