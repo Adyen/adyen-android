@@ -59,7 +59,7 @@ internal class CashAppPayComponentParamsMapper(
         isAnalyticsEnabled = isAnalyticsEnabled ?: true,
         isCreatedByDropIn = false,
         amount = amount,
-        cashAppPayEnvironment = getDefaultCashAppPayEnvironment(),
+        cashAppPayEnvironment = getCashAppPayEnvironment(),
         returnUrl = returnUrl ?: throw ComponentException(
             "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
         ),
@@ -69,7 +69,7 @@ internal class CashAppPayComponentParamsMapper(
         scopeId = scopeId,
     )
 
-    private fun CashAppPayConfiguration.getDefaultCashAppPayEnvironment(): CashAppPayEnvironment {
+    private fun CashAppPayConfiguration.getCashAppPayEnvironment(): CashAppPayEnvironment {
         return when {
             cashAppPayEnvironment != null -> cashAppPayEnvironment
             environment == Environment.TEST -> CashAppPayEnvironment.SANDBOX

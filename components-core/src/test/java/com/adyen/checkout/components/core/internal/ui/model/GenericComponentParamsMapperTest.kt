@@ -94,7 +94,8 @@ internal class GenericComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = sessionsValue
+                amount = sessionsValue,
+                returnUrl = "",
             )
         )
 

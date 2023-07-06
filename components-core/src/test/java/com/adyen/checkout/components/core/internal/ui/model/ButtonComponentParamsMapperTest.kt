@@ -83,7 +83,8 @@ internal class ButtonComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = sessionsValue
+                amount = sessionsValue,
+                returnUrl = "",
             )
         )
 

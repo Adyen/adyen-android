@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import app.cash.paykit.core.CashAppPayFactory
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.cashapppay.CashAppPayComponent
@@ -117,6 +118,7 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
+                cashAppPayFactory = CashAppPayFactory,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -196,6 +198,7 @@ constructor(
             }
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -233,6 +236,7 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
+                cashAppPayFactory = CashAppPayFactory,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(

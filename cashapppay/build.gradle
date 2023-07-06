@@ -38,6 +38,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -48,4 +52,9 @@ dependencies {
 
     api libraries.cashAppPay
     implementation libraries.material
+
+    testImplementation project(':test-core')
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
 }

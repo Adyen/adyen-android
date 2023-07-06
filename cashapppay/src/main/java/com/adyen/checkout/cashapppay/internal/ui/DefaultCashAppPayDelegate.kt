@@ -45,6 +45,7 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -54,13 +55,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-internal class DefaultCashAppPayDelegate(
+internal class DefaultCashAppPayDelegate
+@Suppress("LongParameterList")
+constructor(
     private val submitHandler: SubmitHandler<CashAppPayComponentState>,
     private val analyticsRepository: AnalyticsRepository,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
+    private val cashAppPayFactory: CashAppPayFactory,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
@@ -74,6 +79,7 @@ internal class DefaultCashAppPayDelegate(
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
+    val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
     override val submitFlow: Flow<CashAppPayComponentState> = submitHandler.submitFlow
 
@@ -97,9 +103,9 @@ internal class DefaultCashAppPayDelegate(
 
     private fun initCashAppPay(): CashAppPay {
         return if (componentParams.cashAppPayEnvironment == CashAppPayEnvironment.SANDBOX) {
-            CashAppPayFactory.createSandbox(componentParams.requireClientId())
+            cashAppPayFactory.createSandbox(componentParams.requireClientId())
         } else {
-            CashAppPayFactory.create(componentParams.requireClientId())
+            cashAppPayFactory.create(componentParams.requireClientId())
         }.apply {
             registerForStateUpdates(this@DefaultCashAppPayDelegate)
         }
@@ -119,7 +125,7 @@ internal class DefaultCashAppPayDelegate(
     ) {
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
-            exceptionFlow = exceptionChannel.receiveAsFlow(),
+            exceptionFlow = exceptionFlow,
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
@@ -194,27 +200,35 @@ internal class DefaultCashAppPayDelegate(
         )
 
         if (actions.isEmpty()) {
-            throw ComponentException(
-                "Cannot launch Cash App Pay, you need to either pass an amount or store the shopper account."
+            exceptionChannel.trySend(
+                ComponentException(
+                    "Cannot launch Cash App Pay, you need to either pass an amount with supported " +
+                        "currency or store the shopper account."
+                )
             )
+            return
         }
 
         _viewFlow.tryEmit(PaymentInProgressViewType)
 
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(ioDispatcher) {
             cashAppPay.createCustomerRequest(actions, componentParams.returnUrl)
         }
     }
 
+    @Suppress("ReturnCount")
     private fun getOneTimeAction(): CashAppPayPaymentAction.OneTimeAction? {
         val amount = componentParams.amount
 
-        // we don't create a OneTimeAction from transactions with no amount
+        // We don't create an OneTimeAction for transactions with no amount
         if (amount.value <= 0) return null
 
         val cashAppPayCurrency = when (amount.currency) {
             CheckoutCurrency.USD.name -> CashAppPayCurrency.USD
-            else -> throw ComponentException("Unsupported currency: ${amount.currency}")
+            else -> {
+                exceptionChannel.trySend(ComponentException("Unsupported currency: ${amount.currency}"))
+                return null
+            }
         }
 
         return CashAppPayPaymentAction.OneTimeAction(

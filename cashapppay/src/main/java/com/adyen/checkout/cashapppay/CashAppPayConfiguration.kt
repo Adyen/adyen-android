@@ -137,7 +137,7 @@ private constructor(
          *
          * @param isSubmitButtonVisible If submit button should be visible or not.
          */
-        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): ButtonConfigurationBuilder {
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
         }
