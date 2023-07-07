@@ -48,7 +48,7 @@ class BoletoComponent internal constructor(
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    override val delegate: ComponentDelegate = actionHandlingComponent.activeDelegate
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
     override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
         viewModelScope,
@@ -78,12 +78,12 @@ class BoletoComponent internal constructor(
     override fun isConfirmationRequired(): Boolean = boletoDelegate.isConfirmationRequired()
 
     override fun submit() {
-        (boletoDelegate as? ButtonDelegate)?.onSubmit()
+        (delegate as? ButtonDelegate)?.onSubmit()
             ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        (boletoDelegate as? BoletoDelegate)?.setInteractionBlocked(isInteractionBlocked)
+        (delegate as? BoletoDelegate)?.setInteractionBlocked(isInteractionBlocked)
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 

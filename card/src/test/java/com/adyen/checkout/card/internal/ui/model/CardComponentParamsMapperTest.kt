@@ -269,7 +269,8 @@ internal class CardComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
                 installmentOptions = null,
-                amount = null
+                amount = null,
+                returnUrl = "",
             )
         )
 
@@ -299,7 +300,8 @@ internal class CardComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = null
+                amount = null,
+                returnUrl = "",
             )
         )
 
@@ -338,7 +340,8 @@ internal class CardComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = installmentOptions,
-                amount = null
+                amount = null,
+                returnUrl = "",
             )
         )
 
@@ -415,7 +418,8 @@ internal class CardComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = sessionsValue
+                amount = sessionsValue,
+                returnUrl = "",
             )
         )
 

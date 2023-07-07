@@ -162,7 +162,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         val sessionParams = SessionParams(
             enableStoreDetails = sessionsValue,
             installmentOptions = null,
-            amount = null
+            amount = null,
+            returnUrl = "",
         )
 
         val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
@@ -210,7 +211,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = sessionsValue
+                amount = sessionsValue,
+                returnUrl = "",
             )
         )
 

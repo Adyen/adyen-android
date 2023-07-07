@@ -20,15 +20,23 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 object SessionParamsFactory {
     // Used for components
     fun create(checkoutSession: CheckoutSession): SessionParams {
-        return create(checkoutSession.sessionSetupResponse.configuration, checkoutSession.sessionSetupResponse.amount)
+        return create(
+            checkoutSession.sessionSetupResponse.configuration,
+            checkoutSession.sessionSetupResponse.amount,
+            checkoutSession.sessionSetupResponse.returnUrl
+        )
     }
 
     // Used for Drop-in
     fun create(sessionDetails: SessionDetails): SessionParams {
-        return create(sessionDetails.sessionSetupConfiguration, sessionDetails.amount)
+        return create(sessionDetails.sessionSetupConfiguration, sessionDetails.amount, sessionDetails.returnUrl)
     }
 
-    private fun create(sessionSetupConfiguration: SessionSetupConfiguration?, amount: Amount?): SessionParams {
+    private fun create(
+        sessionSetupConfiguration: SessionSetupConfiguration?,
+        amount: Amount?,
+        returnUrl: String?,
+    ): SessionParams {
         return SessionParams(
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
             installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
@@ -39,6 +47,7 @@ object SessionParamsFactory {
                 )
             }?.toMap(),
             amount = amount,
+            returnUrl = returnUrl,
         )
     }
 }

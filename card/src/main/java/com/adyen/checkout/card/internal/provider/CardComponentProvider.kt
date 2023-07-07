@@ -169,6 +169,7 @@ constructor(
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -327,6 +328,7 @@ constructor(
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -411,6 +413,7 @@ constructor(
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)

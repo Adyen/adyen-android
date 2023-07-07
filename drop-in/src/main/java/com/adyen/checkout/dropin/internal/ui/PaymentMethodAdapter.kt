@@ -155,7 +155,8 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         private fun bindGenericStored(model: GenericStoredModel) {
             with(binding) {
                 textViewTitle.text = model.name
-                textViewDetail.isVisible = false
+                textViewDetail.isVisible = !model.description.isNullOrEmpty()
+                textViewDetail.text = model.description
                 imageViewLogo.loadLogo(
                     environment = model.environment,
                     txVariant = model.imageId,

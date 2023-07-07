@@ -130,6 +130,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     DateUtils.parseDateToView(storedPaymentMethodModel.expiryMonth, storedPaymentMethodModel.expiryYear)
                 binding.storedPaymentMethodItem.textViewDetail.isVisible = true
             }
+
             is StoredACHDirectDebitModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(
@@ -142,9 +143,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 )
                 binding.storedPaymentMethodItem.textViewDetail.isVisible = false
             }
+
             is GenericStoredModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text = storedPaymentMethodModel.name
-                binding.storedPaymentMethodItem.textViewDetail.isVisible = false
+                binding.storedPaymentMethodItem.textViewDetail.isVisible =
+                    !storedPaymentMethodModel.description.isNullOrEmpty()
+                binding.storedPaymentMethodItem.textViewDetail.text = storedPaymentMethodModel.description
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
                     environment = dropInViewModel.dropInConfiguration.environment,
                     txVariant = storedPaymentMethodModel.imageId,
@@ -159,6 +163,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             is ButtonState.ContinueButton -> {
                 binding.payButton.setText(buttonState.labelResId)
             }
+
             is ButtonState.PayButton -> {
                 binding.payButton.text = PayButtonFormatter.getPayButtonText(
                     amount = buttonState.amount,
@@ -166,6 +171,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     localizedContext = requireContext(),
                 )
             }
+
             is ButtonState.Loading -> {
                 // already handled
             }
@@ -183,9 +189,11 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 is PreselectedStoredEvent.ShowStoredPaymentScreen -> {
                     protocol.showStoredComponentDialog(storedPaymentMethod, true)
                 }
+
                 is PreselectedStoredEvent.RequestPaymentsCall -> {
                     protocol.requestPaymentsCall(event.state)
                 }
+
                 is PreselectedStoredEvent.ShowError -> {
                     handleError(event.componentError)
                 }

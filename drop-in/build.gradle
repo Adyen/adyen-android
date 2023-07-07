@@ -55,6 +55,7 @@ dependencies {
     api project(':boleto')
     api project(':blik')
     api project(':card')
+    api project(':cashapppay')
     api project(':convenience-stores-jp')
     api project(':dotpay')
     api project(':entercash')

@@ -18,6 +18,7 @@ import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
@@ -160,6 +161,14 @@ class DropInConfiguration private constructor(
          */
         fun addCardConfiguration(cardConfiguration: CardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.SCHEME] = cardConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Cash App Pay payment method.
+         */
+        fun addCashAppPayConfiguration(cashAppPayConfiguration: CashAppPayConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.CASH_APP_PAY] = cashAppPayConfiguration
             return this
         }
 

@@ -24,7 +24,7 @@ data class SessionSetupResponse(
     val amount: Amount?,
     val expiresAt: String,
     val paymentMethodsApiResponse: PaymentMethodsApiResponse?,
-    val returnUrl: String,
+    val returnUrl: String?,
     val configuration: SessionSetupConfiguration?
 ) : ModelObject() {
 

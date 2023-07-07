@@ -20,6 +20,8 @@ data class Configuration(
     var gatewayMerchantId: String? = null,
     var intent: String? = null,
     var koreanAuthenticationRequired: String? = null,
+    var clientId: String? = null,
+    var scopeId: String? = null,
 ) : ModelObject() {
 
     companion object {
@@ -34,6 +36,10 @@ data class Configuration(
         // Card
         private const val KOREAN_AUTHENTICATION_REQUIRED = "koreanAuthenticationRequired"
 
+        // Cash App Pay
+        private const val CLIENT_ID = "clientId"
+        private const val SCOPE_ID = "scopeId"
+
         @JvmField
         val SERIALIZER: Serializer<Configuration> = object : Serializer<Configuration> {
             override fun serialize(modelObject: Configuration): JSONObject {
@@ -43,6 +49,8 @@ data class Configuration(
                         putOpt(GATEWAY_MERCHANT_ID, modelObject.gatewayMerchantId)
                         putOpt(INTENT, modelObject.intent)
                         putOpt(KOREAN_AUTHENTICATION_REQUIRED, modelObject.koreanAuthenticationRequired)
+                        putOpt(CLIENT_ID, modelObject.clientId)
+                        putOpt(SCOPE_ID, modelObject.scopeId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentMethod::class.java, e)
@@ -54,7 +62,9 @@ data class Configuration(
                     merchantId = jsonObject.getStringOrNull(MERCHANT_ID),
                     gatewayMerchantId = jsonObject.getStringOrNull(GATEWAY_MERCHANT_ID),
                     intent = jsonObject.getStringOrNull(INTENT),
-                    koreanAuthenticationRequired = jsonObject.getStringOrNull(KOREAN_AUTHENTICATION_REQUIRED)
+                    koreanAuthenticationRequired = jsonObject.getStringOrNull(KOREAN_AUTHENTICATION_REQUIRED),
+                    clientId = jsonObject.getStringOrNull(CLIENT_ID),
+                    scopeId = jsonObject.getStringOrNull(SCOPE_ID),
                 )
             }
         }
