@@ -8,13 +8,16 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
+import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
@@ -92,12 +95,36 @@ internal class StoredCashAppPayDelegateTest(
         assertEquals(delegate.componentStateFlow.first(), testFlow.latestValue)
     }
 
+    @Test
+    fun `when delegate is initialized, then component state is created correctly`() = runTest {
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        val expected = CashAppPayComponentState(
+            data = PaymentComponentData(
+                paymentMethod = CashAppPayPaymentMethod(
+                    type = TEST_PAYMENT_METHOD_TYPE,
+                    storedPaymentMethodId = TEST_PAYMENT_METHOD_ID,
+                ),
+                order = TEST_ORDER,
+                amount = null,
+            ),
+            isInputValid = true,
+            isReady = true
+        )
+        assertEquals(expected, testFlow.latestValue)
+    }
+
     private fun createStoredCashAppPayDelegate(
         configuration: CashAppPayConfiguration = getConfigurationBuilder().build()
     ) = StoredCashAppPayDelegate(
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),
-        paymentMethod = StoredPaymentMethod(),
+        paymentMethod = StoredPaymentMethod(
+            id = TEST_PAYMENT_METHOD_ID,
+            type = TEST_PAYMENT_METHOD_TYPE,
+        ),
         order = TEST_ORDER,
         componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
@@ -115,6 +142,8 @@ internal class StoredCashAppPayDelegateTest(
 
     companion object {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_PAYMENT_METHOD_ID = "TEST_PAYMENT_METHOD_ID"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun amountSource() = listOf(
