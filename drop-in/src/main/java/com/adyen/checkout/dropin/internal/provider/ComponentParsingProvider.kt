@@ -186,7 +186,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
                 environment = environment,
                 clientKey = clientKey
             )
-
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,

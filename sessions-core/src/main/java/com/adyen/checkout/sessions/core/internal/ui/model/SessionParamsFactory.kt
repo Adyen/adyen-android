@@ -35,7 +35,7 @@ object SessionParamsFactory {
     private fun create(
         sessionSetupConfiguration: SessionSetupConfiguration?,
         amount: Amount?,
-        returnUrl: String,
+        returnUrl: String?,
     ): SessionParams {
         return SessionParams(
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,

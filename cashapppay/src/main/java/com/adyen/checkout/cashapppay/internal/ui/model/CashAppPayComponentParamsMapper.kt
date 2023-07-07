@@ -22,22 +22,32 @@ internal class CashAppPayComponentParamsMapper(
     private val overrideSessionParams: SessionParams?,
 ) {
 
+    @Suppress("ThrowsCount")
     fun mapToParams(
         configuration: CashAppPayConfiguration,
         sessionParams: SessionParams?,
         paymentMethod: PaymentMethod,
-    ): CashAppPayComponentParams = configuration
-        .mapToParamsInternal(
-            clientId = paymentMethod.configuration?.clientId ?: throw ComponentException(
-                "Cannot launch Cash App Pay, clientId is missing in the payment method object."
-            ),
-            scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
-                "Cannot launch Cash App Pay, scopeId is missing in the payment method object."
-            ),
-            returnUrl = configuration.getReturnUrlOrThrow(sessionParams ?: overrideSessionParams),
-        )
-        .override(overrideComponentParams)
-        .override(sessionParams ?: overrideSessionParams)
+    ): CashAppPayComponentParams {
+        val params = configuration
+            .mapToParamsInternal(
+                clientId = paymentMethod.configuration?.clientId ?: throw ComponentException(
+                    "Cannot launch Cash App Pay, clientId is missing in the payment method object."
+                ),
+                scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
+                    "Cannot launch Cash App Pay, scopeId is missing in the payment method object."
+                ),
+            )
+            .override(overrideComponentParams)
+            .override(sessionParams ?: overrideSessionParams)
+
+        if (params.returnUrl == null) {
+            throw ComponentException(
+                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
+            )
+        }
+
+        return params
+    }
 
     fun mapToParams(
         configuration: CashAppPayConfiguration,
@@ -45,24 +55,13 @@ internal class CashAppPayComponentParamsMapper(
         @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
     ): CashAppPayComponentParams = configuration
         // clientId and scopeId are not needed in the stored flow.
-        .mapToParamsInternal(null, null, configuration.getReturnUrlOrThrow(sessionParams ?: overrideSessionParams))
+        .mapToParamsInternal(null, null)
         .override(overrideComponentParams)
         .override(sessionParams ?: overrideSessionParams)
-
-    @Suppress("IfThenToElvis")
-    private fun CashAppPayConfiguration.getReturnUrlOrThrow(sessionParams: SessionParams?): String =
-        if (sessionParams != null) {
-            sessionParams.returnUrl
-        } else {
-            returnUrl ?: throw ComponentException(
-                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
-            )
-        }
 
     private fun CashAppPayConfiguration.mapToParamsInternal(
         clientId: String?,
         scopeId: String?,
-        returnUrl: String,
     ) = CashAppPayComponentParams(
         isSubmitButtonVisible = isSubmitButtonVisible ?: true,
         shopperLocale = shopperLocale,
@@ -108,6 +107,7 @@ internal class CashAppPayComponentParamsMapper(
         return copy(
             amount = sessionParams.amount ?: amount,
             showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
+            returnUrl = sessionParams.returnUrl ?: returnUrl
         )
     }
 }

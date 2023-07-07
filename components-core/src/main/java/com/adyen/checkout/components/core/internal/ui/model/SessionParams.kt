@@ -16,5 +16,5 @@ data class SessionParams(
     val enableStoreDetails: Boolean?,
     val installmentOptions: Map<String, SessionInstallmentOptionsParams?>?,
     val amount: Amount?,
-    val returnUrl: String,
+    val returnUrl: String?,
 )
