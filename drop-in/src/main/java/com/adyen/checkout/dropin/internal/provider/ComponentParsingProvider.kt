@@ -34,7 +34,6 @@ import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.boleto.internal.provider.BoletoComponentProvider
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.cashapppay.CashAppPayComponent
@@ -44,6 +43,7 @@ import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvid
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
+import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -186,6 +186,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
                 environment = environment,
                 clientKey = clientKey
             )
+
         BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> BlikConfiguration.Builder(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -481,7 +482,7 @@ internal fun getComponentFor(
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
     amount: Amount,
-    componentCallback: ComponentCallback<*>,
+    componentCallback: ComponentCallback<PaymentComponentState<*>>,
     sessionDetails: SessionDetails?,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
@@ -506,7 +507,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
-                callback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = getComponentCallback(componentCallback),
                 key = storedPaymentMethod.id
             )
         }
@@ -623,7 +624,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
-                callback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = getComponentCallback(componentCallback),
             )
         }
 

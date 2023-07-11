@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardComponentCallback
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
@@ -30,7 +30,7 @@ internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-) : ViewModel(), ComponentCallback<CardComponentState> {
+) : ViewModel(), CardComponentCallback {
 
     private val _cardComponentDataFlow = MutableStateFlow<CardComponentData?>(null)
     val cardComponentDataFlow: Flow<CardComponentData> = _cardComponentDataFlow.filterNotNull()

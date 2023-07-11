@@ -16,8 +16,10 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.CardComponentCallback
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.SessionCardComponentCallback
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
@@ -25,7 +27,6 @@ import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
-import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -50,7 +51,6 @@ import com.adyen.checkout.cse.internal.DateGenerator
 import com.adyen.checkout.cse.internal.DefaultCardEncrypter
 import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
 import com.adyen.checkout.sessions.core.CheckoutSession
-import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -73,25 +73,25 @@ constructor(
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>
+        CardComponentCallback
         >,
     StoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>
+        CardComponentCallback
         >,
     SessionPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>
+        SessionCardComponentCallback
         >,
     SessionStoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>
+        SessionCardComponentCallback
         > {
 
     private val componentParamsMapper = CardComponentParamsMapper(
@@ -108,7 +108,7 @@ constructor(
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<CardComponentState>,
+        componentCallback: CardComponentCallback,
         order: Order?,
         key: String?
     ): CardComponent {
@@ -186,7 +186,7 @@ constructor(
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<CardComponentState>,
+        componentCallback: SessionCardComponentCallback,
         key: String?
     ): CardComponent {
         assertSupported(paymentMethod)
@@ -279,7 +279,7 @@ constructor(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        componentCallback: ComponentCallback<CardComponentState>,
+        componentCallback: CardComponentCallback,
         order: Order?,
         key: String?
     ): CardComponent {
@@ -345,7 +345,7 @@ constructor(
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration,
         application: Application,
-        componentCallback: SessionComponentCallback<CardComponentState>,
+        componentCallback: SessionCardComponentCallback,
         key: String?
     ): CardComponent {
         assertSupported(storedPaymentMethod)
