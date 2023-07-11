@@ -67,6 +67,12 @@ import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.internal.ui.BacsDirectDebitDialogFragment
+import com.adyen.checkout.dropin.internal.ui.CardComponentDialogFragment
+import com.adyen.checkout.dropin.internal.ui.DropInBottomSheetDialogFragment
+import com.adyen.checkout.dropin.internal.ui.GenericComponentDialogFragment
+import com.adyen.checkout.dropin.internal.ui.GiftCardComponentDialogFragment
+import com.adyen.checkout.dropin.internal.ui.GooglePayComponentDialogFragment
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
 import com.adyen.checkout.entercash.EntercashComponent
@@ -887,6 +893,45 @@ internal fun getComponentFor(
 
 internal fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {
     return DropInComponentParamsMapper().mapToParams(this, amount)
+}
+
+internal fun getFragmentForStoredPaymentMethod(
+    storedPaymentMethod: StoredPaymentMethod,
+    fromPreselected: Boolean
+): DropInBottomSheetDialogFragment {
+    return when {
+        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            CardComponentDialogFragment.newInstance(storedPaymentMethod, fromPreselected)
+        }
+
+        else -> {
+            GenericComponentDialogFragment.newInstance(storedPaymentMethod, fromPreselected)
+        }
+    }
+}
+
+internal fun getFragmentForPaymentMethod(paymentMethod: PaymentMethod): DropInBottomSheetDialogFragment {
+    return when {
+        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            CardComponentDialogFragment.newInstance(paymentMethod)
+        }
+
+        checkCompileOnly { BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            BacsDirectDebitDialogFragment.newInstance(paymentMethod)
+        }
+
+        checkCompileOnly { GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            GiftCardComponentDialogFragment.newInstance(paymentMethod)
+        }
+
+        checkCompileOnly { GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            GooglePayComponentDialogFragment.newInstance(paymentMethod)
+        }
+
+        else -> {
+            GenericComponentDialogFragment.newInstance(paymentMethod)
+        }
+    }
 }
 
 internal inline fun checkCompileOnly(block: () -> Boolean): Boolean {
