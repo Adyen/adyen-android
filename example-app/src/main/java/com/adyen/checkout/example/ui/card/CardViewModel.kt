@@ -10,7 +10,9 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
@@ -89,6 +91,10 @@ internal class CardViewModel @Inject constructor(
     // no ops
     override fun onStateChanged(state: CardComponentState) = Unit
 
+    override fun onBinLookup(type: String, brands: List<String>) {
+        Logger.d(TAG, "onBinLookup - type:$type brands:$brands")
+    }
+
     private fun makePayment(data: PaymentComponentData<*>) {
         _cardViewState.value = CardViewState.Loading
 
@@ -118,6 +124,7 @@ internal class CardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
+
                 else -> _events.emit(CardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
@@ -136,5 +143,9 @@ internal class CardViewModel @Inject constructor(
 
     private fun onComponentError(error: ComponentError) {
         viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+    }
+
+    companion object {
+        private val TAG = getLogTag()
     }
 }

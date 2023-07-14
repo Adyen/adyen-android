@@ -134,6 +134,8 @@ internal class DefaultCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
+    private var callback: ((PaymentComponentEvent<CardComponentState>) -> Unit)? = null
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
@@ -162,6 +164,7 @@ internal class DefaultCardDelegate(
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
+        this.callback = callback
         observerRepository.addObservers(
             stateFlow = componentStateFlow,
             exceptionFlow = exceptionFlow,
@@ -173,6 +176,7 @@ internal class DefaultCardDelegate(
     }
 
     override fun removeObserver() {
+        this.callback = null
         observerRepository.removeObservers()
     }
 
@@ -232,6 +236,11 @@ internal class DefaultCardDelegate(
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
                 updateOutputData(detectedCardTypes = detectedCardTypes)
+                callback?.invoke(
+                    PaymentComponentEvent.Bin.OnBinLookup(
+                        type = detectedCardTypes.firstOrNull()?.cardBrand?.txVariant ?: "",
+                        brands = detectedCardTypes.map { it.cardBrand.txVariant })
+                )
             }
             .launchIn(coroutineScope)
     }

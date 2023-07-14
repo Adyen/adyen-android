@@ -31,4 +31,19 @@ sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out P
     class Submit<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()
+
+    sealed class Bin<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> :
+        PaymentComponentEvent<ComponentStateT>() {
+
+        // TODO: Figure out what data is needed
+        class OnBinLookup<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+            val type: String,
+            val brands: List<String>,
+        ) : Bin<ComponentStateT>()
+
+        // TODO: Figure out what data is needed
+        class OnBinValue<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+            val value: String,
+        ) : Bin<ComponentStateT>()
+    }
 }

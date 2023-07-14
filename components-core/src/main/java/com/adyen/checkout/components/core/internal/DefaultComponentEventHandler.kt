@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.BinComponentCallback
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.core.exception.CheckoutException
@@ -35,6 +36,16 @@ class DefaultComponentEventHandler<T : PaymentComponentState<*>> : ComponentEven
             is PaymentComponentEvent.Error -> callback.onError(event.error)
             is PaymentComponentEvent.StateChanged -> callback.onStateChanged(event.state)
             is PaymentComponentEvent.Submit -> callback.onSubmit(event.state)
+            is PaymentComponentEvent.Bin -> if (componentCallback is BinComponentCallback) {
+                onBinEvent(event, componentCallback)
+            }
+        }
+    }
+
+    private fun onBinEvent(event: PaymentComponentEvent.Bin<T>, callback: BinComponentCallback) {
+        when (event) {
+            is PaymentComponentEvent.Bin.OnBinLookup -> callback.onBinLookup(event.type, event.brands)
+            is PaymentComponentEvent.Bin.OnBinValue -> callback.onBinValue()
         }
     }
 

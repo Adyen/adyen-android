@@ -42,18 +42,20 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
                             "onBalanceCheck cannot be performed due to payment method being null."
                         )
                     }
+
                     is GiftCardAction.SendPayment -> {
                         callback.onSubmit(event.state)
                     }
+
                     is GiftCardAction.CreateOrder -> {
                         callback.onRequestOrder()
                     }
-                    is GiftCardAction.Idle -> {
-                        // no ops
-                        Logger.d(TAG, "No action to be taken.")
-                    }
+
+                    is GiftCardAction.Idle -> Unit // no ops
                 }
             }
+
+            is PaymentComponentEvent.Bin -> Unit // bin features are not used for gift card
         }
     }
 

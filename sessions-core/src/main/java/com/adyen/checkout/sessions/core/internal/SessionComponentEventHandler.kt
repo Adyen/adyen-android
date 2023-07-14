@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.BinComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
@@ -59,6 +60,9 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             is PaymentComponentEvent.Error -> onComponentError(event.error, sessionComponentCallback)
             is PaymentComponentEvent.StateChanged -> onState(event.state, sessionComponentCallback)
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
+            is PaymentComponentEvent.Bin -> if (componentCallback is BinComponentCallback) {
+                onBinEvent(event, componentCallback)
+            }
         }
     }
 
@@ -77,6 +81,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Payments.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result, sessionComponentCallback)
@@ -84,6 +89,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                     result.result,
                     sessionComponentCallback
                 )
+
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -106,6 +112,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Details.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Details.Finished -> onFinished(result.result, sessionComponentCallback)
                 SessionCallResult.Details.TakenOver -> {
@@ -151,6 +158,13 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
         if (sessionSavedStateHandleContainer.isFlowTakenOver == true) return
         sessionSavedStateHandleContainer.isFlowTakenOver = true
         Logger.i(TAG, "Flow was taken over.")
+    }
+
+    private fun onBinEvent(event: PaymentComponentEvent.Bin<T>, callback: BinComponentCallback) {
+        when (event) {
+            is PaymentComponentEvent.Bin.OnBinLookup -> callback.onBinLookup(event.type, event.brands)
+            is PaymentComponentEvent.Bin.OnBinValue -> callback.onBinValue()
+        }
     }
 
     override fun onCleared() {

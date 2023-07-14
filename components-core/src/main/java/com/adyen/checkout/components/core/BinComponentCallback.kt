@@ -12,5 +12,8 @@ interface BinComponentCallback {
 
     fun onBinValue(): Unit = Unit
 
-    fun onBinLookup(): Unit = Unit
+    fun onBinLookup(
+        type: String,
+        brands: List<String>,
+    ): Unit = Unit
 }

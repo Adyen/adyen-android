@@ -144,6 +144,11 @@ internal class SessionsCardViewModel @Inject constructor(
         _cardViewState.tryEmit(state)
     }
 
+    override fun onBinLookup(type: String, brands: List<String>) {
+        super.onBinLookup(type, brands)
+        Log.d(TAG, "onBinLookup - type:$type brands:$brands")
+    }
+
     companion object {
         private val TAG = getLogTag()
     }
