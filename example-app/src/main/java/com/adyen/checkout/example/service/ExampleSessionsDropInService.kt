@@ -99,11 +99,13 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 Log.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
             }
+
             isAction(jsonResponse) -> {
                 Log.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
                 DropInServiceResult.Action(action)
             }
+
             else -> {
                 Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
                 val resultCode = if (jsonResponse.has("resultCode")) {
@@ -118,6 +120,14 @@ class ExampleSessionsDropInService : SessionDropInService() {
 
     private fun isAction(jsonResponse: JSONObject): Boolean {
         return jsonResponse.has("action")
+    }
+
+    override fun onBinLookup(type: String, brands: List<String>) {
+        Log.d(TAG, "onBinLookup - type:$type brands:$brands")
+    }
+
+    override fun onBinValue() {
+        Log.d(TAG, "onBinValue")
     }
 
     companion object {

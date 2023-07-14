@@ -100,5 +100,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun requestOrderCancellation()
         fun finishWithAction()
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
+        fun onBinLookup(type: String, brands: List<String>)
+        fun onBinValue()
     }
 }

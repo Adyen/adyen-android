@@ -34,7 +34,8 @@ private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 @Suppress("TooManyFunctions")
 internal abstract class BaseComponentDialogFragment :
     DropInBottomSheetDialogFragment(),
-    ComponentCallback<PaymentComponentState<*>> {
+    ComponentCallback<PaymentComponentState<*>>,
+    ExtraComponentCallbacks {
 
     companion object {
         private val TAG = LogUtil.getTag()
@@ -123,7 +124,8 @@ internal abstract class BaseComponentDialogFragment :
                     sessionDetails = dropInViewModel.sessionDetails,
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
-                    componentCallback = this
+                    componentCallback = this,
+                    extraComponentCallbacks = this,
                 )
             }
         } catch (e: CheckoutException) {
@@ -159,6 +161,14 @@ internal abstract class BaseComponentDialogFragment :
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    override fun onBinLookup(type: String, brands: List<String>) {
+        protocol.onBinLookup(type, brands)
+    }
+
+    override fun onBinValue() {
+        protocol.onBinValue()
     }
 
     open fun requestProtocolCall(componentState: PaymentComponentState<*>) {

@@ -15,9 +15,11 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.internal.ui.ExtraComponentCallbacks
 
 inline fun <reified T : ComponentCallback<*>, C : PaymentComponentState<*>> getComponentCallback(
     baseCallback: ComponentCallback<C>,
+    extraComponentCallbacks: ExtraComponentCallbacks?,
 ): T {
     Logger.d("TAG", "Type: ${T::class.simpleName}")
     val callback = when (T::class) {
@@ -38,6 +40,14 @@ inline fun <reified T : ComponentCallback<*>, C : PaymentComponentState<*>> getC
             override fun onStateChanged(state: CardComponentState) {
                 @Suppress("UNCHECKED_CAST")
                 baseCallback.onStateChanged(state as C)
+            }
+
+            override fun onBinLookup(type: String, brands: List<String>) {
+                extraComponentCallbacks?.onBinLookup(type, brands)
+            }
+
+            override fun onBinValue() {
+                extraComponentCallbacks?.onBinValue()
             }
         }
 

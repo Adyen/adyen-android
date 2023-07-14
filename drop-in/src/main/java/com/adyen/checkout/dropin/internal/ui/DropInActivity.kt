@@ -691,6 +691,14 @@ internal class DropInActivity :
         }
     }
 
+    override fun onBinLookup(type: String, brands: List<String>) {
+        dropInService?.onBinLookup(type, brands)
+    }
+
+    override fun onBinValue() {
+        dropInService?.onBinValue()
+    }
+
     companion object {
 
         fun createIntent(

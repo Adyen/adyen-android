@@ -345,6 +345,14 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    override fun onBinLookup(type: String, brands: List<String>) {
+        Log.d(TAG, "onBinLookup - type:$type brands:$brands")
+    }
+
+    override fun onBinValue() {
+        Log.d(TAG, "onBinValue")
+    }
+
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"

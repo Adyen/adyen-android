@@ -67,6 +67,7 @@ import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.internal.ui.ExtraComponentCallbacks
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
 import com.adyen.checkout.entercash.EntercashComponent
@@ -484,6 +485,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<PaymentComponentState<*>>,
     sessionDetails: SessionDetails?,
+    extraComponentCallbacks: ExtraComponentCallbacks? = null,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
@@ -507,7 +509,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
-                callback = getComponentCallback(componentCallback),
+                callback = getComponentCallback(componentCallback, extraComponentCallbacks),
                 key = storedPaymentMethod.id
             )
         }
@@ -557,6 +559,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
+    extraComponentCallbacks: ExtraComponentCallbacks? = null,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
@@ -624,7 +627,7 @@ internal fun getComponentFor(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,
-                callback = getComponentCallback(componentCallback),
+                callback = getComponentCallback(componentCallback, extraComponentCallbacks),
             )
         }
 
