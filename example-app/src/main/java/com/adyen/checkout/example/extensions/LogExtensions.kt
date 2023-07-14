@@ -10,7 +10,8 @@ package com.adyen.checkout.example.extensions
 
 import com.adyen.checkout.core.internal.util.LogUtil
 
-@Suppress("RestrictedApi")
-internal fun getLogTag(): String {
+// Inlining is needed to make sure the tag has the name of the calling class and not this file
+@Suppress("RestrictedApi", "NOTHING_TO_INLINE")
+internal inline fun getLogTag(): String {
     return LogUtil.getTag()
 }
