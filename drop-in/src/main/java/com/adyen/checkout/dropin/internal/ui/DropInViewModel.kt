@@ -52,7 +52,7 @@ import kotlinx.coroutines.launch
 internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
-    private val analyticsRepository: AnalyticsRepository,
+    internal val analyticsRepository: AnalyticsRepository,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()

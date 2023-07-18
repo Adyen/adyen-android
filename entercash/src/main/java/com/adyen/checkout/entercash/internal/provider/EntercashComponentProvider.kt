@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.EntercashPaymentMethod
@@ -27,6 +28,7 @@ class EntercashComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<
     EntercashComponent,
     EntercashConfiguration,
@@ -36,6 +38,7 @@ constructor(
     componentClass = EntercashComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,
+    analyticsRepository = analyticsRepository,
 ) {
 
     override fun createComponent(

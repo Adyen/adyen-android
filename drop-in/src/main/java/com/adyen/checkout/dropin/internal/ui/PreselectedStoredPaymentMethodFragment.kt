@@ -82,6 +82,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 amount = dropInViewModel.amount,
                 componentCallback = storedPaymentViewModel,
                 sessionDetails = dropInViewModel.sessionDetails,
+                analyticsRepository = dropInViewModel.analyticsRepository,
                 onRedirect = protocol::onRedirect,
             )
         } catch (e: CheckoutException) {
