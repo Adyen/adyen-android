@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -116,7 +115,7 @@ class BlikViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(BlikActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
@@ -132,7 +131,7 @@ class BlikViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     _blikViewState.value = BlikViewState.Action(action)
                 }
-                else -> _events.emit(BlikEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
+                else -> _events.emit(BlikEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(BlikEvent.PaymentResult("Failed"))
     }

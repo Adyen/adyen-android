@@ -182,5 +182,5 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
         override val dismissDropIn: Boolean = false
     ) : SessionDropInServiceResult(), DropInServiceResultError
 
-    internal class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()
+    class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()
 }

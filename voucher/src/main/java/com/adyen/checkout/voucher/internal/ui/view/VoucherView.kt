@@ -9,19 +9,16 @@
 package com.adyen.checkout.voucher.internal.ui.view
 
 import android.content.Context
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
@@ -56,7 +53,7 @@ internal class VoucherView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is VoucherDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is VoucherDelegate) { "Unsupported delegate type" }
 
         this.delegate = delegate
 
@@ -65,12 +62,12 @@ internal class VoucherView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.textViewDownload.setOnClickListener { launchDownloadIntent(delegate.outputData.downloadUrl) }
+        binding.textViewDownload.setOnClickListener { delegate.downloadVoucher(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_DescriptionTextAppearance,
+            R.style.AdyenCheckout_Voucher_Description_Bacs,
             localizedContext
         )
         binding.textViewDownload.setLocalizedTextFromStyle(
@@ -98,14 +95,6 @@ internal class VoucherView @JvmOverloads constructor(
                 size = LogoSize.MEDIUM,
             )
         }
-    }
-
-    private fun launchDownloadIntent(url: String?) {
-        CustomTabsIntent.Builder()
-            .setShowTitle(true)
-            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-            .build()
-            .launchUrl(context, Uri.parse(url))
     }
 
     override fun highlightValidationErrors() {

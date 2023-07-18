@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.Boleto" />
+
+    <style name="AdyenCheckout.Boleto.PersonalDetailsHeader" parent="AdyenCheckout.TextAppearance">
+        <item name="android:text">@string/checkout_boleto_personal_details</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:alpha">0.5</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Boleto.FirstNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_boleto_first_name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.Boleto.LastNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_boleto_last_name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.Boleto.SocialNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_social_security_number_hint</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Boleto.EmailCopySwitch" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/checkout_boleto_send_email_copy</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdyenCheckout.Boleto.ShopperEmailInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_boleto_email</item>
+        <item name="android:inputType">text|textEmailAddress</item>
+    </style>
+</resources>

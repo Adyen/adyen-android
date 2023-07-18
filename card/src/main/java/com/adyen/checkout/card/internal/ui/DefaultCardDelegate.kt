@@ -31,7 +31,6 @@ import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
-import com.adyen.checkout.card.internal.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -49,6 +48,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -67,6 +67,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
+import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -597,6 +598,7 @@ internal class DefaultCardDelegate(
             // is typing the card number.
             cvcPolicy == Brand.FieldPolicy.OPTIONAL ||
                 cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+
             else -> InputFieldUIState.REQUIRED
         }
     }
@@ -645,21 +647,11 @@ internal class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
-                brand = DetectedCardTypesUtils.getSelectedCardType(
-                    detectedCardTypes = stateOutputData.detectedCardTypes
-                )?.cardBrand?.txVariant
-            }
+            brand = getCardBrand(stateOutputData.detectedCardTypes)
 
             fundingSource = getFundingSource()
 
-            try {
-                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
-            } catch (e: ClassNotFoundException) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            } catch (e: NoClassDefFoundError) {
-                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-            }
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
         }
 
         val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
@@ -731,6 +723,18 @@ internal class DefaultCardDelegate(
                 environment = componentParams.environment,
             )
         }
+    }
+
+    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
+        return if (isDualBrandedFlow(detectedCardTypes)) {
+            DetectedCardTypesUtils.getSelectedCardType(
+                detectedCardTypes = detectedCardTypes
+            )
+        } else {
+            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
+            val firstDetectedBrand = detectedCardTypes.firstOrNull()
+            reliableCardBrand ?: firstDetectedBrand
+        }?.cardBrand?.txVariant
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType

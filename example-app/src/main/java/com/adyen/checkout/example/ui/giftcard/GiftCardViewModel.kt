@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.giftcard
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,10 +24,8 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createBalanceRequest
 import com.adyen.checkout.example.service.createOrderRequest
@@ -116,7 +115,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
         viewModelScope.launch(Dispatchers.IO) {
-            Logger.d(TAG, "checkBalance")
+            Log.d(TAG, "checkBalance")
 
             val amount = paymentComponentState.data.amount
             val paymentMethod = paymentComponentState.data.paymentMethod
@@ -141,7 +140,7 @@ internal class GiftCardViewModel @Inject constructor(
     @Suppress("SwallowedException")
     private fun handleBalanceResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.optString("resultCode")) {
                 "Success" -> {
                     viewModelScope.launch {
                         _events.emit(
@@ -171,13 +170,13 @@ internal class GiftCardViewModel @Inject constructor(
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
-            Logger.e(TAG, "FAILED")
+            Log.e(TAG, "FAILED")
         }
     }
 
     override fun onRequestOrder() {
         viewModelScope.launch(Dispatchers.IO) {
-            Logger.d(TAG, "createOrder")
+            Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
                 keyValueStorage.getAmount(),
@@ -192,7 +191,7 @@ internal class GiftCardViewModel @Inject constructor(
 
     private fun handleOrderResponse(jsonResponse: JSONObject?) {
         if (jsonResponse != null) {
-            when (jsonResponse.getStringOrNull("resultCode")) {
+            when (jsonResponse.optString("resultCode")) {
                 "Success" -> viewModelScope.launch {
                     val orderResponse = OrderResponse.SERIALIZER.deserialize(jsonResponse)
                     _events.emit(GiftCardEvent.OrderCreated(orderResponse))
@@ -204,7 +203,7 @@ internal class GiftCardViewModel @Inject constructor(
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
-            Logger.e(TAG, "FAILED")
+            Log.e(TAG, "FAILED")
             viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
         }
     }
@@ -222,7 +221,7 @@ internal class GiftCardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(CardActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
@@ -250,7 +249,7 @@ internal class GiftCardViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
+                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(GiftCardEvent.PaymentResult("Failed"))
     }
@@ -259,7 +258,7 @@ internal class GiftCardViewModel @Inject constructor(
         isRefused(jsonResponse) && isNonFullyPaidOrder(jsonResponse)
 
     private fun isRefused(jsonResponse: JSONObject): Boolean {
-        return jsonResponse.getStringOrNull("resultCode")
+        return jsonResponse.optString("resultCode")
             .equals(other = RESULT_REFUSED, ignoreCase = true)
     }
 
@@ -303,7 +302,7 @@ internal class GiftCardViewModel @Inject constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"
     }
 }

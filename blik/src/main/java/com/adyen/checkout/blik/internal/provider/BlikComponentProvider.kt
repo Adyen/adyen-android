@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
@@ -52,8 +52,9 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+class BlikComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class BlikComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -61,22 +62,26 @@ class BlikComponentProvider(
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>>,
+        ComponentCallback<BlikComponentState>
+        >,
     StoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>>,
+        ComponentCallback<BlikComponentState>
+        >,
     SessionPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>>,
+        SessionComponentCallback<BlikComponentState>
+        >,
     SessionStoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>> {
+        SessionComponentCallback<BlikComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

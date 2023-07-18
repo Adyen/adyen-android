@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -48,8 +48,9 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 
+class InstantPaymentComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class InstantPaymentComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -57,12 +58,14 @@ class InstantPaymentComponentProvider(
         InstantPaymentComponent,
         InstantPaymentConfiguration,
         InstantComponentState,
-        ComponentCallback<InstantComponentState>>,
+        ComponentCallback<InstantComponentState>
+        >,
     SessionPaymentComponentProvider<
         InstantPaymentComponent,
         InstantPaymentConfiguration,
         InstantComponentState,
-        SessionComponentCallback<InstantComponentState>> {
+        SessionComponentCallback<InstantComponentState>
+        > {
 
     private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

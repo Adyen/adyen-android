@@ -8,22 +8,20 @@
 
 package com.adyen.checkout.example.service
 
+import android.util.Log
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import com.adyen.checkout.core.internal.data.model.toStringPretty
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
-import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -38,15 +36,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ExampleDropInService : DropInService() {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
-
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
-
-    @Inject
-    lateinit var recurringRepository: RecurringRepository
 
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
@@ -55,7 +46,7 @@ class ExampleDropInService : DropInService() {
         state: PaymentComponentState<*>
     ) {
         launch(Dispatchers.IO) {
-            Logger.d(TAG, "onPaymentsCallRequested")
+            Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
 
@@ -73,7 +64,7 @@ class ExampleDropInService : DropInService() {
                 shopperEmail = keyValueStorage.getShopperEmail()
             )
 
-            Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
+            Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
             val response = paymentsRepository.makePaymentsRequest(paymentRequest)
 
             val result = handleResponse(response)
@@ -92,11 +83,11 @@ class ExampleDropInService : DropInService() {
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         launch(Dispatchers.IO) {
-            Logger.d(TAG, "onDetailsCallRequested")
+            Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
 
-            Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
+            Log.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
             val response = paymentsRepository.makeDetailsRequest(actionComponentJson)
 
@@ -108,16 +99,18 @@ class ExampleDropInService : DropInService() {
     private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult {
         return when {
             jsonResponse == null -> {
-                Logger.e(TAG, "FAILED")
+                Log.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
             }
+
             isAction(jsonResponse) -> {
-                Logger.d(TAG, "Received action")
+                Log.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
                 DropInServiceResult.Action(action)
             }
+
             else -> {
-                Logger.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                Log.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
                 val resultCode = if (jsonResponse.has("resultCode")) {
                     jsonResponse.get("resultCode").toString()
                 } else {
@@ -136,30 +129,31 @@ class ExampleDropInService : DropInService() {
         storedPaymentMethod: StoredPaymentMethod,
     ) {
         launch(Dispatchers.IO) {
-            val request = createRemoveStoredPaymentMethodRequest(
-                storedPaymentMethod.id.orEmpty(),
-                keyValueStorage.getMerchantAccount(),
-                keyValueStorage.getShopperReference()
+            val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
+            val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
+                storedPaymentMethodId = storedPaymentMethodId,
+                merchantAccount = keyValueStorage.getMerchantAccount(),
+                shopperReference = keyValueStorage.getShopperReference(),
             )
-            val response = recurringRepository.removeStoredPaymentMethod(request)
-            val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
+            val result = handleRemoveStoredPaymentMethodResult(storedPaymentMethodId, isSuccessfullyRemoved)
             sendRecurringResult(result)
         }
     }
 
     private fun handleRemoveStoredPaymentMethodResult(
-        jsonResponse: JSONObject?,
-        id: String
+        storedPaymentMethodId: String,
+        isSuccessfullyRemoved: Boolean,
     ): RecurringDropInServiceResult {
-        return if (jsonResponse != null) {
-            Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
-            when (val responseCode = jsonResponse.getStringOrNull("response")) {
-                "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)
-                else -> RecurringDropInServiceResult.Error(reason = responseCode, dismissDropIn = false)
-            }
+        return if (isSuccessfullyRemoved) {
+            Log.v(TAG, "removeStoredPaymentMethod response successful")
+            RecurringDropInServiceResult.PaymentMethodRemoved(storedPaymentMethodId)
         } else {
-            Logger.e(TAG, "FAILED")
+            Log.e(TAG, "FAILED")
             RecurringDropInServiceResult.Error(reason = "IOException")
         }
+    }
+
+    companion object {
+        private val TAG = getLogTag()
     }
 }

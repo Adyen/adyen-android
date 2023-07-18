@@ -9,8 +9,8 @@
 package com.adyen.checkout.dotpay.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,8 +22,9 @@ import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
+class DotpayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DotpayComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod, DotpayComponentState>(

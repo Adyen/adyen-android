@@ -9,8 +9,8 @@
 package com.adyen.checkout.molpay.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,8 +22,9 @@ import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.MolpayConfiguration
 
+class MolpayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class MolpayComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<MolpayComponent, MolpayConfiguration, MolpayPaymentMethod, MolpayComponentState>(

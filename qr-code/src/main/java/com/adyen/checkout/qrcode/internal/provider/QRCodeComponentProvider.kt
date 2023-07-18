@@ -38,8 +38,9 @@ import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 
+class QRCodeComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class QRCodeComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {

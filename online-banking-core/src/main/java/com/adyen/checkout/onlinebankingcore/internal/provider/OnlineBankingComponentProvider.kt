@@ -14,9 +14,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -42,7 +42,6 @@ import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.internal.ui.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
-import com.adyen.checkout.onlinebankingcore.internal.util.PdfOpener
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -53,14 +52,16 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class OnlineBankingComponentProvider<
     ComponentT : OnlineBankingComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : OnlineBankingConfiguration,
     PaymentMethodT : IssuerListPaymentMethod,
     ComponentStateT : PaymentComponentState<PaymentMethodT>
-    >(
+    >
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
@@ -70,7 +71,8 @@ abstract class OnlineBankingComponentProvider<
         ComponentT,
         ConfigurationT,
         ComponentStateT,
-        SessionComponentCallback<ComponentStateT>> {
+        SessionComponentCallback<ComponentStateT>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

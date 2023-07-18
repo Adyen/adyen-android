@@ -50,7 +50,7 @@ internal class SubmitFingerprintRepository internal constructor(
             }
             else -> {
                 Logger.e(TAG, "submitFingerprint: unexpected response $response")
-                throw IllegalStateException("Failed to retrieve 3DS2 fingerprint result")
+                error("Failed to retrieve 3DS2 fingerprint result")
             }
         }
     }

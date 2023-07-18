@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Προσωπικά στοιχεία</string>
+    <string name="checkout_boleto_first_name">Όνομα</string>
+    <string name="checkout_boleto_last_name">Επώνυμο</string>
+    <string name="checkout_boleto_send_email_copy">Αποστολή αντιγράφου στη διεύθυνση email μου</string>
+    <string name="checkout_boleto_email">Διεύθυνση email</string>
+    <string name="checkout_boleto_generate_btn_label">Δημιουργία Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Το όνομα δεν είναι έγκυρο</string>
+    <string name="checkout_boleto_last_name_invalid">Το επώνυμο δεν είναι έγκυρο</string>
+    <string name="checkout_boleto_email_invalid">Μη έγκυρη διεύθυνση email</string>
+</resources>

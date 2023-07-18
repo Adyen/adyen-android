@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Dati personali</string>
+    <string name="checkout_boleto_first_name">Nome</string>
+    <string name="checkout_boleto_last_name">Cognome</string>
+    <string name="checkout_boleto_send_email_copy">Invia una copia alla mia e-mail</string>
+    <string name="checkout_boleto_email">Indirizzo e-mail</string>
+    <string name="checkout_boleto_generate_btn_label">Genera Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Nome non valido</string>
+    <string name="checkout_boleto_last_name_invalid">Cognome non valido</string>
+    <string name="checkout_boleto_email_invalid">Indirizzo e-mail non valido</string>
+</resources>

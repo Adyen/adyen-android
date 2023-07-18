@@ -16,40 +16,47 @@ ext {
     // just for example app, don't need to increment
     version_code = 1
     // The version_name format is "major.minor.patch(-(alpha|beta|rc)[0-9]{2}){0,1}" (e.g. 3.0.0, 3.1.1-alpha04 or 3.1.4-rc01 etc).
-    version_name = "5.0.0-alpha01"
+    version_name = "5.0.0-alpha02"
 
     // Build Script
-    android_gradle_plugin_version = '7.4.2'
-    kotlin_version = '1.8.21'
-    detekt_gradle_plugin_version = "1.22.0"
-    dokka_version = "1.8.10"
-    hilt_version = "2.46"
+    android_gradle_plugin_version = '8.0.2'
+    kotlin_version = '1.8.22'
+    detekt_gradle_plugin_version = "1.23.0"
+    dokka_version = "1.8.20"
+    hilt_version = "2.46.1"
+    compose_compiler_version = '1.4.8'
 
     // Code quality
-    detekt_version = "1.22.0"
-    ktlint_version = '0.48.2'
+    detekt_version = "1.23.0"
+    ktlint_version = '0.50.0'
 
     // Android Dependencies
     annotation_version = "1.6.0"
     appcompat_version = "1.6.1"
     browser_version = "1.5.0"
     coroutines_version = "1.6.4"
-    fragment_version = "1.5.7"
+    fragment_version = "1.6.0"
     lifecycle_version = "2.5.1"
-    material_version = "1.8.0"
+    material_version = "1.9.0"
     recyclerview_version = "1.3.0"
     constraintlayout_version = '2.1.4'
+
+    // Compose Dependencies
+    compose_activity_version = '1.7.2'
+    compose_bom_version = '2023.06.01'
+    compose_viewmodel_version = '2.6.1'
 
     // Adyen Dependencies
     adyen3ds2_version = "2.2.13"
 
     // External Dependencies
+    cash_app_pay_version = '2.2.0'
     okhttp_version = "4.11.0"
-    play_services_wallet_version = '19.1.0'
+    play_services_wallet_version = '19.2.0'
     wechat_pay_version = "6.6.4"
 
     // Example app
-    leak_canary_version = '2.10'
+    leak_canary_version = '2.12'
     moshi_adapters_version = '1.14.0'
     moshi_kotlin_adapter_version = '1.14.0'
     okhttp_logging_version = "4.11.0"
@@ -59,11 +66,11 @@ ext {
     // Tests
     arch_core_testing_version = "2.2.0"
     espresso_version = "3.5.0"
-    json_version = '20230227'
+    json_version = '20230618'
     junit_jupiter_version = "5.9.1"
     mockito_kotlin_version = "4.1.0"
     mockito_version = "4.9.0"
-    robolectric_version = "4.10"
+    robolectric_version = "4.10.3"
     test_ext_version = "1.1.4"
     test_rules_version = "1.5.0"
     turbine_version = "0.12.1"
@@ -83,6 +90,12 @@ ext {
             ],
             preference      : "androidx.preference:preference-ktx:$preference_version",
             recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
+        ],
+        cashAppPay        : "app.cash.paykit:core:$cash_app_pay_version",
+        compose           : [
+            activity : "androidx.activity:activity-compose:$compose_activity_version",
+            bom      : "androidx.compose:compose-bom:$compose_bom_version",
+            viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
         hilt              : "com.google.dagger:hilt-android:$hilt_version",
         hiltCompiler      : "com.google.dagger:hilt-compiler:$hilt_version",

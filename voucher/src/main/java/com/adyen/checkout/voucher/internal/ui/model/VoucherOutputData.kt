@@ -9,6 +9,7 @@
 package com.adyen.checkout.voucher.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -16,4 +17,7 @@ data class VoucherOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,
     val downloadUrl: String?,
+    val expiresAt: String?,
+    val reference: String?,
+    val totalAmount: Amount?,
 ) : OutputData

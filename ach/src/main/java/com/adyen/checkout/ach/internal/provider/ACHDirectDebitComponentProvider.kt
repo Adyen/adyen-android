@@ -20,8 +20,8 @@ import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.StoredACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -59,8 +59,9 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+class ACHDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ACHDirectDebitComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -68,22 +69,26 @@ class ACHDirectDebitComponentProvider(
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        ComponentCallback<ACHDirectDebitComponentState>>,
+        ComponentCallback<ACHDirectDebitComponentState>
+        >,
     StoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        ComponentCallback<ACHDirectDebitComponentState>>,
+        ComponentCallback<ACHDirectDebitComponentState>
+        >,
     SessionPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        SessionComponentCallback<ACHDirectDebitComponentState>>,
+        SessionComponentCallback<ACHDirectDebitComponentState>
+        >,
     SessionStoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        SessionComponentCallback<ACHDirectDebitComponentState>> {
+        SessionComponentCallback<ACHDirectDebitComponentState>
+        > {
 
     private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(
         overrideComponentParams,

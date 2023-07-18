@@ -27,13 +27,15 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 
+class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class VoucherComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
@@ -68,7 +70,11 @@ class VoucherComponentProvider(
         application: Application,
     ): VoucherDelegate {
         val componentParams = componentParamsMapper.mapToParams(configuration, null)
-        return DefaultVoucherDelegate(ActionObserverRepository(), componentParams)
+        return DefaultVoucherDelegate(
+            observerRepository = ActionObserverRepository(),
+            componentParams = componentParams,
+            pdfOpener = PdfOpener()
+        )
     }
 
     override val supportedActionTypes: List<String>
@@ -83,6 +89,15 @@ class VoucherComponentProvider(
     }
 
     companion object {
-        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
+        private val PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.BACS,
+            PaymentMethodTypes.BOLETOBANCARIO,
+            PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL,
+            PaymentMethodTypes.BOLETOBANCARIO_BRADESCO,
+            PaymentMethodTypes.BOLETOBANCARIO_HSBC,
+            PaymentMethodTypes.BOLETOBANCARIO_ITAU,
+            PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
+            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY
+        )
     }
 }

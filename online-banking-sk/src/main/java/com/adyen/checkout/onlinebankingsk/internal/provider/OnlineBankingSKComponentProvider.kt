@@ -9,8 +9,8 @@
 package com.adyen.checkout.onlinebankingsk.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,15 +22,17 @@ import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentState
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 
+class OnlineBankingSKComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class OnlineBankingSKComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,
     OnlineBankingSKPaymentMethod,
-    OnlineBankingSKComponentState>(
+    OnlineBankingSKComponentState
+    >(
     componentClass = OnlineBankingSKComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

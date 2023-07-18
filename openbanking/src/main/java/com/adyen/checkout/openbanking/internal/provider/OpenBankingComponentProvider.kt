@@ -9,8 +9,8 @@
 package com.adyen.checkout.openbanking.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,8 +22,9 @@ import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 
+class OpenBankingComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class OpenBankingComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : IssuerListComponentProvider<

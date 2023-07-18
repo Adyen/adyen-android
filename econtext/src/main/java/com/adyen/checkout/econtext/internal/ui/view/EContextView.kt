@@ -50,7 +50,7 @@ internal class EContextView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is EContextDelegate<*, *>) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is EContextDelegate<*, *>) { "Unsupported delegate type" }
         this.delegate = delegate
 
         this.localizedContext = localizedContext

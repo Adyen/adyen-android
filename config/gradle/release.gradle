@@ -19,14 +19,12 @@ ext["sonatypeStagingProfileId"] = ''
 
 File secretPropsFile = project.rootProject.file('local.properties')
 if (secretPropsFile.exists()) {
-    logger.lifecycle("\n-- Getting Secrets from local.properties --\n")
     Properties p = new Properties()
     p.load(new FileInputStream(secretPropsFile))
     p.each { name, value ->
         ext[name] = value
     }
 } else {
-    logger.lifecycle("\n-- Getting Secrets from System Env --\n")
     ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
     ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
     ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
@@ -53,6 +51,8 @@ final theTeamName = "Checkout"
 
 final theScmConnection = "scm:git:git://github.com/Adyen/adyen-android.git"
 final theScmUrl = "https://github.com/Adyen/adyen-android"
+
+group theGroupId
 
 project.afterEvaluate {
     publishing {

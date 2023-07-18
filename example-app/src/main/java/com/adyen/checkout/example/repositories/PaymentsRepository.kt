@@ -30,6 +30,11 @@ interface PaymentsRepository {
     suspend fun getBalance(request: BalanceRequest): JSONObject?
     suspend fun createOrder(orderRequest: CreateOrderRequest): JSONObject?
     suspend fun cancelOrder(request: CancelOrderRequest): JSONObject?
+    suspend fun removeStoredPaymentMethod(
+        storedPaymentMethodId: String,
+        merchantAccount: String,
+        shopperReference: String,
+    ): Boolean
 }
 
 @Suppress("TooManyFunctions")
@@ -83,5 +88,20 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
 
     override suspend fun cancelOrder(request: CancelOrderRequest): JSONObject? = safeApiCall {
         checkoutApiService.cancelOrderAsync(request)
+    }
+
+    override suspend fun removeStoredPaymentMethod(
+        storedPaymentMethodId: String,
+        merchantAccount: String,
+        shopperReference: String
+    ): Boolean {
+        val response = safeApiCall {
+            checkoutApiService.removeStoredPaymentMethodAsync(
+                recurringId = storedPaymentMethodId,
+                merchantAccount = merchantAccount,
+                shopperReference = shopperReference,
+            )
+        }
+        return response?.isSuccessful == true
     }
 }

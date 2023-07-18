@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Henkilötiedot</string>
+    <string name="checkout_boleto_first_name">Etunimi</string>
+    <string name="checkout_boleto_last_name">Sukunimi</string>
+    <string name="checkout_boleto_send_email_copy">Lähetä kopio sähköpostiini</string>
+    <string name="checkout_boleto_email">Sähköpostiosoite</string>
+    <string name="checkout_boleto_generate_btn_label">Luo Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Etunimi ei ole kelvollinen</string>
+    <string name="checkout_boleto_last_name_invalid">Sukunimi ei ole kelvollinen</string>
+    <string name="checkout_boleto_email_invalid">Ei-kelvollinen sähköpostiosoite</string>
+</resources>

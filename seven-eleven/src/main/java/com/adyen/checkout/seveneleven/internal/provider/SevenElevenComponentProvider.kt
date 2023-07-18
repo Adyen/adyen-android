@@ -9,8 +9,8 @@
 package com.adyen.checkout.seveneleven.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,15 +22,17 @@ import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 
+class SevenElevenComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SevenElevenComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : EContextComponentProvider<
     SevenElevenComponent,
     SevenElevenConfiguration,
     SevenElevenPaymentMethod,
-    SevenElevenComponentState>(
+    SevenElevenComponentState
+    >(
     componentClass = SevenElevenComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

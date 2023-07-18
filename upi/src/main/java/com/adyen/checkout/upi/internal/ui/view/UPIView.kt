@@ -53,7 +53,7 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is UPIDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is UPIDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         this.localizedContext = localizedContext
 

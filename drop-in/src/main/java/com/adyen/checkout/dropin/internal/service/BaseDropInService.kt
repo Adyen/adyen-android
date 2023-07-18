@@ -38,8 +38,9 @@ import java.lang.ref.WeakReference
 import kotlin.coroutines.CoroutineContext
 
 @Suppress("TooManyFunctions")
+abstract class BaseDropInService
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-abstract class BaseDropInService : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropInServiceContract {
+constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropInServiceContract {
 
     private val coroutineJob: Job = Job()
     final override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob

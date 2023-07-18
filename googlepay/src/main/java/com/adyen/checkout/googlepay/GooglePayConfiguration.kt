@@ -10,8 +10,8 @@
 package com.adyen.checkout.googlepay
 
 import android.content.Context
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
@@ -40,6 +40,8 @@ class GooglePayConfiguration private constructor(
     val allowedAuthMethods: List<String>?,
     val allowedCardNetworks: List<String>?,
     val isAllowPrepaidCards: Boolean?,
+    val isAllowCreditCards: Boolean?,
+    val isAssuranceDetailsRequired: Boolean?,
     val isEmailRequired: Boolean?,
     val isExistingPaymentMethodRequired: Boolean?,
     val isShippingAddressRequired: Boolean?,
@@ -62,6 +64,8 @@ class GooglePayConfiguration private constructor(
         private var allowedAuthMethods: List<String>? = null
         private var allowedCardNetworks: List<String>? = null
         private var isAllowPrepaidCards: Boolean? = null
+        private var isAllowCreditCards: Boolean? = null
+        private var isAssuranceDetailsRequired: Boolean? = null
         private var isEmailRequired: Boolean? = null
         private var isExistingPaymentMethodRequired: Boolean? = null
         private var isShippingAddressRequired: Boolean? = null
@@ -205,6 +209,36 @@ class GooglePayConfiguration private constructor(
         }
 
         /**
+         * Set if you support credit cards.
+         *
+         * Default is true for the specified card networks.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
+        fun setAllowCreditCards(isAllowCreditCards: Boolean): Builder {
+            this.isAllowCreditCards = isAllowCreditCards
+            return this
+        }
+
+        /**
+         * Set to true to request assurance details.
+         *
+         * Default is false.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         *
+         */
+        fun setAssuranceDetailsRequired(isAssuranceDetailsRequired: Boolean): Builder {
+            this.isAssuranceDetailsRequired = isAssuranceDetailsRequired
+            return this
+        }
+
+        /**
          * Set to true if you require an email address.
          *
          * Default is false.
@@ -315,6 +349,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param amount Amount of the transaction.
          */
+        @Suppress("RedundantOverride")
         override fun setAmount(amount: Amount): Builder {
             return super.setAmount(amount)
         }
@@ -334,6 +369,8 @@ class GooglePayConfiguration private constructor(
                 allowedAuthMethods = allowedAuthMethods,
                 allowedCardNetworks = allowedCardNetworks,
                 isAllowPrepaidCards = isAllowPrepaidCards,
+                isAllowCreditCards = isAllowCreditCards,
+                isAssuranceDetailsRequired = isAssuranceDetailsRequired,
                 isEmailRequired = isEmailRequired,
                 isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
                 isShippingAddressRequired = isShippingAddressRequired,

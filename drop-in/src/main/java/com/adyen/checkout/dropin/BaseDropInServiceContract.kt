@@ -19,14 +19,14 @@ interface BaseDropInServiceContract {
      * [DropInConfiguration.Builder.setEnableRemovingStoredPaymentMethods] to enable this feature.
      *
      * In this method you should make the network call to tell your server to make a call to the
-     * /Recurring/<version_number>/disable endpoint. This method is called when the user initiates
+     * DELETE /storedPaymentMethods endpoint. This method is called when the user initiates
      * removing a stored payment method using the remove button.
      *
      * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
      * in the field [StoredPaymentMethod.id].
      *
      * Asynchronous handling: since this method runs on the main thread, you should make sure the
-     * /Recurring/<version>/disable call and any other long running operation is made on a background thread.
+     * DELETE /storedPaymentMethods call and any other long running operation is made on a background thread.
      *
      * Use [sendRecurringResult] to send the final result of this call back to the Drop-in.
      *
@@ -73,7 +73,7 @@ interface BaseDropInServiceContract {
     fun sendOrderResult(result: OrderDropInServiceResult)
 
     /**
-     * Allows sending the result of the /Recurring/ network call.
+     * Allows sending the result of the DELETE /storedPaymentMethods network call.
      *
      * Call this method with a [RecurringDropInServiceResult] depending on the response of the corresponding network
      * call.

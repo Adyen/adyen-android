@@ -8,15 +8,15 @@
 
 package com.adyen.checkout.example.ui.main
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.SessionDropInResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
@@ -30,6 +30,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,14 +44,24 @@ internal class MainViewModel @Inject constructor(
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
 
-    private val _listItems = MutableStateFlow(ComponentItemProvider.getDefaultItems())
-    val listItems: Flow<List<ComponentItem>> = _listItems
+    private val _useSessions: MutableStateFlow<Boolean> = MutableStateFlow(keyValueStorage.useSessions())
+    private val _showLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: Flow<Boolean> = _isLoading
+    private val _mainViewState: MutableStateFlow<MainViewState> = MutableStateFlow(getViewState())
+    val mainViewState: Flow<MainViewState> = _mainViewState
 
-    private val _eventFlow = MutableSharedFlow<MainEvent>(extraBufferCapacity = 1)
+    private val _eventFlow: MutableSharedFlow<MainEvent> = MutableSharedFlow(extraBufferCapacity = 1)
     val eventFlow: Flow<MainEvent> = _eventFlow
+
+    init {
+        _useSessions.onEach {
+            loadViewState()
+        }.launchIn(viewModelScope)
+
+        _showLoading.onEach {
+            loadViewState()
+        }.launchIn(viewModelScope)
+    }
 
     fun onComponentEntryClick(entry: ComponentItem.Entry) {
         when (entry) {
@@ -72,11 +84,11 @@ internal class MainViewModel @Inject constructor(
 
     private fun startDropInFlow() {
         viewModelScope.launch {
-            _isLoading.emit(true)
+            showLoading(true)
 
             val paymentMethods = getPaymentMethods()
 
-            _isLoading.emit(false)
+            showLoading(false)
 
             if (paymentMethods != null) {
                 val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
@@ -89,13 +101,13 @@ internal class MainViewModel @Inject constructor(
 
     private fun startSessionDropInFlow(takeOverSession: Boolean) {
         viewModelScope.launch {
-            _isLoading.emit(true)
+            showLoading(true)
 
             val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
 
             val session = getSession(dropInConfiguration)
 
-            _isLoading.emit(false)
+            showLoading(false)
 
             if (session != null) {
                 val navigation = if (takeOverSession) {
@@ -133,7 +145,7 @@ internal class MainViewModel @Inject constructor(
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
             )
@@ -160,12 +172,36 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun onSessionsToggled(enable: Boolean) {
-        val items = if (enable) {
+        viewModelScope.launch {
+            keyValueStorage.setUseSessions(enable)
+            _useSessions.emit(enable)
+        }
+    }
+
+    private suspend fun showLoading(loading: Boolean) {
+        _showLoading.emit(loading)
+    }
+
+    private suspend fun loadViewState() {
+        _mainViewState.emit(getViewState())
+    }
+
+    private fun getViewState(): MainViewState {
+        val useSessions = _useSessions.value
+        val showLoading = _showLoading.value
+        return MainViewState(
+            listItems = getListItems(useSessions),
+            useSessions = useSessions,
+            showLoading = showLoading,
+        )
+    }
+
+    private fun getListItems(useSessions: Boolean): List<ComponentItem> {
+        return if (useSessions) {
             ComponentItemProvider.getSessionItems()
         } else {
             ComponentItemProvider.getDefaultItems()
         }
-        _listItems.tryEmit(items)
     }
 
     fun onDropInResult(dropInResult: DropInResult?) {
@@ -190,10 +226,10 @@ internal class MainViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        Log.d(TAG, "onCleared")
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
+        private val TAG = getLogTag()
     }
 }

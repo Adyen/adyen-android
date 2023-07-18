@@ -156,7 +156,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.card.internal.ui.view.SocialSecurityNumberInput
+        <com.adyen.checkout.ui.core.internal.ui.view.SocialSecurityNumberInput
             android:id="@+id/editText_socialSecurityNumber"
             style="@style/AdyenCheckout.Card.SocialSecurityNumberInput"
             android:nextFocusDown="@id/editText_kcpBirthDateOrTaxNumber"

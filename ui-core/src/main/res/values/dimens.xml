@@ -13,6 +13,7 @@
     <dimen name="standard_half_margin">8dp</dimen>
     <dimen name="standard_three_quarters_margin">12dp</dimen>
     <dimen name="standard_margin">16dp</dimen>
+    <dimen name="standard_one_half_margin">24dp</dimen>
     <dimen name="standard_double_margin">32dp</dimen>
 
     <dimen name="logo_width">40dp</dimen>

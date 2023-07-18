@@ -104,7 +104,7 @@ internal class AnalyticsMapperTest {
 
             val expected = mapOf(
                 "payload_version" to "1",
-                "version" to "5.0.0-alpha01",
+                "version" to "5.0.0-alpha02",
                 "flavor" to "components",
                 "component" to "PAYMENT_METHOD_TYPE",
                 "locale" to "en_US",

@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -48,8 +48,9 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+class BacsDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class BacsDirectDebitComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -57,12 +58,14 @@ class BacsDirectDebitComponentProvider(
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        ComponentCallback<BacsDirectDebitComponentState>>,
+        ComponentCallback<BacsDirectDebitComponentState>
+        >,
     SessionPaymentComponentProvider<
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        SessionComponentCallback<BacsDirectDebitComponentState>> {
+        SessionComponentCallback<BacsDirectDebitComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

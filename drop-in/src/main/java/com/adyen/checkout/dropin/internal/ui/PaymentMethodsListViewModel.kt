@@ -76,7 +76,7 @@ internal class PaymentMethodsListViewModel(
 
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
         paymentMethods.forEach { paymentMethod ->
-            val type = paymentMethod.type ?: throw IllegalStateException("PaymentMethod type is null")
+            val type = requireNotNull(paymentMethod.type) { "PaymentMethod type is null" }
 
             when {
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
@@ -201,8 +201,9 @@ internal class PaymentMethodsListViewModel(
 
     private fun List<PaymentMethod>.mapToPaymentMethodModelList(): List<PaymentMethodModel> =
         mapIndexedNotNull { index, paymentMethod ->
-            val isAvailable = paymentMethodsAvailabilityMap[paymentMethod]
-                ?: throw IllegalStateException("payment method not found in map")
+            val isAvailable = requireNotNull(paymentMethodsAvailabilityMap[paymentMethod]) {
+                "payment method not found in map"
+            }
             if (isAvailable) paymentMethod.mapToModel(index) else null
         }
 

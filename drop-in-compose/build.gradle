@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2023 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 1/6/2023.
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+// Maven artifact
+ext.mavenArtifactId = "drop-in-compose"
+ext.mavenArtifactName = "Adyen checkout drop-in component compose"
+ext.mavenArtifactDescription = "Compose compat Adyen checkout drop-in component."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    namespace 'com.adyen.checkout.dropin.compose'
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = compose_compiler_version
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':drop-in')
+
+    implementation platform(libraries.compose.bom)
+    implementation libraries.compose.activity
+}

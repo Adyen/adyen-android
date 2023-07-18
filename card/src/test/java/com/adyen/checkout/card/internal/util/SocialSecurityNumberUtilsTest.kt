@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.util
 
+import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

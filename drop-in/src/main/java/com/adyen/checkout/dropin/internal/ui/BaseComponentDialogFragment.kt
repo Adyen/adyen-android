@@ -142,7 +142,7 @@ internal abstract class BaseComponentDialogFragment :
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        throw IllegalStateException("This event should not be used in drop-in")
+        error("This event should not be used in drop-in")
     }
 
     override fun onError(componentError: ComponentError) {

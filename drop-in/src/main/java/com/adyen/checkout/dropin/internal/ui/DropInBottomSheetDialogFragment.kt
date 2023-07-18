@@ -41,11 +41,8 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if (activity is Protocol) {
-            protocol = activity as Protocol
-        } else {
-            throw IllegalArgumentException("Host activity needs to implement DropInBottomSheetDialogFragment.Protocol")
-        }
+        require(activity is Protocol)
+        protocol = activity as Protocol
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

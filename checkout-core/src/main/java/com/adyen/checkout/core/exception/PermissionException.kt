@@ -8,14 +8,10 @@
 
 package com.adyen.checkout.core.exception
 
-import androidx.annotation.RestrictTo
-
 /**
  *
  * This exception indicates that the required runtime permission is not granted.
  */
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PermissionException(
     errorMessage: String,
     val requiredPermission: String

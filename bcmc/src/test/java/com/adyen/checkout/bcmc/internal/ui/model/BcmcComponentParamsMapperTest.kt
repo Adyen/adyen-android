@@ -110,7 +110,8 @@ internal class BcmcComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
                 installmentOptions = null,
-                amount = null
+                amount = null,
+                returnUrl = "",
             )
         )
 
@@ -140,7 +141,8 @@ internal class BcmcComponentParamsMapperTest {
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentOptions = null,
-                amount = sessionsValue
+                amount = sessionsValue,
+                returnUrl = "",
             )
         )
 

@@ -25,7 +25,7 @@ data class SessionDetails(
     val sessionData: String,
     val amount: Amount?,
     val expiresAt: String,
-    val returnUrl: String,
+    val returnUrl: String?,
     val sessionSetupConfiguration: SessionSetupConfiguration?
 ) : Parcelable
 

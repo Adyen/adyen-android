@@ -51,7 +51,7 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is MBWayDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is MBWayDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         this.localizedContext = localizedContext
 

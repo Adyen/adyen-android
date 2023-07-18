@@ -11,8 +11,8 @@ package com.adyen.checkout.onlinebankingcore.internal
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.AdyenLogger
@@ -47,7 +47,8 @@ import org.mockito.kotlin.whenever
 internal class OnlineBankingComponentTest(
     @Mock private val onlineBankingDelegate: OnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
-        TestOnlineBankingComponentState>,
+        TestOnlineBankingComponentState
+        >,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock

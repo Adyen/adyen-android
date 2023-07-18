@@ -9,8 +9,8 @@
 package com.adyen.checkout.onlinebankingcz.internal.provider
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -22,15 +22,17 @@ import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponentState
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 
+class OnlineBankingCZComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class OnlineBankingCZComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingCZComponent,
     OnlineBankingCZConfiguration,
     OnlineBankingCZPaymentMethod,
-    OnlineBankingCZComponentState>(
+    OnlineBankingCZComponentState
+    >(
     componentClass = OnlineBankingCZComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,

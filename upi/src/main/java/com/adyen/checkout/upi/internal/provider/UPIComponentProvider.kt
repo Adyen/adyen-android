@@ -14,8 +14,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -48,8 +48,9 @@ import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.internal.ui.DefaultUPIDelegate
 
+class UPIComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class UPIComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -58,7 +59,8 @@ class UPIComponentProvider(
         UPIComponent,
         UPIConfiguration,
         UPIComponentState,
-        SessionComponentCallback<UPIComponentState>> {
+        SessionComponentCallback<UPIComponentState>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

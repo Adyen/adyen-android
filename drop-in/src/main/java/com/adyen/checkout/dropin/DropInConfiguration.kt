@@ -11,12 +11,14 @@ package com.adyen.checkout.dropin
 import android.content.Context
 import android.os.Bundle
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
@@ -90,12 +92,12 @@ class DropInConfiguration private constructor(
         /**
          * Create a [DropInConfiguration]
          *
-         * @param context A context
+         * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
             environment,
             clientKey
         )
@@ -103,12 +105,12 @@ class DropInConfiguration private constructor(
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
-         * @param shopperLocale The [Locale] of the shopper.
+         * @param context A context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
-            shopperLocale,
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
             environment,
             clientKey
         )
@@ -159,6 +161,14 @@ class DropInConfiguration private constructor(
          */
         fun addCardConfiguration(cardConfiguration: CardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.SCHEME] = cardConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Cash App Pay payment method.
+         */
+        fun addCashAppPayConfiguration(cashAppPayConfiguration: CashAppPayConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.CASH_APP_PAY] = cashAppPayConfiguration
             return this
         }
 
@@ -348,6 +358,20 @@ class DropInConfiguration private constructor(
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
             availablePaymentConfigs[PaymentMethodTypes.UPI_COLLECT] = upiConfiguration
             availablePaymentConfigs[PaymentMethodTypes.UPI_QR] = upiConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Boleto payment method.
+         */
+        fun addBoletoConfiguration(boletoConfiguration: BoletoConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BRADESCO] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_HSBC] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_ITAU] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_SANTANDER] = boletoConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BOLETO_PRIMEIRO_PAY] = boletoConfiguration
             return this
         }
 

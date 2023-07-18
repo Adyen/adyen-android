@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 31/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Személyes adatok</string>
+    <string name="checkout_boleto_first_name">Keresztnév</string>
+    <string name="checkout_boleto_last_name">Vezetéknév</string>
+    <string name="checkout_boleto_send_email_copy">Másolat küldése az e-mail-címemre</string>
+    <string name="checkout_boleto_email">E-mail-cím</string>
+    <string name="checkout_boleto_generate_btn_label">Boleto létrehozása</string>
+
+    <string name="checkout_boleto_first_name_invalid">A keresztnév nem érvényes</string>
+    <string name="checkout_boleto_last_name_invalid">A vezetéknév nem érvényes</string>
+    <string name="checkout_boleto_email_invalid">Érvénytelen e-mail-cím</string>
+</resources>

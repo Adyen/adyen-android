@@ -91,7 +91,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
             componentParams = Adyen3DS2ComponentParamsMapper(null, null)
-                .mapToParams(configuration, null, "embeddedRequestorAppUrl"),
+                .mapToParams(configuration, null),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
@@ -526,7 +526,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         override fun getProgressView(p0: Activity?): ProgressDialog {
-            throw IllegalStateException("This method should not be used")
+            error("This method should not be used")
         }
 
         override fun close() = Unit

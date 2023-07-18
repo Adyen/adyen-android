@@ -8,8 +8,8 @@
 package com.adyen.checkout.mbway
 
 import android.content.Context
-import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.action.core.GenericActionConfiguration
+import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder

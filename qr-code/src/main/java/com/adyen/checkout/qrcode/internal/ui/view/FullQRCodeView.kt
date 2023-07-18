@@ -63,7 +63,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is QRCodeDelegate) throw IllegalStateException("Unsupported delegate type")
+        require(delegate is QRCodeDelegate) { "Unsupported delegate type" }
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)

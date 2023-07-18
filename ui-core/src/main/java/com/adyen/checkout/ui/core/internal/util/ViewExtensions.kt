@@ -22,6 +22,7 @@ inline var TextInputLayout.isVisible: Boolean
         editText?.apply {
             this.visibility = visibility
             isFocusable = value
+            isFocusableInTouchMode = value
         }
     }
 

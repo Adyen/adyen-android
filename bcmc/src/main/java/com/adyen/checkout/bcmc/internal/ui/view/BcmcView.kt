@@ -54,7 +54,7 @@ internal class BcmcView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is BcmcDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is BcmcDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
 
         this.localizedContext = localizedContext

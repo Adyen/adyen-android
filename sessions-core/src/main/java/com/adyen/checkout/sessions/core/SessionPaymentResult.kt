@@ -13,7 +13,8 @@ import com.adyen.checkout.components.core.OrderResponse
 import kotlinx.parcelize.Parcelize
 
 /**
- * The final result of a component initialized with the sessions flow.
+ * The final result of a payment using the sessions flow.
+ * You can use the [sessionId] and [sessionResult] to get the result of the payment session on your server.
  */
 @Parcelize
 data class SessionPaymentResult(

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.voucher.internal.ui
 
+import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
@@ -18,4 +19,6 @@ import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 interface VoucherDelegate :
     ActionDelegate,
     ViewableDelegate<VoucherOutputData>,
-    ViewProvidingDelegate
+    ViewProvidingDelegate {
+    fun downloadVoucher(context: Context)
+}

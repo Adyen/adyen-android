@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 26/6/2023.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.CashAppPay" />
+
+    <style name="AdyenCheckout.CashAppPay.StorePaymentSwitch" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/cash_app_pay_store_payment_method</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AdyenCheckout.CashAppPay.ProgressBar">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:indeterminateTint">?android:attr/colorPrimary</item>
+    </style>
+
+    <style name="AdyenCheckout.CashAppPay.WaitingDescriptionTextView">
+        <item name="android:text">@string/cash_app_pay_waiting_text</item>
+        <item name="android:textIsSelectable">false</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+</resources>

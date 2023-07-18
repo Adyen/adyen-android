@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 15/3/2023.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/voucher_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_one_half_margin"
+        android:contentDescription="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_placeholder_image" />
+
+    <TextView
+        android:id="@+id/textView_introduction"
+        style="@style/AdyenCheckout.Voucher.Description.Boleto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView_logo" />
+
+    <TextView
+        android:id="@+id/textView_amount"
+        style="@style/AdyenCheckout.Voucher.Amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_introduction"
+        tools:text="R$ 500" />
+
+    <View
+        android:id="@+id/paymentReferenceSeparator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/voucherBorderColor"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_paymentReference"
+        app:layout_constraintEnd_toStartOf="@id/textView_paymentReference"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_paymentReference" />
+
+    <TextView
+        android:id="@+id/textView_paymentReference"
+        style="@style/AdyenCheckout.Voucher.PaymentReference"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/paymentReferenceSeparator2"
+        app:layout_constraintStart_toEndOf="@id/paymentReferenceSeparator"
+        app:layout_constraintTop_toBottomOf="@+id/textView_amount" />
+
+    <View
+        android:id="@+id/paymentReferenceSeparator2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/voucherBorderColor"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_paymentReference"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/textView_paymentReference"
+        app:layout_constraintTop_toTopOf="@+id/textView_paymentReference" />
+
+    <TextView
+        android:id="@+id/textView_reference_code"
+        style="@style/AdyenCheckout.Voucher.CodeReference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/paymentReferenceSeparator"
+        tools:text="12345.1234.12345.12345.12345678901 123456789012345" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_copyCode"
+        style="@style/AdyenCheckout.Voucher.ButtonCopyCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/button_downloadPdf"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_downloadPdf"
+        style="@style/AdyenCheckout.Voucher.ButtonDownloadPdf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/button_copyCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_copyCode"
+        app:layout_constraintTop_toBottomOf="@id/textView_reference_code"
+        app:layout_constraintTop_toTopOf="@id/button_copyCode" />
+
+    <View
+        android:id="@+id/expiryDateSeparator"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:background="@color/voucherBorderColor"
+        app:layout_constraintTop_toBottomOf="@id/button_copyCode" />
+
+    <TextView
+        android:id="@+id/textView_expirationLabel"
+        style="@style/AdyenCheckout.Voucher.ExpirationDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expiryDateSeparator" />
+
+    <TextView
+        android:id="@+id/textView_expirationDate"
+        style="@style/AdyenCheckout.Voucher.ExpirationDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expiryDateSeparator"
+        tools:text="16/03/2023" />
+</merge>

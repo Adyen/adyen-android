@@ -181,13 +181,15 @@ internal object GooglePayUtils {
     }
 
     private fun createCardParameters(params: GooglePayComponentParams): CardParameters {
-        val cardParameters = CardParameters()
-        cardParameters.allowedAuthMethods = params.allowedAuthMethods
-        cardParameters.allowedCardNetworks = params.allowedCardNetworks
-        cardParameters.isAllowPrepaidCards = params.isAllowPrepaidCards
-        cardParameters.isBillingAddressRequired = params.isBillingAddressRequired
-        cardParameters.billingAddressParameters = params.billingAddressParameters
-        return cardParameters
+        return CardParameters(
+            allowedAuthMethods = params.allowedAuthMethods,
+            allowedCardNetworks = params.allowedCardNetworks,
+            isAllowPrepaidCards = params.isAllowPrepaidCards,
+            isAllowCreditCards = params.isAllowCreditCards,
+            isAssuranceDetailsRequired = params.isAssuranceDetailsRequired,
+            isBillingAddressRequired = params.isBillingAddressRequired,
+            billingAddressParameters = params.billingAddressParameters,
+        )
     }
 
     private fun createTokenizationSpecification(

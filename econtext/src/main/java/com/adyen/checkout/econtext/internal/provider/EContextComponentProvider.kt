@@ -14,9 +14,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -53,13 +53,14 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class EContextComponentProvider<
     ComponentT : EContextComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : EContextConfiguration,
     PaymentMethodT : EContextPaymentMethod,
     ComponentStateT : PaymentComponentState<PaymentMethodT>,
-    >(
+    >
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val componentClass: Class<ComponentT>,
     overrideComponentParams: ComponentParams?,
     overrideSessionParams: SessionParams?,
@@ -68,7 +69,8 @@ abstract class EContextComponentProvider<
         ComponentT,
         ConfigurationT,
         ComponentStateT,
-        SessionComponentCallback<ComponentStateT>> {
+        SessionComponentCallback<ComponentStateT>
+        > {
 
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 

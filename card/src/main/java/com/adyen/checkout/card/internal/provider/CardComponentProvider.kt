@@ -13,8 +13,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -63,8 +63,9 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+class CardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CardComponentProvider(
+constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) :
@@ -72,22 +73,26 @@ class CardComponentProvider(
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>>,
+        ComponentCallback<CardComponentState>
+        >,
     StoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        ComponentCallback<CardComponentState>>,
+        ComponentCallback<CardComponentState>
+        >,
     SessionPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>>,
+        SessionComponentCallback<CardComponentState>
+        >,
     SessionStoredPaymentComponentProvider<
         CardComponent,
         CardConfiguration,
         CardComponentState,
-        SessionComponentCallback<CardComponentState>> {
+        SessionComponentCallback<CardComponentState>
+        > {
 
     private val componentParamsMapper = CardComponentParamsMapper(
         installmentsParamsMapper = InstallmentsParamsMapper(),
@@ -164,6 +169,7 @@ class CardComponentProvider(
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -322,6 +328,7 @@ class CardComponentProvider(
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -406,6 +413,7 @@ class CardComponentProvider(
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, factory)[key, CardComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)

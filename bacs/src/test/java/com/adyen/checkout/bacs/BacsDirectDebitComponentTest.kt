@@ -11,8 +11,8 @@ package com.adyen.checkout.bacs
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.BacsDirectDebitDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler

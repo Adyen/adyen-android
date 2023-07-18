@@ -1,17 +1,38 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 include ':3ds2',
         ':ach',
         ':action',
+        ':action-core',
         ':await',
         ':bacs',
         ':bcmc',
         ':blik',
+        ':boleto',
         ':card',
+        ':cashapppay',
         ':checkout-core',
+        ':components-compose',
         ':components-core',
         ':convenience-stores-jp',
         ':cse',
         ':dotpay',
         ':drop-in',
+        ':drop-in-compose',
         ':econtext',
         ':entercash',
         ':eps',

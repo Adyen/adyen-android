@@ -50,7 +50,7 @@ internal class PayByBankView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        if (delegate !is PayByBankDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        require(delegate is PayByBankDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
 
         this.localizedContext = localizedContext

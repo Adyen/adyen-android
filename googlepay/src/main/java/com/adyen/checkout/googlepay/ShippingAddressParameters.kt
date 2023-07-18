@@ -41,7 +41,7 @@ data class ShippingAddressParameters(
                 return try {
                     JSONObject().apply {
                         putOpt(ALLOWED_COUNTRY_CODES, serializeOptStringList(modelObject.allowedCountryCodes))
-                        putOpt(ALLOWED_COUNTRY_CODES, modelObject.isPhoneNumberRequired)
+                        putOpt(PHONE_NUMBER_REQUIRED, modelObject.isPhoneNumberRequired)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ShippingAddressParameters::class.java, e)
@@ -49,7 +49,7 @@ data class ShippingAddressParameters(
             }
 
             override fun deserialize(jsonObject: JSONObject) = ShippingAddressParameters(
-                allowedCountryCodes = parseOptStringList(jsonObject.optJSONArray(PHONE_NUMBER_REQUIRED)),
+                allowedCountryCodes = parseOptStringList(jsonObject.optJSONArray(ALLOWED_COUNTRY_CODES)),
                 isPhoneNumberRequired = jsonObject.optBoolean(PHONE_NUMBER_REQUIRED),
             )
         }

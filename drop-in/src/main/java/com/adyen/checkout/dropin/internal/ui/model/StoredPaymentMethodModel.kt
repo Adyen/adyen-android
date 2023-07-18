@@ -43,6 +43,7 @@ internal data class GenericStoredModel(
     override val imageId: String,
     override val isRemovable: Boolean,
     val name: String,
+    val description: String?,
     // We need the environment to load the logo
     val environment: Environment,
 ) : StoredPaymentMethodModel()

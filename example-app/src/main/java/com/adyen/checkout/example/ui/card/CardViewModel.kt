@@ -10,7 +10,6 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -103,7 +102,7 @@ internal class CardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(CardActivity.RETURN_URL_EXTRA)
-                    ?: throw IllegalStateException("Return url should be set"),
+                    ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
@@ -119,7 +118,7 @@ internal class CardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
-                else -> _events.emit(CardEvent.PaymentResult("Success: ${json.getStringOrNull("resultCode")}"))
+                else -> _events.emit(CardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
     }

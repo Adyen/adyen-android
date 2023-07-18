@@ -7,13 +7,12 @@
  */
 package com.adyen.checkout.issuerlist.internal
 
-import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.action.internal.ActionHandlingComponent
-import com.adyen.checkout.action.internal.DefaultActionHandlingComponent
-import com.adyen.checkout.action.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.internal.ActionHandlingComponent
+import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
+import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
@@ -41,8 +40,7 @@ abstract class IssuerListComponent<
     private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT, ComponentStateT>,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    val componentEventHandler: ComponentEventHandler<ComponentStateT>,
+    internal val componentEventHandler: ComponentEventHandler<ComponentStateT>,
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
@@ -63,8 +61,7 @@ abstract class IssuerListComponent<
         componentEventHandler.initialize(viewModelScope)
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<ComponentStateT>) -> Unit
     ) {
@@ -72,8 +69,7 @@ abstract class IssuerListComponent<
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun removeObserver() {
+    internal fun removeObserver() {
         issuerListDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
