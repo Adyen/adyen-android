@@ -114,7 +114,8 @@ internal abstract class BaseComponentDialogFragment :
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
-                    sessionDetails = dropInViewModel.sessionDetails
+                    sessionDetails = dropInViewModel.sessionDetails,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
                 )
             } else {
                 getComponentFor(
@@ -123,7 +124,8 @@ internal abstract class BaseComponentDialogFragment :
                     sessionDetails = dropInViewModel.sessionDetails,
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
-                    componentCallback = this
+                    componentCallback = this,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
                 )
             }
         } catch (e: CheckoutException) {

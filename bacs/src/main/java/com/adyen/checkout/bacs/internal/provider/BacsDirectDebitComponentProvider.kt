@@ -26,6 +26,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
@@ -53,6 +54,7 @@ class BacsDirectDebitComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
         BacsDirectDebitComponent,
@@ -84,14 +86,14 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
-            val analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-            )
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
                 clientKey = componentParams.clientKey,
             )
@@ -127,6 +129,7 @@ constructor(
             }
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -146,14 +149,14 @@ constructor(
                 sessionParams = SessionParamsFactory.create(checkoutSession)
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-            )
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
                 clientKey = componentParams.clientKey,
             )
