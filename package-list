@@ -8,11 +8,11 @@ com.adyen.checkout.adyen3ds2.internal.ui
 module:ach
 com.adyen.checkout.ach
 com.adyen.checkout.ach.internal.provider
-module:action
-com.adyen.checkout.action
-com.adyen.checkout.action.internal
-com.adyen.checkout.action.internal.provider
-com.adyen.checkout.action.internal.ui
+module:action-core
+com.adyen.checkout.action.core
+com.adyen.checkout.action.core.internal
+com.adyen.checkout.action.core.internal.provider
+com.adyen.checkout.action.core.internal.ui
 module:await
 com.adyen.checkout.await
 com.adyen.checkout.await.internal.provider
@@ -27,6 +27,9 @@ com.adyen.checkout.bcmc.internal.provider
 module:blik
 com.adyen.checkout.blik
 com.adyen.checkout.blik.internal.provider
+module:boleto
+com.adyen.checkout.boleto
+com.adyen.checkout.boleto.internal.provider
 module:card
 com.adyen.checkout.card
 com.adyen.checkout.card.internal.data.model
@@ -35,6 +38,9 @@ com.adyen.checkout.card.internal.ui
 com.adyen.checkout.card.internal.ui.model
 com.adyen.checkout.card.internal.ui.view
 com.adyen.checkout.card.internal.util
+module:cashapppay
+com.adyen.checkout.cashapppay
+com.adyen.checkout.cashapppay.internal.provider
 module:checkout-core
 com.adyen.checkout.core
 com.adyen.checkout.core.exception
@@ -42,6 +48,8 @@ com.adyen.checkout.core.internal.data.api
 com.adyen.checkout.core.internal.data.model
 com.adyen.checkout.core.internal.ui
 com.adyen.checkout.core.internal.util
+module:components-compose
+com.adyen.checkout.components.compose
 module:components-core
 com.adyen.checkout.components.core
 com.adyen.checkout.components.core.action
@@ -69,6 +77,8 @@ com.adyen.checkout.dropin
 com.adyen.checkout.dropin.internal.service
 com.adyen.checkout.dropin.internal.ui
 com.adyen.checkout.dropin.internal.ui.model
+module:drop-in-compose
+com.adyen.checkout.dropin.compose
 module:econtext
 com.adyen.checkout.econtext.internal
 com.adyen.checkout.econtext.internal.provider
@@ -111,7 +121,6 @@ com.adyen.checkout.onlinebankingcore.internal
 com.adyen.checkout.onlinebankingcore.internal.provider
 com.adyen.checkout.onlinebankingcore.internal.ui
 com.adyen.checkout.onlinebankingcore.internal.ui.model
-com.adyen.checkout.onlinebankingcore.internal.util
 module:online-banking-cz
 com.adyen.checkout.onlinebankingcz
 com.adyen.checkout.onlinebankingcz.internal.provider
@@ -173,6 +182,7 @@ com.adyen.checkout.voucher
 com.adyen.checkout.voucher.internal.provider
 com.adyen.checkout.voucher.internal.ui
 com.adyen.checkout.voucher.internal.ui.model
+com.adyen.checkout.voucher.internal.ui.view
 module:wechatpay
 com.adyen.checkout.wechatpay
 com.adyen.checkout.wechatpay.internal
