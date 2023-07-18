@@ -25,16 +25,32 @@ class DefaultAnalyticsRepository(
     private val clientKey: String,
 ) : AnalyticsRepository {
 
+    private var state: State = State.Uninitialized
+
     override suspend fun setupAnalytics() {
+        if (state != State.Uninitialized) return
+        state = State.InProgress
+        Logger.v(TAG, "Setting up analytics")
+
         runSuspendCatching {
             val analyticsSetupRequest = analyticsMapper.getAnalyticsSetupRequest(packageName, locale, source)
             analyticsService.setupAnalytics(analyticsSetupRequest, clientKey)
+            state = State.Ready
             Logger.v(TAG, "Analytics setup call successful")
+        }.onFailure { e ->
+            state = State.Failed
+            Logger.e(TAG, "Failed to send analytics setup call", e)
         }
-            .onFailure { e -> Logger.e(TAG, "Failed to send analytics setup call", e) }
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
+    }
+
+    private sealed class State {
+        object Uninitialized : State()
+        object InProgress : State()
+        object Ready : State()
+        object Failed : State()
     }
 }
