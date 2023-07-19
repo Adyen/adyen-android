@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -25,7 +26,9 @@ class DefaultAnalyticsRepository(
     private val clientKey: String,
 ) : AnalyticsRepository {
 
-    private var state: State = State.Uninitialized
+    @VisibleForTesting
+    internal var state: State = State.Uninitialized
+        private set
 
     override suspend fun setupAnalytics() {
         if (state != State.Uninitialized) return
@@ -47,7 +50,8 @@ class DefaultAnalyticsRepository(
         private val TAG = LogUtil.getTag()
     }
 
-    private sealed class State {
+    @VisibleForTesting
+    internal sealed class State {
         object Uninitialized : State()
         object InProgress : State()
         object Ready : State()
