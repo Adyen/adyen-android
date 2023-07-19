@@ -31,7 +31,6 @@ import com.adyen.checkout.example.service.createBalanceRequest
 import com.adyen.checkout.example.service.createOrderRequest
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
-import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -220,7 +219,7 @@ internal class GiftCardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = savedStateHandle.get<String>(CardActivity.RETURN_URL_EXTRA)
+                redirectUrl = savedStateHandle.get<String>(GiftCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
