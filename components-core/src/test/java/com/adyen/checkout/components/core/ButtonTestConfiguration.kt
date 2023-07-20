@@ -14,7 +14,7 @@ class ButtonTestConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
 ) : Configuration, ButtonConfiguration {
@@ -45,7 +45,7 @@ class ButtonTestConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
             )

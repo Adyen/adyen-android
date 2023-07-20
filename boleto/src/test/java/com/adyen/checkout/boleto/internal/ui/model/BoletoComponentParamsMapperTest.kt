@@ -10,6 +10,8 @@ package com.adyen.checkout.boleto.internal.ui.model
 
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
@@ -62,7 +64,7 @@ internal class BoletoComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -79,7 +81,7 @@ internal class BoletoComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -149,7 +151,7 @@ internal class BoletoComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        isAnalyticsEnabled: Boolean = true,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         addressParams: AddressParams = AddressParams.FullAddress(
@@ -163,7 +165,7 @@ internal class BoletoComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
-        isAnalyticsEnabled = isAnalyticsEnabled,
+        analyticsParams = analyticsParams,
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         addressParams = addressParams,
