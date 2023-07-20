@@ -53,6 +53,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     )
         .addCardConfiguration(getCardConfiguration())
         .addCashAppPayConfiguration(getCashAppPayConfiguration())
+        .addBlikConfiguration(getBlikConfiguration())
+        .addBacsDirectDebitConfiguration(getBacsConfiguration())
         .addBcmcConfiguration(getBcmcConfiguration())
         .addGooglePayConfiguration(getGooglePayConfiguration())
         .add3ds2ActionConfiguration(get3DS2Configuration())

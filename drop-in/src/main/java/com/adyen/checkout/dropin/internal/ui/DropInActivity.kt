@@ -22,8 +22,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
@@ -35,7 +33,6 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.dropin.DropIn
@@ -47,6 +44,9 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.SessionDropInServiceResult
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
+import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
+import com.adyen.checkout.dropin.internal.provider.getFragmentForPaymentMethod
+import com.adyen.checkout.dropin.internal.provider.getFragmentForStoredPaymentMethod
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 import com.adyen.checkout.dropin.internal.service.BaseDropInServiceInterface
 import com.adyen.checkout.dropin.internal.service.SessionDropInServiceInterface
@@ -54,9 +54,7 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
-import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionPaymentResult
@@ -327,33 +325,14 @@ internal class DropInActivity :
     override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
         Logger.d(TAG, "showStoredComponentDialog")
         hideAllScreens()
-        val dialogFragment = when {
-            CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> CardComponentDialogFragment
-            else -> GenericComponentDialogFragment
-        }.newInstance(storedPaymentMethod, fromPreselected)
-
+        val dialogFragment = getFragmentForStoredPaymentMethod(storedPaymentMethod, fromPreselected)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
-        val dialogFragment = when {
-            CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                CardComponentDialogFragment.newInstance(paymentMethod)
-
-            BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                BacsDirectDebitDialogFragment.newInstance(paymentMethod)
-
-            GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                GiftCardComponentDialogFragment.newInstance(paymentMethod)
-
-            GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                GooglePayComponentDialogFragment.newInstance(paymentMethod)
-
-            else -> GenericComponentDialogFragment.newInstance(paymentMethod)
-        }
-
+        val dialogFragment = getFragmentForPaymentMethod(paymentMethod)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
@@ -554,8 +533,7 @@ internal class DropInActivity :
         }
     }
 
-    private fun isWeChatPayIntent(intent: Intent): Boolean =
-        runCompileOnly { WeChatPayUtils.isResultIntent(intent) } ?: false
+    private fun isWeChatPayIntent(intent: Intent): Boolean = checkCompileOnly { WeChatPayUtils.isResultIntent(intent) }
 
     private fun handleActionIntentResponse(intent: Intent) {
         val actionFragment = getActionFragment() ?: return

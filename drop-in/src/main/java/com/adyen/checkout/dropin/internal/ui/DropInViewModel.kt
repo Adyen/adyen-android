@@ -31,6 +31,7 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
@@ -133,17 +134,21 @@ internal class DropInViewModel(
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
+        if (!dropInConfiguration.skipListWhenSinglePaymentMethod) return false
+
         val noStored = getStoredPaymentMethods().isEmpty()
         val singlePm = getPaymentMethods().size == 1
 
         val firstPaymentMethod = getPaymentMethods().firstOrNull()
+
         val paymentMethodHasComponent = firstPaymentMethod?.let {
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type) &&
-                !GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) &&
+                // google pay is supported, is not action only but does not have a UI component inside our code
+                !checkCompileOnly { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) } &&
                 !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(it.type)
         } ?: false
 
-        return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
+        return noStored && singlePm && paymentMethodHasComponent
     }
 
     private fun getInitialAmount(): Amount {
@@ -189,6 +194,7 @@ internal class DropInViewModel(
                     throw CheckoutException("First payment method is null")
                 }
             }
+
             shouldShowPreselectedStored() -> DropInDestination.PreselectedStored
             else -> DropInDestination.PaymentMethods
         }
@@ -240,6 +246,7 @@ internal class DropInViewModel(
                     false
                 )
             }
+
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
                 Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
                 GiftCardBalanceResult.Error(
@@ -248,6 +255,7 @@ internal class DropInViewModel(
                     false
                 )
             }
+
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
                 Logger.e(
                     TAG,
@@ -256,12 +264,14 @@ internal class DropInViewModel(
                 )
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
+
             is GiftCardBalanceStatus.FullPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.FullPayment(
                     createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
                 )
             }
+
             is GiftCardBalanceStatus.PartialPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 if (currentOrder == null) {
@@ -318,10 +328,12 @@ internal class DropInViewModel(
             existingAmount != null && !existingAmount.isEmpty -> {
                 Logger.d(TAG, "Payment amount already set: $existingAmount")
             }
+
             !amount.isEmpty -> {
                 paymentComponentState.data.amount = amount
                 Logger.d(TAG, "Payment amount set: $amount")
             }
+
             else -> {
                 Logger.d(TAG, "Payment amount not set")
             }

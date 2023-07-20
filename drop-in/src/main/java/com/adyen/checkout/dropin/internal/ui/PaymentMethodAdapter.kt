@@ -126,7 +126,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         private fun bindStoredCard(model: StoredCardModel) {
             with(binding) {
                 val context = root.context
-                textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
+                textViewTitle.text = context.getString(R.string.last_four_digits_format, model.lastFour)
                 imageViewLogo.loadLogo(
                     environment = model.environment,
                     txVariant = model.imageId,
@@ -142,7 +142,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         private fun bindStoredACHDirectDebit(model: StoredACHDirectDebitModel) {
             with(binding) {
                 val context = root.context
-                textViewTitle.text = context.getString(R.string.checkout_ach_bank_account_number_4digit, model.lastFour)
+                textViewTitle.text = context.getString(R.string.last_four_digits_format, model.lastFour)
                 imageViewLogo.loadLogo(
                     environment = model.environment,
                     txVariant = model.imageId,
@@ -215,7 +215,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
 
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
             val context = binding.root.context
-            textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
+            textViewTitle.text = context.getString(R.string.last_four_digits_format, model.lastFour)
             imageViewLogo.loadLogo(
                 environment = model.environment,
                 txVariant = model.imageId,

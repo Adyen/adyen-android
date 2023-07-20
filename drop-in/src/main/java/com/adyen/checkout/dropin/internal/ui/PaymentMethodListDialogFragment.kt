@@ -189,7 +189,7 @@ internal class PaymentMethodListDialogFragment :
             is StoredCardModel -> {
                 dialog.setMessage(
                     requireActivity().getString(
-                        R.string.card_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 )
@@ -200,7 +200,7 @@ internal class PaymentMethodListDialogFragment :
             is StoredACHDirectDebitModel -> {
                 dialog.setMessage(
                     requireActivity().getString(
-                        R.string.checkout_ach_bank_account_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 )

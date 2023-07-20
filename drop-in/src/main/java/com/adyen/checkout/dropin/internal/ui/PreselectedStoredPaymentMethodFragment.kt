@@ -121,7 +121,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         when (storedPaymentMethodModel) {
             is StoredCardModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
-                    requireActivity().getString(R.string.card_number_4digit, storedPaymentMethodModel.lastFour)
+                    requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
                     environment = dropInViewModel.dropInConfiguration.environment,
                     txVariant = storedPaymentMethodModel.imageId,
@@ -134,7 +134,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             is StoredACHDirectDebitModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(
-                        R.string.checkout_ach_bank_account_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
