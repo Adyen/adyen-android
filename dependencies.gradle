@@ -50,7 +50,7 @@ ext {
     adyen3ds2_version = "2.2.13"
 
     // External Dependencies
-    cash_app_pay_version = '2.2.0'
+    cash_app_pay_version = '2.2.1'
     okhttp_version = "4.11.0"
     play_services_wallet_version = '19.2.0'
     wechat_pay_version = "6.6.4"
