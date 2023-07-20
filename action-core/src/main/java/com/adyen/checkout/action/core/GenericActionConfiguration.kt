@@ -15,6 +15,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingConfigurationBuilde
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -39,7 +40,7 @@ class GenericActionConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
@@ -143,7 +144,7 @@ class GenericActionConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 availableActionConfigs = availableActionConfigs,
             )
