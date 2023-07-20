@@ -11,6 +11,8 @@ package com.adyen.checkout.googlepay.internal.ui.model
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogger
@@ -122,7 +124,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "XCD",
@@ -140,7 +142,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "XCD",
@@ -287,7 +289,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
             amount = Amount.EMPTY
         )
@@ -302,7 +304,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false
         )
 
@@ -328,7 +330,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
             amount = Amount.EMPTY
         )
@@ -343,7 +345,7 @@ internal class GooglePayComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
         )
 
@@ -395,7 +397,7 @@ internal class GooglePayComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        isAnalyticsEnabled: Boolean = true,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
         gatewayMerchantId: String = TEST_GATEWAY_MERCHANT_ID,
         googlePayEnvironment: Int = WalletConstants.ENVIRONMENT_TEST,
@@ -418,7 +420,7 @@ internal class GooglePayComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
-        isAnalyticsEnabled = isAnalyticsEnabled,
+        analyticsParams = analyticsParams,
         isCreatedByDropIn = isCreatedByDropIn,
         gatewayMerchantId = gatewayMerchantId,
         googlePayEnvironment = googlePayEnvironment,

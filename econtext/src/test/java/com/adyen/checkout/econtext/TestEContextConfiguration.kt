@@ -11,6 +11,7 @@ package com.adyen.checkout.econtext
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -24,7 +25,7 @@ private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     override val genericActionConfiguration: GenericActionConfiguration
 ) : EContextConfiguration() {
@@ -48,7 +49,7 @@ private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
