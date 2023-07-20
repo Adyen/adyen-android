@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.internal.ui.model
 
 import android.os.Bundle
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
@@ -20,7 +21,7 @@ internal data class DropInComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean,
+    override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
     val showPreselectedStoredPaymentMethod: Boolean,
