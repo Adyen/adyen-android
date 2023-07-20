@@ -3,6 +3,7 @@ package com.adyen.checkout.components.core.internal
 import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.internal.util.validate
 import com.adyen.checkout.core.Environment
@@ -28,7 +29,7 @@ constructor(
     protected var clientKey: String
 ) {
 
-    protected var isAnalyticsEnabled: Boolean? = null
+    protected var analyticsConfiguration: AnalyticsConfiguration? = null
     protected var amount: Amount = Amount.EMPTY
 
     init {
@@ -55,14 +56,12 @@ constructor(
     )
 
     /**
-     * Sets if components can send analytics events.
+     * Allows configuring the internal analytics of the library.
      *
-     * Default is True.
-     *
-     * @param isAnalyticsEnabled Is analytics should be enabled or not.
+     * @param analyticsConfiguration the analytics configuration.
      */
-    fun setAnalyticsEnabled(isAnalyticsEnabled: Boolean): BuilderT {
-        this.isAnalyticsEnabled = isAnalyticsEnabled
+    fun setAnalyticsConfiguration(analyticsConfiguration: AnalyticsConfiguration): BuilderT {
+        this.analyticsConfiguration = analyticsConfiguration
         @Suppress("UNCHECKED_CAST")
         return this as BuilderT
     }
