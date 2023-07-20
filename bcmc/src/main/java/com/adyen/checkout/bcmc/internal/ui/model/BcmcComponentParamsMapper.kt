@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
@@ -32,7 +33,7 @@ internal class BcmcComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
@@ -50,7 +51,7 @@ internal class BcmcComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )

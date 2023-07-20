@@ -32,7 +32,7 @@ class GenericComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount
         )
@@ -46,7 +46,7 @@ class GenericComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )
