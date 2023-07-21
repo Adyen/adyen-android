@@ -11,13 +11,19 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("LongParameterList")
 class DefaultAnalyticsRepository(
+    private val analyticsParams: AnalyticsParams,
     private val packageName: String,
     private val locale: Locale,
     private val source: AnalyticsSource,
@@ -31,6 +37,7 @@ class DefaultAnalyticsRepository(
         private set
 
     override suspend fun setupAnalytics() {
+        if (!canSendAnalytics(requiredLevel = ALL)) return
         if (state != State.Uninitialized) return
         state = State.InProgress
         Logger.v(TAG, "Setting up analytics")
@@ -44,6 +51,11 @@ class DefaultAnalyticsRepository(
             state = State.Failed
             Logger.e(TAG, "Failed to send analytics setup call", e)
         }
+    }
+
+    private fun canSendAnalytics(requiredLevel: AnalyticsParamsLevel): Boolean {
+        require(requiredLevel != NONE) { "Analytics are not allowed with level NONE" }
+        return !analyticsParams.level.hasHigherPriorityThan(requiredLevel)
     }
 
     companion object {
