@@ -100,6 +100,7 @@ constructor(
             val publicKeyService = PublicKeyService(httpClient)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
@@ -170,6 +171,7 @@ constructor(
             val publicKeyService = PublicKeyService(httpClient)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),

@@ -102,6 +102,7 @@ constructor(
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
         val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            analyticsParams = componentParams.analyticsParams,
             packageName = application.packageName,
             locale = componentParams.shopperLocale,
             source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
@@ -173,6 +174,7 @@ constructor(
         val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
         val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            analyticsParams = componentParams.analyticsParams,
             packageName = application.packageName,
             locale = componentParams.shopperLocale,
             source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
