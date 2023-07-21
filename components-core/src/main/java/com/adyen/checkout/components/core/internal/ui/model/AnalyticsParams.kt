@@ -24,9 +24,14 @@ data class AnalyticsParams(
         this(level = getLevel(analyticsConfiguration))
 }
 
-enum class AnalyticsParamsLevel {
-    ALL,
-    NONE,
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class AnalyticsParamsLevel(private val priority: Int) {
+    ALL(1),
+    NONE(2);
+
+    internal fun hasHigherPriorityThan(level: AnalyticsParamsLevel): Boolean {
+        return priority > level.priority
+    }
 }
 
 private fun getLevel(analyticsConfiguration: AnalyticsConfiguration?): AnalyticsParamsLevel {
