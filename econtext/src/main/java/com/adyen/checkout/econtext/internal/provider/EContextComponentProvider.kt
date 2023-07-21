@@ -94,6 +94,7 @@ constructor(
                 val componentParams = componentParamsMapper.mapToParams(configuration, null)
 
                 val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                    analyticsParams = componentParams.analyticsParams,
                     packageName = application.packageName,
                     locale = componentParams.shopperLocale,
                     source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
@@ -157,6 +158,7 @@ constructor(
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
                 val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                    analyticsParams = componentParams.analyticsParams,
                     packageName = application.packageName,
                     locale = componentParams.shopperLocale,
                     source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),

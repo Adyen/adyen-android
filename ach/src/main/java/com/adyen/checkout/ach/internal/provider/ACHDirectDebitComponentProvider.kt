@@ -121,6 +121,7 @@ constructor(
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
@@ -194,6 +195,7 @@ constructor(
             val clientSideEncrypter = ClientSideEncrypter()
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
@@ -274,6 +276,7 @@ constructor(
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
@@ -336,6 +339,7 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsParams = componentParams.analyticsParams,
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
