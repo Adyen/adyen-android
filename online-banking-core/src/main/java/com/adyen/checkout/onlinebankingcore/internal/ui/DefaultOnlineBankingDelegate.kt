@@ -93,11 +93,11 @@ internal class DefaultOnlineBankingDelegate<
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }

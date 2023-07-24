@@ -94,7 +94,7 @@ constructor(
 
         cashAppPay = initCashAppPay()
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         if (!isConfirmationRequired()) {
             initiatePayment()
@@ -111,8 +111,8 @@ constructor(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }

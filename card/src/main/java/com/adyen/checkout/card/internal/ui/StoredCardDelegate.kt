@@ -124,7 +124,7 @@ internal class StoredCardDelegate(
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         initializeInputData()
         fetchPublicKey()
 
@@ -143,8 +143,8 @@ internal class StoredCardDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
