@@ -15,10 +15,8 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-@Parcelize
 internal data class GooglePayComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,

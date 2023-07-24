@@ -8,16 +8,14 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import android.os.Parcelable
 import com.adyen.checkout.card.CardBrand
-import kotlinx.parcelize.Parcelize
 
 /**
  * InstallmentOptionParams is used for defining the details of installment options.
  *
  * Note: All values specified in [values] must be greater than 1.
  */
-internal sealed class InstallmentOptionParams : Parcelable {
+internal sealed class InstallmentOptionParams {
     abstract val values: List<Int>
     abstract val includeRevolving: Boolean
 
@@ -26,7 +24,6 @@ internal sealed class InstallmentOptionParams : Parcelable {
      * @param includeRevolving see [InstallmentOptionParams.includeRevolving]
      * @param cardBrand a [CardBrand] to apply the given options
      */
-    @Parcelize
     data class CardBasedInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean,
@@ -37,7 +34,6 @@ internal sealed class InstallmentOptionParams : Parcelable {
      * @param values see [InstallmentOptionParams.values]
      * @param includeRevolving see [InstallmentOptionParams.includeRevolving]
      */
-    @Parcelize
     data class DefaultInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean

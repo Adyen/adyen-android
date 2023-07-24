@@ -8,17 +8,14 @@
 
 package com.adyen.checkout.components.core.internal.ui.model
 
-import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
-import kotlinx.parcelize.Parcelize
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Parcelize
 data class AnalyticsParams(
     val level: AnalyticsParamsLevel,
-) : Parcelable {
+) {
 
     constructor(analyticsConfiguration: AnalyticsConfiguration?) :
         this(level = getLevel(analyticsConfiguration))

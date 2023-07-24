@@ -15,11 +15,9 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Parcelize
 data class IssuerListComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
