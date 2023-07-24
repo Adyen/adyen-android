@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import android.os.Parcelable
 import com.adyen.checkout.card.CardBrand
-import kotlinx.parcelize.Parcelize
 
 /**
  * Component params class for Installments in Card Component. This class can be used
@@ -24,8 +22,7 @@ import kotlinx.parcelize.Parcelize
  * @param defaultOptions Installment Options to be used for all card types.
  * @param cardBasedOptions Installment Options to be used for specific card types.
  */
-@Parcelize
 internal data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null,
     val cardBasedOptions: List<InstallmentOptionParams.CardBasedInstallmentOptions> = emptyList()
-) : Parcelable
+)

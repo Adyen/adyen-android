@@ -14,10 +14,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-@Parcelize
 internal data class ACHDirectDebitComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,

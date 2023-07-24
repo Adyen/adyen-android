@@ -13,10 +13,8 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
-import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-@Parcelize
 internal data class Adyen3DS2ComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
