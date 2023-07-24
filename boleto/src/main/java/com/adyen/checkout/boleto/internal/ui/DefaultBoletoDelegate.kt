@@ -95,7 +95,7 @@ internal class DefaultBoletoDelegate(
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         if (componentParams.addressParams is AddressParams.FullAddress) {
             subscribeToStatesList()
@@ -104,8 +104,8 @@ internal class DefaultBoletoDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
