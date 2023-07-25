@@ -36,7 +36,12 @@ class DefaultAnalyticsRepository(
 
         runSuspendCatching {
             val analyticsSetupRequest = with(analyticsRepositoryData) {
-                analyticsMapper.getAnalyticsSetupRequest(packageName, locale, source)
+                analyticsMapper.getAnalyticsSetupRequest(
+                    packageName = packageName,
+                    locale = locale,
+                    source = source,
+                    amount = amount,
+                )
             }
             analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
             state = State.Ready

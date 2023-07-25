@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
@@ -24,6 +25,7 @@ data class AnalyticsRepositoryData(
     val locale: Locale,
     val source: AnalyticsSource,
     val clientKey: String,
+    val amount: Amount,
 ) {
     constructor(
         application: Application,
@@ -35,6 +37,7 @@ data class AnalyticsRepositoryData(
         locale = componentParams.shopperLocale,
         source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
         clientKey = componentParams.clientKey,
+        amount = componentParams.amount,
     )
 
     constructor(
@@ -47,5 +50,6 @@ data class AnalyticsRepositoryData(
         locale = componentParams.shopperLocale,
         source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
         clientKey = componentParams.clientKey,
+        amount = componentParams.amount,
     )
 }

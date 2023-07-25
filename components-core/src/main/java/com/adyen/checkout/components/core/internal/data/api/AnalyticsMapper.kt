@@ -11,6 +11,7 @@ package com.adyen.checkout.components.core.internal.data.api
 import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BuildConfig
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
@@ -21,7 +22,8 @@ class AnalyticsMapper {
     internal fun getAnalyticsSetupRequest(
         packageName: String,
         locale: Locale,
-        source: AnalyticsSource
+        source: AnalyticsSource,
+        amount: Amount,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = BuildConfig.CHECKOUT_VERSION,
@@ -36,7 +38,7 @@ class AnalyticsMapper {
             systemVersion = Build.VERSION.SDK_INT.toString(),
             screenWidth = null, // TODO implement
             paymentMethods = null, // TODO implement
-            amount = null, // TODO implement
+            amount = amount,
             level = null, // TODO implement
             containerWidth = null, // unused for Android
         )

@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import android.os.Build
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
@@ -101,7 +102,8 @@ internal class AnalyticsMapperTest {
                 source = AnalyticsSource.PaymentComponent(
                     isCreatedByDropIn = false,
                     PaymentMethod(type = "PAYMENT_METHOD_TYPE")
-                )
+                ),
+                amount = Amount("USD", 1337)
             )
 
             val expected = AnalyticsSetupRequest(
@@ -118,7 +120,7 @@ internal class AnalyticsMapperTest {
                 containerWidth = null,
                 screenWidth = null,
                 paymentMethods = null,
-                amount = null,
+                amount = Amount("USD", 1337),
                 level = null,
             )
 
