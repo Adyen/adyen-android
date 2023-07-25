@@ -9,7 +9,6 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.HttpException
@@ -100,7 +99,7 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and level is set to ALL then call is made`() = runTest {
             analyticsRepository = getDefaultAnalyticsRepository(
-                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL)
+                level = AnalyticsParamsLevel.ALL
             )
 
             analyticsRepository.setupAnalytics()
@@ -111,7 +110,7 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and level is set to NONE then call is not made`() = runTest {
             analyticsRepository = getDefaultAnalyticsRepository(
-                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE)
+                level = AnalyticsParamsLevel.NONE
             )
 
             analyticsRepository.setupAnalytics()
@@ -122,7 +121,7 @@ internal class DefaultAnalyticsRepositoryTest(
 
     @Suppress("LongParameterList")
     private fun getDefaultAnalyticsRepository(
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        level: AnalyticsParamsLevel = AnalyticsParamsLevel.ALL,
         packageName: String = PACKAGE_NAME,
         locale: Locale = LOCALE,
         source: AnalyticsSource = ANALYTICS_SOURCE,
@@ -131,13 +130,15 @@ internal class DefaultAnalyticsRepositoryTest(
         clientKey: String = TEST_CLIENT_KEY,
     ): DefaultAnalyticsRepository {
         return DefaultAnalyticsRepository(
-            analyticsParams,
-            packageName,
-            locale,
-            source,
-            analyticsService,
-            analyticsMapper,
-            clientKey,
+            analyticsRepositoryData = AnalyticsRepositoryData(
+                level = level,
+                packageName = packageName,
+                locale = locale,
+                source = source,
+                clientKey = clientKey,
+            ),
+            analyticsService = analyticsService,
+            analyticsMapper = analyticsMapper,
         )
     }
 
