@@ -10,26 +10,18 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runSuspendCatching
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Suppress("LongParameterList")
 class DefaultAnalyticsRepository(
-    private val analyticsParams: AnalyticsParams,
-    private val packageName: String,
-    private val locale: Locale,
-    private val source: AnalyticsSource,
+    private val analyticsRepositoryData: AnalyticsRepositoryData,
     private val analyticsService: AnalyticsService,
     private val analyticsMapper: AnalyticsMapper,
-    private val clientKey: String,
 ) : AnalyticsRepository {
 
     @VisibleForTesting
@@ -43,8 +35,10 @@ class DefaultAnalyticsRepository(
         Logger.v(TAG, "Setting up analytics")
 
         runSuspendCatching {
-            val analyticsSetupRequest = analyticsMapper.getAnalyticsSetupRequest(packageName, locale, source)
-            analyticsService.setupAnalytics(analyticsSetupRequest, clientKey)
+            val analyticsSetupRequest = with(analyticsRepositoryData) {
+                analyticsMapper.getAnalyticsSetupRequest(packageName, locale, source)
+            }
+            analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
             state = State.Ready
             Logger.v(TAG, "Analytics setup call successful")
         }.onFailure { e ->
@@ -55,7 +49,7 @@ class DefaultAnalyticsRepository(
 
     private fun canSendAnalytics(requiredLevel: AnalyticsParamsLevel): Boolean {
         require(requiredLevel != NONE) { "Analytics are not allowed with level NONE" }
-        return !analyticsParams.level.hasHigherPriorityThan(requiredLevel)
+        return !analyticsRepositoryData.level.hasHigherPriorityThan(requiredLevel)
     }
 
     companion object {
