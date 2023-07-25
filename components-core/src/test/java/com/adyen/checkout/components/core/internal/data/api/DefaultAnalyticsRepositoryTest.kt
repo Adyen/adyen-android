@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.data.api
 
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogger
@@ -61,7 +62,12 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `then AnalyticsService is called`() = runTest {
             analyticsRepository.setupAnalytics()
-            val analyticsSetupRequest = analyticsMapper.getAnalyticsSetupRequest(PACKAGE_NAME, LOCALE, ANALYTICS_SOURCE)
+            val analyticsSetupRequest = analyticsMapper.getAnalyticsSetupRequest(
+                packageName = PACKAGE_NAME,
+                locale = LOCALE,
+                source = ANALYTICS_SOURCE,
+                amount = TEST_AMOUNT
+            )
             verify(analyticsService).setupAnalytics(analyticsSetupRequest, TEST_CLIENT_KEY)
         }
 
@@ -128,6 +134,7 @@ internal class DefaultAnalyticsRepositoryTest(
         analyticsService: AnalyticsService = this.analyticsService,
         analyticsMapper: AnalyticsMapper = this.analyticsMapper,
         clientKey: String = TEST_CLIENT_KEY,
+        amount: Amount = TEST_AMOUNT,
     ): DefaultAnalyticsRepository {
         return DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
@@ -136,6 +143,7 @@ internal class DefaultAnalyticsRepositoryTest(
                 locale = locale,
                 source = source,
                 clientKey = clientKey,
+                amount = amount,
             ),
             analyticsService = analyticsService,
             analyticsMapper = analyticsMapper,
@@ -147,5 +155,6 @@ internal class DefaultAnalyticsRepositoryTest(
         private val LOCALE = Locale.US
         private val ANALYTICS_SOURCE = AnalyticsSource.DropIn()
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private val TEST_AMOUNT = Amount("USD", 1337)
     }
 }

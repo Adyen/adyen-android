@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
@@ -31,6 +32,7 @@ internal class DropInViewModelFactory(
 
         val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
         val packageName: String = requireNotNull(bundleHandler.packageName)
+        val amount: Amount = requireNotNull(bundleHandler.amount)
 
         val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
@@ -41,6 +43,7 @@ internal class DropInViewModelFactory(
                 locale = dropInConfiguration.shopperLocale,
                 source = AnalyticsSource.DropIn(),
                 clientKey = dropInConfiguration.clientKey,
+                amount = amount,
             ),
             analyticsService = AnalyticsService(
                 HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)
