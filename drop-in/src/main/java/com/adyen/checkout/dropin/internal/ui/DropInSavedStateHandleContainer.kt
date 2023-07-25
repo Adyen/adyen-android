@@ -57,6 +57,7 @@ internal object DropInBundleHandler {
             putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
             putExtra(DROP_IN_SERVICE_KEY, service)
             putExtra(PACKAGE_NAME_KEY, packageName)
+            putExtra(AMOUNT, dropInConfiguration.amount)
         }
     }
 
@@ -76,6 +77,7 @@ internal object DropInBundleHandler {
         )
         intent.apply {
             putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
+            putExtra(AMOUNT, checkoutSession.sessionSetupResponse.amount)
         }
     }
 
