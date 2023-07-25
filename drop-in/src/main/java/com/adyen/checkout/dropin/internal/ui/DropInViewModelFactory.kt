@@ -13,6 +13,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
@@ -34,15 +35,17 @@ internal class DropInViewModelFactory(
         val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
         val analyticsRepository = DefaultAnalyticsRepository(
-            analyticsParams = AnalyticsParams(dropInConfiguration.analyticsConfiguration),
-            packageName = packageName,
-            locale = dropInConfiguration.shopperLocale,
-            source = AnalyticsSource.DropIn(),
+            analyticsRepositoryData = AnalyticsRepositoryData(
+                level = AnalyticsParams(dropInConfiguration.analyticsConfiguration).level,
+                packageName = packageName,
+                locale = dropInConfiguration.shopperLocale,
+                source = AnalyticsSource.DropIn(),
+                clientKey = dropInConfiguration.clientKey,
+            ),
             analyticsService = AnalyticsService(
                 HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)
             ),
             analyticsMapper = AnalyticsMapper(),
-            clientKey = dropInConfiguration.clientKey,
         )
 
         @Suppress("UNCHECKED_CAST")

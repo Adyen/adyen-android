@@ -33,11 +33,11 @@ import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -136,15 +136,15 @@ constructor(
             val cardValidationMapper = CardValidationMapper()
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsParams = componentParams.analyticsParams,
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
                 ),
                 analyticsMapper = AnalyticsMapper(),
-                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = DefaultCardDelegate(
@@ -217,15 +217,15 @@ constructor(
             val cardValidationMapper = CardValidationMapper()
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsParams = componentParams.analyticsParams,
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod
+                ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
                 ),
                 analyticsMapper = AnalyticsMapper(),
-                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = DefaultCardDelegate(
@@ -306,15 +306,15 @@ constructor(
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsParams = componentParams.analyticsParams,
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
                 ),
                 analyticsMapper = AnalyticsMapper(),
-                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = StoredCardDelegate(
@@ -377,15 +377,15 @@ constructor(
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsParams = componentParams.analyticsParams,
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
                 ),
                 analyticsMapper = AnalyticsMapper(),
-                clientKey = componentParams.clientKey,
             )
 
             val cardDelegate = StoredCardDelegate(
