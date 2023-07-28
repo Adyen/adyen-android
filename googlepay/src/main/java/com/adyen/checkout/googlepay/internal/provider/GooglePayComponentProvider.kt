@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
@@ -61,6 +62,7 @@ class GooglePayComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
         GooglePayComponent,
@@ -78,6 +80,7 @@ constructor(
 
     private val componentParamsMapper = GooglePayComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -93,14 +96,16 @@ constructor(
 
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, null)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val googlePayDelegate = DefaultGooglePayDelegate(
@@ -133,6 +138,7 @@ constructor(
             }
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -153,13 +159,16 @@ constructor(
         )
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val googlePayDelegate = DefaultGooglePayDelegate(

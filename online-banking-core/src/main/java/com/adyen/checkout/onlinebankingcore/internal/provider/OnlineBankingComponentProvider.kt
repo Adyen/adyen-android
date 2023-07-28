@@ -26,6 +26,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
@@ -63,8 +64,9 @@ abstract class OnlineBankingComponentProvider<
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val componentClass: Class<ComponentT>,
-    overrideComponentParams: ComponentParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    overrideComponentParams: ComponentParams?,
+    overrideSessionParams: SessionParams?,
+    private val analyticsRepository: AnalyticsRepository?,
 ) :
     PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<
@@ -91,14 +93,16 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val onlineBankingDelegate = DefaultOnlineBankingDelegate(
@@ -158,13 +162,16 @@ constructor(
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 packageName = application.packageName,
                 locale = componentParams.shopperLocale,
                 source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
+                clientKey = componentParams.clientKey,
             )
 
             val onlineBankingDelegate = DefaultOnlineBankingDelegate(

@@ -70,7 +70,7 @@ internal class DefaultSepaDelegate(
     private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
         Logger.v(TAG, "sendAnalyticsEvent")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 

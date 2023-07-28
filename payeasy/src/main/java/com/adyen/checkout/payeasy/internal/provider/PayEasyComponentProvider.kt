@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
@@ -27,10 +28,12 @@ class PayEasyComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    analyticsRepository: AnalyticsRepository? = null,
 ) : EContextComponentProvider<PayEasyComponent, PayEasyConfiguration, PayEasyPaymentMethod, PayEasyComponentState>(
     componentClass = PayEasyComponent::class.java,
     overrideComponentParams = overrideComponentParams,
     overrideSessionParams = overrideSessionParams,
+    analyticsRepository = analyticsRepository,
 ) {
 
     override fun createComponentState(
