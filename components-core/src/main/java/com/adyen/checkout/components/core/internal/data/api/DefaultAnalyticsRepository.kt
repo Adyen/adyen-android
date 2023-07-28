@@ -42,6 +42,7 @@ class DefaultAnalyticsRepository(
                     source = source,
                     amount = amount,
                     screenWidth = screenWidth.toLong(),
+                    paymentMethods = paymentMethods,
                 )
             }
             analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)

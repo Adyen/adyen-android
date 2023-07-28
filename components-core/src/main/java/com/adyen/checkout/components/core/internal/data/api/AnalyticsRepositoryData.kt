@@ -28,6 +28,7 @@ data class AnalyticsRepositoryData(
     val clientKey: String,
     val amount: Amount,
     val screenWidth: Int,
+    val paymentMethods: List<String>,
 ) {
     constructor(
         application: Application,
@@ -37,6 +38,7 @@ data class AnalyticsRepositoryData(
         application = application,
         componentParams = componentParams,
         source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+        paymentMethodType = paymentMethod.type,
     )
 
     constructor(
@@ -47,12 +49,14 @@ data class AnalyticsRepositoryData(
         application = application,
         componentParams = componentParams,
         source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+        paymentMethodType = storedPaymentMethod.type,
     )
 
     private constructor(
         application: Application,
         componentParams: ComponentParams,
         source: AnalyticsSource,
+        paymentMethodType: String?,
     ) : this(
         level = componentParams.analyticsParams.level,
         packageName = application.packageName,
@@ -61,5 +65,6 @@ data class AnalyticsRepositoryData(
         clientKey = componentParams.clientKey,
         amount = componentParams.amount,
         screenWidth = application.screenWidthPixels,
+        paymentMethods = listOfNotNull(paymentMethodType),
     )
 }
