@@ -66,7 +66,8 @@ internal class DefaultAnalyticsRepositoryTest(
                 packageName = PACKAGE_NAME,
                 locale = LOCALE,
                 source = ANALYTICS_SOURCE,
-                amount = TEST_AMOUNT
+                amount = TEST_AMOUNT,
+                screenWidth = SCREEN_WIDTH.toLong(),
             )
             verify(analyticsService).setupAnalytics(analyticsSetupRequest, TEST_CLIENT_KEY)
         }
@@ -135,6 +136,7 @@ internal class DefaultAnalyticsRepositoryTest(
         analyticsMapper: AnalyticsMapper = this.analyticsMapper,
         clientKey: String = TEST_CLIENT_KEY,
         amount: Amount = TEST_AMOUNT,
+        screenWidth: Int = SCREEN_WIDTH,
     ): DefaultAnalyticsRepository {
         return DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
@@ -144,6 +146,7 @@ internal class DefaultAnalyticsRepositoryTest(
                 source = source,
                 clientKey = clientKey,
                 amount = amount,
+                screenWidth = screenWidth,
             ),
             analyticsService = analyticsService,
             analyticsMapper = analyticsMapper,
@@ -156,5 +159,6 @@ internal class DefaultAnalyticsRepositoryTest(
         private val ANALYTICS_SOURCE = AnalyticsSource.DropIn()
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_AMOUNT = Amount("USD", 1337)
+        private const val SCREEN_WIDTH = 1080
     }
 }

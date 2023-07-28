@@ -6,7 +6,7 @@
  * Created by josephj on 14/4/2021.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.components.core.internal.util
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -47,3 +47,7 @@ fun Context.createLocalizedContext(locale: Locale): Context {
 
     return createConfigurationContext(newConfig) ?: this
 }
+
+val Context.screenWidthPixels: Int
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    get() = resources.displayMetrics.widthPixels

@@ -21,17 +21,21 @@ import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepositor
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.dropin.DropInConfiguration
 
 internal class DropInViewModelFactory(
     activity: ComponentActivity
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
+
+    private val packageName: String = activity.packageName
+    private val screenWidth: Int = activity.screenWidthPixels
+
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
         val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
-        val packageName: String = requireNotNull(bundleHandler.packageName)
         val amount: Amount = requireNotNull(bundleHandler.amount)
 
         val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
@@ -44,6 +48,7 @@ internal class DropInViewModelFactory(
                 source = AnalyticsSource.DropIn(),
                 clientKey = dropInConfiguration.clientKey,
                 amount = amount,
+                screenWidth = screenWidth,
             ),
             analyticsService = AnalyticsService(
                 HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)

@@ -24,6 +24,7 @@ class AnalyticsMapper {
         locale: Locale,
         source: AnalyticsSource,
         amount: Amount,
+        screenWidth: Long,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = BuildConfig.CHECKOUT_VERSION,
@@ -36,7 +37,7 @@ class AnalyticsMapper {
             deviceModel = Build.MODEL,
             referrer = packageName,
             systemVersion = Build.VERSION.SDK_INT.toString(),
-            screenWidth = null, // TODO implement
+            screenWidth = screenWidth,
             paymentMethods = null, // TODO implement
             amount = amount,
             level = null, // TODO implement

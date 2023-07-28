@@ -39,7 +39,6 @@ internal class DropInSavedStateHandleContainer(
     var cachedGiftCardComponentState: GiftCardComponentState? by SavedStateHandleProperty(CACHED_GIFT_CARD)
     var cachedPartialPaymentAmount: Amount? by SavedStateHandleProperty(PARTIAL_PAYMENT_AMOUNT)
     var currentOrder: OrderModel? by SavedStateHandleProperty(CURRENT_ORDER)
-    var packageName: String? by SavedStateHandleProperty(PACKAGE_NAME_KEY)
 }
 
 internal object DropInBundleHandler {
@@ -50,13 +49,11 @@ internal object DropInBundleHandler {
         dropInConfiguration: DropInConfiguration,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         service: ComponentName,
-        packageName: String,
     ) {
         intent.apply {
             putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
             putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
             putExtra(DROP_IN_SERVICE_KEY, service)
-            putExtra(PACKAGE_NAME_KEY, packageName)
             putExtra(AMOUNT, dropInConfiguration.amount)
         }
     }
@@ -66,14 +63,12 @@ internal object DropInBundleHandler {
         dropInConfiguration: DropInConfiguration,
         checkoutSession: CheckoutSession,
         service: ComponentName,
-        packageName: String,
     ) {
         putIntentExtras(
             intent,
             dropInConfiguration,
             checkoutSession.sessionSetupResponse.paymentMethodsApiResponse ?: PaymentMethodsApiResponse(),
             service,
-            packageName,
         )
         intent.apply {
             putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
@@ -102,7 +97,6 @@ private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER
 private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
 private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
-private const val PACKAGE_NAME_KEY = "PACKAGE_NAME_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
 private const val CURRENT_ORDER = "CURRENT_ORDER"
 private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
