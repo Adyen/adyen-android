@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.JsonUtils
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.getLongOrNull
@@ -35,7 +36,6 @@ internal data class AnalyticsSetupRequest(
     val screenWidth: Long?,
     val paymentMethods: List<String>?,
     val amount: Amount?,
-    val level: String?,
 ) : ModelObject() {
 
     companion object {
@@ -53,7 +53,6 @@ internal data class AnalyticsSetupRequest(
         private const val SCREEN_WIDTH = "screenWidth"
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val AMOUNT = "amount"
-        private const val LEVEL = "level"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsSetupRequest> = object : Serializer<AnalyticsSetupRequest> {
@@ -72,9 +71,8 @@ internal data class AnalyticsSetupRequest(
                         putOpt(SYSTEM_VERSION, modelObject.systemVersion)
                         putOpt(CONTAINER_WIDTH, modelObject.containerWidth)
                         putOpt(SCREEN_WIDTH, modelObject.screenWidth)
-                        putOpt(PAYMENT_METHODS, modelObject.paymentMethods)
+                        putOpt(PAYMENT_METHODS, JsonUtils.serializeOptStringList(modelObject.paymentMethods))
                         putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
-                        putOpt(LEVEL, modelObject.level)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsSetupRequest::class.java, e)
@@ -99,7 +97,6 @@ internal data class AnalyticsSetupRequest(
                             screenWidth = getLongOrNull(SCREEN_WIDTH),
                             paymentMethods = optStringList(PAYMENT_METHODS),
                             amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
-                            level = getStringOrNull(LEVEL),
                         )
                     }
                 } catch (e: JSONException) {

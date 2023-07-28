@@ -105,6 +105,7 @@ internal class AnalyticsMapperTest {
                 ),
                 amount = Amount("USD", 1337),
                 screenWidth = 1286,
+                paymentMethods = listOf("scheme", "googlepay"),
             )
 
             val expected = AnalyticsSetupRequest(
@@ -120,9 +121,8 @@ internal class AnalyticsMapperTest {
                 systemVersion = Build.VERSION.SDK_INT.toString(),
                 containerWidth = null,
                 screenWidth = 1286,
-                paymentMethods = null,
+                paymentMethods = listOf("scheme", "googlepay"),
                 amount = Amount("USD", 1337),
-                level = null,
             )
 
             assertEquals(expected.toString(), actual.toString())

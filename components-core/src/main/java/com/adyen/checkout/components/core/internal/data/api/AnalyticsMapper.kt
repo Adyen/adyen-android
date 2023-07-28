@@ -19,12 +19,14 @@ import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsMapper {
+    @Suppress("LongParameterList")
     internal fun getAnalyticsSetupRequest(
         packageName: String,
         locale: Locale,
         source: AnalyticsSource,
         amount: Amount,
         screenWidth: Long,
+        paymentMethods: List<String>,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = BuildConfig.CHECKOUT_VERSION,
@@ -38,9 +40,8 @@ class AnalyticsMapper {
             referrer = packageName,
             systemVersion = Build.VERSION.SDK_INT.toString(),
             screenWidth = screenWidth,
-            paymentMethods = null, // TODO implement
+            paymentMethods = paymentMethods,
             amount = amount,
-            level = null, // TODO implement
             containerWidth = null, // unused for Android
         )
     }
