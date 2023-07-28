@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -26,18 +27,16 @@ data class AnalyticsRepositoryData(
     val source: AnalyticsSource,
     val clientKey: String,
     val amount: Amount,
+    val screenWidth: Int,
 ) {
     constructor(
         application: Application,
         componentParams: ComponentParams,
         paymentMethod: PaymentMethod,
     ) : this(
-        level = componentParams.analyticsParams.level,
-        packageName = application.packageName,
-        locale = componentParams.shopperLocale,
+        application = application,
+        componentParams = componentParams,
         source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-        clientKey = componentParams.clientKey,
-        amount = componentParams.amount,
     )
 
     constructor(
@@ -45,11 +44,22 @@ data class AnalyticsRepositoryData(
         componentParams: ComponentParams,
         storedPaymentMethod: StoredPaymentMethod,
     ) : this(
+        application = application,
+        componentParams = componentParams,
+        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+    )
+
+    private constructor(
+        application: Application,
+        componentParams: ComponentParams,
+        source: AnalyticsSource,
+    ) : this(
         level = componentParams.analyticsParams.level,
         packageName = application.packageName,
         locale = componentParams.shopperLocale,
-        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+        source = source,
         clientKey = componentParams.clientKey,
         amount = componentParams.amount,
+        screenWidth = application.screenWidthPixels,
     )
 }

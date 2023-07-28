@@ -103,7 +103,8 @@ internal class AnalyticsMapperTest {
                     isCreatedByDropIn = false,
                     PaymentMethod(type = "PAYMENT_METHOD_TYPE")
                 ),
-                amount = Amount("USD", 1337)
+                amount = Amount("USD", 1337),
+                screenWidth = 1286,
             )
 
             val expected = AnalyticsSetupRequest(
@@ -118,7 +119,7 @@ internal class AnalyticsMapperTest {
                 referrer = "PACKAGE_NAME",
                 systemVersion = Build.VERSION.SDK_INT.toString(),
                 containerWidth = null,
-                screenWidth = null,
+                screenWidth = 1286,
                 paymentMethods = null,
                 amount = Amount("USD", 1337),
                 level = null,

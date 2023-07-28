@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.databinding.AdyenComponentViewBinding
@@ -34,7 +35,6 @@ import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
-import com.adyen.checkout.ui.core.internal.util.createLocalizedContext
 import com.adyen.checkout.ui.core.internal.util.hideKeyboard
 import com.adyen.checkout.ui.core.internal.util.resetFocus
 import kotlinx.coroutines.CoroutineScope

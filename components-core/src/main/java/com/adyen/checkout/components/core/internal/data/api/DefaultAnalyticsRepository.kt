@@ -41,6 +41,7 @@ class DefaultAnalyticsRepository(
                     locale = locale,
                     source = source,
                     amount = amount,
+                    screenWidth = screenWidth.toLong(),
                 )
             }
             analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
