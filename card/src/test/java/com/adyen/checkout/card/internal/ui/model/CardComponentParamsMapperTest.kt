@@ -18,6 +18,8 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
@@ -126,7 +128,7 @@ internal class CardComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -144,7 +146,7 @@ internal class CardComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -441,7 +443,7 @@ internal class CardComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        isAnalyticsEnabled: Boolean = true,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         isHolderNameRequired: Boolean = false,
@@ -459,7 +461,7 @@ internal class CardComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
-        isAnalyticsEnabled = isAnalyticsEnabled,
+        analyticsParams = analyticsParams,
         isCreatedByDropIn = isCreatedByDropIn,
         isHolderNameRequired = isHolderNameRequired,
         isSubmitButtonVisible = isSubmitButtonVisible,

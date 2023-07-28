@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.dropin.DropInConfiguration
 
 internal class DropInComponentParamsMapper {
@@ -22,7 +23,7 @@ internal class DropInComponentParamsMapper {
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+                analyticsParams = AnalyticsParams(analyticsConfiguration),
                 isCreatedByDropIn = true,
                 amount = overrideAmount,
                 showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,

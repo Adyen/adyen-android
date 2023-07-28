@@ -59,15 +59,15 @@ internal class DefaultGooglePayDelegate(
     override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }

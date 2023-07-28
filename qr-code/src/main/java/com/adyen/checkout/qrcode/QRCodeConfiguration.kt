@@ -9,6 +9,7 @@ package com.adyen.checkout.qrcode
 
 import android.content.Context
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -23,7 +24,7 @@ class QRCodeConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount
 ) : Configuration {
 
@@ -63,7 +64,7 @@ class QRCodeConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
             )
         }

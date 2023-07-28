@@ -20,7 +20,7 @@ data class GenericComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean,
+    override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
 ) : ComponentParams

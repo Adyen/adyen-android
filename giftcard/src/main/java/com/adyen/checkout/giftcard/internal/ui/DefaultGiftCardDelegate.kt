@@ -92,12 +92,12 @@ internal class DefaultGiftCardDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         fetchPublicKey(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }

@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -28,7 +29,7 @@ class BacsDirectDebitConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
@@ -87,7 +88,7 @@ class BacsDirectDebitConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 amount = amount,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 isSubmitButtonVisible = isSubmitButtonVisible,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )

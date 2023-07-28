@@ -9,6 +9,7 @@
 package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -36,7 +37,7 @@ class IssuerListComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
@@ -53,7 +54,7 @@ class IssuerListComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )

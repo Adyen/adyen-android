@@ -10,6 +10,7 @@ package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
@@ -23,7 +24,7 @@ data class IssuerListComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean,
+    override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount,
     override val isSubmitButtonVisible: Boolean,

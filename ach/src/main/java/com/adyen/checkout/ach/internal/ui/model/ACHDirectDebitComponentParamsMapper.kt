@@ -10,6 +10,7 @@ package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -34,7 +35,7 @@ internal class ACHDirectDebitComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible ?: true,
@@ -69,7 +70,7 @@ internal class ACHDirectDebitComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )

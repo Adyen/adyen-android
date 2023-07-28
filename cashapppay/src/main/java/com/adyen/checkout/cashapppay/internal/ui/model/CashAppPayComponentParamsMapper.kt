@@ -12,6 +12,7 @@ import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
@@ -67,7 +68,7 @@ internal class CashAppPayComponentParamsMapper(
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
-        isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+        analyticsParams = AnalyticsParams(analyticsConfiguration),
         isCreatedByDropIn = false,
         amount = amount,
         cashAppPayEnvironment = getCashAppPayEnvironment(),
@@ -94,7 +95,7 @@ internal class CashAppPayComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )

@@ -157,7 +157,7 @@ internal class DropInViewModel(
 
     fun onCreated() {
         navigateToInitialDestination()
-        sendAnalyticsEvent()
+        setupAnalytics()
     }
 
     fun onDropInServiceConnected() {
@@ -201,8 +201,8 @@ internal class DropInViewModel(
         sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
-    private fun sendAnalyticsEvent() {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics() {
+        Logger.v(TAG, "setupAnalytics")
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }

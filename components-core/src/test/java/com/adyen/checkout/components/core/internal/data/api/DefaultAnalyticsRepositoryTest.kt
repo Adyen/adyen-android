@@ -9,6 +9,8 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.internal.util.Logger
@@ -25,6 +27,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -44,14 +47,7 @@ internal class DefaultAnalyticsRepositoryTest(
     fun before() {
         AdyenLogger.setLogLevel(Logger.NONE)
 
-        analyticsRepository = DefaultAnalyticsRepository(
-            packageName = PACKAGE_NAME,
-            locale = LOCALE,
-            source = ANALYTICS_SOURCE,
-            analyticsService = analyticsService,
-            analyticsMapper = analyticsMapper,
-            clientKey = TEST_CLIENT_KEY,
-        )
+        analyticsRepository = getDefaultAnalyticsRepository()
     }
 
     @Test
@@ -100,6 +96,49 @@ internal class DefaultAnalyticsRepositoryTest(
                 analyticsRepository.setupAnalytics()
                 verify(analyticsService, times(1)).setupAnalytics(any(), any())
             }
+
+        @Test
+        fun `and level is set to ALL then call is made`() = runTest {
+            analyticsRepository = getDefaultAnalyticsRepository(
+                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL)
+            )
+
+            analyticsRepository.setupAnalytics()
+
+            verify(analyticsService, times(1)).setupAnalytics(any(), any())
+        }
+
+        @Test
+        fun `and level is set to NONE then call is not made`() = runTest {
+            analyticsRepository = getDefaultAnalyticsRepository(
+                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE)
+            )
+
+            analyticsRepository.setupAnalytics()
+
+            verify(analyticsService, never()).setupAnalytics(any(), any())
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private fun getDefaultAnalyticsRepository(
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        packageName: String = PACKAGE_NAME,
+        locale: Locale = LOCALE,
+        source: AnalyticsSource = ANALYTICS_SOURCE,
+        analyticsService: AnalyticsService = this.analyticsService,
+        analyticsMapper: AnalyticsMapper = this.analyticsMapper,
+        clientKey: String = TEST_CLIENT_KEY,
+    ): DefaultAnalyticsRepository {
+        return DefaultAnalyticsRepository(
+            analyticsParams,
+            packageName,
+            locale,
+            source,
+            analyticsService,
+            analyticsMapper,
+            clientKey,
+        )
     }
 
     companion object {

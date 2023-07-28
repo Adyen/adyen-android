@@ -111,7 +111,7 @@ internal class DefaultACHDirectDebitDelegate(
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         fetchPublicKey(coroutineScope)
 
         if (componentParams.addressParams is AddressParams.FullAddress) {
@@ -251,8 +251,8 @@ internal class DefaultACHDirectDebitDelegate(
         )
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
