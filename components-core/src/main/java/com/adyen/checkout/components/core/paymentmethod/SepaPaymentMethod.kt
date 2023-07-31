@@ -16,9 +16,10 @@ import org.json.JSONObject
 
 @Parcelize
 class SepaPaymentMethod(
-    override var type: String? = null,
-    var ownerName: String? = null,
-    var iban: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
+    var ownerName: String?,
+    var iban: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -32,6 +33,7 @@ class SepaPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(OWNER_NAME, modelObject.ownerName)
                         putOpt(IBAN, modelObject.iban)
                     }
@@ -43,6 +45,7 @@ class SepaPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): SepaPaymentMethod {
                 return SepaPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     ownerName = jsonObject.getStringOrNull(OWNER_NAME),
                     iban = jsonObject.getStringOrNull(IBAN),
                 )

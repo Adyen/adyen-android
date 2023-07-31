@@ -16,8 +16,9 @@ import org.json.JSONObject
 
 @Parcelize
 data class UPIPaymentMethod(
-    override var type: String? = null,
-    var virtualPaymentAddress: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
+    var virtualPaymentAddress: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -29,6 +30,7 @@ data class UPIPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(VIRTUAL_PAYMENT_ADDRESS, modelObject.virtualPaymentAddress)
                     }
                 } catch (e: JSONException) {
@@ -39,6 +41,7 @@ data class UPIPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): UPIPaymentMethod {
                 return UPIPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     virtualPaymentAddress = jsonObject.getStringOrNull(VIRTUAL_PAYMENT_ADDRESS),
                 )
             }

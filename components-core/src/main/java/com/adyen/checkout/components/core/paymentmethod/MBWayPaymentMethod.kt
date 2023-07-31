@@ -16,8 +16,9 @@ import org.json.JSONObject
 
 @Parcelize
 class MBWayPaymentMethod(
-    override var type: String? = null,
-    var telephoneNumber: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
+    var telephoneNumber: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -30,6 +31,7 @@ class MBWayPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
                     }
                 } catch (e: JSONException) {
@@ -40,6 +42,7 @@ class MBWayPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): MBWayPaymentMethod {
                 return MBWayPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
                 )
             }
