@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogger
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -44,10 +46,12 @@ internal class DefaultAnalyticsRepositoryTest(
     private lateinit var analyticsRepository: DefaultAnalyticsRepository
 
     @BeforeEach
-    fun before() {
+    fun before() = runTest {
         AdyenLogger.setLogLevel(Logger.NONE)
-
         analyticsRepository = getDefaultAnalyticsRepository()
+        whenever(
+            analyticsService.setupAnalytics(any(), any())
+        ) doReturn AnalyticsSetupResponse(checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID)
     }
 
     @Test
@@ -77,6 +81,12 @@ internal class DefaultAnalyticsRepositoryTest(
         fun `and AnalyticsService is successful then state is set as initialized`() = runTest {
             analyticsRepository.setupAnalytics()
             assertEquals(DefaultAnalyticsRepository.State.Ready, analyticsRepository.state)
+        }
+
+        @Test
+        fun `and AnalyticsService is successful then checkoutAttemptId is set`() = runTest {
+            analyticsRepository.setupAnalytics()
+            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, analyticsRepository.getCheckoutAttemptId())
         }
 
         @Test
@@ -164,5 +174,6 @@ internal class DefaultAnalyticsRepositoryTest(
         private val TEST_AMOUNT = Amount("USD", 1337)
         private const val SCREEN_WIDTH = 1080
         private val PAYMENT_METHODS = listOf("bcmc", "blik", "boletobancario")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
     }
 }
