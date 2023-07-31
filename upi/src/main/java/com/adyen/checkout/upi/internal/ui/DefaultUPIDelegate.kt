@@ -130,6 +130,7 @@ internal class DefaultUPIDelegate(
     ): UPIComponentState {
         val paymentMethod = UPIPaymentMethod(
             type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
                 outputData.virtualPaymentAddressFieldState.value
             } else {

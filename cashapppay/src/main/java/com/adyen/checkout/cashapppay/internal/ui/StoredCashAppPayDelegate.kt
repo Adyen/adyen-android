@@ -99,6 +99,7 @@ internal class StoredCashAppPayDelegate(
     private fun createComponentState(): CashAppPayComponentState {
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             storedPaymentMethodId = paymentMethod.id,
         )
 

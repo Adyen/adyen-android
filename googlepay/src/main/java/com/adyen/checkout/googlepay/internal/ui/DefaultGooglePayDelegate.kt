@@ -110,7 +110,11 @@ internal class DefaultGooglePayDelegate(
             GooglePayUtils.findToken(it).isNotEmpty()
         } ?: false
 
-        val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData, paymentMethod.type)
+        val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
+            paymentData = paymentData,
+            paymentMethodType = paymentMethod.type,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        )
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
@@ -145,14 +149,17 @@ internal class DefaultGooglePayDelegate(
                 val paymentData = PaymentData.getFromIntent(data)
                 updateComponentState(paymentData)
             }
+
             Activity.RESULT_CANCELED -> {
                 exceptionChannel.trySend(ComponentException("Payment canceled."))
             }
+
             AutoResolveHelper.RESULT_ERROR -> {
                 val status = AutoResolveHelper.getStatusFromIntent(data)
                 val statusMessage: String = status?.let { ": ${it.statusMessage}" }.orEmpty()
                 exceptionChannel.trySend(ComponentException("GooglePay returned an error$statusMessage"))
             }
+
             else -> Unit
         }
     }

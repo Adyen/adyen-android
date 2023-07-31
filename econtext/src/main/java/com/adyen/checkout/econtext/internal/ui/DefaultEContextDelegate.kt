@@ -118,6 +118,7 @@ internal class DefaultEContextDelegate<
     ): EContextComponentStateT {
         val eContextPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId()
             firstName = outputData.firstNameState.value
             lastName = outputData.lastNameState.value
             telephoneNumber = outputData.phoneNumberState.value

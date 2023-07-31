@@ -621,9 +621,10 @@ internal class DefaultCardDelegate(
         firstCardBrand: CardBrand?,
         binValue: String
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear

@@ -147,6 +147,7 @@ internal class DefaultIssuerListDelegate<
     ): ComponentStateT {
         val issuerListPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId()
             issuer = outputData.selectedIssuer?.id.orEmpty()
         }
 

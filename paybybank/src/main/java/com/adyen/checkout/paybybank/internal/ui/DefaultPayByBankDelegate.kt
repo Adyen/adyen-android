@@ -145,6 +145,7 @@ internal class DefaultPayByBankDelegate(
     ): PayByBankComponentState {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType(),
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             issuer = outputData?.selectedIssuer?.id,
         )
 

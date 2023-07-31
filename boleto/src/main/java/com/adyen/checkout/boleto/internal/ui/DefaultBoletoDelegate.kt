@@ -233,7 +233,10 @@ internal class DefaultBoletoDelegate(
         outputData: BoletoOutputData = this.outputData
     ): BoletoComponentState {
         val paymentComponentData = PaymentComponentData(
-            paymentMethod = GenericPaymentMethod(paymentMethod.type),
+            paymentMethod = GenericPaymentMethod(
+                type = paymentMethod.type,
+                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            ),
             order = order,
             amount = componentParams.amount.takeUnless { it.isEmpty },
             socialSecurityNumber = outputData.socialSecurityNumberState.value,

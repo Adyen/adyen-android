@@ -324,9 +324,10 @@ internal class StoredCardDelegate(
         cardNumber: String,
         firstCardBrand: CardBrand?,
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             storedPaymentMethodId = getPaymentMethodId()
 
             if (!isCvcHidden()) {

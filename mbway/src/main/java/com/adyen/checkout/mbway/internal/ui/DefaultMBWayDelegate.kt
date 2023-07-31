@@ -137,6 +137,7 @@ internal class DefaultMBWayDelegate(
     ): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value
         )
 

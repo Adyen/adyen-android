@@ -195,6 +195,7 @@ internal class DefaultGiftCardDelegate(
 
         val giftCardPaymentMethod = GiftCardPaymentMethod(
             type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
             brand = paymentMethod.brand,

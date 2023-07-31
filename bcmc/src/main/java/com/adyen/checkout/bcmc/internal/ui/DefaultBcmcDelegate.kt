@@ -221,6 +221,7 @@ internal class DefaultBcmcDelegate(
         // BCMC payment method is scheme type.
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,

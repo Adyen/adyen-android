@@ -133,7 +133,8 @@ internal class DefaultBlikDelegate(
     ): BlikComponentState {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-            blikCode = outputData.blikCodeField.value
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            blikCode = outputData.blikCodeField.value,
         )
 
         val paymentComponentData = PaymentComponentData(

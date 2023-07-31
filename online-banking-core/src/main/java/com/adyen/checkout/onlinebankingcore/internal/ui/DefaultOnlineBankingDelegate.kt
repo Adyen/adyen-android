@@ -153,9 +153,11 @@ internal class DefaultOnlineBankingDelegate<
     private fun createComponentState(
         outputData: OnlineBankingOutputData = this.outputData
     ): ComponentStateT {
-        val issuerListPaymentMethod = paymentMethodFactory()
-        issuerListPaymentMethod.type = getPaymentMethodType()
-        issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id
+        val issuerListPaymentMethod = paymentMethodFactory().apply {
+            type = getPaymentMethodType()
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId()
+            issuer = outputData.selectedIssuer?.id
+        }
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = issuerListPaymentMethod,
