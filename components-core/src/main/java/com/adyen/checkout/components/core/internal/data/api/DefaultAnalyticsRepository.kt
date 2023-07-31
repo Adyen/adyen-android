@@ -28,6 +28,9 @@ class DefaultAnalyticsRepository(
     internal var state: State = State.Uninitialized
         private set
 
+    private var checkoutAttemptId: String? = null
+    override fun getCheckoutAttemptId(): String? = checkoutAttemptId
+
     override suspend fun setupAnalytics() {
         if (!canSendAnalytics(requiredLevel = ALL)) return
         if (state != State.Uninitialized) return
@@ -45,7 +48,8 @@ class DefaultAnalyticsRepository(
                     paymentMethods = paymentMethods,
                 )
             }
-            analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
+            val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
+            checkoutAttemptId = response.checkoutAttemptId
             state = State.Ready
             Logger.v(TAG, "Analytics setup call successful")
         }.onFailure { e ->
