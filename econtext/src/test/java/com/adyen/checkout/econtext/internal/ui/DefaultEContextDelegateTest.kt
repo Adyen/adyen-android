@@ -44,6 +44,8 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -227,31 +229,54 @@ internal class DefaultEContextDelegateTest(
 
             assertTrue(delegate.shouldShowSubmitButton())
         }
+    }
 
-        @Nested
-        inner class SubmitHandlerTest {
+    @Nested
+    inner class SubmitHandlerTest {
 
-            @Test
-            fun `when delegate is initialized then submit handler event is initialized`() = runTest {
-                val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-                delegate.initialize(coroutineScope)
-                verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
             }
 
-            @Test
-            fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
-                runTest {
-                    delegate.setInteractionBlocked(true)
-                    verify(submitHandler).setInteractionBlocked(true)
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "firstName"
+                    lastName = "lastName"
+                    mobileNumber = "12345678"
+                    countryCode = "+31"
+                    emailAddress = "abc@mail.com"
                 }
 
-            @Test
-            fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
-                delegate.componentStateFlow.test {
-                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                    delegate.onSubmit()
-                    verify(submitHandler).onSubmit(expectMostRecentItem())
-                }
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
     }
@@ -285,6 +310,7 @@ internal class DefaultEContextDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun amountSource() = listOf(

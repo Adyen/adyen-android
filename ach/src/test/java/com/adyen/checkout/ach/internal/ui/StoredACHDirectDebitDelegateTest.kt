@@ -35,6 +35,8 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -86,6 +88,21 @@ internal class StoredACHDirectDebitDelegateTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate = createAchDelegate()
+
+            delegate.componentStateFlow.test {
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+    }
+
     private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
@@ -109,6 +126,7 @@ internal class StoredACHDirectDebitDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val STORED_ID = "Stored_id"
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun amountSource() = listOf(

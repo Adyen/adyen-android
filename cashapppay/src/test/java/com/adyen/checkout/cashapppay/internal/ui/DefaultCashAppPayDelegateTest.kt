@@ -452,6 +452,27 @@ internal class DefaultCashAppPayDelegateTest(
         )
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            val testFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                authorizationData = CashAppPayAuthorizationData(
+                    oneTimeData = CashAppPayOneTimeData("grantId"),
+                    onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId")
+                )
+            }
+
+            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, testFlow.latestValue.data.paymentMethod?.checkoutAttemptId)
+        }
+    }
+
     private fun createDefaultCashAppPayDelegate(
         configuration: CashAppPayConfiguration = getConfigurationBuilder().build()
     ) = DefaultCashAppPayDelegate(
@@ -487,6 +508,7 @@ internal class DefaultCashAppPayDelegateTest(
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_RETURN_URL = "testReturnUrl"
         private const val TEST_SCOPE_ID = "testScopeId"
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun amountSource() = listOf(

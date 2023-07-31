@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -36,7 +37,9 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -131,6 +134,23 @@ internal class DefaultGooglePayDelegateTest(
         verify(analyticsRepository).setupAnalytics()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateComponentState(paymentData)
+
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+    }
+
     private fun getGooglePayConfigurationBuilder(): GooglePayConfiguration.Builder {
         return GooglePayConfiguration.Builder(
             Locale.US,
@@ -160,6 +180,7 @@ internal class DefaultGooglePayDelegateTest(
 
     companion object {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun amountSource() = listOf(
