@@ -39,4 +39,7 @@ interface ActionHandlingComponent {
      * @param intent The received [Intent].
      */
     fun handleIntent(intent: Intent)
+
+    // TODO: docs
+    fun setOnRedirectListener(listener: () -> Unit)
 }
