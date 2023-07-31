@@ -16,10 +16,11 @@ import org.json.JSONObject
 
 @Parcelize
 data class BacsDirectDebitPaymentMethod(
-    override var type: String? = null,
-    var holderName: String? = null,
-    var bankAccountNumber: String? = null,
-    var bankLocationId: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
+    var holderName: String?,
+    var bankAccountNumber: String?,
+    var bankLocationId: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -36,6 +37,7 @@ data class BacsDirectDebitPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(HOLDER_NAME, modelObject.holderName)
                         putOpt(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
                         putOpt(BANK_LOCATION_ID, modelObject.bankLocationId)
@@ -48,6 +50,7 @@ data class BacsDirectDebitPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): BacsDirectDebitPaymentMethod {
                 return BacsDirectDebitPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     holderName = jsonObject.getStringOrNull(HOLDER_NAME),
                     bankAccountNumber = jsonObject.getStringOrNull(BANK_ACCOUNT_NUMBER),
                     bankLocationId = jsonObject.getStringOrNull(BANK_LOCATION_ID)

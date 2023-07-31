@@ -23,9 +23,11 @@ import org.json.JSONObject
 abstract class PaymentMethodDetails : ModelObject() {
 
     abstract var type: String?
+    abstract var checkoutAttemptId: String?
 
     companion object {
         const val TYPE = "type"
+        const val CHECKOUT_ATTEMPT_ID = "checkoutAttemptId"
 
         @JvmField
         val SERIALIZER: Serializer<PaymentMethodDetails> = object : Serializer<PaymentMethodDetails> {

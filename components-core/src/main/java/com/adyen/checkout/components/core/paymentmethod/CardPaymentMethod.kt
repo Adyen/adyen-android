@@ -16,7 +16,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class CardPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
     var encryptedCardNumber: String? = null,
     var encryptedExpiryMonth: String? = null,
     var encryptedExpiryYear: String? = null,
@@ -50,6 +51,7 @@ data class CardPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
                         putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
@@ -70,6 +72,7 @@ data class CardPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): CardPaymentMethod {
                 return CardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
                     encryptedExpiryYear = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_YEAR),

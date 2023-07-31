@@ -17,7 +17,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class ACHDirectDebitPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
     var encryptedBankAccountNumber: String? = null,
     var encryptedBankLocationId: String? = null,
     var ownerName: String? = null,
@@ -37,6 +38,7 @@ data class ACHDirectDebitPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ENCRYPTED_BANK_ACCOUNT_NUMBER, modelObject.encryptedBankAccountNumber)
                         putOpt(ENCRYPTED_BANK_LOCATION_ID, modelObject.encryptedBankLocationId)
                         putOpt(OWNER_NAME, modelObject.ownerName)
@@ -50,6 +52,7 @@ data class ACHDirectDebitPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): ACHDirectDebitPaymentMethod {
                 return ACHDirectDebitPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     encryptedBankAccountNumber = jsonObject.getStringOrNull(ENCRYPTED_BANK_ACCOUNT_NUMBER),
                     encryptedBankLocationId = jsonObject.getStringOrNull(ENCRYPTED_BANK_LOCATION_ID),
                     ownerName = jsonObject.getStringOrNull(OWNER_NAME),
