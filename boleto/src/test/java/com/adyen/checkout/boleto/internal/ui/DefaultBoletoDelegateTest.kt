@@ -43,7 +43,9 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -487,6 +489,25 @@ internal class DefaultBoletoDelegateTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    firstName = "Test"
+                }
+
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+    }
+
     @Suppress("LongParameterList")
     private fun createBoletoDelegate(
         submitHandler: SubmitHandler<BoletoComponentState> = this.submitHandler,
@@ -532,6 +553,7 @@ internal class DefaultBoletoDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val BRAZIL_COUNTRY_CODE = "BR"
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun amountSource() = listOf(

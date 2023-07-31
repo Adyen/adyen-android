@@ -16,6 +16,7 @@ import com.adyen.checkout.ach.R
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
@@ -23,6 +24,7 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseGenericEncrypter
 import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
@@ -56,7 +58,9 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -150,8 +154,8 @@ internal class DefaultACHDirectDebitDelegateTest(
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             runCurrent()
-            assertEquals(countriesTestFlow.values.size, 0)
-            assertEquals(statesTestFlow.values.size, 0)
+            assertEquals(0, countriesTestFlow.values.size)
+            assertEquals(0, statesTestFlow.values.size)
 
             countriesTestFlow.cancel()
             statesTestFlow.cancel()
@@ -182,7 +186,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
             val outputData = delegate.outputDataFlow.first()
 
-            assertEquals(outputData.addressUIState, AddressFormUIState.NONE)
+            assertEquals(AddressFormUIState.NONE, outputData.addressUIState)
         }
 
         @Test
@@ -198,7 +202,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
             val outputData = delegate.outputDataFlow.first()
 
-            assertEquals(outputData.addressUIState, AddressFormUIState.FULL_ADDRESS)
+            assertEquals(AddressFormUIState.FULL_ADDRESS, outputData.addressUIState)
         }
 
         @Test
@@ -257,7 +261,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.updateInputData { bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER }
             val outputData = delegate.outputDataFlow.first()
-            assertEquals(outputData.bankAccountNumber.validation, Validation.Valid)
+            assertTrue(outputData.bankAccountNumber.validation.isValid())
         }
 
         @Test
@@ -266,8 +270,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { bankAccountNumber = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.bankAccountNumber.validation,
-                Validation.Invalid(reason = R.string.checkout_ach_bank_account_number_invalid)
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_number_invalid),
+                outputData.bankAccountNumber.validation
             )
         }
 
@@ -276,7 +280,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.updateInputData { bankLocationId = TEST_BANK_BANK_LOCATION_ID }
             val outputData = delegate.outputDataFlow.first()
-            assertEquals(outputData.bankLocationId.validation, Validation.Valid)
+            assertTrue(outputData.bankLocationId.validation.isValid())
         }
 
         @Test
@@ -285,8 +289,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { bankLocationId = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.bankLocationId.validation,
-                Validation.Invalid(reason = R.string.checkout_ach_bank_account_location_invalid)
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_location_invalid),
+                outputData.bankLocationId.validation
             )
         }
 
@@ -295,7 +299,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.updateInputData { ownerName = TEST_OWNER_NAME }
             val outputData = delegate.outputDataFlow.first()
-            assertEquals(outputData.ownerName.validation, Validation.Valid)
+            assertTrue(outputData.ownerName.validation.isValid())
         }
 
         @Test
@@ -304,8 +308,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             delegate.updateInputData { ownerName = "" }
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
-                outputData.ownerName.validation,
-                Validation.Invalid(reason = R.string.checkout_ach_bank_account_holder_name_invalid)
+                Validation.Invalid(reason = R.string.checkout_ach_bank_account_holder_name_invalid),
+                outputData.ownerName.validation
             )
         }
     }
@@ -321,6 +325,8 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
+            genericEncrypter.shouldThrowException = true
+
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.updateInputData {
@@ -340,8 +346,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
             val componentState = delegate.componentStateFlow.first()
 
-            assertTrue(componentState.isReady)
-            assertTrue(componentState.isInputValid)
+            assertFalse(componentState.isValid)
         }
 
         @Test
@@ -425,25 +430,26 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
 
         @Test
-        fun `when all fields in outputdata are valid, then component state should be valid`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(ACHDirectDebitAddressConfiguration.None).build()
-            delegate = createAchDelegate(configuration = configuration)
+        fun `when all fields in outputdata are valid and address is empty and not required, then component state should be valid`() =
+            runTest {
+                val configuration = getAchConfigurationBuilder()
+                    .setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+                    .build()
+                delegate = createAchDelegate(configuration = configuration)
 
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.updateInputData {
-                bankLocationId = TEST_BANK_BANK_LOCATION_ID
-                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
-                ownerName = ""
-                address = AddressInputModel()
+                delegate.updateInputData {
+                    bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                    bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                    ownerName = TEST_OWNER_NAME
+                    address = AddressInputModel()
+                }
+
+                val componentState = delegate.componentStateFlow.first()
+
+                assertTrue(componentState.isValid)
             }
-
-            val componentState = delegate.componentStateFlow.first()
-
-            assertTrue(componentState.isReady)
-            assertFalse(componentState.isInputValid)
-        }
 
         @Test
         fun `when all fields in outputdata are valid, payment method in component state should be the same value in outputdata`() =
@@ -475,15 +481,28 @@ internal class DefaultACHDirectDebitDelegateTest(
 
                 val componentState = delegate.componentStateFlow.first()
 
-                with(componentState.data) {
-                    assertEquals(expectedAddress, billingAddress)
+                val expectedPaymentMethod = ACHDirectDebitPaymentMethod(
+                    type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
+                    checkoutAttemptId = null,
+                    encryptedBankAccountNumber = TEST_BANK_ACCOUNT_NUMBER,
+                    encryptedBankLocationId = TEST_BANK_BANK_LOCATION_ID,
+                    ownerName = TEST_OWNER_NAME,
+                )
 
-                    with(requireNotNull(paymentMethod)) {
-                        assertEquals(ownerName, TEST_OWNER_NAME)
-                        assertEquals(encryptedBankLocationId, TEST_BANK_BANK_LOCATION_ID)
-                        assertEquals(encryptedBankAccountNumber, TEST_BANK_ACCOUNT_NUMBER)
-                    }
-                }
+                val expectedPaymentComponentData = PaymentComponentData(
+                    order = TEST_ORDER,
+                    storePaymentMethod = false,
+                    paymentMethod = expectedPaymentMethod,
+                    amount = null,
+                    billingAddress = expectedAddress,
+                )
+
+                val expectedComponentState = ACHDirectDebitComponentState(
+                    data = expectedPaymentComponentData,
+                    isInputValid = true,
+                    isReady = true,
+                )
+                assertEquals(expectedComponentState, componentState)
             }
 
         @ParameterizedTest
@@ -495,8 +514,6 @@ internal class DefaultACHDirectDebitDelegateTest(
             isStorePaymentMethodSwitchChecked: Boolean,
             expectedStorePaymentMethod: Boolean?,
         ) = runTest {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
             val configuration = getAchConfigurationBuilder()
                 .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
                 .build()
@@ -604,6 +621,28 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData {
+                bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                ownerName = TEST_OWNER_NAME
+                address = getValidAddressInputData()
+            }
+
+            val componentState = delegate.componentStateFlow.first()
+
+            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, componentState.data.paymentMethod?.checkoutAttemptId)
+        }
+    }
+
     @Suppress("LongParameterList")
     private fun createAddressOutputData(
         postalCode: FieldState<String> = FieldState("", Validation.Valid),
@@ -678,6 +717,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         private const val TEST_OWNER_NAME = "Joseph"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun shouldStorePaymentMethodSource() = listOf(
