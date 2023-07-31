@@ -169,6 +169,7 @@ constructor(
 
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             grantId = oneTimeData?.grantId,
             customerId = onFileData?.customerId,
             onFileGrantId = onFileData?.grantId,

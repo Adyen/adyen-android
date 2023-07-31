@@ -111,7 +111,8 @@ internal class StoredBlikDelegate(
     private fun createComponentState(): BlikComponentState {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-            storedPaymentMethodId = storedPaymentMethod.id
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            storedPaymentMethodId = storedPaymentMethod.id,
         )
 
         val paymentComponentData = PaymentComponentData(

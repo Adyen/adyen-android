@@ -53,7 +53,10 @@ internal class DefaultInstantPaymentDelegate(
 
     private fun createComponentState(): InstantComponentState {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>(
-            paymentMethod = GenericPaymentMethod(paymentMethod.type),
+            paymentMethod = GenericPaymentMethod(
+                type = paymentMethod.type,
+                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            ),
             order = order,
             amount = componentParams.amount.takeUnless { it.isEmpty },
         )

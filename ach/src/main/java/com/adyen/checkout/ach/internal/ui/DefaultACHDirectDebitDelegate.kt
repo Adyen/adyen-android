@@ -291,9 +291,10 @@ internal class DefaultACHDirectDebitDelegate(
 
             val achPaymentMethod = ACHDirectDebitPaymentMethod(
                 type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
+                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
                 encryptedBankAccountNumber = encryptedBankAccountNumber,
                 encryptedBankLocationId = encryptedBankLocationId,
-                ownerName = outputData.ownerName.value
+                ownerName = outputData.ownerName.value,
             )
             val paymentComponentData = PaymentComponentData(
                 order = order,

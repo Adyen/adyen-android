@@ -124,6 +124,7 @@ internal class DefaultSepaDelegate(
     ): SepaComponentState {
         val paymentMethod = SepaPaymentMethod(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             ownerName = outputData.ownerNameField.value,
             iban = outputData.ibanNumberField.value
         )
