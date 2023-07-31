@@ -27,6 +27,8 @@ import org.json.JSONObject
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
+    private var onRedirectListener: (() -> Unit)? = null
+
     override fun parseRedirectResult(data: Uri?): JSONObject {
         Logger.d(TAG, "parseRedirectResult - $data")
 
@@ -64,6 +66,9 @@ class DefaultRedirectHandler : RedirectHandler {
     override fun launchUriRedirect(context: Context, url: String?) {
         if (url.isNullOrEmpty()) throw ComponentException("Redirect URL is empty.")
         val uri = Uri.parse(url)
+
+        onRedirectListener?.invoke()
+
         if (launchNative(context, uri)) return
         if (launchWithCustomTabs(context, uri)) return
         if (launchBrowser(context, uri)) return
@@ -169,6 +174,14 @@ class DefaultRedirectHandler : RedirectHandler {
             Logger.d(TAG, "launchBrowser - could not do redirect on browser or there's no browser!", e)
             false
         }
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        onRedirectListener = listener
+    }
+
+    override fun removeOnRedirectListener() {
+        onRedirectListener = null
     }
 
     companion object {

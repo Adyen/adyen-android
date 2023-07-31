@@ -19,4 +19,7 @@ interface RedirectDelegate :
     ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
-    ViewProvidingDelegate
+    ViewProvidingDelegate {
+
+    fun setOnRedirectListener(listener: () -> Unit)
+}

@@ -31,6 +31,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -64,6 +65,8 @@ internal class DefaultGenericActionDelegate(
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
+
+    private var onRedirectListener: (() -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
@@ -107,6 +110,10 @@ internal class DefaultGenericActionDelegate(
             )
             this._delegate = delegate
             Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
+
+            if (delegate is RedirectDelegate) {
+                onRedirectListener?.let { delegate.setOnRedirectListener(it) }
+            }
 
             delegate.initialize(coroutineScope)
 
@@ -171,12 +178,17 @@ internal class DefaultGenericActionDelegate(
         delegate.onError(e)
     }
 
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        onRedirectListener = listener
+    }
+
     override fun onCleared() {
         Logger.d(TAG, "onCleared")
         removeObserver()
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null
+        onRedirectListener = null
     }
 
     companion object {

@@ -89,6 +89,10 @@ class CardComponent internal constructor(
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
+    fun setOnRedirectListener(listener: () -> Unit) {
+        genericActionDelegate.setOnRedirectListener(listener)
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

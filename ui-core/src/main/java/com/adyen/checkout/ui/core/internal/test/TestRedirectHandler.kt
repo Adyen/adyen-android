@@ -39,6 +39,10 @@ class TestRedirectHandler : RedirectHandler {
     fun assertLaunchRedirectCalled() =
         assert(timesLaunchRedirectCalled > 0)
 
+    override fun setOnRedirectListener(listener: () -> Unit) = Unit
+
+    override fun removeOnRedirectListener() = Unit
+
     companion object {
         val REDIRECT_RESULT = JSONObject().apply { put("redirect", "successful") }
     }

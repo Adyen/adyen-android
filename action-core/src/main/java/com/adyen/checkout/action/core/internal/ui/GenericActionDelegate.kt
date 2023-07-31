@@ -24,4 +24,6 @@ interface GenericActionDelegate :
     val delegate: ActionDelegate
 
     fun refreshStatus()
+
+    fun setOnRedirectListener(listener: () -> Unit)
 }
