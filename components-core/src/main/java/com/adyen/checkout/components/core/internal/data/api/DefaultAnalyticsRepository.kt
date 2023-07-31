@@ -32,7 +32,10 @@ class DefaultAnalyticsRepository(
     override fun getCheckoutAttemptId(): String? = checkoutAttemptId
 
     override suspend fun setupAnalytics() {
-        if (!canSendAnalytics(requiredLevel = ALL)) return
+        if (!canSendAnalytics(requiredLevel = ALL)) {
+            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
+            return
+        }
         if (state != State.Uninitialized) return
         state = State.InProgress
         Logger.v(TAG, "Setting up analytics")
@@ -65,6 +68,9 @@ class DefaultAnalyticsRepository(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        @VisibleForTesting
+        internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
     }
 
     @VisibleForTesting

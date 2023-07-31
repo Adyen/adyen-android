@@ -19,6 +19,7 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -97,6 +98,13 @@ internal class DefaultAnalyticsRepositoryTest(
         }
 
         @Test
+        fun `and AnalyticsService returns an error then checkoutAttemptId is not set`() = runTest {
+            whenever(analyticsService.setupAnalytics(any(), any())) doThrow HttpException(1, "error_message", null)
+            analyticsRepository.setupAnalytics()
+            assertNull(analyticsRepository.getCheckoutAttemptId())
+        }
+
+        @Test
         fun `multiple times then AnalyticsService is only called once`() = runTest {
             analyticsRepository.setupAnalytics()
             analyticsRepository.setupAnalytics()
@@ -134,6 +142,20 @@ internal class DefaultAnalyticsRepositoryTest(
             analyticsRepository.setupAnalytics()
 
             verify(analyticsService, never()).setupAnalytics(any(), any())
+        }
+
+        @Test
+        fun `and level is set to NONE then checkoutAttemptId is not set`() = runTest {
+            analyticsRepository = getDefaultAnalyticsRepository(
+                level = AnalyticsParamsLevel.NONE
+            )
+
+            analyticsRepository.setupAnalytics()
+
+            assertEquals(
+                DefaultAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
+                analyticsRepository.getCheckoutAttemptId()
+            )
         }
     }
 
