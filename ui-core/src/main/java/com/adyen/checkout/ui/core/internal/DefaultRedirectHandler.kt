@@ -20,6 +20,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,7 +28,7 @@ import org.json.JSONObject
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
-    private var onRedirectListener: (() -> Unit)? = null
+    private var onRedirectListener: ((RedirectMethod) -> Unit)? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         Logger.d(TAG, "parseRedirectResult - $data")
@@ -66,8 +67,6 @@ class DefaultRedirectHandler : RedirectHandler {
     override fun launchUriRedirect(context: Context, url: String?) {
         if (url.isNullOrEmpty()) throw ComponentException("Redirect URL is empty.")
         val uri = Uri.parse(url)
-
-        onRedirectListener?.invoke()
 
         if (launchNative(context, uri)) return
         if (launchWithCustomTabs(context, uri)) return
@@ -115,9 +114,16 @@ class DefaultRedirectHandler : RedirectHandler {
 
         // We found native handlers. Launch the Intent.
         specializedActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(specializedActivityIntent)
-        Logger.d(TAG, "launchNativeBeforeApi30 - redirect successful with native app")
-        return true
+
+        return try {
+            context.startActivity(specializedActivityIntent)
+            onRedirectListener?.invoke(RedirectMethod.ExternalApp)
+            Logger.d(TAG, "launchNativeBeforeApi30 - redirect successful with native app")
+            true
+        } catch (e: ActivityNotFoundException) {
+            Logger.d(TAG, "launchNativeBeforeApi30 - could not find native app to redirect with")
+            false
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -130,10 +136,11 @@ class DefaultRedirectHandler : RedirectHandler {
             )
         return try {
             context.startActivity(nativeAppIntent)
+            onRedirectListener?.invoke(RedirectMethod.ExternalApp)
             Logger.d(TAG, "launchNativeApi30 - redirect successful with native app")
             true
-        } catch (ex: ActivityNotFoundException) {
-            Logger.d(TAG, "launchNativeApi30 - could not find native app to redirect with", ex)
+        } catch (e: ActivityNotFoundException) {
+            Logger.d(TAG, "launchNativeApi30 - could not find native app to redirect with")
             false
         }
     }
@@ -149,10 +156,11 @@ class DefaultRedirectHandler : RedirectHandler {
                 .setDefaultColorSchemeParams(defaultColors)
                 .build()
                 .launchUrl(context, uri)
+            onRedirectListener?.invoke(RedirectMethod.CustomTabs)
             Logger.d(TAG, "launchWithCustomTabs - redirect successful with custom tabs")
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled", e)
+            Logger.d(TAG, "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled")
             false
         }
     }
@@ -168,15 +176,16 @@ class DefaultRedirectHandler : RedirectHandler {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setData(uri)
             context.startActivity(browserActivityIntent)
+            onRedirectListener?.invoke(RedirectMethod.Browser)
             Logger.d(TAG, "launchBrowser - redirect successful with browser")
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchBrowser - could not do redirect on browser or there's no browser!", e)
+            Logger.d(TAG, "launchBrowser - could not do redirect on browser or there's no browser")
             false
         }
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         onRedirectListener = listener
     }
 

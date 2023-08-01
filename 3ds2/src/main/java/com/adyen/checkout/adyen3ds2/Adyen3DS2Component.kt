@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.internal.provider.Adyen3DS2ComponentProvider
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
@@ -71,7 +72,7 @@ class Adyen3DS2Component internal constructor(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         delegate.setOnRedirectListener(listener)
     }
 

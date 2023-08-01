@@ -11,6 +11,7 @@ package com.adyen.checkout.action.core.internal
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -41,5 +42,5 @@ interface ActionHandlingComponent {
     fun handleIntent(intent: Intent)
 
     // TODO: docs
-    fun setOnRedirectListener(listener: () -> Unit)
+    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
 }

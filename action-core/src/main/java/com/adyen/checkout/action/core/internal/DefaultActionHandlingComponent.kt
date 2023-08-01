@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
@@ -42,7 +43,7 @@ class DefaultActionHandlingComponent(
         genericActionDelegate.handleIntent(intent)
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         genericActionDelegate.setOnRedirectListener(listener)
     }
 }

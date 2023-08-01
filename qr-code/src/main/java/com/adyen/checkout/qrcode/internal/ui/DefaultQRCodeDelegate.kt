@@ -17,6 +17,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -302,7 +303,7 @@ internal class DefaultQRCodeDelegate(
         }
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
     }
 

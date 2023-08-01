@@ -11,6 +11,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.components.core.RedirectMethod
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -28,7 +29,7 @@ interface RedirectHandler {
 
     fun launchUriRedirect(context: Context, url: String?)
 
-    fun setOnRedirectListener(listener: () -> Unit)
+    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
 
     fun removeOnRedirectListener()
 }

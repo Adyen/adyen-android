@@ -23,6 +23,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -111,7 +112,7 @@ internal class DefaultRedirectDelegate(
         exceptionChannel.trySend(e)
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
     }
 

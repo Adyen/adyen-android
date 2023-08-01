@@ -12,6 +12,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
@@ -71,7 +72,7 @@ class QRCodeComponent internal constructor(
         delegate.handleIntent(intent)
     }
 
-    override fun setOnRedirectListener(listener: () -> Unit) {
+    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
         delegate.setOnRedirectListener(listener)
     }
 

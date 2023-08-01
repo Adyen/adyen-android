@@ -11,5 +11,5 @@ package com.adyen.checkout.components.core
 interface RedirectableActionComponent {
 
     // TODO: docs
-    fun setOnRedirectListener(listener: () -> Unit)
+    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
 }

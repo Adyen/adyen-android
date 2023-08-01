@@ -106,7 +106,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
         )
 
         cardComponent.setOnRedirectListener {
-            Log.d(TAG, "On redirect")
+            Log.d(TAG, "On redirect: $it")
         }
 
         this.cardComponent = cardComponent
