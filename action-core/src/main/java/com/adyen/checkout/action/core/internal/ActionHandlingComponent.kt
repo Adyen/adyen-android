@@ -41,6 +41,11 @@ interface ActionHandlingComponent {
      */
     fun handleIntent(intent: Intent)
 
-    // TODO: docs
+    /**
+     * Set a callback that will be called when an redirect is opened. A [RedirectMethod] will be passed to the callback,
+     * which indicates how we opened the redirect.
+     *
+     * @param listener The callback that will be called on redirect.
+     */
     fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
 }
