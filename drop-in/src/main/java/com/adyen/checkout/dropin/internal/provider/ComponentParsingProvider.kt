@@ -46,7 +46,6 @@ import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
@@ -511,7 +510,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
-    onRedirect: (RedirectMethod) -> Unit,
+    onRedirect: () -> Unit,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
@@ -587,7 +586,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
-    onRedirect: (RedirectMethod) -> Unit
+    onRedirect: () -> Unit,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)

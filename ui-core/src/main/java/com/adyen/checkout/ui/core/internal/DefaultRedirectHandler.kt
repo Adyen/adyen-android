@@ -16,7 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -28,7 +27,7 @@ import org.json.JSONObject
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
-    private var onRedirectListener: ((RedirectMethod) -> Unit)? = null
+    private var onRedirectListener: (() -> Unit)? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         Logger.d(TAG, "parseRedirectResult - $data")
@@ -118,7 +117,7 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(specializedActivityIntent)
-            onRedirectListener?.invoke(RedirectMethod.ExternalApp)
+            onRedirectListener?.invoke()
             Logger.d(TAG, "launchNativeBeforeApi30 - redirect successful with native app")
             true
         } catch (e: ActivityNotFoundException) {
@@ -138,7 +137,7 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(nativeAppIntent)
-            onRedirectListener?.invoke(RedirectMethod.ExternalApp)
+            onRedirectListener?.invoke()
             Logger.d(TAG, "launchNativeApi30 - redirect successful with native app")
             true
         } catch (e: ActivityNotFoundException) {
@@ -160,7 +159,7 @@ class DefaultRedirectHandler : RedirectHandler {
                 .setDefaultColorSchemeParams(defaultColors)
                 .build()
                 .launchUrl(context, uri)
-            onRedirectListener?.invoke(RedirectMethod.CustomTabs)
+            onRedirectListener?.invoke()
             Logger.d(TAG, "launchWithCustomTabs - redirect successful with custom tabs")
             true
         } catch (e: ActivityNotFoundException) {
@@ -181,7 +180,7 @@ class DefaultRedirectHandler : RedirectHandler {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setData(uri)
             context.startActivity(browserActivityIntent)
-            onRedirectListener?.invoke(RedirectMethod.Browser)
+            onRedirectListener?.invoke()
             Logger.d(TAG, "launchBrowser - redirect successful with browser")
             true
         } catch (e: ActivityNotFoundException) {
@@ -190,7 +189,7 @@ class DefaultRedirectHandler : RedirectHandler {
         }
     }
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
+    override fun setOnRedirectListener(listener: () -> Unit) {
         onRedirectListener = listener
     }
 

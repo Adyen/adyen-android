@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.core.internal
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import org.json.JSONObject
 
@@ -29,7 +28,7 @@ interface RedirectHandler {
 
     fun launchUriRedirect(context: Context, url: String?)
 
-    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
+    fun setOnRedirectListener(listener: () -> Unit)
 
     fun removeOnRedirectListener()
 }

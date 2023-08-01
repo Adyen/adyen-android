@@ -11,7 +11,6 @@ package com.adyen.checkout.ui.core.internal.test
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import org.json.JSONObject
@@ -40,7 +39,7 @@ class TestRedirectHandler : RedirectHandler {
     fun assertLaunchRedirectCalled() =
         assert(timesLaunchRedirectCalled > 0)
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) = Unit
+    override fun setOnRedirectListener(listener: () -> Unit) = Unit
 
     override fun removeOnRedirectListener() = Unit
 

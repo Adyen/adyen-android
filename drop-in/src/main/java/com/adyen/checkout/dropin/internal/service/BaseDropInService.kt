@@ -17,7 +17,6 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -129,8 +128,8 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         return additionalData
     }
 
-    final override fun onRedirectCalled(method: RedirectMethod) {
-        onRedirect(method)
+    final override fun onRedirectCalled() {
+        onRedirect()
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {

@@ -11,7 +11,6 @@ package com.adyen.checkout.action.core.internal
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -42,10 +41,9 @@ interface ActionHandlingComponent {
     fun handleIntent(intent: Intent)
 
     /**
-     * Set a callback that will be called when an redirect is opened. A [RedirectMethod] will be passed to the callback,
-     * which indicates how we opened the redirect.
+     * Set a callback that will be called when a redirect is opened.
      *
      * @param listener The callback that will be called on redirect.
      */
-    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
+    fun setOnRedirectListener(listener: () -> Unit)
 }

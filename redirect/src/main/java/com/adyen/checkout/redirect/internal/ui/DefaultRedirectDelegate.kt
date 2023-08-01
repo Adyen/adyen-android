@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -112,7 +111,7 @@ internal class DefaultRedirectDelegate(
         exceptionChannel.trySend(e)
     }
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
+    override fun setOnRedirectListener(listener: () -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
     }
 

@@ -9,10 +9,9 @@
 package com.adyen.checkout.components.core.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface RedirectableDelegate {
 
-    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
+    fun setOnRedirectListener(listener: () -> Unit)
 }

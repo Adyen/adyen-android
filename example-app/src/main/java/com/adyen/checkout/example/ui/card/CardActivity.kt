@@ -97,7 +97,7 @@ class CardActivity : AppCompatActivity() {
         )
 
         cardComponent.setOnRedirectListener {
-            Log.d(TAG, "On redirect: $it")
+            Log.d(TAG, "On redirect")
         }
 
         this.cardComponent = cardComponent

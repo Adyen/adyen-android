@@ -16,7 +16,6 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.Configuration
@@ -150,7 +149,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override fun removeObserver() = Unit
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) = Unit
+    override fun setOnRedirectListener(listener: () -> Unit) = Unit
 
     override fun onCleared() = Unit
 }

@@ -87,7 +87,7 @@ internal class ActionComponentDialogFragment :
                 callback = this
             )
 
-            actionComponent.setOnRedirectListener { protocol.onRedirect(it) }
+            actionComponent.setOnRedirectListener { protocol.onRedirect() }
 
             if (shouldFinishWithAction()) {
                 binding.buttonFinish.apply {
@@ -130,9 +130,11 @@ internal class ActionComponentDialogFragment :
             shouldFinishWithAction() -> {
                 protocol.finishWithAction()
             }
+
             dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
                 protocol.terminateDropIn()
             }
+
             else -> {
                 protocol.showPaymentMethodsDialog()
             }
@@ -163,6 +165,7 @@ internal class ActionComponentDialogFragment :
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
             }
+
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
                 Logger.e(TAG, exception.message.orEmpty(), exception)
@@ -175,6 +178,7 @@ internal class ActionComponentDialogFragment :
                     .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
+
             else -> {
                 Logger.e(TAG, componentError.errorMessage)
                 protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)

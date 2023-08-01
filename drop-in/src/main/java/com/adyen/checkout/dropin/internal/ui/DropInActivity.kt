@@ -29,7 +29,6 @@ import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -670,8 +669,8 @@ internal class DropInActivity :
         }
     }
 
-    override fun onRedirect(method: RedirectMethod) {
-        dropInService?.onRedirectCalled(method)
+    override fun onRedirect() {
+        dropInService?.onRedirectCalled()
     }
 
     companion object {

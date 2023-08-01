@@ -23,7 +23,6 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParams
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.BaseThreeds2Action
 import com.adyen.checkout.components.core.action.RedirectAction
@@ -450,7 +449,7 @@ internal class DefaultAdyen3DS2Delegate(
         exceptionChannel.trySend(e)
     }
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
+    override fun setOnRedirectListener(listener: () -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
     }
 

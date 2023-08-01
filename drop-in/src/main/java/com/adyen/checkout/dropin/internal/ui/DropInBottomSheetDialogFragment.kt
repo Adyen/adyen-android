@@ -17,7 +17,6 @@ import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -103,6 +102,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun requestOrderCancellation()
         fun finishWithAction()
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
-        fun onRedirect(method: RedirectMethod)
+        fun onRedirect()
     }
 }

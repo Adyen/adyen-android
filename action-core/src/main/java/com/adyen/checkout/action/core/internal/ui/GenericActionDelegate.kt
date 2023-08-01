@@ -9,7 +9,6 @@
 package com.adyen.checkout.action.core.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -26,5 +25,5 @@ interface GenericActionDelegate :
 
     fun refreshStatus()
 
-    fun setOnRedirectListener(listener: (RedirectMethod) -> Unit)
+    fun setOnRedirectListener(listener: () -> Unit)
 }

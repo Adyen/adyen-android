@@ -15,7 +15,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -67,7 +66,7 @@ internal class DefaultGenericActionDelegate(
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private var onRedirectListener: ((RedirectMethod) -> Unit)? = null
+    private var onRedirectListener: (() -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
@@ -181,7 +180,7 @@ internal class DefaultGenericActionDelegate(
         delegate.onError(e)
     }
 
-    override fun setOnRedirectListener(listener: (RedirectMethod) -> Unit) {
+    override fun setOnRedirectListener(listener: () -> Unit) {
         onRedirectListener = listener
     }
 
