@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.internal.provider.Adyen3DS2ComponentProvider
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -35,7 +36,8 @@ class Adyen3DS2Component internal constructor(
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,
-    ViewableComponent {
+    ViewableComponent,
+    RedirectableActionComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
@@ -67,6 +69,10 @@ class Adyen3DS2Component internal constructor(
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        delegate.setOnRedirectListener(listener)
     }
 
     override fun onCleared() {

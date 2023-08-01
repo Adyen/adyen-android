@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -31,7 +32,6 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runCompileOnly
-import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -111,7 +111,7 @@ internal class DefaultGenericActionDelegate(
             this._delegate = delegate
             Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
 
-            if (delegate is RedirectDelegate) {
+            if (delegate is RedirectableDelegate) {
                 onRedirectListener?.let { delegate.setOnRedirectListener(it) }
             }
 
@@ -157,9 +157,11 @@ internal class DefaultGenericActionDelegate(
             null -> {
                 exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
             }
+
             !is IntentHandlingDelegate -> {
                 exceptionChannel.trySend(ComponentException("Cannot handle intent with the current component"))
             }
+
             else -> {
                 Logger.d(TAG, "Handling intent")
                 delegate.handleIntent(intent)

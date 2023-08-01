@@ -12,6 +12,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -35,7 +36,8 @@ class QRCodeComponent internal constructor(
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,
-    ViewableComponent {
+    ViewableComponent,
+    RedirectableActionComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
@@ -67,6 +69,10 @@ class QRCodeComponent internal constructor(
      */
     override fun handleIntent(intent: Intent) {
         delegate.handleIntent(intent)
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        delegate.setOnRedirectListener(listener)
     }
 
     override fun onCleared() {

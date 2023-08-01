@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -19,7 +20,5 @@ interface RedirectDelegate :
     ActionDelegate,
     DetailsEmittingDelegate,
     IntentHandlingDelegate,
-    ViewProvidingDelegate {
-
-    fun setOnRedirectListener(listener: () -> Unit)
-}
+    ViewProvidingDelegate,
+    RedirectableDelegate
