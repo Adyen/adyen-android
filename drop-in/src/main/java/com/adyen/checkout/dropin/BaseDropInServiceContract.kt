@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin
 
 import android.os.Bundle
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 
@@ -89,4 +90,11 @@ interface BaseDropInServiceContract {
      * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
      */
     fun getAdditionalData(): Bundle?
+
+    /**
+     * This method is called when a redirect is opened.
+     *
+     * @param method Indicates what medium was used to open the redirect, for example the browser or an external app.
+     */
+    fun onRedirect(method: RedirectMethod) = Unit
 }

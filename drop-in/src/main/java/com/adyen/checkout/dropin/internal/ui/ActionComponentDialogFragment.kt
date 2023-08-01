@@ -87,6 +87,8 @@ internal class ActionComponentDialogFragment :
                 callback = this
             )
 
+            actionComponent.setOnRedirectListener { protocol.onRedirect(it) }
+
             if (shouldFinishWithAction()) {
                 binding.buttonFinish.apply {
                     isVisible = true

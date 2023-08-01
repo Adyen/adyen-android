@@ -78,6 +78,7 @@ internal class GooglePayComponentDialogFragment :
                 amount = dropInViewModel.amount,
                 componentCallback = this,
                 sessionDetails = dropInViewModel.sessionDetails,
+                onRedirect = protocol::onRedirect,
             ) as GooglePayComponent
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

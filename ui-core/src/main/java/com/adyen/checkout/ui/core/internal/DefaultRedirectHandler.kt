@@ -16,11 +16,11 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.components.core.RedirectMethod
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
 import org.json.JSONObject
@@ -115,6 +115,7 @@ class DefaultRedirectHandler : RedirectHandler {
         // We found native handlers. Launch the Intent.
         specializedActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
+        @Suppress("SwallowedException")
         return try {
             context.startActivity(specializedActivityIntent)
             onRedirectListener?.invoke(RedirectMethod.ExternalApp)
@@ -134,6 +135,7 @@ class DefaultRedirectHandler : RedirectHandler {
                 Intent.FLAG_ACTIVITY_NEW_TASK or
                     Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER
             )
+        @Suppress("SwallowedException")
         return try {
             context.startActivity(nativeAppIntent)
             onRedirectListener?.invoke(RedirectMethod.ExternalApp)
@@ -150,6 +152,8 @@ class DefaultRedirectHandler : RedirectHandler {
         val defaultColors = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
             .build()
+
+        @Suppress("SwallowedException")
         return try {
             CustomTabsIntent.Builder()
                 .setShowTitle(true)
@@ -169,6 +173,7 @@ class DefaultRedirectHandler : RedirectHandler {
      * in case the device doesn't support custom tabs or doesn't support google services (Huawei device).
      */
     private fun launchBrowser(context: Context, uri: Uri): Boolean {
+        @Suppress("SwallowedException")
         return try {
             val browserActivityIntent = Intent()
                 .setAction(Intent.ACTION_VIEW)

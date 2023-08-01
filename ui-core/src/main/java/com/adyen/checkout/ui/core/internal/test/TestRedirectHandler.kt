@@ -11,8 +11,8 @@ package com.adyen.checkout.ui.core.internal.test
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.components.core.RedirectMethod
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import org.json.JSONObject
 
