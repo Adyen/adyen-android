@@ -8,6 +8,7 @@
 package com.adyen.checkout.card.internal.util
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.R
@@ -79,11 +80,20 @@ object CardValidationUtils {
      * Validate Expiry Date.
      */
     fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+        return validateExpiryDate(expiryDate, fieldPolicy, GregorianCalendar.getInstance())
+    }
+
+    @VisibleForTesting
+    internal fun validateExpiryDate(
+        expiryDate: ExpiryDate,
+        fieldPolicy: Brand.FieldPolicy?,
+        calendar: Calendar
+    ): FieldState<ExpiryDate> {
         val invalidState = FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
         return when {
             dateExists(expiryDate) -> {
-                val isInMaxYearRange = isInMaxYearRange(expiryDate, GregorianCalendar.getInstance())
-                val isInMinMonthRange = isInMinMonthRange(expiryDate, GregorianCalendar.getInstance())
+                val isInMaxYearRange = isInMaxYearRange(expiryDate, calendar)
+                val isInMinMonthRange = isInMinMonthRange(expiryDate, calendar)
                 val fieldState = when {
                     // higher than maxPast and lower than maxFuture
                     isInMinMonthRange && isInMaxYearRange -> FieldState(expiryDate, Validation.Valid)
@@ -91,10 +101,12 @@ object CardValidationUtils {
                         expiryDate,
                         Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
                     )
+
                     !isInMinMonthRange -> FieldState(
                         expiryDate,
                         Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
                     )
+
                     else -> invalidState
                 }
                 fieldState
@@ -108,14 +120,14 @@ object CardValidationUtils {
         }
     }
 
-    internal fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
+    private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
         val expiryDateCalendar = getExpiryCalendar(expiryDate)
         val maxFutureCalendar = calendar.clone() as GregorianCalendar
         maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
         return expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
     }
 
-    internal fun isInMinMonthRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
+    private fun isInMinMonthRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
         val expiryDateCalendar = getExpiryCalendar(expiryDate)
         val maxPastCalendar = calendar.clone() as GregorianCalendar
         maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
@@ -134,8 +146,10 @@ object CardValidationUtils {
             detectedCardType?.cvcPolicy?.isRequired() == false && length == 0 -> Validation.Valid
             detectedCardType?.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
+
             detectedCardType?.cardBrand != CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
+
             else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)
