@@ -11,7 +11,7 @@ package com.adyen.checkout.components.core
 interface RedirectableActionComponent {
 
     /**
-     * Set a callback that will be called when an redirect is opened.
+     * Set a callback that will be called when a redirect is made.
      *
      * @param listener The callback that will be called on redirect.
      */

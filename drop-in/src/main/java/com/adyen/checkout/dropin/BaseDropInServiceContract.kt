@@ -91,7 +91,7 @@ interface BaseDropInServiceContract {
     fun getAdditionalData(): Bundle?
 
     /**
-     * This method is called when a redirect is opened.
+     * Set a callback that will be called when a redirect is made.
      */
     fun onRedirect() = Unit
 }
