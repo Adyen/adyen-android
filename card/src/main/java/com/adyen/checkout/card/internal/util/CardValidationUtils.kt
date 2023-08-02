@@ -99,10 +99,11 @@ object CardValidationUtils {
                 }
                 fieldState
             }
-            (fieldPolicy == Brand.FieldPolicy.OPTIONAL || fieldPolicy == Brand.FieldPolicy.HIDDEN) &&
-                expiryDate != ExpiryDate.INVALID_DATE -> {
+
+            fieldPolicy?.isRequired() == false && expiryDate != ExpiryDate.INVALID_DATE -> {
                 FieldState(expiryDate, Validation.Valid)
             }
+
             else -> invalidState
         }
     }
@@ -130,7 +131,7 @@ object CardValidationUtils {
         val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
-            detectedCardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
+            detectedCardType?.cvcPolicy?.isRequired() == false && length == 0 -> Validation.Valid
             detectedCardType?.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
             detectedCardType?.cardBrand != CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
