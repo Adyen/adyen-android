@@ -67,11 +67,17 @@ class DefaultRedirectHandler : RedirectHandler {
         if (url.isNullOrEmpty()) throw ComponentException("Redirect URL is empty.")
         val uri = Uri.parse(url)
 
-        if (launchNative(context, uri)) return
-        if (launchWithCustomTabs(context, uri)) return
-        if (launchBrowser(context, uri)) return
+        if (
+            launchNative(context, uri) ||
+            launchWithCustomTabs(context, uri) ||
+            launchBrowser(context, uri)
+        ) {
+            onRedirectListener?.invoke()
+            return
+        }
+
         Logger.e(TAG, "Could not launch url")
-        throw ComponentException("Redirect to app failed.")
+        throw ComponentException("Launching redirect failed.")
     }
 
     private fun launchNative(context: Context, uri: Uri): Boolean {
@@ -180,7 +186,6 @@ class DefaultRedirectHandler : RedirectHandler {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setData(uri)
             context.startActivity(browserActivityIntent)
-            onRedirectListener?.invoke()
             Logger.d(TAG, "launchBrowser - redirect successful with browser")
             true
         } catch (e: ActivityNotFoundException) {

@@ -567,7 +567,7 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
     }.apply {
-        this.setOnRedirectListener(onRedirect)
+        setOnRedirectListener(onRedirect)
     }
 }
 
@@ -893,7 +893,7 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
     }.apply {
-        this.setOnRedirectListener(onRedirect)
+        setOnRedirectListener(onRedirect)
     }
 }
 
