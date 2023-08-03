@@ -83,6 +83,12 @@ data class Brand(
         OPTIONAL("optional"),
         HIDDEN("hidden");
 
+        // We treat both HIDDEN and OPTIONAL the same way now, as optional, to avoid hiding and showing the cvc field
+        // while the user is typing the card number
+        fun isRequired(): Boolean {
+            return this == REQUIRED
+        }
+
         companion object {
             @JvmStatic
             fun parse(value: String): FieldPolicy {

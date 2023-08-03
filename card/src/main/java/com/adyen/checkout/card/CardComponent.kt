@@ -302,15 +302,14 @@ class CardComponent private constructor(
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
             cardDelegate.isCvcHidden() -> InputFieldUIState.HIDDEN
-            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
-            cvcPolicy == Brand.FieldPolicy.OPTIONAL || cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
 
     private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
-        return when (expiryDatePolicy) {
-            Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+        return when {
+            expiryDatePolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
