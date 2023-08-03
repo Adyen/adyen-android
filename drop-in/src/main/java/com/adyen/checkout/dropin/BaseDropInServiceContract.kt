@@ -89,4 +89,9 @@ interface BaseDropInServiceContract {
      * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
      */
     fun getAdditionalData(): Bundle?
+
+    /**
+     * Set a callback that will be called when a redirect is made.
+     */
+    fun onRedirect() = Unit
 }

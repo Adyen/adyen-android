@@ -128,6 +128,10 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         return additionalData
     }
 
+    final override fun onRedirectCalled() {
+        onRedirect()
+    }
+
     internal class DropInBinder(service: BaseDropInService) : Binder() {
 
         private val serviceRef: WeakReference<BaseDropInService> = WeakReference(service)

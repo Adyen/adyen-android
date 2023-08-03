@@ -39,4 +39,11 @@ interface ActionHandlingComponent {
      * @param intent The received [Intent].
      */
     fun handleIntent(intent: Intent)
+
+    /**
+     * Set a callback that will be called when a redirect is opened.
+     *
+     * @param listener The callback that will be called on redirect.
+     */
+    fun setOnRedirectListener(listener: () -> Unit)
 }

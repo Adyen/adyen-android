@@ -41,4 +41,8 @@ class DefaultActionHandlingComponent(
     override fun handleIntent(intent: Intent) {
         genericActionDelegate.handleIntent(intent)
     }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        genericActionDelegate.setOnRedirectListener(listener)
+    }
 }

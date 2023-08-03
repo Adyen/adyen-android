@@ -149,6 +149,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
     override fun removeObserver() = Unit
 
+    override fun setOnRedirectListener(listener: () -> Unit) = Unit
+
     override fun onCleared() = Unit
 }
 

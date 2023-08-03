@@ -25,8 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-private val TAG = LogUtil.getTag()
-
 internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var protocol: Protocol
@@ -82,6 +80,10 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         return false
     }
 
+    companion object {
+        private val TAG = LogUtil.getTag()
+    }
+
     /**
      * Interface for Drop-in fragments to interact with the main Activity
      */
@@ -100,5 +102,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun requestOrderCancellation()
         fun finishWithAction()
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
+        fun onRedirect()
     }
 }

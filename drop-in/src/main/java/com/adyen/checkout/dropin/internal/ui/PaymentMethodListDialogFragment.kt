@@ -158,7 +158,8 @@ internal class PaymentMethodListDialogFragment :
             dropInConfiguration = dropInViewModel.dropInConfiguration,
             amount = dropInViewModel.amount,
             componentCallback = paymentMethodsListViewModel,
-            sessionDetails = dropInViewModel.sessionDetails
+            sessionDetails = dropInViewModel.sessionDetails,
+            onRedirect = protocol::onRedirect,
         )
         paymentMethodsListViewModel.onClickStoredItem(storedPaymentMethod, storedPaymentMethodModel)
     }

@@ -74,6 +74,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
                 amount = dropInViewModel.amount,
                 componentCallback = this,
                 sessionDetails = dropInViewModel.sessionDetails,
+                onRedirect = protocol::onRedirect,
             ) as GiftCardComponent
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))

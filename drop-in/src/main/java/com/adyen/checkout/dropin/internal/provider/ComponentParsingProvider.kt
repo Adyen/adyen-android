@@ -510,6 +510,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
+    onRedirect: () -> Unit,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
@@ -565,6 +566,8 @@ internal fun getComponentFor(
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
+    }.apply {
+        setOnRedirectListener(onRedirect)
     }
 }
 
@@ -583,6 +586,7 @@ internal fun getComponentFor(
     amount: Amount,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
+    onRedirect: () -> Unit,
 ): PaymentComponent {
     val dropInParams = dropInConfiguration.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
@@ -888,6 +892,8 @@ internal fun getComponentFor(
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
+    }.apply {
+        setOnRedirectListener(onRedirect)
     }
 }
 

@@ -449,9 +449,14 @@ internal class DefaultAdyen3DS2Delegate(
         exceptionChannel.trySend(e)
     }
 
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        redirectHandler.setOnRedirectListener(listener)
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        redirectHandler.removeOnRedirectListener()
     }
 
     companion object {

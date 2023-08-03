@@ -669,6 +669,10 @@ internal class DropInActivity :
         }
     }
 
+    override fun onRedirect() {
+        dropInService?.onRedirectCalled()
+    }
+
     companion object {
 
         fun createIntent(

@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -64,6 +65,8 @@ internal class DefaultGenericActionDelegate(
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
+
+    private var onRedirectListener: (() -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         Logger.d(TAG, "initialize")
@@ -108,6 +111,10 @@ internal class DefaultGenericActionDelegate(
             this._delegate = delegate
             Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
 
+            if (delegate is RedirectableDelegate) {
+                onRedirectListener?.let { delegate.setOnRedirectListener(it) }
+            }
+
             delegate.initialize(coroutineScope)
 
             observeDetails(delegate)
@@ -150,9 +157,11 @@ internal class DefaultGenericActionDelegate(
             null -> {
                 exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
             }
+
             !is IntentHandlingDelegate -> {
                 exceptionChannel.trySend(ComponentException("Cannot handle intent with the current component"))
             }
+
             else -> {
                 Logger.d(TAG, "Handling intent")
                 delegate.handleIntent(intent)
@@ -171,12 +180,17 @@ internal class DefaultGenericActionDelegate(
         delegate.onError(e)
     }
 
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        onRedirectListener = listener
+    }
+
     override fun onCleared() {
         Logger.d(TAG, "onCleared")
         removeObserver()
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null
+        onRedirectListener = null
     }
 
     companion object {
