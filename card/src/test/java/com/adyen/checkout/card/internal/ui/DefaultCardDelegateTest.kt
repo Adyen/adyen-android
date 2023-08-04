@@ -82,7 +82,9 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -960,7 +962,7 @@ internal class DefaultCardDelegateTest(
     @Test
     fun `when delegate is initialized then analytics event is sent`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).sendAnalyticsEvent()
+        verify(analyticsRepository).setupAnalytics()
     }
 
     @Nested
@@ -1012,6 +1014,27 @@ internal class DefaultCardDelegateTest(
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
                 delegate.onSubmit()
                 verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
+    }
+
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
     }
@@ -1193,6 +1216,7 @@ internal class DefaultCardDelegateTest(
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun shouldStorePaymentMethodSource() = listOf(

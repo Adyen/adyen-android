@@ -77,13 +77,13 @@ internal class DefaultEContextDelegate<
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -118,6 +118,7 @@ internal class DefaultEContextDelegate<
     ): EContextComponentStateT {
         val eContextPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId()
             firstName = outputData.firstNameState.value
             lastName = outputData.lastNameState.value
             telephoneNumber = outputData.phoneNumberState.value

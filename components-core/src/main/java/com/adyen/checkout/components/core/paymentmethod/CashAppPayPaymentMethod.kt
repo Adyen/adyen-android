@@ -9,7 +9,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class CashAppPayPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
     var grantId: String? = null,
     var onFileGrantId: String? = null,
     var customerId: String? = null,
@@ -31,6 +32,7 @@ data class CashAppPayPaymentMethod(
             override fun serialize(modelObject: CashAppPayPaymentMethod): JSONObject = JSONObject().apply {
                 try {
                     putOpt(TYPE, modelObject.type)
+                    putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                     putOpt(GRANT_ID, modelObject.grantId)
                     putOpt(ON_FILE_GRANT_ID, modelObject.onFileGrantId)
                     putOpt(CUSTOMER_ID, modelObject.customerId)
@@ -43,6 +45,7 @@ data class CashAppPayPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): CashAppPayPaymentMethod = CashAppPayPaymentMethod(
                 type = jsonObject.getStringOrNull(TYPE),
+                checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                 grantId = jsonObject.getStringOrNull(GRANT_ID),
                 onFileGrantId = jsonObject.getStringOrNull(ON_FILE_GRANT_ID),
                 customerId = jsonObject.getStringOrNull(CUSTOMER_ID),

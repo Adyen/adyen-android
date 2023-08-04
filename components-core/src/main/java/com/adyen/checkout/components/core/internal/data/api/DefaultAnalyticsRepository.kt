@@ -9,31 +9,75 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runSuspendCatching
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultAnalyticsRepository(
-    private val packageName: String,
-    private val locale: Locale,
-    private val source: AnalyticsSource,
+    private val analyticsRepositoryData: AnalyticsRepositoryData,
     private val analyticsService: AnalyticsService,
     private val analyticsMapper: AnalyticsMapper,
 ) : AnalyticsRepository {
 
-    override suspend fun sendAnalyticsEvent() {
-        runSuspendCatching {
-            val queryParameters = analyticsMapper.getQueryParameters(packageName, locale, source)
-            analyticsService.sendEvent(queryParameters)
-            Logger.v(TAG, "Analytics event sent")
+    @VisibleForTesting
+    internal var state: State = State.Uninitialized
+        private set
+
+    private var checkoutAttemptId: String? = null
+    override fun getCheckoutAttemptId(): String? = checkoutAttemptId
+
+    override suspend fun setupAnalytics() {
+        if (!canSendAnalytics(requiredLevel = ALL)) {
+            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
+            return
         }
-            .onFailure { e -> Logger.e(TAG, "Failed to send analytics event", e) }
+        if (state != State.Uninitialized) return
+        state = State.InProgress
+        Logger.v(TAG, "Setting up analytics")
+
+        runSuspendCatching {
+            val analyticsSetupRequest = with(analyticsRepositoryData) {
+                analyticsMapper.getAnalyticsSetupRequest(
+                    packageName = packageName,
+                    locale = locale,
+                    source = source,
+                    amount = amount,
+                    screenWidth = screenWidth.toLong(),
+                    paymentMethods = paymentMethods,
+                )
+            }
+            val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
+            checkoutAttemptId = response.checkoutAttemptId
+            state = State.Ready
+            Logger.v(TAG, "Analytics setup call successful")
+        }.onFailure { e ->
+            state = State.Failed
+            Logger.e(TAG, "Failed to send analytics setup call", e)
+        }
+    }
+
+    private fun canSendAnalytics(requiredLevel: AnalyticsParamsLevel): Boolean {
+        require(requiredLevel != NONE) { "Analytics are not allowed with level NONE" }
+        return !analyticsRepositoryData.level.hasHigherPriorityThan(requiredLevel)
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        @VisibleForTesting
+        internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+    }
+
+    @VisibleForTesting
+    internal sealed class State {
+        object Uninitialized : State()
+        object InProgress : State()
+        object Ready : State()
+        object Failed : State()
     }
 }

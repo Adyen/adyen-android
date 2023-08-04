@@ -9,25 +9,20 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
 internal sealed class AddressFieldPolicyParams : AddressFieldPolicy {
     /**
      * Address form fields will be required.
      */
-    @Parcelize
     object Required : AddressFieldPolicyParams()
 
     /**
      * Address form fields will be optional.
      */
-    @Parcelize
     object Optional : AddressFieldPolicyParams()
 
     /**
      * Address form fields will be optional for given [brands] and required for the other brands.
      */
-    @Parcelize
     data class OptionalForCardTypes(val brands: List<String>) : AddressFieldPolicyParams()
 }

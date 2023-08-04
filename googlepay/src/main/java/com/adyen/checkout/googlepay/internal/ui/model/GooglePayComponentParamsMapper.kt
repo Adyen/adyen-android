@@ -11,6 +11,7 @@ package com.adyen.checkout.googlepay.internal.ui.model
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.isEmpty
@@ -46,7 +47,7 @@ internal class GooglePayComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             gatewayMerchantId = getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = getAvailableAuthMethods(),
@@ -128,7 +129,7 @@ internal class GooglePayComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = amount,
         )

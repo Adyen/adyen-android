@@ -67,13 +67,13 @@ internal class DefaultBacsDirectDebitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -189,6 +189,7 @@ internal class DefaultBacsDirectDebitDelegate(
     ): BacsDirectDebitComponentState {
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod(
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             holderName = outputData.holderNameState.value,
             bankAccountNumber = outputData.bankAccountNumberState.value,
             bankLocationId = outputData.sortCodeState.value,

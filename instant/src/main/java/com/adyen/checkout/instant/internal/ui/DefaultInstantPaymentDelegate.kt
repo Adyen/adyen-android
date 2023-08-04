@@ -53,7 +53,10 @@ internal class DefaultInstantPaymentDelegate(
 
     private fun createComponentState(): InstantComponentState {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>(
-            paymentMethod = GenericPaymentMethod(paymentMethod.type),
+            paymentMethod = GenericPaymentMethod(
+                type = paymentMethod.type,
+                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            ),
             order = order,
             amount = componentParams.amount.takeUnless { it.isEmpty },
         )
@@ -61,13 +64,13 @@ internal class DefaultInstantPaymentDelegate(
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 

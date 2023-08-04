@@ -8,28 +8,23 @@
 
 package com.adyen.checkout.ui.core.internal.ui.model
 
-import android.os.Parcelable
 import androidx.annotation.RestrictTo
-import kotlinx.parcelize.Parcelize
 
 /**
  * Configuration class for Address Form in Address View. This class can be used define the
  * visibility of the address form.
  */
-@Parcelize
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class AddressParams : Parcelable {
+sealed class AddressParams {
 
     /**
      * Address Form will be hidden.
      */
-    @Parcelize
     object None : AddressParams()
 
     /**
      * Only postal code will be shown as part of the card component.
      */
-    @Parcelize
     data class PostalCode(
         val addressFieldPolicy: AddressFieldPolicy
     ) : AddressParams()
@@ -41,7 +36,6 @@ sealed class AddressParams : Parcelable {
      * @param supportedCountryCodes Supported country codes to be filtered from the available country
      * options.
      */
-    @Parcelize
     data class FullAddress(
         val defaultCountryCode: String? = null,
         val supportedCountryCodes: List<String> = emptyList(),
@@ -53,4 +47,4 @@ sealed class AddressParams : Parcelable {
  * Configuration for requirement of the address fields.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface AddressFieldPolicy : Parcelable
+interface AddressFieldPolicy

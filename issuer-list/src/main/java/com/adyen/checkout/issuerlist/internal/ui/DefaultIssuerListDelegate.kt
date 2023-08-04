@@ -75,13 +75,13 @@ internal class DefaultIssuerListDelegate<
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -147,6 +147,7 @@ internal class DefaultIssuerListDelegate<
     ): ComponentStateT {
         val issuerListPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId()
             issuer = outputData.selectedIssuer?.id.orEmpty()
         }
 

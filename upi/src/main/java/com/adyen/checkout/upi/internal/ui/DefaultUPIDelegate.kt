@@ -67,13 +67,13 @@ internal class DefaultUPIDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -130,6 +130,7 @@ internal class DefaultUPIDelegate(
     ): UPIComponentState {
         val paymentMethod = UPIPaymentMethod(
             type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
                 outputData.virtualPaymentAddressFieldState.value
             } else {

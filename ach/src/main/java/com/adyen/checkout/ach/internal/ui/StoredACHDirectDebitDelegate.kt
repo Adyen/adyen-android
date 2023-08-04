@@ -88,7 +88,7 @@ internal class StoredACHDirectDebitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
@@ -105,17 +105,18 @@ internal class StoredACHDirectDebitDelegate(
         Logger.e(TAG, "updateInputData should not be called in StoredACHDirectDebitDelegate")
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
     private fun createComponentState(): ACHDirectDebitComponentState {
         val paymentMethod = ACHDirectDebitPaymentMethod(
             type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-            storedPaymentMethodId = storedPaymentMethod.id
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            storedPaymentMethodId = storedPaymentMethod.id,
         )
 
         val paymentComponentData = PaymentComponentData(

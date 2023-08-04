@@ -124,7 +124,7 @@ internal class StoredCardDelegate(
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         initializeInputData()
         fetchPublicKey()
 
@@ -143,10 +143,10 @@ internal class StoredCardDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -324,9 +324,10 @@ internal class StoredCardDelegate(
         cardNumber: String,
         firstCardBrand: CardBrand?,
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             storedPaymentMethodId = getPaymentMethodId()
 
             if (!isCvcHidden()) {

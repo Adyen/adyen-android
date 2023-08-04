@@ -52,7 +52,7 @@ import kotlinx.coroutines.launch
 internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
-    private val analyticsRepository: AnalyticsRepository,
+    internal val analyticsRepository: AnalyticsRepository,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -63,7 +63,7 @@ internal class DropInViewModel(
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
     var amount: Amount
-        get() = bundleHandler.amount ?: getInitialAmount()
+        get() = requireNotNull(bundleHandler.amount)
         private set(value) {
             bundleHandler.amount = value
         }
@@ -157,7 +157,7 @@ internal class DropInViewModel(
 
     fun onCreated() {
         navigateToInitialDestination()
-        sendAnalyticsEvent()
+        setupAnalytics()
     }
 
     fun onDropInServiceConnected() {
@@ -201,10 +201,10 @@ internal class DropInViewModel(
         sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
-    private fun sendAnalyticsEvent() {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics() {
+        Logger.v(TAG, "setupAnalytics")
         viewModelScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 

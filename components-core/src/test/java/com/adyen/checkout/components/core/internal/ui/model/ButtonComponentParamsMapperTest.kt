@@ -33,7 +33,7 @@ internal class ButtonComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
@@ -50,7 +50,7 @@ internal class ButtonComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
@@ -106,7 +106,7 @@ internal class ButtonComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
             amount = Amount.EMPTY,
             isSubmitButtonVisible = true,

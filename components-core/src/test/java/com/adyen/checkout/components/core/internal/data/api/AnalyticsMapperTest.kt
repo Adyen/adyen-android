@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.components.core.internal.data.api
 
+import android.os.Build
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
@@ -93,26 +96,33 @@ internal class AnalyticsMapperTest {
 
         @Test
         fun `then returned values should match expected`() {
-            val actual = analyticsMapper.getQueryParameters(
+            val actual = analyticsMapper.getAnalyticsSetupRequest(
                 packageName = "PACKAGE_NAME",
                 locale = Locale("en", "US"),
                 source = AnalyticsSource.PaymentComponent(
                     isCreatedByDropIn = false,
                     PaymentMethod(type = "PAYMENT_METHOD_TYPE")
-                )
+                ),
+                amount = Amount("USD", 1337),
+                screenWidth = 1286,
+                paymentMethods = listOf("scheme", "googlepay"),
             )
 
-            val expected = mapOf(
-                "payload_version" to "1",
-                "version" to "5.0.0-alpha02",
-                "flavor" to "components",
-                "component" to "PAYMENT_METHOD_TYPE",
-                "locale" to "en_US",
-                "platform" to "android",
-                "referer" to "PACKAGE_NAME",
-                "device_brand" to "null",
-                "device_model" to "null",
-                "system_version" to "0",
+            val expected = AnalyticsSetupRequest(
+                version = "5.0.0-alpha02",
+                channel = "Android",
+                platform = "android",
+                locale = "en_US",
+                component = "PAYMENT_METHOD_TYPE",
+                flavor = "components",
+                deviceBrand = "null",
+                deviceModel = "null",
+                referrer = "PACKAGE_NAME",
+                systemVersion = Build.VERSION.SDK_INT.toString(),
+                containerWidth = null,
+                screenWidth = 1286,
+                paymentMethods = listOf("scheme", "googlepay"),
+                amount = Amount("USD", 1337),
             )
 
             assertEquals(expected.toString(), actual.toString())

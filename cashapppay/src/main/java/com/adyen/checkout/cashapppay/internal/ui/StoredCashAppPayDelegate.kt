@@ -53,17 +53,17 @@ internal class StoredCashAppPayDelegate(
     override val submitFlow: Flow<CashAppPayComponentState> = submitChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -99,6 +99,7 @@ internal class StoredCashAppPayDelegate(
     private fun createComponentState(): CashAppPayComponentState {
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             storedPaymentMethodId = paymentMethod.id,
         )
 

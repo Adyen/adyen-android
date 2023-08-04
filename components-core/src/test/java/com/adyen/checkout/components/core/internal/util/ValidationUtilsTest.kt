@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.net.URL
 
 internal class ValidationUtilsTest {
 
@@ -44,17 +43,6 @@ internal class ValidationUtilsTest {
             arguments("live_someclientkey", Environment.AUSTRALIA, true),
             arguments("live_someclientkey", Environment.INDIA, true),
             arguments("live_someclientkey", Environment.APSE, true),
-            arguments("live_someclientkey", Environment(URL("https://randomenv.com")), true),
-            arguments(
-                "live_someclientkey",
-                Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")),
-                true
-            ),
-            arguments(
-                "test_someclientkey",
-                Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/")),
-                false
-            ),
         )
 
         @JvmStatic

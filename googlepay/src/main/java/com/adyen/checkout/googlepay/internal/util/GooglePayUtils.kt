@@ -124,25 +124,30 @@ internal object GooglePayUtils {
      * @param paymentMethodType the type of the payment method.
      * @return The object matching the data for the API call to Adyen.
      */
-    fun createGooglePayPaymentMethod(paymentData: PaymentData?, paymentMethodType: String?): GooglePayPaymentMethod? {
+    fun createGooglePayPaymentMethod(
+        paymentData: PaymentData?,
+        paymentMethodType: String?,
+        checkoutAttemptId: String?
+    ): GooglePayPaymentMethod? {
         if (paymentData == null) {
             return null
         }
-        val paymentMethod = GooglePayPaymentMethod()
-        paymentMethod.type = paymentMethodType
-        return try {
-            val paymentDataJson = JSONObject(paymentData.toJson())
-            val paymentMethodDataJson = paymentDataJson.getJSONObject(PAYMENT_METHOD_DATA)
-            val tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA)
-            paymentMethod.googlePayToken = tokenizationDataJson.getString(TOKEN)
-            val infoJson = paymentMethodDataJson.optJSONObject(INFO)
-            if (infoJson != null && infoJson.has(CARD_NETWORK)) {
-                paymentMethod.googlePayCardNetwork = infoJson.getString(CARD_NETWORK)
+        return GooglePayPaymentMethod(
+            type = paymentMethodType,
+            checkoutAttemptId = checkoutAttemptId,
+        ).apply {
+            try {
+                val paymentDataJson = JSONObject(paymentData.toJson())
+                val paymentMethodDataJson = paymentDataJson.getJSONObject(PAYMENT_METHOD_DATA)
+                val tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA)
+                googlePayToken = tokenizationDataJson.getString(TOKEN)
+                val infoJson = paymentMethodDataJson.optJSONObject(INFO)
+                if (infoJson != null && infoJson.has(CARD_NETWORK)) {
+                    googlePayCardNetwork = infoJson.getString(CARD_NETWORK)
+                }
+            } catch (e: JSONException) {
+                Logger.e(TAG, "Failed to find Google Pay token.", e)
             }
-            paymentMethod
-        } catch (e: JSONException) {
-            Logger.e(TAG, "Failed to find Google Pay token.", e)
-            null
         }
     }
 

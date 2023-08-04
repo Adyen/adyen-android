@@ -71,13 +71,13 @@ internal class DefaultBlikDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -133,7 +133,8 @@ internal class DefaultBlikDelegate(
     ): BlikComponentState {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-            blikCode = outputData.blikCodeField.value
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            blikCode = outputData.blikCodeField.value,
         )
 
         val paymentComponentData = PaymentComponentData(

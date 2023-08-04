@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components.core.paymentmethod
 
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
@@ -16,11 +17,12 @@ import org.json.JSONObject
 @Parcelize
 class IdealPaymentMethod(
     override var type: String? = null,
+    override var checkoutAttemptId: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
 
     companion object {
-        const val PAYMENT_METHOD_TYPE = "ideal"
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.IDEAL
 
         @JvmField
         val SERIALIZER: Serializer<IdealPaymentMethod> = object : Serializer<IdealPaymentMethod> {
@@ -28,6 +30,7 @@ class IdealPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ISSUER, modelObject.issuer)
                     }
                 } catch (e: JSONException) {
@@ -38,6 +41,7 @@ class IdealPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): IdealPaymentMethod {
                 return IdealPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     issuer = jsonObject.getStringOrNull(ISSUER)
                 )
             }

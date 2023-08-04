@@ -115,6 +115,7 @@ internal abstract class BaseComponentDialogFragment :
                     amount = dropInViewModel.amount,
                     componentCallback = this,
                     sessionDetails = dropInViewModel.sessionDetails,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
                     onRedirect = protocol::onRedirect,
                 )
             } else {
@@ -125,6 +126,7 @@ internal abstract class BaseComponentDialogFragment :
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
                     onRedirect = protocol::onRedirect,
                 )
             }

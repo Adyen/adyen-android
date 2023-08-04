@@ -139,7 +139,7 @@ internal class DefaultCardDelegate(
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
@@ -150,10 +150,10 @@ internal class DefaultCardDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -617,9 +617,10 @@ internal class DefaultCardDelegate(
         firstCardBrand: CardBrand?,
         binValue: String
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear

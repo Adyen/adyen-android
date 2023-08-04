@@ -17,6 +17,7 @@ import org.json.JSONObject
 @Parcelize
 class EntercashPaymentMethod(
     override var type: String? = null,
+    override var checkoutAttemptId: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
 
@@ -29,6 +30,7 @@ class EntercashPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ISSUER, modelObject.issuer)
                     }
                 } catch (e: JSONException) {
@@ -39,6 +41,7 @@ class EntercashPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): EntercashPaymentMethod {
                 return EntercashPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     issuer = jsonObject.getStringOrNull(ISSUER)
                 )
             }
