@@ -345,6 +345,14 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    override fun onRedirect() {
+        Log.d(TAG, "On redirect")
+    }
+
+    override fun onBinValue(binValue: String) {
+        Log.d(TAG, "On bin value: $binValue")
+    }
+
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"
