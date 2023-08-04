@@ -10,7 +10,7 @@ package com.adyen.checkout.example.extensions
 
 import com.adyen.checkout.core.internal.util.LogUtil
 
-@Suppress("RestrictedApi")
-internal fun getLogTag(): String {
+@Suppress("RestrictedApi", "NOTHING_TO_INLINE")
+internal inline fun getLogTag(): String {
     return LogUtil.getTag()
 }
