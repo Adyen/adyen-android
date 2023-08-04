@@ -70,6 +70,7 @@ import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -133,6 +134,8 @@ internal class DefaultCardDelegate(
     override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    private var onBinValueListener: ((binValue: String) -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -384,6 +387,10 @@ internal class DefaultCardDelegate(
             } else {
                 cardNumber.take(BIN_VALUE_LENGTH)
             }
+
+        _coroutineScope?.launch(Dispatchers.Main) {
+            onBinValueListener?.invoke(binValue)
+        }
 
         val publicKey = publicKey
 
@@ -738,9 +745,14 @@ internal class DefaultCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
+        onBinValueListener = listener
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        onBinValueListener = null
     }
 
     companion object {

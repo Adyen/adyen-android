@@ -89,6 +89,10 @@ class CardComponent internal constructor(
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
+    fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
+        cardDelegate.setOnBinValueListener(listener)
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
