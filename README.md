@@ -1,5 +1,9 @@
 ![Checkout Android Logo][header.image]
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.adyen.checkout/drop-in)](https://mvnrepository.com/artifact/com.adyen.checkout)
+[![Build status](https://github.com/Adyen/adyen-android/actions/workflows/check_release.yml/badge.svg)](https://github.com/Adyen/adyen-android/actions)
+[![GitHub](https://img.shields.io/github/license/Adyen/adyen-android)](https://raw.githubusercontent.com/Adyen/adyen-android/develop/LICENSE)
+
 # Adyen Android
 
 Adyen Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
