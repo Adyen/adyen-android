@@ -94,4 +94,11 @@ interface BaseDropInServiceContract {
      * Set a callback that will be called when a redirect is made.
      */
     fun onRedirect() = Unit
+
+    /**
+     * Set a callback that will be called when the bin value changes.
+     *
+     * @param binValue Up to the first 6 or 8 digits of the card number.
+     */
+    fun onBinValue(binValue: String) = Unit
 }
