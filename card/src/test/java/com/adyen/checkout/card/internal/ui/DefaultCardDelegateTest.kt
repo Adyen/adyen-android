@@ -66,6 +66,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -1037,6 +1038,48 @@ internal class DefaultCardDelegateTest(
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
+    }
+
+    @Nested
+    inner class OnBinValueListenerTest {
+
+        @Test
+        fun `when on bin value listener is set, then it should be called`() = runTest {
+            val expectedBinValue = "545454"
+            val cardNumber = expectedBinValue + "1234567891"
+
+            delegate.setOnBinValueListener { binValue ->
+                launch(this.coroutineContext) {
+                    assertEquals(expectedBinValue, binValue)
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { this.cardNumber = cardNumber }
+        }
+
+        @Test
+        fun `when on bin value listener is called again with the same value, then it should be called only once`() =
+            runTest {
+                val expectedBinValue = "545454"
+                val cardNumber = expectedBinValue + "1234567891"
+                var timesCalled = 0
+
+                delegate.setOnBinValueListener { binValue ->
+                    timesCalled++
+
+                    launch(this.coroutineContext) {
+                        assertEquals(expectedBinValue, binValue)
+                        assertEquals(1, timesCalled)
+                    }
+                }
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData { this.cardNumber = cardNumber }
+                delegate.updateInputData { this.cardNumber = cardNumber }
+            }
     }
 
     @Suppress("LongParameterList")

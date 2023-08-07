@@ -370,7 +370,7 @@ internal class DefaultCardDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "LongMethod")
     private fun createComponentState(
         outputData: CardOutputData = this.outputData
     ): CardComponentState {
