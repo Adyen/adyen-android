@@ -70,7 +70,6 @@ import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -388,7 +387,9 @@ internal class DefaultCardDelegate(
                 cardNumber.take(BIN_VALUE_LENGTH)
             }
 
-        _coroutineScope?.launch(Dispatchers.Main) {
+        // This safe call is needed because _componentStateFlow is null while this is called the first time.
+        @Suppress("UNNECESSARY_SAFE_CALL")
+        if (_componentStateFlow?.value?.binValue != binValue) {
             onBinValueListener?.invoke(binValue)
         }
 
