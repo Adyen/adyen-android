@@ -89,6 +89,7 @@ internal class StoredCardDelegate(
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
         isSupported = true,
         panLength = null,
+        paymentMethodVariant = null,
     )
 
     private val inputData: CardInputData = CardInputData()

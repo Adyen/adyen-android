@@ -117,7 +117,8 @@ internal class DefaultDetectCardTypeRepository(
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
             isSupported = supportedCardBrands.contains(cardBrand),
-            panLength = null
+            panLength = null,
+            paymentMethodVariant = null,
         )
     }
 
@@ -192,7 +193,8 @@ internal class DefaultDetectCardTypeRepository(
                     brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value
                 ),
                 isSupported = brandResponse.supported != false,
-                panLength = brandResponse.panLength
+                panLength = brandResponse.panLength,
+                paymentMethodVariant = brandResponse.paymentMethodVariant,
             )
         }
     }
