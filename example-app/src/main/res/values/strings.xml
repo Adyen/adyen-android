@@ -48,9 +48,9 @@
     <string name="shopper_email_title">Shopper Email</string>
     <string name="split_card_funding_sources_key">split_card_funding_sources</string>
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
-    <string name="card_address_form_key">enable_card_address_form</string>
+    <string name="card_address_form_mode_key">card_address_form_mode</string>
     <string name="card_installment_options_mode_title">Installment options</string>
-    <string name="card_installment_options_mode_key">card_installment_options_mode_key</string>
+    <string name="card_installment_options_mode_key">card_installment_options_mode</string>
     <string name="card_address_form_title">Address mode</string>
     <string name="instant_payment_method_type_key">instant_payment_method_type</string>
     <string name="instant_payment_method_type_title">Instant Payment Method Type</string>
@@ -70,5 +70,18 @@
     <string name="currency_title">Currency</string>
     <string name="amount_value_key">amount_value</string>
     <string name="amount_value_title">Amount (minor units)</string>
+
+    <string name="preferences_default_country">NL</string>
+    <string name="preferences_default_shopper_locale">en-US</string>
+    <string name="preferences_default_amount_value">1337</string>
+    <string name="preferences_default_amount_currency">EUR</string>
+    <string name="preferences_default_threeds2_enabled">true</string>
+    <string name="preferences_default_execute_threed">true</string>
+    <string name="preferences_default_split_card_funding_sources">false</string>
+    <string name="preferences_default_address_form_mode">NONE</string>
+    <string name="preferences_default_installment_options_mode">NONE</string>
+    <string name="preferences_default_instant_payment_method">paypal</string>
+    <string name="preferences_default_use_sessions">true</string>
+    <string name="preferences_default_telemetry_level">ALL</string>
 
 </resources>

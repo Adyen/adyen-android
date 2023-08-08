@@ -15,9 +15,9 @@
     </array>
 
     <array name="card_address_form_values">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
+        <item>"NONE"</item>
+        <item>"POSTAL_CODE"</item>
+        <item>"FULL_ADDRESS"</item>
     </array>
 
     <array name="card_installment_options_mode_entries" >
@@ -28,10 +28,10 @@
     </array>
 
     <array name="card_installment_options_mode_values">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
-        <item>"3"</item>
+        <item>"NONE"</item>
+        <item>"DEFAULT"</item>
+        <item>"DEFAULT_WITH_REVOLVING"</item>
+        <item>"CARD_BASED_VISA"</item>
     </array>
 
     <array name="instant_payment_method_type_entries">

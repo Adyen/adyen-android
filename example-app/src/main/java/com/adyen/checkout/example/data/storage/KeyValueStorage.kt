@@ -12,9 +12,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
-import com.adyen.checkout.example.extensions.get
+import com.adyen.checkout.example.extensions.getBoolean
+import com.adyen.checkout.example.extensions.getString
 
 @Suppress("TooManyFunctions")
 interface KeyValueStorage {
@@ -27,12 +29,12 @@ interface KeyValueStorage {
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
-    fun getCardAddressMode(): Int
+    fun getCardAddressMode(): CardAddressMode
     fun getInstantPaymentMethodType(): String
-    fun getInstallmentOptionsMode(): Int
+    fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
     fun useSessions(): Boolean
     fun setUseSessions(useSessions: Boolean)
-    fun getTelemetryLevel(): String
+    fun getTelemetryLevel(): AnalyticsLevel
 }
 
 @Suppress("TooManyFunctions")
@@ -42,78 +44,117 @@ internal class DefaultKeyValueStorage(
 ) : KeyValueStorage {
 
     override fun getShopperReference(): String {
-        return sharedPreferences.get(appContext, R.string.shopper_reference_key, BuildConfig.SHOPPER_REFERENCE)
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.shopper_reference_key,
+            defaultValue = BuildConfig.SHOPPER_REFERENCE,
+        )
     }
 
     override fun getAmount(): Amount {
-        val amountValue = sharedPreferences.get(appContext, R.string.amount_value_key, DEFAULT_VALUE)
-        val amountCurrency = sharedPreferences.get(appContext, R.string.currency_key, DEFAULT_CURRENCY)
-
-        val amount = Amount()
-        amount.currency = amountCurrency
-        amount.value = amountValue.toLong()
-
-        return amount
+        return Amount(
+            currency = sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.currency_key,
+                defaultStringRes = R.string.preferences_default_amount_currency,
+            ),
+            value = sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.amount_value_key,
+                defaultStringRes = R.string.preferences_default_amount_value,
+            ).toLong()
+        )
     }
 
     override fun getCountry(): String {
-        return sharedPreferences.get(appContext, R.string.shopper_country_key, DEFAULT_COUNTRY)
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.shopper_country_key,
+            defaultStringRes = R.string.preferences_default_country,
+        )
     }
 
     override fun getShopperLocale(): String {
-        return sharedPreferences.get(appContext, R.string.shopper_locale_key, DEFAULT_LOCALE)
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.shopper_locale_key,
+            defaultStringRes = R.string.preferences_default_shopper_locale,
+        )
     }
 
     override fun isThreeds2Enabled(): Boolean {
-        return sharedPreferences.get(appContext, R.string.threeds2_key, DEFAULT_THREEDS2_ENABLE)
+        return sharedPreferences.getBoolean(
+            appContext = appContext,
+            stringRes = R.string.threeds2_key,
+            defaultStringRes = R.string.preferences_default_threeds2_enabled,
+        )
     }
 
     override fun isExecuteThreeD(): Boolean {
-        return sharedPreferences.get(appContext, R.string.execute3D_key, DEFAULT_EXECUTE_3D)
+        return sharedPreferences.getBoolean(
+            appContext = appContext,
+            stringRes = R.string.execute3D_key,
+            defaultStringRes = R.string.preferences_default_execute_threed,
+        )
     }
 
     override fun getShopperEmail(): String {
-        return sharedPreferences.get(appContext, R.string.shopper_email_key, "")
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.shopper_email_key,
+            defaultValue = "",
+        )
     }
 
     override fun getMerchantAccount(): String {
-        return sharedPreferences.get(appContext, R.string.merchant_account_key, BuildConfig.MERCHANT_ACCOUNT)
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.merchant_account_key,
+            defaultValue = BuildConfig.MERCHANT_ACCOUNT,
+        )
     }
 
     override fun isSplitCardFundingSources(): Boolean {
-        return sharedPreferences.get(
-            appContext,
-            R.string.split_card_funding_sources_key,
-            DEFAULT_SPLIT_CARD_FUNDING_SOURCES
+        return sharedPreferences.getBoolean(
+            appContext = appContext,
+            stringRes = R.string.split_card_funding_sources_key,
+            defaultStringRes = R.string.preferences_default_split_card_funding_sources,
         )
     }
 
-    override fun getCardAddressMode(): Int {
-        return sharedPreferences.get(appContext, R.string.card_address_form_key, DEFAULT_ENABLE_ADDRESS_FORM)
-            .toInt()
+    override fun getCardAddressMode(): CardAddressMode {
+        return CardAddressMode.valueOf(
+            sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.card_address_form_mode_key,
+                defaultStringRes = R.string.preferences_default_address_form_mode,
+            )
+        )
     }
 
     override fun getInstantPaymentMethodType(): String {
-        return sharedPreferences.get(
-            appContext,
-            R.string.instant_payment_method_type_key,
-            DEFAULT_INSTANT_PAYMENT_METHOD
+        return sharedPreferences.getString(
+            appContext = appContext,
+            stringRes = R.string.instant_payment_method_type_key,
+            defaultStringRes = R.string.preferences_default_instant_payment_method,
         )
     }
 
-    override fun getInstallmentOptionsMode(): Int {
-        return sharedPreferences.get(
-            appContext,
-            R.string.card_installment_options_mode_key,
-            DEFAULT_INSTALLMENT_OPTIONS_MODE
-        ).toInt()
+    override fun getInstallmentOptionsMode(): CardInstallmentOptionsMode {
+        return CardInstallmentOptionsMode.valueOf(
+            sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.card_installment_options_mode_key,
+                defaultStringRes = R.string.preferences_default_installment_options_mode,
+            )
+        )
     }
 
     override fun useSessions(): Boolean {
-        return sharedPreferences.get(
-            appContext,
-            R.string.use_sessions_key,
-            DEFAULT_USE_SESSIONS
+        return sharedPreferences.getBoolean(
+            appContext = appContext,
+            stringRes = R.string.use_sessions_key,
+            defaultStringRes = R.string.preferences_default_use_sessions,
         )
     }
 
@@ -123,26 +164,13 @@ internal class DefaultKeyValueStorage(
         }
     }
 
-    override fun getTelemetryLevel(): String {
-        return sharedPreferences.get(
-            appContext,
-            R.string.telemetry_level_key,
-            DEFAULT_TELEMETRY_LEVEL
+    override fun getTelemetryLevel(): AnalyticsLevel {
+        return AnalyticsLevel.valueOf(
+            sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.telemetry_level_key,
+                defaultStringRes = R.string.preferences_default_telemetry_level,
+            )
         )
-    }
-
-    companion object {
-        private const val DEFAULT_COUNTRY = "NL"
-        private const val DEFAULT_LOCALE = "en-US"
-        private const val DEFAULT_VALUE = "1337"
-        private const val DEFAULT_CURRENCY = "EUR"
-        private const val DEFAULT_THREEDS2_ENABLE = true
-        private const val DEFAULT_EXECUTE_3D = false
-        private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
-        private const val DEFAULT_ENABLE_ADDRESS_FORM = "0"
-        private const val DEFAULT_INSTALLMENT_OPTIONS_MODE = "0"
-        private const val DEFAULT_INSTANT_PAYMENT_METHOD = "paypal"
-        private const val DEFAULT_USE_SESSIONS = true
-        private const val DEFAULT_TELEMETRY_LEVEL = "ALL"
     }
 }

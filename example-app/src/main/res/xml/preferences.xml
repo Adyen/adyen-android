@@ -13,26 +13,33 @@
 
         <EditTextPreference
             android:key="@string/merchant_account_key"
-            android:title="@string/merchant_account_title" />
+            android:title="@string/merchant_account_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/payment_information">
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_amount_value"
             android:inputType="number"
             android:key="@string/amount_value_key"
-            android:title="@string/amount_value_title" />
+            android:title="@string/amount_value_title"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_amount_currency"
             android:key="@string/currency_key"
-            android:title="@string/currency_title" />
+            android:title="@string/currency_title"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
+            android:defaultValue="@string/preferences_default_threeds2_enabled"
             android:key="@string/threeds2_key"
             android:title="@string/threeds2_title" />
 
         <SwitchPreference
+            android:defaultValue="@string/preferences_default_execute_threed"
             android:key="@string/execute3D_key"
             android:title="@string/execute3D_key_title" />
     </PreferenceCategory>
@@ -41,32 +48,40 @@
 
         <EditTextPreference
             android:key="@string/shopper_reference_key"
-            android:title="@string/shopper_reference_title" />
+            android:title="@string/shopper_reference_title"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_country"
             android:key="@string/shopper_country_key"
-            android:title="@string/shopper_country_title" />
+            android:title="@string/shopper_country_title"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_shopper_locale"
             android:key="@string/shopper_locale_key"
-            android:title="@string/shopper_locale_title" />
+            android:title="@string/shopper_locale_title"
+            app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
             android:key="@string/shopper_email_key"
-            android:title="@string/shopper_email_title" />
+            android:title="@string/shopper_email_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/card_settings_title">
 
         <DropDownPreference
+            android:defaultValue="@string/preferences_default_address_form_mode"
             android:entries="@array/card_address_form_entries"
             android:entryValues="@array/card_address_form_values"
-            android:key="@string/card_address_form_key"
+            android:key="@string/card_address_form_mode_key"
             android:title="@string/card_address_form_title"
             app:useSimpleSummaryProvider="true" />
 
         <DropDownPreference
+            android:defaultValue="@string/preferences_default_installment_options_mode"
             android:entries="@array/card_installment_options_mode_entries"
             android:entryValues="@array/card_installment_options_mode_values"
             android:key="@string/card_installment_options_mode_key"
@@ -74,6 +89,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
+            android:defaultValue="@string/preferences_default_split_card_funding_sources"
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
 
@@ -83,6 +99,7 @@
     <PreferenceCategory android:title="@string/telemetry_title">
 
         <DropDownPreference
+            android:defaultValue="@string/preferences_default_telemetry_level"
             android:entries="@array/telemetry_level_entries"
             android:entryValues="@array/telemetry_level_values"
             android:key="@string/telemetry_level_key"
@@ -94,6 +111,7 @@
     <PreferenceCategory android:title="@string/app_title">
 
         <DropDownPreference
+            android:defaultValue="@string/preferences_default_instant_payment_method"
             android:entries="@array/instant_payment_method_type_entries"
             android:entryValues="@array/instant_payment_method_type_values"
             android:key="@string/instant_payment_method_type_key"
@@ -101,6 +119,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <DropDownPreference
+            android:defaultValue="@string/night_theme_system"
             android:entries="@array/night_theme_entries"
             android:entryValues="@array/night_theme_values"
             android:key="@string/night_theme_title"

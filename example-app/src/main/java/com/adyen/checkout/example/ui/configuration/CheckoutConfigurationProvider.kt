@@ -15,10 +15,11 @@ import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.example.data.storage.CardAddressMode
+import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -107,9 +108,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
-        0 -> AddressConfiguration.None
-        1 -> AddressConfiguration.PostalCode()
-        else -> AddressConfiguration.FullAddress(
+        CardAddressMode.NONE -> AddressConfiguration.None
+        CardAddressMode.POSTAL_CODE -> AddressConfiguration.PostalCode()
+        CardAddressMode.FULL_ADDRESS -> AddressConfiguration.FullAddress(
             defaultCountryCode = null,
             supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
             addressFieldPolicy = AddressConfiguration.CardAddressFieldPolicy.OptionalForCardTypes(
@@ -146,17 +147,16 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val telemetryLevelPreferences = keyValueStorage.getTelemetryLevel()
-        val analyticsLevel = AnalyticsLevel.valueOf(telemetryLevelPreferences)
+        val analyticsLevel = keyValueStorage.getTelemetryLevel()
         return AnalyticsConfiguration(level = analyticsLevel)
     }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
         when (keyValueStorage.getInstallmentOptionsMode()) {
-            0 -> InstallmentConfiguration()
-            1 -> getDefaultInstallmentOptions()
-            2 -> getDefaultInstallmentOptions(includeRevolving = true)
-            else -> getCardBasedInstallmentOptions()
+            CardInstallmentOptionsMode.NONE -> InstallmentConfiguration()
+            CardInstallmentOptionsMode.DEFAULT -> getDefaultInstallmentOptions()
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> getDefaultInstallmentOptions(includeRevolving = true)
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> getCardBasedInstallmentOptions()
         }
 
     private fun getDefaultInstallmentOptions(
