@@ -83,6 +83,13 @@
             android:title="@string/instant_payment_method_type_title"
             app:useSimpleSummaryProvider="true" />
 
+        <DropDownPreference
+            android:entries="@array/telemetry_level_entries"
+            android:entryValues="@array/telemetry_level_values"
+            android:key="@string/telemetry_level_key"
+            android:title="@string/telemetry_level_title"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/app_title">

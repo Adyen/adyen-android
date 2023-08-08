@@ -55,4 +55,14 @@
         <item>@string/night_theme_day</item>
         <item>@string/night_theme_night</item>
     </array>
+
+    <array name="telemetry_level_entries">
+        <item>"All"</item>
+        <item>"None"</item>
+    </array>
+
+    <array name="telemetry_level_values">
+        <item>"ALL"</item>
+        <item>"NONE"</item>
+    </array>
 </resources>

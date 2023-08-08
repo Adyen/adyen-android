@@ -14,6 +14,8 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
@@ -61,6 +63,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         .addRedirectActionConfiguration(getRedirectConfiguration())
         .setEnableRemovingStoredPaymentMethods(true)
         .setAmount(amount)
+        .setAnalyticsConfiguration(getAnalyticsConfiguration())
         .build()
 
     fun getCardConfiguration(): CardConfiguration =
@@ -69,31 +72,38 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAddressConfiguration(getAddressConfiguration())
             .setInstallmentConfigurations(getInstallmentConfiguration())
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getCashAppPayConfiguration(): CashAppPayConfiguration =
         CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+            .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
         BlikConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getBacsConfiguration(): BacsDirectDebitConfiguration =
         BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getInstantConfiguration(): InstantPaymentConfiguration =
         InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
@@ -113,23 +123,33 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShowStorePaymentField(true)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getGooglePayConfiguration(): GooglePayConfiguration =
         GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setCountryCode(keyValueStorage.getCountry())
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun get3DS2Configuration(): Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getRedirectConfiguration(): RedirectConfiguration =
         RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
+
+    private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
+        val telemetryLevelPreferences = keyValueStorage.getTelemetryLevel()
+        val analyticsLevel = AnalyticsLevel.valueOf(telemetryLevelPreferences)
+        return AnalyticsConfiguration(level = analyticsLevel)
+    }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
         when (keyValueStorage.getInstallmentOptionsMode()) {

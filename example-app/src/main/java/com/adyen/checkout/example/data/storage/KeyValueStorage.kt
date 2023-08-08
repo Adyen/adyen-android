@@ -32,6 +32,7 @@ interface KeyValueStorage {
     fun getInstallmentOptionsMode(): Int
     fun useSessions(): Boolean
     fun setUseSessions(useSessions: Boolean)
+    fun getTelemetryLevel(): String
 }
 
 @Suppress("TooManyFunctions")
@@ -122,6 +123,14 @@ internal class DefaultKeyValueStorage(
         }
     }
 
+    override fun getTelemetryLevel(): String {
+        return sharedPreferences.get(
+            appContext,
+            R.string.telemetry_level_key,
+            DEFAULT_TELEMETRY_LEVEL
+        )
+    }
+
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
         private const val DEFAULT_LOCALE = "en-US"
@@ -134,5 +143,6 @@ internal class DefaultKeyValueStorage(
         private const val DEFAULT_INSTALLMENT_OPTIONS_MODE = "0"
         private const val DEFAULT_INSTANT_PAYMENT_METHOD = "paypal"
         private const val DEFAULT_USE_SESSIONS = true
+        private const val DEFAULT_TELEMETRY_LEVEL = "ALL"
     }
 }
