@@ -39,4 +39,6 @@ internal interface CardDelegate :
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 
     fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?)
+
+    fun setOnBinLookupListener(listener: (() -> Unit)?)
 }

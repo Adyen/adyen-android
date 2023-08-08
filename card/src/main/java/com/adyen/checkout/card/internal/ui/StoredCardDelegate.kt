@@ -410,6 +410,9 @@ internal class StoredCardDelegate(
     // Bin doesn't change for stored cards
     override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) = Unit
 
+    // Bin lookup is not performed for stored cards
+    override fun setOnBinLookupListener(listener: (() -> Unit)?) = Unit
+
     override fun onCleared() {
         removeObserver()
         coroutineScope = null

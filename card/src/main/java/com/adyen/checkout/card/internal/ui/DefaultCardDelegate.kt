@@ -135,6 +135,7 @@ internal class DefaultCardDelegate(
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
+    private var onBinLookupListener: (() -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -233,6 +234,7 @@ internal class DefaultCardDelegate(
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
+                onBinLookupListener?.invoke()
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
@@ -750,10 +752,15 @@ internal class DefaultCardDelegate(
         onBinValueListener = listener
     }
 
+    override fun setOnBinLookupListener(listener: (() -> Unit)?) {
+        onBinLookupListener = listener
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
         onBinValueListener = null
+        onBinLookupListener = null
     }
 
     companion object {
