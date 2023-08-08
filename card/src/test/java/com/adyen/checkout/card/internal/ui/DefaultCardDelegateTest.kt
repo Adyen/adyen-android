@@ -808,7 +808,7 @@ internal class DefaultCardDelegateTest(
 
                 val detectedCardTypes = listOf(
                     createDetectedCardType(),
-                    createDetectedCardType().copy(
+                    createDetectedCardType(
                         isSelected = true,
                         cardBrand = CardBrand(cardType = CardType.VISA)
                     )
@@ -1082,6 +1082,70 @@ internal class DefaultCardDelegateTest(
             }
     }
 
+    @Nested
+    inner class OnBinLookupListenerTest {
+
+        @Test
+        fun `when card number is detected locally, then callback should be called with unreliable result`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+
+            delegate.setOnBinLookupListener { data ->
+                launch(this.coroutineContext) {
+                    with(data.first()) {
+                        assertEquals("visa", brand)
+                        assertNull(paymentMethodVariant)
+                        assertFalse(isReliable)
+                    }
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { cardNumber = "5555444" }
+        }
+
+        @Test
+        fun `when card number is detected over network, then callback should be called with reliable result`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+
+            delegate.setOnBinLookupListener { data ->
+                launch(this.coroutineContext) {
+                    with(data.first()) {
+                        assertEquals("mc", brand)
+                        assertEquals("mccredit", paymentMethodVariant)
+                        assertTrue(isReliable)
+                    }
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { cardNumber = "5555444" }
+        }
+
+        @Test
+        fun `when callback is called multiple times, then it should only trigger if the data changed`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+            var timesTriggered = 0
+
+            delegate.setOnBinLookupListener {
+                timesTriggered++
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            // Trigger first time
+            delegate.updateInputData { cardNumber = "5555444" }
+            // Shouldn't trigger
+            delegate.updateInputData { cardNumber = "55554444" }
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+            // Trigger second time
+            delegate.updateInputData { cardNumber = "555544443" }
+
+            assertEquals(2, timesTriggered)
+        }
+    }
+
     @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
@@ -1120,7 +1184,7 @@ internal class DefaultCardDelegateTest(
 
     private fun getDefaultCardConfigurationBuilder(shopperLocale: Locale = Locale.US): CardConfiguration.Builder {
         return CardConfiguration.Builder(shopperLocale, Environment.TEST, TEST_CLIENT_KEY)
-            .setSupportedCardTypes(CardType.VISA)
+            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD)
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -1172,6 +1236,11 @@ internal class DefaultCardDelegateTest(
                 CardBrand(cardType = CardType.VISA),
                 true,
                 Environment.TEST
+            ),
+            CardListItem(
+                CardBrand(cardType = CardType.MASTERCARD),
+                false,
+                Environment.TEST
             )
         ),
         isCardListVisible: Boolean = true
@@ -1212,6 +1281,7 @@ internal class DefaultCardDelegateTest(
         expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         isSupported: Boolean = true,
         panLength: Int? = null,
+        paymentMethodVariant: String? = null,
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
@@ -1222,6 +1292,7 @@ internal class DefaultCardDelegateTest(
             expiryDatePolicy = expiryDatePolicy,
             isSupported = isSupported,
             panLength = panLength,
+            paymentMethodVariant = paymentMethodVariant,
             isSelected = isSelected,
         )
     }
