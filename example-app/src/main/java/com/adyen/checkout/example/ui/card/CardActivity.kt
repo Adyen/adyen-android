@@ -104,6 +104,10 @@ class CardActivity : AppCompatActivity() {
             Log.d(TAG, "On bin value: $binValue")
         }
 
+        cardComponent.setOnBinLookupListener { data ->
+            Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
+        }
+
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
