@@ -20,13 +20,21 @@
     <PreferenceCategory android:title="@string/payment_information">
 
         <EditTextPreference
+            android:inputType="number"
+            android:key="@string/amount_value_key"
+            android:title="@string/amount_value_title" />
+
+        <EditTextPreference
             android:key="@string/currency_key"
             android:title="@string/currency_title" />
 
-        <EditTextPreference
-            android:inputType="number"
-            android:key="@string/value_key"
-            android:title="@string/value_title" />
+        <SwitchPreference
+            android:key="@string/threeds2_key"
+            android:title="@string/threeds2_title" />
+
+        <SwitchPreference
+            android:key="@string/execute3D_key"
+            android:title="@string/execute3D_key_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/shopper_information">
@@ -49,39 +57,30 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/additional_data_title">
+    <PreferenceCategory android:title="@string/card_settings_title">
 
-        <SwitchPreference
-            android:key="@string/threeds2_key"
-            android:title="@string/threeds2_title" />
-        <SwitchPreference
-            android:key="@string/execute3D_key"
-            android:title="@string/execute3D_key_title" />
+        <DropDownPreference
+            android:entries="@array/card_address_form_entries"
+            android:entryValues="@array/card_address_form_values"
+            android:key="@string/card_address_form_key"
+            android:title="@string/card_address_form_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
+            android:entries="@array/card_installment_options_mode_entries"
+            android:entryValues="@array/card_installment_options_mode_values"
+            android:key="@string/card_installment_options_mode_key"
+            android:title="@string/card_installment_options_mode_title"
+            app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
 
-        <DropDownPreference
-            android:entries="@array/enable_card_address_form_entries"
-            android:entryValues="@array/enable_card_address_form_entry_values"
-            android:key="@string/enable_card_address_form_key"
-            android:title="@string/enable_card_address_form_title"
-            app:useSimpleSummaryProvider="true" />
 
-        <DropDownPreference
-            android:entries="@array/card_installment_options_mode_entries"
-            android:entryValues="@array/card_installment_options_mode_entry_values"
-            android:key="@string/card_installment_options_mode_key"
-            android:title="@string/card_installment_options_mode_title"
-            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 
-        <DropDownPreference
-            android:entries="@array/instant_payment_method_type_entries"
-            android:entryValues="@array/instant_payment_method_type_values"
-            android:key="@string/instant_payment_method_type_key"
-            android:title="@string/instant_payment_method_type_title"
-            app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory android:title="@string/telemetry_title">
 
         <DropDownPreference
             android:entries="@array/telemetry_level_entries"
@@ -95,8 +94,15 @@
     <PreferenceCategory android:title="@string/app_title">
 
         <DropDownPreference
+            android:entries="@array/instant_payment_method_type_entries"
+            android:entryValues="@array/instant_payment_method_type_values"
+            android:key="@string/instant_payment_method_type_key"
+            android:title="@string/instant_payment_method_type_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <DropDownPreference
             android:entries="@array/night_theme_entries"
-            android:entryValues="@array/night_theme_entry_values"
+            android:entryValues="@array/night_theme_values"
             android:key="@string/night_theme_title"
             android:title="@string/night_theme_title"
             app:useSimpleSummaryProvider="true" />

@@ -106,7 +106,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
-    private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
+    private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
         0 -> AddressConfiguration.None
         1 -> AddressConfiguration.PostalCode()
         else -> AddressConfiguration.FullAddress(

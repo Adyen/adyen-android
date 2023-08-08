@@ -22,12 +22,12 @@ interface KeyValueStorage {
     fun getAmount(): Amount
     fun getCountry(): String
     fun getShopperLocale(): String
-    fun isThreeds2Enable(): Boolean
+    fun isThreeds2Enabled(): Boolean
     fun isExecuteThreeD(): Boolean
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
-    fun isAddressFormEnabled(): Int
+    fun getCardAddressMode(): Int
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): Int
     fun useSessions(): Boolean
@@ -46,7 +46,7 @@ internal class DefaultKeyValueStorage(
     }
 
     override fun getAmount(): Amount {
-        val amountValue = sharedPreferences.get(appContext, R.string.value_key, DEFAULT_VALUE)
+        val amountValue = sharedPreferences.get(appContext, R.string.amount_value_key, DEFAULT_VALUE)
         val amountCurrency = sharedPreferences.get(appContext, R.string.currency_key, DEFAULT_CURRENCY)
 
         val amount = Amount()
@@ -64,7 +64,7 @@ internal class DefaultKeyValueStorage(
         return sharedPreferences.get(appContext, R.string.shopper_locale_key, DEFAULT_LOCALE)
     }
 
-    override fun isThreeds2Enable(): Boolean {
+    override fun isThreeds2Enabled(): Boolean {
         return sharedPreferences.get(appContext, R.string.threeds2_key, DEFAULT_THREEDS2_ENABLE)
     }
 
@@ -88,8 +88,8 @@ internal class DefaultKeyValueStorage(
         )
     }
 
-    override fun isAddressFormEnabled(): Int {
-        return sharedPreferences.get(appContext, R.string.enable_card_address_form_key, DEFAULT_ENABLE_ADDRESS_FORM)
+    override fun getCardAddressMode(): Int {
+        return sharedPreferences.get(appContext, R.string.card_address_form_key, DEFAULT_ENABLE_ADDRESS_FORM)
             .toInt()
     }
 

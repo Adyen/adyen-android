@@ -103,7 +103,7 @@ internal class CardViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(CardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
 
