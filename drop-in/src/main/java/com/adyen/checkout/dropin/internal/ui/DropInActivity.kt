@@ -22,6 +22,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
@@ -683,6 +684,10 @@ internal class DropInActivity :
 
     override fun onBinValue(binValue: String) {
         dropInService?.onBinValueCalled(binValue)
+    }
+
+    override fun onBinLookup(data: List<BinLookupData>) {
+        dropInService?.onBinLookupCalled(data)
     }
 
     private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {

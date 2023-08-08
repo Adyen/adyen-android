@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin
 
 import android.os.Bundle
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 
@@ -101,4 +102,11 @@ interface BaseDropInServiceContract {
      * @param binValue Up to the first 6 or 8 digits of the card number.
      */
     fun onBinValue(binValue: String) = Unit
+
+    /**
+     * Set a callback that will be called when a bin lookup is performed.
+     *
+     * @param data A list of [BinLookupData], which contains information about the detected brands.
+     */
+    fun onBinLookup(data: List<BinLookupData>) = Unit
 }

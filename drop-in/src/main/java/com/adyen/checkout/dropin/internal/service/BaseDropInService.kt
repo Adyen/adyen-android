@@ -17,6 +17,7 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -134,6 +135,10 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
 
     final override fun onBinValueCalled(binValue: String) {
         onBinValue(binValue)
+    }
+
+    final override fun onBinLookupCalled(data: List<BinLookupData>) {
+        onBinLookup(data)
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {

@@ -40,6 +40,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             .find { it.type == PaymentMethodTypes.SCHEME }?.name
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
+        cardComponent.setOnBinLookupListener(protocol::onBinLookup)
 
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
