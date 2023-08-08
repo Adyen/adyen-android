@@ -8,7 +8,6 @@
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
-import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -18,22 +17,27 @@ internal class ChallengeResult private constructor(val isAuthenticated: Boolean,
         private const val KEY_TRANSACTION_STATUS = "transStatus"
         private const val KEY_AUTHORISATION_TOKEN = "authorisationToken"
         private const val VALUE_TRANSACTION_STATUS = "Y"
+        private const val KEY_SDK_ERROR = "threeDS2SDKError"
 
         /**
          * Constructs the object base in the result from te 3DS2 SDK.
          *
-         * @param completionEvent The result from the 3DS2 SDK.
+         * @param transactionStatus The transaction status received in the result from the 3DS2 SDK.
+         * @param errorDetails The additional error details received in the result from the 3DS2 SDK.
          * @param authorisationToken The authorisationToken from the API.
          * @return The filled object with the content needed for the details response.
          * @throws JSONException In case parsing fails.
          */
-        @Throws(JSONException::class)
-        fun from(completionEvent: CompletionEvent, authorisationToken: String? = null): ChallengeResult {
-            val transactionStatus = completionEvent.transactionStatus
+        fun from(
+            transactionStatus: String,
+            errorDetails: String? = null,
+            authorisationToken: String? = null
+        ): ChallengeResult {
             val isAuthenticated = VALUE_TRANSACTION_STATUS == transactionStatus
             val jsonObject = JSONObject()
             jsonObject.put(KEY_TRANSACTION_STATUS, transactionStatus)
             jsonObject.putOpt(KEY_AUTHORISATION_TOKEN, authorisationToken)
+            jsonObject.putOpt(KEY_SDK_ERROR, errorDetails)
             val payload = AndroidBase64Encoder().encode(jsonObject.toString())
             return ChallengeResult(isAuthenticated, payload)
         }

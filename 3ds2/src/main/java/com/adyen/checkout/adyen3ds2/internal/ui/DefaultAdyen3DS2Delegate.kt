@@ -43,10 +43,8 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.threeds2.AuthenticationRequestParameters
-import com.adyen.threeds2.ChallengeStatusReceiver
-import com.adyen.threeds2.CompletionEvent
-import com.adyen.threeds2.ProtocolErrorEvent
-import com.adyen.threeds2.RuntimeErrorEvent
+import com.adyen.threeds2.ChallengeResult
+import com.adyen.threeds2.ChallengeStatusHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
 import com.adyen.threeds2.exception.InvalidInputException
@@ -79,7 +77,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val defaultDispatcher: CoroutineDispatcher,
     private val base64Encoder: Base64Encoder,
     private val application: Application,
-) : Adyen3DS2Delegate, ChallengeStatusReceiver, SavedStateHandleContainer {
+) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -139,6 +137,7 @@ internal class DefaultAdyen3DS2Delegate(
                     submitFingerprintAutomatically = false,
                 )
             }
+
             is Threeds2ChallengeAction -> {
                 if (action.token.isNullOrEmpty()) {
                     exceptionChannel.trySend(ComponentException("Challenge token not found."))
@@ -146,6 +145,7 @@ internal class DefaultAdyen3DS2Delegate(
                 }
                 challengeShopper(activity, action.token.orEmpty())
             }
+
             is Threeds2Action -> {
                 if (action.token.isNullOrEmpty()) {
                     exceptionChannel.trySend(ComponentException("3DS2 token not found."))
@@ -174,6 +174,7 @@ internal class DefaultAdyen3DS2Delegate(
                 encodedFingerprintToken = token,
                 submitFingerprintAutomatically = true,
             )
+
             Threeds2Action.SubType.CHALLENGE -> challengeShopper(activity, token)
         }
     }
@@ -306,9 +307,11 @@ internal class DefaultAdyen3DS2Delegate(
             is SubmitFingerprintResult.Completed -> {
                 emitDetails(result.details)
             }
+
             is SubmitFingerprintResult.Redirect -> {
                 makeRedirect(activity, result.action)
             }
+
             is SubmitFingerprintResult.Threeds2 -> {
                 handleAction(result.action, activity)
             }
@@ -385,17 +388,10 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
-    override fun completed(completionEvent: CompletionEvent) {
+    private fun onCompleted(transactionStatus: String) {
         Logger.d(TAG, "challenge completed")
         try {
-            // Check whether authorizationToken was set and create the corresponding details object
-            val token = authorizationToken
-            val details =
-                if (token == null) {
-                    adyen3DS2Serializer.createChallengeDetails(completionEvent)
-                } else {
-                    adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
-                }
+            val details = makeDetails(transactionStatus)
             emitDetails(details)
         } catch (e: CheckoutException) {
             exceptionChannel.trySend(e)
@@ -404,30 +400,43 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
-    override fun cancelled() {
+    private fun onCancelled() {
         Logger.d(TAG, "challenge cancelled")
         exceptionChannel.trySend(Cancelled3DS2Exception("Challenge canceled."))
         closeTransaction()
     }
 
-    override fun timedout() {
+    private fun onTimeout(result: ChallengeResult.Timeout) {
         Logger.d(TAG, "challenge timed out")
-        exceptionChannel.trySend(Authentication3DS2Exception("Challenge timed out."))
-        closeTransaction()
-    }
-
-    override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-        with(protocolErrorEvent.errorMessage) {
-            Logger.e(TAG, "protocolError - $errorCode - $errorDescription - $errorDetails")
-            exceptionChannel.trySend(Authentication3DS2Exception("Protocol Error - $this"))
+        try {
+            val details = makeDetails(result.transactionStatus, result.additionalDetails)
+            emitDetails(details)
+        } catch (e: CheckoutException) {
+            exceptionChannel.trySend(e)
+        } finally {
+            closeTransaction()
         }
-        closeTransaction()
     }
 
-    override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
-        Logger.d(TAG, "runtimeError")
-        exceptionChannel.trySend(Authentication3DS2Exception("Runtime Error - " + runtimeErrorEvent.errorMessage))
-        closeTransaction()
+    private fun onError(result: ChallengeResult.Error) {
+        Logger.d(TAG, "challenge timed out")
+        try {
+            val details = makeDetails(result.transactionStatus, result.additionalDetails)
+            emitDetails(details)
+        } catch (e: CheckoutException) {
+            exceptionChannel.trySend(e)
+        } finally {
+            closeTransaction()
+        }
+    }
+
+    override fun onCompletion(result: ChallengeResult) {
+        when (result) {
+            is ChallengeResult.Cancelled -> onCancelled()
+            is ChallengeResult.Completed -> onCompleted(result.transactionStatus)
+            is ChallengeResult.Error -> onError(result)
+            is ChallengeResult.Timeout -> onTimeout(result)
+        }
     }
 
     private fun closeTransaction() {
@@ -457,6 +466,23 @@ internal class DefaultAdyen3DS2Delegate(
         removeObserver()
         _coroutineScope = null
         redirectHandler.removeOnRedirectListener()
+    }
+
+    private fun makeDetails(transactionStatus: String, errorDetails: String? = null): JSONObject {
+        // Check whether authorizationToken was set and create the corresponding details object
+        val token = authorizationToken
+        return if (token == null) {
+            adyen3DS2Serializer.createChallengeDetails(
+                transactionStatus = transactionStatus,
+                errorDetails = errorDetails
+            )
+        } else {
+            adyen3DS2Serializer.createThreeDsResultDetails(
+                transactionStatus = transactionStatus,
+                errorDetails = errorDetails,
+                authorisationToken = token
+            )
+        }
     }
 
     companion object {
