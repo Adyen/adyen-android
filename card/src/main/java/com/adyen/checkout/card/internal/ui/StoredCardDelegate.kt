@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
@@ -411,7 +412,7 @@ internal class StoredCardDelegate(
     override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) = Unit
 
     // Bin lookup is not performed for stored cards
-    override fun setOnBinLookupListener(listener: (() -> Unit)?) = Unit
+    override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
 
     override fun onCleared() {
         removeObserver()

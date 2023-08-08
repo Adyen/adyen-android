@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -40,5 +41,5 @@ internal interface CardDelegate :
 
     fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?)
 
-    fun setOnBinLookupListener(listener: (() -> Unit)?)
+    fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?)
 }
