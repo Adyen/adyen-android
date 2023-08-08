@@ -236,7 +236,9 @@ internal class DefaultCardDelegate(
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
-                onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+                if (outputData.detectedCardTypes != detectedCardTypes) {
+                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+                }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
