@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.example.databinding.FragmentBacsBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
+import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -47,7 +48,9 @@ class BacsFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         val returnUrl = RedirectComponent.getReturnUrl(requireActivity().applicationContext)
-        arguments = bundleOf(RETURN_URL_EXTRA to returnUrl)
+        arguments = (arguments ?: bundleOf()).apply {
+            putString(InstantFragment.RETURN_URL_EXTRA, returnUrl)
+        }
 
         _binding = FragmentBacsBinding.inflate(inflater)
         return binding.root

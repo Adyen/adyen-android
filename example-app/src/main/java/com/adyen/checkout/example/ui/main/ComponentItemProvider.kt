@@ -4,7 +4,7 @@ import com.adyen.checkout.example.R
 
 internal object ComponentItemProvider {
 
-    fun getDefaultItems() = listOf(
+    fun getDefaultItems(instantPaymentMethodType: String) = listOf(
         ComponentItem.Title(R.string.drop_in_title),
         ComponentItem.Entry.DropIn,
         ComponentItem.Title(R.string.components_title),
@@ -12,7 +12,9 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Blik,
         ComponentItem.Entry.Card,
         ComponentItem.Entry.GiftCard,
-        ComponentItem.Entry.Instant,
+        ComponentItem.Entry.Klarna,
+        ComponentItem.Entry.PayPal,
+        ComponentItem.Entry.Instant(instantPaymentMethodType),
     )
 
     fun getSessionItems() = listOf(

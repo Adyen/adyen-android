@@ -193,7 +193,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                order = order
+                order = order,
             )
             val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
             val result = if (paymentMethods != null) {

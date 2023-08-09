@@ -93,6 +93,15 @@
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/other_payment_methods_settings_title">
+
+        <EditTextPreference
+            android:defaultValue="@string/preferences_default_instant_payment_method"
+            android:key="@string/instant_payment_method_type_key"
+            android:title="@string/instant_payment_method_type_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
@@ -109,14 +118,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/app_title">
-
-        <DropDownPreference
-            android:defaultValue="@string/preferences_default_instant_payment_method"
-            android:entries="@array/instant_payment_method_type_entries"
-            android:entryValues="@array/instant_payment_method_type_values"
-            android:key="@string/instant_payment_method_type_key"
-            android:title="@string/instant_payment_method_type_title"
-            app:useSimpleSummaryProvider="true" />
 
         <DropDownPreference
             android:defaultValue="@string/night_theme_system"

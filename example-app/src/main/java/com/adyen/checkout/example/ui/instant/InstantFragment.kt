@@ -47,7 +47,9 @@ class InstantFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         val returnUrl = RedirectComponent.getReturnUrl(requireActivity().applicationContext)
-        arguments = bundleOf(RETURN_URL_EXTRA to returnUrl)
+        arguments = (arguments ?: bundleOf()).apply {
+            putString(RETURN_URL_EXTRA, returnUrl)
+        }
         _binding = FragmentInstantBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -94,17 +96,18 @@ class InstantFragment : BottomSheetDialogFragment() {
 
     private fun onViewState(viewState: InstantViewState) {
         when (viewState) {
-            InstantViewState.Error -> {
+            is InstantViewState.Error -> {
                 binding.errorView.isVisible = true
+                binding.errorView.text = viewState.errorMessage
                 binding.progressIndicator.isVisible = false
                 binding.componentContainer.isVisible = false
             }
-            InstantViewState.Loading -> {
+            is InstantViewState.Loading -> {
                 binding.progressIndicator.isVisible = true
                 binding.errorView.isVisible = false
                 binding.componentContainer.isVisible = false
             }
-            InstantViewState.ShowComponent -> {
+            is InstantViewState.ShowComponent -> {
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
                 binding.componentContainer.isVisible = true
@@ -125,10 +128,15 @@ class InstantFragment : BottomSheetDialogFragment() {
     companion object {
 
         private const val TAG = "InstantFragment"
-        const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val PAYMENT_METHOD_TYPE_EXTRA = "PAYMENT_METHOD_TYPE_EXTRA"
+        internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
 
-        fun show(fragmentManager: FragmentManager) {
-            InstantFragment().show(fragmentManager, TAG)
+        fun show(fragmentManager: FragmentManager, paymentMethodType: String) {
+            InstantFragment().apply {
+                arguments = bundleOf(
+                    PAYMENT_METHOD_TYPE_EXTRA to paymentMethodType
+                )
+            }.show(fragmentManager, TAG)
         }
     }
 }

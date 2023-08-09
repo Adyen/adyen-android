@@ -21,7 +21,9 @@
     <string name="blik_component_image_description">Blik Logo</string>
     <string name="blik_title">Blik</string>
 
-    <string name="instant_component_entry">Instant</string>
+    <string name="klarna_component_entry">Klarna</string>
+    <string name="paypal_component_entry">PayPal</string>
+    <string name="instant_component_entry">Instant (%s)</string>
 
     <string name="switch_use_sessions">Use sessions</string>
 
@@ -30,6 +32,7 @@
     <string name="merchant_account_key">merchant_account</string>
     <string name="merchant_account_title">Merchant Account</string>
     <string name="card_settings_title">Card</string>
+    <string name="other_payment_methods_settings_title">Other payment methods</string>
     <string name="telemetry_title">Telemetry</string>
     <string name="app_title">App</string>
 
@@ -80,7 +83,7 @@
     <string name="preferences_default_split_card_funding_sources">false</string>
     <string name="preferences_default_address_form_mode">NONE</string>
     <string name="preferences_default_installment_options_mode">NONE</string>
-    <string name="preferences_default_instant_payment_method">paypal</string>
+    <string name="preferences_default_instant_payment_method">wechatpaySDK</string>
     <string name="preferences_default_use_sessions">true</string>
     <string name="preferences_default_telemetry_level">ALL</string>
 

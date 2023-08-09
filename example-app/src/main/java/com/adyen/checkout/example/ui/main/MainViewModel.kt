@@ -63,22 +63,42 @@ internal class MainViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    internal fun onResume() {
+        viewModelScope.launch {
+            loadViewState()
+        }
+    }
+
     fun onComponentEntryClick(entry: ComponentItem.Entry) {
         when (entry) {
-            ComponentItem.Entry.Bacs -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Bacs))
-            ComponentItem.Entry.Blik -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Blik))
-            ComponentItem.Entry.Card -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Card))
-            ComponentItem.Entry.Instant -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Instant))
-            ComponentItem.Entry.CardWithSession ->
+            is ComponentItem.Entry.Bacs -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Bacs))
+            is ComponentItem.Entry.Blik -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Blik))
+            is ComponentItem.Entry.Card -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Card))
+            is ComponentItem.Entry.Klarna -> _eventFlow.tryEmit(
+                MainEvent.NavigateTo(MainNavigation.Instant(PAYMENT_METHOD_KLARNA))
+            )
+
+            is ComponentItem.Entry.PayPal ->
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Instant(PAYMENT_METHOD_PAYPAL)))
+
+            is ComponentItem.Entry.Instant ->
+                _eventFlow.tryEmit(
+                    MainEvent.NavigateTo(MainNavigation.Instant(keyValueStorage.getInstantPaymentMethodType()))
+                )
+
+            is ComponentItem.Entry.CardWithSession ->
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.CardWithSession))
-            ComponentItem.Entry.CardWithSessionTakenOver ->
+
+            is ComponentItem.Entry.CardWithSessionTakenOver ->
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.CardWithSessionTakenOver))
-            ComponentItem.Entry.GiftCard -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCard))
-            ComponentItem.Entry.GiftCardWithSession ->
+
+            is ComponentItem.Entry.GiftCard -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCard))
+            is ComponentItem.Entry.GiftCardWithSession ->
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCardWithSession))
-            ComponentItem.Entry.DropIn -> startDropInFlow()
-            ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
-            ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
+
+            is ComponentItem.Entry.DropIn -> startDropInFlow()
+            is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
+            is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
         }
     }
 
@@ -129,7 +149,7 @@ internal class MainViewModel @Inject constructor(
             amount = keyValueStorage.getAmount(),
             countryCode = keyValueStorage.getCountry(),
             shopperLocale = keyValueStorage.getShopperLocale(),
-            splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+            splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
         )
     )
 
@@ -200,7 +220,8 @@ internal class MainViewModel @Inject constructor(
         return if (useSessions) {
             ComponentItemProvider.getSessionItems()
         } else {
-            ComponentItemProvider.getDefaultItems()
+            val instantPaymentMethodType = keyValueStorage.getInstantPaymentMethodType()
+            ComponentItemProvider.getDefaultItems(instantPaymentMethodType)
         }
     }
 
@@ -231,5 +252,7 @@ internal class MainViewModel @Inject constructor(
 
     companion object {
         private val TAG = getLogTag()
+        private const val PAYMENT_METHOD_PAYPAL = "paypal"
+        private const val PAYMENT_METHOD_KLARNA = "klarna"
     }
 }

@@ -176,7 +176,8 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                 redirectUrl = savedStateHandle.get<String>(SessionsCardTakenOverActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
@@ -190,7 +191,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
-                else -> _events.emit(CardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
+                else -> _events.emit(CardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
     }

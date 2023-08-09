@@ -37,7 +37,7 @@ fun getPaymentMethodRequest(
     countryCode: String,
     shopperLocale: String,
     splitCardFundingSources: Boolean,
-    order: OrderRequest? = null
+    order: OrderRequest? = null,
 ): PaymentMethodsRequest {
     return PaymentMethodsRequest(
         merchantAccount = merchantAccount,
@@ -47,7 +47,7 @@ fun getPaymentMethodRequest(
         shopperLocale = shopperLocale,
         splitCardFundingSources = splitCardFundingSources,
         order = order,
-        channel = CHANNEL
+        channel = CHANNEL,
     )
 }
 
@@ -103,7 +103,7 @@ fun createPaymentRequest(
     redirectUrl: String,
     isThreeds2Enabled: Boolean,
     isExecuteThreeD: Boolean,
-    shopperEmail: String? = null,
+    shopperEmail: String?,
     force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,

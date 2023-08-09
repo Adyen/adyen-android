@@ -21,5 +21,5 @@ data class PaymentMethodsRequest(
     val shopperLocale: String,
     val channel: String,
     val splitCardFundingSources: Boolean,
-    val order: OrderRequest?
+    val order: OrderRequest?,
 )

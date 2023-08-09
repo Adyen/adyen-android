@@ -20,7 +20,7 @@ internal sealed class MainNavigation {
 
     object Card : MainNavigation()
 
-    object Instant : MainNavigation()
+    class Instant(val paymentMethodType: String) : MainNavigation()
 
     object CardWithSession : MainNavigation()
 
