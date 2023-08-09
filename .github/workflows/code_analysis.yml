@@ -5,6 +5,7 @@ on:
 
 jobs:
   detekt:
+    name: Run detekt
     runs-on: ubuntu-latest
 
     steps:
@@ -24,6 +25,7 @@ jobs:
         run: ./gradlew detekt --no-daemon
 
   ktlint:
+    name: Run ktlint
     runs-on: ubuntu-latest
 
     steps:

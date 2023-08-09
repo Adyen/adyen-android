@@ -5,6 +5,7 @@ on:
 
 jobs:
   unit-test:
+    name: Run unit tests
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +30,7 @@ jobs:
         run: ./gradlew testDebugUnitTest --no-daemon
 
   lint:
+    name: Run lint
     runs-on: ubuntu-latest
 
     steps:

@@ -12,10 +12,13 @@ concurrency:
 
 jobs:
   code_analysis:
+    name: Code analysis
     uses: ./.github/workflows/code_analysis.yml
   assemble:
+    name: Assemble
     uses: ./.github/workflows/assemble.yml
     needs: code_analysis
   test:
+    name: Test
     uses: ./.github/workflows/run_tests.yml
     needs: assemble

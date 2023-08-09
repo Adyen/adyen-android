@@ -5,6 +5,7 @@ on:
 
 jobs:
   update-verification-metadata:
+    name: Update verification metadata
     runs-on: ubuntu-latest
 
     steps:
