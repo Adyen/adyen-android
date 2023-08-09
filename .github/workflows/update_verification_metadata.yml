@@ -12,12 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 2
 
       - name: Detect dependency changes
         id: detect-dependency-changes
         run: |
-          git fetch origin develop --depth 1
-          if [ -n "$(git diff origin/develop dependencies.gradle)" ];then echo "continue=true" >> "$GITHUB_OUTPUT";else echo "continue=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$(git diff HEAD^ dependencies.gradle)" ];then echo "continue=true" >> "$GITHUB_OUTPUT";else echo "continue=false" >> "$GITHUB_OUTPUT"; fi
 
   update-verification-metadata:
     name: Update verification metadata
