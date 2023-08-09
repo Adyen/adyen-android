@@ -5,6 +5,7 @@ on:
 
 jobs:
   detect-dependency-changes:
+    name: Detect dependency changes
     runs-on: ubuntu-latest
     outputs:
       continue: ${{ steps.detect-dependency-changes.outputs.continue }}
@@ -19,6 +20,7 @@ jobs:
           if [ -n "$(git diff origin/develop dependencies.gradle)" ];then echo "continue=true" >> "$GITHUB_OUTPUT";else echo "continue=false" >> "$GITHUB_OUTPUT"; fi
 
   update-verification-metadata:
+    name: Update verification metadata
     needs: detect-dependency-changes
     if: startsWith(github.head_ref, 'renovate/') && needs.detect-dependency-changes.outputs.continue == 'true'
     runs-on: ubuntu-latest

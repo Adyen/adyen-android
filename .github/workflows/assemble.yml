@@ -5,6 +5,7 @@ on:
 
 jobs:
   assemble-debug:
+    name: Assemble debug
     runs-on: ubuntu-latest
 
     steps:

@@ -12,13 +12,17 @@ concurrency:
 
 jobs:
   update_verification_metadata:
+    name: Dependency changes
     uses: ./.github/workflows/update_verification_metadata.yml
   code_analysis:
+    name: Code analysis
     uses: ./.github/workflows/code_analysis.yml
     needs: update_verification_metadata
   assemble:
+    name: Assemble
     uses: ./.github/workflows/assemble.yml
     needs: code_analysis
   test:
+    name: Test
     uses: ./.github/workflows/run_tests.yml
     needs: assemble
