@@ -43,7 +43,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle update verification metadata
-        run: ./gradlew --write-verification-metadata sha256 build --no-daemon
+        run: |
+          ./gradlew --write-verification-metadata sha256 build --no-daemon --dry-run
+          mv gradle/verification-metadata.dryrun.xml gradle/verification-metadata.xml
 
       - name: Commit
         run: |
@@ -53,5 +55,5 @@ jobs:
           git diff-index --quiet HEAD || git commit -am 'Update verification metadata
           
           
-          skip-checks: true'
+          request-checks: true'
           git push
