@@ -20,6 +20,7 @@ internal interface DropInServiceResultError {
     val errorMessage: String?
     val reason: String?
     val dismissDropIn: Boolean
+    val showDialog: Boolean
 }
 
 /**
@@ -79,7 +80,8 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
     class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
+        override val showDialog: Boolean = true,
     ) : DropInServiceResult(), DropInServiceResultError
 
     /**
@@ -118,7 +120,8 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
     class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
+        override val showDialog: Boolean = true,
     ) : BalanceDropInServiceResult(), DropInServiceResultError
 }
 
@@ -147,7 +150,8 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
     class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
+        override val showDialog: Boolean = true,
     ) : OrderDropInServiceResult(), DropInServiceResultError
 }
 
@@ -176,7 +180,8 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
     class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
+        override val showDialog: Boolean = true,
     ) : RecurringDropInServiceResult(), DropInServiceResultError
 }
 
@@ -189,7 +194,8 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
     data class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
+        override val showDialog: Boolean = true,
     ) : SessionDropInServiceResult(), DropInServiceResultError
 
     class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()

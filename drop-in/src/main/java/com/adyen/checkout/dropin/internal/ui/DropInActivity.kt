@@ -457,10 +457,18 @@ internal class DropInActivity :
     }
 
     private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
-        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
         val reason = dropInServiceResult.reason ?: "Unspecified reason"
-        val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
-        showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: $reason")
+        if (dropInServiceResult.showDialog) {
+            val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
+            showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+        } else {
+            if (dropInServiceResult.dismissDropIn) {
+                terminateWithError(reason)
+            } else {
+                setLoading(false)
+            }
+        }
     }
 
     private fun handleAction(action: Action) {
