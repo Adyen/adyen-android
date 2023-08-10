@@ -26,7 +26,7 @@ class AnalyticsService(
         clientKey: String,
     ): AnalyticsSetupResponse = withContext(Dispatchers.IO) {
         httpClient.post(
-            path = "v2/analytics",
+            path = "v3/analytics",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = AnalyticsSetupRequest.SERIALIZER,
