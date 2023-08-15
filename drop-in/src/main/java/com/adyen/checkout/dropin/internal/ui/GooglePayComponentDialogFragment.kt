@@ -104,7 +104,7 @@ internal class GooglePayComponentDialogFragment :
     private fun handleEvent(event: GooglePayFragmentEvent) {
         when (event) {
             is GooglePayFragmentEvent.StartGooglePay -> {
-                component.startGooglePayScreen(requireActivity(), GOOGLE_PAY_REQUEST_CODE)
+                component.startGooglePayScreen(requireActivity(), DropInActivity.GOOGLE_PAY_REQUEST_CODE)
             }
         }
     }

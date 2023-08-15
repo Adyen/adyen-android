@@ -62,17 +62,6 @@ import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
 
-private val TAG = LogUtil.getTag()
-
-private const val PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG = "PRESELECTED_PAYMENT_METHOD_FRAGMENT"
-private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAGMENT"
-private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
-private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
-private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
-private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
-
-internal const val GOOGLE_PAY_REQUEST_CODE = 1
-
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
  */
@@ -282,12 +271,9 @@ internal class DropInActivity :
 
     override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
         Logger.d(TAG, "showError - message: $errorMessage")
-        AlertDialog.Builder(this)
-            .setTitle(R.string.error_dialog_title)
-            .setMessage(errorMessage)
-            .setOnDismissListener { this@DropInActivity.errorDialogDismissed(reason, terminate) }
-            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
-            .show()
+        showDialog(getString(R.string.error_dialog_title), errorMessage) {
+            errorDialogDismissed(reason, terminate)
+        }
     }
 
     private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
@@ -410,7 +396,7 @@ internal class DropInActivity :
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
-            is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
+            is DropInServiceResult.Finished -> handleFinished(dropInServiceResult)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
@@ -468,6 +454,16 @@ internal class DropInActivity :
             } else {
                 setLoading(false)
             }
+        }
+    }
+
+    private fun handleFinished(dropInServiceResult: DropInServiceResult.Finished) {
+        if (dropInServiceResult.finishedDialog != null) {
+            showDialog(dropInServiceResult.finishedDialog.title, dropInServiceResult.finishedDialog.message) {
+                sendResult(dropInServiceResult.result)
+            }
+        } else {
+            sendResult(dropInServiceResult.result)
         }
     }
 
@@ -688,7 +684,27 @@ internal class DropInActivity :
         dropInService?.onBinValueCalled(binValue)
     }
 
+    private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setOnDismissListener { onDismiss() }
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
     companion object {
+
+        private val TAG = LogUtil.getTag()
+
+        private const val PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG = "PRESELECTED_PAYMENT_METHOD_FRAGMENT"
+        private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAGMENT"
+        private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
+        private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
+        private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+        private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
+
+        internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
         fun createIntent(
             context: Context,

@@ -24,6 +24,7 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
+import com.adyen.checkout.dropin.FinishedDialog
 import com.adyen.checkout.dropin.OrderDropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -151,7 +152,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 } else {
                     "EMPTY"
                 }
-                DropInServiceResult.Finished(resultCode)
+                DropInServiceResult.Finished(resultCode, FinishedDialog("Payment finished", "Status: $resultCode"))
             }
         }
     }

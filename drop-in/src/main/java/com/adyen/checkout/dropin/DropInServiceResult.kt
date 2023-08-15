@@ -35,8 +35,13 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      *
      * @param result The final result of the checkout flow. You will receive this value back in your [DropInCallback]
      * class. This value is not used internally by Drop-in.
+     * @param finishedDialog If set, a dialog will be shown with the data passed in [FinishedDialog]. If null, no
+     * dialog will be displayed.
      */
-    class Finished(val result: String) : DropInServiceResult()
+    class Finished(
+        val result: String,
+        val finishedDialog: FinishedDialog? = null,
+    ) : DropInServiceResult()
 
     /**
      * A call to /payments or /payments/details was successful and returned with an action that needs to be handled.
@@ -200,3 +205,14 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
 
     class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()
 }
+
+/**
+ * Represents the data shown in the dialog when the payment flow is finished.
+ *
+ * @param title The title displayed in the dialog.
+ * @param message The message displayed in the dialog.
+ */
+data class FinishedDialog(
+    val title: String,
+    val message: String,
+)
