@@ -89,6 +89,16 @@ class CardComponent internal constructor(
             ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
     }
 
+    /**
+     * Set a callback that will be called when the bin value changes.
+     *
+     * @param listener The callback that will be called when the bin value changes. The bin value will be passed to it,
+     * this are up to the first 6 or 8 characters of the card number.
+     */
+    fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
+        cardDelegate.setOnBinValueListener(listener)
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

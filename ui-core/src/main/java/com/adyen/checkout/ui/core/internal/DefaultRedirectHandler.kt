@@ -123,7 +123,6 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(specializedActivityIntent)
-            onRedirectListener?.invoke()
             Logger.d(TAG, "launchNativeBeforeApi30 - redirect successful with native app")
             true
         } catch (e: ActivityNotFoundException) {
@@ -143,7 +142,6 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(nativeAppIntent)
-            onRedirectListener?.invoke()
             Logger.d(TAG, "launchNativeApi30 - redirect successful with native app")
             true
         } catch (e: ActivityNotFoundException) {
@@ -165,7 +163,6 @@ class DefaultRedirectHandler : RedirectHandler {
                 .setDefaultColorSchemeParams(defaultColors)
                 .build()
                 .launchUrl(context, uri)
-            onRedirectListener?.invoke()
             Logger.d(TAG, "launchWithCustomTabs - redirect successful with custom tabs")
             true
         } catch (e: ActivityNotFoundException) {

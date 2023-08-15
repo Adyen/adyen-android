@@ -403,13 +403,16 @@ internal class StoredCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        // no ops
+    }
+
+    // Bin doesn't change for stored cards
+    override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) = Unit
+
     override fun onCleared() {
         removeObserver()
         coroutineScope = null
-    }
-
-    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
-        // no ops
     }
 
     companion object {

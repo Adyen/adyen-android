@@ -103,5 +103,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun finishWithAction()
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
         fun onRedirect()
+        fun onBinValue(binValue: String)
     }
 }

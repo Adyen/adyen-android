@@ -673,6 +673,10 @@ internal class DropInActivity :
         dropInService?.onRedirectCalled()
     }
 
+    override fun onBinValue(binValue: String) {
+        dropInService?.onBinValueCalled(binValue)
+    }
+
     companion object {
 
         fun createIntent(

@@ -25,6 +25,7 @@ internal interface BaseDropInServiceInterface {
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
     fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
     fun onRedirectCalled()
+    fun onBinValueCalled(binValue: String)
 }
 
 internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {

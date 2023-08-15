@@ -134,6 +134,8 @@ internal class DefaultCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
+    private var onBinValueListener: ((binValue: String) -> Unit)? = null
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
@@ -368,7 +370,7 @@ internal class DefaultCardDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "LongMethod")
     private fun createComponentState(
         outputData: CardOutputData = this.outputData
     ): CardComponentState {
@@ -384,6 +386,12 @@ internal class DefaultCardDelegate(
             } else {
                 cardNumber.take(BIN_VALUE_LENGTH)
             }
+
+        // This safe call is needed because _componentStateFlow is null while this is called the first time.
+        @Suppress("UNNECESSARY_SAFE_CALL")
+        if (_componentStateFlow?.value?.binValue != binValue) {
+            onBinValueListener?.invoke(binValue)
+        }
 
         val publicKey = publicKey
 
@@ -738,9 +746,14 @@ internal class DefaultCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
+        onBinValueListener = listener
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        onBinValueListener = null
     }
 
     companion object {

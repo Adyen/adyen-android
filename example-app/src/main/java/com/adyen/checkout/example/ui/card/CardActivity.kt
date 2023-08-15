@@ -100,6 +100,10 @@ class CardActivity : AppCompatActivity() {
             Log.d(TAG, "On redirect")
         }
 
+        cardComponent.setOnBinValueListener { binValue ->
+            Log.d(TAG, "On bin value: $binValue")
+        }
+
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)

@@ -37,4 +37,6 @@ internal interface CardDelegate :
     fun updateInputData(update: CardInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
+
+    fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?)
 }
