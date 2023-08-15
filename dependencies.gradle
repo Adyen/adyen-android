@@ -47,7 +47,7 @@ ext {
     compose_viewmodel_version = '2.6.1'
 
     // Adyen Dependencies
-    adyen3ds2_version = "2.2.13"
+    adyen3ds2_version = "2.2.15"
 
     // External Dependencies
     cash_app_pay_version = '2.2.0'
