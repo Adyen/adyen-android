@@ -359,6 +359,10 @@ internal class DropInViewModel(
         }
     }
 
+    fun onToPaymentMethodsList() {
+        sendEvent(DropInActivityEvent.ShowPaymentMethods)
+    }
+
     fun removeStoredPaymentMethodWithId(id: String) {
         val positionToRemove = getStoredPaymentMethods().indexOfFirst { it.id == id }
         val updatedStoredPaymentMethods = getStoredPaymentMethods().toMutableList()

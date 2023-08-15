@@ -414,6 +414,7 @@ internal class DropInActivity :
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+            is DropInServiceResult.ToPaymentMethodsList -> dropInViewModel.onToPaymentMethodsList()
         }
     }
 

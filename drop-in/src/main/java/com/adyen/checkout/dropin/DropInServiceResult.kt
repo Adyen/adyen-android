@@ -81,6 +81,8 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : DropInServiceResult(), DropInServiceResultError
+
+    class ToPaymentMethodsList : DropInServiceResult()
 }
 
 sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
