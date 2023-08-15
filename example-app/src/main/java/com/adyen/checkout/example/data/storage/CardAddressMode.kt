@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.example.data.storage
 
+import androidx.annotation.Keep
+
+@Keep
 enum class CardAddressMode {
     NONE,
     POSTAL_CODE,
