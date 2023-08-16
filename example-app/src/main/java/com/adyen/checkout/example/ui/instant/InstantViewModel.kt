@@ -60,16 +60,20 @@ internal class InstantViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
-                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
             )
         )
 
         val paymentMethod = paymentMethodResponse
             ?.paymentMethods
-            ?.firstOrNull { it.type == keyValueStorage.getInstantPaymentMethodType() }
+            ?.firstOrNull { it.type == savedStateHandle.get<String>(InstantFragment.PAYMENT_METHOD_TYPE_EXTRA) }
 
         if (paymentMethod == null) {
-            _instantViewState.emit(InstantViewState.Error)
+            _instantViewState.emit(
+                InstantViewState.Error(
+                    "Payment method unavailable, make sure you set the correct country code and currency."
+                )
+            )
         } else {
             _instantComponentDataFlow.emit(
                 InstantComponentData(
@@ -106,8 +110,9 @@ internal class InstantViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(InstantFragment.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
@@ -122,7 +127,7 @@ internal class InstantViewModel @Inject constructor(
                     _instantViewState.tryEmit(InstantViewState.ShowComponent)
                     _events.emit(InstantEvent.AdditionalAction(action))
                 }
-                else -> _events.emit(InstantEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
+                else -> _events.emit(InstantEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(InstantEvent.PaymentResult("Failed"))
     }

@@ -73,7 +73,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 shopperEmail = keyValueStorage.getShopperEmail()
             )
@@ -193,7 +193,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                order = order
+                order = order,
             )
             val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
             val result = if (paymentMethods != null) {

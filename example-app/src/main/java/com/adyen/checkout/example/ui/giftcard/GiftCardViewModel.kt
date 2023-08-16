@@ -76,7 +76,7 @@ internal class GiftCardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
-                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
             )
         )
 
@@ -221,8 +221,9 @@ internal class GiftCardViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(GiftCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
@@ -248,7 +249,7 @@ internal class GiftCardViewModel @Inject constructor(
                         )
                     }
                 }
-                else -> _events.emit(GiftCardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
+                else -> _events.emit(GiftCardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(GiftCardEvent.PaymentResult("Failed"))
     }

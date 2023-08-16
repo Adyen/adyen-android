@@ -59,7 +59,7 @@ class ExampleDropInService : DropInService() {
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
                 shopperEmail = keyValueStorage.getShopperEmail()
             )
