@@ -10,7 +10,6 @@ package com.adyen.checkout.adyen3ds2
 
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -33,10 +32,13 @@ class Adyen3DS2Serializer {
     }
 
     @Throws(ComponentException::class)
-    fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
+    fun createChallengeDetails(
+        transactionStatus: String,
+        errorDetails: String? = null
+    ): JSONObject {
         val challengeDetails = JSONObject()
         try {
-            val challengeResult = ChallengeResult.from(completionEvent)
+            val challengeResult = ChallengeResult.from(transactionStatus, errorDetails)
             challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.payload)
         } catch (e: JSONException) {
             throw ComponentException("Failed to create challenge details", e)
@@ -46,12 +48,14 @@ class Adyen3DS2Serializer {
 
     @Throws(ComponentException::class)
     fun createThreeDsResultDetails(
-        completionEvent: CompletionEvent,
-        authorisationToken: String
+        transactionStatus: String,
+        authorisationToken: String,
+        errorDetails: String? = null,
     ): JSONObject {
         val threeDsDetails = JSONObject()
         try {
-            val challengeResult = ChallengeResult.from(completionEvent, authorisationToken)
+            val challengeResult =
+                ChallengeResult.from(transactionStatus, errorDetails, authorisationToken)
             threeDsDetails.put(THREEDS_RESULT_KEY, challengeResult.payload)
         } catch (e: JSONException) {
             throw ComponentException("Failed to create ThreeDS Result details", e)

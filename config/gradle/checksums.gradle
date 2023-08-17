@@ -9,13 +9,13 @@
 if (!hasProperty("checksums")) {
     final checksums = [
             // Adyen dependencies
-            "com.adyen.threeds:adyen-3ds2:2.2.13:dfa2025daa56db88d9c179cdeb51e143:MD5",
+            "com.adyen.threeds:adyen-3ds2:2.2.15:876c1cda05d330e57c62dc4de35b6c91:MD5",
 
             // Kotlin
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.6.21:eb3d83e86861d7399e816410e1ceba2c:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.6.21:ea6fa29c284656cd40b13825464f5972:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20:2097cb28602f5a6320bcc1bd74914db9:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20:2097cb28602f5a6320bcc1bd74914db9:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.8.20:13de50e6fde16cef3982f8ef707cde6c:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.8.20:d9c35d4c31b7a468cf7c1998922ccad8:MD5",
 
             // Coroutines
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1:e427aac656a3159609ea059d38feaf7f:MD5",
