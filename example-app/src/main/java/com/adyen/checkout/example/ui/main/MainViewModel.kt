@@ -30,8 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,28 +43,37 @@ internal class MainViewModel @Inject constructor(
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
 
+    private val lifecycleResumed: MutableSharedFlow<Unit> = MutableSharedFlow()
     private val useSessions: MutableStateFlow<Boolean> = MutableStateFlow(keyValueStorage.useSessions())
     private val showLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    private val _mainViewState: MutableStateFlow<MainViewState> = MutableStateFlow(getViewState())
+    private val _mainViewState: MutableStateFlow<MainViewState> = MutableStateFlow(getInitialViewState())
     val mainViewState: Flow<MainViewState> = _mainViewState
 
     private val _eventFlow: MutableSharedFlow<MainEvent> = MutableSharedFlow(extraBufferCapacity = 1)
     val eventFlow: Flow<MainEvent> = _eventFlow
 
     init {
-        useSessions.onEach {
-            loadViewState()
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            combineViewStateFlows()
+        }
+    }
 
-        showLoading.onEach {
-            loadViewState()
-        }.launchIn(viewModelScope)
+    private suspend fun combineViewStateFlows() {
+        combine(
+            lifecycleResumed,
+            useSessions,
+            showLoading,
+        ) { _, useSessions, showLoading ->
+            getViewState(useSessions, showLoading)
+        }.collect {
+            loadViewState(it)
+        }
     }
 
     internal fun onResume() {
         viewModelScope.launch {
-            loadViewState()
+            lifecycleResumed.emit(Unit)
         }
     }
 
@@ -203,18 +211,25 @@ internal class MainViewModel @Inject constructor(
         showLoading.emit(loading)
     }
 
-    private suspend fun loadViewState() {
-        _mainViewState.emit(getViewState())
-    }
-
-    private fun getViewState(): MainViewState {
+    private fun getInitialViewState(): MainViewState {
         val useSessions = useSessions.value
         val showLoading = showLoading.value
+        return getViewState(useSessions, showLoading)
+    }
+
+    private fun getViewState(
+        useSessions: Boolean,
+        showLoading: Boolean,
+    ): MainViewState {
         return MainViewState(
             listItems = getListItems(useSessions),
             useSessions = useSessions,
             showLoading = showLoading,
         )
+    }
+
+    private suspend fun loadViewState(mainViewState: MainViewState) {
+        _mainViewState.emit(mainViewState)
     }
 
     private fun getListItems(useSessions: Boolean): List<ComponentItem> {
