@@ -77,6 +77,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     fun onComponentEntryClick(entry: ComponentItem.Entry) {
         when (entry) {
             is ComponentItem.Entry.Bacs -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Bacs))
@@ -104,6 +105,7 @@ internal class MainViewModel @Inject constructor(
             is ComponentItem.Entry.GiftCardWithSession ->
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCardWithSession))
 
+            is ComponentItem.Entry.GooglePay -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GooglePay))
             is ComponentItem.Entry.DropIn -> startDropInFlow()
             is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
             is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)

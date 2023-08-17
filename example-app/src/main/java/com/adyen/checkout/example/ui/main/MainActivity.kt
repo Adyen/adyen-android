@@ -35,6 +35,7 @@ import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
 import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
+import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -200,6 +201,8 @@ class MainActivity : AppCompatActivity() {
             is MainNavigation.Instant -> {
                 InstantFragment.show(supportFragmentManager, navigation.paymentMethodType)
             }
+
+            is MainNavigation.GooglePay -> GooglePayFragment.show(supportFragmentManager)
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.example.databinding.FragmentBacsBinding
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
@@ -144,7 +145,7 @@ class BacsFragment : BottomSheetDialogFragment() {
 
     companion object {
 
-        private const val TAG = "BacsFragment"
+        private val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
 
