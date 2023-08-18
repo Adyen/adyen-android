@@ -359,7 +359,10 @@ internal class DropInViewModel(
         }
     }
 
-    fun onToPaymentMethodsList() {
+    fun onToPaymentMethodsList(paymentMethodsApiResponse: PaymentMethodsApiResponse?) {
+        paymentMethodsApiResponse?.let {
+            this.paymentMethodsApiResponse = it
+        }
         sendEvent(DropInActivityEvent.ShowPaymentMethods)
     }
 

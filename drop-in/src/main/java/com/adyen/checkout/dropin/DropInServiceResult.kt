@@ -82,7 +82,15 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
         override val dismissDropIn: Boolean = false
     ) : DropInServiceResult(), DropInServiceResultError
 
-    class ToPaymentMethodsList : DropInServiceResult()
+    /**
+     * Send this to navigate to the payment methods list. Optionally provide a [PaymentMethodsApiResponse] to refresh
+     * the displayed payment methods.
+     *
+     * @param paymentMethodsApiResponse Optionally pass this to refresh the displayed payment methods.
+     */
+    class ToPaymentMethodsList(
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse? = null,
+    ) : DropInServiceResult()
 }
 
 sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
