@@ -359,6 +359,13 @@ internal class DropInViewModel(
         }
     }
 
+    fun onToPaymentMethodsList(paymentMethodsApiResponse: PaymentMethodsApiResponse?) {
+        paymentMethodsApiResponse?.let {
+            this.paymentMethodsApiResponse = it
+        }
+        sendEvent(DropInActivityEvent.ShowPaymentMethods)
+    }
+
     fun removeStoredPaymentMethodWithId(id: String) {
         val positionToRemove = getStoredPaymentMethods().indexOfFirst { it.id == id }
         val updatedStoredPaymentMethods = getStoredPaymentMethods().toMutableList()
