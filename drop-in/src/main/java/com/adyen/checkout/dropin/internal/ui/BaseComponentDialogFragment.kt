@@ -176,6 +176,6 @@ internal abstract class BaseComponentDialogFragment :
 
     fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 }

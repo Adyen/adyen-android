@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
+import com.adyen.checkout.dropin.ErrorDialog
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -76,6 +77,7 @@ class ExampleDropInService : DropInService() {
      * This is an example on how to handle the PaymentComponentState
      */
     private fun checkPaymentState(paymentComponentState: PaymentComponentState<*>) {
+        @Suppress("ControlFlowWithEmptyBody")
         if (paymentComponentState is CardComponentState) {
             // a card payment is being made, handle accordingly
         }
@@ -100,7 +102,7 @@ class ExampleDropInService : DropInService() {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
-                DropInServiceResult.Error(reason = "IOException")
+                DropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
             }
 
             isAction(jsonResponse) -> {
@@ -149,7 +151,7 @@ class ExampleDropInService : DropInService() {
             RecurringDropInServiceResult.PaymentMethodRemoved(storedPaymentMethodId)
         } else {
             Log.e(TAG, "FAILED")
-            RecurringDropInServiceResult.Error(reason = "IOException")
+            RecurringDropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
         }
     }
 

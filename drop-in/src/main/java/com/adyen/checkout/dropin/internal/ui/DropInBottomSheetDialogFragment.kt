@@ -95,7 +95,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun showComponentDialog(paymentMethod: PaymentMethod)
         fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
-        fun showError(errorMessage: String, reason: String, terminate: Boolean)
+        fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
         fun requestPartialPayment()

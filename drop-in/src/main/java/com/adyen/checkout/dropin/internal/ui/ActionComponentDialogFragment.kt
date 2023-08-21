@@ -181,7 +181,7 @@ internal class ActionComponentDialogFragment :
 
             else -> {
                 Logger.e(TAG, componentError.errorMessage)
-                protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+                protocol.showError(null, getString(R.string.action_failed), componentError.errorMessage, true)
             }
         }
     }

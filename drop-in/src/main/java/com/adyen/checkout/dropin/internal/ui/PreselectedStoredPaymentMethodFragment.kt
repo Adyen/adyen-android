@@ -205,7 +205,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     private fun showRemoveStoredPaymentDialog() {

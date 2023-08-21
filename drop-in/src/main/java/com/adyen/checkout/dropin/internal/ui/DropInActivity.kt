@@ -269,9 +269,10 @@ internal class DropInActivity :
         dropInService?.requestDetailsCall(actionComponentData)
     }
 
-    override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
+    override fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean) {
         Logger.d(TAG, "showError - message: $errorMessage")
-        showDialog(getString(R.string.error_dialog_title), errorMessage) {
+        val title = dialogTitle ?: getString(R.string.error_dialog_title)
+        showDialog(title, errorMessage) {
             errorDialogDismissed(reason, terminate)
         }
     }
@@ -445,15 +446,14 @@ internal class DropInActivity :
     private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
         val reason = dropInServiceResult.reason ?: "Unspecified reason"
         Logger.d(TAG, "handleDropInServiceResult ERROR - reason: $reason")
-        if (dropInServiceResult.showDialog) {
-            val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
-            showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+
+        dropInServiceResult.errorDialog?.let { errorDialog ->
+            val errorMessage = errorDialog.message ?: getString(R.string.payment_failed)
+            showError(errorDialog.title, errorMessage, reason, dropInServiceResult.dismissDropIn)
+        } ?: if (dropInServiceResult.dismissDropIn) {
+            terminateWithError(reason)
         } else {
-            if (dropInServiceResult.dismissDropIn) {
-                terminateWithError(reason)
-            } else {
-                setLoading(false)
-            }
+            setLoading(false)
         }
     }
 
@@ -620,9 +620,10 @@ internal class DropInActivity :
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
             is GiftCardBalanceResult.Error -> showError(
-                getString(result.errorMessage),
-                result.reason,
-                result.terminateDropIn
+                dialogTitle = null,
+                errorMessage = getString(result.errorMessage),
+                reason = result.reason,
+                terminate = result.terminateDropIn
             )
 
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
