@@ -19,7 +19,7 @@ sealed class AddressConfiguration : Parcelable {
             override fun newArray(size: Int) = arrayOfNulls<None>(size)
         }
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
+        override fun writeToParcel(dest: Parcel, flags: Int) {
             // no ops
         }
     }
@@ -89,13 +89,13 @@ sealed class AddressConfiguration : Parcelable {
             companion object {
                 @JvmField
                 val CREATOR = object : Parcelable.Creator<Required> {
-                    override fun createFromParcel(source: Parcel?) = Required()
+                    override fun createFromParcel(source: Parcel) = Required()
                     override fun newArray(size: Int) = arrayOfNulls<Required>(size)
                 }
             }
 
             override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
+            override fun writeToParcel(dest: Parcel, flags: Int) {
                 // no ops
             }
         }
@@ -107,13 +107,13 @@ sealed class AddressConfiguration : Parcelable {
             companion object {
                 @JvmField
                 val CREATOR = object : Parcelable.Creator<Optional> {
-                    override fun createFromParcel(source: Parcel?) = Optional()
+                    override fun createFromParcel(source: Parcel) = Optional()
                     override fun newArray(size: Int) = arrayOfNulls<Optional>(size)
                 }
             }
 
             override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-            override fun writeToParcel(dest: Parcel?, flags: Int) {
+            override fun writeToParcel(dest: Parcel, flags: Int) {
                 // no ops
             }
         }
