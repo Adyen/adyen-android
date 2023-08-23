@@ -675,7 +675,7 @@ internal class DefaultCardDelegate(
 
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
         val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
-        return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
+        return reliableDetectedCards.size > 1
     }
 
     private fun showStorePaymentField(): Boolean {
