@@ -17,9 +17,9 @@ import com.adyen.checkout.components.core.action.Action as ActionResponse
 sealed class BaseDropInServiceResult
 
 internal interface DropInServiceResultError {
-    val errorMessage: String?
     val reason: String?
     val dismissDropIn: Boolean
+    val errorDialog: ErrorDialog?
 }
 
 /**
@@ -34,8 +34,13 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      *
      * @param result The final result of the checkout flow. You will receive this value back in your [DropInCallback]
      * class. This value is not used internally by Drop-in.
+     * @param finishedDialog If set, a dialog will be shown with the data passed in [FinishedDialog]. If null, no
+     * dialog will be displayed.
      */
-    class Finished(val result: String) : DropInServiceResult()
+    class Finished(
+        val result: String,
+        val finishedDialog: FinishedDialog? = null,
+    ) : DropInServiceResult()
 
     /**
      * A call to /payments or /payments/details was successful and returned with an action that needs to be handled.
@@ -70,16 +75,16 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
     /**
      * Send this to display an error dialog and optionally dismiss Drop-in.
      *
-     * @param errorMessage the localized error message to be shown in an Alert Dialog. If not provided a generic error
-     * message will be shown.
+     * @param errorDialog If set, a dialog will be shown with the data passed in [ErrorDialog]. If null, no
+     * dialog will be displayed.
      * @param reason the reason of the error. You will receive this value back in your [DropInCallback] class. This
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
     class Error(
-        override val errorMessage: String? = null,
+        override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
     ) : DropInServiceResult(), DropInServiceResultError
 
     /**
@@ -109,16 +114,16 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
      *
      * Send this to display an error dialog and optionally dismiss Drop-in.
      *
-     * @param errorMessage the localized error message to be shown in an Alert Dialog. If not provided a generic error
-     * message will be shown.
+     * @param errorDialog If set, a dialog will be shown with the data passed in [ErrorDialog]. If null, no
+     * dialog will be displayed.
      * @param reason the reason of the error. You will receive this value back in your [DropInCallback] class. This
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
     class Error(
-        override val errorMessage: String? = null,
+        override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
     ) : BalanceDropInServiceResult(), DropInServiceResultError
 }
 
@@ -138,16 +143,16 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
      *
      * Send this to display an error dialog and optionally dismiss Drop-in.
      *
-     * @param errorMessage the localized error message to be shown in an Alert Dialog. If not provided a generic error
-     * message will be shown.
+     * @param errorDialog If set, a dialog will be shown with the data passed in [ErrorDialog]. If null, no
+     * dialog will be displayed.
      * @param reason the reason of the error. You will receive this value back in your [DropInCallback] class. This
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
     class Error(
-        override val errorMessage: String? = null,
+        override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
     ) : OrderDropInServiceResult(), DropInServiceResultError
 }
 
@@ -167,16 +172,16 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
      *
      * Send this to display an error dialog and optionally dismiss Drop-in.
      *
-     * @param errorMessage the localized error message to be shown in an Alert Dialog. If not provided a generic error
-     * message will be shown.
+     * @param errorDialog If set, a dialog will be shown with the data passed in [ErrorDialog]. If null, no
+     * dialog will be displayed.
      * @param reason the reason of the error. You will receive this value back in your [DropInCallback] class. This
      * value is not used internally by Drop-in.
      * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
      */
     class Error(
-        override val errorMessage: String? = null,
+        override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
     ) : RecurringDropInServiceResult(), DropInServiceResultError
 }
 
@@ -187,9 +192,9 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
     data class SessionTakenOverUpdated(val isFlowTakenOver: Boolean) : SessionDropInServiceResult()
 
     data class Error(
-        override val errorMessage: String? = null,
+        override val errorDialog: ErrorDialog?,
         override val reason: String? = null,
-        override val dismissDropIn: Boolean = false
+        override val dismissDropIn: Boolean = false,
     ) : SessionDropInServiceResult(), DropInServiceResultError
 
     class Finished(val result: SessionPaymentResult) : SessionDropInServiceResult()

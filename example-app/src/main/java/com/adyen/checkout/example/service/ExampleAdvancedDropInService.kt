@@ -24,6 +24,8 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
+import com.adyen.checkout.dropin.ErrorDialog
+import com.adyen.checkout.dropin.FinishedDialog
 import com.adyen.checkout.dropin.OrderDropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -90,6 +92,7 @@ class ExampleAdvancedDropInService : DropInService() {
      * This is an example on how to handle the PaymentComponentState
      */
     private fun checkPaymentState(paymentComponentState: PaymentComponentState<*>) {
+        @Suppress("ControlFlowWithEmptyBody")
         if (paymentComponentState is CardComponentState) {
             // a card payment is being made, handle accordingly
         }
@@ -123,12 +126,12 @@ class ExampleAdvancedDropInService : DropInService() {
         return when {
             jsonResponse == null -> {
                 Log.e(TAG, "FAILED")
-                DropInServiceResult.Error(reason = "IOException")
+                DropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
             }
 
             isRefusedInPartialPaymentFlow(jsonResponse) -> {
                 Log.d(TAG, "Refused")
-                DropInServiceResult.Error(reason = "Refused")
+                DropInServiceResult.Error(errorDialog = ErrorDialog(message = "Refused"))
             }
 
             isAction(jsonResponse) -> {
@@ -151,7 +154,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 } else {
                     "EMPTY"
                 }
-                DropInServiceResult.Finished(resultCode)
+                DropInServiceResult.Finished(resultCode, FinishedDialog("Payment finished", "Status: $resultCode"))
             }
         }
     }
@@ -200,7 +203,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 DropInServiceResult.Update(paymentMethods, orderResponse)
             } else {
                 Log.e(TAG, "FAILED")
-                DropInServiceResult.Error(reason = "IOException")
+                DropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
             }
             sendResult(result)
         }
@@ -225,7 +228,10 @@ class ExampleAdvancedDropInService : DropInService() {
                 val result = handleBalanceResponse(response)
                 sendBalanceResult(result)
             } else {
-                sendBalanceResult(BalanceDropInServiceResult.Error("amount or paymentMethod is null."))
+                val result = BalanceDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(message = "amount or paymentMethod is null.")
+                )
+                sendBalanceResult(result)
             }
         }
     }
@@ -240,17 +246,20 @@ class ExampleAdvancedDropInService : DropInService() {
                         BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
                     } catch (e: ModelSerializationException) {
                         BalanceDropInServiceResult.Error(
-                            reason = "Not enough balance",
+                            errorDialog = ErrorDialog(message = "Not enough balance"),
                             dismissDropIn = false
                         )
                     }
                 }
 
-                else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+                else -> BalanceDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(message = resultCode),
+                    dismissDropIn = false
+                )
             }
         } else {
             Log.e(TAG, "FAILED")
-            BalanceDropInServiceResult.Error(reason = "IOException")
+            BalanceDropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
         }
     }
 
@@ -274,11 +283,14 @@ class ExampleAdvancedDropInService : DropInService() {
         return if (jsonResponse != null) {
             when (val resultCode = jsonResponse.optString("resultCode")) {
                 "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
-                else -> OrderDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+                else -> OrderDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(message = resultCode),
+                    dismissDropIn = false
+                )
             }
         } else {
             Log.e(TAG, "FAILED")
-            OrderDropInServiceResult.Error(reason = "IOException")
+            OrderDropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
         }
     }
 
@@ -309,11 +321,14 @@ class ExampleAdvancedDropInService : DropInService() {
                     null
                 }
 
-                else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+                else -> DropInServiceResult.Error(
+                    errorDialog = ErrorDialog(message = resultCode),
+                    dismissDropIn = false
+                )
             }
         } else {
             Log.e(TAG, "FAILED")
-            DropInServiceResult.Error(reason = "IOException")
+            DropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
         }
     }
 
@@ -341,7 +356,7 @@ class ExampleAdvancedDropInService : DropInService() {
             RecurringDropInServiceResult.PaymentMethodRemoved(storedPaymentMethodId)
         } else {
             Log.e(TAG, "FAILED")
-            RecurringDropInServiceResult.Error(reason = "IOException")
+            RecurringDropInServiceResult.Error(errorDialog = ErrorDialog(message = "IOException"))
         }
     }
 
