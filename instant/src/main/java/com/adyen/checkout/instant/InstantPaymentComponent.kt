@@ -32,7 +32,10 @@ class InstantPaymentComponent internal constructor(
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
+    @Suppress("ForbiddenComment")
+    // FIXME: Using actionHandlingComponent.activeDelegate will crash for QR code actions. This is a workaround for the
+    //  actual issue.
+    override val delegate: ComponentDelegate get() = genericActionDelegate.delegate
 
     override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
 
