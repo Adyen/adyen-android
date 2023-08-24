@@ -6,6 +6,7 @@
   "labels": ["Dependencies"],
   "packageRules": [
     {
+      "matchPackagePatterns": ["*"],
       "groupName": "all-dependencies"
     }
   ]
