@@ -3,5 +3,10 @@
   "extends": [
     "config:base"
   ],
-  "labels": ["Dependencies"]
+  "labels": ["Dependencies"],
+  "packageRules": [
+    {
+      "groupName": "all-dependencies"
+    }
+  ]
 }
