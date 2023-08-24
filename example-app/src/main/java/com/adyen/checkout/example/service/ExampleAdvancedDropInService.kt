@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.service
 
 import android.util.Log
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
@@ -366,6 +367,10 @@ class ExampleAdvancedDropInService : DropInService() {
 
     override fun onBinValue(binValue: String) {
         Log.d(TAG, "On bin value: $binValue")
+    }
+
+    override fun onBinLookup(data: List<BinLookupData>) {
+        Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
     }
 
     companion object {

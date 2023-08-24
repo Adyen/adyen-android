@@ -18,5 +18,6 @@ internal data class DetectedCardType(
     val expiryDatePolicy: Brand.FieldPolicy,
     val isSupported: Boolean,
     val panLength: Int?,
+    val paymentMethodVariant: String?,
     val isSelected: Boolean = false,
 )

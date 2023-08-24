@@ -573,6 +573,7 @@ internal class StoredCardDelegateTest(
         expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         isSupported: Boolean = true,
         panLength: Int? = null,
+        paymentMethodVariant: String? = null,
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
@@ -583,6 +584,7 @@ internal class StoredCardDelegateTest(
             expiryDatePolicy = expiryDatePolicy,
             isSupported = isSupported,
             panLength = panLength,
+            paymentMethodVariant = paymentMethodVariant,
             isSelected = isSelected,
         )
     }

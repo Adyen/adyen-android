@@ -521,6 +521,7 @@ internal class CardValidationUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         }
     }

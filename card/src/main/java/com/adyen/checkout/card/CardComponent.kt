@@ -99,6 +99,16 @@ class CardComponent internal constructor(
         cardDelegate.setOnBinValueListener(listener)
     }
 
+    /**
+     * Set a callback that will be called when a bin lookup is performed.
+     *
+     * @param listener The callback that will be called when a bin lookup is performed. A list of [BinLookupData] will
+     * be passed, which contains information about the detected brands.
+     */
+    fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
+        cardDelegate.setOnBinLookupListener(listener)
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

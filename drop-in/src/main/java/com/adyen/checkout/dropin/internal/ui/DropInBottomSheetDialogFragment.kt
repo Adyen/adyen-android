@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
@@ -104,5 +105,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
         fun onRedirect()
         fun onBinValue(binValue: String)
+        fun onBinLookup(data: List<BinLookupData>)
     }
 }

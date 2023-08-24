@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -31,6 +32,7 @@ import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
+import com.adyen.checkout.card.internal.util.toBinLookupData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -135,6 +137,7 @@ internal class DefaultCardDelegate(
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
+    private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -227,12 +230,14 @@ internal class DefaultCardDelegate(
 
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
+            .distinctUntilChanged()
             .onEach { detectedCardTypes ->
                 Logger.d(
                     TAG,
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
+                onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
@@ -750,10 +755,15 @@ internal class DefaultCardDelegate(
         onBinValueListener = listener
     }
 
+    override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
+        onBinLookupListener = listener
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
         onBinValueListener = null
+        onBinLookupListener = null
     }
 
     companion object {
