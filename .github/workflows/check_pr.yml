@@ -11,11 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  update_verification_metadata:
-    uses: ./.github/workflows/update_verification_metadata.yml
   code_analysis:
     uses: ./.github/workflows/code_analysis.yml
-    needs: update_verification_metadata
   assemble:
     uses: ./.github/workflows/assemble.yml
     needs: code_analysis
