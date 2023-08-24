@@ -1,26 +1,11 @@
 name: Update verification metadata
 
 on:
-  workflow_call
+  workflow_dispatch:
 
 jobs:
-  detect-dependency-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      continue: ${{ steps.detect-dependency-changes.outputs.continue }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Detect dependency changes
-        id: detect-dependency-changes
-        run: |
-          git fetch origin develop --depth 1
-          if [ -n "$(git diff origin/develop dependencies.gradle)" ];then echo "continue=true" >> "$GITHUB_OUTPUT";else echo "continue=false" >> "$GITHUB_OUTPUT"; fi
-
   update-verification-metadata:
     needs: detect-dependency-changes
-    if: startsWith(github.head_ref, 'renovate/') && needs.detect-dependency-changes.outputs.continue == 'true'
     runs-on: ubuntu-latest
 
     steps:
