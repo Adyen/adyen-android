@@ -12,6 +12,7 @@ import app.cash.paykit.core.CashAppPay
 import app.cash.paykit.core.CashAppPayFactory
 import app.cash.paykit.core.CashAppPayState
 import app.cash.paykit.core.models.common.Action
+import app.cash.paykit.core.models.pii.PiiString
 import app.cash.paykit.core.models.response.CustomerProfile
 import app.cash.paykit.core.models.response.CustomerResponseData
 import app.cash.paykit.core.models.response.Grant
@@ -388,7 +389,7 @@ internal class DefaultCashAppPayDelegateTest(
                 createGrant(GrantType.ONE_TIME),
                 createGrant(GrantType.EXTENDED)
             )
-            whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", "cashTag")
+            whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", PiiString("cashTag"))
             delegate.cashAppPayStateDidChange(CashAppPayState.Approved(mockResponse))
 
             val actual = testFlow.latestValue
@@ -412,7 +413,7 @@ internal class DefaultCashAppPayDelegateTest(
                 createGrant(GrantType.ONE_TIME),
                 createGrant(GrantType.EXTENDED)
             )
-            whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", "cashTag")
+            whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", PiiString("cashTag"))
             delegate.cashAppPayStateDidChange(CashAppPayState.Approved(mockResponse))
 
             verify(submitHandler).onSubmit(testFlow.latestValue)

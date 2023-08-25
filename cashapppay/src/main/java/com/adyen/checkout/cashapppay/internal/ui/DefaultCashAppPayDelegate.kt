@@ -296,7 +296,7 @@ constructor(
         val onFileData = grants.find { it.type == GrantType.EXTENDED }?.let {
             CashAppPayOnFileData(
                 grantId = it.id,
-                cashTag = customerResponseData.customerProfile?.cashTag,
+                cashTag = customerResponseData.customerProfile?.cashTag?.toString(),
                 customerId = customerResponseData.customerProfile?.id
             )
         }
