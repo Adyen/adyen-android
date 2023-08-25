@@ -38,6 +38,7 @@ internal class DropInViewModelFactory(
         val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
         val amount: Amount = requireNotNull(bundleHandler.amount)
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
+        val session = bundleHandler.sessionDetails
 
         val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
@@ -51,6 +52,7 @@ internal class DropInViewModelFactory(
                 amount = amount,
                 screenWidth = screenWidth,
                 paymentMethods = paymentMethods,
+                sessionId = session?.id,
             ),
             analyticsService = AnalyticsService(
                 HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)

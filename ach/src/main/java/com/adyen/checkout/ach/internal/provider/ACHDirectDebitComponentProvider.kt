@@ -199,6 +199,7 @@ constructor(
                     application = application,
                     componentParams = componentParams,
                     paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
@@ -343,6 +344,7 @@ constructor(
                     application = application,
                     componentParams = componentParams,
                     storedPaymentMethod = storedPaymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
