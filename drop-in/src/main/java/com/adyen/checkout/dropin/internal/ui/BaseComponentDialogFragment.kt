@@ -54,7 +54,7 @@ internal abstract class BaseComponentDialogFragment :
             val args = Bundle()
             args.putParcelable(PAYMENT_METHOD, paymentMethod)
 
-            val dialogFragment = classes.newInstance()
+            val dialogFragment = classes.getDeclaredConstructor().newInstance()
             dialogFragment.arguments = args
             return dialogFragment
         }
@@ -67,7 +67,7 @@ internal abstract class BaseComponentDialogFragment :
             args.putParcelable(STORED_PAYMENT_METHOD, storedPaymentMethod)
             args.putBoolean(NAVIGATED_FROM_PRESELECTED, navigatedFromPreselected)
 
-            val dialogFragment = classes.newInstance()
+            val dialogFragment = classes.getDeclaredConstructor().newInstance()
             dialogFragment.arguments = args
             return dialogFragment
         }
