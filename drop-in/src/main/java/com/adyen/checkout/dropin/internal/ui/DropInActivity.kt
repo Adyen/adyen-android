@@ -607,7 +607,7 @@ internal class DropInActivity :
     private fun setLoading(showLoading: Boolean) {
         val loadingDialog = getFragmentByTag(LOADING_FRAGMENT_TAG)
         if (showLoading) {
-            if (loadingDialog == null) {
+            if (loadingDialog == null && !supportFragmentManager.isDestroyed) {
                 LoadingDialogFragment.newInstance().show(supportFragmentManager, LOADING_FRAGMENT_TAG)
             }
         } else {
