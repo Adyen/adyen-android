@@ -72,6 +72,6 @@ class AnalyticsMapper {
     companion object {
         private const val DROP_IN_COMPONENT = "dropin"
         private const val ANDROID_PLATFORM = "android"
-        private const val ANDROID_CHANNEL = "Android"
+        private const val ANDROID_CHANNEL = "android"
     }
 }
