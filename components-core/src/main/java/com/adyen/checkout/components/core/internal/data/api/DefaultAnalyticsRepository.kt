@@ -49,6 +49,7 @@ class DefaultAnalyticsRepository(
                     amount = amount,
                     screenWidth = screenWidth.toLong(),
                     paymentMethods = paymentMethods,
+                    sessionId = sessionId,
                 )
             }
             val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)

@@ -29,6 +29,7 @@ data class AnalyticsRepositoryData(
     val amount: Amount,
     val screenWidth: Int,
     val paymentMethods: List<String>,
+    val sessionId: String?,
 ) {
     constructor(
         application: Application,

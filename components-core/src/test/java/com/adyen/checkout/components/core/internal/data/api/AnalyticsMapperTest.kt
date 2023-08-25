@@ -106,6 +106,7 @@ internal class AnalyticsMapperTest {
                 amount = Amount("USD", 1337),
                 screenWidth = 1286,
                 paymentMethods = listOf("scheme", "googlepay"),
+                sessionId = "SESSION_ID",
             )
 
             val expected = AnalyticsSetupRequest(
@@ -123,6 +124,7 @@ internal class AnalyticsMapperTest {
                 screenWidth = 1286,
                 paymentMethods = listOf("scheme", "googlepay"),
                 amount = Amount("USD", 1337),
+                sessionId = "SESSION_ID",
             )
 
             assertEquals(expected.toString(), actual.toString())
