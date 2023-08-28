@@ -10,8 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <app.cash.paykit.core.ui.CashAppPayLightButton
+    <app.cash.paykit.core.ui.CashAppPayButton
         android:id="@+id/payButton"
+        style="@style/AdyenCheckout.CashAppPay.Button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginStart="16dp"
