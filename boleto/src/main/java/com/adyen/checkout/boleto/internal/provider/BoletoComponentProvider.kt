@@ -163,6 +163,7 @@ constructor(
                     application = application,
                     componentParams = componentParams,
                     paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)

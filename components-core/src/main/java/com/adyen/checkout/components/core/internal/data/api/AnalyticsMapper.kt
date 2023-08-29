@@ -27,6 +27,7 @@ class AnalyticsMapper {
         amount: Amount,
         screenWidth: Long,
         paymentMethods: List<String>,
+        sessionId: String?,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = BuildConfig.CHECKOUT_VERSION,
@@ -42,7 +43,8 @@ class AnalyticsMapper {
             screenWidth = screenWidth,
             paymentMethods = paymentMethods,
             amount = amount,
-            containerWidth = null, // unused for Android
+            containerWidth = null, // unused for Android,
+            sessionId = sessionId,
         )
     }
 
@@ -72,6 +74,6 @@ class AnalyticsMapper {
     companion object {
         private const val DROP_IN_COMPONENT = "dropin"
         private const val ANDROID_PLATFORM = "android"
-        private const val ANDROID_CHANNEL = "Android"
+        private const val ANDROID_CHANNEL = "android"
     }
 }

@@ -74,6 +74,7 @@ internal class DefaultAnalyticsRepositoryTest(
                 amount = TEST_AMOUNT,
                 screenWidth = SCREEN_WIDTH.toLong(),
                 paymentMethods = PAYMENT_METHODS,
+                sessionId = TEST_SESSION_ID,
             )
             verify(analyticsService).setupAnalytics(analyticsSetupRequest, TEST_CLIENT_KEY)
         }
@@ -171,6 +172,7 @@ internal class DefaultAnalyticsRepositoryTest(
         amount: Amount = TEST_AMOUNT,
         screenWidth: Int = SCREEN_WIDTH,
         paymentMethods: List<String> = PAYMENT_METHODS,
+        sessionId: String? = TEST_SESSION_ID,
     ): DefaultAnalyticsRepository {
         return DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
@@ -182,6 +184,7 @@ internal class DefaultAnalyticsRepositoryTest(
                 amount = amount,
                 screenWidth = screenWidth,
                 paymentMethods = paymentMethods,
+                sessionId = sessionId,
             ),
             analyticsService = analyticsService,
             analyticsMapper = analyticsMapper,
@@ -197,5 +200,6 @@ internal class DefaultAnalyticsRepositoryTest(
         private const val SCREEN_WIDTH = 1080
         private val PAYMENT_METHODS = listOf("bcmc", "blik", "boletobancario")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private const val TEST_SESSION_ID = "TEST_SESSION_ID"
     }
 }

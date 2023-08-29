@@ -36,6 +36,7 @@ internal data class AnalyticsSetupRequest(
     val screenWidth: Long?,
     val paymentMethods: List<String>?,
     val amount: Amount?,
+    val sessionId: String?,
 ) : ModelObject() {
 
     companion object {
@@ -53,6 +54,7 @@ internal data class AnalyticsSetupRequest(
         private const val SCREEN_WIDTH = "screenWidth"
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val AMOUNT = "amount"
+        private const val SESSION_ID = "sessionId"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsSetupRequest> = object : Serializer<AnalyticsSetupRequest> {
@@ -73,6 +75,7 @@ internal data class AnalyticsSetupRequest(
                         putOpt(SCREEN_WIDTH, modelObject.screenWidth)
                         putOpt(PAYMENT_METHODS, JsonUtils.serializeOptStringList(modelObject.paymentMethods))
                         putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
+                        putOpt(SESSION_ID, modelObject.sessionId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsSetupRequest::class.java, e)
@@ -97,6 +100,7 @@ internal data class AnalyticsSetupRequest(
                             screenWidth = getLongOrNull(SCREEN_WIDTH),
                             paymentMethods = optStringList(PAYMENT_METHODS),
                             amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
+                            sessionId = getStringOrNull(SESSION_ID),
                         )
                     }
                 } catch (e: JSONException) {
