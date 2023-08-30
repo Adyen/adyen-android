@@ -269,7 +269,12 @@ class CardComponent private constructor(
 
     private fun requestCountryList(cardDelegate: NewCardDelegate) {
         viewModelScope.launch {
-            val countries = cardDelegate.getCountryList()
+            val countries = try {
+                cardDelegate.getCountryList()
+            } catch (e: CheckoutException) {
+                notifyException(e)
+                emptyList()
+            }
             val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
             countryOptions.firstOrNull { it.selected }?.let {
                 inputData.address.country = it.code

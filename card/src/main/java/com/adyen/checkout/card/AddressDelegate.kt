@@ -14,6 +14,7 @@ import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.AddressSpecification
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,12 +40,16 @@ class AddressDelegate(
             cache[countryCode]?.let {
                 _statesFlow.tryEmit(it)
             } ?: coroutineScope.launch {
-                val states = addressRepository.getAddressData(
-                    environment = configuration.environment,
-                    dataType = AddressDataType.STATE,
-                    localeString = configuration.shopperLocale.toLanguageTag(),
-                    countryCode = countryCode
-                )
+                val states = try {
+                    addressRepository.getAddressData(
+                        environment = configuration.environment,
+                        dataType = AddressDataType.STATE,
+                        localeString = configuration.shopperLocale.toLanguageTag(),
+                        countryCode = countryCode
+                    )
+                } catch (e: CheckoutException) {
+                    emptyList()
+                }
                 if (states.isNotEmpty()) {
                     cache.put(countryCode, states)
                 }
