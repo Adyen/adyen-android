@@ -9,6 +9,7 @@
 
 package com.adyen.checkout.card.ui
 
+import androidx.annotation.Keep
 import androidx.annotation.StyleRes
 import com.adyen.checkout.card.R
 
@@ -16,7 +17,8 @@ import com.adyen.checkout.card.R
  * Specification for address form alternatives depending on the country.
  */
 @Suppress("LongParameterList")
-enum class AddressSpecification(
+@Keep
+internal enum class AddressSpecification(
     internal val street: AddressFieldSpec,
     internal val houseNumber: AddressFieldSpec,
     internal val apartmentSuite: AddressFieldSpec,
