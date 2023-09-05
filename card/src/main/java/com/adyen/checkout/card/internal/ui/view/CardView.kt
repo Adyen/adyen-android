@@ -55,7 +55,7 @@ import kotlinx.coroutines.flow.onEach
  * CardView for [CardComponent].
  */
 @Suppress("TooManyFunctions", "LargeClass")
-internal class CardView @JvmOverloads constructor(
+class CardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

@@ -15,7 +15,7 @@ import com.adyen.checkout.card.CardBrand
  *
  * Note: All values specified in [values] must be greater than 1.
  */
-internal sealed class InstallmentOptionParams {
+sealed class InstallmentOptionParams {
     abstract val values: List<Int>
     abstract val includeRevolving: Boolean
 

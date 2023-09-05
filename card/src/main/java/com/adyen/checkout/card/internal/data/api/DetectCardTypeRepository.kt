@@ -13,7 +13,7 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-internal interface DetectCardTypeRepository {
+interface DetectCardTypeRepository {
 
     val detectedCardTypesFlow: Flow<List<DetectedCardType>>
 
@@ -24,5 +24,6 @@ internal interface DetectCardTypeRepository {
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
+        type: String? = null
     )
 }

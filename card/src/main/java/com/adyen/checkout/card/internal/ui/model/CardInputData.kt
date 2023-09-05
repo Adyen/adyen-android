@@ -11,7 +11,7 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
-internal data class CardInputData(
+data class CardInputData(
     var cardNumber: String = "",
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
     var securityCode: String = "",

@@ -22,7 +22,7 @@ import com.adyen.checkout.card.CardBrand
  * @param defaultOptions Installment Options to be used for all card types.
  * @param cardBasedOptions Installment Options to be used for specific card types.
  */
-internal data class InstallmentParams(
+data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null,
     val cardBasedOptions: List<InstallmentOptionParams.CardBasedInstallmentOptions> = emptyList()
 )

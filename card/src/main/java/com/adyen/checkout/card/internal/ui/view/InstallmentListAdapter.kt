@@ -64,7 +64,7 @@ internal class InstallmentListAdapter(
     }
 }
 
-internal data class InstallmentModel(
+data class InstallmentModel(
     @StringRes val textResId: Int,
     val value: Int?,
     val option: InstallmentOption

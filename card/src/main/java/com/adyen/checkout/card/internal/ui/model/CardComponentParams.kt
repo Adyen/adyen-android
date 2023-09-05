@@ -19,7 +19,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import java.util.Locale
 
-internal data class CardComponentParams(
+data class CardComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,

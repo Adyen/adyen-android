@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
-internal data class CardOutputData(
+data class CardOutputData(
     val cardNumberState: FieldState<String>,
     val expiryDateState: FieldState<ExpiryDate>,
     val securityCodeState: FieldState<String>,

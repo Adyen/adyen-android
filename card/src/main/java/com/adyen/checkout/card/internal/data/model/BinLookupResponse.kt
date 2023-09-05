@@ -17,7 +17,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-internal data class BinLookupResponse(
+data class BinLookupResponse(
     val brands: List<Brand>? = null,
     val issuingCountryCode: String? = null,
     val requestId: String? = null

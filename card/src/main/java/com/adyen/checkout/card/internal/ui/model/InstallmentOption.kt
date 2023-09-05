@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-internal enum class InstallmentOption(val type: String?) {
+enum class InstallmentOption(val type: String?) {
     ONE_TIME(null),
     REGULAR("regular"),
     REVOLVING("revolving")

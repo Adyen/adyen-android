@@ -15,7 +15,7 @@ import com.adyen.checkout.core.internal.data.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class BinLookupService(
+class BinLookupService(
     private val httpClient: HttpClient,
 ) {
 

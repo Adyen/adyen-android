@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
-class CardComponent internal constructor(
+open class CardComponent constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
@@ -60,7 +60,7 @@ class CardComponent internal constructor(
         componentEventHandler.initialize(viewModelScope)
     }
 
-    internal fun observe(
+    fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
@@ -73,7 +73,7 @@ class CardComponent internal constructor(
         )
     }
 
-    internal fun removeObserver() {
+    fun removeObserver() {
         cardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }

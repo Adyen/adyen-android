@@ -20,7 +20,7 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-internal interface CardDelegate :
+interface CardDelegate :
     PaymentComponentDelegate<CardComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

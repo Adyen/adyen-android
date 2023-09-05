@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-internal enum class InputFieldUIState {
+enum class InputFieldUIState {
     REQUIRED, OPTIONAL, HIDDEN
 }

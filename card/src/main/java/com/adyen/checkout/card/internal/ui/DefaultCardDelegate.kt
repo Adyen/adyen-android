@@ -84,7 +84,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
-internal class DefaultCardDelegate(
+class DefaultCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: CardComponentParams,
@@ -222,7 +222,8 @@ internal class DefaultCardDelegate(
             publicKey = publicKey,
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
+            type = paymentMethod.type
         )
         requestStateList(inputData.address.country)
     }

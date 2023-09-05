@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.data.model
 
 import com.adyen.checkout.card.CardBrand
 
-internal data class DetectedCardType(
+data class DetectedCardType(
     val cardBrand: CardBrand,
     val isReliable: Boolean,
     val enableLuhnCheck: Boolean,
