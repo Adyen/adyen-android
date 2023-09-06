@@ -230,14 +230,15 @@ internal class DefaultCardDelegate(
 
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
-            .distinctUntilChanged()
             .onEach { detectedCardTypes ->
                 Logger.d(
                     TAG,
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
-                onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+                if (detectedCardTypes != outputData.detectedCardTypes) {
+                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+                }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
