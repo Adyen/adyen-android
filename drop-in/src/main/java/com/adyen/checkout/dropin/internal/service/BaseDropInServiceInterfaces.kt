@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.service
 
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
@@ -24,6 +25,9 @@ internal interface BaseDropInServiceInterface {
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
     fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
+    fun onRedirectCalled()
+    fun onBinValueCalled(binValue: String)
+    fun onBinLookupCalled(data: List<BinLookupData>)
 }
 
 internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {

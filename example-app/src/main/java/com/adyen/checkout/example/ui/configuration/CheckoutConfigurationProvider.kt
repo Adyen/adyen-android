@@ -14,9 +14,12 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.example.data.storage.CardAddressMode
+import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -53,12 +56,15 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     )
         .addCardConfiguration(getCardConfiguration())
         .addCashAppPayConfiguration(getCashAppPayConfiguration())
+        .addBlikConfiguration(getBlikConfiguration())
+        .addBacsDirectDebitConfiguration(getBacsConfiguration())
         .addBcmcConfiguration(getBcmcConfiguration())
         .addGooglePayConfiguration(getGooglePayConfiguration())
         .add3ds2ActionConfiguration(get3DS2Configuration())
         .addRedirectActionConfiguration(getRedirectConfiguration())
         .setEnableRemovingStoredPaymentMethods(true)
         .setAmount(amount)
+        .setAnalyticsConfiguration(getAnalyticsConfiguration())
         .build()
 
     fun getCardConfiguration(): CardConfiguration =
@@ -67,37 +73,44 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAddressConfiguration(getAddressConfiguration())
             .setInstallmentConfigurations(getInstallmentConfiguration())
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getCashAppPayConfiguration(): CashAppPayConfiguration =
         CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+            .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getBlikConfiguration(): BlikConfiguration =
         BlikConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getBacsConfiguration(): BacsDirectDebitConfiguration =
         BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getInstantConfiguration(): InstantPaymentConfiguration =
         InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
-    private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
-        0 -> AddressConfiguration.None
-        1 -> AddressConfiguration.PostalCode()
-        else -> AddressConfiguration.FullAddress(
+    private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
+        CardAddressMode.NONE -> AddressConfiguration.None
+        CardAddressMode.POSTAL_CODE -> AddressConfiguration.PostalCode()
+        CardAddressMode.FULL_ADDRESS -> AddressConfiguration.FullAddress(
             defaultCountryCode = null,
             supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
             addressFieldPolicy = AddressConfiguration.CardAddressFieldPolicy.OptionalForCardTypes(
@@ -111,30 +124,39 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShowStorePaymentField(true)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getGooglePayConfiguration(): GooglePayConfiguration =
         GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setCountryCode(keyValueStorage.getCountry())
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun get3DS2Configuration(): Adyen3DS2Configuration =
         Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
     private fun getRedirectConfiguration(): RedirectConfiguration =
         RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
+            .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
+
+    private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
+        val analyticsLevel = keyValueStorage.getTelemetryLevel()
+        return AnalyticsConfiguration(level = analyticsLevel)
+    }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
         when (keyValueStorage.getInstallmentOptionsMode()) {
-            0 -> InstallmentConfiguration()
-            1 -> getDefaultInstallmentOptions()
-            2 -> getDefaultInstallmentOptions(includeRevolving = true)
-            else -> getCardBasedInstallmentOptions()
+            CardInstallmentOptionsMode.NONE -> InstallmentConfiguration()
+            CardInstallmentOptionsMode.DEFAULT -> getDefaultInstallmentOptions()
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> getDefaultInstallmentOptions(includeRevolving = true)
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> getCardBasedInstallmentOptions()
         }
 
     private fun getDefaultInstallmentOptions(

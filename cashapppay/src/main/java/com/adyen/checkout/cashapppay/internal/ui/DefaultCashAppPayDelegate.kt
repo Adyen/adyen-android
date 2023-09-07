@@ -94,7 +94,7 @@ constructor(
 
         cashAppPay = initCashAppPay()
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
 
         if (!isConfirmationRequired()) {
             initiatePayment()
@@ -111,10 +111,10 @@ constructor(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -169,6 +169,7 @@ constructor(
 
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             grantId = oneTimeData?.grantId,
             customerId = onFileData?.customerId,
             onFileGrantId = onFileData?.grantId,
@@ -295,7 +296,7 @@ constructor(
         val onFileData = grants.find { it.type == GrantType.EXTENDED }?.let {
             CashAppPayOnFileData(
                 grantId = it.id,
-                cashTag = customerResponseData.customerProfile?.cashTag,
+                cashTag = customerResponseData.customerProfile?.cashTag?.toString(),
                 customerId = customerResponseData.customerProfile?.id
             )
         }

@@ -9,8 +9,6 @@
 package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import kotlinx.parcelize.Parcelize
 
 @RestrictTo(RestrictTo.Scope.TESTS)
-@Parcelize
 internal class Required : AddressFieldPolicy

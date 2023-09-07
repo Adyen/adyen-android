@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
@@ -26,7 +27,8 @@ interface QRCodeDelegate :
     ViewableDelegate<QRCodeOutputData>,
     IntentHandlingDelegate,
     StatusPollingDelegate,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    RedirectableDelegate {
 
     val eventFlow: Flow<QrCodeUIEvent>
 

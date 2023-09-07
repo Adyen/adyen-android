@@ -14,6 +14,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -71,7 +72,7 @@ internal class CardComponentParamsMapper(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
-            isAnalyticsEnabled = isAnalyticsEnabled ?: true,
+            analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
             isHolderNameRequired = isHolderNameRequired ?: false,
@@ -130,7 +131,7 @@ internal class CardComponentParamsMapper(
             shopperLocale = overrideComponentParams.shopperLocale,
             environment = overrideComponentParams.environment,
             clientKey = overrideComponentParams.clientKey,
-            isAnalyticsEnabled = overrideComponentParams.isAnalyticsEnabled,
+            analyticsParams = overrideComponentParams.analyticsParams,
             isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
             amount = overrideComponentParams.amount,
         )

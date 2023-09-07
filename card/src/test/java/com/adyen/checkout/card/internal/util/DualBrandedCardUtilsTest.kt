@@ -34,6 +34,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
         assertEquals(detectedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -50,6 +51,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.VISA),
@@ -59,6 +61,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -71,6 +74,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -80,6 +84,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -97,6 +102,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -106,6 +112,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -118,6 +125,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -127,6 +135,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -144,6 +153,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(txVariant = "plcc_mastercard"),
@@ -153,6 +163,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -165,6 +176,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -174,6 +186,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -191,6 +204,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -200,6 +214,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 
@@ -212,6 +227,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -221,6 +237,7 @@ internal class DualBrandedCardUtilsTest {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = true,
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
 

@@ -66,6 +66,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -82,7 +83,9 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -770,7 +773,7 @@ internal class DefaultCardDelegateTest(
                     assertNull(encryptedPassword)
                     assertNull(fundingSource)
                     assertNull(storedPaymentMethodId)
-                    assertEquals("2.2.13", threeDS2SdkVersion)
+                    assertEquals("2.2.15", threeDS2SdkVersion)
                 }
             }
         }
@@ -805,7 +808,7 @@ internal class DefaultCardDelegateTest(
 
                 val detectedCardTypes = listOf(
                     createDetectedCardType(),
-                    createDetectedCardType().copy(
+                    createDetectedCardType(
                         isSelected = true,
                         cardBrand = CardBrand(cardType = CardType.VISA)
                     )
@@ -872,7 +875,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals(PaymentMethodTypes.SCHEME, type)
                     assertEquals(CardType.VISA.txVariant, brand)
                     assertNull(storedPaymentMethodId)
-                    assertEquals("2.2.13", threeDS2SdkVersion)
+                    assertEquals("2.2.15", threeDS2SdkVersion)
                 }
             }
         }
@@ -960,7 +963,7 @@ internal class DefaultCardDelegateTest(
     @Test
     fun `when delegate is initialized then analytics event is sent`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).sendAnalyticsEvent()
+        verify(analyticsRepository).setupAnalytics()
     }
 
     @Nested
@@ -1016,6 +1019,133 @@ internal class DefaultCardDelegateTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
+            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.componentStateFlow.test {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    securityCode = TEST_SECURITY_CODE
+                    expiryDate = TEST_EXPIRY_DATE
+                }
+
+                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
+            }
+        }
+    }
+
+    @Nested
+    inner class OnBinValueListenerTest {
+
+        @Test
+        fun `when on bin value listener is set, then it should be called`() = runTest {
+            val expectedBinValue = "545454"
+            val cardNumber = expectedBinValue + "1234567891"
+
+            delegate.setOnBinValueListener { binValue ->
+                launch(this.coroutineContext) {
+                    assertEquals(expectedBinValue, binValue)
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { this.cardNumber = cardNumber }
+        }
+
+        @Test
+        fun `when on bin value listener is called again with the same value, then it should be called only once`() =
+            runTest {
+                val expectedBinValue = "545454"
+                val cardNumber = expectedBinValue + "1234567891"
+                var timesCalled = 0
+
+                delegate.setOnBinValueListener { binValue ->
+                    timesCalled++
+
+                    launch(this.coroutineContext) {
+                        assertEquals(expectedBinValue, binValue)
+                        assertEquals(1, timesCalled)
+                    }
+                }
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData { this.cardNumber = cardNumber }
+                delegate.updateInputData { this.cardNumber = cardNumber }
+            }
+    }
+
+    @Nested
+    inner class OnBinLookupListenerTest {
+
+        @Test
+        fun `when card number is detected locally, then callback should be called with unreliable result`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+
+            delegate.setOnBinLookupListener { data ->
+                launch(this.coroutineContext) {
+                    with(data.first()) {
+                        assertEquals("visa", brand)
+                        assertNull(paymentMethodVariant)
+                        assertFalse(isReliable)
+                    }
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { cardNumber = "5555444" }
+        }
+
+        @Test
+        fun `when card number is detected over network, then callback should be called with reliable result`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+
+            delegate.setOnBinLookupListener { data ->
+                launch(this.coroutineContext) {
+                    with(data.first()) {
+                        assertEquals("mc", brand)
+                        assertEquals("mccredit", paymentMethodVariant)
+                        assertTrue(isReliable)
+                    }
+                }
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.updateInputData { cardNumber = "5555444" }
+        }
+
+        @Test
+        fun `when callback is called multiple times, then it should only trigger if the data changed`() = runTest {
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+            var timesTriggered = 0
+
+            delegate.setOnBinLookupListener {
+                timesTriggered++
+            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            // Trigger first time
+            delegate.updateInputData { cardNumber = "5555444" }
+            // Shouldn't trigger
+            delegate.updateInputData { cardNumber = "55554444" }
+            detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
+            // Trigger second time
+            delegate.updateInputData { cardNumber = "555544443" }
+
+            assertEquals(2, timesTriggered)
+        }
+    }
+
     @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
@@ -1054,7 +1184,7 @@ internal class DefaultCardDelegateTest(
 
     private fun getDefaultCardConfigurationBuilder(shopperLocale: Locale = Locale.US): CardConfiguration.Builder {
         return CardConfiguration.Builder(shopperLocale, Environment.TEST, TEST_CLIENT_KEY)
-            .setSupportedCardTypes(CardType.VISA)
+            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD)
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -1106,6 +1236,11 @@ internal class DefaultCardDelegateTest(
                 CardBrand(cardType = CardType.VISA),
                 true,
                 Environment.TEST
+            ),
+            CardListItem(
+                CardBrand(cardType = CardType.MASTERCARD),
+                false,
+                Environment.TEST
             )
         ),
         isCardListVisible: Boolean = true
@@ -1146,6 +1281,7 @@ internal class DefaultCardDelegateTest(
         expiryDatePolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
         isSupported: Boolean = true,
         panLength: Int? = null,
+        paymentMethodVariant: String? = null,
         isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
@@ -1156,6 +1292,7 @@ internal class DefaultCardDelegateTest(
             expiryDatePolicy = expiryDatePolicy,
             isSupported = isSupported,
             panLength = panLength,
+            paymentMethodVariant = paymentMethodVariant,
             isSelected = isSelected,
         )
     }
@@ -1193,6 +1330,7 @@ internal class DefaultCardDelegateTest(
         private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
 
         @JvmStatic
         fun shouldStorePaymentMethodSource() = listOf(

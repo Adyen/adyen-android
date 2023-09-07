@@ -32,8 +32,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONObject
 
-private val TAG = LogUtil.getTag()
-
 internal class DefaultRedirectDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
@@ -113,7 +111,16 @@ internal class DefaultRedirectDelegate(
         exceptionChannel.trySend(e)
     }
 
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        redirectHandler.setOnRedirectListener(listener)
+    }
+
     override fun onCleared() {
         removeObserver()
+        redirectHandler.removeOnRedirectListener()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

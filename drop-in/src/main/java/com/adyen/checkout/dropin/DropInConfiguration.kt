@@ -20,6 +20,7 @@ import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
@@ -57,7 +58,7 @@ class DropInConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
     internal val genericActionConfiguration: GenericActionConfiguration,
@@ -380,7 +381,7 @@ class DropInConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 availablePaymentConfigs = availablePaymentConfigs,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
                 amount = amount,

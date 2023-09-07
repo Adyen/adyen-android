@@ -9,6 +9,8 @@
 package com.adyen.checkout.issuerlist.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
@@ -52,7 +54,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
@@ -80,7 +82,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "XCD",
@@ -94,7 +96,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
@@ -152,7 +154,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            isAnalyticsEnabled = true,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = false,

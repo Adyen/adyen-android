@@ -81,7 +81,9 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dropInConfiguration = dropInViewModel.dropInConfiguration,
                 amount = dropInViewModel.amount,
                 componentCallback = storedPaymentViewModel,
-                sessionDetails = dropInViewModel.sessionDetails
+                sessionDetails = dropInViewModel.sessionDetails,
+                analyticsRepository = dropInViewModel.analyticsRepository,
+                onRedirect = protocol::onRedirect,
             )
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
@@ -121,7 +123,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         when (storedPaymentMethodModel) {
             is StoredCardModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
-                    requireActivity().getString(R.string.card_number_4digit, storedPaymentMethodModel.lastFour)
+                    requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
                     environment = dropInViewModel.dropInConfiguration.environment,
                     txVariant = storedPaymentMethodModel.imageId,
@@ -134,7 +136,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             is StoredACHDirectDebitModel -> {
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(
-                        R.string.checkout_ach_bank_account_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
@@ -203,7 +205,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     private fun showRemoveStoredPaymentDialog() {

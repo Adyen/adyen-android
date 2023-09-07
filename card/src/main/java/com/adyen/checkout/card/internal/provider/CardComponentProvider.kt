@@ -32,11 +32,12 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -68,6 +69,7 @@ class CardComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
         CardComponent,
@@ -132,12 +134,16 @@ constructor(
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val cardValidationMapper = CardValidationMapper()
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -209,12 +215,17 @@ constructor(
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val cardValidationMapper = CardValidationMapper()
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -295,12 +306,15 @@ constructor(
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                analyticsService = analyticsService,
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -363,12 +377,16 @@ constructor(
             val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
             val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
 
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                analyticsService = analyticsService,
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 

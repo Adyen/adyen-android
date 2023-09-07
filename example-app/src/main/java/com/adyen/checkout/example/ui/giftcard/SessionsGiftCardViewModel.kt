@@ -21,7 +21,6 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
-import com.adyen.checkout.example.ui.card.SessionsCardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.SessionsGiftCardComponentCallback
@@ -96,8 +95,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                redirectUrl = savedStateHandle.get<String>(SessionsCardActivity.RETURN_URL_EXTRA)
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                redirectUrl = savedStateHandle.get<String>(SessionsGiftCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),

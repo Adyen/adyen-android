@@ -50,8 +50,19 @@ internal class ComponentItemAdapter(
     ) : ComponentItemViewHolder(binding) {
 
         override fun bind(item: ComponentItem) {
-            binding.title.setText(item.stringResource)
+            setTitle(item)
             binding.root.setOnClickListener { onEntryClick(item as ComponentItem.Entry) }
+        }
+
+        private fun setTitle(item: ComponentItem) {
+            val arguments = item.arguments
+            if (arguments == null) {
+                binding.title.setText(item.stringResource)
+            } else {
+                @Suppress("SpreadOperator")
+                val title = binding.root.resources.getString(item.stringResource, *arguments.toTypedArray())
+                binding.title.text = title
+            }
         }
     }
 

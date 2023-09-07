@@ -109,16 +109,25 @@ internal class PaymentMethodListDialogFragment :
                     is PaymentMethodListStoredEvent.ShowConfirmationPopup -> {
                         showConfirmationPopup(event.paymentMethodName, event.storedPaymentMethodModel)
                     }
+
                     is PaymentMethodListStoredEvent.ShowStoredComponentDialog -> {
                         protocol.showStoredComponentDialog(event.storedPaymentMethod, false)
                     }
+
                     is PaymentMethodListStoredEvent.RequestPaymentsCall -> {
                         protocol.requestPaymentsCall(event.state)
                     }
+
                     is PaymentMethodListStoredEvent.ShowError -> {
                         Logger.e(TAG, event.componentError.errorMessage)
-                        protocol.showError(getString(R.string.component_error), event.componentError.errorMessage, true)
+                        protocol.showError(
+                            dialogTitle = null,
+                            errorMessage = getString(R.string.component_error),
+                            reason = event.componentError.errorMessage,
+                            terminate = true,
+                        )
                     }
+
                     is PaymentMethodListStoredEvent.AdditionalDetails -> {
                         protocol.requestDetailsCall(event.data)
                     }
@@ -158,7 +167,9 @@ internal class PaymentMethodListDialogFragment :
             dropInConfiguration = dropInViewModel.dropInConfiguration,
             amount = dropInViewModel.amount,
             componentCallback = paymentMethodsListViewModel,
-            sessionDetails = dropInViewModel.sessionDetails
+            sessionDetails = dropInViewModel.sessionDetails,
+            analyticsRepository = dropInViewModel.analyticsRepository,
+            onRedirect = protocol::onRedirect,
         )
         paymentMethodsListViewModel.onClickStoredItem(storedPaymentMethod, storedPaymentMethodModel)
     }
@@ -189,18 +200,20 @@ internal class PaymentMethodListDialogFragment :
             is StoredCardModel -> {
                 dialog.setMessage(
                     requireActivity().getString(
-                        R.string.card_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 )
             }
+
             is GenericStoredModel -> {
                 // do nothing
             }
+
             is StoredACHDirectDebitModel -> {
                 dialog.setMessage(
                     requireActivity().getString(
-                        R.string.checkout_ach_bank_account_number_4digit,
+                        R.string.last_four_digits_format,
                         storedPaymentMethodModel.lastFour
                     )
                 )

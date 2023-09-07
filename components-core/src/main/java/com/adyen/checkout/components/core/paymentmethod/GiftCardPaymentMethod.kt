@@ -16,10 +16,11 @@ import org.json.JSONObject
 
 @Parcelize
 class GiftCardPaymentMethod(
-    override var type: String? = null,
-    var encryptedCardNumber: String? = null,
-    var encryptedSecurityCode: String? = null,
-    var brand: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
+    var encryptedCardNumber: String?,
+    var encryptedSecurityCode: String?,
+    var brand: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -34,6 +35,7 @@ class GiftCardPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
                         putOpt(BRAND, modelObject.brand)
@@ -46,6 +48,7 @@ class GiftCardPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): GiftCardPaymentMethod {
                 return GiftCardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedSecurityCode = jsonObject.getStringOrNull(ENCRYPTED_SECURITY_CODE),
                     brand = jsonObject.getStringOrNull(BRAND)

@@ -64,7 +64,7 @@ internal class StoredCashAppPayDelegateTest(
     @Test
     fun `when delegate is initialized, then analytics event is sent`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).sendAnalyticsEvent()
+        verify(analyticsRepository).setupAnalytics()
     }
 
     @ParameterizedTest
@@ -105,6 +105,7 @@ internal class StoredCashAppPayDelegateTest(
             data = PaymentComponentData(
                 paymentMethod = CashAppPayPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
+                    checkoutAttemptId = null,
                     storedPaymentMethodId = TEST_PAYMENT_METHOD_ID,
                 ),
                 order = TEST_ORDER,

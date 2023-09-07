@@ -22,8 +22,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
@@ -33,9 +32,9 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.dropin.DropIn
@@ -47,6 +46,9 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.SessionDropInServiceResult
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
+import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
+import com.adyen.checkout.dropin.internal.provider.getFragmentForPaymentMethod
+import com.adyen.checkout.dropin.internal.provider.getFragmentForStoredPaymentMethod
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 import com.adyen.checkout.dropin.internal.service.BaseDropInServiceInterface
 import com.adyen.checkout.dropin.internal.service.SessionDropInServiceInterface
@@ -54,26 +56,12 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
-import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionPaymentResult
-import com.adyen.checkout.ui.core.internal.util.createLocalizedContext
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
-
-private val TAG = LogUtil.getTag()
-
-private const val PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG = "PRESELECTED_PAYMENT_METHOD_FRAGMENT"
-private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAGMENT"
-private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
-private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
-private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
-private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
-
-internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -282,14 +270,12 @@ internal class DropInActivity :
         dropInService?.requestDetailsCall(actionComponentData)
     }
 
-    override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
+    override fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean) {
         Logger.d(TAG, "showError - message: $errorMessage")
-        AlertDialog.Builder(this)
-            .setTitle(R.string.error_dialog_title)
-            .setMessage(errorMessage)
-            .setOnDismissListener { this@DropInActivity.errorDialogDismissed(reason, terminate) }
-            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
-            .show()
+        val title = dialogTitle ?: getString(R.string.error_dialog_title)
+        showDialog(title, errorMessage) {
+            errorDialogDismissed(reason, terminate)
+        }
     }
 
     private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
@@ -327,33 +313,14 @@ internal class DropInActivity :
     override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
         Logger.d(TAG, "showStoredComponentDialog")
         hideAllScreens()
-        val dialogFragment = when {
-            CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) -> CardComponentDialogFragment
-            else -> GenericComponentDialogFragment
-        }.newInstance(storedPaymentMethod, fromPreselected)
-
+        val dialogFragment = getFragmentForStoredPaymentMethod(storedPaymentMethod, fromPreselected)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
-        val dialogFragment = when {
-            CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                CardComponentDialogFragment.newInstance(paymentMethod)
-
-            BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                BacsDirectDebitDialogFragment.newInstance(paymentMethod)
-
-            GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                GiftCardComponentDialogFragment.newInstance(paymentMethod)
-
-            GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ->
-                GooglePayComponentDialogFragment.newInstance(paymentMethod)
-
-            else -> GenericComponentDialogFragment.newInstance(paymentMethod)
-        }
-
+        val dialogFragment = getFragmentForPaymentMethod(paymentMethod)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
@@ -431,10 +398,13 @@ internal class DropInActivity :
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
-            is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
+            is DropInServiceResult.Finished -> handleFinished(dropInServiceResult)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+            is DropInServiceResult.ToPaymentMethodsList -> dropInViewModel.onToPaymentMethodsList(
+                dropInServiceResult.paymentMethodsApiResponse
+            )
         }
     }
 
@@ -475,10 +445,27 @@ internal class DropInActivity :
     }
 
     private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
-        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
         val reason = dropInServiceResult.reason ?: "Unspecified reason"
-        val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
-        showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: $reason")
+
+        dropInServiceResult.errorDialog?.let { errorDialog ->
+            val errorMessage = errorDialog.message ?: getString(R.string.payment_failed)
+            showError(errorDialog.title, errorMessage, reason, dropInServiceResult.dismissDropIn)
+        } ?: if (dropInServiceResult.dismissDropIn) {
+            terminateWithError(reason)
+        } else {
+            setLoading(false)
+        }
+    }
+
+    private fun handleFinished(dropInServiceResult: DropInServiceResult.Finished) {
+        if (dropInServiceResult.finishedDialog != null) {
+            showDialog(dropInServiceResult.finishedDialog.title, dropInServiceResult.finishedDialog.message) {
+                sendResult(dropInServiceResult.result)
+            }
+        } else {
+            sendResult(dropInServiceResult.result)
+        }
     }
 
     private fun handleAction(action: Action) {
@@ -554,8 +541,7 @@ internal class DropInActivity :
         }
     }
 
-    private fun isWeChatPayIntent(intent: Intent): Boolean =
-        runCompileOnly { WeChatPayUtils.isResultIntent(intent) } ?: false
+    private fun isWeChatPayIntent(intent: Intent): Boolean = checkCompileOnly { WeChatPayUtils.isResultIntent(intent) }
 
     private fun handleActionIntentResponse(intent: Intent) {
         val actionFragment = getActionFragment() ?: return
@@ -621,7 +607,7 @@ internal class DropInActivity :
     private fun setLoading(showLoading: Boolean) {
         val loadingDialog = getFragmentByTag(LOADING_FRAGMENT_TAG)
         if (showLoading) {
-            if (loadingDialog == null) {
+            if (loadingDialog == null && !supportFragmentManager.isDestroyed) {
                 LoadingDialogFragment.newInstance().show(supportFragmentManager, LOADING_FRAGMENT_TAG)
             }
         } else {
@@ -635,9 +621,10 @@ internal class DropInActivity :
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
             is GiftCardBalanceResult.Error -> showError(
-                getString(result.errorMessage),
-                result.reason,
-                result.terminateDropIn
+                dialogTitle = null,
+                errorMessage = getString(result.errorMessage),
+                reason = result.reason,
+                terminate = result.terminateDropIn
             )
 
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
@@ -691,7 +678,39 @@ internal class DropInActivity :
         }
     }
 
+    override fun onRedirect() {
+        dropInService?.onRedirectCalled()
+    }
+
+    override fun onBinValue(binValue: String) {
+        dropInService?.onBinValueCalled(binValue)
+    }
+
+    override fun onBinLookup(data: List<BinLookupData>) {
+        dropInService?.onBinLookupCalled(data)
+    }
+
+    private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setOnDismissListener { onDismiss() }
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
     companion object {
+
+        private val TAG = LogUtil.getTag()
+
+        private const val PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG = "PRESELECTED_PAYMENT_METHOD_FRAGMENT"
+        private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAGMENT"
+        private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
+        private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
+        private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+        private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
+
+        internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
         fun createIntent(
             context: Context,
@@ -705,7 +724,6 @@ internal class DropInActivity :
                 dropInConfiguration = dropInConfiguration,
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
                 service = service,
-                packageName = context.packageName
             )
             return intent
         }
@@ -722,7 +740,6 @@ internal class DropInActivity :
                 dropInConfiguration = dropInConfiguration,
                 checkoutSession = checkoutSession,
                 service = service,
-                packageName = context.packageName
             )
             return intent
         }

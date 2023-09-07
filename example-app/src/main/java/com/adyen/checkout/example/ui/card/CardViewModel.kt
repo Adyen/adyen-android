@@ -53,7 +53,7 @@ internal class CardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
-                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
             )
         )
 
@@ -103,8 +103,9 @@ internal class CardViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(CardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
@@ -118,7 +119,7 @@ internal class CardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
-                else -> _events.emit(CardEvent.PaymentResult("Success: ${json.optString("resultCode")}"))
+                else -> _events.emit(CardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
     }

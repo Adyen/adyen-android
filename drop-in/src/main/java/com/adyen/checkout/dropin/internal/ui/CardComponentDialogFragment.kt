@@ -39,7 +39,10 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         binding.header.text = dropInViewModel.getPaymentMethods()
             .find { it.type == PaymentMethodTypes.SCHEME }?.name
 
-        binding.cardView.attach(component as CardComponent, viewLifecycleOwner)
+        cardComponent.setOnBinValueListener(protocol::onBinValue)
+        cardComponent.setOnBinLookupListener(protocol::onBinLookup)
+
+        binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         if (cardComponent.isConfirmationRequired()) {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)

@@ -10,6 +10,7 @@ package com.adyen.checkout.adyen3ds2
 import android.content.Context
 import android.content.IntentFilter
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -27,7 +28,7 @@ class Adyen3DS2Configuration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-    override val isAnalyticsEnabled: Boolean?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount,
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
@@ -97,7 +98,7 @@ class Adyen3DS2Configuration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-                isAnalyticsEnabled = isAnalyticsEnabled,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 uiCustomization = uiCustomization,
                 threeDSRequestorAppURL = threeDSRequestorAppURL,

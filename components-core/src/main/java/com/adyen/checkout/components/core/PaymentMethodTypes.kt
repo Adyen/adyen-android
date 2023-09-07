@@ -130,6 +130,7 @@ object PaymentMethodTypes {
         WECHAT_PAY_SDK,
     )
 
+    // Payment methods that do not need a payment component, but only an action component
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = listOf(
         DUIT_NOW,
         PAY_NOW,
@@ -138,6 +139,7 @@ object PaymentMethodTypes {
         WECHAT_PAY_SDK,
     )
 
+    // Payment methods that are explicitly unsupported
     val UNSUPPORTED_PAYMENT_METHODS: List<String> = listOf(
         AFTER_PAY,
         BCMC_QR,

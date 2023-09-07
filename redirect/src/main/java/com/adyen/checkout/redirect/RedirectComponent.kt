@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -36,7 +37,8 @@ class RedirectComponent internal constructor(
 ) : ViewModel(),
     ActionComponent,
     IntentHandlingComponent,
-    ViewableComponent {
+    ViewableComponent,
+    RedirectableActionComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
@@ -68,6 +70,10 @@ class RedirectComponent internal constructor(
      */
     override fun handleIntent(intent: Intent) {
         delegate.handleIntent(intent)
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        delegate.setOnRedirectListener(listener)
     }
 
     override fun onCleared() {

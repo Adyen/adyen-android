@@ -10,6 +10,8 @@ package com.adyen.checkout.adyen3ds2.internal.ui.model
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
@@ -64,7 +66,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
@@ -79,7 +81,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            isAnalyticsEnabled = false,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
@@ -101,7 +103,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        isAnalyticsEnabled: Boolean = true,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
         amount: Amount = Amount.EMPTY,
         uiCustomization: UiCustomization? = null,
@@ -110,7 +112,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
-        isAnalyticsEnabled = isAnalyticsEnabled,
+        analyticsParams = analyticsParams,
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         uiCustomization = uiCustomization,

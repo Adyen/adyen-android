@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
@@ -24,8 +25,6 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
-private val TAG = LogUtil.getTag()
 
 internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -82,6 +81,10 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         return false
     }
 
+    companion object {
+        private val TAG = LogUtil.getTag()
+    }
+
     /**
      * Interface for Drop-in fragments to interact with the main Activity
      */
@@ -93,12 +96,15 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun showComponentDialog(paymentMethod: PaymentMethod)
         fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
-        fun showError(errorMessage: String, reason: String, terminate: Boolean)
+        fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
         fun requestPartialPayment()
         fun requestOrderCancellation()
         fun finishWithAction()
         fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
+        fun onRedirect()
+        fun onBinValue(binValue: String)
+        fun onBinLookup(data: List<BinLookupData>)
     }
 }

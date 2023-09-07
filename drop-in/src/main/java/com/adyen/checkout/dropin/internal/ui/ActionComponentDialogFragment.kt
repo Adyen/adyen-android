@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.PermissionException
@@ -36,7 +37,6 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.util.arguments
-import com.adyen.checkout.ui.core.internal.util.toast
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -87,6 +87,8 @@ internal class ActionComponentDialogFragment :
                 callback = this
             )
 
+            actionComponent.setOnRedirectListener { protocol.onRedirect() }
+
             if (shouldFinishWithAction()) {
                 binding.buttonFinish.apply {
                     isVisible = true
@@ -128,9 +130,11 @@ internal class ActionComponentDialogFragment :
             shouldFinishWithAction() -> {
                 protocol.finishWithAction()
             }
+
             dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
                 protocol.terminateDropIn()
             }
+
             else -> {
                 protocol.showPaymentMethodsDialog()
             }
@@ -161,6 +165,7 @@ internal class ActionComponentDialogFragment :
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
             }
+
             is PermissionException -> {
                 val requiredPermission = exception.requiredPermission
                 Logger.e(TAG, exception.message.orEmpty(), exception)
@@ -173,9 +178,10 @@ internal class ActionComponentDialogFragment :
                     .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
+
             else -> {
                 Logger.e(TAG, componentError.errorMessage)
-                protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+                protocol.showError(null, getString(R.string.action_failed), componentError.errorMessage, true)
             }
         }
     }

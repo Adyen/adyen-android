@@ -57,6 +57,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = null,
+                paymentMethodVariant = null,
             )
         )
     }
@@ -72,6 +73,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = 16,
+                paymentMethodVariant = "mccredit",
             )
         )
     }
@@ -88,6 +90,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
                 isSupported = supportedCardBrands.contains(cardBrandFirst),
                 panLength = 16,
+                paymentMethodVariant = "mccredit",
             ),
             DetectedCardType(
                 cardBrand = cardBrandSecond,
@@ -97,6 +100,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 expiryDatePolicy = Brand.FieldPolicy.HIDDEN,
                 isSupported = supportedCardBrands.contains(cardBrandSecond),
                 panLength = 16,
+                paymentMethodVariant = "maestrouk",
             )
         )
     }

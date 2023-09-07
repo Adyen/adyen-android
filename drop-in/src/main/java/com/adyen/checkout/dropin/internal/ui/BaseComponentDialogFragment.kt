@@ -54,7 +54,7 @@ internal abstract class BaseComponentDialogFragment :
             val args = Bundle()
             args.putParcelable(PAYMENT_METHOD, paymentMethod)
 
-            val dialogFragment = classes.newInstance()
+            val dialogFragment = classes.getDeclaredConstructor().newInstance()
             dialogFragment.arguments = args
             return dialogFragment
         }
@@ -67,7 +67,7 @@ internal abstract class BaseComponentDialogFragment :
             args.putParcelable(STORED_PAYMENT_METHOD, storedPaymentMethod)
             args.putBoolean(NAVIGATED_FROM_PRESELECTED, navigatedFromPreselected)
 
-            val dialogFragment = classes.newInstance()
+            val dialogFragment = classes.getDeclaredConstructor().newInstance()
             dialogFragment.arguments = args
             return dialogFragment
         }
@@ -114,7 +114,9 @@ internal abstract class BaseComponentDialogFragment :
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
-                    sessionDetails = dropInViewModel.sessionDetails
+                    sessionDetails = dropInViewModel.sessionDetails,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
+                    onRedirect = protocol::onRedirect,
                 )
             } else {
                 getComponentFor(
@@ -123,7 +125,9 @@ internal abstract class BaseComponentDialogFragment :
                     sessionDetails = dropInViewModel.sessionDetails,
                     dropInConfiguration = dropInViewModel.dropInConfiguration,
                     amount = dropInViewModel.amount,
-                    componentCallback = this
+                    componentCallback = this,
+                    analyticsRepository = dropInViewModel.analyticsRepository,
+                    onRedirect = protocol::onRedirect,
                 )
             }
         } catch (e: CheckoutException) {
@@ -172,6 +176,6 @@ internal abstract class BaseComponentDialogFragment :
 
     fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 }

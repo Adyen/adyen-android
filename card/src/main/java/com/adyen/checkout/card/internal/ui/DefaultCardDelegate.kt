@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -31,6 +32,7 @@ import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
+import com.adyen.checkout.card.internal.util.toBinLookupData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -134,12 +136,15 @@ internal class DefaultCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
+    private var onBinValueListener: ((binValue: String) -> Unit)? = null
+    private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
@@ -150,10 +155,10 @@ internal class DefaultCardDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -231,6 +236,9 @@ internal class DefaultCardDelegate(
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 )
+                if (detectedCardTypes != outputData.detectedCardTypes) {
+                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+                }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
@@ -368,7 +376,7 @@ internal class DefaultCardDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "LongMethod")
     private fun createComponentState(
         outputData: CardOutputData = this.outputData
     ): CardComponentState {
@@ -384,6 +392,12 @@ internal class DefaultCardDelegate(
             } else {
                 cardNumber.take(BIN_VALUE_LENGTH)
             }
+
+        // This safe call is needed because _componentStateFlow is null while this is called the first time.
+        @Suppress("UNNECESSARY_SAFE_CALL")
+        if (_componentStateFlow?.value?.binValue != binValue) {
+            onBinValueListener?.invoke(binValue)
+        }
 
         val publicKey = publicKey
 
@@ -594,18 +608,14 @@ internal class DefaultCardDelegate(
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
             isCvcHidden() -> InputFieldUIState.HIDDEN
-            // We treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user
-            // is typing the card number.
-            cvcPolicy == Brand.FieldPolicy.OPTIONAL ||
-                cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
-
+            cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
 
     private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
-        return when (expiryDatePolicy) {
-            Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+        return when {
+            expiryDatePolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
@@ -621,9 +631,10 @@ internal class DefaultCardDelegate(
         firstCardBrand: CardBrand?,
         binValue: String
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear
@@ -670,7 +681,7 @@ internal class DefaultCardDelegate(
 
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
         val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
-        return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
+        return reliableDetectedCards.size > 1
     }
 
     private fun showStorePaymentField(): Boolean {
@@ -741,9 +752,19 @@ internal class DefaultCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
+        onBinValueListener = listener
+    }
+
+    override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
+        onBinLookupListener = listener
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        onBinValueListener = null
+        onBinLookupListener = null
     }
 
     companion object {

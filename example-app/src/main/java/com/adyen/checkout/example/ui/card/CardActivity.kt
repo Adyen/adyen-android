@@ -2,6 +2,7 @@ package com.adyen.checkout.example.ui.card
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,11 +73,13 @@ class CardActivity : AppCompatActivity() {
                 binding.cardContainer.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             is CardViewState.ShowComponent -> {
                 binding.cardContainer.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
             }
+
             CardViewState.Error -> {
                 binding.errorView.isVisible = true
                 binding.progressIndicator.isVisible = false
@@ -91,6 +95,18 @@ class CardActivity : AppCompatActivity() {
             configuration = checkoutConfigurationProvider.getCardConfiguration(),
             callback = cardComponentData.callback,
         )
+
+        cardComponent.setOnRedirectListener {
+            Log.d(TAG, "On redirect")
+        }
+
+        cardComponent.setOnBinValueListener { binValue ->
+            Log.d(TAG, "On bin value: $binValue")
+        }
+
+        cardComponent.setOnBinLookupListener { data ->
+            Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
+        }
 
         this.cardComponent = cardComponent
 
@@ -119,6 +135,7 @@ class CardActivity : AppCompatActivity() {
     }
 
     companion object {
+        private val TAG = getLogTag()
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
 }

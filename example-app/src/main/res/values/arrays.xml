@@ -8,16 +8,16 @@
 
 <resources>
 
-    <array name="enable_card_address_form_entries">
+    <array name="card_address_form_entries">
         <item>"None"</item>
         <item>"Postal code"</item>
         <item>"Full address"</item>
     </array>
 
-    <array name="enable_card_address_form_entry_values">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
+    <array name="card_address_form_values">
+        <item>"NONE"</item>
+        <item>"POSTAL_CODE"</item>
+        <item>"FULL_ADDRESS"</item>
     </array>
 
     <array name="card_installment_options_mode_entries" >
@@ -27,21 +27,11 @@
         <item>"Card based installment options (VISA)"</item>
     </array>
 
-    <array name="card_installment_options_mode_entry_values">
-        <item>"0"</item>
-        <item>"1"</item>
-        <item>"2"</item>
-        <item>"3"</item>
-    </array>
-
-    <array name="instant_payment_method_type_entries">
-        <item>"Paypal"</item>
-        <item>"Klarna"</item>
-    </array>
-
-    <array name="instant_payment_method_type_values">
-        <item>"paypal"</item>
-        <item>"klarna"</item>
+    <array name="card_installment_options_mode_values">
+        <item>"NONE"</item>
+        <item>"DEFAULT"</item>
+        <item>"DEFAULT_WITH_REVOLVING"</item>
+        <item>"CARD_BASED_VISA"</item>
     </array>
 
     <array name="night_theme_entries">
@@ -50,9 +40,19 @@
         <item>@string/night_theme_night</item>
     </array>
 
-    <array name="night_theme_entry_values">
+    <array name="night_theme_values">
         <item>@string/night_theme_system</item>
         <item>@string/night_theme_day</item>
         <item>@string/night_theme_night</item>
+    </array>
+
+    <array name="telemetry_level_entries">
+        <item>"All"</item>
+        <item>"None"</item>
+    </array>
+
+    <array name="telemetry_level_values">
+        <item>"ALL"</item>
+        <item>"NONE"</item>
     </array>
 </resources>

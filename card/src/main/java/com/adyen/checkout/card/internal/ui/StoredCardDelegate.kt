@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
@@ -88,6 +89,7 @@ internal class StoredCardDelegate(
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
         isSupported = true,
         panLength = null,
+        paymentMethodVariant = null,
     )
 
     private val inputData: CardInputData = CardInputData()
@@ -124,7 +126,7 @@ internal class StoredCardDelegate(
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        sendAnalyticsEvent(coroutineScope)
+        setupAnalytics(coroutineScope)
         initializeInputData()
         fetchPublicKey()
 
@@ -143,10 +145,10 @@ internal class StoredCardDelegate(
         }
     }
 
-    private fun sendAnalyticsEvent(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "sendAnalyticsEvent")
+    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+        Logger.v(TAG, "setupAnalytics")
         coroutineScope.launch {
-            analyticsRepository.sendAnalyticsEvent()
+            analyticsRepository.setupAnalytics()
         }
     }
 
@@ -324,9 +326,10 @@ internal class StoredCardDelegate(
         cardNumber: String,
         firstCardBrand: CardBrand?,
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod().apply {
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
+        val cardPaymentMethod = CardPaymentMethod(
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+        ).apply {
             storedPaymentMethodId = getPaymentMethodId()
 
             if (!isCvcHidden()) {
@@ -382,18 +385,14 @@ internal class StoredCardDelegate(
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
             isCvcHidden() -> InputFieldUIState.HIDDEN
-            // We treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user
-            // is typing the card number.
-            cvcPolicy == Brand.FieldPolicy.OPTIONAL ||
-                cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
-
+            !cvcPolicy.isRequired() -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
 
     private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy): InputFieldUIState {
-        return when (expiryDatePolicy) {
-            Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+        return when {
+            !expiryDatePolicy.isRequired() -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }
@@ -406,13 +405,19 @@ internal class StoredCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        // no ops
+    }
+
+    // Bin doesn't change for stored cards
+    override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) = Unit
+
+    // Bin lookup is not performed for stored cards
+    override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
+
     override fun onCleared() {
         removeObserver()
         coroutineScope = null
-    }
-
-    override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
-        // no ops
     }
 
     companion object {

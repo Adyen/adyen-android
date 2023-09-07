@@ -209,7 +209,11 @@ internal class DefaultQRCodeDelegate(
         var qrImageUrl: String? = null
         if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
             val encodedQrCodeData = Uri.encode(action.qrCodeData)
-            qrImageUrl = String.format(QR_IMAGE_BASE_PATH, componentParams.environment.baseUrl, encodedQrCodeData)
+            qrImageUrl = String.format(
+                QR_IMAGE_BASE_PATH,
+                componentParams.environment.checkoutShopperBaseUrl.toString(),
+                encodedQrCodeData
+            )
         }
 
         var messageTextResource: Int? = null
@@ -278,14 +282,6 @@ internal class DefaultQRCodeDelegate(
         exceptionChannel.trySend(e)
     }
 
-    override fun onCleared() {
-        removeObserver()
-        statusPollingJob?.cancel()
-        statusPollingJob = null
-        statusCountDownTimer.cancel()
-        _coroutineScope = null
-    }
-
     private fun createOutputData() = QRCodeOutputData(
         isValid = false,
         paymentMethodType = null,
@@ -308,6 +304,19 @@ internal class DefaultQRCodeDelegate(
                 onFailure = { e -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(e)) }
             )
         }
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        redirectHandler.setOnRedirectListener(listener)
+    }
+
+    override fun onCleared() {
+        removeObserver()
+        statusPollingJob?.cancel()
+        statusPollingJob = null
+        statusCountDownTimer.cancel()
+        _coroutineScope = null
+        redirectHandler.removeOnRedirectListener()
     }
 
     companion object {

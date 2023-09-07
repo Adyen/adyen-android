@@ -12,5 +12,7 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AnalyticsRepository {
-    suspend fun sendAnalyticsEvent()
+    suspend fun setupAnalytics()
+
+    fun getCheckoutAttemptId(): String?
 }

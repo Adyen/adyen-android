@@ -16,6 +16,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.Configuration
@@ -69,7 +70,7 @@ internal class TestActionDelegate :
         override val shopperLocale: Locale = Locale.US
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
-        override val isAnalyticsEnabled: Boolean? = null
+        override val analyticsConfiguration: AnalyticsConfiguration? = null
         override val amount: Amount = Amount.EMPTY
 
         override fun describeContents(): Int {
@@ -148,6 +149,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     ) = Unit
 
     override fun removeObserver() = Unit
+
+    override fun setOnRedirectListener(listener: () -> Unit) = Unit
 
     override fun onCleared() = Unit
 }

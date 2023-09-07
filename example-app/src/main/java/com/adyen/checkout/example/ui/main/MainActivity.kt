@@ -40,6 +40,7 @@ import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -84,6 +85,11 @@ class MainActivity : AppCompatActivity() {
                 launch { viewModel.eventFlow.collect(::onMainEvent) }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -172,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             is MainNavigation.Instant -> {
-                InstantFragment.show(supportFragmentManager)
+                InstantFragment.show(supportFragmentManager, navigation.paymentMethodType)
             }
         }
     }

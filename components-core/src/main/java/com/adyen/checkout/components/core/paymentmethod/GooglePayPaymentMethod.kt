@@ -15,7 +15,8 @@ import org.json.JSONObject
 
 @Parcelize
 class GooglePayPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
     var googlePayToken: String? = null,
     var googlePayCardNetwork: String? = null,
 ) : PaymentMethodDetails() {
@@ -30,6 +31,7 @@ class GooglePayPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
                         putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
                     }
@@ -41,6 +43,7 @@ class GooglePayPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethod {
                 return GooglePayPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     googlePayToken = jsonObject.getStringOrNull(GOOGLE_PAY_TOKEN),
                     googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK)
                 )

@@ -78,6 +78,8 @@ internal class GooglePayComponentDialogFragment :
                 amount = dropInViewModel.amount,
                 componentCallback = this,
                 sessionDetails = dropInViewModel.sessionDetails,
+                analyticsRepository = dropInViewModel.analyticsRepository,
+                onRedirect = protocol::onRedirect,
             ) as GooglePayComponent
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
@@ -102,7 +104,7 @@ internal class GooglePayComponentDialogFragment :
     private fun handleEvent(event: GooglePayFragmentEvent) {
         when (event) {
             is GooglePayFragmentEvent.StartGooglePay -> {
-                component.startGooglePayScreen(requireActivity(), GOOGLE_PAY_REQUEST_CODE)
+                component.startGooglePayScreen(requireActivity(), DropInActivity.GOOGLE_PAY_REQUEST_CODE)
             }
         }
     }

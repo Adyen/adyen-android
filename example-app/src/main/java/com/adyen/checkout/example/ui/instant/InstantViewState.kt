@@ -10,6 +10,6 @@ package com.adyen.checkout.example.ui.instant
 
 sealed class InstantViewState {
     object Loading : InstantViewState()
-    object Error : InstantViewState()
+    class Error(val errorMessage: String) : InstantViewState()
     object ShowComponent : InstantViewState()
 }

@@ -16,7 +16,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class BlikPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
     var blikCode: String? = null,
     var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
@@ -32,6 +33,7 @@ data class BlikPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(BLIK_CODE, modelObject.blikCode)
                         putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
@@ -43,6 +45,7 @@ data class BlikPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): BlikPaymentMethod {
                 return BlikPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     blikCode = jsonObject.getStringOrNull(BLIK_CODE),
                     storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID)
                 )

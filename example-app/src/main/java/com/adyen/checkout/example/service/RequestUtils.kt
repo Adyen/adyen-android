@@ -25,6 +25,7 @@ import com.adyen.checkout.example.data.api.model.RecurringProcessingModel
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
 import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
+import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
 import org.json.JSONObject
 
@@ -36,7 +37,7 @@ fun getPaymentMethodRequest(
     countryCode: String,
     shopperLocale: String,
     splitCardFundingSources: Boolean,
-    order: OrderRequest? = null
+    order: OrderRequest? = null,
 ): PaymentMethodsRequest {
     return PaymentMethodsRequest(
         merchantAccount = merchantAccount,
@@ -46,7 +47,7 @@ fun getPaymentMethodRequest(
         shopperLocale = shopperLocale,
         splitCardFundingSources = splitCardFundingSources,
         order = order,
-        channel = CHANNEL
+        channel = CHANNEL,
     )
 }
 
@@ -102,7 +103,7 @@ fun createPaymentRequest(
     redirectUrl: String,
     isThreeds2Enabled: Boolean,
     isExecuteThreeD: Boolean,
-    shopperEmail: String? = null,
+    shopperEmail: String?,
     force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
@@ -166,14 +167,22 @@ private fun getAdditionalData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boole
     executeThreeD = isExecuteThreeD.toString()
 )
 
-fun getSettingsInstallmentOptionsMode(settingsInstallmentOptionMode: Int) = when (settingsInstallmentOptionMode) {
-    0 -> null
-    1 -> mapOf(DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption())
-    2 -> mapOf(
-        DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption(plans = listOf(InstallmentPlan.REVOLVING.plan))
-    )
-    else -> mapOf(CARD_BASED_INSTALLMENT_OPTION to getSessionInstallmentOption())
-}
+fun getSettingsInstallmentOptionsMode(settingsInstallmentOptionMode: CardInstallmentOptionsMode) =
+    when (settingsInstallmentOptionMode) {
+        CardInstallmentOptionsMode.NONE -> null
+
+        CardInstallmentOptionsMode.DEFAULT -> mapOf(
+            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption()
+        )
+
+        CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> mapOf(
+            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption(plans = listOf(InstallmentPlan.REVOLVING.plan))
+        )
+
+        CardInstallmentOptionsMode.CARD_BASED_VISA -> mapOf(
+            CARD_BASED_INSTALLMENT_OPTION to getSessionInstallmentOption()
+        )
+    }
 
 @Suppress("MagicNumber")
 private fun getSessionInstallmentOption(

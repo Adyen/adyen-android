@@ -1,34 +1,24 @@
 name: Check PR
 
-# Every PR should be checked for static analysis
 on:
   pull_request:
     branches-ignore:
       - 'main'
     types: [ opened, synchronize, reopened ]
 
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
-  gradle-check:
-    # https://github.com/actions/virtual-environments/
-    runs-on: ubuntu-latest
-
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v3
-        
-      # Setup Java 17
-      # https://github.com/marketplace/actions/setup-java-jdk
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: 17
-          cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # Run gradlew check
-      - name: Gradle check
-        run: ./gradlew check --no-daemon
+  code_analysis:
+    name: Code analysis
+    uses: ./.github/workflows/code_analysis.yml
+  assemble:
+    name: Assemble
+    uses: ./.github/workflows/assemble.yml
+    needs: code_analysis
+  test:
+    name: Test
+    uses: ./.github/workflows/run_tests.yml
+    needs: assemble

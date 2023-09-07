@@ -27,4 +27,8 @@ interface RedirectHandler {
     fun parseRedirectResult(data: Uri?): JSONObject
 
     fun launchUriRedirect(context: Context, url: String?)
+
+    fun setOnRedirectListener(listener: () -> Unit)
+
+    fun removeOnRedirectListener()
 }

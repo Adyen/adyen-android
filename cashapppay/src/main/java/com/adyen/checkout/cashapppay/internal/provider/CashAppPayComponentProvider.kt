@@ -30,9 +30,10 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -58,6 +59,7 @@ class CashAppPayComponentProvider
 constructor(
     overrideComponentParams: ComponentParams? = null,
     overrideSessionParams: SessionParams? = null,
+    private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
         CashAppPayComponent,
@@ -101,13 +103,15 @@ constructor(
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null, paymentMethod)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -158,13 +162,15 @@ constructor(
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null, storedPaymentMethod)
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                analyticsService = analyticsService,
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -220,12 +226,17 @@ constructor(
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
-                analyticsService = analyticsService,
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 
@@ -280,6 +291,7 @@ constructor(
             }
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -301,12 +313,17 @@ constructor(
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsService = AnalyticsService(httpClient)
-            val analyticsRepository = DefaultAnalyticsRepository(
-                packageName = application.packageName,
-                locale = componentParams.shopperLocale,
-                source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
-                analyticsService = analyticsService,
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
                 analyticsMapper = AnalyticsMapper(),
             )
 

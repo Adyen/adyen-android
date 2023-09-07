@@ -15,7 +15,8 @@ import org.json.JSONObject
 
 @Parcelize
 class GenericPaymentMethod(
-    override var type: String? = null,
+    override var type: String?,
+    override var checkoutAttemptId: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
@@ -26,6 +27,7 @@ class GenericPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(GenericPaymentMethod::class.java, e)
@@ -34,7 +36,8 @@ class GenericPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): GenericPaymentMethod {
                 return GenericPaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE)
+                    type = jsonObject.getStringOrNull(TYPE),
+                    checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                 )
             }
         }
