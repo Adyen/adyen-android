@@ -196,6 +196,7 @@ class Adyen3DS2Component(
         }
     }
 
+    @Suppress("LongMethod")
     @Throws(ComponentException::class)
     private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprintAutomatically: Boolean) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
@@ -212,7 +213,9 @@ class Adyen3DS2Component(
             /* directoryServerId = */ fingerprintToken.directoryServerId,
             /* directoryServerPublicKey = */ fingerprintToken.directoryServerPublicKey,
             /* directoryServerRootCertificates = */ fingerprintToken.directoryServerRootCertificates,
-        ).build()
+        )
+            .deviceParameterBlockList(setOf(PHONE_NUMBER_PARAMETER))
+            .build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
@@ -394,6 +397,8 @@ class Adyen3DS2Component(
 
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
+
+        private const val PHONE_NUMBER_PARAMETER = "A005"
 
         private var sGotDestroyedWhileChallenging = false
     }
