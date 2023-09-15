@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -478,7 +479,7 @@ class DefaultCardDelegate(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        return if (componentParams.isHideCvc) {
+        return if (isCvcHidden()) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -549,7 +550,9 @@ class DefaultCardDelegate(
     }
 
     private fun isCvcHidden(): Boolean {
-        return componentParams.isHideCvc
+        val hiddenAfterBinLookup = componentParams.cvcVisibility == CVCVisibility.HIDE_FIRST &&
+            outputData.cvcUIState == InputFieldUIState.HIDDEN
+        return componentParams.cvcVisibility == CVCVisibility.ALWAYS_HIDE || hiddenAfterBinLookup
     }
 
     private fun isSocialSecurityNumberRequired(): Boolean {
@@ -606,10 +609,23 @@ class DefaultCardDelegate(
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
-        return when {
-            isCvcHidden() -> InputFieldUIState.HIDDEN
-            cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
-            else -> InputFieldUIState.REQUIRED
+
+        return when (componentParams.cvcVisibility) {
+            CVCVisibility.SHOW_FIRST -> {
+                when {
+                    cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
+                    else -> InputFieldUIState.REQUIRED
+                }
+            }
+
+            CVCVisibility.HIDE_FIRST -> {
+                when {
+                    cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
+                    else -> InputFieldUIState.REQUIRED
+                }
+            }
+
+            CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
         }
     }
 

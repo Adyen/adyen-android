@@ -37,12 +37,12 @@ class CardConfiguration private constructor(
     val supportedCardBrands: List<CardBrand>?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
-    val isHideCvc: Boolean?,
-    val isHideCvcStoredCard: Boolean?,
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
     val kcpAuthVisibility: KCPAuthVisibility?,
     val installmentConfiguration: InstallmentConfiguration?,
     val addressConfiguration: AddressConfiguration?,
+    val cvcVisibility: CVCVisibility?,
+    val storedCVCVisibility: StoredCVCVisibility?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
 
@@ -57,12 +57,12 @@ class CardConfiguration private constructor(
         private var holderNameRequired: Boolean? = null
         private var isStorePaymentFieldVisible: Boolean? = null
         private var shopperReference: String? = null
-        private var isHideCvc: Boolean? = null
-        private var isHideCvcStoredCard: Boolean? = null
         private var isSubmitButtonVisible: Boolean? = null
         private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
         private var kcpAuthVisibility: KCPAuthVisibility? = null
         private var installmentConfiguration: InstallmentConfiguration? = null
+        private var cvcVisibility: CVCVisibility? = null
+        private var storedCVCVisibility: StoredCVCVisibility? = null
         private var addressConfiguration: AddressConfiguration? = null
 
         /**
@@ -161,37 +161,6 @@ class CardConfiguration private constructor(
         }
 
         /**
-         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular
-         * payment.
-         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling
-         * this.
-         *
-         * Default is false.
-         *
-         * @param hideCvc If CVC should be hidden or not.
-         * @return [CardConfiguration.Builder]
-         */
-        fun setHideCvc(hideCvc: Boolean): Builder {
-            this.isHideCvc = hideCvc
-            return this
-        }
-
-        /**
-         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a stored payment
-         * flow.
-         * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
-         *
-         * Default is false.
-         *
-         * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
-         * @return [CardConfiguration.Builder]
-         */
-        fun setHideCvcStoredCard(hideCvcStoredCard: Boolean): Builder {
-            isHideCvcStoredCard = hideCvcStoredCard
-            return this
-        }
-
-        /**
          * Set if CPF/CNPJ field for Brazil merchants should be visible or not.
          *
          * Default is [SocialSecurityNumberVisibility.HIDE].
@@ -244,6 +213,39 @@ class CardConfiguration private constructor(
             return this
         }
 
+        // TODO docs
+        /**
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular
+         * payment.
+         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling
+         * this.
+         *
+         * Default is false.
+         *
+         * @param hideCvc If CVC should be hidden or not.
+         * @return [CardConfiguration.Builder]
+         */
+        fun setCvcVisibility(cvcVisibility: CVCVisibility): Builder {
+            this.cvcVisibility = cvcVisibility
+            return this
+        }
+
+        // TODO docs
+        /**
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a stored payment
+         * flow.
+         * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
+         *
+         * Default is false.
+         *
+         * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
+         * @return [CardConfiguration.Builder]
+         */
+        fun setStoredCvcVisibility(storedCVCVisibility: StoredCVCVisibility): Builder {
+            this.storedCVCVisibility = storedCVCVisibility
+            return this
+        }
+
         /**
          * Sets if submit button will be visible or not.
          *
@@ -273,12 +275,12 @@ class CardConfiguration private constructor(
                 supportedCardBrands = supportedCardBrands,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = isStorePaymentFieldVisible,
-                isHideCvc = isHideCvc,
-                isHideCvcStoredCard = isHideCvcStoredCard,
                 socialSecurityNumberVisibility = socialSecurityNumberVisibility,
                 kcpAuthVisibility = kcpAuthVisibility,
                 installmentConfiguration = installmentConfiguration,
                 addressConfiguration = addressConfiguration,
+                cvcVisibility = cvcVisibility,
+                storedCVCVisibility = storedCVCVisibility,
                 genericActionConfiguration = genericActionConfigurationBuilder.build()
             )
         }

@@ -6,6 +6,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
@@ -74,6 +75,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setInstallmentConfigurations(getInstallmentConfiguration())
             .setAmount(amount)
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
+            .setCvcVisibility(CVCVisibility.SHOW_FIRST)
             .build()
 
     private fun getCashAppPayConfiguration(): CashAppPayConfiguration =

@@ -9,10 +9,12 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -48,10 +50,10 @@ internal class BcmcComponentParamsMapperNew(
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
             addressParams = AddressParams.None,
             installmentParams = null,
-            isHideCvc = true,
-            isHideCvcStoredCard = true,
             kcpAuthVisibility = KCPAuthVisibility.HIDE,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
+            cvcVisibility = cvcVisibility ?: CVCVisibility.ALWAYS_HIDE,
+            storedCVCVisibility = StoredCVCVisibility.HIDE,
             supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.BCMC),
                 CardBrand(cardType = CardType.MAESTRO),

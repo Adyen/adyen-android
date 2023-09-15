@@ -10,6 +10,8 @@ package com.adyen.checkout.bcmc
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.card.CVCVisibility
+import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -35,6 +37,7 @@ class BcmcConfiguration private constructor(
     val isHolderNameRequired: Boolean?,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean?,
+    val cvcVisibility: CVCVisibility?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
 
@@ -49,6 +52,7 @@ class BcmcConfiguration private constructor(
         private var showStorePaymentField: Boolean? = null
         private var shopperReference: String? = null
         private var isSubmitButtonVisible: Boolean? = null
+        private var cvcVisibility: CVCVisibility? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -117,6 +121,23 @@ class BcmcConfiguration private constructor(
             return this
         }
 
+        // TODO docs
+        /**
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular
+         * payment.
+         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling
+         * this.
+         *
+         * Default is false.
+         *
+         * @param hideCvc If CVC should be hidden or not.
+         * @return [CardConfiguration.Builder]
+         */
+        fun setCvcVisibility(cvcVisibility: CVCVisibility): Builder {
+            this.cvcVisibility = cvcVisibility
+            return this
+        }
+
         /**
          * Sets if submit button will be visible or not.
          *
@@ -145,6 +166,7 @@ class BcmcConfiguration private constructor(
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,
                 isSubmitButtonVisible = isSubmitButtonVisible,
+                cvcVisibility = cvcVisibility,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

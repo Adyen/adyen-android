@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
@@ -31,10 +33,10 @@ data class CardComponentParams(
     val supportedCardBrands: List<CardBrand>,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean,
-    val isHideCvc: Boolean,
-    val isHideCvcStoredCard: Boolean,
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
     val kcpAuthVisibility: KCPAuthVisibility,
     val installmentParams: InstallmentParams?,
     val addressParams: AddressParams,
+    val cvcVisibility: CVCVisibility,
+    val storedCVCVisibility: StoredCVCVisibility
 ) : ComponentParams, ButtonParams

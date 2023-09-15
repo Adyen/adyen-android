@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -21,6 +22,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
@@ -545,8 +547,8 @@ internal class DefaultCardDelegateTest(
 
             delegate = createCardDelegate(
                 configuration = CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-                    .setHideCvc(true)
-                    .setHideCvcStoredCard(true)
+                    .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
+                    .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
                     .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
                     .setInstallmentConfigurations(installmentConfiguration)
                     .setHolderNameRequired(true)
@@ -1189,7 +1191,7 @@ internal class DefaultCardDelegateTest(
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
         return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setHideCvc(true)
+            .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
             .setShopperReference("shopper_android")
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setInstallmentConfigurations(

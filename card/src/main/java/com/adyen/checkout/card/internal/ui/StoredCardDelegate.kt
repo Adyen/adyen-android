@@ -14,6 +14,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -82,7 +83,7 @@ internal class StoredCardDelegate(
         isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = when {
-            componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+            isCvcHidden() -> Brand.FieldPolicy.HIDDEN
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -306,7 +307,7 @@ internal class StoredCardDelegate(
     }
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
-        return if (componentParams.isHideCvcStoredCard || noCvcBrands.contains(detectedCardType.cardBrand)) {
+        return if (isCvcHidden()) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -317,7 +318,7 @@ internal class StoredCardDelegate(
     }
 
     private fun isCvcHidden(): Boolean {
-        return componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType)
+        return componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE || noCvcBrands.contains(cardType)
     }
 
     private fun mapComponentState(
@@ -382,10 +383,9 @@ internal class StoredCardDelegate(
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
-        return when {
-            isCvcHidden() -> InputFieldUIState.HIDDEN
-            !cvcPolicy.isRequired() -> InputFieldUIState.OPTIONAL
-            else -> InputFieldUIState.REQUIRED
+        return when (componentParams.storedCVCVisibility) {
+            StoredCVCVisibility.SHOW -> InputFieldUIState.REQUIRED
+            StoredCVCVisibility.HIDE -> InputFieldUIState.HIDDEN
         }
     }
 

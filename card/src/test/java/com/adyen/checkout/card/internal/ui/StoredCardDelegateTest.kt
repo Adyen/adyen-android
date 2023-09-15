@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -19,6 +20,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
@@ -108,7 +110,7 @@ internal class StoredCardDelegateTest(
     fun `when component is initialized with cvc shown, then view flow emits StoredCardView`() = runTest {
         delegate = createCardDelegate(
             configuration = getDefaultCardConfigurationBuilder()
-                .setHideCvcStoredCard(false)
+                .setStoredCvcVisibility(StoredCVCVisibility.SHOW)
                 .build()
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -121,7 +123,7 @@ internal class StoredCardDelegateTest(
     fun `when component is initialized with cvc hidden, then view flow emits null`() = runTest {
         delegate = createCardDelegate(
             configuration = getDefaultCardConfigurationBuilder()
-                .setHideCvcStoredCard(true)
+                .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
                 .build()
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -202,7 +204,7 @@ internal class StoredCardDelegateTest(
         fun `security code is empty with hide cvc stored config, then output data should be valid`() = runTest {
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
-                    .setHideCvcStoredCard(true)
+                    .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
                     .build()
             )
 
@@ -496,7 +498,7 @@ internal class StoredCardDelegateTest(
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
         return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setHideCvc(true)
+            .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
             .setShopperReference("shopper_android")
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setInstallmentConfigurations(

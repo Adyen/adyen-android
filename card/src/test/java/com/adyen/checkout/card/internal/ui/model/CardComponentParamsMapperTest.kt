@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
@@ -16,6 +17,7 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
@@ -80,8 +82,8 @@ internal class CardComponentParamsMapperTest {
             .setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
             .setShopperReference(shopperReference)
             .setShowStorePaymentField(false)
-            .setHideCvc(true)
-            .setHideCvcStoredCard(true)
+            .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
+            .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
             .setSubmitButtonVisible(false)
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
@@ -107,8 +109,8 @@ internal class CardComponentParamsMapperTest {
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
             isSubmitButtonVisible = false,
-            isHideCvc = true,
-            isHideCvcStoredCard = true,
+            cvcVisibility = CVCVisibility.ALWAYS_HIDE,
+            storedCVCVisibility = StoredCVCVisibility.HIDE,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
             kcpAuthVisibility = KCPAuthVisibility.SHOW,
             installmentParams = expectedInstallmentParams,
@@ -451,12 +453,12 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = true,
-        isHideCvc: Boolean = false,
-        isHideCvcStoredCard: Boolean = false,
         socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
         kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentParams: InstallmentParams? = null,
         addressParams: AddressParams = AddressParams.None,
+        cvcVisibility: CVCVisibility = CVCVisibility.SHOW_FIRST,
+        storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
     ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -468,13 +470,13 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands = supportedCardBrands,
         shopperReference = shopperReference,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
-        isHideCvc = isHideCvc,
-        isHideCvcStoredCard = isHideCvcStoredCard,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         kcpAuthVisibility = kcpAuthVisibility,
         installmentParams = installmentParams,
         addressParams = addressParams,
-        amount = amount
+        amount = amount,
+        cvcVisibility = cvcVisibility,
+        storedCVCVisibility = storedCVCVisibility,
     )
 
     companion object {
