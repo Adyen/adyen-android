@@ -18,7 +18,11 @@ import androidx.lifecycle.ViewModel
  */
 @RestrictTo(RestrictTo.Scope.TESTS)
 fun ViewModel.invokeOnCleared() {
-    with(javaClass.getDeclaredMethod("onCleared")) {
+    var clazz = javaClass as Class<Any>
+    while (clazz.declaredMethods.toList().none { it.name == "onCleared" }) {
+        clazz = clazz.superclass as Class<Any>
+    }
+    with(clazz.getDeclaredMethod("onCleared")) {
         isAccessible = true
         invoke(this@invokeOnCleared)
     }
