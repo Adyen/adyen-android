@@ -9,12 +9,20 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.card.CVCVisibility
+import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.card.CardType
+import com.adyen.checkout.card.KCPAuthVisibility
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.StoredCVCVisibility
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -31,7 +39,7 @@ internal class BcmcComponentParamsMapperTest {
 
         val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
 
-        val expected = getBcmcComponentParams()
+        val expected = getCardComponentParams()
 
         assertEquals(expected, params)
     }
@@ -45,15 +53,17 @@ internal class BcmcComponentParamsMapperTest {
             .setHolderNameRequired(true)
             .setShowStorePaymentField(true)
             .setSubmitButtonVisible(false)
+            .setCvcVisibility(CVCVisibility.SHOW_FIRST)
             .build()
 
         val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
 
-        val expected = getBcmcComponentParams(
+        val expected = getCardComponentParams(
             isHolderNameRequired = true,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
-            isSubmitButtonVisible = false
+            isSubmitButtonVisible = false,
+            cvcVisibility = CVCVisibility.SHOW_FIRST
         )
 
         assertEquals(expected, params)
@@ -80,7 +90,7 @@ internal class BcmcComponentParamsMapperTest {
 
         val params = BcmcComponentParamsMapper(overrideParams, null).mapToParams(bcmcConfiguration, null)
 
-        val expected = getBcmcComponentParams(
+        val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
@@ -117,7 +127,7 @@ internal class BcmcComponentParamsMapperTest {
             )
         )
 
-        val expected = getBcmcComponentParams(isStorePaymentFieldVisible = expectedValue)
+        val expected = getCardComponentParams(isStorePaymentFieldVisible = expectedValue)
 
         assertEquals(expected, params)
     }
@@ -136,7 +146,7 @@ internal class BcmcComponentParamsMapperTest {
 
         // this is in practice DropInComponentParams, but we don't have access to it in this module and any
         // ComponentParams class can work
-        val overrideParams = dropInValue?.let { getBcmcComponentParams(amount = it) }
+        val overrideParams = dropInValue?.let { getCardComponentParams(amount = it) }
 
         val params = BcmcComponentParamsMapper(overrideParams, null).mapToParams(
             bcmcConfiguration,
@@ -148,7 +158,7 @@ internal class BcmcComponentParamsMapperTest {
             )
         )
 
-        val expected = getBcmcComponentParams(
+        val expected = getCardComponentParams(
             amount = expectedValue
         )
 
@@ -162,7 +172,7 @@ internal class BcmcComponentParamsMapperTest {
     )
 
     @Suppress("LongParameterList")
-    private fun getBcmcComponentParams(
+    private fun getCardComponentParams(
         shopperLocale: Locale = Locale.US,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
@@ -173,7 +183,8 @@ internal class BcmcComponentParamsMapperTest {
         isHolderNameRequired: Boolean = false,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = false,
-    ) = BcmcComponentParams(
+        cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_HIDE,
+    ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
         clientKey = clientKey,
@@ -183,7 +194,18 @@ internal class BcmcComponentParamsMapperTest {
         isSubmitButtonVisible = isSubmitButtonVisible,
         isHolderNameRequired = isHolderNameRequired,
         shopperReference = shopperReference,
-        isStorePaymentFieldVisible = isStorePaymentFieldVisible
+        isStorePaymentFieldVisible = isStorePaymentFieldVisible,
+        cvcVisibility = cvcVisibility,
+        addressParams = AddressParams.None,
+        installmentParams = null,
+        socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
+        kcpAuthVisibility = KCPAuthVisibility.HIDE,
+        storedCVCVisibility = StoredCVCVisibility.HIDE,
+        supportedCardBrands = listOf(
+            CardBrand(cardType = CardType.BCMC),
+            CardBrand(cardType = CardType.MAESTRO),
+            CardBrand(cardType = CardType.VISA)
+        )
     )
 
     companion object {
