@@ -12,7 +12,6 @@ import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
@@ -22,7 +21,6 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
@@ -449,7 +447,7 @@ internal class DefaultCardDelegateTest(
                     assertTrue(expiryDateState.validation is Validation.Valid)
                     assertTrue(securityCodeState.validation is Validation.Valid)
                     assertEquals(InputFieldUIState.OPTIONAL, cvcUIState)
-                    assertEquals(InputFieldUIState.OPTIONAL, expiryDateUIState)
+                    assertEquals(InputFieldUIState.HIDDEN, expiryDateUIState)
                     assertTrue(isDualBranded)
                 }
             }
@@ -547,8 +545,8 @@ internal class DefaultCardDelegateTest(
 
             delegate = createCardDelegate(
                 configuration = CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-                    .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
-                    .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
+                    .setHideCvc(true)
+                    .setHideCvcStoredCard(true)
                     .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
                     .setInstallmentConfigurations(installmentConfiguration)
                     .setHolderNameRequired(true)
@@ -1107,23 +1105,24 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `when card number is detected over network, then callback should be called with reliable result`() = runTest {
-            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+        fun `when card number is detected over network, then callback should be called with reliable result`() =
+            runTest {
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
 
-            delegate.setOnBinLookupListener { data ->
-                launch(this.coroutineContext) {
-                    with(data.first()) {
-                        assertEquals("mc", brand)
-                        assertEquals("mccredit", paymentMethodVariant)
-                        assertTrue(isReliable)
+                delegate.setOnBinLookupListener { data ->
+                    launch(this.coroutineContext) {
+                        with(data.first()) {
+                            assertEquals("mc", brand)
+                            assertEquals("mccredit", paymentMethodVariant)
+                            assertTrue(isReliable)
+                        }
                     }
                 }
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData { cardNumber = "5555444" }
             }
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.updateInputData { cardNumber = "5555444" }
-        }
 
         @Test
         fun `when callback is called multiple times, then it should only trigger if the data changed`() = runTest {
@@ -1191,7 +1190,7 @@ internal class DefaultCardDelegateTest(
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
         return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
+            .setHideCvc(true)
             .setShopperReference("shopper_android")
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setInstallmentConfigurations(

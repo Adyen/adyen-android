@@ -21,9 +21,10 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvider
-import com.adyen.checkout.bcmc.BcmcComponentNew
+import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProviderNew
+import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
@@ -248,7 +249,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
                 clientKey = clientKey
             )
 
-        checkCompileOnly { BcmcComponentNew.PROVIDER.isPaymentMethodSupported(paymentMethod) } ->
+        checkCompileOnly { BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } ->
             BcmcConfiguration.Builder(
                 shopperLocale = shopperLocale,
                 environment = environment,
@@ -616,14 +617,14 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { BcmcComponentNew.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+        checkCompileOnly { BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val bcmcConfiguration: BcmcConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, dropInConfiguration, context)
-            BcmcComponentProviderNew(dropInParams, sessionParams, analyticsRepository).get(
+            BcmcComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bcmcConfiguration,
-                callback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = componentCallback as ComponentCallback<BcmcComponentState>,
             )
         }
 

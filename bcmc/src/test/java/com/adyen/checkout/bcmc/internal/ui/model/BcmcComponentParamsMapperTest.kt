@@ -9,13 +9,13 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.StoredCVCVisibility
+import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
@@ -53,7 +53,6 @@ internal class BcmcComponentParamsMapperTest {
             .setHolderNameRequired(true)
             .setShowStorePaymentField(true)
             .setSubmitButtonVisible(false)
-            .setCvcVisibility(CVCVisibility.SHOW_FIRST)
             .build()
 
         val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
@@ -63,7 +62,7 @@ internal class BcmcComponentParamsMapperTest {
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
             isSubmitButtonVisible = false,
-            cvcVisibility = CVCVisibility.SHOW_FIRST
+            cvcVisibility = CVCVisibility.HIDE_FIRST
         )
 
         assertEquals(expected, params)
@@ -183,7 +182,7 @@ internal class BcmcComponentParamsMapperTest {
         isHolderNameRequired: Boolean = false,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = false,
-        cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_HIDE,
+        cvcVisibility: CVCVisibility = CVCVisibility.HIDE_FIRST,
     ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,

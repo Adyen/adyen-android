@@ -7,10 +7,12 @@
  */
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardInputData(
     var cardNumber: String = "",
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,

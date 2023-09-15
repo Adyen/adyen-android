@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -60,6 +61,7 @@ open class CardComponent constructor(
         componentEventHandler.initialize(viewModelScope)
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
@@ -73,6 +75,7 @@ open class CardComponent constructor(
         )
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun removeObserver() {
         cardDelegate.removeObserver()
         genericActionDelegate.removeObserver()

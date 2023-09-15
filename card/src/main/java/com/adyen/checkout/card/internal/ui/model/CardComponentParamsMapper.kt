@@ -9,12 +9,10 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -86,8 +84,16 @@ internal class CardComponentParamsMapper(
             kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
             installmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration),
             addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None,
-            cvcVisibility = cvcVisibility ?: CVCVisibility.SHOW_FIRST,
-            storedCVCVisibility = storedCVCVisibility ?: StoredCVCVisibility.SHOW
+            cvcVisibility = if (isHideCvc == true) {
+                CVCVisibility.ALWAYS_HIDE
+            } else {
+                CVCVisibility.ALWAYS_SHOW
+            },
+            storedCVCVisibility = if (isHideCvcStoredCard == true) {
+                StoredCVCVisibility.HIDE
+            } else {
+                StoredCVCVisibility.SHOW
+            }
         )
     }
 

@@ -14,11 +14,11 @@ import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 /**
  * Represents the state of [CardComponent].
  */
-open class CardComponentState(
+data class CardComponentState(
     override val data: PaymentComponentData<CardPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean,
-    open val cardBrand: CardBrand?,
-    open val binValue: String,
-    open val lastFourDigits: String?,
+    val cardBrand: CardBrand?,
+    val binValue: String,
+    val lastFourDigits: String?,
 ) : PaymentComponentState<CardPaymentMethod>

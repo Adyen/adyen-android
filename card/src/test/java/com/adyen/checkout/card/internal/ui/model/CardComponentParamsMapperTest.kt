@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CVCVisibility
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
@@ -17,7 +16,6 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
@@ -82,8 +80,8 @@ internal class CardComponentParamsMapperTest {
             .setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
             .setShopperReference(shopperReference)
             .setShowStorePaymentField(false)
-            .setCvcVisibility(CVCVisibility.ALWAYS_HIDE)
-            .setStoredCvcVisibility(StoredCVCVisibility.HIDE)
+            .setHideCvc(true)
+            .setHideCvcStoredCard(true)
             .setSubmitButtonVisible(false)
             .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
@@ -457,7 +455,7 @@ internal class CardComponentParamsMapperTest {
         kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentParams: InstallmentParams? = null,
         addressParams: AddressParams = AddressParams.None,
-        cvcVisibility: CVCVisibility = CVCVisibility.SHOW_FIRST,
+        cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
     ) = CardComponentParams(
         shopperLocale = shopperLocale,

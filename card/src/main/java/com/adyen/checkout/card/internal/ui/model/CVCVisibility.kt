@@ -6,12 +6,16 @@
  * Created by ozgur on 5/9/2023.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CVCVisibility {
-    SHOW_FIRST, HIDE_FIRST, ALWAYS_HIDE
+    ALWAYS_SHOW, HIDE_FIRST, ALWAYS_HIDE
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class StoredCVCVisibility {
     SHOW, HIDE
 }

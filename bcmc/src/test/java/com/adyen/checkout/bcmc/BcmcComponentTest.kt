@@ -46,17 +46,17 @@ internal class BcmcComponentTest(
     @Mock private val cardDelegate: CardDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
-    @Mock private val componentEventHandler: ComponentEventHandler<CardComponentState>,
+    @Mock private val componentEventHandler: ComponentEventHandler<BcmcComponentState>,
 ) {
 
-    private lateinit var component: BcmcComponentNew
+    private lateinit var component: BcmcComponent
 
     @BeforeEach
     fun before() {
         whenever(cardDelegate.viewFlow) doReturn MutableStateFlow(BcmcComponentViewType)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
-        component = BcmcComponentNew(
+        component = BcmcComponent(
             cardDelegate,
             genericActionDelegate,
             actionHandlingComponent,
@@ -112,7 +112,7 @@ internal class BcmcComponentTest(
     fun `when bcmc delegate view flow emits a value then component view flow should match that value`() = runTest {
         val bcmcDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(cardDelegate.viewFlow) doReturn bcmcDelegateViewFlow
-        component = BcmcComponentNew(
+        component = BcmcComponent(
             cardDelegate = cardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
@@ -133,7 +133,7 @@ internal class BcmcComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = BcmcComponentNew(
+        component = BcmcComponent(
             cardDelegate = cardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,

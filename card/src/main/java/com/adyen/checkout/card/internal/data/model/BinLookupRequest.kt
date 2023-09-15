@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.data.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -18,6 +19,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class BinLookupRequest(
     val encryptedBin: String? = null,
     val requestId: String? = null,

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.data.api
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
@@ -28,6 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDetectCardTypeRepository(
     private val cardEncrypter: BaseCardEncrypter,
     private val binLookupService: BinLookupService,
