@@ -26,6 +26,7 @@ internal data class CashAppPayAuthorizationData(
 
 internal data class CashAppPayOneTimeData(
     val grantId: String?,
+    val customerId: String?,
 )
 
 internal data class CashAppPayOnFileData(
