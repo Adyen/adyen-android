@@ -92,6 +92,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.onResume()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        when (intent.data?.path) {
+            InstantFragment.RETURN_URL_PATH -> {
+                (supportFragmentManager.findFragmentByTag(InstantFragment.TAG) as? InstantFragment)
+                    ?.onNewIntent(intent)
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -135,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                     ExampleAdvancedDropInService::class.java,
                 )
             }
+
             is MainNavigation.DropInWithSession -> {
                 DropIn.startPayment(
                     this,
@@ -143,6 +155,7 @@ class MainActivity : AppCompatActivity() {
                     navigation.dropInConfiguration,
                 )
             }
+
             is MainNavigation.DropInWithCustomSession -> {
                 DropIn.startPayment(
                     this,
@@ -152,31 +165,38 @@ class MainActivity : AppCompatActivity() {
                     ExampleSessionsDropInService::class.java
                 )
             }
+
             is MainNavigation.Bacs -> BacsFragment.show(supportFragmentManager)
             is MainNavigation.Blik -> {
                 val intent = Intent(this, BlikActivity::class.java)
                 startActivity(intent)
             }
+
             MainNavigation.Card -> {
                 val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
             }
+
             MainNavigation.CardWithSession -> {
                 val intent = Intent(this, SessionsCardActivity::class.java)
                 startActivity(intent)
             }
+
             MainNavigation.GiftCard -> {
                 val intent = Intent(this, GiftCardActivity::class.java)
                 startActivity(intent)
             }
+
             MainNavigation.GiftCardWithSession -> {
                 val intent = Intent(this, SessionsGiftCardActivity::class.java)
                 startActivity(intent)
             }
+
             MainNavigation.CardWithSessionTakenOver -> {
                 val intent = Intent(this, SessionsCardTakenOverActivity::class.java)
                 startActivity(intent)
             }
+
             is MainNavigation.Instant -> {
                 InstantFragment.show(supportFragmentManager, navigation.paymentMethodType)
             }

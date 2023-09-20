@@ -21,6 +21,7 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
+        <!-- We have to handle deep links to fragments with this activity. -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
@@ -30,6 +31,22 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Use a different intent filter then the one used to handle the Drop-In result
+            (if you have both Drop-In and standalone components in your app). If you don't do this
+            the user will have to choose which Activity is used to handle the result, which is a
+            confusing user experience. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/instant"
+                    android:scheme="adyencheckout" />
             </intent-filter>
 
         </activity>
