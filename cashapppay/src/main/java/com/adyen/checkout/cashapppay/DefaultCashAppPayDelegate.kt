@@ -164,6 +164,7 @@ internal class DefaultCashAppPayDelegate(
         val oneTimeGrant = grants.find { it.type == GrantType.ONE_TIME } ?: return null
         return CashAppPayOneTimeData(
             grantId = oneTimeGrant.id,
+            customerId = oneTimeGrant.customerId,
         )
     }
 
@@ -195,7 +196,7 @@ internal class DefaultCashAppPayDelegate(
 
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             grantId = oneTimeData?.grantId,
-            customerId = onFileData?.customerId,
+            customerId = onFileData?.customerId ?: oneTimeData?.customerId,
             onFileGrantId = onFileData?.grantId,
             cashtag = onFileData?.cashTag,
         ).apply {

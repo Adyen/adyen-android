@@ -30,6 +30,7 @@ class CashAppPayAuthorizationData(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CashAppPayOneTimeData(
     val grantId: String?,
+    val customerId: String?,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
