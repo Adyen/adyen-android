@@ -171,7 +171,7 @@ constructor(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             grantId = oneTimeData?.grantId,
-            customerId = onFileData?.customerId,
+            customerId = onFileData?.customerId ?: oneTimeData?.customerId,
             onFileGrantId = onFileData?.grantId,
             cashtag = onFileData?.cashTag,
         )
@@ -292,7 +292,8 @@ constructor(
 
     private fun createAuthorizationData(customerResponseData: CustomerResponseData): CashAppPayAuthorizationData {
         val grants = customerResponseData.grants.orEmpty()
-        val oneTimeData = grants.find { it.type == GrantType.ONE_TIME }?.let { CashAppPayOneTimeData(it.id) }
+        val oneTimeData =
+            grants.find { it.type == GrantType.ONE_TIME }?.let { CashAppPayOneTimeData(it.id, it.customerId) }
         val onFileData = grants.find { it.type == GrantType.EXTENDED }?.let {
             CashAppPayOnFileData(
                 grantId = it.id,
