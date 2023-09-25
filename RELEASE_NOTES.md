@@ -8,5 +8,5 @@
 [//]: # ( # Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Changed
-- Updated device information collection during device fingerprinting process.
+## Fixed
+- Fixed Cash App payments being refused because of missing `customerId` during `/payments/details` call.
