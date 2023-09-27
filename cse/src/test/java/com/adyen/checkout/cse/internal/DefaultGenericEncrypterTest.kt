@@ -23,15 +23,15 @@ import java.util.TimeZone
 
 @ExtendWith(MockitoExtension::class)
 internal class DefaultGenericEncrypterTest(
-    @Mock private val clientSideEncrypter: ClientSideEncrypter,
     @Mock private val dateGenerator: DateGenerator,
+    @Mock private val jsonWebEncryptor: JSONWebEncryptor,
 ) {
-    private val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+    private val genericEncrypter = DefaultGenericEncrypter(dateGenerator, jsonWebEncryptor)
 
     @BeforeEach
     fun setup() {
         whenever(dateGenerator.getCurrentDate()) doReturn DATE
-        whenever(clientSideEncrypter.encrypt(any(), any())).thenAnswer {
+        whenever(jsonWebEncryptor.encrypt(any(), any())).thenAnswer {
             "${it.arguments[0]}-${it.arguments[1]}"
         }
     }

@@ -464,7 +464,7 @@ internal class StoredCardDelegateTest(
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
             componentParams = componentParams,
-            cardEncrypter = cardEncrypter,
+            cardEncryptor = cardEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
             order = order,

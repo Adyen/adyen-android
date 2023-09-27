@@ -32,10 +32,7 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultCardEncrypter
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -90,10 +87,7 @@ constructor(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val clientSideEncrypter = ClientSideEncrypter()
-        val dateGenerator = DateGenerator()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val cardEncrypter = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -118,7 +112,7 @@ constructor(
                 analyticsRepository = analyticsRepository,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncrypter,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
@@ -158,10 +152,7 @@ constructor(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val clientSideEncrypter = ClientSideEncrypter()
-        val dateGenerator = DateGenerator()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
                 configuration = configuration,
@@ -190,7 +181,7 @@ constructor(
                 analyticsRepository = analyticsRepository,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 

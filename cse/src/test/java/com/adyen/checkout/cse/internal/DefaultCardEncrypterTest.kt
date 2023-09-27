@@ -24,18 +24,18 @@ import java.util.Calendar
 import java.util.TimeZone
 
 @ExtendWith(MockitoExtension::class)
-class DefaultCardEncrypterTest(
-    @Mock private val clientSideEncrypter: ClientSideEncrypter,
+internal class DefaultCardEncrypterTest(
     @Mock private val dateGenerator: DateGenerator,
+    @Mock private val jsonWebEncryptor: JSONWebEncryptor,
 ) {
     private val cardEncrypter = DefaultCardEncrypter(
-        DefaultGenericEncrypter(clientSideEncrypter, dateGenerator),
+        DefaultGenericEncrypter(dateGenerator, jsonWebEncryptor),
     )
 
     @BeforeEach
     fun setup() {
         whenever(dateGenerator.getCurrentDate()) doReturn DATE
-        whenever(clientSideEncrypter.encrypt(any(), any())).thenAnswer {
+        whenever(jsonWebEncryptor.encrypt(any(), any())).thenAnswer {
             "${it.arguments[0]}-${it.arguments[1]}"
         }
     }

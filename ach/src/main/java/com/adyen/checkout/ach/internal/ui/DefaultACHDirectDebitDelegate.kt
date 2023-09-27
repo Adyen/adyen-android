@@ -66,7 +66,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
-    private val genericEncrypter: BaseGenericEncrypter,
+    private val genericEncryptor: BaseGenericEncrypter,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
 ) : ACHDirectDebitDelegate, ButtonDelegate, UIStateDelegate {
@@ -277,12 +277,12 @@ internal class DefaultACHDirectDebitDelegate(
         }
 
         try {
-            val encryptedBankAccountNumber = genericEncrypter.encryptField(
+            val encryptedBankAccountNumber = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
                 fieldValueToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
-            val encryptedBankLocationId = genericEncrypter.encryptField(
+            val encryptedBankLocationId = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
                 fieldValueToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey

@@ -46,10 +46,8 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultCardEncrypter
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.CardEncryptorFactory
+import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -123,12 +121,10 @@ constructor(
                 null,
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val genericEncryptor = GenericEncryptorFactory.provide()
+            val cardEncryptor = CardEncryptorFactory.provide()
             val binLookupService = BinLookupService(httpClient)
-            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
             val addressService = AddressService(httpClient)
@@ -157,8 +153,8 @@ constructor(
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
-                cardEncrypter = cardEncrypter,
-                genericEncrypter = genericEncrypter,
+                cardEncryptor = cardEncryptor,
+                genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle)
             )
 
@@ -204,12 +200,10 @@ constructor(
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val genericEncryptor = GenericEncryptorFactory.provide()
+            val cardEncryptor = CardEncryptorFactory.provide()
             val binLookupService = BinLookupService(httpClient)
-            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
             val addressService = AddressService(httpClient)
@@ -239,8 +233,8 @@ constructor(
                 addressRepository = addressRepository,
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
-                cardEncrypter = cardEncrypter,
-                genericEncrypter = genericEncrypter,
+                cardEncryptor = cardEncryptor,
+                genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle)
             )
 
@@ -301,10 +295,7 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val cardEncryptor = CardEncryptorFactory.provide()
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -324,7 +315,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle)
             )
@@ -372,10 +363,7 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val cardEncryptor = CardEncryptorFactory.provide()
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -396,7 +384,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle)
             )

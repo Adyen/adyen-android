@@ -70,7 +70,7 @@ internal class StoredCardDelegate(
     private val order: OrderRequest?,
     override val componentParams: CardComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val cardEncrypter: BaseCardEncrypter,
+    private val cardEncryptor: BaseCardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
@@ -278,7 +278,7 @@ internal class StoredCardDelegate(
                 )
             }
 
-            cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
             return CardComponentState(

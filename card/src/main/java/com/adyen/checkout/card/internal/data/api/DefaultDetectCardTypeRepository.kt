@@ -31,7 +31,7 @@ import java.util.UUID
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDetectCardTypeRepository(
-    private val cardEncrypter: BaseCardEncrypter,
+    private val cardEncryptor: BaseCardEncrypter,
     private val binLookupService: BinLookupService,
 ) : DetectCardTypeRepository {
 
@@ -169,7 +169,7 @@ class DefaultDetectCardTypeRepository(
         type: String?
     ): BinLookupResponse? {
         return runSuspendCatching {
-            val encryptedBin = cardEncrypter.encryptBin(cardNumber, publicKey)
+            val encryptedBin = cardEncryptor.encryptBin(cardNumber, publicKey)
             val cardBrands = supportedCardBrands.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands, type)
 

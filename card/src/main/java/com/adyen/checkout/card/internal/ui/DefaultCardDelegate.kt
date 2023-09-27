@@ -97,8 +97,8 @@ class DefaultCardDelegate(
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: BaseCardEncrypter,
-    private val genericEncrypter: BaseGenericEncrypter,
+    private val cardEncryptor: BaseCardEncrypter,
+    private val genericEncryptor: BaseGenericEncrypter,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
 
@@ -435,7 +435,7 @@ class DefaultCardDelegate(
                 )
             }
 
-            cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
 
@@ -673,7 +673,7 @@ class DefaultCardDelegate(
 
             if (isKCPAuthRequired()) {
                 publicKey?.let { publicKey ->
-                    encryptedPassword = genericEncrypter.encryptField(
+                    encryptedPassword = genericEncryptor.encryptField(
                         ENCRYPTION_KEY_FOR_KCP_PASSWORD,
                         stateOutputData.kcpCardPasswordState.value,
                         publicKey

@@ -1182,11 +1182,11 @@ internal class DefaultCardDelegateTest(
             order = order,
             publicKeyRepository = publicKeyRepository,
             componentParams = componentParams,
-            cardEncrypter = cardEncrypter,
+            cardEncryptor = cardEncrypter,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,
             cardValidationMapper = cardValidationMapper,
-            genericEncrypter = genericEncrypter,
+            genericEncryptor = genericEncrypter,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
         )

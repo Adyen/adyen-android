@@ -60,13 +60,13 @@ internal class DefaultGiftCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) {
 
-    private lateinit var cardEncrypter: TestCardEncrypter
+    private lateinit var cardEncryptor: TestCardEncrypter
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var delegate: DefaultGiftCardDelegate
 
     @BeforeEach
     fun before() {
-        cardEncrypter = TestCardEncrypter()
+        cardEncryptor = TestCardEncrypter()
         publicKeyRepository = TestPublicKeyRepository()
         delegate = createGiftCardDelegate()
     }
@@ -121,7 +121,7 @@ internal class DefaultGiftCardDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            cardEncrypter.shouldThrowException = true
+            cardEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -403,7 +403,7 @@ internal class DefaultGiftCardDelegateTest(
         order = order,
         publicKeyRepository = publicKeyRepository,
         componentParams = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null),
-        cardEncrypter = cardEncrypter,
+        cardEncryptor = cardEncryptor,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
     )

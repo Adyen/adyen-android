@@ -63,7 +63,7 @@ internal class DefaultGiftCardDelegate(
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: GiftCardComponentParams,
-    private val cardEncrypter: BaseCardEncrypter,
+    private val cardEncryptor: BaseCardEncrypter,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) : GiftCardDelegate {
 
@@ -249,7 +249,7 @@ internal class DefaultGiftCardDelegate(
             build()
         }
 
-        cardEncrypter.encryptFields(unencryptedCard, publicKey)
+        cardEncryptor.encryptFields(unencryptedCard, publicKey)
     } catch (e: EncryptionException) {
         exceptionChannel.trySend(e)
         null

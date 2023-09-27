@@ -7,13 +7,11 @@
  */
 package com.adyen.checkout.cse.internal
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultCardEncrypter(
+internal class DefaultCardEncrypter(
     private val genericEncrypter: BaseGenericEncrypter
 ) : BaseCardEncrypter {
 
@@ -45,10 +43,12 @@ class DefaultCardEncrypter(
                         publicKey = publicKey
                     )
                 }
+
                 unencryptedCard.expiryMonth == null && unencryptedCard.expiryYear == null -> {
                     encryptedExpiryMonth = null
                     encryptedExpiryYear = null
                 }
+
                 else -> {
                     throw EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null)
                 }
