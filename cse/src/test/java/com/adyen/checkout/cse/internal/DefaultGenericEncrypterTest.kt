@@ -22,11 +22,11 @@ import java.util.Calendar
 import java.util.TimeZone
 
 @ExtendWith(MockitoExtension::class)
-internal class DefaultGenericEncrypterTest(
+internal class DefaultGenericEncryptorTest(
     @Mock private val dateGenerator: DateGenerator,
     @Mock private val jsonWebEncryptor: JSONWebEncryptor,
 ) {
-    private val genericEncrypter = DefaultGenericEncrypter(dateGenerator, jsonWebEncryptor)
+    private val genericEncryptor = DefaultGenericEncryptor(dateGenerator, jsonWebEncryptor)
 
     @BeforeEach
     fun setup() {
@@ -42,7 +42,7 @@ internal class DefaultGenericEncrypterTest(
         val value = "VALUE"
         val publicKey = "PUBLIC_KEY"
 
-        val encrypted = genericEncrypter.encryptField(
+        val encrypted = genericEncryptor.encryptField(
             fieldKeyToEncrypt = key,
             fieldValueToEncrypt = value,
             publicKey = publicKey

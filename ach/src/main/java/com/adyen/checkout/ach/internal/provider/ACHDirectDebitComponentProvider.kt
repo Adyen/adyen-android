@@ -115,7 +115,7 @@ constructor(
 
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
-            val genericEncrypter = GenericEncryptorFactory.provide()
+            val genericEncryptor = GenericEncryptorFactory.provide()
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
@@ -135,7 +135,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 addressRepository = addressRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
-                genericEncryptor = genericEncrypter,
+                genericEncryptor = genericEncryptor,
                 componentParams = componentParams,
                 order = order
             )

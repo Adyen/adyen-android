@@ -13,7 +13,7 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface BaseCardEncrypter {
+interface BaseCardEncryptor {
 
     fun encryptFields(
         unencryptedCard: UnencryptedCard,

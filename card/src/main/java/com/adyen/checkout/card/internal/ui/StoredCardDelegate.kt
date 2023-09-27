@@ -43,7 +43,7 @@ import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -70,7 +70,7 @@ internal class StoredCardDelegate(
     private val order: OrderRequest?,
     override val componentParams: CardComponentParams,
     private val analyticsRepository: AnalyticsRepository,
-    private val cardEncryptor: BaseCardEncrypter,
+    private val cardEncryptor: BaseCardEncryptor,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {

@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.cse.internal
 
-internal class DefaultGenericEncrypter(
+internal class DefaultGenericEncryptor(
     private val dateGenerator: DateGenerator,
     private val jweEncryptor: JSONWebEncryptor,
-) : BaseGenericEncrypter {
+) : BaseGenericEncryptor {
 
     override fun encryptField(fieldKeyToEncrypt: String, fieldValueToEncrypt: Any?, publicKey: String): String {
         return encryptFields(

@@ -13,10 +13,10 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CardEncryptorFactory {
 
-    fun provide(): BaseCardEncrypter {
+    fun provide(): BaseCardEncryptor {
         val dateGenerator = DateGenerator()
         val jsonWebEncryptor = JSONWebEncryptor()
-        val genericEncrypter = DefaultGenericEncrypter(dateGenerator, jsonWebEncryptor)
-        return DefaultCardEncrypter(genericEncrypter)
+        val genericEncryptor = DefaultGenericEncryptor(dateGenerator, jsonWebEncryptor)
+        return DefaultCardEncryptor(genericEncryptor)
     }
 }

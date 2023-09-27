@@ -87,7 +87,7 @@ constructor(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val cardEncrypter = CardEncryptorFactory.provide()
+        val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(configuration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -112,7 +112,7 @@ constructor(
                 analyticsRepository = analyticsRepository,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
-                cardEncryptor = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 

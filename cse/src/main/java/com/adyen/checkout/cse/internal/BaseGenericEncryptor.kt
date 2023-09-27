@@ -11,7 +11,7 @@ package com.adyen.checkout.cse.internal
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface BaseGenericEncrypter {
+interface BaseGenericEncryptor {
 
     fun encryptField(
         fieldKeyToEncrypt: String,

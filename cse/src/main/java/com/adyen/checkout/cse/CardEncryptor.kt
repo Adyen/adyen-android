@@ -14,7 +14,7 @@ import com.adyen.checkout.cse.internal.CardEncryptorFactory
  * Allows the encryption of card data to be sent to Adyen's APIs.
  * Use this class with the custom card integration.
  */
-object CardEncrypter {
+object CardEncryptor {
 
     private val encryptor = CardEncryptorFactory.provide()
 

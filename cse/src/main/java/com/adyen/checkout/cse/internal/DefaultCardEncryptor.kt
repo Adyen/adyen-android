@@ -11,9 +11,9 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 
-internal class DefaultCardEncrypter(
-    private val genericEncrypter: BaseGenericEncrypter
-) : BaseCardEncrypter {
+internal class DefaultCardEncryptor(
+    private val genericEncryptor: BaseGenericEncryptor
+) : BaseCardEncryptor {
 
     override fun encryptFields(
         unencryptedCard: UnencryptedCard,
@@ -21,7 +21,7 @@ internal class DefaultCardEncrypter(
     ): EncryptedCard {
         return try {
             val encryptedNumber = unencryptedCard.number?.let { number ->
-                genericEncrypter.encryptField(
+                genericEncryptor.encryptField(
                     fieldKeyToEncrypt = CARD_NUMBER_KEY,
                     fieldValueToEncrypt = number,
                     publicKey = publicKey
@@ -32,12 +32,12 @@ internal class DefaultCardEncrypter(
             val encryptedExpiryYear: String?
             when {
                 unencryptedCard.expiryMonth != null && unencryptedCard.expiryYear != null -> {
-                    encryptedExpiryMonth = genericEncrypter.encryptField(
+                    encryptedExpiryMonth = genericEncryptor.encryptField(
                         fieldKeyToEncrypt = EXPIRY_MONTH_KEY,
                         fieldValueToEncrypt = unencryptedCard.expiryMonth,
                         publicKey = publicKey
                     )
-                    encryptedExpiryYear = genericEncrypter.encryptField(
+                    encryptedExpiryYear = genericEncryptor.encryptField(
                         fieldKeyToEncrypt = EXPIRY_YEAR_KEY,
                         fieldValueToEncrypt = unencryptedCard.expiryYear,
                         publicKey = publicKey
@@ -55,7 +55,7 @@ internal class DefaultCardEncrypter(
             }
 
             val encryptedSecurityCode = unencryptedCard.cvc?.let { cvc ->
-                genericEncrypter.encryptField(CVC_KEY, cvc, publicKey)
+                genericEncryptor.encryptField(CVC_KEY, cvc, publicKey)
             }
             EncryptedCard(
                 encryptedCardNumber = encryptedNumber,
@@ -72,7 +72,7 @@ internal class DefaultCardEncrypter(
         unencryptedCard: UnencryptedCard,
         publicKey: String
     ): String {
-        return genericEncrypter.encryptFields(
+        return genericEncryptor.encryptFields(
             publicKey,
             CARD_NUMBER_KEY to unencryptedCard.number,
             EXPIRY_MONTH_KEY to unencryptedCard.expiryMonth,
@@ -83,7 +83,7 @@ internal class DefaultCardEncrypter(
     }
 
     override fun encryptBin(bin: String, publicKey: String): String {
-        return genericEncrypter.encryptField(
+        return genericEncryptor.encryptField(
             BIN_KEY,
             bin,
             publicKey

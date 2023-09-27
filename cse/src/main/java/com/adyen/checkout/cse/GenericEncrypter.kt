@@ -14,7 +14,7 @@ import com.adyen.checkout.cse.internal.GenericEncryptorFactory
  * Allows the encryption of any type of data to be sent to Adyen's APIs.
  * Use this class with custom component integrations.
  */
-object GenericEncrypter {
+object GenericEncryptor {
 
     private val encryptor = GenericEncryptorFactory.provide()
 

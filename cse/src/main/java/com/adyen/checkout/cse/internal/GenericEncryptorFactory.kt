@@ -13,9 +13,9 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object GenericEncryptorFactory {
 
-    fun provide(): BaseGenericEncrypter {
+    fun provide(): BaseGenericEncryptor {
         val dateGenerator = DateGenerator()
         val jweEncryptor = JSONWebEncryptor()
-        return DefaultGenericEncrypter(dateGenerator, jweEncryptor)
+        return DefaultGenericEncryptor(dateGenerator, jweEncryptor)
     }
 }
