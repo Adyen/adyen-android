@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.cse.internal
 
-import android.util.Base64
 import com.adyen.checkout.cse.EncryptionException
 import org.json.JSONObject
 import java.math.BigInteger
@@ -44,7 +43,7 @@ internal class JSONWebEncryptor {
     fun encrypt(publicKey: String, payload: String): String {
         val pubKey = generatePublicKey(publicKey)
         val cek = generateCEK()
-        val encryptedKey = Base64.encodeToString(encryptCEK(pubKey, cek), Base64.URL_SAFE or Base64.NO_WRAP)
+        val encryptedKey = Base64String(encryptCEK(pubKey, cek))
         val jweObject = encrypt(payload, cek, encryptedKey)
         return serialize(jweObject)
     }
@@ -103,8 +102,9 @@ internal class JSONWebEncryptor {
         return cipher
     }
 
-    private fun encrypt(payload: String, cek: SecretKey, encryptedKey: String): JWEObject {
-        val aad = getAAD()
+    private fun encrypt(payload: String, cek: SecretKey, encryptedKey: Base64String): JWEObject {
+        val base64Header = Base64String(HEADER.toString().encodeToByteArray())
+        val aad = getAAD(base64Header)
         val iv = generateIV()
         val compositeKey = CompositeKey(cek)
         val aesCipher = getAESCBCCipher(compositeKey.encKey, iv)
@@ -122,18 +122,16 @@ internal class JSONWebEncryptor {
         val authTag = hmac.copyOf(compositeKey.truncatedMacLength)
 
         return JWEObject(
-            header = HEADER.toString(),
+            header = base64Header,
             encryptedKey = encryptedKey,
-            iv = Base64.encodeToString(iv, Base64.URL_SAFE or Base64.NO_WRAP),
-            cipherText = Base64.encodeToString(cipherText, Base64.URL_SAFE or Base64.NO_WRAP),
-            authTag = Base64.encodeToString(authTag, Base64.URL_SAFE or Base64.NO_WRAP),
+            iv = Base64String(iv),
+            cipherText = Base64String(cipherText),
+            authTag = Base64String(authTag),
         )
     }
 
-    private fun getAAD(): ByteArray {
-        val bytes = HEADER.toString().toByteArray()
-        val base64Encoded = Base64.encodeToString(bytes, Base64.URL_SAFE or Base64.NO_WRAP)
-        return base64Encoded.toByteArray(Charsets.US_ASCII)
+    private fun getAAD(encodedHeader: Base64String): ByteArray {
+        return encodedHeader.value.toByteArray(Charsets.US_ASCII)
     }
 
     private fun generateIV(): ByteArray {
@@ -174,9 +172,8 @@ internal class JSONWebEncryptor {
     }
 
     private fun serialize(jweObject: JWEObject): String {
-        val encodedHeader =
-            Base64.encodeToString(jweObject.header.encodeToByteArray(), Base64.URL_SAFE or Base64.NO_WRAP)
-        return StringBuilder(encodedHeader)
+        return StringBuilder()
+            .append(jweObject.header)
             .append(".")
             .append(jweObject.encryptedKey)
             .append(".")
@@ -203,7 +200,7 @@ internal class JSONWebEncryptor {
         private const val CEK_BYTES = 64
         private const val IV_BYTES = 16
 
-        val HEADER = JSONObject().apply {
+        private val HEADER = JSONObject().apply {
             put("alg", "RSA-OAEP-256")
             put("enc", "A256CBC-HS512")
             put("version", "1")
