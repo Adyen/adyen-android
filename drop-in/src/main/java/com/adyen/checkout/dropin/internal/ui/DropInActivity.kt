@@ -380,8 +380,8 @@ internal class DropInActivity :
     }
 
     override fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        dropInService?.requestRemoveStoredPaymentMethod(storedPaymentMethod)
         setLoading(true)
+        dropInService?.requestRemoveStoredPaymentMethod(storedPaymentMethod)
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
