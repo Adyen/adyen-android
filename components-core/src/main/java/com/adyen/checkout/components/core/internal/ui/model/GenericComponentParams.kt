@@ -20,5 +20,5 @@ data class GenericComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
 ) : ComponentParams

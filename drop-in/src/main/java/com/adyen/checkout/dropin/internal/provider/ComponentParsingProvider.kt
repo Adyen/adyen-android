@@ -450,7 +450,7 @@ internal fun checkPaymentMethodAvailability(
     application: Application,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
-    amount: Amount,
+    amount: Amount?,
     sessionDetails: SessionDetails?,
     callback: ComponentAvailableCallback,
 ) {
@@ -476,7 +476,7 @@ internal fun checkPaymentMethodAvailability(
 internal fun getPaymentMethodAvailabilityCheck(
     dropInConfiguration: DropInConfiguration,
     paymentMethodType: String,
-    amount: Amount,
+    amount: Amount?,
     sessionDetails: SessionDetails?,
 ): PaymentMethodAvailabilityCheck<Configuration> {
     val dropInParams = dropInConfiguration.mapToParams(amount)
@@ -508,7 +508,7 @@ internal fun getComponentFor(
     fragment: Fragment,
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration,
-    amount: Amount,
+    amount: Amount?,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
     analyticsRepository: AnalyticsRepository,
@@ -585,7 +585,7 @@ internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
-    amount: Amount,
+    amount: Amount?,
     componentCallback: ComponentCallback<*>,
     sessionDetails: SessionDetails?,
     analyticsRepository: AnalyticsRepository,
@@ -900,7 +900,7 @@ internal fun getComponentFor(
     }
 }
 
-internal fun DropInConfiguration.mapToParams(amount: Amount): DropInComponentParams {
+internal fun DropInConfiguration.mapToParams(amount: Amount?): DropInComponentParams {
     return DropInComponentParamsMapper().mapToParams(this, amount)
 }
 

@@ -30,7 +30,7 @@ constructor(
 ) {
 
     protected var analyticsConfiguration: AnalyticsConfiguration? = null
-    protected var amount: Amount = Amount.EMPTY
+    protected var amount: Amount? = null
 
     init {
         if (!ValidationUtils.isClientKeyValid(clientKey)) {
@@ -69,7 +69,7 @@ constructor(
     /**
      * Sets the amount of the transaction.
      *
-     * Default is [Amount.EMPTY].
+     * Default is null.
      *
      * @param amount Amount of the transaction.
      */

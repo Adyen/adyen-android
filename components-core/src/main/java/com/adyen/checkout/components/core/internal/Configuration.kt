@@ -14,5 +14,5 @@ interface Configuration : Parcelable {
     val environment: Environment
     val clientKey: String
     val analyticsConfiguration: AnalyticsConfiguration?
-    val amount: Amount
+    val amount: Amount?
 }

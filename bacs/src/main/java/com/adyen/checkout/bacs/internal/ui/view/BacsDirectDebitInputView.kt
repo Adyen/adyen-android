@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -258,9 +257,10 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun setAmountConsentSwitchText(componentParams: ButtonComponentParams) {
-        if (!componentParams.amount.isEmpty) {
+        val amount = componentParams.amount
+        if (amount != null) {
             val formattedAmount = CurrencyUtils.formatAmount(
-                componentParams.amount,
+                amount,
                 componentParams.shopperLocale
             )
             binding.switchConsentAmount.text =

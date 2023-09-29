@@ -36,7 +36,7 @@ internal class DropInViewModelFactory(
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
         val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
-        val amount: Amount = requireNotNull(bundleHandler.amount)
+        val amount: Amount? = bundleHandler.amount
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
         val session = bundleHandler.sessionDetails
 

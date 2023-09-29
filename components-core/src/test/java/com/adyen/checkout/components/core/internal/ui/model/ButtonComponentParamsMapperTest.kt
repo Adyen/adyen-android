@@ -108,7 +108,7 @@ internal class ButtonComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY,
+            amount = null,
             isSubmitButtonVisible = true,
         )
     }

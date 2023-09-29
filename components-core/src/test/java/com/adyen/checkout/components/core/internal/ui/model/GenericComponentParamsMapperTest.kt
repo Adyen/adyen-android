@@ -119,7 +119,7 @@ internal class GenericComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY
+            amount = null
         )
     }
 

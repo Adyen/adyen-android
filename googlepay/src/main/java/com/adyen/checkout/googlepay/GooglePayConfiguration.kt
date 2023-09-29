@@ -34,7 +34,7 @@ class GooglePayConfiguration private constructor(
     override val analyticsConfiguration: AnalyticsConfiguration?,
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
-    override val amount: Amount,
+    override val amount: Amount?,
     val totalPriceStatus: String?,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,

@@ -153,7 +153,7 @@ internal class BoletoComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
-        amount: Amount = Amount.EMPTY,
+        amount: Amount? = null,
         addressParams: AddressParams = AddressParams.FullAddress(
             defaultCountryCode = BRAZIL_COUNTRY_CODE,
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST_1,

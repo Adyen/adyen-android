@@ -50,7 +50,7 @@ internal class PaymentMethodsListViewModel(
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
     private val dropInConfiguration: DropInConfiguration,
-    private val amount: Amount,
+    private val amount: Amount?,
     private val sessionDetails: SessionDetails?,
 ) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 

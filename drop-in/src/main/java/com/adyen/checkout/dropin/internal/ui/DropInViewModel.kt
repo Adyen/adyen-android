@@ -62,8 +62,8 @@ internal class DropInViewModel(
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
-    var amount: Amount
-        get() = requireNotNull(bundleHandler.amount)
+    var amount: Amount?
+        get() = bundleHandler.amount
         private set(value) {
             bundleHandler.amount = value
         }
@@ -151,7 +151,7 @@ internal class DropInViewModel(
         return noStored && singlePm && paymentMethodHasComponent
     }
 
-    private fun getInitialAmount(): Amount {
+    private fun getInitialAmount(): Amount? {
         return sessionDetails?.amount ?: dropInConfiguration.amount
     }
 
@@ -325,11 +325,11 @@ internal class DropInViewModel(
         // include amount value if merchant passed it to the DropIn
         val existingAmount = paymentComponentState.data.amount
         when {
-            existingAmount != null && !existingAmount.isEmpty -> {
+            existingAmount != null -> {
                 Logger.d(TAG, "Payment amount already set: $existingAmount")
             }
 
-            !amount.isEmpty -> {
+            amount != null -> {
                 paymentComponentState.data.amount = amount
                 Logger.d(TAG, "Payment amount set: $amount")
             }

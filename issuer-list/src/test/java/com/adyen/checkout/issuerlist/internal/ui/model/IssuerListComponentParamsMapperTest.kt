@@ -58,7 +58,7 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
-            amount = Amount.EMPTY,
+            amount = null,
             isSubmitButtonVisible = false
         )
 
@@ -158,7 +158,7 @@ internal class IssuerListComponentParamsMapperTest {
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = false,
-            amount = Amount.EMPTY,
+            amount = null,
             isSubmitButtonVisible = true
         )
     }

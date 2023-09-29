@@ -23,7 +23,7 @@ internal data class BoletoComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     val addressParams: AddressParams,
     val isEmailVisible: Boolean,
 ) : ComponentParams, ButtonParams

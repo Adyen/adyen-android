@@ -23,7 +23,7 @@ internal data class CashAppPayComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     val cashAppPayEnvironment: CashAppPayEnvironment,
     val returnUrl: String?,
     val showStorePaymentField: Boolean,
