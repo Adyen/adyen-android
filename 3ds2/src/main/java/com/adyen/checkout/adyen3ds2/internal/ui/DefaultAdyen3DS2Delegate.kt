@@ -204,7 +204,9 @@ internal class DefaultAdyen3DS2Delegate(
             fingerprintToken.directoryServerPublicKey,
             // directoryServerRootCertificates
             fingerprintToken.directoryServerRootCertificates,
-        ).build()
+        )
+            .deviceParameterBlockList(setOf(PHONE_NUMBER_PARAMETER))
+            .build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
@@ -491,5 +493,6 @@ internal class DefaultAdyen3DS2Delegate(
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
+        private const val PHONE_NUMBER_PARAMETER = "A005"
     }
 }
