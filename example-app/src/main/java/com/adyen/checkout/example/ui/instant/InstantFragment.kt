@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.instant
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,7 +47,7 @@ class InstantFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
-        val returnUrl = RedirectComponent.getReturnUrl(requireActivity().applicationContext)
+        val returnUrl = RedirectComponent.getReturnUrl(requireActivity().applicationContext) + RETURN_URL_PATH
         arguments = (arguments ?: bundleOf()).apply {
             putString(RETURN_URL_EXTRA, returnUrl)
         }
@@ -64,6 +65,10 @@ class InstantFragment : BottomSheetDialogFragment() {
                 launch { instantViewModel.instantViewState.collect(::onViewState) }
             }
         }
+    }
+
+    fun onNewIntent(intent: Intent) {
+        instantPaymentComponent?.handleIntent(intent)
     }
 
     private fun setupInstantComponent(componentData: InstantComponentData) {
@@ -127,9 +132,10 @@ class InstantFragment : BottomSheetDialogFragment() {
 
     companion object {
 
-        private const val TAG = "InstantFragment"
+        internal const val TAG = "InstantFragment"
         internal const val PAYMENT_METHOD_TYPE_EXTRA = "PAYMENT_METHOD_TYPE_EXTRA"
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val RETURN_URL_PATH = "/instant"
 
         fun show(fragmentManager: FragmentManager, paymentMethodType: String) {
             InstantFragment().apply {
