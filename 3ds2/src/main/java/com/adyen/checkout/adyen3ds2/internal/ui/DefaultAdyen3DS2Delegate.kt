@@ -205,7 +205,7 @@ internal class DefaultAdyen3DS2Delegate(
             // directoryServerRootCertificates
             fingerprintToken.directoryServerRootCertificates,
         )
-            .deviceParameterBlockList(setOf(PHONE_NUMBER_PARAMETER))
+            .deviceParameterBlockList(componentParams.deviceParameterBlockList)
             .build()
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -493,6 +493,5 @@ internal class DefaultAdyen3DS2Delegate(
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
-        private const val PHONE_NUMBER_PARAMETER = "A005"
     }
 }

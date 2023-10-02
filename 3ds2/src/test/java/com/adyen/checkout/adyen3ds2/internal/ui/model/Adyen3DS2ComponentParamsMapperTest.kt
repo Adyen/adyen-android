@@ -117,6 +117,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         amount = amount,
         uiCustomization = uiCustomization,
         threeDSRequestorAppURL = threeDSRequestorAppURL,
+        deviceParameterBlockList = Adyen3DS2ComponentParamsMapper.DEVICE_PARAMETER_BLOCK_LIST,
     )
 
     companion object {

@@ -43,7 +43,6 @@ import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.json.JSONException
@@ -66,7 +65,6 @@ import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultAdyen3DS2DelegateTest(
     @Mock private val submitFingerprintRepository: SubmitFingerprintRepository,
@@ -89,7 +87,9 @@ internal class DefaultAdyen3DS2DelegateTest(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
             componentParams = Adyen3DS2ComponentParamsMapper(null, null)
-                .mapToParams(configuration, null),
+                .mapToParams(configuration, null)
+                // Set it to null to avoid a crash in 3DS2 library (they use Android APIs)
+                .copy(deviceParameterBlockList = null),
             submitFingerprintRepository = submitFingerprintRepository,
             paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
