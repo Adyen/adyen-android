@@ -20,5 +20,5 @@ interface ComponentParams {
     val clientKey: String
     val analyticsParams: AnalyticsParams
     val isCreatedByDropIn: Boolean
-    val amount: Amount
+    val amount: Amount?
 }

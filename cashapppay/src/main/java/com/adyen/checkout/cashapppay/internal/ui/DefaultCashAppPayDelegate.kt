@@ -35,7 +35,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -179,7 +178,7 @@ constructor(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = cashAppPayPaymentMethod,
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
             storePaymentMethod = onFileData != null,
         )
 
@@ -223,8 +222,7 @@ constructor(
     private fun getOneTimeAction(): CashAppPayPaymentAction.OneTimeAction? {
         val amount = componentParams.amount
 
-        // We don't create an OneTimeAction for transactions with no amount
-        if (amount.value <= 0) return null
+        if (amount?.value == null || amount.value == 0L) return null
 
         val cashAppPayCurrency = when (amount.currency) {
             CheckoutCurrency.USD.name -> CashAppPayCurrency.USD

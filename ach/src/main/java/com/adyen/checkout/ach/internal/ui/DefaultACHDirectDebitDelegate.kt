@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -300,7 +299,7 @@ internal class DefaultACHDirectDebitDelegate(
                 order = order,
                 storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
                 paymentMethod = achPaymentMethod,
-                amount = componentParams.amount.takeUnless { it.isEmpty },
+                amount = componentParams.amount,
             )
 
             if (isAddressRequired(outputData.addressUIState)) {

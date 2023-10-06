@@ -28,7 +28,7 @@ class OnlineBankingPLConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
-    override val amount: Amount,
+    override val amount: Amount?,
     override val viewType: IssuerListViewType?,
     override val isSubmitButtonVisible: Boolean?,
     override val hideIssuerLogos: Boolean?,

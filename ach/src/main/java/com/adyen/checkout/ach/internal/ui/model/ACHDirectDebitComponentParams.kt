@@ -22,7 +22,7 @@ internal data class ACHDirectDebitComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean,
     val addressParams: AddressParams,
     val isStorePaymentFieldVisible: Boolean,

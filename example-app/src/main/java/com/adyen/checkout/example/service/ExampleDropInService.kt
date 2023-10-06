@@ -56,7 +56,7 @@ class ExampleDropInService : DropInService() {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentJson,
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = state.data.amount,
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),

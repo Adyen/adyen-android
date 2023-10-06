@@ -21,7 +21,7 @@ import org.json.JSONObject
 @Parcelize
 data class OrderPaymentMethod(
     val type: String,
-    val amount: Amount,
+    val amount: Amount?,
     val lastFour: String,
     val transactionLimit: Amount?
 ) : ModelObject() {
@@ -55,8 +55,7 @@ data class OrderPaymentMethod(
                     OrderPaymentMethod(
                         type = jsonObject.getString(TYPE),
                         lastFour = jsonObject.getString(LAST_FOUR),
-                        amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER)
-                            ?: Amount.EMPTY,
+                        amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                         transactionLimit = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(TRANSACTION_LIMIT),
                             Amount.SERIALIZER

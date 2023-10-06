@@ -29,7 +29,7 @@ import java.util.Locale
 
 internal class PreselectedStoredPaymentViewModel(
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val amount: Amount,
+    private val amount: Amount?,
     private val dropInConfiguration: DropInConfiguration,
 ) : ViewModel(), ComponentCallback<PaymentComponentState<*>> {
 
@@ -111,7 +111,7 @@ internal data class PreselectedStoredState(
 internal sealed class ButtonState {
     object Loading : ButtonState()
     data class ContinueButton(@StringRes val labelResId: Int = R.string.continue_button) : ButtonState()
-    data class PayButton(val amount: Amount, val shopperLocale: Locale) : ButtonState()
+    data class PayButton(val amount: Amount?, val shopperLocale: Locale) : ButtonState()
 }
 
 internal sealed class PreselectedStoredEvent {

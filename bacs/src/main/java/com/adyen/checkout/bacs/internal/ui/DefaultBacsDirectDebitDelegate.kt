@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -105,10 +104,12 @@ internal class DefaultBacsDirectDebitDelegate(
                 Logger.e(TAG, "Current mode is already $mode")
                 false
             }
+
             mode == BacsDirectDebitMode.CONFIRMATION && !outputData.isValid -> {
                 Logger.e(TAG, "Cannot set confirmation view when input is not valid")
                 false
             }
+
             else -> {
                 Logger.d(TAG, "Setting mode to $mode")
                 updateInputData { this.mode = mode }
@@ -133,6 +134,7 @@ internal class DefaultBacsDirectDebitDelegate(
                     submitHandler.onSubmit(state)
                 }
             }
+
             BacsDirectDebitMode.CONFIRMATION -> {
                 submitHandler.onSubmit(state)
             }
@@ -199,7 +201,7 @@ internal class DefaultBacsDirectDebitDelegate(
             shopperEmail = outputData.shopperEmailState.value,
             paymentMethod = bacsDirectDebitPaymentMethod,
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
         )
 
         return BacsDirectDebitComponentState(

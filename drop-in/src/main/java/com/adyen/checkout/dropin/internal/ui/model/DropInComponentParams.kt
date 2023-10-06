@@ -21,7 +21,7 @@ internal data class DropInComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     val showPreselectedStoredPaymentMethod: Boolean,
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,

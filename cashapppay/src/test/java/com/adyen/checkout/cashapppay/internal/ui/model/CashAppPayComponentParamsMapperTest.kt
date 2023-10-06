@@ -276,7 +276,7 @@ internal class CashAppPayComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
-        amount: Amount = Amount.EMPTY,
+        amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,
         cashAppPayEnvironment: CashAppPayEnvironment = CashAppPayEnvironment.SANDBOX,
         returnUrl: String = TEST_RETURN_URL,

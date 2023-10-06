@@ -13,7 +13,6 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.internal.util.isZero
 import com.adyen.checkout.ui.core.R
 import java.util.Locale
@@ -23,7 +22,7 @@ object PayButtonFormatter {
 
     @Suppress("LongParameterList")
     fun getPayButtonText(
-        amount: Amount,
+        amount: Amount?,
         locale: Locale,
         localizedContext: Context,
         @StringRes emptyAmountStringResId: Int = R.string.pay_button,
@@ -31,12 +30,14 @@ object PayButtonFormatter {
         @StringRes positiveAmountStringResId: Int = R.string.pay_button_with_value,
     ): String {
         return when {
-            amount.isEmpty -> {
+            amount == null -> {
                 localizedContext.getString(emptyAmountStringResId)
             }
+
             amount.isZero -> {
                 localizedContext.getString(zeroAmountStringResId)
             }
+
             else -> {
                 localizedContext.getString(positiveAmountStringResId, CurrencyUtils.formatAmount(amount, locale))
             }

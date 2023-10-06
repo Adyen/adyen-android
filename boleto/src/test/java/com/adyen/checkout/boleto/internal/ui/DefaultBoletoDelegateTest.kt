@@ -560,7 +560,7 @@ internal class DefaultBoletoDelegateTest(
             // configurationValue, expectedComponentStateValue
             Arguments.arguments(Amount("EUR", 100), Amount("EUR", 100)),
             Arguments.arguments(Amount("USD", 0), Amount("USD", 0)),
-            Arguments.arguments(Amount.EMPTY, null),
+            Arguments.arguments(null, null),
             Arguments.arguments(null, null),
         )
     }

@@ -21,7 +21,7 @@ import org.json.JSONObject
 @Parcelize
 data class OrderStatusResponse(
     val paymentMethods: List<OrderPaymentMethod>,
-    val remainingAmount: Amount
+    val remainingAmount: Amount?
 ) : ModelObject() {
 
     companion object {
@@ -54,7 +54,7 @@ data class OrderStatusResponse(
                         remainingAmount = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(REMAINING_AMOUNT),
                             Amount.SERIALIZER
-                        ) ?: Amount.EMPTY
+                        )
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(OrderStatusResponse::class.java, e)

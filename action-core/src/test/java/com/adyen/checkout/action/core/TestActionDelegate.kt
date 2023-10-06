@@ -71,7 +71,7 @@ internal class TestActionDelegate :
         override val environment: Environment = Environment.TEST
         override val clientKey: String = ""
         override val analyticsConfiguration: AnalyticsConfiguration? = null
-        override val amount: Amount = Amount.EMPTY
+        override val amount: Amount? = null
 
         override fun describeContents(): Int {
             throw NotImplementedError("This method shouldn't be used in tests")

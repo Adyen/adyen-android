@@ -16,7 +16,7 @@ internal class DropInComponentParamsMapper {
 
     fun mapToParams(
         dropInConfiguration: DropInConfiguration,
-        overrideAmount: Amount,
+        overrideAmount: Amount?,
     ): DropInComponentParams {
         with(dropInConfiguration) {
             return DropInComponentParams(

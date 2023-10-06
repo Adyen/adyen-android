@@ -44,7 +44,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -704,7 +703,7 @@ internal class DefaultCardDelegate(
             storePaymentMethod = if (showStorePaymentField()) stateOutputData.shouldStorePaymentMethod else null,
             shopperReference = componentParams.shopperReference,
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
         ).apply {
             if (isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value

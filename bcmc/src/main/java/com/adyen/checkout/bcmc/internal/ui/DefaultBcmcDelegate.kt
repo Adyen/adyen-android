@@ -32,7 +32,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -238,7 +237,7 @@ internal class DefaultBcmcDelegate(
             paymentMethod = cardPaymentMethod,
             storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
             shopperReference = componentParams.shopperReference,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
         )
 
         return BcmcComponentState(paymentComponentData, isInputValid = true, isReady = true)

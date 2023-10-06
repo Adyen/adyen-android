@@ -30,7 +30,7 @@ class BoletoConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
-    override val amount: Amount,
+    override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean?,
     val genericActionConfiguration: GenericActionConfiguration,
     val isEmailVisible: Boolean?

@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -206,7 +205,7 @@ internal class DefaultGiftCardDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = giftCardPaymentMethod,
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
         )
 
         return GiftCardComponentState(
@@ -272,11 +271,13 @@ internal class DefaultGiftCardDelegate(
                 _componentStateFlow.tryEmit(updatedState)
                 submitHandler.onSubmit(updatedState)
             }
+
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
                 exceptionChannel.trySend(
                     GiftCardException("Currency of the gift card does not match the currency of transaction.")
                 )
             }
+
             is GiftCardBalanceStatus.PartialPayment -> {
                 val updatedState = if (order == null) {
                     currentState.copy(giftCardAction = GiftCardAction.CreateOrder)
@@ -292,11 +293,13 @@ internal class DefaultGiftCardDelegate(
                 _componentStateFlow.tryEmit(updatedState)
                 submitHandler.onSubmit(updatedState)
             }
+
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
                 exceptionChannel.trySend(
                     GiftCardException("Amount of the transaction is zero.")
                 )
             }
+
             is GiftCardBalanceStatus.ZeroBalance -> {
                 exceptionChannel.trySend(
                     GiftCardException("Gift card has no balance.")

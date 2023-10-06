@@ -445,7 +445,7 @@ internal class CardComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
-        amount: Amount = Amount.EMPTY,
+        amount: Amount? = null,
         isHolderNameRequired: Boolean = false,
         isSubmitButtonVisible: Boolean = true,
         supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
