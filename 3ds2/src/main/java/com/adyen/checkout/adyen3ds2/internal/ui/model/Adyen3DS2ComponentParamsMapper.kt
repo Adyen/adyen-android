@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -38,6 +39,8 @@ internal class Adyen3DS2ComponentParamsMapper(
             amount = amount,
             uiCustomization = uiCustomization,
             threeDSRequestorAppURL = threeDSRequestorAppURL,
+            // Hardcoded for now, but in the feature we could make this configurable
+            deviceParameterBlockList = DEVICE_PARAMETER_BLOCK_LIST,
         )
     }
 
@@ -62,5 +65,12 @@ internal class Adyen3DS2ComponentParamsMapper(
         return copy(
             amount = sessionParams.amount ?: amount,
         )
+    }
+
+    companion object {
+        private const val PHONE_NUMBER_PARAMETER = "A005"
+
+        @VisibleForTesting
+        internal val DEVICE_PARAMETER_BLOCK_LIST = setOf(PHONE_NUMBER_PARAMETER)
     }
 }

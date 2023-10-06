@@ -24,4 +24,5 @@ internal data class Adyen3DS2ComponentParams(
     override val amount: Amount?,
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
+    val deviceParameterBlockList: Set<String>?,
 ) : ComponentParams
