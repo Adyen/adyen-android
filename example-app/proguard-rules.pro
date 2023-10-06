@@ -23,3 +23,8 @@
 # Temporary rules to fix an issue with the Cash App SDK
 -dontwarn kotlinx.serialization.KSerializer
 -dontwarn kotlinx.serialization.Serializable
+
+# Temporary rules to fix an issue with Retrofit
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
