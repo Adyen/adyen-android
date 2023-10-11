@@ -9,7 +9,6 @@
 package com.adyen.checkout.action.core.internal
 
 import android.content.Context
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
@@ -24,7 +23,6 @@ import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.Locale
 
 @Suppress("UNCHECKED_CAST")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>

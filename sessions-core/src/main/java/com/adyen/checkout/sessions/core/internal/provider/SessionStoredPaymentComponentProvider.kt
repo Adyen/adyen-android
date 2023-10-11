@@ -10,7 +10,6 @@ package com.adyen.checkout.sessions.core.internal.provider
 
 import android.app.Application
 import androidx.activity.ComponentActivity
-import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
@@ -23,7 +22,6 @@ import com.adyen.checkout.components.core.internal.util.requireApplication
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface SessionStoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,

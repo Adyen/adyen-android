@@ -9,7 +9,6 @@ package com.adyen.checkout.components.core.internal.provider
 
 import android.app.Application
 import androidx.activity.ComponentActivity
-import androidx.annotation.RestrictTo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
@@ -22,7 +21,6 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.requireApplication
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface StoredPaymentComponentProvider<
     ComponentT : PaymentComponent,
     ConfigurationT : Configuration,
