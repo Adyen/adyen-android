@@ -1,7 +1,6 @@
 package com.adyen.checkout.components.core.internal
 
 import android.content.Context
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
@@ -11,7 +10,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleUtil
 import java.util.Locale
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class BaseConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
