@@ -28,9 +28,11 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.redirect.toCheckoutConfiguration
@@ -79,11 +81,15 @@ constructor(
 
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val nativeRedirectService = NativeRedirectService(httpClient)
+
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
+            nativeRedirectService = nativeRedirectService,
         )
     }
 
@@ -108,7 +114,7 @@ constructor(
     }
 
     override val supportedActionTypes: List<String>
-        get() = listOf(RedirectAction.ACTION_TYPE)
+        get() = listOf(RedirectAction.ACTION_TYPE, "nativeRedirect")
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)

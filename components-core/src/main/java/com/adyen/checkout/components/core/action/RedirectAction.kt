@@ -21,12 +21,14 @@ data class RedirectAction(
     override var paymentMethodType: String? = null,
     var method: String? = null,
     var url: String? = null,
+    var nativeRedirectData: String? = null,
 ) : Action() {
 
     companion object {
         const val ACTION_TYPE = ActionTypes.REDIRECT
         private const val METHOD = "method"
         private const val URL = "url"
+        private const val NATIVE_REDIRECT_DATA = "nativeRedirectData"
 
         @JvmField
         val SERIALIZER: Serializer<RedirectAction> = object : Serializer<RedirectAction> {
@@ -38,6 +40,7 @@ data class RedirectAction(
                         putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
                         putOpt(METHOD, modelObject.method)
                         putOpt(URL, modelObject.url)
+                        putOpt(NATIVE_REDIRECT_DATA, modelObject.nativeRedirectData)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(RedirectAction::class.java, e)
@@ -51,6 +54,7 @@ data class RedirectAction(
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
                     method = jsonObject.getStringOrNull(METHOD),
                     url = jsonObject.getStringOrNull(URL),
+                    nativeRedirectData = jsonObject.getStringOrNull(NATIVE_REDIRECT_DATA),
                 )
             }
         }

@@ -37,6 +37,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var dateOfBirth: String? = null,
     var socialSecurityNumber: String? = null,
     var installments: Installments? = null,
+    var supportNativeRedirect: Boolean? = true,
 ) : ModelObject() {
 
     companion object {
@@ -53,6 +54,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         private const val SOCIAL_SECURITY_NUMBER = "socialSecurityNumber"
         private const val INSTALLMENTS = "installments"
         private const val ORDER = "order"
+        private const val SUPPORT_NATIVE_REDIRECT = "supportNativeRedirect"
 
         @JvmField
         val SERIALIZER: Serializer<PaymentComponentData<*>> = object : Serializer<PaymentComponentData<*>> {
@@ -72,6 +74,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
                         putOpt(INSTALLMENTS, serializeOpt(modelObject.installments, Installments.SERIALIZER))
                         putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                        putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentComponentData::class.java, e)
@@ -96,6 +99,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                     socialSecurityNumber = jsonObject.optString(SOCIAL_SECURITY_NUMBER),
                     installments = deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER),
                     order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
+                    supportNativeRedirect = jsonObject.optBoolean(SUPPORT_NATIVE_REDIRECT),
                 )
             }
         }

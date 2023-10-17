@@ -14,6 +14,7 @@ internal object ActionTypes {
     const val AWAIT = "await"
     const val QR_CODE = "qrCode"
     const val REDIRECT = "redirect"
+    const val NATIVE_REDIRECT = "nativeRedirect"
     const val SDK = "sdk"
     const val THREEDS2_CHALLENGE = "threeDS2Challenge"
     const val THREEDS2_FINGERPRINT = "threeDS2Fingerprint"
