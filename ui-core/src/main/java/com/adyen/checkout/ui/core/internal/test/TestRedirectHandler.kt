@@ -44,6 +44,9 @@ class TestRedirectHandler : RedirectHandler {
     override fun removeOnRedirectListener() = Unit
 
     companion object {
-        val REDIRECT_RESULT = JSONObject().apply { put("redirect", "successful") }
+        val REDIRECT_RESULT = JSONObject().apply {
+            put("redirect", "successful")
+            put("returnUrlQueryString", "gpid=ajfbasljbfaljfe")
+        }
     }
 }

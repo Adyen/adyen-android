@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.action.ActionTypes
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
@@ -21,16 +22,21 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
+import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.redirect.redirect
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -85,6 +91,17 @@ internal class DefaultRedirectDelegateTest(
     }
 
     @Test
+    fun `when handleAction called with native redirect type, then the native redirect data should be stored`() {
+        val testData = "sometestdata"
+        delegate.handleAction(
+            action = RedirectAction(type = ActionTypes.NATIVE_REDIRECT, nativeRedirectData = testData),
+            activity = Activity(),
+        )
+
+        assertEquals(testData, paymentDataRepository.nativeRedirectData)
+    }
+
+    @Test
     fun `when handleIntent called and RedirectHandler returns an error, then the error is propagated`() = runTest {
         val error = ComponentException("Failed to parse redirect result.")
         redirectHandler.exception = error
@@ -108,6 +125,27 @@ internal class DefaultRedirectDelegateTest(
             }
         }
     }
+
+    @Test
+    fun `when handleIntent called with valid data and it's a native redirect, then the details are emitted`() =
+        runTest {
+            delegate.detailsFlow.test {
+                val response = NativeRedirectResponse("someRedirectResult")
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doReturn response
+                delegate.initialize(this@runTest)
+                delegate.handleAction(
+                    action = RedirectAction(type = ActionTypes.NATIVE_REDIRECT, nativeRedirectData = "testData"),
+                    activity = Activity(),
+                )
+
+                delegate.handleIntent(Intent())
+
+                with(awaitItem()) {
+                    assertEquals(NativeRedirectResponse.SERIALIZER.serialize(response).toString(), details.toString())
+                    assertNull(paymentData)
+                }
+            }
+        }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
