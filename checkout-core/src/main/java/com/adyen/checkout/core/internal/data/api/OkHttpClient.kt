@@ -83,8 +83,11 @@ internal class OkHttpClient(
                 response.body?.close()
                 return bytes
             } else {
-                val errorBody = response.errorBody()
-                val exception = HttpException(response.code, response.message, errorBody)
+                val exception = HttpException(
+                    code = response.code,
+                    message = response.message,
+                    errorBody = response.errorBody()
+                )
                 response.body?.close()
                 throw exception
             }
@@ -98,16 +101,29 @@ internal class OkHttpClient(
         (defaultHeaders + this).toHeaders()
 
     @Suppress("SwallowedException")
-    private fun Response.errorBody(): ErrorResponseBody? = try {
-        body?.string()
-            ?.let { JSONObject(it) }
-            ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
-    } catch (e: IOException) {
-        null
-    } catch (e: JSONException) {
-        null
-    } catch (e: ModelSerializationException) {
-        null
+    private fun Response.errorBody(): ErrorResponseBody? {
+        val stringBody = try {
+            body?.string()
+        } catch (e: IOException) {
+            null
+        }
+
+        val parsedErrorResponseBody = try {
+            stringBody
+                ?.let { JSONObject(it) }
+                ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
+        } catch (e: JSONException) {
+            null
+        } catch (e: ModelSerializationException) {
+            null
+        }
+
+        return parsedErrorResponseBody ?: ErrorResponseBody(
+            status = null,
+            errorCode = null,
+            message = stringBody,
+            errorType = null,
+        )
     }
 
     companion object {
