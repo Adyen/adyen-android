@@ -18,6 +18,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.action.ActionTypes
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
@@ -114,7 +115,7 @@ constructor(
     }
 
     override val supportedActionTypes: List<String>
-        get() = listOf(RedirectAction.ACTION_TYPE, "nativeRedirect")
+        get() = listOf(RedirectAction.ACTION_TYPE, ActionTypes.NATIVE_REDIRECT)
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)

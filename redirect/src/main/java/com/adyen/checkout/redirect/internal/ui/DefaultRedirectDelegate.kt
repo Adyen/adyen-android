@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.action.ActionTypes
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -88,12 +89,12 @@ internal class DefaultRedirectDelegate(
         }
 
         when (action.type) {
-            "redirect" -> {
-                paymentDataRepository.paymentData = action.paymentData
+            ActionTypes.NATIVE_REDIRECT -> {
+                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
             }
 
-            "nativeRedirect" -> {
-                paymentDataRepository.nativeRedirectData = action.nativeRedirectData
+            else -> {
+                paymentDataRepository.paymentData = action.paymentData
             }
         }
 

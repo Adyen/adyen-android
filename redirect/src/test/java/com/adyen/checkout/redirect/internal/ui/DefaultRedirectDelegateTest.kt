@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.redirect
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,10 +28,16 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class DefaultRedirectDelegateTest {
+@ExtendWith(MockitoExtension::class)
+internal class DefaultRedirectDelegateTest(
+    @Mock private val nativeRedirectService: NativeRedirectService,
+) {
 
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var paymentDataRepository: PaymentDataRepository
@@ -52,6 +59,7 @@ internal class DefaultRedirectDelegateTest {
                 .mapToParams(configuration, Locale.US, null, null),
             redirectHandler,
             paymentDataRepository,
+            nativeRedirectService,
         )
     }
 

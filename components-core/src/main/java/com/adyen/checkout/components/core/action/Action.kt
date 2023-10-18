@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.core.action
 
-import com.adyen.checkout.components.core.internal.ActionTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import org.json.JSONObject
@@ -53,7 +52,9 @@ abstract class Action : ModelObject() {
 
         fun getChildSerializer(actionType: String): Serializer<Action> {
             val childSerializer = when (actionType) {
-                RedirectAction.ACTION_TYPE, ActionTypes.NATIVE_REDIRECT -> RedirectAction.SERIALIZER
+                RedirectAction.ACTION_TYPE,
+                ActionTypes.NATIVE_REDIRECT -> RedirectAction.SERIALIZER
+
                 Threeds2FingerprintAction.ACTION_TYPE -> Threeds2FingerprintAction.SERIALIZER
                 Threeds2ChallengeAction.ACTION_TYPE -> Threeds2ChallengeAction.SERIALIZER
                 Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
