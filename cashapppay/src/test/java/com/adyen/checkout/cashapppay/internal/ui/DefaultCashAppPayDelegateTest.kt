@@ -120,7 +120,7 @@ internal class DefaultCashAppPayDelegateTest(
         delegate.updateInputData {
             isStorePaymentSelected = true
             authorizationData = CashAppPayAuthorizationData(
-                oneTimeData = CashAppPayOneTimeData("grantId"),
+                oneTimeData = CashAppPayOneTimeData("grantId", "customerId"),
                 onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId")
             )
         }
@@ -465,7 +465,7 @@ internal class DefaultCashAppPayDelegateTest(
 
             delegate.updateInputData {
                 authorizationData = CashAppPayAuthorizationData(
-                    oneTimeData = CashAppPayOneTimeData("grantId"),
+                    oneTimeData = CashAppPayOneTimeData("grantId", "customerId"),
                     onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId")
                 )
             }
@@ -516,7 +516,7 @@ internal class DefaultCashAppPayDelegateTest(
             // configurationValue, expectedComponentStateValue
             arguments(Amount("EUR", 100), Amount("EUR", 100)),
             arguments(Amount("USD", 0), Amount("USD", 0)),
-            arguments(Amount.EMPTY, null),
+            arguments(null, null),
             arguments(null, null),
         )
     }

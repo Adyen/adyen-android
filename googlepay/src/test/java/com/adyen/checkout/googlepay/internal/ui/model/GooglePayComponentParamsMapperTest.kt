@@ -291,7 +291,7 @@ internal class GooglePayComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY
+            amount = null
         )
 
         val params = GooglePayComponentParamsMapper(overrideParams, null).mapToParams(
@@ -332,7 +332,7 @@ internal class GooglePayComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
             isCreatedByDropIn = false,
-            amount = Amount.EMPTY
+            amount = null
         )
 
         val params = GooglePayComponentParamsMapper(overrideParams, null).mapToParams(

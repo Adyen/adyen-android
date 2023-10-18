@@ -21,7 +21,8 @@ internal data class Adyen3DS2ComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
+    val deviceParameterBlockList: Set<String>?,
 ) : ComponentParams

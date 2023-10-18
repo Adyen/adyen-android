@@ -25,10 +25,10 @@ object GiftCardBalanceUtils {
      * @param amountToBePaid the desired amount to be paid using this gift card.
      * @return the result of the balance check.
      */
-    fun checkBalance(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
+    fun checkBalance(balance: Amount?, transactionLimit: Amount?, amountToBePaid: Amount?): GiftCardBalanceStatus {
         return when {
-            amountToBePaid.isEmpty || amountToBePaid.value <= 0 -> GiftCardBalanceStatus.ZeroAmountToBePaid
-            balance.isEmpty || balance.value <= 0 -> GiftCardBalanceStatus.ZeroBalance
+            amountToBePaid == null || amountToBePaid.value <= 0 -> GiftCardBalanceStatus.ZeroAmountToBePaid
+            balance == null || balance.value <= 0 -> GiftCardBalanceStatus.ZeroBalance
             amountToBePaid.currency != balance.currency -> GiftCardBalanceStatus.NonMatchingCurrencies
             transactionLimit != null && amountToBePaid.currency != transactionLimit.currency ->
                 GiftCardBalanceStatus.NonMatchingCurrencies

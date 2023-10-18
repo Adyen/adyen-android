@@ -26,7 +26,7 @@ data class PaymentsRequest(
 @Keep
 data class PaymentsRequestData(
     val shopperReference: String,
-    val amount: Amount,
+    val amount: Amount?,
     val countryCode: String,
     val merchantAccount: String,
     val returnUrl: String,

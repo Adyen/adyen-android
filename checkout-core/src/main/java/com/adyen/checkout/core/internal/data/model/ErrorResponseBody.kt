@@ -17,10 +17,10 @@ import org.json.JSONObject
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Parcelize
 data class ErrorResponseBody(
-    val status: Int,
-    val errorCode: String,
-    val message: String,
-    val errorType: String,
+    val status: Int?,
+    val errorCode: String?,
+    val message: String?,
+    val errorType: String?,
 ) : ModelObject() {
 
     companion object {

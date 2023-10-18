@@ -24,7 +24,7 @@ data class IssuerListComponentParams(
     override val clientKey: String,
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
-    override val amount: Amount,
+    override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean,
     val viewType: IssuerListViewType,
     val hideIssuerLogos: Boolean,

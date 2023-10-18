@@ -18,12 +18,10 @@ val Amount.isZero: Boolean
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun Amount.validate() {
-    if (!isEmpty) {
-        if (!CheckoutCurrency.isSupported(currency)) {
-            throw CheckoutException("Currency code is not valid.")
-        }
-        if (value < 0) {
-            throw CheckoutException("Value cannot be less than 0.")
-        }
+    if (!CheckoutCurrency.isSupported(currency)) {
+        throw CheckoutException("Currency code is not valid.")
+    }
+    if (value < 0) {
+        throw CheckoutException("Value cannot be less than 0.")
     }
 }

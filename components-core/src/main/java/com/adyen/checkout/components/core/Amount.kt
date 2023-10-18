@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.core
 
-import com.adyen.checkout.components.core.internal.util.EMPTY_CURRENCY
 import com.adyen.checkout.components.core.internal.util.EMPTY_VALUE
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -25,8 +24,6 @@ data class Amount(
     companion object {
         private const val CURRENCY = "currency"
         private const val VALUE = "value"
-
-        val EMPTY = Amount(EMPTY_CURRENCY, EMPTY_VALUE)
 
         @JvmField
         val SERIALIZER: Serializer<Amount> = object : Serializer<Amount> {

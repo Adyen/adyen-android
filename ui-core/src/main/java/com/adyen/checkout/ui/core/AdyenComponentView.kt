@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.LinearLayout
 import androidx.core.view.children
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
@@ -124,9 +125,11 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
-        val view = componentView.getView()
-        binding.frameLayoutComponentContainer.addView(view)
-        view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
+        binding.frameLayoutComponentContainer.doOnNextLayout {
+            val view = componentView.getView()
+            binding.frameLayoutComponentContainer.addView(view)
+            view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
+        }
 
         componentView.initView(delegate, coroutineScope, localizedContext)
 

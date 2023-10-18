@@ -29,7 +29,7 @@ class SepaConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
-    override val amount: Amount,
+    override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {

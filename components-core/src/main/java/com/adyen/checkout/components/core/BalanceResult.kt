@@ -17,7 +17,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class BalanceResult(
-    val balance: Amount,
+    val balance: Amount?,
     val transactionLimit: Amount?
 ) : ModelObject() {
 

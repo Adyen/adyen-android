@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
@@ -204,8 +203,8 @@ internal class GiftCardComponentTest(
 
     companion object {
         private val BALANCE_RESULT = BalanceResult(
-            balance = Amount.EMPTY,
-            transactionLimit = Amount.EMPTY
+            balance = null,
+            transactionLimit = null
         )
 
         private val ORDER_RESPONSE = OrderResponse(

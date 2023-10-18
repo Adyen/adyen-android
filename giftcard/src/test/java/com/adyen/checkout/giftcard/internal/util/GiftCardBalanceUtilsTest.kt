@@ -156,7 +156,7 @@ internal class GiftCardBalanceUtilsTest {
         val result = GiftCardBalanceUtils.checkBalance(
             balance = createAmount(100),
             transactionLimit = createAmount(10),
-            amountToBePaid = Amount.EMPTY
+            amountToBePaid = null
         )
 
         assert(result is GiftCardBalanceStatus.ZeroAmountToBePaid)
@@ -176,7 +176,7 @@ internal class GiftCardBalanceUtilsTest {
     @Test
     fun checkBalance_EmptyBalance_ExpectZeroBalance() {
         val result = GiftCardBalanceUtils.checkBalance(
-            balance = Amount.EMPTY,
+            balance = null,
             transactionLimit = createAmount(10),
             amountToBePaid = createAmount(100)
         )

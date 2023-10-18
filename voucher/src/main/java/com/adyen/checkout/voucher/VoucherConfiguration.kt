@@ -26,7 +26,7 @@ class VoucherConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
-    override val amount: Amount,
+    override val amount: Amount?,
 ) : Configuration {
 
     /**

@@ -60,7 +60,7 @@ fun ImageView.load(
             url,
             onSuccess = { setImageBitmap(it) },
             onError = { e ->
-                Logger.e(TAG, "Failed loading image for $url", e)
+                Logger.w(TAG, "Failed loading image for $url - ${e::class.simpleName}: ${e.message}")
                 setImageResource(errorFallback)
             }
         )

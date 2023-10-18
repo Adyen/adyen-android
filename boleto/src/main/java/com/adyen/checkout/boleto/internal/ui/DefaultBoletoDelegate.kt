@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -238,7 +237,7 @@ internal class DefaultBoletoDelegate(
                 checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             ),
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
             socialSecurityNumber = outputData.socialSecurityNumberState.value,
             shopperName = ShopperName(
                 firstName = outputData.firstNameState.value,

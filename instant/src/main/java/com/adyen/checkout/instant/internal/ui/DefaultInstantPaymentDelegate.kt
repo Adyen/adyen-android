@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -58,7 +57,7 @@ internal class DefaultInstantPaymentDelegate(
                 checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             ),
             order = order,
-            amount = componentParams.amount.takeUnless { it.isEmpty },
+            amount = componentParams.amount,
         )
         return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }

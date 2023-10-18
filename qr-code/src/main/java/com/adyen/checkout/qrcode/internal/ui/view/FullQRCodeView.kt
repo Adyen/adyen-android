@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -117,9 +116,10 @@ internal class FullQRCodeView @JvmOverloads constructor(
     }
 
     private fun updateAmount(componentParams: ComponentParams) {
-        if (!componentParams.amount.isEmpty) {
+        val amount = componentParams.amount
+        if (amount != null) {
             val formattedAmount = CurrencyUtils.formatAmount(
-                componentParams.amount,
+                amount,
                 componentParams.shopperLocale
             )
             binding.textviewAmount.isVisible = true
@@ -172,6 +172,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
             QrCodeUIEvent.QrImageDownloadResult.Success -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_succeeded))
             }
+
             is QrCodeUIEvent.QrImageDownloadResult.Failure -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_failed))
                 Logger.e(TAG, "download file failed", event.throwable)

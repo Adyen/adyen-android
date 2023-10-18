@@ -26,7 +26,7 @@ data class AnalyticsRepositoryData(
     val locale: Locale,
     val source: AnalyticsSource,
     val clientKey: String,
-    val amount: Amount,
+    val amount: Amount?,
     val screenWidth: Int,
     val paymentMethods: List<String>,
     val sessionId: String?,

@@ -97,7 +97,7 @@ fun getSessionRequest(
 fun createPaymentRequest(
     paymentComponentData: JSONObject,
     shopperReference: String,
-    amount: Amount,
+    amount: Amount?,
     countryCode: String,
     merchantAccount: String,
     redirectUrl: String,

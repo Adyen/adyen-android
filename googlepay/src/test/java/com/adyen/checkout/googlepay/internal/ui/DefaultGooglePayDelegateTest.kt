@@ -187,7 +187,7 @@ internal class DefaultGooglePayDelegateTest(
             // configurationValue, expectedComponentStateValue
             arguments(Amount("EUR", 100), Amount("EUR", 100)),
             arguments(Amount("USD", 0), Amount("USD", 0)),
-            arguments(Amount.EMPTY, Amount("USD", 0)),
+            arguments(null, Amount("USD", 0)),
             arguments(null, Amount("USD", 0)),
         )
     }

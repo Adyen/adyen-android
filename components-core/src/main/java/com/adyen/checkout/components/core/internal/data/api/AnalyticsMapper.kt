@@ -24,7 +24,7 @@ class AnalyticsMapper {
         packageName: String,
         locale: Locale,
         source: AnalyticsSource,
-        amount: Amount,
+        amount: Amount?,
         screenWidth: Long,
         paymentMethods: List<String>,
         sessionId: String?,

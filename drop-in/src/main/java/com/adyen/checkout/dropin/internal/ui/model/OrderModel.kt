@@ -17,6 +17,6 @@ import kotlinx.parcelize.Parcelize
 internal data class OrderModel(
     val orderData: String,
     val pspReference: String,
-    val remainingAmount: Amount,
+    val remainingAmount: Amount?,
     val paymentMethods: List<OrderPaymentMethod>
 ) : Parcelable

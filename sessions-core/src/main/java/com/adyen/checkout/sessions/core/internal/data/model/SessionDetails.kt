@@ -50,7 +50,7 @@ fun SessionDetails.mapToModel(): SessionModel {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionDetails.mapToParams(amount: Amount): SessionParams {
+fun SessionDetails.mapToParams(amount: Amount?): SessionParams {
     // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails
     return SessionParamsFactory.create(this.copy(amount = amount))
 }

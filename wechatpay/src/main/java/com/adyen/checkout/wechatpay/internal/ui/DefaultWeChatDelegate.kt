@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 internal class DefaultWeChatDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
@@ -153,6 +154,10 @@ internal class DefaultWeChatDelegate(
             details = details,
             paymentData = paymentDataRepository.paymentData,
         )
+    }
+
+    override fun onError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
     }
 
     override fun onCleared() {

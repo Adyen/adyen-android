@@ -133,7 +133,7 @@ internal class StoredACHDirectDebitDelegateTest(
             // configurationValue, expectedComponentStateValue
             arguments(Amount("EUR", 100), Amount("EUR", 100)),
             arguments(Amount("USD", 0), Amount("USD", 0)),
-            arguments(Amount.EMPTY, null),
+            arguments(null, null),
             arguments(null, null),
         )
     }

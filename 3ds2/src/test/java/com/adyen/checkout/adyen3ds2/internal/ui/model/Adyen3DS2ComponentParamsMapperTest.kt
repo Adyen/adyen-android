@@ -105,7 +105,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
-        amount: Amount = Amount.EMPTY,
+        amount: Amount? = null,
         uiCustomization: UiCustomization? = null,
         threeDSRequestorAppURL: String? = null,
     ) = Adyen3DS2ComponentParams(
@@ -117,6 +117,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         amount = amount,
         uiCustomization = uiCustomization,
         threeDSRequestorAppURL = threeDSRequestorAppURL,
+        deviceParameterBlockList = Adyen3DS2ComponentParamsMapper.DEVICE_PARAMETER_BLOCK_LIST,
     )
 
     companion object {
