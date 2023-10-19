@@ -8,7 +8,49 @@
 
 package com.adyen.checkout.twint
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.twint.internal.ui.TwintDelegate
 
-class TwintComponent : ViewModel() {
+class TwintComponent internal constructor(
+    private val twintDelegate: TwintDelegate,
+) : ViewModel(),
+    PaymentComponent {
+
+    override val delegate: ComponentDelegate get() = twintDelegate
+
+    init {
+        twintDelegate.initialize(viewModelScope)
+    }
+
+    internal fun observe(
+        lifecycleOwner: LifecycleOwner,
+        callback: (PaymentComponentEvent<TwintComponentState>) -> Unit
+    ) {
+        twintDelegate.observe(lifecycleOwner, viewModelScope, callback)
+    }
+
+    internal fun removeObserver() {
+        twintDelegate.removeObserver()
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        Logger.w(TAG, "Interaction with TwintComponent can't be blocked")
+    }
+
+    override fun onCleared() {
+        Logger.d(TAG, "onCleared")
+        super.onCleared()
+        twintDelegate.onCleared()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+    }
 }
