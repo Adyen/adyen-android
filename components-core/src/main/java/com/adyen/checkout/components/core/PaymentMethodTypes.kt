@@ -46,7 +46,6 @@ object PaymentMethodTypes {
     const val PAY_BY_BANK = "paybybank"
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
-    const val TWINT = "twint"
     const val UPI = "upi"
     const val UPI_COLLECT = "upi_collect"
     const val UPI_QR = "upi_qr"
@@ -56,6 +55,7 @@ object PaymentMethodTypes {
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
     const val PROMPT_PAY = "promptpay"
+    const val TWINT = "twint"
     const val WECHAT_PAY_SDK = "wechatpaySDK"
     const val MULTIBANCO = "multibanco"
 
@@ -143,6 +143,7 @@ object PaymentMethodTypes {
         PAY_NOW,
         PIX,
         PROMPT_PAY,
+        TWINT,
         WECHAT_PAY_SDK,
         MULTIBANCO,
     )

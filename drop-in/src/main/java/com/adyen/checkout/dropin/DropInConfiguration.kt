@@ -45,6 +45,7 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

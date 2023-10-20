@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.Locale
@@ -121,6 +122,14 @@ constructor(
      */
     final override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): BuilderT {
         genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
+        return this as BuilderT
+    }
+
+    /**
+     * Add configuration for Twint action.
+     */
+    override fun addTwintActionConfiguration(configuration: TwintActionConfiguration): BuilderT {
+        genericActionConfigurationBuilder.addTwintActionConfiguration(configuration)
         return this as BuilderT
     }
 

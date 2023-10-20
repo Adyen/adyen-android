@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 7/6/2021.
+ * Created by oscars on 20/10/2023.
  */
 
-package com.adyen.checkout.wechatpay.internal.provider
+package com.adyen.checkout.twint.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -30,21 +30,18 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
-import com.adyen.checkout.wechatpay.WeChatPayActionComponent
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
-import com.adyen.checkout.wechatpay.internal.ui.DefaultWeChatDelegate
-import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
-import com.adyen.checkout.wechatpay.internal.util.WeChatPayRequestGenerator
-import com.adyen.checkout.wechatpay.toCheckoutConfiguration
-import com.tencent.mm.opensdk.openapi.IWXAPI
-import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import com.adyen.checkout.twint.TwintActionComponent
+import com.adyen.checkout.twint.TwintActionConfiguration
+import com.adyen.checkout.twint.internal.ui.DefaultTwintDelegate
+import com.adyen.checkout.twint.internal.ui.TwintDelegate
+import com.adyen.checkout.twint.toCheckoutConfiguration
 
-class WeChatPayActionComponentProvider
+class TwintActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
-) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
+) : ActionComponentProvider<TwintActionComponent, TwintActionConfiguration, TwintDelegate> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -54,28 +51,26 @@ constructor(
         checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
         key: String?
-    ): WeChatPayActionComponent {
-        val weChatFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val weChatDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
-            WeChatPayActionComponent(
-                delegate = weChatDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(),
+    ): TwintActionComponent {
+        val twintFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val twintDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
+            TwintActionComponent(
+                delegate = twintDelegate,
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
 
-        return ViewModelProvider(viewModelStoreOwner, weChatFactory)[key, WeChatPayActionComponent::class.java]
+        return ViewModelProvider(viewModelStoreOwner, twintFactory)[key, TwintActionComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner) {
-                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
-                }
+                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
             }
     }
 
     override fun getDelegate(
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application
-    ): WeChatDelegate {
+        application: Application,
+    ): TwintDelegate {
         val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = localeProvider.getLocale(application),
@@ -83,15 +78,10 @@ constructor(
             componentSessionParams = null,
         )
 
-        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
-        val requestGenerator = WeChatPayRequestGenerator()
-        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultWeChatDelegate(
+        return DefaultTwintDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
-            iwxApi = iwxApi,
-            payRequestGenerator = requestGenerator,
-            paymentDataRepository = paymentDataRepository,
+            paymentDataRepository = PaymentDataRepository(savedStateHandle),
         )
     }
 
@@ -100,10 +90,10 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: WeChatPayActionConfiguration,
+        configuration: TwintActionConfiguration,
         callback: ActionComponentCallback,
         key: String?,
-    ): WeChatPayActionComponent {
+    ): TwintActionComponent {
         return get(
             savedStateRegistryOwner = savedStateRegistryOwner,
             viewModelStoreOwner = viewModelStoreOwner,
@@ -126,6 +116,6 @@ constructor(
     }
 
     companion object {
-        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.WECHAT_PAY_SDK)
+        private val PAYMENT_METHODS = listOf(PaymentMethodTypes.TWINT)
     }
 }

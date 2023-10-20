@@ -9,28 +9,29 @@
 package com.adyen.checkout.twint
 
 import android.content.Context
-import com.adyen.checkout.action.core.GenericActionConfiguration
-import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+/**
+ * Configuration class for the [TwintActionComponent].
+ */
 @Parcelize
-class TwintConfiguration private constructor(
+class TwintActionConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
-    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<TwintConfiguration, Builder> {
+    class Builder : BaseConfigurationBuilder<TwintActionConfiguration, Builder> {
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -76,23 +77,22 @@ class TwintConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        override fun buildInternal(): TwintConfiguration {
-            return TwintConfiguration(
+        override fun buildInternal(): TwintActionConfiguration {
+            return TwintActionConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
-                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
 }
 
-fun CheckoutConfiguration.twint(
-    configuration: @CheckoutConfigurationMarker TwintConfiguration.Builder.() -> Unit = {}
+fun CheckoutConfiguration.twintAction(
+    configuration: @CheckoutConfigurationMarker TwintActionConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = TwintConfiguration.Builder(environment, clientKey)
+    val config = TwintActionConfiguration.Builder(environment, clientKey)
         .apply {
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
@@ -104,11 +104,11 @@ fun CheckoutConfiguration.twint(
     return this
 }
 
-internal fun CheckoutConfiguration.getTwintConfiguration(): TwintConfiguration? {
-    return getActionConfiguration(TwintConfiguration::class.java)
+internal fun CheckoutConfiguration.getTwintActionConfiguration(): TwintActionConfiguration? {
+    return getActionConfiguration(TwintActionConfiguration::class.java)
 }
 
-internal fun TwintConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+internal fun TwintActionConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
     return CheckoutConfiguration(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -117,9 +117,5 @@ internal fun TwintConfiguration.toCheckoutConfiguration(): CheckoutConfiguration
         analyticsConfiguration = analyticsConfiguration,
     ) {
         addActionConfiguration(this@toCheckoutConfiguration)
-
-        genericActionConfiguration.getAllConfigurations().forEach {
-            addActionConfiguration(it)
-        }
     }
 }

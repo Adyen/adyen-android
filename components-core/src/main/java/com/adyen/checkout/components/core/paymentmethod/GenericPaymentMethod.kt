@@ -17,9 +17,12 @@ import org.json.JSONObject
 data class GenericPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
+    var subtype: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
+
+        private const val SUBTYPE = "subtype"
 
         @JvmField
         val SERIALIZER: Serializer<GenericPaymentMethod> = object : Serializer<GenericPaymentMethod> {
@@ -28,6 +31,7 @@ data class GenericPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SUBTYPE, modelObject.subtype)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(GenericPaymentMethod::class.java, e)
@@ -38,6 +42,7 @@ data class GenericPaymentMethod(
                 return GenericPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    subtype = jsonObject.getStringOrNull(SUBTYPE)
                 )
             }
         }

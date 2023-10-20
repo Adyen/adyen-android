@@ -8,80 +8,56 @@
 
 package com.adyen.checkout.twint.internal.ui
 
-import androidx.activity.ComponentActivity
+import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
-import ch.twint.payment.sdk.Twint
 import ch.twint.payment.sdk.TwintPayResult
-import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.PaymentMethodTypes
-import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.action.SdkAction
+import com.adyen.checkout.components.core.action.TwintSdkData
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
+import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.Twint
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 internal class DefaultTwintDelegate(
-    private val observerRepository: PaymentObserverRepository,
-    private val paymentMethod: PaymentMethod,
-    private val order: OrderRequest?,
-    override val componentParams: ComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val observerRepository: ActionObserverRepository,
+    override val componentParams: GenericComponentParams,
+    private val paymentDataRepository: PaymentDataRepository,
 ) : TwintDelegate {
 
-    private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<TwintComponentState> = _componentStateFlow
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val submitChannel: Channel<TwintComponentState> = bufferedChannel()
-    override val submitFlow: Flow<TwintComponentState> = submitChannel.receiveAsFlow()
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
 
-    override fun initialize(coroutineScope: CoroutineScope) {
-        setupAnalytics(coroutineScope)
-
-        componentStateFlow.onEach {
-            onState(it)
-        }.launchIn(coroutineScope)
-    }
-
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.DEBUG) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
-    }
-
-    private fun onState(state: TwintComponentState) {
-        if (state.isValid) {
-            submitChannel.trySend(state)
-        }
-    }
+    override fun initialize(coroutineScope: CoroutineScope) = Unit
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (PaymentComponentEvent<TwintComponentState>) -> Unit
+        callback: (ActionComponentEvent) -> Unit
     ) {
         observerRepository.addObservers(
-            stateFlow = componentStateFlow,
+            detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
-            submitFlow = submitFlow,
+            permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback,
@@ -92,40 +68,62 @@ internal class DefaultTwintDelegate(
         observerRepository.removeObservers()
     }
 
-    private fun createComponentState(): TwintComponentState {
-        val paymentMethod = TwintPaymentMethod(
-            type = paymentMethod.type,
-            subtype = "sdk",
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
-        )
-
-        val paymentComponentData = PaymentComponentData(
-            paymentMethod = paymentMethod,
-            order = order,
-            amount = componentParams.amount,
-        )
-
-        return TwintComponentState(
-            data = paymentComponentData,
-            isInputValid = true,
-            isReady = true,
-        )
-    }
-
-    override fun startTwintScreen(activity: ComponentActivity) {
-        val twint = Twint(activity) { result ->
-            when (result) {
-                TwintPayResult.TW_B_SUCCESS -> TODO()
-                TwintPayResult.TW_B_ERROR -> TODO()
-                TwintPayResult.TW_B_APP_NOT_INSTALLED -> TODO()
-            }
+    override fun handleAction(action: Action, activity: Activity) {
+        @Suppress("UNCHECKED_CAST")
+        val sdkAction = (action as? SdkAction<TwintSdkData>)
+        if (sdkAction == null) {
+            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            return
         }
 
-        twint.payWithCode("test")
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
+        if (paymentData == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
+            return
+        }
+
+        val sdkData = action.sdkData
+        if (sdkData == null) {
+            exceptionChannel.trySend(ComponentException("SDK Data is null"))
+            return
+        }
+
+        Twint.setResultListener(::handleTwintResult)
+        try {
+            Twint.payWithCode(sdkData.token)
+        } catch (e: CheckoutException) {
+            exceptionChannel.trySend(e)
+        }
     }
 
-    override fun getPaymentMethodType(): String {
-        return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+    private fun handleTwintResult(result: TwintPayResult) {
+        when (result) {
+            TwintPayResult.TW_B_SUCCESS -> {
+                detailsChannel.trySend(createActionComponentData())
+            }
+
+            TwintPayResult.TW_B_ERROR -> {
+                onError(ComponentException("Twint encountered an error."))
+            }
+
+            TwintPayResult.TW_B_APP_NOT_INSTALLED -> {
+                onError(ComponentException("Twint app not installed."))
+            }
+        }
+    }
+
+    private fun createActionComponentData(): ActionComponentData {
+        return ActionComponentData(
+            // The backend doesn't accept null, so we have to send an empty json object.
+            details = JSONObject(),
+            paymentData = paymentDataRepository.paymentData,
+        )
+    }
+
+    override fun onError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
     }
 
     override fun onCleared() {

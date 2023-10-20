@@ -37,6 +37,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
@@ -62,6 +63,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionPaymentResult
+import com.adyen.checkout.twint.Twint
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -164,6 +166,10 @@ internal class DropInActivity :
         initObservers()
 
         startDropInService()
+
+        runCompileOnly {
+            Twint.initialize(this)
+        }
     }
 
     private fun noDialogPresent(): Boolean {
