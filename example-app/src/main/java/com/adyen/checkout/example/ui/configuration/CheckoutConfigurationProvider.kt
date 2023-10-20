@@ -129,7 +129,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
             .build()
 
-    private fun getGooglePayConfiguration(): GooglePayConfiguration =
+    fun getGooglePayConfiguration(): GooglePayConfiguration =
         GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setCountryCode(keyValueStorage.getCountry())
             .setAmount(amount)

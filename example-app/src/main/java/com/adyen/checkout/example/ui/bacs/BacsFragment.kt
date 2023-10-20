@@ -50,7 +50,7 @@ class BacsFragment : BottomSheetDialogFragment() {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         val returnUrl = RedirectComponent.getReturnUrl(requireActivity().applicationContext)
         arguments = (arguments ?: bundleOf()).apply {
-            putString(InstantFragment.RETURN_URL_EXTRA, returnUrl)
+            putString(RETURN_URL_EXTRA, returnUrl)
         }
 
         _binding = FragmentBacsBinding.inflate(inflater)

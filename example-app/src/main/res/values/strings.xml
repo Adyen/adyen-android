@@ -15,6 +15,7 @@
 
     <string name="country_code_error">Your country code must be %s</string>
     <string name="currency_code_error">Your currency code must be %s</string>
+    <string name="google_pay_unavailable_error">Google Pay is unavailable on this device</string>
 
     <string name="blik_component_entry">Blik</string>
     <string name="blik_component_await">Waiting for approval</string>
