@@ -46,6 +46,7 @@ object PaymentMethodTypes {
     const val PAY_BY_BANK = "paybybank"
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
+    const val TWINT = "twint"
     const val UPI = "upi"
     const val UPI_COLLECT = "upi_collect"
     const val UPI_QR = "upi_qr"
@@ -129,6 +130,7 @@ object PaymentMethodTypes {
         PROMPT_PAY,
         SCHEME,
         SEPA,
+        TWINT,
         UPI,
         UPI_COLLECT,
         UPI_QR,
