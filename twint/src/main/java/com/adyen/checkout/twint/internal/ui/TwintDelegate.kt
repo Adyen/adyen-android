@@ -8,17 +8,13 @@
 
 package com.adyen.checkout.twint.internal.ui
 
-import androidx.activity.ComponentActivity
-import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.twint.TwintComponentState
-import kotlinx.coroutines.flow.Flow
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 
-internal interface TwintDelegate : PaymentComponentDelegate<TwintComponentState> {
-
-    val componentStateFlow: Flow<TwintComponentState>
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    fun startTwintScreen(activity: ComponentActivity)
-}
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface TwintDelegate :
+    ActionDelegate,
+    DetailsEmittingDelegate,
+    ViewProvidingDelegate

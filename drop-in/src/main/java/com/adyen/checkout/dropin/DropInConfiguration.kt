@@ -42,6 +42,7 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -376,6 +377,11 @@ class DropInConfiguration private constructor(
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_ITAU] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_SANTANDER] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETO_PRIMEIRO_PAY] = boletoConfiguration
+            return this
+        }
+
+        fun addTwintConfiguration(twintActionConfiguration: TwintActionConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.TWINT] = twintActionConfiguration
             return this
         }
 

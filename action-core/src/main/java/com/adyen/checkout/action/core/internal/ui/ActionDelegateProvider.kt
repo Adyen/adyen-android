@@ -15,6 +15,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.provider.Adyen3DS2ComponentProvider
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.internal.provider.AwaitComponentProvider
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.action.BaseThreeds2Action
@@ -33,6 +34,8 @@ import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
+import com.adyen.checkout.twint.TwintActionConfiguration
+import com.adyen.checkout.twint.internal.provider.TwintActionComponentProvider
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
@@ -91,11 +94,29 @@ internal class ActionDelegateProvider(
             }
 
             is SdkAction<*> -> {
-                WeChatPayActionComponentProvider(overrideComponentParams, overrideSessionParams).getDelegate(
-                    getConfigurationForAction(configuration),
-                    savedStateHandle,
-                    application
-                )
+                when (action.paymentMethodType) {
+                    PaymentMethodTypes.TWINT -> TwintActionComponentProvider(
+                        overrideComponentParams,
+                        overrideSessionParams
+                    ).getDelegate(
+                        getConfigurationForAction(configuration),
+                        savedStateHandle,
+                        application
+                    )
+
+                    PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
+                        overrideComponentParams,
+                        overrideSessionParams
+                    ).getDelegate(
+                        getConfigurationForAction(configuration),
+                        savedStateHandle,
+                        application
+                    )
+
+                    else -> throw CheckoutException(
+                        "Can't find delegate for action: ${action.type} and type: ${action.paymentMethodType}"
+                    )
+                }
             }
 
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
@@ -116,13 +137,13 @@ internal class ActionDelegateProvider(
         val clientKey = configuration.clientKey
 
         val builder: BaseConfigurationBuilder<*, *> = when (T::class) {
-            runCompileOnly { AwaitConfiguration::class } -> AwaitConfiguration.Builder(
+            runCompileOnly { Adyen3DS2Configuration::class } -> Adyen3DS2Configuration.Builder(
                 shopperLocale,
                 environment,
                 clientKey
             )
 
-            runCompileOnly { RedirectConfiguration::class } -> RedirectConfiguration.Builder(
+            runCompileOnly { AwaitConfiguration::class } -> AwaitConfiguration.Builder(
                 shopperLocale,
                 environment,
                 clientKey
@@ -134,19 +155,25 @@ internal class ActionDelegateProvider(
                 clientKey
             )
 
-            runCompileOnly { Adyen3DS2Configuration::class } -> Adyen3DS2Configuration.Builder(
+            runCompileOnly { RedirectConfiguration::class } -> RedirectConfiguration.Builder(
                 shopperLocale,
                 environment,
                 clientKey
             )
 
-            runCompileOnly { WeChatPayActionConfiguration::class } -> WeChatPayActionConfiguration.Builder(
+            runCompileOnly { TwintActionConfiguration::class } -> TwintActionConfiguration.Builder(
                 shopperLocale,
                 environment,
                 clientKey
             )
 
             runCompileOnly { VoucherConfiguration::class } -> VoucherConfiguration.Builder(
+                shopperLocale,
+                environment,
+                clientKey
+            )
+
+            runCompileOnly { WeChatPayActionConfiguration::class } -> WeChatPayActionConfiguration.Builder(
                 shopperLocale,
                 environment,
                 clientKey

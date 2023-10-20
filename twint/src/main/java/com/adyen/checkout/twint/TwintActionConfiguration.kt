@@ -9,26 +9,27 @@
 package com.adyen.checkout.twint
 
 import android.content.Context
-import com.adyen.checkout.action.core.GenericActionConfiguration
-import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+/**
+ * Configuration class for the [TwintActionComponent].
+ */
 @Parcelize
-class TwintConfiguration private constructor(
+class TwintActionConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
-    internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
-    class Builder : ActionHandlingPaymentMethodConfigurationBuilder<TwintConfiguration, Builder> {
+    class Builder : BaseConfigurationBuilder<TwintActionConfiguration, Builder> {
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -56,14 +57,13 @@ class TwintConfiguration private constructor(
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        override fun buildInternal(): TwintConfiguration {
-            return TwintConfiguration(
+        override fun buildInternal(): TwintActionConfiguration {
+            return TwintActionConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
-                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }

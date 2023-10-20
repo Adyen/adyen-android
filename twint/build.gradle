@@ -39,12 +39,9 @@ android {
 
 dependencies {
     // Checkout
-    api project(':action-core')
     api project(':ui-core')
-    api project(':sessions-core')
 
     // Dependencies
-    implementation libraries.material
     implementation files('./libs/TwintSdk-android-7.0.0.aar')
 
     //Tests

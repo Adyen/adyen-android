@@ -55,11 +55,17 @@ internal class DefaultInstantPaymentDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                subtype = getSubtype(paymentMethod)
             ),
             order = order,
             amount = componentParams.amount,
         )
         return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
+    }
+
+    private fun getSubtype(paymentMethod: PaymentMethod): String? = when (paymentMethod.type) {
+        PaymentMethodTypes.TWINT -> SDK_SUBTYPE
+        else -> null
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -98,5 +104,7 @@ internal class DefaultInstantPaymentDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private const val SDK_SUBTYPE = "sdk"
     }
 }
