@@ -8,7 +8,17 @@
 
 package com.adyen.checkout.twint.internal.ui
 
+import androidx.activity.ComponentActivity
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.twint.TwintComponentState
+import kotlinx.coroutines.flow.Flow
 
-internal interface TwintDelegate : PaymentComponentDelegate<TwintComponentState>
+internal interface TwintDelegate : PaymentComponentDelegate<TwintComponentState> {
+
+    val componentStateFlow: Flow<TwintComponentState>
+
+    val exceptionFlow: Flow<CheckoutException>
+
+    fun startTwintScreen(activity: ComponentActivity)
+}

@@ -88,6 +88,7 @@ abstract class PaymentMethodDetails : ModelObject() {
 
                 SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
                 SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
+                TwintPaymentMethod.PAYMENT_METHOD_TYPE -> TwintPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")
