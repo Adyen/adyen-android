@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +76,8 @@ class GooglePayFragment : BottomSheetDialogFragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { onEvent(it) }
             .launchIn(lifecycleScope)
+
+        loadGooglePayButton()
     }
 
     private fun setupGooglePayComponent(googlePayComponentData: GooglePayComponentData) {
@@ -145,6 +148,19 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         dismiss()
     }
 
+    private fun loadGooglePayButton() {
+        binding.googlePayButton.setOnClickListener {
+            googlePayComponent?.startGooglePayScreen(requireActivity(), ACTIVITY_RESULT_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ACTIVITY_RESULT_CODE) {
+            googlePayComponent?.handleActivityResult(resultCode, data)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -153,9 +169,10 @@ class GooglePayFragment : BottomSheetDialogFragment() {
 
     companion object {
 
-        private val TAG = getLogTag()
+        internal val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val ACTIVITY_RESULT_CODE = 1
 
         fun show(fragmentManager: FragmentManager) {
             GooglePayFragment().show(fragmentManager, TAG)

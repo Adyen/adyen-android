@@ -218,6 +218,14 @@ class MainActivity : AppCompatActivity() {
         binding.switchSessions.isChecked = isChecked
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GooglePayFragment.ACTIVITY_RESULT_CODE) {
+            (supportFragmentManager.findFragmentByTag(GooglePayFragment.TAG) as? GooglePayFragment)
+                ?.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         componentItemAdapter = null

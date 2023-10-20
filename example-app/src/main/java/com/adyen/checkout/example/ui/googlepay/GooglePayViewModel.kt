@@ -78,6 +78,9 @@ internal class GooglePayViewModel @Inject constructor(
             _viewState.emit(GooglePayViewState.Error(R.string.error_dialog_title))
         } else {
             _events.emit(GooglePayEvent.CheckAvailability(paymentMethod, this@GooglePayViewModel))
+            _googleComponentDataFlow.emit(
+                GooglePayComponentData(paymentMethod, this@GooglePayViewModel)
+            )
         }
     }
 
