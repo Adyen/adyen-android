@@ -97,7 +97,7 @@ This repository is available under the [MIT license](LICENSE).
 [shield.license.image]: https://img.shields.io/github/license/Adyen/adyen-android
 [shield.license.link]: LICENSE
 [docs.android]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android
-[header.preview]: config/docs/dropin-android.jpg
+[header.preview]: https://github.com/Adyen/adyen-android/assets/9079915/e6e18a07-b30f-41f0-b7ef-701b20e2e339
 [adyen.testAccount]: https://www.adyen.com/signup
 [docs.apiKey]: https://docs.adyen.com/development-resources/how-to-get-the-api-key
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key
