@@ -96,7 +96,7 @@ constructor(
     ): BcmcComponent {
         assertSupported(paymentMethod)
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(configuration, null, paymentMethod)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -176,7 +176,8 @@ constructor(
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
                 bcmcConfiguration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)

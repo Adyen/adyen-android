@@ -17,6 +17,7 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -37,7 +38,8 @@ internal class BcmcComponentParamsMapperTest {
         val bcmcConfiguration = getBcmcConfigurationBuilder()
             .build()
 
-        val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
+        val params = BcmcComponentParamsMapper(null, null)
+            .mapToParams(bcmcConfiguration, null, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -55,7 +57,8 @@ internal class BcmcComponentParamsMapperTest {
             .setSubmitButtonVisible(false)
             .build()
 
-        val params = BcmcComponentParamsMapper(null, null).mapToParams(bcmcConfiguration, null)
+        val params = BcmcComponentParamsMapper(null, null)
+            .mapToParams(bcmcConfiguration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             isHolderNameRequired = true,
@@ -87,7 +90,8 @@ internal class BcmcComponentParamsMapperTest {
             )
         )
 
-        val params = BcmcComponentParamsMapper(overrideParams, null).mapToParams(bcmcConfiguration, null)
+        val params = BcmcComponentParamsMapper(overrideParams, null)
+            .mapToParams(bcmcConfiguration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -123,7 +127,8 @@ internal class BcmcComponentParamsMapperTest {
                 installmentOptions = null,
                 amount = null,
                 returnUrl = "",
-            )
+            ),
+            PaymentMethod()
         )
 
         val expected = getCardComponentParams(isStorePaymentFieldVisible = expectedValue)
@@ -154,7 +159,8 @@ internal class BcmcComponentParamsMapperTest {
                 installmentOptions = null,
                 amount = sessionsValue,
                 returnUrl = "",
-            )
+            ),
+            PaymentMethod()
         )
 
         val expected = getCardComponentParams(

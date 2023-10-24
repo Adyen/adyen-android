@@ -16,6 +16,7 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
+import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
@@ -29,14 +30,17 @@ internal class BcmcComponentParamsMapper(
     fun mapToParams(
         bcmcConfiguration: BcmcConfiguration,
         sessionParams: SessionParams?,
+        paymentMethod: PaymentMethod
     ): CardComponentParams {
         return bcmcConfiguration
-            .mapToParamsInternal()
+            .mapToParamsInternal(
+                supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) }
+            )
             .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun BcmcConfiguration.mapToParamsInternal(): CardComponentParams {
+    private fun BcmcConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {
         return CardComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -54,11 +58,7 @@ internal class BcmcComponentParamsMapper(
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
             cvcVisibility = CVCVisibility.HIDE_FIRST,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
-            supportedCardBrands = listOf(
-                CardBrand(cardType = CardType.BCMC),
-                CardBrand(cardType = CardType.MAESTRO),
-                CardBrand(cardType = CardType.VISA)
-            )
+            supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS
         )
     }
 
@@ -83,6 +83,14 @@ internal class BcmcComponentParamsMapper(
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
             amount = sessionParams.amount ?: amount,
+        )
+    }
+
+    companion object {
+        private val DEFAULT_SUPPORTED_CARD_BRANDS = listOf(
+            CardBrand(cardType = CardType.BCMC),
+            CardBrand(cardType = CardType.MAESTRO),
+            CardBrand(cardType = CardType.VISA)
         )
     }
 }
