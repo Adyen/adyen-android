@@ -71,7 +71,7 @@ interface ActionComponentProvider<
      *
      * @return The Component
      */
-    fun <T> get(
+    fun get(
         activity: ComponentActivity,
         configuration: ConfigurationT,
         callback: ActionComponentCallback,
