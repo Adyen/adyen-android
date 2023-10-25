@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.util.requireApplication
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponentProvider<
     ComponentT : ActionComponent,
     ConfigurationT : Configuration,

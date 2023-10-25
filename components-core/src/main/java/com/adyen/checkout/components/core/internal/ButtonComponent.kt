@@ -8,13 +8,10 @@
 
 package com.adyen.checkout.components.core.internal
 
-import androidx.annotation.RestrictTo
-
 /**
  * A component that requires a button to be clicked so that it can be submitted. This button might be visible during all
  * or part of the payment flow.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ButtonComponent {
 
     /**

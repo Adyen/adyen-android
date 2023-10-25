@@ -7,9 +7,6 @@
  */
 package com.adyen.checkout.components.core
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ComponentAvailableCallback {
     fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod)
 }

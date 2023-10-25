@@ -1,20 +1,18 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 17/5/2021.
+ * Created by josephj on 27/10/2023.
  */
 
-package com.adyen.checkout.wechatpay.internal
+package com.adyen.checkout.wechatpay
 
 import android.app.Application
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
-import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.tencent.mm.opensdk.constants.Build
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
@@ -24,7 +22,6 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
  * You can directly call /payments after you receive a callback from [isAvailable].
  * You can use [WeChatPayActionComponent] to handle the returned action.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class WeChatPayProvider : PaymentMethodAvailabilityCheck<Configuration> {
 
     override fun isAvailable(
