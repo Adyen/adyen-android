@@ -9,7 +9,6 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.mbway.internal.ui.view.MbWayView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -22,10 +21,8 @@ internal object MbWayViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        MbWayComponentViewType -> MbWayView(context, attrs, defStyleAttr)
+        MbWayComponentViewType -> MbWayView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

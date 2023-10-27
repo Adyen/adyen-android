@@ -9,7 +9,6 @@
 package com.adyen.checkout.qrcode.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.qrcode.internal.ui.view.FullQRCodeView
 import com.adyen.checkout.qrcode.internal.ui.view.SimpleQRCodeView
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -22,12 +21,10 @@ internal object QrCodeViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        QrCodeComponentViewType.SIMPLE_QR_CODE -> SimpleQRCodeView(context, attrs, defStyleAttr)
-        QrCodeComponentViewType.FULL_QR_CODE -> FullQRCodeView(context, attrs, defStyleAttr)
-        QrCodeComponentViewType.REDIRECT -> PaymentInProgressView(context, attrs, defStyleAttr)
+        QrCodeComponentViewType.SIMPLE_QR_CODE -> SimpleQRCodeView(context)
+        QrCodeComponentViewType.FULL_QR_CODE -> FullQRCodeView(context)
+        QrCodeComponentViewType.REDIRECT -> PaymentInProgressView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.bacs.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitConfirmationView
 import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitInputView
@@ -22,12 +21,10 @@ internal object BacsDirectDebitViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            BacsComponentViewType.INPUT -> BacsDirectDebitInputView(context, attrs, defStyleAttr)
-            BacsComponentViewType.CONFIRMATION -> BacsDirectDebitConfirmationView(context, attrs, defStyleAttr)
+            BacsComponentViewType.INPUT -> BacsDirectDebitInputView(context)
+            BacsComponentViewType.CONFIRMATION -> BacsDirectDebitConfirmationView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
