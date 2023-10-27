@@ -312,8 +312,6 @@ class DefaultCardDelegate(
             detectedCardTypes = filteredDetectedCardTypes
         )
 
-        val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
-
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
 
@@ -328,8 +326,8 @@ class DefaultCardDelegate(
                 enableLuhnCheck = enableLuhnCheck,
                 isBrandSupported = !shouldFailWithUnsupportedBrand
             ),
-            expiryDateState = validateExpiryDate(inputData.expiryDate, reliableSelectedCard?.expiryDatePolicy),
-            securityCodeState = validateSecurityCode(inputData.securityCode, reliableSelectedCard),
+            expiryDateState = validateExpiryDate(inputData.expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
+            securityCodeState = validateSecurityCode(inputData.securityCode, selectedOrFirstCardType),
             holderNameState = validateHolderName(inputData.holderName),
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
@@ -337,14 +335,14 @@ class DefaultCardDelegate(
             addressState = validateAddress(
                 inputData.address,
                 addressFormUIState,
-                reliableSelectedCard,
+                selectedOrFirstCardType,
                 updatedCountryOptions,
                 updatedStateOptions
             ),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
-            cvcUIState = makeCvcUIState(reliableSelectedCard?.cvcPolicy),
-            expiryDateUIState = makeExpiryDateUIState(reliableSelectedCard?.expiryDatePolicy),
+            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+            expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             holderNameUIState = getHolderNameUIState(),
             showStorePaymentField = showStorePaymentField(),
             detectedCardTypes = filteredDetectedCardTypes,
@@ -481,14 +479,8 @@ class DefaultCardDelegate(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        return if (isCvcHidden(makeCvcUIState(cardType?.cvcPolicy))) {
-            FieldState(
-                securityCode,
-                Validation.Valid
-            )
-        } else {
-            CardValidationUtils.validateSecurityCode(securityCode, cardType)
-        }
+        val cvcUIState = makeCvcUIState(cardType)
+        return CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {
@@ -552,9 +544,7 @@ class DefaultCardDelegate(
     }
 
     private fun isCvcHidden(cvcUIState: InputFieldUIState = outputData.cvcUIState): Boolean {
-        val hiddenAfterBinLookup =
-            componentParams.cvcVisibility == CVCVisibility.HIDE_FIRST && cvcUIState == InputFieldUIState.HIDDEN
-        return componentParams.cvcVisibility == CVCVisibility.ALWAYS_HIDE || hiddenAfterBinLookup
+        return cvcUIState == InputFieldUIState.HIDDEN
     }
 
     private fun isSocialSecurityNumberRequired(): Boolean {
@@ -609,27 +599,35 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
+    private fun makeCvcUIState(detectedCardType: DetectedCardType?): InputFieldUIState {
+        Logger.d(TAG, "makeCvcUIState: ${detectedCardType?.cvcPolicy}")
 
-        return when (componentParams.cvcVisibility) {
-            CVCVisibility.ALWAYS_SHOW -> {
-                when (cvcPolicy) {
-                    Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                    Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
-                    else -> InputFieldUIState.REQUIRED
+        return if (detectedCardType?.isReliable == true) {
+            when (componentParams.cvcVisibility) {
+                CVCVisibility.ALWAYS_SHOW -> {
+                    when (detectedCardType.cvcPolicy) {
+                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+                        Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
+                        else -> InputFieldUIState.REQUIRED
+                    }
                 }
-            }
 
-            CVCVisibility.HIDE_FIRST -> {
-                when (cvcPolicy) {
-                    Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
-                    Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                    else -> InputFieldUIState.HIDDEN
+                CVCVisibility.HIDE_FIRST -> {
+                    when (detectedCardType.cvcPolicy) {
+                        Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
+                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+                        else -> InputFieldUIState.HIDDEN
+                    }
                 }
-            }
 
-            CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
+                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
+            }
+        } else {
+            when (componentParams.cvcVisibility) {
+                CVCVisibility.ALWAYS_SHOW -> InputFieldUIState.REQUIRED
+                CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
+                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
+            }
         }
     }
 

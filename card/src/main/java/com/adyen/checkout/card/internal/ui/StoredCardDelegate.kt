@@ -83,7 +83,8 @@ internal class StoredCardDelegate(
         isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = when {
-            isCvcHidden() -> Brand.FieldPolicy.HIDDEN
+            componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
+                noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -307,18 +308,12 @@ internal class StoredCardDelegate(
     }
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
-        return if (isCvcHidden()) {
-            FieldState(
-                securityCode,
-                Validation.Valid
-            )
-        } else {
-            CardValidationUtils.validateSecurityCode(securityCode, detectedCardType)
-        }
+        val cvcUiState = makeCvcUIState(detectedCardType.cvcPolicy)
+        return CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
     }
 
     private fun isCvcHidden(): Boolean {
-        return componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE || noCvcBrands.contains(cardType)
+        return outputData.cvcUIState == InputFieldUIState.HIDDEN
     }
 
     private fun mapComponentState(
@@ -383,9 +378,10 @@ internal class StoredCardDelegate(
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
-        return when (componentParams.storedCVCVisibility) {
-            StoredCVCVisibility.SHOW -> InputFieldUIState.REQUIRED
-            StoredCVCVisibility.HIDE -> InputFieldUIState.HIDDEN
+        return when (cvcPolicy) {
+            Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
+            Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+            Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
         }
     }
 

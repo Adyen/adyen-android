@@ -22,7 +22,8 @@ internal object DetectedCardTypesUtils {
     }
 
     fun getSelectedOrFirstDetectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
-        return getSelectedCardType(detectedCardTypes) ?: detectedCardTypes.firstOrNull()
+        val selectedCardType = getSelectedCardType(detectedCardTypes)
+        return selectedCardType ?: detectedCardTypes.firstOrNull()
     }
 
     fun getSelectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
