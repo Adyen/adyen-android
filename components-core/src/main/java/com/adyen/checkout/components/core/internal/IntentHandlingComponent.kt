@@ -10,12 +10,10 @@ package com.adyen.checkout.components.core.internal
 
 import android.app.Activity
 import android.content.Intent
-import androidx.annotation.RestrictTo
 
 /**
  * A component that expects to receive and handle an external result in the form of an [Intent].
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface IntentHandlingComponent : ResultHandlingComponent {
 
     /**

@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.core.internal
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 
@@ -20,7 +19,6 @@ import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
  *
  * Can be attached to [AdyenComponentView] to present a view to the user.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentComponent : Component {
 
     /**

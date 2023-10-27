@@ -8,7 +8,6 @@
 package com.adyen.checkout.components.core.internal
 
 import android.app.Activity
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 
@@ -18,7 +17,6 @@ import com.adyen.checkout.components.core.action.Action
  * If an [ActionComponentData] is emitted from this component, it should be sent back through the /payments/details API
  * call.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponent : Component {
 
     /**

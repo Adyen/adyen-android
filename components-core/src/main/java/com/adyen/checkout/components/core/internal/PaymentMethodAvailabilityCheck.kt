@@ -8,7 +8,6 @@
 package com.adyen.checkout.components.core.internal
 
 import android.app.Application
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
@@ -18,7 +17,6 @@ import com.adyen.checkout.components.core.PaymentMethod
  * @param ConfigurationT The Configuration for the Component corresponding to this payment method. Simply use
  * [Configuration] if not applicable.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
     fun isAvailable(
         applicationContext: Application,

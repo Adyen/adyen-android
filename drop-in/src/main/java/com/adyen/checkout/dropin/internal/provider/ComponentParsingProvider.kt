@@ -150,7 +150,7 @@ import com.adyen.checkout.upi.UPIComponent
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
-import com.adyen.checkout.wechatpay.internal.WeChatPayProvider
+import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 private val TAG = LogUtil.getTag()
 
