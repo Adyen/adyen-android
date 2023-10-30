@@ -9,7 +9,6 @@
 package com.adyen.checkout.boleto.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.boleto.R
 import com.adyen.checkout.boleto.internal.ui.view.BoletoView
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -21,10 +20,8 @@ internal object BoletoViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        BoletoComponentViewType -> BoletoView(context, attrs, defStyleAttr)
+        BoletoComponentViewType -> BoletoView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

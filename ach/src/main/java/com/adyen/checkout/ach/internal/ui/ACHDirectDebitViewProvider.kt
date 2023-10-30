@@ -9,7 +9,6 @@
 package com.adyen.checkout.ach.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.ach.internal.ui.view.ACHDirectDebitView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -21,11 +20,9 @@ internal object ACHDirectDebitViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            ACHDirectDebitComponentViewType -> ACHDirectDebitView(context, attrs, defStyleAttr)
+            ACHDirectDebitComponentViewType -> ACHDirectDebitView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

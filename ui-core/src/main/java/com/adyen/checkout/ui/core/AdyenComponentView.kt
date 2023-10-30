@@ -49,8 +49,8 @@ import java.lang.ref.WeakReference
  */
 class AdyenComponentView @JvmOverloads constructor(
     context: Context,
-    private val attrs: AttributeSet? = null,
-    private val defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
@@ -120,7 +120,7 @@ class AdyenComponentView @JvmOverloads constructor(
         componentParams: ComponentParams,
         coroutineScope: CoroutineScope,
     ) {
-        val componentView = viewType.viewProvider.getView(viewType, context, attrs, defStyleAttr)
+        val componentView = viewType.viewProvider.getView(viewType, context)
         this.componentView = componentView
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
@@ -148,7 +148,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
             binding.frameLayoutButtonContainer.isVisible = buttonDelegate.shouldShowSubmitButton()
             val buttonView = (viewType as ButtonComponentViewType)
-                .buttonViewProvider.getButton(context, attrs, defStyleAttr)
+                .buttonViewProvider.getButton(context)
             buttonView.setText(viewType, componentParams, localizedContext)
             buttonView.setOnClickListener {
                 buttonDelegate.onSubmit()

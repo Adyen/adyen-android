@@ -9,7 +9,6 @@
 package com.adyen.checkout.bcmc.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.bcmc.internal.ui.view.BcmcView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -22,10 +21,8 @@ internal object BcmcViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        BcmcComponentViewType -> BcmcView(context, attrs, defStyleAttr)
+        BcmcComponentViewType -> BcmcView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

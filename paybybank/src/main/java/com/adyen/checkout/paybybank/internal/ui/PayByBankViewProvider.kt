@@ -9,7 +9,6 @@
 package com.adyen.checkout.paybybank.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.paybybank.internal.ui.view.PayByBankView
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -20,11 +19,9 @@ internal object PayByBankViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            PayByBankComponentViewType -> PayByBankView(context, attrs, defStyleAttr)
+            PayByBankComponentViewType -> PayByBankView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

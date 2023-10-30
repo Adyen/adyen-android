@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -17,7 +16,5 @@ interface ViewProvider {
     fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView
 }

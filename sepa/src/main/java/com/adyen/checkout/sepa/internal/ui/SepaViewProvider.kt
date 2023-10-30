@@ -9,7 +9,6 @@
 package com.adyen.checkout.sepa.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.sepa.internal.ui.view.SepaView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -22,11 +21,9 @@ internal object SepaViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            SepaComponentViewType -> SepaView(context, attrs, defStyleAttr)
+            SepaComponentViewType -> SepaView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

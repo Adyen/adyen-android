@@ -9,7 +9,6 @@
 package com.adyen.checkout.upi.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -22,10 +21,8 @@ internal object UPIViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        UPIComponentViewType -> UPIView(context, attrs, defStyleAttr)
+        UPIComponentViewType -> UPIView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

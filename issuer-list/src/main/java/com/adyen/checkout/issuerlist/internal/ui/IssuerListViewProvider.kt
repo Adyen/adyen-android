@@ -9,7 +9,6 @@
 package com.adyen.checkout.issuerlist.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.issuerlist.internal.ui.view.IssuerListRecyclerView
 import com.adyen.checkout.issuerlist.internal.ui.view.IssuerListSpinnerView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
@@ -23,12 +22,10 @@ internal object IssuerListViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            IssuerListComponentViewType.RecyclerView -> IssuerListRecyclerView(context, attrs, defStyleAttr)
-            IssuerListComponentViewType.SpinnerView -> IssuerListSpinnerView(context, attrs, defStyleAttr)
+            IssuerListComponentViewType.RecyclerView -> IssuerListRecyclerView(context)
+            IssuerListComponentViewType.SpinnerView -> IssuerListSpinnerView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

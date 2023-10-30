@@ -9,7 +9,6 @@
 package com.adyen.checkout.blik.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.blik.internal.ui.view.BlikView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -21,11 +20,9 @@ internal object BlikViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            BlikComponentViewType -> BlikView(context, attrs, defStyleAttr)
+            BlikComponentViewType -> BlikView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

@@ -9,7 +9,6 @@
 package com.adyen.checkout.onlinebankingcore.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -21,11 +20,9 @@ internal object OnlineBankingViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            OnlineBankingComponentViewType -> OnlineBankingView(context, attrs, defStyleAttr)
+            OnlineBankingComponentViewType -> OnlineBankingView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
