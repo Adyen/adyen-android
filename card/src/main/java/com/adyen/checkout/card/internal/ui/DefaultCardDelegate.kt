@@ -364,7 +364,9 @@ class DefaultCardDelegate(
     private fun isCardListVisible(
         cardBrands: List<CardListItem>,
         detectedCardTypes: List<DetectedCardType>
-    ): Boolean = cardBrands.isNotEmpty() && detectedCardTypes.isEmpty()
+    ): Boolean = cardBrands.isNotEmpty() &&
+        detectedCardTypes.isEmpty() &&
+        paymentMethod.type == PaymentMethodTypes.SCHEME
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN

@@ -1156,7 +1156,7 @@ internal class DefaultCardDelegateTest(
         cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
         genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
-        paymentMethod: PaymentMethod = PaymentMethod(),
+        paymentMethod: PaymentMethod = PaymentMethod(type = PaymentMethodTypes.SCHEME),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
