@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -127,6 +128,12 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
         protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        Logger.d(TAG, "onCancel")
+        protocol.terminateDropIn()
     }
 
     override fun onBackPressed(): Boolean {
