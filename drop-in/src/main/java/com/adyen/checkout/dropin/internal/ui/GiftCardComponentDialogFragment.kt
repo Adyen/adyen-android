@@ -54,7 +54,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-        binding.header.text = paymentMethod.name
+        binding.header.text = paymentMethod.getMerchantCustomizableName()
 
         try {
             loadComponent()

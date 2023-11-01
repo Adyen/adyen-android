@@ -20,10 +20,16 @@ import org.json.JSONObject
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
 @Parcelize
-class PaymentMethodsApiResponse(
+data class PaymentMethodsApiResponse(
     var storedPaymentMethods: List<StoredPaymentMethod>? = null,
     var paymentMethods: List<PaymentMethod>? = null,
 ) : ModelObject() {
+
+    // TODO: Create a filter {} lambda for custom display name
+    fun addCustomDisplayInformation(type: String, customDisplayInformation: PaymentMethodCustomDisplayInformation) =
+        paymentMethods?.filter { it.type == type }?.forEach {
+            it.customDisplayInformation = customDisplayInformation
+        }
 
     companion object {
         private const val STORED_PAYMENT_METHODS = "storedPaymentMethods"

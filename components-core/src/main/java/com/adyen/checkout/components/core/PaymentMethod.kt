@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components.core
 
+import com.adyen.checkout.components.core.internal.util.IgnoredCustomizedField
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.internal.data.model.JsonUtils.serializeOptStringList
@@ -16,21 +17,31 @@ import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@OptIn(IgnoredCustomizedField::class)
 @Parcelize
 data class PaymentMethod(
-    var type: String? = null,
-    var name: String? = null,
-    var brands: List<String>? = null,
-    var brand: String? = null,
-    var fundingSource: String? = null,
-    var issuers: List<Issuer>? = null,
-    var configuration: Configuration? = null,
-    var details: List<InputDetail>? = null,
+    val type: String? = null,
+    @IgnoredCustomizedField
+    val name: String? = null,
+    val brands: List<String>? = null,
+    val brand: String? = null,
+    val fundingSource: String? = null,
+    val issuers: List<Issuer>? = null,
+    val configuration: Configuration? = null,
+    val details: List<InputDetail>? = null,
+    // Gives the option to set a customizable fields for the payment method
+    var customDisplayInformation: PaymentMethodCustomDisplayInformation? = null
 ) : ModelObject() {
+
+    fun getMerchantCustomizableName() = customDisplayInformation?.name ?: name
+
+    @IgnoredOnParcel
+    var test: String? = null
 
     companion object {
         private const val TYPE = "type"

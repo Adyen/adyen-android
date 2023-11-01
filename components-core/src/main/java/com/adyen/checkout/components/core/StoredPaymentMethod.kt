@@ -18,18 +18,18 @@ import org.json.JSONObject
 
 @Parcelize
 data class StoredPaymentMethod(
-    var type: String? = null,
-    var name: String? = null,
-    var brand: String? = null,
-    var expiryMonth: String? = null,
-    var expiryYear: String? = null,
-    var holderName: String? = null,
-    var id: String? = null,
-    var lastFour: String? = null,
-    var shopperEmail: String? = null,
-    var supportedShopperInteractions: List<String>? = null,
-    var bankAccountNumber: String? = null,
-    var cashtag: String? = null,
+    val type: String? = null,
+    val name: String? = null,
+    val brand: String? = null,
+    val expiryMonth: String? = null,
+    val expiryYear: String? = null,
+    val holderName: String? = null,
+    val id: String? = null,
+    val lastFour: String? = null,
+    val shopperEmail: String? = null,
+    val supportedShopperInteractions: List<String>? = null,
+    val bankAccountNumber: String? = null,
+    val cashtag: String? = null,
 ) : ModelObject() {
 
     val isEcommerce: Boolean

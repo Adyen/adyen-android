@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.components.core.PaymentMethodCustomDisplayInformation
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.SessionDropInCallback
@@ -138,20 +139,36 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
             is MainNavigation.DropIn -> {
+                // TODO: Remove this example
+                val paymentMethodsApiResponse = navigation.paymentMethodsApiResponse.apply {
+                    addCustomDisplayInformation(
+                        type = "scheme",
+                        PaymentMethodCustomDisplayInformation("Custom card name")
+                    )
+                }
+
                 DropIn.startPayment(
                     this,
                     dropInLauncher,
-                    navigation.paymentMethodsApiResponse,
+                    paymentMethodsApiResponse,
                     navigation.dropInConfiguration,
                     ExampleAdvancedDropInService::class.java,
                 )
             }
 
             is MainNavigation.DropInWithSession -> {
+                // TODO: Remove this example
+                val checkoutSession = navigation.checkoutSession.apply {
+                    sessionSetupResponse.paymentMethodsApiResponse?.addCustomDisplayInformation(
+                        type = "scheme",
+                        PaymentMethodCustomDisplayInformation("Custom card name")
+                    )
+                }
+
                 DropIn.startPayment(
                     this,
                     sessionDropInLauncher,
-                    navigation.checkoutSession,
+                    checkoutSession,
                     navigation.dropInConfiguration,
                 )
             }
