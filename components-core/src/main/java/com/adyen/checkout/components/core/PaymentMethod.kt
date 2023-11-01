@@ -17,13 +17,12 @@ import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
-@OptIn(IgnoredCustomizedField::class)
 @Parcelize
+@OptIn(IgnoredCustomizedField::class)
 data class PaymentMethod(
     val type: String? = null,
     @IgnoredCustomizedField
@@ -34,14 +33,11 @@ data class PaymentMethod(
     val issuers: List<Issuer>? = null,
     val configuration: Configuration? = null,
     val details: List<InputDetail>? = null,
-    // Gives the option to set a customizable fields for the payment method
+    // This property is used to allow setting a customizable fields for the payment method
     var customDisplayInformation: PaymentMethodCustomDisplayInformation? = null
 ) : ModelObject() {
 
     fun getMerchantCustomizableName() = customDisplayInformation?.name ?: name
-
-    @IgnoredOnParcel
-    var test: String? = null
 
     companion object {
         private const val TYPE = "type"

@@ -9,16 +9,18 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.RestrictTo.Scope
+import kotlin.RequiresOptIn.Level
 
 /**
- * Preferably another field should be used instead, which is already customized.
- * In other cases [IgnoredCustomizedField] annotation can be used to suppress warning.
+ * Use [IgnoredCustomizedField] annotation to restrict direct use of properties.
+ * When using this annotation, make sure to provide a customized alternative property to be used instead.
  */
-// TODO: Explain what is this annotation in the comment section
-// TODO: Make sure it is well configured. More here - https://kotlinlang.org/docs/opt-in-requirements.html#create-opt-in-requirement-annotations
-// TODO: We could pass a custom message to be shown for the opt in
-@RequiresOptIn(message = "This field should not be used. Preferably use a customized alternative of this field.")
+@RequiresOptIn(
+    level = Level.WARNING,
+    message = "This field should not be directly used. Preferably use a customized alternative of this field."
+)
 @Target(AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.BINARY)
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@RestrictTo(Scope.LIBRARY_GROUP)
 annotation class IgnoredCustomizedField
