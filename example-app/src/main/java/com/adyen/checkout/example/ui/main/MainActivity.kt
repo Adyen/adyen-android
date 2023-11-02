@@ -19,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.components.core.PaymentMethodCustomDisplayInformation
-import com.adyen.checkout.components.core.internal.util.IgnoredCustomizedField
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.SessionDropInCallback
@@ -140,42 +138,20 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
             is MainNavigation.DropIn -> {
-                // TODO: Remove this example
-                @OptIn(IgnoredCustomizedField::class)
-                val paymentMethodsApiResponse = navigation.paymentMethodsApiResponse.apply {
-                    addCustomDisplayInformation(
-                        type = "scheme",
-                        PaymentMethodCustomDisplayInformation("Custom card name")
-                    ) {
-                        it.name == "Some name"
-                    }
-                }
-
                 DropIn.startPayment(
                     this,
                     dropInLauncher,
-                    paymentMethodsApiResponse,
+                    navigation.paymentMethodsApiResponse,
                     navigation.dropInConfiguration,
                     ExampleAdvancedDropInService::class.java,
                 )
             }
 
             is MainNavigation.DropInWithSession -> {
-                // TODO: Remove this example
-                @OptIn(IgnoredCustomizedField::class)
-                val checkoutSession = navigation.checkoutSession.apply {
-                    addCustomDisplayInformation(
-                        type = "scheme",
-                        PaymentMethodCustomDisplayInformation("Custom card name")
-                    ) {
-                        it.name == "Some name"
-                    }
-                }
-
                 DropIn.startPayment(
                     this,
                     sessionDropInLauncher,
-                    checkoutSession,
+                    navigation.checkoutSession,
                     navigation.dropInConfiguration,
                 )
             }

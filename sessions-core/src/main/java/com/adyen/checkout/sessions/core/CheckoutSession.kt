@@ -11,6 +11,7 @@ package com.adyen.checkout.sessions.core
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodCustomDisplayInformation
+import com.adyen.checkout.components.core.StoredPaymentMethod
 
 /**
  * A class holding the data required to launch Drop-in or a component with the sessions flow.
@@ -24,18 +25,40 @@ data class CheckoutSession(
     /**
      * Allows setting custom display information for payment methods, allowing filter by [type] and [predicate].
      *
-     * [addCustomDisplayInformation] can be called multiple times, which will always override the latest value.
+     * Calling this function multiple times will cause the custom display information to be overridden.
      * This might be useful when [customDisplayInformation] should be updated when localization settings change.
      *
      * @param type Updates payment methods matching the given type.
      * @param customDisplayInformation Customizable information object to override the default display values.
      * @param predicate Updates payment methods not only matching the type but also matching the given predicate.
      */
-    fun addCustomDisplayInformation(
+    @Suppress("unused")
+    fun addPaymentMethodCustomDisplayInformation(
         type: String,
         customDisplayInformation: PaymentMethodCustomDisplayInformation,
         predicate: (PaymentMethod) -> Boolean = { true }
-    ) = sessionSetupResponse.paymentMethodsApiResponse?.addCustomDisplayInformation(
+    ) = sessionSetupResponse.paymentMethodsApiResponse?.addPaymentMethodCustomDisplayInformation(
+        type,
+        customDisplayInformation,
+        predicate
+    )
+
+    /**
+     * Allows setting custom display information for stored payment methods, allowing filter by [type] and [predicate].
+     *
+     * Calling this function multiple times will cause the custom display information to be overridden.
+     * This might be useful when [customDisplayInformation] should be updated when localization settings change.
+     *
+     * @param type Updates stored payment methods matching the given type.
+     * @param customDisplayInformation Customizable information object to override the default display values.
+     * @param predicate Updates stored payment methods not only matching the type but also matching the given predicate.
+     */
+    @Suppress("unused")
+    fun addStoredPaymentMethodCustomDisplayInformation(
+        type: String,
+        customDisplayInformation: PaymentMethodCustomDisplayInformation,
+        predicate: (StoredPaymentMethod) -> Boolean = { true }
+    ) = sessionSetupResponse.paymentMethodsApiResponse?.addStoredPaymentMethodCustomDisplayInformation(
         type,
         customDisplayInformation,
         predicate

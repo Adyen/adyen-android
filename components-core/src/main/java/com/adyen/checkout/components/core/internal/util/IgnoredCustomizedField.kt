@@ -14,7 +14,7 @@ import kotlin.RequiresOptIn.Level
 
 /**
  * Use [IgnoredCustomizedField] annotation to restrict direct use of properties.
- * When using this annotation, make sure to provide a customized alternative property to be used instead.
+ * When using this annotation, make sure to provide an alternative property to be used instead.
  */
 @RequiresOptIn(
     level = Level.WARNING,

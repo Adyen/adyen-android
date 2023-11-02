@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components.core
 
+import com.adyen.checkout.components.core.internal.util.IgnoredCustomizedField
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -16,9 +17,11 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
+@OptIn(IgnoredCustomizedField::class)
 @Parcelize
 data class StoredPaymentMethod(
     val type: String? = null,
+    @IgnoredCustomizedField
     val name: String? = null,
     val brand: String? = null,
     val expiryMonth: String? = null,
@@ -30,10 +33,14 @@ data class StoredPaymentMethod(
     val supportedShopperInteractions: List<String>? = null,
     val bankAccountNumber: String? = null,
     val cashtag: String? = null,
+    // This property is used to allow setting a customizable fields for the payment method
+    var customDisplayInformation: PaymentMethodCustomDisplayInformation? = null
 ) : ModelObject() {
 
     val isEcommerce: Boolean
         get() = supportedShopperInteractions?.contains(ECOMMERCE) == true
+    val merchantCustomizableName: String?
+        get() = customDisplayInformation?.name ?: name
 
     companion object {
         private const val TYPE = "type"

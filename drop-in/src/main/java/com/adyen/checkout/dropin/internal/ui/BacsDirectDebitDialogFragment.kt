@@ -41,7 +41,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
-        binding.header.text = paymentMethod.getMerchantCustomizableName()
+        binding.header.text = paymentMethod.merchantCustomizableName
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 

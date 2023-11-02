@@ -49,7 +49,7 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 imageId = type.orEmpty(),
                 isRemovable = isRemovingEnabled,
                 name = cashtag.orEmpty(),
-                description = name,
+                description = merchantCustomizableName,
                 environment = environment,
             )
         }
@@ -58,7 +58,7 @@ internal fun StoredPaymentMethod.mapStoredModel(
             id = id.orEmpty(),
             imageId = type.orEmpty(),
             isRemovable = isRemovingEnabled,
-            name = name.orEmpty(),
+            name = merchantCustomizableName.orEmpty(),
             description = null,
             environment = environment,
         )

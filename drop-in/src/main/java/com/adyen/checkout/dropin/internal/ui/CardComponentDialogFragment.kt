@@ -37,7 +37,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         // try to get the name from the payment methods response
         binding.header.text = dropInViewModel.getPaymentMethods()
-            .find { it.type == PaymentMethodTypes.SCHEME }?.getMerchantCustomizableName()
+            .find { it.type == PaymentMethodTypes.SCHEME }?.merchantCustomizableName
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)

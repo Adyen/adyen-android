@@ -183,7 +183,7 @@ internal class PaymentMethodsListViewModel(
         if (componentState?.isInputValid == true) {
             eventsChannel.trySend(
                 PaymentMethodListStoredEvent.ShowConfirmationPopup(
-                    storedPaymentMethod.name ?: "",
+                    storedPaymentMethod.merchantCustomizableName ?: "",
                     storedPaymentMethodModel
                 )
             )
@@ -230,7 +230,7 @@ internal class PaymentMethodsListViewModel(
         return PaymentMethodModel(
             index = index,
             type = type.orEmpty(),
-            name = getMerchantCustomizableName().orEmpty(),
+            name = merchantCustomizableName.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
             environment = dropInConfiguration.environment,

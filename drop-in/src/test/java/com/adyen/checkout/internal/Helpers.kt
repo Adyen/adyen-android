@@ -45,7 +45,7 @@ internal object Helpers {
         return PaymentMethodModel(
             index = index,
             type = type.orEmpty(),
-            name = getMerchantCustomizableName().orEmpty(),
+            name = merchantCustomizableName.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
             Environment.TEST,

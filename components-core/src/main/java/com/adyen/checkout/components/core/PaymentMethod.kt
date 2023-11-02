@@ -21,8 +21,8 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
-@Parcelize
 @OptIn(IgnoredCustomizedField::class)
+@Parcelize
 data class PaymentMethod(
     val type: String? = null,
     @IgnoredCustomizedField
@@ -37,7 +37,8 @@ data class PaymentMethod(
     var customDisplayInformation: PaymentMethodCustomDisplayInformation? = null
 ) : ModelObject() {
 
-    fun getMerchantCustomizableName() = customDisplayInformation?.name ?: name
+    val merchantCustomizableName: String?
+        get() = customDisplayInformation?.name ?: name
 
     companion object {
         private const val TYPE = "type"
