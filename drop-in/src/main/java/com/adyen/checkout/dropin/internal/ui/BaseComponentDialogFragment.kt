@@ -43,7 +43,7 @@ internal abstract class BaseComponentDialogFragment :
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
     lateinit var component: PaymentComponent
-    private var isStoredPayment = false
+    var isStoredPayment = false
     private var navigatedFromPreselected = false
 
     open class BaseCompanion<T : BaseComponentDialogFragment>(private var classes: Class<T>) {
