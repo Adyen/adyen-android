@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -112,12 +111,6 @@ internal class GooglePayComponentDialogFragment :
     override fun onBackPressed(): Boolean {
         Logger.d(TAG, "onBackPressed")
         return performBackAction()
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
     }
 
     private fun handleError(componentError: ComponentError) {
