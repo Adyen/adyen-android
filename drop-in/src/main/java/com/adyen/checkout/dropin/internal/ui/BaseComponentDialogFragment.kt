@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -133,12 +132,6 @@ internal abstract class BaseComponentDialogFragment :
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
     }
 
     override fun onSubmit(state: PaymentComponentState<*>) {

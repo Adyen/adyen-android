@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -141,12 +140,6 @@ internal class PaymentMethodListDialogFragment :
         paymentMethodAdapter = null
         binding.recyclerViewPaymentMethods.adapter = null
         _binding = null
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
     }
 
     override fun onBackPressed(): Boolean {
