@@ -13,6 +13,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
@@ -24,6 +25,8 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
+import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
 
 internal class DropInViewModelFactory(
     activity: ComponentActivity
@@ -35,7 +38,9 @@ internal class DropInViewModelFactory(
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
-        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration).apply {
+            bundleHandler.paymentMethodsApiResponse?.overridePaymentMethodInformation(overriddenPaymentMethodInformation)
+        }
         val amount: Amount? = bundleHandler.amount
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
         val session = bundleHandler.sessionDetails
@@ -62,5 +67,18 @@ internal class DropInViewModelFactory(
 
         @Suppress("UNCHECKED_CAST")
         return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository) as T
+    }
+
+    internal fun PaymentMethodsApiResponse.overridePaymentMethodInformation(
+        paymentMethodInformationMap: Map<String, DropInPaymentMethodInformation>
+    ) {
+        paymentMethodInformationMap.forEach { informationEntry ->
+            val type = informationEntry.key
+            val paymentMethodInformation = informationEntry.value
+
+            paymentMethods
+                ?.filter { paymentMethod -> paymentMethod.type == type }
+                ?.forEach { paymentMethod -> paymentMethod.overrideInformation(paymentMethodInformation) }
+        }
     }
 }
