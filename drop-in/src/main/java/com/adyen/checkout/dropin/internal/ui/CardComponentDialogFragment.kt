@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
@@ -35,9 +34,11 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
 
-        // try to get the name from the payment methods response
-        binding.header.text = dropInViewModel.getPaymentMethods()
-            .find { it.type == PaymentMethodTypes.SCHEME }?.name
+        binding.header.text = if (isStoredPayment) {
+            storedPaymentMethod.name
+        } else {
+            paymentMethod.name
+        }
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
