@@ -73,24 +73,23 @@ class AnalyticsMapper {
 
     companion object {
         private const val DROP_IN_COMPONENT = "dropin"
-        private const val ANDROID_PLATFORM = "android"
         private const val ANDROID_CHANNEL = "android"
 
-        private var PLATFORM = ANDROID_PLATFORM
+        private var PLATFORM = AnalyticsPlatform.ANDROID.value
         private var VERSION = BuildConfig.CHECKOUT_VERSION
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         fun overrideForCrossPlatform(
-            platform: String,
+            platform: AnalyticsPlatform,
             version: String,
         ) {
-            PLATFORM = platform
+            PLATFORM = platform.value
             VERSION = version
         }
 
         @VisibleForTesting
         internal fun resetToDefaults() {
-            PLATFORM = ANDROID_PLATFORM
+            PLATFORM = AnalyticsPlatform.ANDROID.value
             VERSION = BuildConfig.CHECKOUT_VERSION
         }
     }

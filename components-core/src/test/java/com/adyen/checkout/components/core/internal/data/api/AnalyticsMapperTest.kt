@@ -142,7 +142,7 @@ internal class AnalyticsMapperTest {
 
     @Test
     fun `when cross platform parameters are overridden, then returned values should match expected`() {
-        AnalyticsMapper.overrideForCrossPlatform("flutter", "some test version")
+        AnalyticsMapper.overrideForCrossPlatform(AnalyticsPlatform.FLUTTER, "some test version")
         val actual = analyticsMapper.getAnalyticsSetupRequest(
             packageName = "PACKAGE_NAME",
             locale = Locale("en", "US"),
