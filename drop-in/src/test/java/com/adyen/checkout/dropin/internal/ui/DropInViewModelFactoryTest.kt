@@ -57,7 +57,7 @@ class DropInViewModelFactoryTest {
     }
 
     @Test
-    fun `when overriding payment information for a payment method by type, does not update any payment method`() {
+    fun `when overriding payment information for a payment method by non existing type, does not update any payment method`() {
         val bundleHandler = DropInSavedStateHandleContainer(mock()).apply {
             paymentMethodsApiResponse = generatePaymentMethodsApiResponse()
         }
