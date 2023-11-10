@@ -9,7 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui
 
 import android.content.Context
-import com.adyen.checkout.bcmc.internal.ui.view.BcmcView
+import com.adyen.checkout.card.internal.ui.view.CardView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -22,7 +22,7 @@ internal object BcmcViewProvider : ViewProvider {
         viewType: ComponentViewType,
         context: Context,
     ): ComponentView = when (viewType) {
-        BcmcComponentViewType -> BcmcView(context)
+        BcmcComponentViewType -> CardView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

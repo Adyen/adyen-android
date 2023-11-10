@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
@@ -19,7 +20,8 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import java.util.Locale
 
-internal data class CardComponentParams(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class CardComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
@@ -31,10 +33,10 @@ internal data class CardComponentParams(
     val supportedCardBrands: List<CardBrand>,
     val shopperReference: String?,
     val isStorePaymentFieldVisible: Boolean,
-    val isHideCvc: Boolean,
-    val isHideCvcStoredCard: Boolean,
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility,
     val kcpAuthVisibility: KCPAuthVisibility,
     val installmentParams: InstallmentParams?,
     val addressParams: AddressParams,
+    val cvcVisibility: CVCVisibility,
+    val storedCVCVisibility: StoredCVCVisibility
 ) : ComponentParams, ButtonParams

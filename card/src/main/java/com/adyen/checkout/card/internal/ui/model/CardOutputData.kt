@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
@@ -15,7 +16,8 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
-internal data class CardOutputData(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class CardOutputData(
     val cardNumberState: FieldState<String>,
     val expiryDateState: FieldState<ExpiryDate>,
     val securityCodeState: FieldState<String>,
