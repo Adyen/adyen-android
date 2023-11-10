@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.core.internal.ui.view.DefaultPayButton
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
@@ -18,13 +17,10 @@ import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 interface ButtonViewProvider {
     fun getButton(
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
     ): PayButton
 }
 
 internal class DefaultButtonViewProvider : ButtonViewProvider {
 
-    override fun getButton(context: Context, attrs: AttributeSet?, defStyleAttr: Int): PayButton =
-        DefaultPayButton(context, attrs, defStyleAttr)
+    override fun getButton(context: Context): PayButton = DefaultPayButton(context)
 }

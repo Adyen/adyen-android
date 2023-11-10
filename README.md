@@ -31,23 +31,23 @@ Import the corresponding module in your `build.gradle` file.
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in-compose:5.0.0"
+implementation "com.adyen.checkout:drop-in-compose:5.0.1"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.0.0"
-implementation "com.adyen.checkout:components-compose:5.0.0"
+implementation "com.adyen.checkout:card:5.0.1"
+implementation "com.adyen.checkout:components-compose:5.0.1"
 ```
 
 ### Without Jetpack Compose
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in:5.0.0"
+implementation "com.adyen.checkout:drop-in:5.0.1"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.0.0"
+implementation "com.adyen.checkout:card:5.0.1"
 ```
 
 The library is available on [Maven Central][mavenRepo].
@@ -97,7 +97,7 @@ This repository is available under the [MIT license](LICENSE).
 [shield.license.image]: https://img.shields.io/github/license/Adyen/adyen-android
 [shield.license.link]: LICENSE
 [docs.android]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android
-[header.preview]: config/docs/dropin-android.jpg
+[header.preview]: https://github.com/Adyen/adyen-android/assets/9079915/e6e18a07-b30f-41f0-b7ef-701b20e2e339
 [adyen.testAccount]: https://www.adyen.com/signup
 [docs.apiKey]: https://docs.adyen.com/development-resources/how-to-get-the-api-key
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key

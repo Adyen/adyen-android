@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.internal.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
@@ -79,6 +80,11 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
 
     open fun onBackPressed(): Boolean {
         return false
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        Logger.d(TAG, "onCancel")
+        protocol.terminateDropIn()
     }
 
     companion object {

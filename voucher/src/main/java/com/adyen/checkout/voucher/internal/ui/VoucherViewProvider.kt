@@ -9,7 +9,6 @@
 package com.adyen.checkout.voucher.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
@@ -21,12 +20,10 @@ internal object VoucherViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            VoucherComponentViewType.SIMPLE_VOUCHER -> VoucherView(context, attrs, defStyleAttr)
-            VoucherComponentViewType.FULL_VOUCHER -> FullVoucherView(context, attrs, defStyleAttr)
+            VoucherComponentViewType.SIMPLE_VOUCHER -> VoucherView(context)
+            VoucherComponentViewType.FULL_VOUCHER -> FullVoucherView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

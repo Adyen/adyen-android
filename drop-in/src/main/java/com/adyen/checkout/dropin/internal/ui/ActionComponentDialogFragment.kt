@@ -143,7 +143,6 @@ internal class ActionComponentDialogFragment :
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
         if (shouldFinishWithAction()) {
             protocol.finishWithAction()

@@ -9,7 +9,6 @@
 package com.adyen.checkout.wechatpay.internal.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
@@ -20,10 +19,8 @@ internal object WeChatViewProvider : ViewProvider {
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
     ): ComponentView = when (viewType) {
-        WeChatComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
+        WeChatComponentViewType -> PaymentInProgressView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

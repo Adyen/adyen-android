@@ -19,7 +19,7 @@ ext.mavenArtifactDescription = "Adyen Checkout Action Core module."
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    namespace 'com.adyen.checkout.action'
+    namespace 'com.adyen.checkout.action.core'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {

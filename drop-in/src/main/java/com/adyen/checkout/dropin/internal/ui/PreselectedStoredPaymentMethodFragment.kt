@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -224,12 +223,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dialog.dismiss()
             }
             .show()
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
     }
 
     override fun onDestroyView() {
