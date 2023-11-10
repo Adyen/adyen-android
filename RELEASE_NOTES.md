@@ -10,3 +10,12 @@
 
 ## Fixed
 - `@RestrictTo` annotations no longer cause false errors with Android Studio and Lint.
+- Using the layout inspector or having view attribute inspection enabled in the developer options no longer causes a crash when viewing a payment method.
+- Implementing the `:action` module no longer gives a duplicate class error caused by a duplicate namespace.
+- For Drop-in, dismissing the gift card payment method no longer prevents further interaction.
+
+## Changed
+- Dependency versions:
+  | Name                                                                                                   | Version                       |
+  |--------------------------------------------------------------------------------------------------------|-------------------------------|
+  | [AndroidX Compose BoM](https://developer.android.com/jetpack/compose/bom/bom-mapping)                  | **2023.09.01**                |
