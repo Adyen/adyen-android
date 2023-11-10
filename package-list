@@ -185,6 +185,5 @@ com.adyen.checkout.voucher.internal.ui.model
 com.adyen.checkout.voucher.internal.ui.view
 module:wechatpay
 com.adyen.checkout.wechatpay
-com.adyen.checkout.wechatpay.internal
 com.adyen.checkout.wechatpay.internal.provider
 com.adyen.checkout.wechatpay.internal.ui
