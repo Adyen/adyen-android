@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 28/10/2022.
+ * Created by ararat on 9/11/2023.
  */
 
-package com.adyen.checkout.internal
+package com.adyen.checkout.dropin.internal
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration

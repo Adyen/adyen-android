@@ -6,7 +6,7 @@
  * Created by atef on 27/10/2022.
  */
 
-package com.adyen.checkout.internal.ui
+package com.adyen.checkout.dropin.internal.ui
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -15,17 +15,16 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.internal.ui.PaymentMethodsListViewModel
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
-import com.adyen.checkout.internal.ConfigurationProvider
-import com.adyen.checkout.internal.DataProvider
-import com.adyen.checkout.internal.Helpers.mapToPaymentMethodModelList
-import com.adyen.checkout.internal.Helpers.mapToStoredPaymentMethodsModelList
+import com.adyen.checkout.dropin.internal.ConfigurationProvider
+import com.adyen.checkout.dropin.internal.DataProvider
+import com.adyen.checkout.dropin.internal.Helpers.mapToPaymentMethodModelList
+import com.adyen.checkout.dropin.internal.Helpers.mapToStoredPaymentMethodsModelList
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
