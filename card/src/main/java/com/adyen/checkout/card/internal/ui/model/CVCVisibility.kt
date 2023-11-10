@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 10/6/2021.
+ * Created by ozgur on 5/9/2023.
  */
 
 package com.adyen.checkout.card.internal.ui.model
@@ -11,6 +11,11 @@ package com.adyen.checkout.card.internal.ui.model
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class InputFieldUIState {
-    REQUIRED, OPTIONAL, HIDDEN
+enum class CVCVisibility {
+    ALWAYS_SHOW, HIDE_FIRST, ALWAYS_HIDE
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class StoredCVCVisibility {
+    SHOW, HIDE
 }

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.data.api
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
@@ -28,7 +29,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-internal class DefaultDetectCardTypeRepository(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultDetectCardTypeRepository(
     private val cardEncrypter: BaseCardEncrypter,
     private val binLookupService: BinLookupService,
 ) : DetectCardTypeRepository {
@@ -45,6 +47,7 @@ internal class DefaultDetectCardTypeRepository(
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
+        type: String?
     ) {
         Logger.d(TAG, "detectCardType")
         if (shouldFetchReliableTypes(cardNumber)) {
@@ -64,7 +67,8 @@ internal class DefaultDetectCardTypeRepository(
                         publicKey,
                         supportedCardBrands,
                         clientKey,
-                        coroutineScope
+                        coroutineScope,
+                        type
                     )
                 }
             }
@@ -79,6 +83,7 @@ internal class DefaultDetectCardTypeRepository(
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
+        type: String?
     ) {
         if (publicKey != null) {
             Logger.d(TAG, "Launching Bin Lookup")
@@ -89,7 +94,8 @@ internal class DefaultDetectCardTypeRepository(
                     cardNumber,
                     publicKey,
                     supportedCardBrands,
-                    clientKey
+                    clientKey,
+                    type
                 )?.let {
                     _detectedCardTypesFlow.send(it)
                 }
@@ -139,10 +145,11 @@ internal class DefaultDetectCardTypeRepository(
         publicKey: String,
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
+        type: String?
     ): List<DetectedCardType>? {
         val key = hashBin(cardNumber)
         cachedBinLookup[key] = BinLookupResult.Loading
-        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardBrands, clientKey)
+        val binLookupResponse = makeBinLookup(cardNumber, publicKey, supportedCardBrands, clientKey, type)
 
         return if (binLookupResponse == null) {
             cachedBinLookup.remove(key)
@@ -159,11 +166,12 @@ internal class DefaultDetectCardTypeRepository(
         publicKey: String,
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
+        type: String?
     ): BinLookupResponse? {
         return runSuspendCatching {
             val encryptedBin = cardEncrypter.encryptBin(cardNumber, publicKey)
             val cardBrands = supportedCardBrands.map { it.txVariant }
-            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands)
+            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands, type)
 
             binLookupService.makeBinLookup(
                 request = request,

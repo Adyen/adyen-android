@@ -15,6 +15,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
@@ -137,13 +138,18 @@ object CardValidationUtils {
     /**
      * Validate Security Code.
      */
-    internal fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType?): FieldState<String> {
+    internal fun validateSecurityCode(
+        securityCode: String,
+        detectedCardType: DetectedCardType?,
+        cvcUIState: InputFieldUIState
+    ): FieldState<String> {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
         val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
+            cvcUIState == InputFieldUIState.HIDDEN -> Validation.Valid
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
-            detectedCardType?.cvcPolicy?.isRequired() == false && length == 0 -> Validation.Valid
+            cvcUIState == InputFieldUIState.OPTIONAL && length == 0 -> Validation.Valid
             detectedCardType?.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
                 length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
 
