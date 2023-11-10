@@ -107,8 +107,8 @@ internal class CardComponentParamsMapperTest {
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
             isSubmitButtonVisible = false,
-            cvcVisibility = CVCVisibility.ALWAYS_HIDE,
-            storedCVCVisibility = StoredCVCVisibility.HIDE,
+            isHideCvc = true,
+            isHideCvcStoredCard = true,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
             kcpAuthVisibility = KCPAuthVisibility.SHOW,
             installmentParams = expectedInstallmentParams,
@@ -451,12 +451,12 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = true,
+        isHideCvc: Boolean = false,
+        isHideCvcStoredCard: Boolean = false,
         socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
         kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentParams: InstallmentParams? = null,
         addressParams: AddressParams = AddressParams.None,
-        cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
-        storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
     ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -468,13 +468,13 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands = supportedCardBrands,
         shopperReference = shopperReference,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
+        isHideCvc = isHideCvc,
+        isHideCvcStoredCard = isHideCvcStoredCard,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         kcpAuthVisibility = kcpAuthVisibility,
         installmentParams = installmentParams,
         addressParams = addressParams,
-        amount = amount,
-        cvcVisibility = cvcVisibility,
-        storedCVCVisibility = storedCVCVisibility,
+        amount = amount
     )
 
     companion object {

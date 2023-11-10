@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
@@ -21,8 +20,7 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface CardDelegate :
+internal interface CardDelegate :
     PaymentComponentDelegate<CardComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface DetectCardTypeRepository {
+internal interface DetectCardTypeRepository {
 
     val detectedCardTypesFlow: Flow<List<DetectedCardType>>
 
@@ -26,6 +24,5 @@ interface DetectCardTypeRepository {
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
-        type: String? = null
     )
 }

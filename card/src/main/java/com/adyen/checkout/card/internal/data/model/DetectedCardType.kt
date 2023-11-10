@@ -8,11 +8,9 @@
 
 package com.adyen.checkout.card.internal.data.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class DetectedCardType(
+internal data class DetectedCardType(
     val cardBrand: CardBrand,
     val isReliable: Boolean,
     val enableLuhnCheck: Boolean,

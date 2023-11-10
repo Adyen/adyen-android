@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +34,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
-open class CardComponent constructor(
+class CardComponent internal constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
@@ -61,8 +60,7 @@ open class CardComponent constructor(
         componentEventHandler.initialize(viewModelScope)
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun observe(
+    internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<CardComponentState>) -> Unit
     ) {
@@ -75,8 +73,7 @@ open class CardComponent constructor(
         )
     }
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun removeObserver() {
+    internal fun removeObserver() {
         cardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
