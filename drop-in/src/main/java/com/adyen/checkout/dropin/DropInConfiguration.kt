@@ -67,7 +67,7 @@ class DropInConfiguration private constructor(
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
-    val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
+    internal val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
 ) : Configuration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
@@ -379,6 +379,16 @@ class DropInConfiguration private constructor(
             return this
         }
 
+        /**
+         * Override payment method name, filtering by [paymentMethodType].
+         * You can pass [PaymentMethodTypes] or any other custom value.]
+         *
+         * This function can be called multiple times to set custom names for payment methods with different types.
+         * Only the latest value will be shown if calling this function multiple times for the same [paymentMethodType].
+         *
+         * @param paymentMethodType Updates payment methods matching the given type.
+         * @param name Custom name to be shown for payment methods filtered by given [paymentMethodType].
+         */
         fun overridePaymentMethodName(paymentMethodType: String, name: String): Builder {
             overriddenPaymentMethodInformation[paymentMethodType] = DropInPaymentMethodInformation(name)
             return this

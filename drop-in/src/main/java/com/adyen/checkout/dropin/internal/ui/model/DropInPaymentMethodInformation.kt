@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class DropInPaymentMethodInformation(
+internal data class DropInPaymentMethodInformation(
     val name: String
 ) : Parcelable
 
