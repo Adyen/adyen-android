@@ -28,7 +28,7 @@ ext {
 
     // Code quality
     detekt_version = "1.23.1"
-    ktlint_version = '0.50.0'
+    ktlint_version = '0.51.0-FINAL'
 
     // Android Dependencies
     annotation_version = "1.7.0"
