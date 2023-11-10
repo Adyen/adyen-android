@@ -21,7 +21,6 @@ import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
-import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -83,8 +82,7 @@ internal class StoredCardDelegate(
         isReliable = true,
         enableLuhnCheck = true,
         cvcPolicy = when {
-            componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
-                noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+            componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -308,12 +306,18 @@ internal class StoredCardDelegate(
     }
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
-        val cvcUiState = makeCvcUIState(detectedCardType.cvcPolicy)
-        return CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
+        return if (componentParams.isHideCvcStoredCard || noCvcBrands.contains(detectedCardType.cardBrand)) {
+            FieldState(
+                securityCode,
+                Validation.Valid
+            )
+        } else {
+            CardValidationUtils.validateSecurityCode(securityCode, detectedCardType)
+        }
     }
 
     private fun isCvcHidden(): Boolean {
-        return outputData.cvcUIState == InputFieldUIState.HIDDEN
+        return componentParams.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
 
     private fun mapComponentState(
@@ -378,10 +382,10 @@ internal class StoredCardDelegate(
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
-        return when (cvcPolicy) {
-            Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
-            Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-            Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
+        return when {
+            isCvcHidden() -> InputFieldUIState.HIDDEN
+            !cvcPolicy.isRequired() -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
         }
     }
 

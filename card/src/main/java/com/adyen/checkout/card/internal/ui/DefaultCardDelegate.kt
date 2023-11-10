@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
@@ -20,7 +19,6 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
@@ -85,9 +83,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList", "TooManyFunctions", "LargeClass")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultCardDelegate(
+@Suppress("LongParameterList", "TooManyFunctions")
+internal class DefaultCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val publicKeyRepository: PublicKeyRepository,
     override val componentParams: CardComponentParams,
@@ -225,8 +222,7 @@ class DefaultCardDelegate(
             publicKey = publicKey,
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
-            coroutineScope = coroutineScope,
-            type = paymentMethod.type
+            coroutineScope = coroutineScope
         )
         requestStateList(inputData.address.country)
     }
@@ -312,6 +308,8 @@ class DefaultCardDelegate(
             detectedCardTypes = filteredDetectedCardTypes
         )
 
+        val reliableSelectedCard = if (isReliable) selectedOrFirstCardType else null
+
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
 
@@ -335,13 +333,13 @@ class DefaultCardDelegate(
             addressState = validateAddress(
                 inputData.address,
                 addressFormUIState,
-                selectedOrFirstCardType,
+                reliableSelectedCard,
                 updatedCountryOptions,
                 updatedStateOptions
             ),
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
-            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+            cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             holderNameUIState = getHolderNameUIState(),
             showStorePaymentField = showStorePaymentField(),
@@ -364,9 +362,7 @@ class DefaultCardDelegate(
     private fun isCardListVisible(
         cardBrands: List<CardListItem>,
         detectedCardTypes: List<DetectedCardType>
-    ): Boolean = cardBrands.isNotEmpty() &&
-        detectedCardTypes.isEmpty() &&
-        paymentMethod.type == PaymentMethodTypes.SCHEME
+    ): Boolean = cardBrands.isNotEmpty() && detectedCardTypes.isEmpty()
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -481,8 +477,14 @@ class DefaultCardDelegate(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        val cvcUIState = makeCvcUIState(cardType)
-        return CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
+        return if (componentParams.isHideCvc) {
+            FieldState(
+                securityCode,
+                Validation.Valid
+            )
+        } else {
+            CardValidationUtils.validateSecurityCode(securityCode, cardType)
+        }
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {
@@ -545,8 +547,8 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun isCvcHidden(cvcUIState: InputFieldUIState = outputData.cvcUIState): Boolean {
-        return cvcUIState == InputFieldUIState.HIDDEN
+    private fun isCvcHidden(): Boolean {
+        return componentParams.isHideCvc
     }
 
     private fun isSocialSecurityNumberRequired(): Boolean {
@@ -601,42 +603,18 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun makeCvcUIState(detectedCardType: DetectedCardType?): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: ${detectedCardType?.cvcPolicy}")
-
-        return if (detectedCardType?.isReliable == true) {
-            when (componentParams.cvcVisibility) {
-                CVCVisibility.ALWAYS_SHOW -> {
-                    when (detectedCardType.cvcPolicy) {
-                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                        Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
-                        else -> InputFieldUIState.REQUIRED
-                    }
-                }
-
-                CVCVisibility.HIDE_FIRST -> {
-                    when (detectedCardType.cvcPolicy) {
-                        Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
-                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                        else -> InputFieldUIState.HIDDEN
-                    }
-                }
-
-                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
-            }
-        } else {
-            when (componentParams.cvcVisibility) {
-                CVCVisibility.ALWAYS_SHOW -> InputFieldUIState.REQUIRED
-                CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
-                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
-            }
+    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
+        Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
+        return when {
+            isCvcHidden() -> InputFieldUIState.HIDDEN
+            cvcPolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
         }
     }
 
     private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
-        return when (expiryDatePolicy) {
-            Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-            Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
+        return when {
+            expiryDatePolicy?.isRequired() == false -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }

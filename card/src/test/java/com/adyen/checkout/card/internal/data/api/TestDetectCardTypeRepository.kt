@@ -34,7 +34,6 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
         supportedCardBrands: List<CardBrand>,
         clientKey: String,
         coroutineScope: CoroutineScope,
-        type: String?
     ) {
         val detectedCardTypes = when (detectionResult) {
             TestDetectedCardType.ERROR -> null

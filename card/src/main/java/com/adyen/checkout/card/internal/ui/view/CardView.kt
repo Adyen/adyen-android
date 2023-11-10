@@ -18,7 +18,6 @@ import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.LinearLayout
-import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardBrand
@@ -56,8 +55,7 @@ import kotlinx.coroutines.flow.onEach
  * CardView for [CardComponent].
  */
 @Suppress("TooManyFunctions", "LargeClass")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class CardView @JvmOverloads constructor(
+internal class CardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -598,14 +596,12 @@ class CardView @JvmOverloads constructor(
                     localizedContext
                 )
             }
-
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutSecurityCode.isVisible = true
                 binding.textInputLayoutSecurityCode.hint = localizedContext.getString(
                     R.string.checkout_card_security_code_optional_hint
                 )
             }
-
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutSecurityCode.isVisible = false
                 // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the
@@ -626,14 +622,12 @@ class CardView @JvmOverloads constructor(
                     localizedContext
                 )
             }
-
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
                 binding.textInputLayoutExpiryDate.hint = localizedContext.getString(
                     R.string.checkout_card_expiry_date_optional_hint
                 )
             }
-
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutExpiryDate.isVisible = false
                 val params = binding.textInputLayoutSecurityCode.layoutParams as LayoutParams
@@ -671,12 +665,10 @@ class CardView @JvmOverloads constructor(
                 binding.addressFormInput.isVisible = true
                 binding.textInputLayoutPostalCode.isVisible = false
             }
-
             AddressFormUIState.POSTAL_CODE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = true
             }
-
             AddressFormUIState.NONE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
@@ -695,7 +687,6 @@ class CardView @JvmOverloads constructor(
                 }
                 binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
             }
-
             else -> {
                 // no ops
             }

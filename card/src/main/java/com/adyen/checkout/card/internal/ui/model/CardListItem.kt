@@ -8,12 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.core.Environment
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class CardListItem(
+internal data class CardListItem(
     val cardBrand: CardBrand,
     val isDetected: Boolean,
     // We need the environment to load the logo

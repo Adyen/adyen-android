@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
@@ -16,8 +15,7 @@ import com.adyen.checkout.core.internal.data.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class BinLookupService(
+internal class BinLookupService(
     private val httpClient: HttpClient,
 ) {
 

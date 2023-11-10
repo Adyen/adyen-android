@@ -1,26 +1,17 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 22/8/2023.
+ * Created by josephj on 17/11/2022.
  */
 
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
-import com.adyen.checkout.card.KCPAuthVisibility
-import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
-import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BcmcComponentParamsMapper(
     private val overrideComponentParams: ComponentParams?,
@@ -30,18 +21,15 @@ internal class BcmcComponentParamsMapper(
     fun mapToParams(
         bcmcConfiguration: BcmcConfiguration,
         sessionParams: SessionParams?,
-        paymentMethod: PaymentMethod
-    ): CardComponentParams {
+    ): BcmcComponentParams {
         return bcmcConfiguration
-            .mapToParamsInternal(
-                supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) }
-            )
+            .mapToParamsInternal()
             .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun BcmcConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {
-        return CardComponentParams(
+    private fun BcmcConfiguration.mapToParamsInternal(): BcmcComponentParams {
+        return BcmcComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
@@ -52,19 +40,12 @@ internal class BcmcComponentParamsMapper(
             isHolderNameRequired = isHolderNameRequired ?: false,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
-            addressParams = AddressParams.None,
-            installmentParams = null,
-            kcpAuthVisibility = KCPAuthVisibility.HIDE,
-            socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
-            cvcVisibility = CVCVisibility.HIDE_FIRST,
-            storedCVCVisibility = StoredCVCVisibility.HIDE,
-            supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS
         )
     }
 
-    private fun CardComponentParams.override(
+    private fun BcmcComponentParams.override(
         overrideComponentParams: ComponentParams?
-    ): CardComponentParams {
+    ): BcmcComponentParams {
         if (overrideComponentParams == null) return this
         return copy(
             shopperLocale = overrideComponentParams.shopperLocale,
@@ -76,21 +57,13 @@ internal class BcmcComponentParamsMapper(
         )
     }
 
-    private fun CardComponentParams.override(
+    private fun BcmcComponentParams.override(
         sessionParams: SessionParams? = null
-    ): CardComponentParams {
+    ): BcmcComponentParams {
         if (sessionParams == null) return this
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
             amount = sessionParams.amount ?: amount,
-        )
-    }
-
-    companion object {
-        private val DEFAULT_SUPPORTED_CARD_BRANDS = listOf(
-            CardBrand(cardType = CardType.BCMC),
-            CardBrand(cardType = CardType.MAESTRO),
-            CardBrand(cardType = CardType.VISA)
         )
     }
 }
