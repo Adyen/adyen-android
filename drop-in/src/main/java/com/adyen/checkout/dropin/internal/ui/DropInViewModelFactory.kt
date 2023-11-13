@@ -37,9 +37,9 @@ internal class DropInViewModelFactory(
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
-        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration).apply {
-            bundleHandler.overridePaymentMethodInformation(overriddenPaymentMethodInformation)
-        }
+        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+        bundleHandler.overridePaymentMethodInformation(dropInConfiguration.overriddenPaymentMethodInformation)
+
         val amount: Amount? = bundleHandler.amount
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
         val session = bundleHandler.sessionDetails

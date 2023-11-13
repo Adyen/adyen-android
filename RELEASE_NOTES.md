@@ -10,3 +10,4 @@
 
 ## New
 - You can now override payment method names in drop in by using `DropInConfiguration.Builder.overridePaymentMethodName(type, name)`
+- For stored cards, Drop-in will show the card name ("Visa", "Mastercard"...), instead of "Credit Card"

@@ -380,14 +380,13 @@ class DropInConfiguration private constructor(
         }
 
         /**
-         * Provide a custom name to be shown in drop in for payment methods, filtering by [paymentMethodType].
-         * You can pass [PaymentMethodTypes] or any other custom value.
+         * Provide a custom name to be shown in Drop-in for payment methods with a type matching [paymentMethodType].
+         * For [paymentMethodType] you can pass [PaymentMethodTypes] or any other custom value.
          *
          * This function can be called multiple times to set custom names for payment methods with different types.
-         * Only the latest value will be shown if calling this function multiple times for the same [paymentMethodType].
          *
-         * @param paymentMethodType Updates payment methods matching the given type.
-         * @param name Custom name to be shown for payment methods filtered by given [paymentMethodType].
+         * @param paymentMethodType The type of the payment method.
+         * @param name The name to be displayed.
          */
         fun overridePaymentMethodName(paymentMethodType: String, name: String): Builder {
             overriddenPaymentMethodInformation[paymentMethodType] = DropInPaymentMethodInformation(name)

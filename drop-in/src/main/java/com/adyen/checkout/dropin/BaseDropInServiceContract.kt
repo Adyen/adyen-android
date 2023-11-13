@@ -86,7 +86,7 @@ interface BaseDropInServiceContract {
     fun sendRecurringResult(result: RecurringDropInServiceResult)
 
     /**
-     * Gets the additional data that was set when starting drop-in using
+     * Gets the additional data that was set when starting Drop-in using
      * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
      */
     fun getAdditionalData(): Bundle?

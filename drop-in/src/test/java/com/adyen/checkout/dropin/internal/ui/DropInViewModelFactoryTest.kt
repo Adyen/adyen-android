@@ -17,7 +17,7 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.mockito.kotlin.mock
 
-class DropInViewModelFactoryTest {
+internal class DropInViewModelFactoryTest {
 
     @Test
     fun `when overriding payment information for a payment method by type, updates the correct payment methods`() {
