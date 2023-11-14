@@ -24,6 +24,8 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
+import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
 
 internal class DropInViewModelFactory(
     activity: ComponentActivity
@@ -36,6 +38,8 @@ internal class DropInViewModelFactory(
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
         val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+        bundleHandler.overridePaymentMethodInformation(dropInConfiguration.overriddenPaymentMethodInformation)
+
         val amount: Amount? = bundleHandler.amount
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
         val session = bundleHandler.sessionDetails
@@ -62,5 +66,18 @@ internal class DropInViewModelFactory(
 
         @Suppress("UNCHECKED_CAST")
         return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository) as T
+    }
+}
+
+internal fun DropInSavedStateHandleContainer.overridePaymentMethodInformation(
+    paymentMethodInformationMap: Map<String, DropInPaymentMethodInformation>
+) {
+    paymentMethodInformationMap.forEach { informationEntry ->
+        val type = informationEntry.key
+        val paymentMethodInformation = informationEntry.value
+
+        paymentMethodsApiResponse?.paymentMethods
+            ?.filter { paymentMethod -> paymentMethod.type == type }
+            ?.forEach { paymentMethod -> paymentMethod.overrideInformation(paymentMethodInformation) }
     }
 }

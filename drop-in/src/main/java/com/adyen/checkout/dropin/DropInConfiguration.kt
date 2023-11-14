@@ -27,6 +27,7 @@ import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
+import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -66,6 +67,7 @@ class DropInConfiguration private constructor(
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
+    internal val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
 ) : Configuration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
@@ -84,6 +86,7 @@ class DropInConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder> {
 
         private val availablePaymentConfigs = HashMap<String, Configuration>()
+        private val overriddenPaymentMethodInformation = HashMap<String, DropInPaymentMethodInformation>()
 
         private var showPreselectedStoredPaymentMethod: Boolean = true
         private var skipListWhenSinglePaymentMethod: Boolean = false
@@ -376,6 +379,20 @@ class DropInConfiguration private constructor(
             return this
         }
 
+        /**
+         * Provide a custom name to be shown in Drop-in for payment methods with a type matching [paymentMethodType].
+         * For [paymentMethodType] you can pass [PaymentMethodTypes] or any other custom value.
+         *
+         * This function can be called multiple times to set custom names for payment methods with different types.
+         *
+         * @param paymentMethodType The type of the payment method.
+         * @param name The name to be displayed.
+         */
+        fun overridePaymentMethodName(paymentMethodType: String, name: String): Builder {
+            overriddenPaymentMethodInformation[paymentMethodType] = DropInPaymentMethodInformation(name)
+            return this
+        }
+
         override fun buildInternal(): DropInConfiguration {
             return DropInConfiguration(
                 shopperLocale = shopperLocale,
@@ -389,6 +406,7 @@ class DropInConfiguration private constructor(
                 skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,
                 isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
                 additionalDataForDropInService = additionalDataForDropInService,
+                overriddenPaymentMethodInformation = overriddenPaymentMethodInformation,
             )
         }
     }

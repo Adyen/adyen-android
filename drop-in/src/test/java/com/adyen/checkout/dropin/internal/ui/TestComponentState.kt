@@ -6,7 +6,7 @@
  * Created by ozgur on 22/2/2023.
  */
 
-package com.adyen.checkout.internal.ui
+package com.adyen.checkout.dropin.internal.ui
 
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
