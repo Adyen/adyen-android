@@ -30,9 +30,9 @@ class AnalyticsMapper {
         sessionId: String?,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
-            version = BuildConfig.CHECKOUT_VERSION,
+            version = VERSION,
             channel = ANDROID_CHANNEL,
-            platform = ANDROID_PLATFORM,
+            platform = PLATFORM,
             locale = locale.toString(),
             component = getComponentQueryParameter(source),
             flavor = getFlavorQueryParameter(source),
@@ -73,7 +73,24 @@ class AnalyticsMapper {
 
     companion object {
         private const val DROP_IN_COMPONENT = "dropin"
-        private const val ANDROID_PLATFORM = "android"
         private const val ANDROID_CHANNEL = "android"
+
+        private var PLATFORM = AnalyticsPlatform.ANDROID.value
+        private var VERSION = BuildConfig.CHECKOUT_VERSION
+
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+        fun overrideForCrossPlatform(
+            platform: AnalyticsPlatform,
+            version: String,
+        ) {
+            PLATFORM = platform.value
+            VERSION = version
+        }
+
+        @VisibleForTesting
+        internal fun resetToDefaults() {
+            PLATFORM = AnalyticsPlatform.ANDROID.value
+            VERSION = BuildConfig.CHECKOUT_VERSION
+        }
     }
 }
