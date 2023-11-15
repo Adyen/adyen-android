@@ -147,7 +147,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val analyticsLevel = keyValueStorage.getTelemetryLevel()
+        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
         return AnalyticsConfiguration(level = analyticsLevel)
     }
 

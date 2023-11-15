@@ -34,7 +34,7 @@ interface KeyValueStorage {
     fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
     fun useSessions(): Boolean
     fun setUseSessions(useSessions: Boolean)
-    fun getTelemetryLevel(): AnalyticsLevel
+    fun getAnalyticsLevel(): AnalyticsLevel
 }
 
 @Suppress("TooManyFunctions")
@@ -164,12 +164,12 @@ internal class DefaultKeyValueStorage(
         }
     }
 
-    override fun getTelemetryLevel(): AnalyticsLevel {
+    override fun getAnalyticsLevel(): AnalyticsLevel {
         return AnalyticsLevel.valueOf(
             sharedPreferences.getString(
                 appContext = appContext,
-                stringRes = R.string.telemetry_level_key,
-                defaultStringRes = R.string.preferences_default_telemetry_level,
+                stringRes = R.string.analytics_level_key,
+                defaultStringRes = R.string.preferences_default_analytics_level,
             )
         )
     }
