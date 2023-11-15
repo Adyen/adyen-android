@@ -426,6 +426,10 @@ internal class DefaultCardDelegateTest(
 
                 delegate.updateInputData {
                     cardNumber = invalidLuhnCardNumber
+                }
+
+                // we need to update selectedCardIndex separate from cardNumber to simulate the actual use case
+                delegate.updateInputData {
                     selectedCardIndex = 1
                 }
 
