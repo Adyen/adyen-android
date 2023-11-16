@@ -85,7 +85,8 @@ fun getSessionRequest(
         lineItems = LINE_ITEMS,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
         // TODO check if this should be kept or removed
-        threeDS2RequestData = null, // if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
+        //  previous code: if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
+        threeDS2RequestData = null,
         shopperEmail = shopperEmail,
         allowedPaymentMethods = allowedPaymentMethods,
         storePaymentMethodMode = storePaymentMethodMode,

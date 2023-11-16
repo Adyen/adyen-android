@@ -43,7 +43,8 @@ class AnalyticsMapper {
             screenWidth = screenWidth,
             paymentMethods = paymentMethods,
             amount = amount,
-            containerWidth = null, // unused for Android,
+            // unused for Android
+            containerWidth = null,
             sessionId = sessionId,
         )
     }
