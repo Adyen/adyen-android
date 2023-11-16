@@ -12,10 +12,13 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CVCVisibility {
-    ALWAYS_SHOW, HIDE_FIRST, ALWAYS_HIDE
+    ALWAYS_SHOW,
+    HIDE_FIRST,
+    ALWAYS_HIDE
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class StoredCVCVisibility {
-    SHOW, HIDE
+    SHOW,
+    HIDE
 }

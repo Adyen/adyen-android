@@ -13,7 +13,9 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class AddressFormUIState {
-    NONE, POSTAL_CODE, FULL_ADDRESS;
+    NONE,
+    POSTAL_CODE,
+    FULL_ADDRESS;
 
     companion object {
         /**
