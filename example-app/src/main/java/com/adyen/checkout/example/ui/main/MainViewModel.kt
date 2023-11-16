@@ -167,7 +167,8 @@ internal class MainViewModel @Inject constructor(
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
-                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
             )
         ) ?: return null
 

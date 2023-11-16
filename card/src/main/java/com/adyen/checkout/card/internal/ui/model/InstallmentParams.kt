@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.components.core.Amount
+import java.util.Locale
 
 /**
  * Component params class for Installments in Card Component. This class can be used
@@ -26,5 +28,8 @@ import com.adyen.checkout.card.CardBrand
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null,
-    val cardBasedOptions: List<InstallmentOptionParams.CardBasedInstallmentOptions> = emptyList()
+    val cardBasedOptions: List<InstallmentOptionParams.CardBasedInstallmentOptions> = emptyList(),
+    val amount: Amount? = null,
+    val shopperLocale: Locale? = null,
+    val showInstallmentAmount: Boolean = false
 )

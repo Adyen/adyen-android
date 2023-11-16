@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.InstallmentViewBinding
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
 import com.adyen.checkout.card.internal.util.InstallmentUtils
+import com.adyen.checkout.components.core.Amount
+import java.util.Locale
 
 // We need context to inflate the views and localizedContext to fetch the strings
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -69,8 +71,11 @@ internal class InstallmentListAdapter(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentModel(
     @StringRes val textResId: Int,
-    val value: Int?,
-    val option: InstallmentOption
+    val monthValue: Int?,
+    val option: InstallmentOption,
+    val amount: Amount?,
+    val shopperLocale: Locale?,
+    val showAmount: Boolean
 )
 
 internal class InstallmentFilter(

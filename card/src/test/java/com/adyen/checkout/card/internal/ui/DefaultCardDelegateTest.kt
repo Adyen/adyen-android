@@ -566,8 +566,11 @@ internal class DefaultCardDelegateTest(
             delegate.outputDataFlow.test {
                 val installmentModel = InstallmentModel(
                     textResId = R.string.checkout_card_installments_option_revolving,
-                    value = 1,
-                    option = InstallmentOption.REVOLVING
+                    monthValue = 1,
+                    option = InstallmentOption.REVOLVING,
+                    amount = null,
+                    shopperLocale = null,
+                    showAmount = false
                 )
 
                 delegate.updateInputData {
@@ -806,8 +809,11 @@ internal class DefaultCardDelegateTest(
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
                 val installmentModel = InstallmentModel(
                     textResId = R.string.checkout_card_installments_option_revolving,
-                    value = 1,
-                    option = InstallmentOption.REVOLVING
+                    monthValue = 1,
+                    option = InstallmentOption.REVOLVING,
+                    amount = null,
+                    shopperLocale = null,
+                    showAmount = false
                 )
 
                 val detectedCardTypes = listOf(

@@ -163,10 +163,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         maxInstallments: Int = 3,
         includeRevolving: Boolean = false
     ) = InstallmentConfiguration(
-        InstallmentOptions.DefaultInstallmentOptions(
+        defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
             maxInstallments = maxInstallments,
             includeRevolving = includeRevolving
-        )
+        ),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
     )
 
     private fun getCardBasedInstallmentOptions(
@@ -180,6 +181,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 includeRevolving = includeRevolving,
                 cardBrand = cardBrand
             )
-        )
+        ),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
     )
 }

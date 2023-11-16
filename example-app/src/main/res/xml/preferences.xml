@@ -90,6 +90,11 @@
 
         <SwitchPreference
             android:defaultValue="@string/preferences_default_split_card_funding_sources"
+            android:key="@string/card_installment_show_amount_key"
+            android:title="@string/card_installment_show_amount_title" />
+
+        <SwitchPreference
+            android:defaultValue="@string/preferences_default_split_card_funding_sources"
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
 

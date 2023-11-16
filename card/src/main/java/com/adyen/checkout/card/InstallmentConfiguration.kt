@@ -28,7 +28,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class InstallmentConfiguration(
     val defaultOptions: InstallmentOptions.DefaultInstallmentOptions? = null,
-    val cardBasedOptions: List<InstallmentOptions.CardBasedInstallmentOptions> = emptyList()
+    val cardBasedOptions: List<InstallmentOptions.CardBasedInstallmentOptions> = emptyList(),
+    val showInstallmentAmount: Boolean = false
 ) : Parcelable {
 
     init {

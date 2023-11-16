@@ -18,11 +18,13 @@ import org.json.JSONObject
 @Parcelize
 data class SessionSetupConfiguration(
     val enableStoreDetails: Boolean? = null,
+    val showInstallmentAmount: Boolean = false,
     val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null
 ) : ModelObject() {
 
     companion object {
         private const val ENABLE_STORE_DETAILS = "enableStoreDetails"
+        private const val SHOW_INSTALLMENT_AMOUNT = "showInstallmentAmount"
         private const val INSTALLMENT_OPTIONS = "installmentOptions"
 
         @JvmField
@@ -31,6 +33,7 @@ data class SessionSetupConfiguration(
                 return try {
                     JSONObject().apply {
                         putOpt(ENABLE_STORE_DETAILS, modelObject.enableStoreDetails)
+                        putOpt(SHOW_INSTALLMENT_AMOUNT, modelObject.showInstallmentAmount)
                         putOpt(
                             INSTALLMENT_OPTIONS,
                             modelObject.installmentOptions?.let { JSONObject(it) }
@@ -45,6 +48,7 @@ data class SessionSetupConfiguration(
                 return try {
                     SessionSetupConfiguration(
                         enableStoreDetails = jsonObject.optBoolean(ENABLE_STORE_DETAILS),
+                        showInstallmentAmount = jsonObject.optBoolean(SHOW_INSTALLMENT_AMOUNT),
                         installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
                             ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER)
                     )
