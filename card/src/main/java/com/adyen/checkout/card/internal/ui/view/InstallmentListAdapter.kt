@@ -71,10 +71,10 @@ internal class InstallmentListAdapter(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentModel(
     @StringRes val textResId: Int,
-    val monthValue: Int?,
+    val numberOfInstallments: Int?,
     val option: InstallmentOption,
     val amount: Amount?,
-    val shopperLocale: Locale?,
+    val shopperLocale: Locale,
     val showAmount: Boolean
 )
 

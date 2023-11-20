@@ -24,12 +24,15 @@ import java.util.Locale
  *
  * @param defaultOptions Installment Options to be used for all card types.
  * @param cardBasedOptions Installment Options to be used for specific card types.
+ * @param amount Amount of the transaction.
+ * @param shopperLocale The [Locale] of the shopper.
+ * @param showInstallmentAmount A flag to show the installment amount.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentParams(
     val defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null,
     val cardBasedOptions: List<InstallmentOptionParams.CardBasedInstallmentOptions> = emptyList(),
     val amount: Amount? = null,
-    val shopperLocale: Locale? = null,
+    val shopperLocale: Locale,
     val showInstallmentAmount: Boolean = false
 )

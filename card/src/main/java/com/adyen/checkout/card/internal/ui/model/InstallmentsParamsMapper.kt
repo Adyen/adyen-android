@@ -21,7 +21,7 @@ internal class InstallmentsParamsMapper {
     internal fun mapToInstallmentParams(
         installmentConfiguration: SessionInstallmentConfiguration?,
         amount: Amount?,
-        shopperLocale: Locale?
+        shopperLocale: Locale
     ): InstallmentParams? {
         installmentConfiguration?.installmentOptions ?: return null
 
@@ -48,7 +48,7 @@ internal class InstallmentsParamsMapper {
     internal fun mapToInstallmentParams(
         installmentConfiguration: InstallmentConfiguration?,
         amount: Amount?,
-        shopperLocale: Locale?
+        shopperLocale: Locale
     ): InstallmentParams? {
         installmentConfiguration ?: return null
         return InstallmentParams(

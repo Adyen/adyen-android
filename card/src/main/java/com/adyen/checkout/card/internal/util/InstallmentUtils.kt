@@ -20,43 +20,43 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Installments
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
+import java.text.NumberFormat
 import java.util.Locale
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
 
-// TODO: Add tests
 internal object InstallmentUtils {
 
     /**
      * Create a list of installment options from [InstallmentParams].
      */
     fun makeInstallmentOptions(
-        params: InstallmentParams?,
+        installmentParams: InstallmentParams?,
         cardBrand: CardBrand?,
         isCardTypeReliable: Boolean
-    ): List<InstallmentModel> {
-        val hasCardBasedInstallmentOptions = params?.cardBasedOptions != null
-        val hasDefaultInstallmentOptions = params?.defaultOptions != null
+    ): List<InstallmentModel> = installmentParams?.let { params ->
+        val hasCardBasedInstallmentOptions = params.cardBasedOptions.isNotEmpty()
+        val hasDefaultInstallmentOptions = params.defaultOptions != null
         val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
             isCardTypeReliable &&
-            (params?.cardBasedOptions?.any { it.cardBrand == cardBrand } ?: false)
+            params.cardBasedOptions.any { it.cardBrand == cardBrand }
 
         return when {
             hasOptionsForCardType -> {
                 makeInstallmentModelList(
-                    installmentOptions = params?.cardBasedOptions?.firstOrNull { it.cardBrand == cardBrand },
-                    amount = params?.amount,
-                    shopperLocale = params?.shopperLocale,
-                    showAmount = params?.showInstallmentAmount ?: false
+                    installmentOptions = params.cardBasedOptions.firstOrNull { it.cardBrand == cardBrand },
+                    amount = params.amount,
+                    shopperLocale = params.shopperLocale,
+                    showAmount = params.showInstallmentAmount
                 )
             }
 
             hasDefaultInstallmentOptions -> {
                 makeInstallmentModelList(
-                    installmentOptions = params?.defaultOptions,
-                    amount = params?.amount,
-                    shopperLocale = params?.shopperLocale,
-                    showAmount = params?.showInstallmentAmount ?: false
+                    installmentOptions = params.defaultOptions,
+                    amount = params.amount,
+                    shopperLocale = params.shopperLocale,
+                    showAmount = params.showInstallmentAmount
                 )
             }
 
@@ -64,19 +64,19 @@ internal object InstallmentUtils {
                 emptyList()
             }
         }
-    }
+    } ?: emptyList()
 
     private fun makeInstallmentModelList(
         installmentOptions: InstallmentOptionParams?,
         amount: Amount?,
-        shopperLocale: Locale?,
+        shopperLocale: Locale,
         showAmount: Boolean
     ): List<InstallmentModel> {
         if (installmentOptions == null) return emptyList()
         val installmentOptionsList = mutableListOf<InstallmentModel>()
         val oneTimeOption = InstallmentModel(
             textResId = R.string.checkout_card_installments_option_one_time,
-            monthValue = null,
+            numberOfInstallments = null,
             option = InstallmentOption.ONE_TIME,
             amount = amount,
             shopperLocale = shopperLocale,
@@ -87,7 +87,7 @@ internal object InstallmentUtils {
         if (installmentOptions.includeRevolving) {
             val revolvingOption = InstallmentModel(
                 textResId = R.string.checkout_card_installments_option_revolving,
-                monthValue = REVOLVING_INSTALLMENT_VALUE,
+                numberOfInstallments = REVOLVING_INSTALLMENT_VALUE,
                 option = InstallmentOption.REVOLVING,
                 amount = amount,
                 shopperLocale = shopperLocale,
@@ -96,15 +96,15 @@ internal object InstallmentUtils {
             installmentOptionsList.add(revolvingOption)
         }
 
-        val regularOptionTextResId = if (showAmount && amount != null && shopperLocale != null) {
+        val regularOptionTextResId = if (showAmount && amount != null) {
             R.string.checkout_card_installments_option_regular_with_price
         } else {
             R.string.checkout_card_installments_option_regular
         }
-        val regularOptions = installmentOptions.values.map {
+        val regularOptions = installmentOptions.values.map { numberOfInstallments ->
             InstallmentModel(
                 textResId = regularOptionTextResId,
-                monthValue = it,
+                numberOfInstallments = numberOfInstallments,
                 option = InstallmentOption.REGULAR,
                 amount = amount,
                 shopperLocale = shopperLocale,
@@ -122,13 +122,15 @@ internal object InstallmentUtils {
         with(installmentModel) {
             return when (this?.option) {
                 InstallmentOption.REGULAR -> {
-                    val monthValue = monthValue ?: 1
-                    val installmentAmount = amount?.copy(value = amount.value / monthValue)
-                    if (installmentAmount != null && shopperLocale != null) {
+                    val numberOfInstallments = numberOfInstallments ?: 1
+                    val installmentAmount = amount?.copy(value = amount.value / numberOfInstallments)
+                    val formattedNumberOfInstallments =
+                        NumberFormat.getInstance(shopperLocale).format(numberOfInstallments)
+                    if (installmentAmount != null) {
                         val formattedAmount = CurrencyUtils.formatAmount(installmentAmount, shopperLocale)
-                        context.getString(textResId, monthValue, formattedAmount)
+                        context.getString(textResId, formattedNumberOfInstallments, formattedAmount)
                     } else {
-                        context.getString(textResId, monthValue)
+                        context.getString(textResId, formattedNumberOfInstallments)
                     }
                 }
 
@@ -143,7 +145,7 @@ internal object InstallmentUtils {
     fun makeInstallmentModelObject(installmentModel: InstallmentModel?): Installments? {
         return when (installmentModel?.option) {
             InstallmentOption.REGULAR, InstallmentOption.REVOLVING -> {
-                Installments(installmentModel.option.type, installmentModel.monthValue)
+                Installments(installmentModel.option.type, installmentModel.numberOfInstallments)
             }
 
             else -> null

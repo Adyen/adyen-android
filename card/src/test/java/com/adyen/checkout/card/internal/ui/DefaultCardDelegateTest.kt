@@ -541,7 +541,8 @@ internal class DefaultCardDelegateTest(
                 InstallmentOptionParams.DefaultInstallmentOptions(
                     values = listOf(2, 3),
                     includeRevolving = true
-                )
+                ),
+                shopperLocale = Locale.US
             )
 
             val addressConfiguration = AddressConfiguration.FullAddress()
@@ -566,10 +567,10 @@ internal class DefaultCardDelegateTest(
             delegate.outputDataFlow.test {
                 val installmentModel = InstallmentModel(
                     textResId = R.string.checkout_card_installments_option_revolving,
-                    monthValue = 1,
+                    numberOfInstallments = 1,
                     option = InstallmentOption.REVOLVING,
                     amount = null,
-                    shopperLocale = null,
+                    shopperLocale = Locale.US,
                     showAmount = false
                 )
 
@@ -809,10 +810,10 @@ internal class DefaultCardDelegateTest(
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
                 val installmentModel = InstallmentModel(
                     textResId = R.string.checkout_card_installments_option_revolving,
-                    monthValue = 1,
+                    numberOfInstallments = 1,
                     option = InstallmentOption.REVOLVING,
                     amount = null,
-                    shopperLocale = null,
+                    shopperLocale = Locale.US,
                     showAmount = false
                 )
 
