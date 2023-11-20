@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Număr de rate</string>
     <string name="checkout_card_installments_option_regular">%s luni</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">Plată unică</string>
     <string name="checkout_card_installments_option_revolving">Plată recurentă</string>
 

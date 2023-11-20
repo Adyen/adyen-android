@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">分期付款的期數</string>
     <string name="checkout_card_installments_option_regular">%s 個月</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">一次性付款</string>
     <string name="checkout_card_installments_option_revolving">延期付款</string>
 
