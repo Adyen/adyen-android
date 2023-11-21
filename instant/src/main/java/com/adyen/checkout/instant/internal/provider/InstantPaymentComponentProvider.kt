@@ -216,10 +216,13 @@ constructor(
         }
     }
 
-    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
+    override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean =
+        isPaymentMethodSupported(paymentMethod.type)
+
+    fun isPaymentMethodSupported(paymentMethod: String?): Boolean {
         return when {
-            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> true
-            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
+            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod) -> true
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod) -> false
             else -> true
         }
     }

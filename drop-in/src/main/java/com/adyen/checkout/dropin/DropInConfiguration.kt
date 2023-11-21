@@ -32,6 +32,8 @@ import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.instant.InstantPaymentComponent
+import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
@@ -42,11 +44,12 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
-import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
+
+private const val INSTANT_PAYMENT = "INSTANT_PAYMENT"
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
@@ -72,9 +75,17 @@ class DropInConfiguration private constructor(
 ) : Configuration {
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
-        if (availablePaymentConfigs.containsKey(paymentMethod)) {
+        // For instant payment we cannot use the payment method as key as we don't have a definitive list of supported
+        // instant payment methods.
+        val key = if (InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod)) {
+            INSTANT_PAYMENT
+        } else {
+            paymentMethod
+        }
+
+        if (availablePaymentConfigs.containsKey(key)) {
             @Suppress("UNCHECKED_CAST")
-            return availablePaymentConfigs[paymentMethod] as T
+            return availablePaymentConfigs[key] as T
         }
         return null
     }
@@ -380,8 +391,11 @@ class DropInConfiguration private constructor(
             return this
         }
 
-        fun addTwintConfiguration(twintActionConfiguration: TwintActionConfiguration): Builder {
-            availablePaymentConfigs[PaymentMethodTypes.TWINT] = twintActionConfiguration
+        /**
+         * Add configuration for instant payment methods.
+         */
+        fun addInstantPaymentConfiguration(instantPaymentConfiguration: InstantPaymentConfiguration): Builder {
+            availablePaymentConfigs[INSTANT_PAYMENT] = instantPaymentConfiguration
             return this
         }
 
