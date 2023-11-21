@@ -20,7 +20,7 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Installments
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import java.text.NumberFormat
+import com.adyen.checkout.components.core.internal.util.format
 import java.util.Locale
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
@@ -36,7 +36,7 @@ internal object InstallmentUtils {
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> = installmentParams?.let { params ->
         val hasCardBasedInstallmentOptions = params.cardBasedOptions.isNotEmpty()
-        val hasDefaultInstallmentOptions = params.defaultOptions != null
+        val hasDefaultInstallmentOptions = !params.defaultOptions?.values.isNullOrEmpty()
         val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
             isCardTypeReliable &&
             params.cardBasedOptions.any { it.cardBrand == cardBrand }
@@ -124,11 +124,11 @@ internal object InstallmentUtils {
                 InstallmentOption.REGULAR -> {
                     val numberOfInstallments = numberOfInstallments ?: 1
                     val installmentAmount = amount?.copy(value = amount.value / numberOfInstallments)
-                    val formattedNumberOfInstallments =
-                        NumberFormat.getInstance(shopperLocale).format(numberOfInstallments)
-                    if (installmentAmount != null) {
-                        val formattedAmount = CurrencyUtils.formatAmount(installmentAmount, shopperLocale)
-                        context.getString(textResId, formattedNumberOfInstallments, formattedAmount)
+                    val formattedNumberOfInstallments = numberOfInstallments.format(shopperLocale)
+
+                    if (showAmount && installmentAmount != null) {
+                        val formattedInstallmentAmount = CurrencyUtils.formatAmount(installmentAmount, shopperLocale)
+                        context.getString(textResId, formattedNumberOfInstallments, formattedInstallmentAmount)
                     } else {
                         context.getString(textResId, formattedNumberOfInstallments)
                     }
@@ -142,14 +142,12 @@ internal object InstallmentUtils {
     /**
      * Populate the [Installments] model object from [InstallmentModel].
      */
-    fun makeInstallmentModelObject(installmentModel: InstallmentModel?): Installments? {
-        return when (installmentModel?.option) {
-            InstallmentOption.REGULAR, InstallmentOption.REVOLVING -> {
-                Installments(installmentModel.option.type, installmentModel.numberOfInstallments)
-            }
-
-            else -> null
+    fun makeInstallmentModelObject(installmentModel: InstallmentModel?) = when (installmentModel?.option) {
+        InstallmentOption.REGULAR, InstallmentOption.REVOLVING -> {
+            Installments(installmentModel.option.type, installmentModel.numberOfInstallments)
         }
+
+        else -> null
     }
 
     /**
@@ -161,7 +159,7 @@ internal object InstallmentUtils {
         val hasMultipleOptionsForSameCard = cardBasedInstallmentOptions
             ?.groupBy { it.cardBrand }
             ?.values
-            ?.any { it.size > 1 } ?: false
+            ?.any { value -> value.size > 1 } ?: false
         return !hasMultipleOptionsForSameCard
     }
 
@@ -173,7 +171,9 @@ internal object InstallmentUtils {
         val installmentOptions = mutableListOf<InstallmentOptions?>()
         installmentOptions.add(installmentConfiguration.defaultOptions)
         installmentOptions.addAll(installmentConfiguration.cardBasedOptions)
-        val hasInvalidValue = installmentOptions.filterNotNull().any { it.values.any { it <= 1 } }
+        val hasInvalidValue = installmentOptions.filterNotNull().any { installmentOption ->
+            installmentOption.values.any { value -> value <= 1 }
+        }
         return !hasInvalidValue
     }
 }
