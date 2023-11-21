@@ -116,6 +116,7 @@ class CardView @JvmOverloads constructor(
         initKcpAuthenticationInput()
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
+        initAddressLookup()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
@@ -554,6 +555,12 @@ class CardView @JvmOverloads constructor(
         binding.addressFormInput.attachDelegate(cardDelegate, coroutineScope)
     }
 
+    private fun initAddressLookup() {
+        binding.textInputLayoutAddressLookup.setOnClickListener {
+            cardDelegate.startAddressLookup()
+        }
+    }
+
     private fun updateInstallments(cardOutputData: CardOutputData) {
         val installmentTextInputLayout = binding.textInputLayoutInstallments
         val installmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
@@ -668,21 +675,26 @@ class CardView @JvmOverloads constructor(
     private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {
         when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> {
-                binding.addressFormInput.isVisible = true
                 binding.textInputLayoutPostalCode.isVisible = false
+                binding.textInputLayoutAddressLookup.isVisible = false
+                binding.addressFormInput.isVisible = true
             }
 
             AddressFormUIState.POSTAL_CODE -> {
                 binding.addressFormInput.isVisible = false
+                binding.textInputLayoutAddressLookup.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = true
             }
 
             AddressFormUIState.NONE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
+                binding.textInputLayoutAddressLookup.isVisible = false
             }
             AddressFormUIState.LOOKUP -> {
-                // TODO address lookup view visibility
+                binding.addressFormInput.isVisible = false
+                binding.textInputLayoutPostalCode.isVisible = false
+                binding.textInputLayoutAddressLookup.isVisible = true
             }
         }
     }

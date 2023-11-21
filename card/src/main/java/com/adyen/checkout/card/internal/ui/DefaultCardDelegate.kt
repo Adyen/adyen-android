@@ -463,6 +463,10 @@ class DefaultCardDelegate(
         submitHandler.onSubmit(state = state)
     }
 
+    override fun startAddressLookup() {
+        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
+    }
+
     // Validation
     private fun validateCardNumber(
         cardNumber: String,

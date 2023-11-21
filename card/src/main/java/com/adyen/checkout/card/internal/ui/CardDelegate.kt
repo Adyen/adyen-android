@@ -44,4 +44,6 @@ interface CardDelegate :
     fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?)
 
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?)
+
+    fun startAddressLookup()
 }

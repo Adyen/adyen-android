@@ -151,6 +151,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_addressLookup"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_addressLookup"
+            style="@style/AdyenCheckout.AddressLookup"
+            android:inputType="none"
+            android:autofillHints="postalAddress"
+            android:nextFocusDown="@id/editText_socialSecurityNumber"
+            android:nextFocusForward="@id/editText_socialSecurityNumber" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_socialSecurityNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"

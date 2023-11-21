@@ -303,6 +303,11 @@ internal class StoredCardDelegate(
         submitHandler.onSubmit(state)
     }
 
+    // TODO address lookup check
+    override fun startAddressLookup() {
+        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
+    }
+
     override fun getPaymentMethodType(): String {
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
