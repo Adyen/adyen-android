@@ -9,6 +9,7 @@
 package com.adyen.checkout.twint.internal.ui
 
 import android.app.Activity
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import ch.twint.payment.sdk.TwintPayResult
 import com.adyen.checkout.components.core.ActionComponentData
@@ -68,9 +69,9 @@ internal class DefaultTwintDelegate(
         observerRepository.removeObservers()
     }
 
+    @SuppressWarnings("ReturnCount")
     override fun handleAction(action: Action, activity: Activity) {
-        @Suppress("UNCHECKED_CAST")
-        val sdkAction = (action as? SdkAction<TwintSdkData>)
+        val sdkAction = action as? SdkAction<*>
         if (sdkAction == null) {
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
@@ -84,9 +85,9 @@ internal class DefaultTwintDelegate(
             return
         }
 
-        val sdkData = action.sdkData
-        if (sdkData == null) {
-            exceptionChannel.trySend(ComponentException("SDK Data is null"))
+        val sdkData = sdkAction.sdkData
+        if (sdkData == null || sdkData !is TwintSdkData) {
+            exceptionChannel.trySend(ComponentException("SDK Data is null or of wrong type"))
             return
         }
 
@@ -98,7 +99,8 @@ internal class DefaultTwintDelegate(
         }
     }
 
-    private fun handleTwintResult(result: TwintPayResult) {
+    @VisibleForTesting
+    internal fun handleTwintResult(result: TwintPayResult) {
         when (result) {
             TwintPayResult.TW_B_SUCCESS -> {
                 detailsChannel.trySend(createActionComponentData())
