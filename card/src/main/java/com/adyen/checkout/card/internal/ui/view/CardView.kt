@@ -681,6 +681,9 @@ class CardView @JvmOverloads constructor(
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
             }
+            AddressFormUIState.LOOKUP -> {
+                // TODO address lookup view visibility
+            }
         }
     }
 

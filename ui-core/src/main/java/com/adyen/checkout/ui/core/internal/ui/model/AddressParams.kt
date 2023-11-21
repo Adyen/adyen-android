@@ -41,6 +41,10 @@ sealed class AddressParams {
         val supportedCountryCodes: List<String> = emptyList(),
         val addressFieldPolicy: AddressFieldPolicy
     ) : AddressParams()
+
+    // TODO address lookup
+    @Suppress("EmptyDefaultConstructor")
+    class Lookup() : AddressParams()
 }
 
 /**
