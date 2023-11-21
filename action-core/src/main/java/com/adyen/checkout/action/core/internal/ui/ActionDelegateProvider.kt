@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.exception.CheckoutException
@@ -48,19 +49,7 @@ internal class ActionDelegateProvider(
             is RedirectAction -> RedirectComponentProvider(dropInOverrideParams, localeProvider)
             is BaseThreeds2Action -> Adyen3DS2ComponentProvider(dropInOverrideParams, localeProvider)
             is VoucherAction -> VoucherComponentProvider(dropInOverrideParams, localeProvider)
-            is SdkAction<*> -> {
-                when (action.paymentMethodType) {
-                    PaymentMethodTypes.TWINT -> TwintActionComponentProvider(dropInOverrideParams, localeProvider)
-                    PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
-                        dropInOverrideParams,
-                        localeProvider,
-                    )
-
-                    else -> throw CheckoutException(
-                        "Can't find delegate for action: ${action.type} and type: ${action.paymentMethodType}",
-                    )
-                }
-            }
+            is SdkAction<*> -> getSdkActionComponentProvider(action)
 
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
@@ -70,5 +59,21 @@ internal class ActionDelegateProvider(
             savedStateHandle = savedStateHandle,
             application = application,
         )
+    }
+
+    private fun getSdkActionComponentProvider(
+        action: Action,
+    ): ActionComponentProvider<*, *, *> {
+        return when (action.paymentMethodType) {
+            PaymentMethodTypes.TWINT -> TwintActionComponentProvider(dropInOverrideParams, localeProvider)
+            PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
+                dropInOverrideParams,
+                localeProvider,
+            )
+
+            else -> throw CheckoutException(
+                "Can't find delegate for action: ${action.type} and type: ${action.paymentMethodType}",
+            )
+        }
     }
 }
