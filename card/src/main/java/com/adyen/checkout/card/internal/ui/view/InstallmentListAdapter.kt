@@ -16,7 +16,6 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.annotation.RestrictTo
-import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.InstallmentViewBinding
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
@@ -70,7 +69,6 @@ internal class InstallmentListAdapter(
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class InstallmentModel(
-    @StringRes val textResId: Int,
     val numberOfInstallments: Int?,
     val option: InstallmentOption,
     val amount: Amount?,

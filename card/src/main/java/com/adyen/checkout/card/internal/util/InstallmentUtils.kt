@@ -75,7 +75,6 @@ internal object InstallmentUtils {
         if (installmentOptions == null) return emptyList()
         val installmentOptionsList = mutableListOf<InstallmentModel>()
         val oneTimeOption = InstallmentModel(
-            textResId = R.string.checkout_card_installments_option_one_time,
             numberOfInstallments = null,
             option = InstallmentOption.ONE_TIME,
             amount = amount,
@@ -86,7 +85,6 @@ internal object InstallmentUtils {
 
         if (installmentOptions.includeRevolving) {
             val revolvingOption = InstallmentModel(
-                textResId = R.string.checkout_card_installments_option_revolving,
                 numberOfInstallments = REVOLVING_INSTALLMENT_VALUE,
                 option = InstallmentOption.REVOLVING,
                 amount = amount,
@@ -96,14 +94,8 @@ internal object InstallmentUtils {
             installmentOptionsList.add(revolvingOption)
         }
 
-        val regularOptionTextResId = if (showAmount && amount != null) {
-            R.string.checkout_card_installments_option_regular_with_price
-        } else {
-            R.string.checkout_card_installments_option_regular
-        }
         val regularOptions = installmentOptions.values.map { numberOfInstallments ->
             InstallmentModel(
-                textResId = regularOptionTextResId,
                 numberOfInstallments = numberOfInstallments,
                 option = InstallmentOption.REGULAR,
                 amount = amount,
@@ -121,6 +113,8 @@ internal object InstallmentUtils {
     fun getTextForInstallmentOption(context: Context, installmentModel: InstallmentModel?): String =
         with(installmentModel) {
             return when (this?.option) {
+                InstallmentOption.ONE_TIME -> context.getString(R.string.checkout_card_installments_option_one_time)
+                InstallmentOption.REVOLVING -> context.getString(R.string.checkout_card_installments_option_revolving)
                 InstallmentOption.REGULAR -> {
                     val numberOfInstallments = numberOfInstallments ?: 1
                     val installmentAmount = amount?.copy(value = amount.value / numberOfInstallments)
@@ -128,13 +122,19 @@ internal object InstallmentUtils {
 
                     if (showAmount && installmentAmount != null) {
                         val formattedInstallmentAmount = CurrencyUtils.formatAmount(installmentAmount, shopperLocale)
-                        context.getString(textResId, formattedNumberOfInstallments, formattedInstallmentAmount)
+                        context.getString(
+                            R.string.checkout_card_installments_option_regular_with_price,
+                            formattedNumberOfInstallments,
+                            formattedInstallmentAmount
+                        )
                     } else {
-                        context.getString(textResId, formattedNumberOfInstallments)
+                        context.getString(
+                            R.string.checkout_card_installments_option_regular,
+                            formattedNumberOfInstallments
+                        )
                     }
                 }
 
-                InstallmentOption.REVOLVING, InstallmentOption.ONE_TIME -> context.getString(textResId)
                 else -> ""
             }
         }

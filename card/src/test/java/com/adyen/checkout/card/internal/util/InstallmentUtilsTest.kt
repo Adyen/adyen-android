@@ -13,6 +13,7 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
 import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
@@ -161,9 +162,8 @@ internal class InstallmentUtilsTest {
 
     @Test
     fun `get text for installment option gets a string, if installment option is one time`() {
-        val textResourceId = Int.MAX_VALUE
+        val textResourceId = R.string.checkout_card_installments_option_one_time
         val installmentModel = InstallmentModel(
-            textResId = textResourceId,
             numberOfInstallments = null,
             option = InstallmentOption.ONE_TIME,
             amount = null,
@@ -178,9 +178,8 @@ internal class InstallmentUtilsTest {
 
     @Test
     fun `get text for installment option gets a string, if installment option is revolving`() {
-        val textResourceId = Int.MAX_VALUE
+        val textResourceId = R.string.checkout_card_installments_option_revolving
         val installmentModel = InstallmentModel(
-            textResId = textResourceId,
             numberOfInstallments = null,
             option = InstallmentOption.REVOLVING,
             amount = null,
@@ -195,9 +194,8 @@ internal class InstallmentUtilsTest {
 
     @Test
     fun `get text for installment option gets a string, if installment option is regular and amount is not shown`() {
-        val textResourceId = Int.MAX_VALUE
+        val textResourceId = R.string.checkout_card_installments_option_regular
         val installmentModel = InstallmentModel(
-            textResId = textResourceId,
             numberOfInstallments = 2,
             option = InstallmentOption.REGULAR,
             amount = Amount("USD", 100L),
@@ -212,9 +210,8 @@ internal class InstallmentUtilsTest {
 
     @Test
     fun `get text for installment option gets a string, if installment option is regular and amount is null`() {
-        val textResourceId = Int.MAX_VALUE
+        val textResourceId = R.string.checkout_card_installments_option_regular
         val installmentModel = InstallmentModel(
-            textResId = textResourceId,
             numberOfInstallments = 2,
             option = InstallmentOption.REGULAR,
             amount = null,
@@ -229,9 +226,8 @@ internal class InstallmentUtilsTest {
 
     @Test
     fun `get text for installment option gets a string, if installment option is regular and amount is shown`() {
-        val textResourceId = Int.MAX_VALUE
+        val textResourceId = R.string.checkout_card_installments_option_regular_with_price
         val installmentModel = InstallmentModel(
-            textResId = textResourceId,
             numberOfInstallments = 3,
             option = InstallmentOption.REGULAR,
             amount = Amount("USD", 10000L),
@@ -359,7 +355,6 @@ internal class InstallmentUtilsTest {
             arguments(null),
             arguments(
                 InstallmentModel(
-                    textResId = Int.MAX_VALUE,
                     numberOfInstallments = null,
                     option = InstallmentOption.ONE_TIME,
                     amount = null,
@@ -373,7 +368,6 @@ internal class InstallmentUtilsTest {
         fun validInstallmentOptionForMakeInstallmentModelObject() = listOf(
             arguments(
                 InstallmentModel(
-                    textResId = Int.MAX_VALUE,
                     numberOfInstallments = null,
                     option = InstallmentOption.REGULAR,
                     amount = null,
@@ -383,7 +377,6 @@ internal class InstallmentUtilsTest {
             ),
             arguments(
                 InstallmentModel(
-                    textResId = Int.MAX_VALUE,
                     numberOfInstallments = null,
                     option = InstallmentOption.REVOLVING,
                     amount = null,
