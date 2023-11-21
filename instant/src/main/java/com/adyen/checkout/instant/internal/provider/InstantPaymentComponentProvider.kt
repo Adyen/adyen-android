@@ -29,7 +29,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -39,6 +38,7 @@ import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.instant.internal.ui.DefaultInstantPaymentDelegate
+import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -69,7 +69,7 @@ constructor(
         SessionComponentCallback<InstantComponentState>
         > {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = InstantComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

@@ -14,11 +14,11 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.instant.InstantPaymentConfiguration
+import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -121,7 +121,7 @@ class DefaultInstantPaymentDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
             order = TEST_ORDER,
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = InstantComponentParamsMapper(null, null).mapToParams(configuration, null),
             analyticsRepository = analyticsRepository
         )
     }

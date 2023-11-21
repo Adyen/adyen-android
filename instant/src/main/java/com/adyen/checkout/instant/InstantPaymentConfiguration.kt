@@ -22,12 +22,15 @@ import java.util.Locale
  * Configuration class for the [InstantPaymentComponent].
  */
 @Parcelize
-class InstantPaymentConfiguration private constructor(
+class InstantPaymentConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
+    val shouldUseSdk: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -35,6 +38,8 @@ class InstantPaymentConfiguration private constructor(
      * Builder to create an [InstantPaymentConfiguration].
      */
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
+
+        private var shouldUseSdk: Boolean? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -62,6 +67,17 @@ class InstantPaymentConfiguration private constructor(
             clientKey
         )
 
+        /**
+         * Sets if the payment method will be handled with the corresponding SDK or with a web flow. If there is no SDK
+         * available then the payment method will be handled with a web flow.
+         *
+         * Default is true.
+         */
+        fun setUseSdk(shouldUseSdk: Boolean): Builder {
+            this.shouldUseSdk = shouldUseSdk
+            return this
+        }
+
         override fun buildInternal(): InstantPaymentConfiguration {
             return InstantPaymentConfiguration(
                 shopperLocale = shopperLocale,
@@ -69,6 +85,7 @@ class InstantPaymentConfiguration private constructor(
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
+                shouldUseSdk = shouldUseSdk,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

@@ -54,14 +54,18 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         environment,
         clientKey,
     )
-        .addCardConfiguration(getCardConfiguration())
-        .addCashAppPayConfiguration(getCashAppPayConfiguration())
-        .addBlikConfiguration(getBlikConfiguration())
+        // Payment method configs
         .addBacsDirectDebitConfiguration(getBacsConfiguration())
         .addBcmcConfiguration(getBcmcConfiguration())
+        .addBlikConfiguration(getBlikConfiguration())
+        .addCardConfiguration(getCardConfiguration())
+        .addCashAppPayConfiguration(getCashAppPayConfiguration())
         .addGooglePayConfiguration(getGooglePayConfiguration())
+        // Action configs
         .add3ds2ActionConfiguration(get3DS2Configuration())
         .addRedirectActionConfiguration(getRedirectConfiguration())
+        .addInstantPaymentConfiguration(getInstantConfiguration())
+        // Drop-in specific config
         .setEnableRemovingStoredPaymentMethods(true)
         .setAmount(amount)
         .setAnalyticsConfiguration(getAnalyticsConfiguration())
@@ -99,6 +103,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
+            .setUseSdk(true)
             .build()
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =

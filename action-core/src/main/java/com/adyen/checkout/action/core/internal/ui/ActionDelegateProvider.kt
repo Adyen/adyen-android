@@ -93,33 +93,40 @@ internal class ActionDelegateProvider(
                 )
             }
 
-            is SdkAction<*> -> {
-                when (action.paymentMethodType) {
-                    PaymentMethodTypes.TWINT -> TwintActionComponentProvider(
-                        overrideComponentParams,
-                        overrideSessionParams
-                    ).getDelegate(
-                        getConfigurationForAction(configuration),
-                        savedStateHandle,
-                        application
-                    )
-
-                    PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
-                        overrideComponentParams,
-                        overrideSessionParams
-                    ).getDelegate(
-                        getConfigurationForAction(configuration),
-                        savedStateHandle,
-                        application
-                    )
-
-                    else -> throw CheckoutException(
-                        "Can't find delegate for action: ${action.type} and type: ${action.paymentMethodType}"
-                    )
-                }
-            }
+            is SdkAction<*> -> getSdkActionDelegate(action, configuration, savedStateHandle, application)
 
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
+        }
+    }
+
+    private fun getSdkActionDelegate(
+        action: Action,
+        configuration: GenericActionConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): ActionDelegate {
+        return when (action.paymentMethodType) {
+            PaymentMethodTypes.TWINT -> TwintActionComponentProvider(
+                overrideComponentParams,
+                overrideSessionParams
+            ).getDelegate(
+                getConfigurationForAction(configuration),
+                savedStateHandle,
+                application
+            )
+
+            PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
+                overrideComponentParams,
+                overrideSessionParams
+            ).getDelegate(
+                getConfigurationForAction(configuration),
+                savedStateHandle,
+                application
+            )
+
+            else -> throw CheckoutException(
+                "Can't find delegate for action: ${action.type} and type: ${action.paymentMethodType}"
+            )
         }
     }
 
