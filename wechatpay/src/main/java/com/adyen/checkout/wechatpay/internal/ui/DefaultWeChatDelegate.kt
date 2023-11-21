@@ -110,8 +110,7 @@ internal class DefaultWeChatDelegate(
 
     @SuppressWarnings("ReturnCount")
     override fun handleAction(action: Action, activity: Activity) {
-        @Suppress("UNCHECKED_CAST")
-        val sdkAction = (action as? SdkAction<WeChatPaySdkData>)
+        val sdkAction = (action as? SdkAction<*>)
         if (sdkAction == null) {
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
@@ -129,7 +128,7 @@ internal class DefaultWeChatDelegate(
         }
 
         val sdkData = action.sdkData
-        if (sdkData == null) {
+        if (sdkData == null || sdkData !is WeChatPaySdkData) {
             exceptionChannel.trySend(ComponentException("SDK Data is null"))
             return
         }

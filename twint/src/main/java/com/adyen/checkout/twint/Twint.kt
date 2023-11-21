@@ -17,12 +17,12 @@ import com.adyen.checkout.core.exception.CheckoutException
 
 object Twint {
 
-    private var twint: Twint? = null
+    private var twintObject: Twint? = null
 
     private var onResultListener: ((TwintPayResult) -> Unit)? = null
 
     fun initialize(activity: ComponentActivity) {
-        twint = Twint(activity, ::onTwintResult)
+        twintObject = Twint(activity, ::onTwintResult)
 
         val observer = object : DefaultLifecycleObserver {
             override fun onDestroy(owner: LifecycleOwner) {
@@ -42,11 +42,11 @@ object Twint {
     }
 
     internal fun payWithCode(code: String) {
-        twint?.payWithCode(code) ?: throw CheckoutException("Twint not initialised before payment.")
+        twintObject?.payWithCode(code) ?: throw CheckoutException("Twint not initialised before payment.")
     }
 
     private fun onDestroy() {
         onResultListener = null
-        twint = null
+        twintObject = null
     }
 }

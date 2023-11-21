@@ -49,7 +49,7 @@ constructor(
         application: Application,
         configuration: TwintActionConfiguration,
         callback: ActionComponentCallback,
-        key     : String?,
+        key: String?,
     ): TwintActionComponent {
         val twintFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val twintDelegate = getDelegate(configuration, savedStateHandle, application)
