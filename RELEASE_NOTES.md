@@ -9,5 +9,4 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-- You can now override payment method names in drop in by using `DropInConfiguration.Builder.overridePaymentMethodName(type, name)`
-- For stored cards, Drop-in will show the card name ("Visa", "Mastercard"...), instead of "Credit Card"
+- Now it is possible to show installment amounts for card payments.
