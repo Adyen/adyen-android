@@ -41,4 +41,6 @@ internal interface GiftCardDelegate :
     fun resolveBalanceResult(balanceResult: BalanceResult)
 
     fun resolveOrderResponse(orderResponse: OrderResponse)
+
+    fun isPinRequired(): Boolean
 }

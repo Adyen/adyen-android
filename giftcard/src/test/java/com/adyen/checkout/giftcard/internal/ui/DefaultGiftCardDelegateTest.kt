@@ -16,16 +16,19 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncrypter
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardException
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.test.TestDispatcherExtension
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -90,7 +93,7 @@ internal class DefaultGiftCardDelegateTest(
         @Test
         fun `public key is null, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(giftCardOutputDataWith("5555444433330000", "737"))
 
                 val componentState = expectMostRecentItem()
 
@@ -105,7 +108,7 @@ internal class DefaultGiftCardDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(GiftCardOutputData("123", "737"))
+                delegate.updateComponentState(giftCardOutputDataWith("123", "737"))
 
                 val componentState = expectMostRecentItem()
 
@@ -123,7 +126,7 @@ internal class DefaultGiftCardDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(giftCardOutputDataWith("5555444433330000", "737"))
 
                 val componentState = expectMostRecentItem()
 
@@ -139,7 +142,7 @@ internal class DefaultGiftCardDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(giftCardOutputDataWith("5555444433330000", "737"))
 
                 val componentState = expectMostRecentItem()
 
@@ -373,6 +376,24 @@ internal class DefaultGiftCardDelegateTest(
         }
     }
 
+    @Test
+    fun `when pin is not required, then does not matter for validation`() = runTest {
+        delegate = createGiftCardDelegate(
+            configuration = getDefaultGiftCardConfigurationBuilder().setPinRequired(false).build()
+        )
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+
+        delegate.updateInputData {
+            // Valid card number
+            cardNumber = "5555444433330000"
+            // Invalid pin
+            pin = ""
+        }
+
+        assertTrue(componentStateFlow.latestValue.isInputValid)
+    }
+
     private fun createGiftCardDelegate(
         configuration: GiftCardConfiguration = getDefaultGiftCardConfigurationBuilder().build(),
         order: OrderRequest? = TEST_ORDER
@@ -381,7 +402,7 @@ internal class DefaultGiftCardDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         publicKeyRepository = publicKeyRepository,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null),
         cardEncrypter = cardEncrypter,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
@@ -391,6 +412,11 @@ internal class DefaultGiftCardDelegateTest(
         Locale.US,
         Environment.TEST,
         TEST_CLIENT_KEY
+    )
+
+    private fun giftCardOutputDataWith(number: String, pin: String) = GiftCardOutputData(
+        numberFieldState = GiftCardNumberUtils.validateInputField(number),
+        pinFieldState = GiftCardPinUtils.validateInputField(pin),
     )
 
     companion object {
