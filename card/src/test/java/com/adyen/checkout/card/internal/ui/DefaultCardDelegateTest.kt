@@ -447,7 +447,7 @@ internal class DefaultCardDelegateTest(
                     assertTrue(expiryDateState.validation is Validation.Valid)
                     assertTrue(securityCodeState.validation is Validation.Valid)
                     assertEquals(InputFieldUIState.OPTIONAL, cvcUIState)
-                    assertEquals(InputFieldUIState.OPTIONAL, expiryDateUIState)
+                    assertEquals(InputFieldUIState.HIDDEN, expiryDateUIState)
                     assertTrue(isDualBranded)
                 }
             }
@@ -1105,23 +1105,24 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `when card number is detected over network, then callback should be called with reliable result`() = runTest {
-            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+        fun `when card number is detected over network, then callback should be called with reliable result`() =
+            runTest {
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
 
-            delegate.setOnBinLookupListener { data ->
-                launch(this.coroutineContext) {
-                    with(data.first()) {
-                        assertEquals("mc", brand)
-                        assertEquals("mccredit", paymentMethodVariant)
-                        assertTrue(isReliable)
+                delegate.setOnBinLookupListener { data ->
+                    launch(this.coroutineContext) {
+                        with(data.first()) {
+                            assertEquals("mc", brand)
+                            assertEquals("mccredit", paymentMethodVariant)
+                            assertTrue(isReliable)
+                        }
                     }
                 }
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData { cardNumber = "5555444" }
             }
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.updateInputData { cardNumber = "5555444" }
-        }
 
         @Test
         fun `when callback is called multiple times, then it should only trigger if the data changed`() = runTest {
@@ -1155,7 +1156,7 @@ internal class DefaultCardDelegateTest(
         cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
         genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
-        paymentMethod: PaymentMethod = PaymentMethod(),
+        paymentMethod: PaymentMethod = PaymentMethod(type = PaymentMethodTypes.SCHEME),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
