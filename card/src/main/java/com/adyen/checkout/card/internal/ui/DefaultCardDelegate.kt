@@ -244,6 +244,9 @@ class DefaultCardDelegate(
                 }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
+            .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
+            .distinctUntilChanged()
+            .onEach { inputData.selectedCardIndex = -1 }
             .launchIn(coroutineScope)
     }
 
