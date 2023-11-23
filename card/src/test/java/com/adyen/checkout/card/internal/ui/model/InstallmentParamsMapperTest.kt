@@ -12,43 +12,62 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 internal class InstallmentParamsMapperTest {
 
     private val installmentsParamsMapper: InstallmentsParamsMapper = InstallmentsParamsMapper()
+    private val amount = Amount("EUR", 100)
+    private val shopperLocale = Locale.US
+    private val showInstallmentAmount = true
 
     @Test
     fun `when session setup installment option is default then installment params should be the same `() {
-        val sessionSetupInstallmentOptionsMap = mapOf(
-            DEFAULT_INSTALLMENT_OPTION to SessionInstallmentOptionsParams(
-                plans = listOf(INSTALLMENT_PLAN),
-                preselectedValue = 2,
-                values = listOf(2)
-            )
+        val sessionSetupInstallmentOptionsMap = SessionInstallmentConfiguration(
+            installmentOptions = mapOf(
+                DEFAULT_INSTALLMENT_OPTION to SessionInstallmentOptionsParams(
+                    plans = listOf(INSTALLMENT_PLAN),
+                    preselectedValue = 2,
+                    values = listOf(2)
+                )
+            ),
+            showInstallmentAmount = showInstallmentAmount
         )
         val expectedInstallmentParams = InstallmentParams(
-            InstallmentOptionParams.DefaultInstallmentOptions(
+            defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(2),
                 includeRevolving = false
-            )
+            ),
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = showInstallmentAmount
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionSetupInstallmentOptionsMap)
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
+            installmentConfiguration = sessionSetupInstallmentOptionsMap,
+            amount = amount,
+            shopperLocale = shopperLocale
+        )
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
 
     @Test
     fun `when session setup installment option is card based then installment params should be the same `() {
-        val sessionSetupInstallmentOptionsMap = mapOf(
-            CardType.VISA.txVariant to SessionInstallmentOptionsParams(
-                plans = listOf(INSTALLMENT_PLAN),
-                preselectedValue = 2,
-                values = listOf(2)
-            )
+        val sessionSetupInstallmentOptionsMap = SessionInstallmentConfiguration(
+            installmentOptions = mapOf(
+                CardType.VISA.txVariant to SessionInstallmentOptionsParams(
+                    plans = listOf(INSTALLMENT_PLAN),
+                    preselectedValue = 2,
+                    values = listOf(2)
+                )
+            ),
+            showInstallmentAmount = showInstallmentAmount
         )
         val expectedInstallmentParams = InstallmentParams(
             cardBasedOptions = listOf(
@@ -57,10 +76,17 @@ internal class InstallmentParamsMapperTest {
                     includeRevolving = false,
                     cardBrand = CardBrand(CardType.VISA)
                 )
-            )
+            ),
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = showInstallmentAmount
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(sessionSetupInstallmentOptionsMap)
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
+            installmentConfiguration = sessionSetupInstallmentOptionsMap,
+            amount = amount,
+            shopperLocale = shopperLocale
+        )
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
@@ -71,17 +97,25 @@ internal class InstallmentParamsMapperTest {
             defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
                 values = listOf(2),
                 includeRevolving = false
-            )
+            ),
+            showInstallmentAmount = showInstallmentAmount
         )
 
         val expectedInstallmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(2),
                 includeRevolving = false
-            )
+            ),
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = showInstallmentAmount
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration)
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
+            installmentConfiguration = installmentConfiguration,
+            amount = amount,
+            shopperLocale = shopperLocale
+        )
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }
@@ -95,7 +129,8 @@ internal class InstallmentParamsMapperTest {
                     includeRevolving = false,
                     cardBrand = CardBrand(CardType.VISA)
                 )
-            )
+            ),
+            showInstallmentAmount = showInstallmentAmount
         )
 
         val expectedInstallmentParams = InstallmentParams(
@@ -105,10 +140,17 @@ internal class InstallmentParamsMapperTest {
                     includeRevolving = false,
                     cardBrand = CardBrand(CardType.VISA)
                 )
-            )
+            ),
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = showInstallmentAmount
         )
 
-        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(installmentConfiguration)
+        val actualInstallmentParams = installmentsParamsMapper.mapToInstallmentParams(
+            installmentConfiguration = installmentConfiguration,
+            amount = amount,
+            shopperLocale = shopperLocale
+        )
 
         assertEquals(expectedInstallmentParams, actualInstallmentParams)
     }

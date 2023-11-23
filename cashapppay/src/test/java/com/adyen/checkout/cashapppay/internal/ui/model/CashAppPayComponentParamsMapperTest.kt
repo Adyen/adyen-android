@@ -138,7 +138,7 @@ internal class CashAppPayComponentParamsMapperTest {
             configuration = cardConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = null,
                 returnUrl = TEST_RETURN_URL,
             ),
@@ -173,7 +173,7 @@ internal class CashAppPayComponentParamsMapperTest {
             cardConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = TEST_RETURN_URL,
             ),

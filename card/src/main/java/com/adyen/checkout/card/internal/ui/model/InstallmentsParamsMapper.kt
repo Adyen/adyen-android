@@ -11,35 +11,54 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
+import java.util.Locale
 
 internal class InstallmentsParamsMapper {
 
     internal fun mapToInstallmentParams(
-        sessionInstallmentOptions: Map<String, SessionInstallmentOptionsParams?>?
+        installmentConfiguration: SessionInstallmentConfiguration?,
+        amount: Amount?,
+        shopperLocale: Locale
     ): InstallmentParams? {
-        sessionInstallmentOptions ?: return null
+        installmentConfiguration?.installmentOptions ?: return null
+
+        val showInstallmentAmount = installmentConfiguration.showInstallmentAmount ?: false
         var defaultOptions: InstallmentOptionParams.DefaultInstallmentOptions? = null
         val cardBasedOptionsList = mutableListOf<InstallmentOptionParams.CardBasedInstallmentOptions>()
-        sessionInstallmentOptions.forEach { (key, value) ->
+        installmentConfiguration.installmentOptions?.forEach { (key, value) ->
             if (key == DEFAULT_INSTALLMENT_OPTION) {
                 defaultOptions = value.mapToDefaultInstallmentOptions()
             } else {
                 cardBasedOptionsList.add(value.mapToCardBasedInstallmentOptions(key))
             }
         }
-        return InstallmentParams(defaultOptions, cardBasedOptionsList)
+
+        return InstallmentParams(
+            defaultOptions = defaultOptions,
+            cardBasedOptions = cardBasedOptionsList,
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = showInstallmentAmount
+        )
     }
 
     internal fun mapToInstallmentParams(
-        installmentConfiguration: InstallmentConfiguration?
+        installmentConfiguration: InstallmentConfiguration?,
+        amount: Amount?,
+        shopperLocale: Locale
     ): InstallmentParams? {
         installmentConfiguration ?: return null
         return InstallmentParams(
             defaultOptions = installmentConfiguration.defaultOptions?.mapToDefaultInstallmentOptionsParam(),
             cardBasedOptions = installmentConfiguration.cardBasedOptions.map { option ->
                 option.mapToCardBasedInstallmentOptionsParams()
-            }
+            },
+            amount = amount,
+            shopperLocale = shopperLocale,
+            showInstallmentAmount = installmentConfiguration.showInstallmentAmount
         )
     }
 

@@ -3,18 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 7/3/2023.
+ * Created by ararat on 15/11/2023.
  */
 
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class SessionParams(
-    val enableStoreDetails: Boolean?,
-    val installmentConfiguration: SessionInstallmentConfiguration?,
-    val amount: Amount?,
-    val returnUrl: String?,
+data class SessionInstallmentConfiguration(
+    val installmentOptions: Map<String, SessionInstallmentOptionsParams?>?,
+    val showInstallmentAmount: Boolean?
 )

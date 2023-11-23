@@ -101,7 +101,8 @@ internal class SessionsCardViewModel @Inject constructor(
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
-                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
             )
         ) ?: return null
 

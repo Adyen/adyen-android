@@ -32,6 +32,7 @@ interface KeyValueStorage {
     fun getCardAddressMode(): CardAddressMode
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
+    fun isInstallmentAmountShown(): Boolean
     fun useSessions(): Boolean
     fun setUseSessions(useSessions: Boolean)
     fun getAnalyticsLevel(): AnalyticsLevel
@@ -149,6 +150,12 @@ internal class DefaultKeyValueStorage(
             )
         )
     }
+
+    override fun isInstallmentAmountShown() = sharedPreferences.getBoolean(
+        appContext = appContext,
+        stringRes = R.string.card_installment_show_amount_key,
+        defaultStringRes = R.string.preferences_default_installment_amount_shown,
+    )
 
     override fun useSessions(): Boolean {
         return sharedPreferences.getBoolean(

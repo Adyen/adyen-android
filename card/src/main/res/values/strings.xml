@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Number of installments</string>
     <string name="checkout_card_installments_option_regular">%s months</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">One time payment</string>
     <string name="checkout_card_installments_option_revolving">Revolving payment</string>
 

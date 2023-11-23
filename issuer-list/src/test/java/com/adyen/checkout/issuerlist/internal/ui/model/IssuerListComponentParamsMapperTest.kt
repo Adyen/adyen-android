@@ -130,7 +130,7 @@ internal class IssuerListComponentParamsMapperTest {
             issuerListConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
             )

@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Počet splátok</string>
     <string name="checkout_card_installments_option_regular">%s mesiace/-ov</string>
+    <string name="checkout_card_installments_option_regular_with_price">%s x %s</string>
     <string name="checkout_card_installments_option_one_time">Jednorazová platba</string>
     <string name="checkout_card_installments_option_revolving">Revolvingová platba</string>
 

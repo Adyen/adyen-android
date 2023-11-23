@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Anzahl der Raten</string>
     <string name="checkout_card_installments_option_regular">%s Monate</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">Einmalige Zahlung</string>
     <string name="checkout_card_installments_option_revolving">Ratenzahlung</string>
 
