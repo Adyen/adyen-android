@@ -15,22 +15,22 @@ import java.util.Locale
 internal class NumberExtensionTest {
 
     @Test
-    fun `integer format formats with en-US locale`() {
+    fun `integer format to localized string formats with en-US locale`() {
         val locale = Locale.forLanguageTag("en-US")
 
-        assertEquals("1", 1.format(locale))
-        assertEquals("5", 5.format(locale))
-        assertEquals("10", 10.format(locale))
-        assertEquals("15", 15.format(locale))
+        assertEquals("1", 1.formatToLocalizedString(locale))
+        assertEquals("5", 5.formatToLocalizedString(locale))
+        assertEquals("10", 10.formatToLocalizedString(locale))
+        assertEquals("15", 15.formatToLocalizedString(locale))
     }
 
     @Test
-    fun `integer format formats with ar-LB locale`() {
+    fun `integer format to localized string formats with ar-LB locale`() {
         val locale = Locale.forLanguageTag("ar-LB")
 
-        assertEquals("١", 1.format(locale))
-        assertEquals("٥", 5.format(locale))
-        assertEquals("١٠", 10.format(locale))
-        assertEquals("١٥", 15.format(locale))
+        assertEquals("١", 1.formatToLocalizedString(locale))
+        assertEquals("٥", 5.formatToLocalizedString(locale))
+        assertEquals("١٠", 10.formatToLocalizedString(locale))
+        assertEquals("١٥", 15.formatToLocalizedString(locale))
     }
 }

@@ -13,18 +13,19 @@ import com.adyen.checkout.core.exception.CheckoutException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.Locale
 
 internal class CurrencyUtilsTest {
 
     @Test
     fun `format amount with nl-NL locale`() {
-        val amount = Amount("EUR", 10050L)
+        val amount = Amount("EUR", 1075L)
         val locale = Locale.forLanguageTag("nl-NL")
 
         val formattedAmount = CurrencyUtils.formatAmount(amount, locale)
 
-        assertEquals("€ 100,50", formattedAmount)
+        assertEquals("€ 10,75", formattedAmount)
     }
 
     @Test
@@ -39,21 +40,19 @@ internal class CurrencyUtilsTest {
 
     @Test
     fun `format amount with en-US locale`() {
-        val amount = Amount("USD", 10050L)
+        val amount = Amount("USD", 220000L)
         val locale = Locale.forLanguageTag("en-US")
 
         val formattedAmount = CurrencyUtils.formatAmount(amount, locale)
 
-        assertEquals("$100.50", formattedAmount)
+        assertEquals("$2,200.00", formattedAmount)
     }
 
     @Test
-    fun `assert currency does nothing, if currency code is supported`() {
+    fun `assert currency does not throw an exception, if currency code is supported`() {
         val currencyCode = "EUR"
 
-        val formattedAmount = CurrencyUtils.assertCurrency(currencyCode)
-
-        assertEquals(Unit, formattedAmount)
+        assertDoesNotThrow { CurrencyUtils.assertCurrency(currencyCode) }
     }
 
     @Test

@@ -19,4 +19,4 @@ import java.util.Locale
  * @return A formatted string displaying value.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Int.format(locale: Locale): String = NumberFormat.getInstance(locale).format(this)
+fun Int.formatToLocalizedString(locale: Locale): String = NumberFormat.getInstance(locale).format(this)

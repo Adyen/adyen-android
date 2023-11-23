@@ -20,7 +20,7 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Installments
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.format
+import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
 import java.util.Locale
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
@@ -118,7 +118,7 @@ internal object InstallmentUtils {
                 InstallmentOption.REGULAR -> {
                     val numberOfInstallments = numberOfInstallments ?: 1
                     val installmentAmount = amount?.copy(value = amount.value / numberOfInstallments)
-                    val formattedNumberOfInstallments = numberOfInstallments.format(shopperLocale)
+                    val formattedNumberOfInstallments = numberOfInstallments.formatToLocalizedString(shopperLocale)
 
                     if (showAmount && installmentAmount != null) {
                         val formattedInstallmentAmount = CurrencyUtils.formatAmount(installmentAmount, shopperLocale)

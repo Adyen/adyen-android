@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.util
 
 import android.content.Context
+import androidx.annotation.StringRes
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
@@ -19,6 +20,7 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -160,84 +162,44 @@ internal class InstallmentUtilsTest {
         assertTrue(installmentOptionText.isEmpty())
     }
 
-    @Test
-    fun `get text for installment option gets a string, if installment option is one time`() {
-        val textResourceId = R.string.checkout_card_installments_option_one_time
-        val installmentModel = InstallmentModel(
-            numberOfInstallments = null,
-            option = InstallmentOption.ONE_TIME,
-            amount = null,
-            shopperLocale = Locale.US,
-            showAmount = false
-        )
-
+    @ParameterizedTest
+    @MethodSource("noStringArgumentInstallmentSourceForGetTextForInstallmentOption")
+    fun `get text for installment option gets a string, if installment option is one time`(
+        installmentModel: InstallmentModel,
+        @StringRes textResourceId: Int
+    ) {
         InstallmentUtils.getTextForInstallmentOption(context, installmentModel)
 
         verify(context).getString(textResourceId)
     }
 
-    @Test
-    fun `get text for installment option gets a string, if installment option is revolving`() {
-        val textResourceId = R.string.checkout_card_installments_option_revolving
-        val installmentModel = InstallmentModel(
-            numberOfInstallments = null,
-            option = InstallmentOption.REVOLVING,
-            amount = null,
-            shopperLocale = Locale.US,
-            showAmount = false
-        )
-
-        InstallmentUtils.getTextForInstallmentOption(context, installmentModel)
-
-        verify(context).getString(textResourceId)
-    }
-
-    @Test
-    fun `get text for installment option gets a string, if installment option is regular and amount is not shown`() {
+    @ParameterizedTest
+    @MethodSource("numberOfInstallmentsStringSourceForGetTextForInstallmentOption")
+    fun `get text for installment option gets a string, if installment option is regular and amount is not shown`(
+        installmentModel: InstallmentModel
+    ) {
         val textResourceId = R.string.checkout_card_installments_option_regular
-        val installmentModel = InstallmentModel(
-            numberOfInstallments = 2,
-            option = InstallmentOption.REGULAR,
-            amount = Amount("USD", 100L),
-            shopperLocale = Locale.US,
-            showAmount = false
-        )
+        val formattedNumberOfInstallments =
+            installmentModel.numberOfInstallments?.formatToLocalizedString(installmentModel.shopperLocale)
 
         InstallmentUtils.getTextForInstallmentOption(context, installmentModel)
 
-        verify(context).getString(textResourceId, "2")
+        verify(context).getString(textResourceId, formattedNumberOfInstallments)
     }
 
-    @Test
-    fun `get text for installment option gets a string, if installment option is regular and amount is null`() {
-        val textResourceId = R.string.checkout_card_installments_option_regular
-        val installmentModel = InstallmentModel(
-            numberOfInstallments = 2,
-            option = InstallmentOption.REGULAR,
-            amount = null,
-            shopperLocale = Locale.US,
-            showAmount = false
-        )
-
-        InstallmentUtils.getTextForInstallmentOption(context, installmentModel)
-
-        verify(context).getString(textResourceId, "2")
-    }
-
-    @Test
-    fun `get text for installment option gets a string, if installment option is regular and amount is shown`() {
+    @ParameterizedTest
+    @MethodSource("amountShownStringSourceForGetTextForInstallmentOption")
+    fun `get text for installment option gets a string, if installment option is regular and amount is shown`(
+        installmentModel: InstallmentModel,
+        installmentAmount: String
+    ) {
         val textResourceId = R.string.checkout_card_installments_option_regular_with_price
-        val installmentModel = InstallmentModel(
-            numberOfInstallments = 3,
-            option = InstallmentOption.REGULAR,
-            amount = Amount("USD", 10000L),
-            shopperLocale = Locale.US,
-            showAmount = true
-        )
+        val formattedNumberOfInstallments =
+            installmentModel.numberOfInstallments?.formatToLocalizedString(installmentModel.shopperLocale)
 
         InstallmentUtils.getTextForInstallmentOption(context, installmentModel)
 
-        verify(context).getString(textResourceId, "3", "$33.33")
+        verify(context).getString(textResourceId, formattedNumberOfInstallments, installmentAmount)
     }
 
     @ParameterizedTest
@@ -348,6 +310,86 @@ internal class InstallmentUtilsTest {
                 false
             ),
             arguments(null, null, false),
+        )
+
+        @JvmStatic
+        fun noStringArgumentInstallmentSourceForGetTextForInstallmentOption() = listOf(
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = null,
+                    option = InstallmentOption.ONE_TIME,
+                    amount = null,
+                    shopperLocale = Locale.US,
+                    showAmount = false
+                ),
+                R.string.checkout_card_installments_option_one_time
+            ),
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = null,
+                    option = InstallmentOption.REVOLVING,
+                    amount = null,
+                    shopperLocale = Locale.US,
+                    showAmount = false
+                ),
+                R.string.checkout_card_installments_option_revolving
+            )
+        )
+
+        @JvmStatic
+        fun numberOfInstallmentsStringSourceForGetTextForInstallmentOption() = listOf(
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = 2,
+                    option = InstallmentOption.REGULAR,
+                    amount = Amount("USD", 100L),
+                    shopperLocale = Locale.US,
+                    showAmount = false
+                )
+            ),
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = 2,
+                    option = InstallmentOption.REGULAR,
+                    amount = null,
+                    shopperLocale = Locale.US,
+                    showAmount = false
+                )
+            )
+        )
+
+        @JvmStatic
+        fun amountShownStringSourceForGetTextForInstallmentOption() = listOf(
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = 2,
+                    option = InstallmentOption.REGULAR,
+                    amount = Amount("USD", 10000L),
+                    shopperLocale = Locale.US,
+                    showAmount = true
+                ),
+                "$50.00"
+            ),
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = 3,
+                    option = InstallmentOption.REGULAR,
+                    amount = Amount("USD", 10000L),
+                    shopperLocale = Locale.US,
+                    showAmount = true
+                ),
+                "$33.33"
+            ),
+            arguments(
+                InstallmentModel(
+                    numberOfInstallments = 4,
+                    option = InstallmentOption.REGULAR,
+                    amount = Amount("USD", 10000L),
+                    shopperLocale = Locale.US,
+                    showAmount = true
+                ),
+                "$25.00"
+            )
         )
 
         @JvmStatic
