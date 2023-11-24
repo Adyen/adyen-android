@@ -30,9 +30,9 @@ class AnalyticsMapper {
         sessionId: String?,
     ): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
-            version = VERSION,
+            version = actualVersion,
             channel = ANDROID_CHANNEL,
-            platform = PLATFORM,
+            platform = actualPlatform,
             locale = locale.toString(),
             component = getComponentQueryParameter(source),
             flavor = getFlavorQueryParameter(source),
@@ -43,7 +43,8 @@ class AnalyticsMapper {
             screenWidth = screenWidth,
             paymentMethods = paymentMethods,
             amount = amount,
-            containerWidth = null, // unused for Android,
+            // unused for Android
+            containerWidth = null,
             sessionId = sessionId,
         )
     }
@@ -75,22 +76,24 @@ class AnalyticsMapper {
         private const val DROP_IN_COMPONENT = "dropin"
         private const val ANDROID_CHANNEL = "android"
 
-        private var PLATFORM = AnalyticsPlatform.ANDROID.value
-        private var VERSION = BuildConfig.CHECKOUT_VERSION
+        // these params are prefixed with actual because cross platform SDKs will override them so they are not
+        // technically constants
+        private var actualPlatform = AnalyticsPlatform.ANDROID.value
+        private var actualVersion = BuildConfig.CHECKOUT_VERSION
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         fun overrideForCrossPlatform(
             platform: AnalyticsPlatform,
             version: String,
         ) {
-            PLATFORM = platform.value
-            VERSION = version
+            this.actualPlatform = platform.value
+            this.actualVersion = version
         }
 
         @VisibleForTesting
         internal fun resetToDefaults() {
-            PLATFORM = AnalyticsPlatform.ANDROID.value
-            VERSION = BuildConfig.CHECKOUT_VERSION
+            actualPlatform = AnalyticsPlatform.ANDROID.value
+            actualVersion = BuildConfig.CHECKOUT_VERSION
         }
     }
 }

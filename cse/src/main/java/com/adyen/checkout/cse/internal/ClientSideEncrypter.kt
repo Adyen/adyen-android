@@ -60,8 +60,8 @@ class ClientSideEncrypter {
             throw EncryptionException("RSA KeyFactory not found.", e)
         }
         val pubKeySpec = RSAPublicKeySpec(
-            BigInteger(keyComponents[1].lowercase(Locale.getDefault()), radix),
-            BigInteger(keyComponents[0].lowercase(Locale.getDefault()), radix)
+            BigInteger(keyComponents[1].lowercase(Locale.getDefault()), RADIX),
+            BigInteger(keyComponents[0].lowercase(Locale.getDefault()), RADIX)
         )
         val pubKey: PublicKey = try {
             keyFactory.generatePublic(pubKeySpec)
@@ -127,7 +127,7 @@ class ClientSideEncrypter {
         } catch (e: NoSuchAlgorithmException) {
             throw EncryptionException("Unable to get AES algorithm", e)
         }
-        keyGenerator.init(keySize)
+        keyGenerator.init(KEY_SIZE)
         return keyGenerator.generateKey()
     }
 
@@ -138,7 +138,7 @@ class ClientSideEncrypter {
      */
     private fun generateIV(secureRandom: SecureRandom): ByteArray {
         // generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
-        val iv = ByteArray(ivSize)
+        val iv = ByteArray(IV_SIZE)
         secureRandom.nextBytes(iv)
         return iv
     }
@@ -148,8 +148,8 @@ class ClientSideEncrypter {
         private const val VERSION = "0_1_1"
         private const val SEPARATOR = "$"
 
-        private const val keySize = 256
-        private const val ivSize = 12
-        private const val radix = 16
+        private const val KEY_SIZE = 256
+        private const val IV_SIZE = 12
+        private const val RADIX = 16
     }
 }

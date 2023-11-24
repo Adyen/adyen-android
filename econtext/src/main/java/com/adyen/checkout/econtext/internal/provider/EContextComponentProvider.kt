@@ -54,6 +54,7 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+@Suppress("ktlint:standard:type-parameter-list-spacing")
 abstract class EContextComponentProvider<
     ComponentT : EContextComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : EContextConfiguration,

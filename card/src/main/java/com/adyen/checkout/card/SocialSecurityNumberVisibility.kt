@@ -5,5 +5,6 @@ package com.adyen.checkout.card
  * field.
  */
 enum class SocialSecurityNumberVisibility {
-    SHOW, HIDE
+    SHOW,
+    HIDE,
 }

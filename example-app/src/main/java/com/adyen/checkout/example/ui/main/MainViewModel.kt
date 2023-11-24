@@ -44,8 +44,8 @@ internal class MainViewModel @Inject constructor(
     private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel() {
 
-    private val _useSessions: MutableStateFlow<Boolean> = MutableStateFlow(keyValueStorage.useSessions())
-    private val _showLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    private val useSessions: MutableStateFlow<Boolean> = MutableStateFlow(keyValueStorage.useSessions())
+    private val showLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private val _mainViewState: MutableStateFlow<MainViewState> = MutableStateFlow(getViewState())
     val mainViewState: Flow<MainViewState> = _mainViewState
@@ -54,11 +54,11 @@ internal class MainViewModel @Inject constructor(
     val eventFlow: Flow<MainEvent> = _eventFlow
 
     init {
-        _useSessions.onEach {
+        useSessions.onEach {
             loadViewState()
         }.launchIn(viewModelScope)
 
-        _showLoading.onEach {
+        showLoading.onEach {
             loadViewState()
         }.launchIn(viewModelScope)
     }
@@ -195,12 +195,12 @@ internal class MainViewModel @Inject constructor(
     fun onSessionsToggled(enable: Boolean) {
         viewModelScope.launch {
             keyValueStorage.setUseSessions(enable)
-            _useSessions.emit(enable)
+            useSessions.emit(enable)
         }
     }
 
     private suspend fun showLoading(loading: Boolean) {
-        _showLoading.emit(loading)
+        showLoading.emit(loading)
     }
 
     private suspend fun loadViewState() {
@@ -208,8 +208,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     private fun getViewState(): MainViewState {
-        val useSessions = _useSessions.value
-        val showLoading = _showLoading.value
+        val useSessions = useSessions.value
+        val showLoading = showLoading.value
         return MainViewState(
             listItems = getListItems(useSessions),
             useSessions = useSessions,

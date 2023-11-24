@@ -28,10 +28,10 @@ import retrofit2.http.Query
 internal interface CheckoutApiService {
 
     companion object {
-        private const val defaultGradleUrl = "<YOUR_SERVER_URL>"
+        private const val DEFAULT_GRADLE_SERVER_URL = "<YOUR_SERVER_URL>"
 
         fun isRealUrlAvailable(): Boolean {
-            return BuildConfig.MERCHANT_SERVER_URL != defaultGradleUrl
+            return BuildConfig.MERCHANT_SERVER_URL != DEFAULT_GRADLE_SERVER_URL
         }
     }
 
