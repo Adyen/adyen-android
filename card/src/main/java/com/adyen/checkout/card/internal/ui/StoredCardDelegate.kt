@@ -308,6 +308,15 @@ internal class StoredCardDelegate(
         _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
     }
 
+    override fun handleBackPress(): Boolean {
+        return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
+            _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
+            true
+        } else {
+            false
+        }
+    }
+
     override fun getPaymentMethodType(): String {
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }

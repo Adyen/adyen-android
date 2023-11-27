@@ -154,13 +154,14 @@
         android:id="@+id/textInputLayout_addressLookup"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants">
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_addressLookup"
             style="@style/AdyenCheckout.AddressLookup"
-            android:inputType="none"
-            android:autofillHints="postalAddress"
+            android:clickable="false"
+            android:focusable="false"
             android:nextFocusDown="@id/editText_socialSecurityNumber"
             android:nextFocusForward="@id/editText_socialSecurityNumber" />
     </com.google.android.material.textfield.TextInputLayout>

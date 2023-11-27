@@ -51,6 +51,13 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
+    override fun onBackPressed(): Boolean {
+        if (cardComponent.handleBackPress()) {
+            return true
+        }
+        return super.onBackPressed()
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

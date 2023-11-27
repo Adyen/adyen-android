@@ -112,6 +112,10 @@ open class CardComponent constructor(
         cardDelegate.setOnBinLookupListener(listener)
     }
 
+    fun handleBackPress(): Boolean {
+        return (delegate as? CardDelegate)?.handleBackPress() ?: false
+    }
+
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

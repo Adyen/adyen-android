@@ -556,6 +556,8 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressLookup() {
+        binding.editTextAddressLookup.isClickable = false
+        binding.editTextAddressLookup.isFocusable = false
         binding.textInputLayoutAddressLookup.setOnClickListener {
             cardDelegate.startAddressLookup()
         }
@@ -691,6 +693,7 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutPostalCode.isVisible = false
                 binding.textInputLayoutAddressLookup.isVisible = false
             }
+
             AddressFormUIState.LOOKUP -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false

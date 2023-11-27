@@ -46,4 +46,6 @@ interface CardDelegate :
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?)
 
     fun startAddressLookup()
+
+    fun handleBackPress(): Boolean
 }

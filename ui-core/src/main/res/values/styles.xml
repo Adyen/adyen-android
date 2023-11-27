@@ -203,9 +203,14 @@
         <item name="android:layout_marginEnd">16dp</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup" parent="AdyenCheckout.TextInputEditText">
+    <style name="AdyenCheckout.AddressLookup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/input_height</item>
         <item name="android:hint">Search Address</item>
-        <item name="android:inputType">textPostalAddress</item>
+        <item name="android:textSize">16sp</item>
+        <!-- The textDirection and textAlignment attributes ensure consistent display behaviour with RTL locales -->
+        <item name="android:textDirection">ltr</item>
+        <item name="android:textAlignment">viewStart</item>
     </style>
 
     <style name="AdyenCheckout.StreetInput" parent="AdyenCheckout.TextInputEditText">
@@ -294,7 +299,8 @@
     </style>
 
     <style name="AdyenCheckout.ProvinceTerritoryInput.Optional" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_address_form_province_territory_hint_optional</item>
+        <item name="android:hint">@string/checkout_address_form_province_territory_hint_optional
+        </item>
         <item name="android:inputType">textPostalAddress</item>
     </style>
 

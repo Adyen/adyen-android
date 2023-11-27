@@ -104,6 +104,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 brands = listOf("jcb"),
             ),
         )
+
+        CardAddressMode.LOOKUP -> AddressConfiguration.Lookup()
     }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
