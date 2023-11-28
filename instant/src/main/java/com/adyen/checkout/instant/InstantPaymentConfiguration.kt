@@ -30,7 +30,7 @@ private constructor(
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
-    val shouldUseSdk: Boolean?,
+    val actionHandlingMethod: ActionHandlingMethod?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -39,7 +39,7 @@ private constructor(
      */
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
-        private var shouldUseSdk: Boolean? = null
+        private var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -68,13 +68,12 @@ private constructor(
         )
 
         /**
-         * Sets if the payment method will be handled with the corresponding SDK or with a web flow. If there is no SDK
-         * available then the payment method will be handled with a web flow.
+         * Sets the method used to handle actions. See [ActionHandlingMethod] for the available options.
          *
-         * Default is true.
+         * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
-        fun setUseSdk(shouldUseSdk: Boolean): Builder {
-            this.shouldUseSdk = shouldUseSdk
+        fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
+            this.actionHandlingMethod = actionHandlingMethod
             return this
         }
 
@@ -85,7 +84,7 @@ private constructor(
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
-                shouldUseSdk = shouldUseSdk,
+                actionHandlingMethod = actionHandlingMethod,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

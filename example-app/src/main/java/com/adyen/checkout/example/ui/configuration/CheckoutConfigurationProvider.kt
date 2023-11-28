@@ -23,6 +23,7 @@ import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -103,7 +104,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .setUseSdk(true)
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
             .build()
 
     fun getGiftCardConfiguration(): GiftCardConfiguration =

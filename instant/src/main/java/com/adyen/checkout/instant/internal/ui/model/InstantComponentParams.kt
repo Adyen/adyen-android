@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.instant.ActionHandlingMethod
 import java.util.Locale
 
 internal data class InstantComponentParams(
@@ -21,5 +22,5 @@ internal data class InstantComponentParams(
     override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount?,
-    val shouldUseSdk: Boolean,
+    val actionHandlingMethod: ActionHandlingMethod,
 ) : ComponentParams
