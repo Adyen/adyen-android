@@ -11,6 +11,7 @@ package com.adyen.checkout.example.service
 import android.util.Log
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
@@ -22,6 +23,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
@@ -34,6 +36,7 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -371,6 +374,18 @@ class ExampleAdvancedDropInService : DropInService() {
 
     override fun onBinLookup(data: List<BinLookupData>) {
         Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
+    }
+
+    override fun onAddressLookupQuery(query: String) {
+        Log.d(TAG, "On address lookup query: $query")
+
+        // TODO address lookup debounce
+
+        sendAddressLookupResult(
+            AddressLookupDropInServiceResult.LookupResult(
+                listOf(LookupAddress("id", AddressInputModel("1072BX")))
+            )
+        )
     }
 
     companion object {

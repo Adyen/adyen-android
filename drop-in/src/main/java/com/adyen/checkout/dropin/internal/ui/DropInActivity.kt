@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.dropin.DropIn
@@ -393,6 +394,7 @@ internal class DropInActivity :
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is SessionDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is AddressLookupDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -428,6 +430,13 @@ internal class DropInActivity :
                 handleRemovePaymentMethodResult(dropInServiceResult.id)
 
             is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: AddressLookupDropInServiceResult) {
+        when (dropInServiceResult) {
+            is AddressLookupDropInServiceResult.LookupResult -> handleAddressLookupOptionsUpdate(dropInServiceResult)
+            is AddressLookupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -481,6 +490,10 @@ internal class DropInActivity :
             dropInServiceResult.paymentMethodsApiResponse,
             dropInServiceResult.order,
         )
+    }
+
+    private fun handleAddressLookupOptionsUpdate(lookupResult: AddressLookupDropInServiceResult.LookupResult) {
+        dropInViewModel.onAddressLookupOptions(lookupResult.options)
     }
 
     private fun sendResult(result: String) {
@@ -687,6 +700,10 @@ internal class DropInActivity :
 
     override fun onBinLookup(data: List<BinLookupData>) {
         dropInService?.onBinLookupCalled(data)
+    }
+
+    override fun onAddressLookupQuery(query: String) {
+        dropInService?.onAddressLookupQueryChanged(query)
     }
 
     private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {

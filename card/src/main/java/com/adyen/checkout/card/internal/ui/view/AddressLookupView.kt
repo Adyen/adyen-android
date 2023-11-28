@@ -79,7 +79,7 @@ internal class AddressLookupView @JvmOverloads constructor(
         val addressLookupQueryEditText = binding.textInputLayoutAddressLookupQuery.editText as? AdyenTextInputEditText
         addressLookupQueryEditText?.setOnChangeListener {
             cardDelegate.updateInputData {
-                addressLookupQuery = it.toString()
+                cardDelegate.onAddressQueryChanged(it.toString())
                 binding.textInputLayoutAddressLookupQuery.hideError()
             }
         }

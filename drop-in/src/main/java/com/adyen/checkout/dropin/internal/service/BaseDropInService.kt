@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceContract
 import com.adyen.checkout.dropin.BaseDropInServiceResult
@@ -109,6 +110,11 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         emitResult(result)
     }
 
+    final override fun sendAddressLookupResult(result: AddressLookupDropInServiceResult) {
+        Logger.d(TAG, "dispatching AddressLookupDropInServiceResult")
+        emitResult(result)
+    }
+
     protected fun emitResult(result: BaseDropInServiceResult) {
         launch {
             // send response back to activity
@@ -139,6 +145,10 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
 
     final override fun onBinLookupCalled(data: List<BinLookupData>) {
         onBinLookup(data)
+    }
+
+    final override fun onAddressLookupQueryChanged(query: String) {
+        onAddressLookupQuery(query)
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {

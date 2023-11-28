@@ -13,6 +13,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 
+@Suppress("TooManyFunctions")
 interface BaseDropInServiceContract {
 
     /**
@@ -85,6 +86,9 @@ interface BaseDropInServiceContract {
      */
     fun sendRecurringResult(result: RecurringDropInServiceResult)
 
+    // TODO address lookup docs
+    fun sendAddressLookupResult(result: AddressLookupDropInServiceResult)
+
     /**
      * Gets the additional data that was set when starting Drop-in using
      * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
@@ -109,4 +113,7 @@ interface BaseDropInServiceContract {
      * @param data A list of [BinLookupData], which contains information about the detected brands.
      */
     fun onBinLookup(data: List<BinLookupData>) = Unit
+
+    // TODO address lookup docs
+    fun onAddressLookupQuery(query: String) = Unit
 }

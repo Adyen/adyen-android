@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import android.content.ComponentName
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -46,6 +47,7 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -112,6 +114,9 @@ internal class DropInViewModel(
         private set(value) {
             bundleHandler.currentOrder = value
         }
+
+    private val _addressLookupOptionsFlow = bufferedChannel<List<LookupAddress>>()
+    val addressLookupOptionsFlow: Flow<List<LookupAddress>> = _addressLookupOptionsFlow.receiveAsFlow()
 
     fun getPaymentMethods(): List<PaymentMethod> {
         return paymentMethodsApiResponse.paymentMethods.orEmpty()
@@ -414,6 +419,11 @@ internal class DropInViewModel(
         val order = currentOrder
             ?: throw CheckoutException("No order in progress")
         sendCancelOrderEvent(order, false)
+    }
+
+    fun onAddressLookupOptions(options: List<LookupAddress>) {
+        Logger.d(TAG, "onAddressLookupOptions $options")
+        viewModelScope.launch { _addressLookupOptionsFlow.send(options) }
     }
 
     fun cancelDropIn() {

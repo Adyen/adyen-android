@@ -12,11 +12,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -42,6 +45,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
+        cardComponent.setAddressLookupQueryChangedListener(protocol::onAddressLookupQuery)
 
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
@@ -49,6 +53,10 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         }
+
+        dropInViewModel.addressLookupOptionsFlow.onEach {
+            cardComponent.updateAddressLookupOptions(it)
+        }.launchIn(dropInViewModel.viewModelScope)
     }
 
     override fun onBackPressed(): Boolean {

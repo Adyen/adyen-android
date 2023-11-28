@@ -803,12 +803,13 @@ class DefaultCardDelegate(
         onBinLookupListener = listener
     }
 
-    override fun setAddressLookupQueryListener(listener: ((query: String) -> Unit)?) {
+    override fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) {
         this.onAddressQueryChangedListener = listener
     }
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
         // TODO address lookup show options
+        Logger.d(TAG, "update address lookup options $options")
     }
 
     override fun onCleared() {

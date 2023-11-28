@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin
 
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
@@ -183,6 +184,20 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false,
     ) : RecurringDropInServiceResult(), DropInServiceResultError
+}
+
+// TODO address lookup docs
+sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
+
+    class LookupResult(
+        val options: List<LookupAddress>
+    ) : AddressLookupDropInServiceResult()
+
+    class Error(
+        override val errorDialog: ErrorDialog?,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false,
+    ) : AddressLookupDropInServiceResult(), DropInServiceResultError
 }
 
 internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {

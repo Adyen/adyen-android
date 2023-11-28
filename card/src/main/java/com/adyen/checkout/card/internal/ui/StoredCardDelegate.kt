@@ -429,7 +429,7 @@ internal class StoredCardDelegate(
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
 
     // TODO address lookup not used
-    override fun setAddressLookupQueryListener(listener: ((query: String) -> Unit)?) = Unit
+    override fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) = Unit
 
     // TODO address lookup not used
     override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit

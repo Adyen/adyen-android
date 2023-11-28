@@ -17,6 +17,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.sessions.core.SessionModel
 
+@Suppress("TooManyFunctions")
 internal interface BaseDropInServiceInterface {
     suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
@@ -28,6 +29,7 @@ internal interface BaseDropInServiceInterface {
     fun onRedirectCalled()
     fun onBinValueCalled(binValue: String)
     fun onBinLookupCalled(data: List<BinLookupData>)
+    fun onAddressLookupQueryChanged(query: String)
 }
 
 internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {

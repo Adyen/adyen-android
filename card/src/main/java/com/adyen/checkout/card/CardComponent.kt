@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -35,6 +36,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
+@Suppress("TooManyFunctions")
 open class CardComponent constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
@@ -110,6 +112,16 @@ open class CardComponent constructor(
      */
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
         cardDelegate.setOnBinLookupListener(listener)
+    }
+
+    // TODO address lookup
+    fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) {
+        cardDelegate.setAddressLookupQueryChangedListener(listener)
+    }
+
+    // TODO address lookup
+    fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        cardDelegate.updateAddressLookupOptions(options)
     }
 
     fun handleBackPress(): Boolean {
