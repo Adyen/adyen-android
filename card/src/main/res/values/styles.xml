@@ -78,6 +78,10 @@
         <item name="android:maxLength">2</item>
     </style>
 
+    <!-- TODO address lookuo -->
+    <style name="AdyenCheckout.Card.AddressLookupQuery" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Search Address</item>
+    </style>
 
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>

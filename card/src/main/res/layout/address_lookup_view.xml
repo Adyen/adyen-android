@@ -13,19 +13,22 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <TextView
-        android:id="@+id/textView_waiting_confirmation"
-        style="@style/AdyenCheckout.TextAppearance.Primary"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_addressLookupQuery"
+        style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/standard_half_margin"
-        android:text="Welcome to Address Lookup" />
+        android:descendantFocusability="afterDescendants">
+
+        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_addressLookupQuery"
+            style="@style/AdyenCheckout.AddressLookup" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="afterDescendants"
-        android:focusableInTouchMode="true"
-        android:visibility="gone" />
+        android:focusableInTouchMode="true" />
 </merge>
