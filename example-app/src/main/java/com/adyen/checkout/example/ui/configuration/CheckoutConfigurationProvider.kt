@@ -22,6 +22,7 @@ import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
+import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.instantPayment
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale

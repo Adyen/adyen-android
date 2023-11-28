@@ -9,18 +9,30 @@
 package com.adyen.checkout.twint
 
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import ch.twint.payment.sdk.Twint
 import ch.twint.payment.sdk.TwintPayResult
+import com.adyen.checkout.components.core.action.SdkAction
+import com.adyen.checkout.components.core.action.TwintSdkData
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.twint.Twint.initialize
 
+/**
+ * Object used to manage the Twint SDK. Call [initialize] in [ComponentActivity.onCreate] to make sure [SdkAction]s
+ * with [TwintSdkData] can be handled.
+ */
 object Twint {
 
     private var twintObject: Twint? = null
 
     private var onResultListener: ((TwintPayResult) -> Unit)? = null
 
+    /**
+     * Initializes the [Twint] object. This method **must** be called in [ComponentActivity.onCreate] or before, because
+     * the Twint SDK creates an [ActivityResultLauncher] under the hood.
+     */
     fun initialize(activity: ComponentActivity) {
         twintObject = Twint(activity, ::onTwintResult)
 

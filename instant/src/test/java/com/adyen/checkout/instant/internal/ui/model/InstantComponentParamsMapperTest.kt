@@ -166,6 +166,7 @@ internal class InstantComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Suppress("LongParameterList")
     private fun getInstantComponentParams(
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
