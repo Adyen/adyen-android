@@ -16,6 +16,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -308,6 +309,9 @@ internal class StoredCardDelegate(
         _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
     }
 
+    // TODO address lookup not used
+    override fun onAddressQueryChanged(query: String) = Unit
+
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
             _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
@@ -423,6 +427,12 @@ internal class StoredCardDelegate(
 
     // Bin lookup is not performed for stored cards
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
+
+    // TODO address lookup not used
+    override fun setAddressLookupQueryListener(listener: ((query: String) -> Unit)?) = Unit
+
+    // TODO address lookup not used
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit
 
     override fun onCleared() {
         removeObserver()

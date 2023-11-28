@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.ui.core.internal.ui.model
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AddressInputModel(
     var postalCode: String = "",
     var street: String = "",

@@ -21,6 +21,7 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
@@ -140,6 +141,7 @@ class DefaultCardDelegate(
 
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
     private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
+    private var onAddressQueryChangedListener: ((query: String) -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -465,6 +467,10 @@ class DefaultCardDelegate(
 
     override fun startAddressLookup() {
         _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
+    }
+
+    override fun onAddressQueryChanged(query: String) {
+        onAddressQueryChangedListener?.invoke(query)
     }
 
     override fun handleBackPress(): Boolean {
@@ -795,6 +801,14 @@ class DefaultCardDelegate(
 
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
         onBinLookupListener = listener
+    }
+
+    override fun setAddressLookupQueryListener(listener: ((query: String) -> Unit)?) {
+        this.onAddressQueryChangedListener = listener
+    }
+
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        // TODO address lookup show options
     }
 
     override fun onCleared() {

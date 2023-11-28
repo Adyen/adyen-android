@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
@@ -45,7 +46,13 @@ interface CardDelegate :
 
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?)
 
+    fun setAddressLookupQueryListener(listener: ((query: String) -> Unit)?)
+
     fun startAddressLookup()
+
+    fun updateAddressLookupOptions(options: List<LookupAddress>)
+
+    fun onAddressQueryChanged(query: String)
 
     fun handleBackPress(): Boolean
 }
