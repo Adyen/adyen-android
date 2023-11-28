@@ -85,7 +85,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             }
 
             instantPayment {
-                setUseSdk(true)
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
             }
 
             // Actions

@@ -10,8 +10,9 @@ package com.adyen.checkout.instant.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.instant.ActionHandlingMethod
 
 internal data class InstantComponentParams(
     private val commonComponentParams: CommonComponentParams,
-    val shouldUseSdk: Boolean,
+    val actionHandlingMethod: ActionHandlingMethod,
 ) : ComponentParams by commonComponentParams

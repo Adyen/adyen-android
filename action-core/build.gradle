@@ -48,6 +48,7 @@ dependencies {
     //Tests
     testImplementation project(':3ds2')
     testImplementation project(':test-core')
+    testImplementation project(':twint')
     testImplementation project(':wechatpay')
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5

@@ -7,8 +7,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.SdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.twint.internal.ui.TwintComponentViewType
@@ -29,7 +28,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class TwintActionComponentTest(
     @Mock private val twintDelegate: TwintDelegate,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
@@ -39,8 +38,6 @@ internal class TwintActionComponentTest(
 
     @BeforeEach
     fun beforeEach() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(twintDelegate.viewFlow) doReturn MutableStateFlow(TwintComponentViewType)
         component = TwintActionComponent(twintDelegate, actionComponentEventHandler)
     }

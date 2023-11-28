@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.internal.ui.model.InstantComponentParams
 import kotlinx.coroutines.CoroutineScope
@@ -64,10 +65,15 @@ internal class DefaultInstantPaymentDelegate(
     }
 
     private fun getSubtype(paymentMethod: PaymentMethod): String? {
-        if (!componentParams.shouldUseSdk) return null
-        return when (paymentMethod.type) {
-            PaymentMethodTypes.TWINT -> SDK_SUBTYPE
-            else -> null
+        return when (componentParams.actionHandlingMethod) {
+            ActionHandlingMethod.PREFER_NATIVE -> {
+                when (paymentMethod.type) {
+                    PaymentMethodTypes.TWINT -> SDK_SUBTYPE
+                    else -> null
+                }
+            }
+
+            ActionHandlingMethod.PREFER_WEB -> null
         }
     }
 

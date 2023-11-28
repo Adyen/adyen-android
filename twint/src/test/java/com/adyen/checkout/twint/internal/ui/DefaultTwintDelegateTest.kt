@@ -45,7 +45,7 @@ internal class DefaultTwintDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(Environment.TEST, "")
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
 
         delegate = DefaultTwintDelegate(
             observerRepository = ActionObserverRepository(),

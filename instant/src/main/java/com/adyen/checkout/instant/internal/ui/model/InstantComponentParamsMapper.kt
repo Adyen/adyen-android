@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.getInstantPaymentConfiguration
 import java.util.Locale
 
@@ -40,7 +41,8 @@ internal class InstantComponentParamsMapper(
 
         return InstantComponentParams(
             commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
-            shouldUseSdk = instantActionConfiguration?.shouldUseSdk ?: true,
+            actionHandlingMethod = instantActionConfiguration?.actionHandlingMethod
+                ?: ActionHandlingMethod.PREFER_NATIVE,
         )
     }
 }
