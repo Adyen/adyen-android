@@ -65,13 +65,14 @@ internal class DefaultInstantPaymentDelegate(
     }
 
     private fun getSubtype(paymentMethod: PaymentMethod): String? {
-        return when(componentParams.actionHandlingMethod) {
+        return when (componentParams.actionHandlingMethod) {
             ActionHandlingMethod.PREFER_NATIVE -> {
                 when (paymentMethod.type) {
                     PaymentMethodTypes.TWINT -> SDK_SUBTYPE
                     else -> null
                 }
             }
+
             ActionHandlingMethod.PREFER_WEB -> null
         }
     }
