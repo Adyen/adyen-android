@@ -1289,6 +1289,7 @@ internal class DefaultCardDelegateTest(
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
+            addressLookupOptions = emptyList() // TODO address lookup
         )
     }
 

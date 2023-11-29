@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 21/11/2023.
+ * Created by ozgur on 1/12/2023.
  */
 
 package com.adyen.checkout.card.internal.ui.view
@@ -14,9 +14,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.AddressLookupViewBinding
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -25,6 +28,8 @@ import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class AddressLookupView @JvmOverloads constructor(
     context: Context,
@@ -44,6 +49,8 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private lateinit var cardDelegate: CardDelegate
 
+    private var addressLookupOptionsAdapter: AddressLookupOptionsAdapter? = null
+
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -57,14 +64,23 @@ internal class AddressLookupView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
+        observeDelegate(delegate, coroutineScope)
+
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
+        initAddressOptions()
     }
 
     override fun highlightValidationErrors() {
         cardDelegate.outputData.let {
             binding.addressFormInput.highlightValidationErrors(false)
         }
+    }
+
+    private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -98,6 +114,27 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
         binding.addressFormInput.attachDelegate(cardDelegate, coroutineScope)
+    }
+
+    private fun initAddressOptions() {
+        addressLookupOptionsAdapter = AddressLookupOptionsAdapter()
+        addressLookupOptionsAdapter?.let { adapter ->
+            binding.recyclerViewAddressLookupOptions.adapter = adapter
+        }
+    }
+
+    private fun outputDataChanged(outputData: CardOutputData) {
+        setAddressOptions(outputData.addressLookupOptions)
+    }
+
+    private fun setAddressOptions(options: List<LookupAddress>) {
+        binding.recyclerViewAddressLookupOptions.isVisible = options.isNotEmpty()
+        binding.addressFormInput.isVisible = options.isEmpty()
+        if (addressLookupOptionsAdapter == null) {
+            addressLookupOptionsAdapter = AddressLookupOptionsAdapter()
+            binding.recyclerViewAddressLookupOptions.adapter = addressLookupOptionsAdapter
+        }
+        addressLookupOptionsAdapter?.submitList(options)
     }
 
     override fun getView(): View = this

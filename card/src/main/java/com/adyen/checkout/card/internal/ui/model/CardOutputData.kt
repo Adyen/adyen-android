@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
@@ -41,7 +42,8 @@ data class CardOutputData(
     val isDualBranded: Boolean,
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
-    val isCardListVisible: Boolean
+    val isCardListVisible: Boolean,
+    val addressLookupOptions: List<LookupAddress>
 ) : OutputData {
 
     override val isValid: Boolean
