@@ -30,7 +30,7 @@ import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
-import com.adyen.checkout.example.ui.card.SessionsCardActivity
+import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity

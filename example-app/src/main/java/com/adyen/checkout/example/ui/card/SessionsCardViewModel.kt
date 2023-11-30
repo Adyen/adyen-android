@@ -22,6 +22,7 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
+import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
@@ -30,10 +31,10 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,44 +47,37 @@ internal class SessionsCardViewModel @Inject constructor(
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
-    private val _sessionsCardComponentDataFlow = MutableStateFlow<SessionsCardComponentData?>(null)
-    val sessionsCardComponentDataFlow: Flow<SessionsCardComponentData> = _sessionsCardComponentDataFlow.filterNotNull()
-
-    private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
-    val cardViewState: Flow<CardViewState> = _cardViewState
-
-    private val _events = MutableSharedFlow<CardEvent>()
-    val events: Flow<CardEvent> = _events
-
     private val cardConfiguration = checkoutConfigurationProvider.getCardConfiguration()
+
+    private val _uiState = MutableStateFlow(SessionsCardUiState(cardConfiguration))
+    val uiState: StateFlow<SessionsCardUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch { launchComponent() }
     }
 
     private suspend fun launchComponent() {
+        updateUiState { it.copy(isLoading = true) }
         val paymentMethodType = PaymentMethodTypes.SCHEME
         val checkoutSession = getSession(paymentMethodType)
         if (checkoutSession == null) {
             Log.e(TAG, "Failed to fetch session")
-            _cardViewState.emit(CardViewState.Error)
+            onError("Failed to fetch session")
             return
         }
         val paymentMethod = checkoutSession.getPaymentMethod(paymentMethodType)
         if (paymentMethod == null) {
             Log.e(TAG, "Session does not contain SCHEME payment method")
-            _cardViewState.emit(CardViewState.Error)
+            onError("Payment method is null")
             return
         }
 
-        _sessionsCardComponentDataFlow.emit(
-            SessionsCardComponentData(
-                checkoutSession = checkoutSession,
-                paymentMethod = paymentMethod,
-                callback = this
-            )
+        val componentData = SessionsCardComponentData(
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            callback = this,
         )
-        _cardViewState.emit(CardViewState.ShowComponent)
+        updateUiState { it.copy(componentData = componentData, isLoading = false) }
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
@@ -102,8 +96,8 @@ internal class SessionsCardViewModel @Inject constructor(
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
-            )
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            ),
         ) ?: return null
 
         return getCheckoutSession(sessionModel, cardConfiguration)
@@ -120,30 +114,35 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     override fun onAction(action: Action) {
-        viewModelScope.launch { _events.emit(CardEvent.AdditionalAction(action)) }
+        updateUiState { it.copy(action = action) }
     }
 
     override fun onError(componentError: ComponentError) {
-        onComponentError(componentError)
+        onError(componentError.errorMessage)
+    }
+
+    private fun onError(message: String) {
+        updateUiState { it.copy(toastMessage = "Error: $message") }
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-        viewModelScope.launch { _events.emit(CardEvent.PaymentResult(result.resultCode.orEmpty())) }
-    }
-
-    private fun onComponentError(error: ComponentError) {
-        viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+        updateUiState { it.copy(toastMessage = "Finished: ${result.resultCode}") }
     }
 
     override fun onLoading(isLoading: Boolean) {
-        val state = if (isLoading) {
-            Log.d(TAG, "Show loading")
-            CardViewState.Loading
-        } else {
-            Log.d(TAG, "Don't show loading")
-            CardViewState.ShowComponent
-        }
-        _cardViewState.tryEmit(state)
+        updateUiState { it.copy(isLoading = isLoading) }
+    }
+
+    fun toastMessageConsumed() {
+        updateUiState { it.copy(toastMessage = null) }
+    }
+
+    fun actionConsumed() {
+        updateUiState { it.copy(action = null) }
+    }
+
+    private fun updateUiState(block: (SessionsCardUiState) -> SessionsCardUiState) {
+        _uiState.update(block)
     }
 
     companion object {

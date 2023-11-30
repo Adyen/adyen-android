@@ -86,7 +86,7 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.card.SessionsCardActivity"
+            android:name=".ui.card.compose.SessionsCardActivity"
             android:exported="true"
             android:launchMode="singleTop">
 
