@@ -15,8 +15,8 @@ import androidx.preference.DropDownPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivitySettingsBinding
-import com.adyen.checkout.example.ui.NightTheme
-import com.adyen.checkout.example.ui.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.NightTheme
+import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

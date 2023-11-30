@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.di
 
-import com.adyen.checkout.example.ui.DefaultNightThemeRepository
-import com.adyen.checkout.example.ui.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
+import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
