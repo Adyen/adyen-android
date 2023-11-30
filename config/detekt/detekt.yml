@@ -16,6 +16,10 @@ naming:
 
 style:
   active: true
+  MagicNumber:
+    active: true
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
   MaxLineLength:
     active: true
     maxLineLength: 120
@@ -25,6 +29,10 @@ style:
     excludeRawStrings: true
     ignoreAnnotated:
       - Test
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated:
+      - Preview
 
 formatting:
   active: true

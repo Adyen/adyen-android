@@ -103,7 +103,7 @@ private val CustomDarkColors = CustomColorScheme(
 @Composable
 fun ExampleTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     val colors = if (!useDarkTheme) {
         LightColors

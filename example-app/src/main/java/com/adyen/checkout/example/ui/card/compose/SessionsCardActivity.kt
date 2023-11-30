@@ -10,15 +10,14 @@ package com.adyen.checkout.example.ui.card.compose
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.view.WindowCompat
+import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.NightTheme
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.example.ui.theme.ExampleTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

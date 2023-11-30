@@ -68,6 +68,7 @@ internal fun SessionsCardScreen(
     }
 }
 
+@Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
