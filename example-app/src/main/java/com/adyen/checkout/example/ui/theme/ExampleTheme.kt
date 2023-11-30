@@ -2,10 +2,13 @@ package com.adyen.checkout.example.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -39,7 +42,6 @@ private val LightColors = lightColorScheme(
     scrim = md_theme_light_scrim,
 )
 
-
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -72,19 +74,47 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+@Immutable
+data class CustomColorScheme(
+    val success: Color = Color.Unspecified,
+    val warning: Color = Color.Unspecified,
+)
+
+val LocalCustomColorScheme = staticCompositionLocalOf { CustomColorScheme() }
+
+private val CustomLightColors = CustomColorScheme(
+    success = md_theme_light_success,
+    warning = md_theme_light_warning,
+)
+
+private val CustomDarkColors = CustomColorScheme(
+    success = md_theme_dark_success,
+    warning = md_theme_dark_warning,
+)
+
 @Composable
 fun ExampleTheme(
-  useDarkTheme: Boolean = isSystemInDarkTheme(),
-  content: @Composable() () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable() () -> Unit
 ) {
-  val colors = if (!useDarkTheme) {
-    LightColors
-  } else {
-    DarkColors
-  }
+    val colors = if (!useDarkTheme) {
+        LightColors
+    } else {
+        DarkColors
+    }
 
-  MaterialTheme(
-    colorScheme = colors,
-    content = content
-  )
+    val customColors = if (!useDarkTheme) {
+        CustomLightColors
+    } else {
+        CustomDarkColors
+    }
+
+    CompositionLocalProvider(
+        LocalCustomColorScheme provides customColors,
+    ) {
+        MaterialTheme(
+            colorScheme = colors,
+            content = content,
+        )
+    }
 }

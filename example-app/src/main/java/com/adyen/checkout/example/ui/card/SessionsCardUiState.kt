@@ -11,6 +11,7 @@ package com.adyen.checkout.example.ui.card
 import androidx.compose.runtime.Immutable
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.example.ui.compose.ResultState
 
 @Immutable
 internal data class SessionsCardUiState(
@@ -19,4 +20,5 @@ internal data class SessionsCardUiState(
     val toastMessage: String? = null,
     val componentData: SessionsCardComponentData? = null,
     val action: Action? = null,
+    val finalResult: ResultState? = null,
 )

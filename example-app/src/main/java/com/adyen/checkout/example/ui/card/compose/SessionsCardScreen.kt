@@ -45,6 +45,7 @@ import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.card.SessionsCardComponentData
 import com.adyen.checkout.example.ui.card.SessionsCardViewModel
+import com.adyen.checkout.example.ui.compose.ResultContent
 
 @Composable
 internal fun SessionsCardScreen(
@@ -78,7 +79,7 @@ private fun MainContent(
     ) {
         val uiState by viewModel.uiState.collectAsState()
 
-        val (cardConfiguration, isLoading, toastMessage, componentData, action) = uiState
+        val (cardConfiguration, isLoading, toastMessage, componentData, action, finalResult) = uiState
 
         if (isLoading) {
             CircularProgressIndicator()
@@ -89,7 +90,9 @@ private fun MainContent(
             viewModel.toastMessageConsumed()
         }
 
-        if (componentData != null) {
+        if (finalResult != null) {
+            ResultContent(finalResult)
+        } else if (componentData != null) {
             CardComponent(
                 configuration = cardConfiguration,
                 componentData = componentData,

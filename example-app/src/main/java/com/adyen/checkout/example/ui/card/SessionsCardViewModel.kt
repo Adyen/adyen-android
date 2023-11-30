@@ -23,6 +23,7 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
+import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
@@ -126,7 +127,20 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-        updateUiState { it.copy(toastMessage = "Finished: ${result.resultCode}") }
+        updateUiState {
+            it.copy(
+                toastMessage = "Finished: ${result.resultCode}",
+                finalResult = getFinalResultState(result),
+            )
+        }
+    }
+
+    private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
+        "Authorised" -> ResultState.SUCCESS
+        "Pending",
+        "Received" -> ResultState.PENDING
+
+        else -> ResultState.FAILURE
     }
 
     override fun onLoading(isLoading: Boolean) {
