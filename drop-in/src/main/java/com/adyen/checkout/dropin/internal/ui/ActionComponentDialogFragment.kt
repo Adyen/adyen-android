@@ -73,6 +73,10 @@ internal class ActionComponentDialogFragment :
         return binding.root
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
+        window?.setWindowAnimations(R.style.AdyenCheckout_BottomSheet_NoWindowEnterDialogAnimation)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
@@ -84,7 +88,7 @@ internal class ActionComponentDialogFragment :
             actionComponent = GenericActionComponentProvider(componentParams).get(
                 fragment = this,
                 configuration = actionConfiguration,
-                callback = this
+                callback = this,
             )
 
             actionComponent.setOnRedirectListener { protocol.onRedirect() }
