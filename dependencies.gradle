@@ -27,7 +27,7 @@ ext {
     compose_compiler_version = '1.5.3'
 
     // Code quality
-    detekt_version = "1.23.1"
+    detekt_version = "1.23.3"
     ktlint_version = '1.0.1'
 
     // Android Dependencies
