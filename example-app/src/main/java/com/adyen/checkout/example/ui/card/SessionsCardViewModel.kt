@@ -17,6 +17,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -119,7 +120,16 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     override fun onError(componentError: ComponentError) {
-        onError(componentError.errorMessage)
+        if (componentError.exception is CancellationException) {
+            updateUiState {
+                it.copy(
+                    toastMessage = "Payment in progress was cancelled",
+                    finalResult = ResultState.FAILURE,
+                )
+            }
+        } else {
+            onError(componentError.errorMessage)
+        }
     }
 
     private fun onError(message: String) {

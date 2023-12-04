@@ -87,8 +87,11 @@ private fun MainContent(
         }
 
         if (toastMessage != null) {
-            Toast.makeText(LocalContext.current, toastMessage, Toast.LENGTH_SHORT).show()
-            viewModel.toastMessageConsumed()
+            val context = LocalContext.current
+            LaunchedEffect(toastMessage) {
+                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+                viewModel.toastMessageConsumed()
+            }
         }
 
         if (finalResult != null) {
