@@ -30,6 +30,7 @@ import com.adyen.checkout.dropin.DropInConfiguration.Builder
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
+import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
@@ -376,6 +377,14 @@ class DropInConfiguration private constructor(
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_ITAU] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_SANTANDER] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETO_PRIMEIRO_PAY] = boletoConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for gift card payment method.
+         */
+        fun addGiftCardConfiguration(giftCardConfiguration: GiftCardConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.GIFTCARD] = giftCardConfiguration
             return this
         }
 

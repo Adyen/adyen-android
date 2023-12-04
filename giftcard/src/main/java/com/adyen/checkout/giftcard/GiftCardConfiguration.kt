@@ -31,6 +31,7 @@ class GiftCardConfiguration private constructor(
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean?,
+    val isPinRequired: Boolean?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
 
@@ -41,6 +42,7 @@ class GiftCardConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<GiftCardConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        private var isPinRequired: Boolean? = null
         private var isSubmitButtonVisible: Boolean? = null
 
         /**
@@ -81,6 +83,19 @@ class GiftCardConfiguration private constructor(
             return this
         }
 
+        /**
+         * Set if the PIN field should be hidden from the Component and not requested to the shopper.
+         * Note that this might have implications for the transaction.
+         *
+         * Default is true.
+         *
+         * @param isPinRequired If PIN should be hidden or not.
+         */
+        fun setPinRequired(isPinRequired: Boolean): Builder {
+            this.isPinRequired = isPinRequired
+            return this
+        }
+
         override fun buildInternal(): GiftCardConfiguration {
             return GiftCardConfiguration(
                 shopperLocale = shopperLocale,
@@ -89,6 +104,7 @@ class GiftCardConfiguration private constructor(
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
+                isPinRequired = isPinRequired,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

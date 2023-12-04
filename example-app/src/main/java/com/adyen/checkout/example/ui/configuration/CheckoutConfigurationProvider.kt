@@ -62,6 +62,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         .addGooglePayConfiguration(getGooglePayConfiguration())
         .add3ds2ActionConfiguration(get3DS2Configuration())
         .addRedirectActionConfiguration(getRedirectConfiguration())
+        .addGiftCardConfiguration(getGiftCardConfiguration())
         .setEnableRemovingStoredPaymentMethods(true)
         .setAmount(amount)
         .setAnalyticsConfiguration(getAnalyticsConfiguration())
@@ -105,6 +106,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
+            .setPinRequired(true)
             .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
