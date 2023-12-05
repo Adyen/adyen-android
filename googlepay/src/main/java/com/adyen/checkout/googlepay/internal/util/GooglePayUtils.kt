@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.googlepay.internal.util
 
-import com.adyen.checkout.components.core.internal.util.AmountFormat.toBigDecimal
+import com.adyen.checkout.components.core.internal.util.AmountFormat
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -152,37 +152,37 @@ internal object GooglePayUtils {
     }
 
     private fun createIsReadyToPayRequestModel(params: GooglePayComponentParams): IsReadyToPayRequestModel {
-        val isReadyToPayRequestModel = IsReadyToPayRequestModel()
-        isReadyToPayRequestModel.apiVersion = MAJOR_API_VERSION
-        isReadyToPayRequestModel.apiVersionMinor = MINOT_API_VERSION
-        isReadyToPayRequestModel.isExistingPaymentMethodRequired = params.isExistingPaymentMethodRequired
-        val allowedPaymentMethods = ArrayList<GooglePayPaymentMethodModel>()
-        allowedPaymentMethods.add(createCardPaymentMethod(params))
-        isReadyToPayRequestModel.allowedPaymentMethods = allowedPaymentMethods
-        return isReadyToPayRequestModel
+        return IsReadyToPayRequestModel(
+            apiVersion = MAJOR_API_VERSION,
+            apiVersionMinor = MINOT_API_VERSION,
+            isExistingPaymentMethodRequired = params.isExistingPaymentMethodRequired,
+            allowedPaymentMethods = getAllowedPaymentMethods(params),
+        )
     }
 
     private fun createPaymentDataRequestModel(params: GooglePayComponentParams): PaymentDataRequestModel {
-        val paymentDataRequestModel = PaymentDataRequestModel()
-        paymentDataRequestModel.apiVersion = MAJOR_API_VERSION
-        paymentDataRequestModel.apiVersionMinor = MINOT_API_VERSION
-        paymentDataRequestModel.merchantInfo = params.merchantInfo
-        paymentDataRequestModel.transactionInfo = createTransactionInfo(params)
-        val allowedPaymentMethods = ArrayList<GooglePayPaymentMethodModel>()
-        allowedPaymentMethods.add(createCardPaymentMethod(params))
-        paymentDataRequestModel.allowedPaymentMethods = allowedPaymentMethods
-        paymentDataRequestModel.isEmailRequired = params.isEmailRequired
-        paymentDataRequestModel.isShippingAddressRequired = params.isShippingAddressRequired
-        paymentDataRequestModel.shippingAddressParameters = params.shippingAddressParameters
-        return paymentDataRequestModel
+        return PaymentDataRequestModel(
+            apiVersion = MAJOR_API_VERSION,
+            apiVersionMinor = MINOT_API_VERSION,
+            merchantInfo = params.merchantInfo,
+            transactionInfo = createTransactionInfo(params),
+            allowedPaymentMethods = getAllowedPaymentMethods(params),
+            isEmailRequired = params.isEmailRequired,
+            isShippingAddressRequired = params.isShippingAddressRequired,
+            shippingAddressParameters = params.shippingAddressParameters,
+        )
+    }
+
+    internal fun getAllowedPaymentMethods(params: GooglePayComponentParams): List<GooglePayPaymentMethodModel> {
+        return listOf(createCardPaymentMethod(params))
     }
 
     private fun createCardPaymentMethod(params: GooglePayComponentParams): GooglePayPaymentMethodModel {
-        val cardPaymentMethod = GooglePayPaymentMethodModel()
-        cardPaymentMethod.type = PAYMENT_TYPE_CARD
-        cardPaymentMethod.parameters = createCardParameters(params)
-        cardPaymentMethod.tokenizationSpecification = createTokenizationSpecification(params)
-        return cardPaymentMethod
+        return GooglePayPaymentMethodModel(
+            type = PAYMENT_TYPE_CARD,
+            parameters = createCardParameters(params),
+            tokenizationSpecification = createTokenizationSpecification(params),
+        )
     }
 
     private fun createCardParameters(params: GooglePayComponentParams): CardParameters {
@@ -200,31 +200,31 @@ internal object GooglePayUtils {
     private fun createTokenizationSpecification(
         params: GooglePayComponentParams
     ): PaymentMethodTokenizationSpecification {
-        val tokenizationSpecification = PaymentMethodTokenizationSpecification()
-        tokenizationSpecification.type = PAYMENT_GATEWAY
-        tokenizationSpecification.parameters = createGatewayParameters(params)
-        return tokenizationSpecification
+        return PaymentMethodTokenizationSpecification(
+            type = PAYMENT_GATEWAY,
+            parameters = createGatewayParameters(params),
+        )
     }
 
     private fun createGatewayParameters(params: GooglePayComponentParams): TokenizationParameters {
-        val tokenizationParameters = TokenizationParameters()
-        tokenizationParameters.gateway = ADYEN_GATEWAY
-        tokenizationParameters.gatewayMerchantId = params.gatewayMerchantId
-        return tokenizationParameters
+        return TokenizationParameters(
+            gateway = ADYEN_GATEWAY,
+            gatewayMerchantId = params.gatewayMerchantId,
+        )
     }
 
     private fun createTransactionInfo(params: GooglePayComponentParams): TransactionInfoModel {
-        var bigDecimal = toBigDecimal(params.amount)
-        bigDecimal = bigDecimal.setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP)
-        val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal)
-        val transactionInfoModel = TransactionInfoModel()
-        // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
-        if (params.totalPriceStatus != NOT_CURRENTLY_KNOWN) {
-            transactionInfoModel.totalPrice = displayAmount
+        return TransactionInfoModel(
+            countryCode = params.countryCode,
+            totalPriceStatus = params.totalPriceStatus,
+            currencyCode = params.amount.currency,
+        ).apply {
+            // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
+            if (params.totalPriceStatus == NOT_CURRENTLY_KNOWN) return@apply
+            val bigDecimalAmount = AmountFormat.toBigDecimal(params.amount)
+                .setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP)
+            val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimalAmount)
+            totalPrice = displayAmount
         }
-        transactionInfoModel.countryCode = params.countryCode
-        transactionInfoModel.totalPriceStatus = params.totalPriceStatus
-        transactionInfoModel.currencyCode = params.amount.currency
-        return transactionInfoModel
     }
 }
