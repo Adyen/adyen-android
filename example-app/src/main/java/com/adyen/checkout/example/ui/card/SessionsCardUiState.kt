@@ -17,7 +17,7 @@ import com.adyen.checkout.example.ui.compose.ResultState
 internal data class SessionsCardUiState(
     val cardConfiguration: CardConfiguration,
     val isLoading: Boolean = false,
-    val toastMessage: String? = null,
+    val oneTimeMessage: String? = null,
     val componentData: SessionsCardComponentData? = null,
     val action: Action? = null,
     val finalResult: ResultState? = null,

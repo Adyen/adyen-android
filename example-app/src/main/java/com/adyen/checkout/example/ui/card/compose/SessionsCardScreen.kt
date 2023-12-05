@@ -44,12 +44,14 @@ import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.card.SessionsCardComponentData
+import com.adyen.checkout.example.ui.card.SessionsCardUiState
 import com.adyen.checkout.example.ui.card.SessionsCardViewModel
 import com.adyen.checkout.example.ui.compose.ResultContent
 
 @Composable
 internal fun SessionsCardScreen(
     onBackPressed: () -> Unit,
+    viewModel: SessionsCardViewModel = hiltViewModel(),
 ) {
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
@@ -57,40 +59,46 @@ internal fun SessionsCardScreen(
             TopAppBar(
                 title = { Text(text = "Card component with sessions") },
                 navigationIcon = {
-                    IconButton(onClick = { onBackPressed() }) {
+                    IconButton(onClick = onBackPressed) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
             )
         },
     ) { innerPadding ->
-        MainContent(Modifier.padding(innerPadding))
+        val uiState by viewModel.uiState.collectAsState()
+        MainContent(
+            uiState = uiState,
+            onOneTimeMessageConsumed = viewModel::oneTimeMessageConsumed,
+            onActionConsumed = viewModel::actionConsumed,
+            modifier = Modifier.padding(innerPadding),
+        )
     }
 }
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
 private fun MainContent(
+    uiState: SessionsCardUiState,
+    onOneTimeMessageConsumed: () -> Unit,
+    onActionConsumed: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SessionsCardViewModel = hiltViewModel(),
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        val uiState by viewModel.uiState.collectAsState()
-
-        val (cardConfiguration, isLoading, toastMessage, componentData, action, finalResult) = uiState
+        val (cardConfiguration, isLoading, oneTimeMessage, componentData, action, finalResult) = uiState
 
         if (isLoading) {
             CircularProgressIndicator()
         }
 
-        if (toastMessage != null) {
+        if (oneTimeMessage != null) {
             val context = LocalContext.current
-            LaunchedEffect(toastMessage) {
-                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                viewModel.toastMessageConsumed()
+            LaunchedEffect(oneTimeMessage) {
+                Toast.makeText(context, oneTimeMessage, Toast.LENGTH_SHORT).show()
+                onOneTimeMessageConsumed()
             }
         }
 
@@ -101,7 +109,7 @@ private fun MainContent(
                 configuration = cardConfiguration,
                 componentData = componentData,
                 action = action,
-                onActionConsumed = viewModel::actionConsumed,
+                onActionConsumed = onActionConsumed,
                 modifier = Modifier.fillMaxSize(),
             )
         }

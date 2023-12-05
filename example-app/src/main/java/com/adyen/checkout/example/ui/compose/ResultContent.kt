@@ -44,7 +44,7 @@ internal fun ResultContent(
             painter = painterResource(id = resultState.drawable),
             contentDescription = null,
             tint = tint,
-            modifier = modifier.size(100.dp),
+            modifier = Modifier.size(100.dp),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = resultState.text, style = MaterialTheme.typography.displaySmall)

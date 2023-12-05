@@ -123,7 +123,7 @@ internal class SessionsCardViewModel @Inject constructor(
         if (componentError.exception is CancellationException) {
             updateUiState {
                 it.copy(
-                    toastMessage = "Payment in progress was cancelled",
+                    oneTimeMessage = "Payment in progress was cancelled",
                     finalResult = ResultState.FAILURE,
                 )
             }
@@ -133,13 +133,13 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     private fun onError(message: String) {
-        updateUiState { it.copy(toastMessage = "Error: $message") }
+        updateUiState { it.copy(oneTimeMessage = "Error: $message") }
     }
 
     override fun onFinished(result: SessionPaymentResult) {
         updateUiState {
             it.copy(
-                toastMessage = "Finished: ${result.resultCode}",
+                oneTimeMessage = "Finished: ${result.resultCode}",
                 finalResult = getFinalResultState(result),
             )
         }
@@ -157,8 +157,8 @@ internal class SessionsCardViewModel @Inject constructor(
         updateUiState { it.copy(isLoading = isLoading) }
     }
 
-    fun toastMessageConsumed() {
-        updateUiState { it.copy(toastMessage = null) }
+    fun oneTimeMessageConsumed() {
+        updateUiState { it.copy(oneTimeMessage = null) }
     }
 
     fun actionConsumed() {
