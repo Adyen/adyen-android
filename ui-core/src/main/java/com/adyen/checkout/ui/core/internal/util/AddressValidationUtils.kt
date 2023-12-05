@@ -33,18 +33,20 @@ object AddressValidationUtils {
         isOptional: Boolean,
     ): AddressOutputData {
         return when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> validateAddressInput(
+            AddressFormUIState.FULL_ADDRESS, AddressFormUIState.LOOKUP -> validateAddressInput(
                 addressInputModel,
                 isOptional,
                 countryOptions,
                 stateOptions
             )
+
             AddressFormUIState.POSTAL_CODE -> validatePostalCode(
                 addressInputModel,
                 isOptional,
                 countryOptions,
                 stateOptions
             )
+
             else -> makeValidEmptyAddressOutput(addressInputModel)
         }
     }
@@ -77,7 +79,7 @@ object AddressValidationUtils {
         countryOptions: List<AddressListItem>,
         stateOptions: List<AddressListItem>,
     ): AddressOutputData {
-        val spec = AddressSpecification.fromString(addressInputModel.country)
+        val spec = AddressSpecification.fromString(addressInputModel.country) ?: AddressSpecification.DEFAULT
         return with(addressInputModel) {
             AddressOutputData(
                 postalCode = validateAddressField(postalCode, spec.postalCode.isRequired && !isOptional),

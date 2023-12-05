@@ -22,6 +22,7 @@ import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
@@ -135,6 +136,7 @@ class AddressFormInput @JvmOverloads constructor(
         delegate.addressOutputDataFlow.onEach { addressOutputData ->
             updateCountries(addressOutputData.countryOptions)
             updateStates(addressOutputData.stateOptions)
+            updateInputFields(addressOutputData)
         }.launchIn(coroutineScope)
     }
 
@@ -303,7 +305,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initStreetInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextStreet?.apply {
-            setText(delegate.addressOutputData.street.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { street = it.toString() }
                 textInputLayoutStreet?.hideError()
@@ -322,7 +323,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initHouseNumberInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
-            setText(delegate.addressOutputData.houseNumberOrName.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { houseNumberOrName = it.toString() }
                 textInputLayoutHouseNumber?.hideError()
@@ -341,7 +341,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initApartmentSuiteInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextApartmentSuite?.apply {
-            setText(delegate.addressOutputData.apartmentSuite.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { apartmentSuite = it.toString() }
             }
@@ -359,7 +358,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initPostalCodeInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextPostalCode?.apply {
-            setText(delegate.addressOutputData.postalCode.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { postalCode = it.toString() }
                 textInputLayoutPostalCode?.hideError()
@@ -378,7 +376,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initCityInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextCity?.apply {
-            setText(delegate.addressOutputData.city.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { city = it.toString() }
                 textInputLayoutCity?.hideError()
@@ -397,7 +394,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initProvinceTerritoryInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextProvinceTerritory?.apply {
-            setText(delegate.addressOutputData.stateOrProvince.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { stateOrProvince = it.toString() }
                 textInputLayoutProvinceTerritory?.hideError()
@@ -416,7 +412,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initStatesInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
         autoCompleteTextViewState?.apply {
-            setText(statesAdapter.getItem { it.selected }?.name)
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -461,5 +456,16 @@ class AddressFormInput @JvmOverloads constructor(
 
         val statesStyleResId = spec.stateProvince.getStyleResId(isOptional)
         statesStyleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
+    }
+
+    private fun updateInputFields(addressOutputData: AddressOutputData) {
+        autoCompleteTextViewCountry.setText(addressOutputData.countryOptions.firstOrNull { it.selected }?.name)
+        editTextStreet?.setText(delegate.addressOutputData.street.value)
+        editTextHouseNumber?.setText(delegate.addressOutputData.houseNumberOrName.value)
+        editTextApartmentSuite?.setText(delegate.addressOutputData.apartmentSuite.value)
+        editTextPostalCode?.setText(delegate.addressOutputData.postalCode.value)
+        editTextCity?.setText(delegate.addressOutputData.city.value)
+        editTextProvinceTerritory?.setText(delegate.addressOutputData.stateOrProvince.value)
+        autoCompleteTextViewState?.setText(statesAdapter.getItem { it.selected }?.name)
     }
 }

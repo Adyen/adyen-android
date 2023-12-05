@@ -16,14 +16,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.AddressLookupOptionItemViewBinding
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 
-internal class AddressLookupOptionsAdapter :
+internal class AddressLookupOptionsAdapter(
+    private val onItemClicked: (LookupAddress) -> Unit
+) :
     ListAdapter<LookupAddress, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
         AddressLookupOptionDiffCallback
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressLookupOptionViewHolder {
         val binding = AddressLookupOptionItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AddressLookupOptionViewHolder(binding)
+        return AddressLookupOptionViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: AddressLookupOptionViewHolder, position: Int) {
@@ -31,9 +33,13 @@ internal class AddressLookupOptionsAdapter :
     }
 
     internal class AddressLookupOptionViewHolder(
-        private val binding: AddressLookupOptionItemViewBinding
+        private val binding: AddressLookupOptionItemViewBinding,
+        private val onItemClicked: (LookupAddress) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(lookupAddress: LookupAddress) {
+            binding.root.setOnClickListener {
+                onItemClicked(lookupAddress)
+            }
             binding.textViewAddressHeader.text = lookupAddress.id
             binding.textViewAddressDescription.text = lookupAddress.toString()
         }

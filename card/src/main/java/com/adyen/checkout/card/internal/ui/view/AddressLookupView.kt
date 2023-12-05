@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@Suppress("TooManyFunctions")
 internal class AddressLookupView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -117,7 +118,7 @@ internal class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initAddressOptions() {
-        addressLookupOptionsAdapter = AddressLookupOptionsAdapter()
+        addressLookupOptionsAdapter = AddressLookupOptionsAdapter(::onAddressSelected)
         addressLookupOptionsAdapter?.let { adapter ->
             binding.recyclerViewAddressLookupOptions.adapter = adapter
         }
@@ -131,10 +132,17 @@ internal class AddressLookupView @JvmOverloads constructor(
         binding.recyclerViewAddressLookupOptions.isVisible = options.isNotEmpty()
         binding.addressFormInput.isVisible = options.isEmpty()
         if (addressLookupOptionsAdapter == null) {
-            addressLookupOptionsAdapter = AddressLookupOptionsAdapter()
-            binding.recyclerViewAddressLookupOptions.adapter = addressLookupOptionsAdapter
+            initAddressOptions()
         }
         addressLookupOptionsAdapter?.submitList(options)
+    }
+
+    private fun onAddressSelected(lookupAddress: LookupAddress) {
+        cardDelegate.updateInputData {
+            this.address = lookupAddress.address
+        }
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.addressFormInput.isVisible = true
     }
 
     override fun getView(): View = this

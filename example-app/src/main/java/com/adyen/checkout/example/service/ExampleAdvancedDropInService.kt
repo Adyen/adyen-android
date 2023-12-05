@@ -71,6 +71,7 @@ class ExampleAdvancedDropInService : DropInService() {
     private val _addressLookupQueryFlow = MutableStateFlow<String?>(null)
 
     init {
+
         _addressLookupQueryFlow
             .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
             .filterNotNull()
@@ -78,7 +79,30 @@ class ExampleAdvancedDropInService : DropInService() {
                 sendAddressLookupResult(
                     AddressLookupDropInServiceResult.LookupResult(
                         // TODO address lookup populate better data
-                        listOf(LookupAddress(it, AddressInputModel(postalCode = "1234AB"))),
+                        listOf(
+                            LookupAddress(
+                                id = it,
+                                address = AddressInputModel(
+                                    country = "NL",
+                                    postalCode = "1234AB",
+                                    houseNumberOrName = "1HS",
+                                    street = "Simon Carmiggeltstraat",
+                                    stateOrProvince = "Noord-Holland",
+                                    city = "Amsterdam",
+                                ),
+                            ),
+                            LookupAddress(
+                                id = it,
+                                address = AddressInputModel(
+                                    country = "TR",
+                                    postalCode = "38090",
+                                    houseNumberOrName = "93",
+                                    street = "12. Cadde",
+                                    stateOrProvince = "Kayseri",
+                                    city = "Kayseri",
+                                ),
+                            ),
+                        ),
                     ),
                 )
             }.launchIn(this)

@@ -152,7 +152,9 @@ class DefaultCardDelegate(
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
-        if (componentParams.addressParams is AddressParams.FullAddress) {
+        if (componentParams.addressParams is AddressParams.FullAddress ||
+            componentParams.addressParams is AddressParams.Lookup
+        ) {
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
@@ -327,6 +329,14 @@ class DefaultCardDelegate(
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
+        val addressState = validateAddress(
+            inputData.address,
+            addressFormUIState,
+            selectedOrFirstCardType,
+            updatedCountryOptions,
+            updatedStateOptions,
+        )
+
         return CardOutputData(
             cardNumberState = validateCardNumber(
                 cardNumber = inputData.cardNumber,
@@ -339,13 +349,7 @@ class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(
-                inputData.address,
-                addressFormUIState,
-                selectedOrFirstCardType,
-                updatedCountryOptions,
-                updatedStateOptions,
-            ),
+            addressState = addressState,
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType),

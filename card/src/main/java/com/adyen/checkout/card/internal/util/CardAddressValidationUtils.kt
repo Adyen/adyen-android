@@ -28,8 +28,7 @@ internal object CardAddressValidationUtils {
                 true
             }
             is AddressParams.Lookup -> {
-                // TODO validate address
-                true
+                false
             }
         } ?: true
     }
