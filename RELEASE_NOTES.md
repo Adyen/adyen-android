@@ -8,5 +8,11 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## New
+- You can now override payment method names in drop in by using `DropInConfiguration.Builder.overridePaymentMethodName(type, name)`.
+- For stored cards, Drop-in will show the card name ("Visa", "Mastercard"...), instead of "Credit Card".
+- Now it is possible to show installment amounts for card payments using `InstallmentConfiguration.showInstallmentAmount` in `CardConfiguration.Builder.setInstallmentConfigurations()`.
+- For gift cards, you can now hide the PIN text field using `GiftCardConfiguration.Builder.setPinRequired()`.
+
 ## Fixed
 - Fixed the bug which would not show components in Compose lazy lists.
