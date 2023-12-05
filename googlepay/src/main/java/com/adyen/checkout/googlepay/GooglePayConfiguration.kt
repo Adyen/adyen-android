@@ -164,7 +164,7 @@ class GooglePayConfiguration private constructor(
         }
 
         /**
-         * Sets the supported authentication methods.
+         * Sets the supported authentication methods. Check [AllowedAuthMethods] for all the possible values.
          *
          * Default is ["PAN_ONLY", "CRYPTOGRAM_3DS"].
          *
@@ -180,7 +180,7 @@ class GooglePayConfiguration private constructor(
 
         /**
          * Sets the allowed card networks. The allowed networks are automatically configured based on your account
-         * settings, but you can override them here.
+         * settings, but you can override them here. Check [AllowedCardNetworks] for all the possible values.
          *
          * Default is ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"].
          *
