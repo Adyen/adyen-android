@@ -13,9 +13,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.LinearLayout
 import androidx.core.view.children
-import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.internal.Component
@@ -56,7 +54,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
     private val binding: AdyenComponentViewBinding = AdyenComponentViewBinding.inflate(
         LayoutInflater.from(context),
-        this
+        this,
     )
 
     /**
@@ -125,12 +123,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
 
-        binding.frameLayoutComponentContainer.doOnNextLayout {
-            val view = componentView.getView()
-            binding.frameLayoutComponentContainer.addView(view)
-            view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
-        }
-
+        binding.frameLayoutComponentContainer.addView(componentView.getView())
         componentView.initView(delegate, coroutineScope, localizedContext)
 
         val buttonDelegate = (delegate as? ButtonDelegate)
@@ -181,7 +174,7 @@ class AdyenComponentView @JvmOverloads constructor(
                     amount = componentParams.amount,
                     locale = componentParams.shopperLocale,
                     localizedContext = localizedContext,
-                    emptyAmountStringResId = viewType.buttonTextResId
+                    emptyAmountStringResId = viewType.buttonTextResId,
                 )
             }
 

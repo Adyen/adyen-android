@@ -8,5 +8,5 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## New
-- Now it is possible to show installment amounts for card payments.
+## Fixed
+- Fixed the bug which would not show components in Compose lazy lists.

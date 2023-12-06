@@ -19,4 +19,9 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <!-- This is only used in ActionComponentDialogFragment to prevent dialog jumping animation -->
+    <style name="AdyenCheckout.BottomSheet.NoWindowEnterDialogAnimation" parent="@style/Animation.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowEnterAnimation">@null</item>
+    </style>
+
 </resources>
