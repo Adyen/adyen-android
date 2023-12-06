@@ -22,18 +22,18 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.util.requireApplication
 import com.adyen.checkout.example.databinding.FragmentGooglePayBinding
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
+import com.google.android.gms.wallet.button.ButtonConstants.ButtonType
+import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class GooglePayFragment : BottomSheetDialogFragment() {
@@ -76,8 +76,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { onEvent(it) }
             .launchIn(lifecycleScope)
-
-        loadGooglePayButton()
     }
 
     private fun setupGooglePayComponent(googlePayComponentData: GooglePayComponentData) {
@@ -85,12 +83,14 @@ class GooglePayFragment : BottomSheetDialogFragment() {
             fragment = this,
             paymentMethod = googlePayComponentData.paymentMethod,
             configuration = checkoutConfigurationProvider.getGooglePayConfiguration(),
-            callback = googlePayComponentData.callback
+            callback = googlePayComponentData.callback,
         )
 
         this.googlePayComponent = googlePayComponent
 
         binding.componentView.attach(googlePayComponent, viewLifecycleOwner)
+
+        loadGooglePayButton()
     }
 
     private fun onViewState(state: GooglePayViewState) {
@@ -136,7 +136,7 @@ class GooglePayFragment : BottomSheetDialogFragment() {
 
     private fun checkAvailability(paymentMethod: PaymentMethod, callback: ComponentAvailableCallback) {
         GooglePayComponent.PROVIDER.isAvailable(
-            applicationContext = requireApplication(),
+            applicationContext = requireActivity().application,
             paymentMethod = paymentMethod,
             configuration = checkoutConfigurationProvider.getGooglePayConfiguration(),
             callback = callback,
@@ -149,11 +149,21 @@ class GooglePayFragment : BottomSheetDialogFragment() {
     }
 
     private fun loadGooglePayButton() {
+        val allowedPaymentMethods = googlePayComponent?.getGooglePayButtonParameters()?.allowedPaymentMethods.orEmpty()
+        val buttonOptions = ButtonOptions
+            .newBuilder()
+            .setButtonType(ButtonType.PAY)
+            .setAllowedPaymentMethods(allowedPaymentMethods)
+            .build()
+        binding.googlePayButton.initialize(buttonOptions)
+
         binding.googlePayButton.setOnClickListener {
             googlePayComponent?.startGooglePayScreen(requireActivity(), ACTIVITY_RESULT_CODE)
         }
     }
 
+    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ACTIVITY_RESULT_CODE) {
