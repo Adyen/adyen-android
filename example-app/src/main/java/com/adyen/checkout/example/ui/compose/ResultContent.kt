@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.adyen.checkout.example.ui.theme.LocalCustomColorScheme
+import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
 internal fun ResultContent(
@@ -31,13 +31,13 @@ internal fun ResultContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(ExampleTheme.dimensions.grid_2),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         val tint = when (resultState) {
-            ResultState.SUCCESS -> LocalCustomColorScheme.current.success
-            ResultState.PENDING -> LocalCustomColorScheme.current.warning
+            ResultState.SUCCESS -> ExampleTheme.customColors.success
+            ResultState.PENDING -> ExampleTheme.customColors.warning
             ResultState.FAILURE -> MaterialTheme.colorScheme.error
         }
         Icon(
@@ -46,7 +46,7 @@ internal fun ResultContent(
             tint = tint,
             modifier = Modifier.size(100.dp),
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(ExampleTheme.dimensions.grid_2))
         Text(text = resultState.text, style = MaterialTheme.typography.displaySmall)
     }
 }

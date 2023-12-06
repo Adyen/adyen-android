@@ -67,7 +67,7 @@ internal fun SessionsCardScreen(
         },
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
-        MainContent(
+        SessionsCardContent(
             uiState = uiState,
             onOneTimeMessageConsumed = viewModel::oneTimeMessageConsumed,
             onActionConsumed = viewModel::actionConsumed,
@@ -78,7 +78,7 @@ internal fun SessionsCardScreen(
 
 @Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
-private fun MainContent(
+private fun SessionsCardContent(
     uiState: SessionsCardUiState,
     onOneTimeMessageConsumed: () -> Unit,
     onActionConsumed: () -> Unit,
