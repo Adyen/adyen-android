@@ -79,6 +79,14 @@ class GooglePayComponent internal constructor(
     }
 
     /**
+     * Returns some of the parameters required to initialize the [Google Pay button](https://docs.adyen.com/payment-methods/google-pay/android-component/#2-show-the-google-pay-button).
+     */
+    @Suppress("MaxLineLength")
+    fun getGooglePayButtonParameters(): GooglePayButtonParameters {
+        return googlePayDelegate.getGooglePayButtonParameters()
+    }
+
+    /**
      * Handle the result from the GooglePay screen that was started by [.startGooglePayScreen].
      *
      * @param resultCode The result code from the [Activity.onActivityResult]

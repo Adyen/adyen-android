@@ -22,9 +22,12 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -89,7 +92,7 @@ internal class DefaultGooglePayDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -124,7 +127,7 @@ internal class DefaultGooglePayDelegate(
             data = paymentComponentData,
             isInputValid = isValid,
             isReady = true,
-            paymentData = paymentData
+            paymentData = paymentData,
         )
     }
 
@@ -161,6 +164,15 @@ internal class DefaultGooglePayDelegate(
 
             else -> Unit
         }
+    }
+
+    override fun getGooglePayButtonParameters(): GooglePayButtonParameters {
+        val allowedPaymentMethodsList = GooglePayUtils.getAllowedPaymentMethods(componentParams)
+        val allowedPaymentMethods = ModelUtils.serializeOptList(
+            allowedPaymentMethodsList,
+            GooglePayPaymentMethodModel.SERIALIZER,
+        )?.toString().orEmpty()
+        return GooglePayButtonParameters(allowedPaymentMethods)
     }
 
     override fun getPaymentMethodType(): String {
