@@ -11,6 +11,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -49,7 +50,7 @@ class OpenBankingConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -79,4 +80,22 @@ class OpenBankingConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.openBankingConfiguration(
+    configuration: OpenBankingConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getOpenBankingConfiguration(): OpenBankingConfiguration? {
+    return getConfiguration(OpenBankingConfiguration::class)
 }

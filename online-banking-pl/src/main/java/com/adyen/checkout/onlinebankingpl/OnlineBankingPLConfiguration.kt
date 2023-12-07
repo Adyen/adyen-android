@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -50,7 +51,7 @@ class OnlineBankingPLConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -80,4 +81,22 @@ class OnlineBankingPLConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.onlineBankingPLConfiguration(
+    configuration: OnlineBankingPLConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = OnlineBankingPLConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getOnlineBankingPLConfiguration(): OnlineBankingPLConfiguration? {
+    return getConfiguration(OnlineBankingPLConfiguration::class)
 }

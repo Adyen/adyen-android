@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -75,4 +76,22 @@ class PayEasyConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.payEasyConfiguration(
+    configuration: PayEasyConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = PayEasyConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getPayEasyConfiguration(): PayEasyConfiguration? {
+    return getConfiguration(PayEasyConfiguration::class)
 }

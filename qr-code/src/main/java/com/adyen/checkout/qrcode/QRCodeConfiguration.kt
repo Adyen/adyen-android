@@ -10,6 +10,7 @@ package com.adyen.checkout.qrcode
 import android.content.Context
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -43,7 +44,7 @@ class QRCodeConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -56,7 +57,7 @@ class QRCodeConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         override fun buildInternal(): QRCodeConfiguration {
@@ -69,4 +70,23 @@ class QRCodeConfiguration private constructor(
             )
         }
     }
+}
+
+@Suppress("FunctionName")
+fun CheckoutConfiguration.QRCodeConfiguration(
+    configuration: QRCodeConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getQRCodeConfiguration(): QRCodeConfiguration? {
+    return getConfiguration(QRCodeConfiguration::class)
 }

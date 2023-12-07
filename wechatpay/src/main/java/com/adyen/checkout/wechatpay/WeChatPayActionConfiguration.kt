@@ -10,6 +10,7 @@ package com.adyen.checkout.wechatpay
 import android.content.Context
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -43,7 +44,7 @@ class WeChatPayActionConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -69,4 +70,22 @@ class WeChatPayActionConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.weChatPayActionConfiguration(
+    configuration: WeChatPayActionConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = WeChatPayActionConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getWeChatPayActionConfiguration(): WeChatPayActionConfiguration? {
+    return getConfiguration(WeChatPayActionConfiguration::class)
 }

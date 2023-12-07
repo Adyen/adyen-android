@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -53,7 +54,7 @@ class SepaConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -93,4 +94,22 @@ class SepaConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.sepaConfiguration(
+    configuration: SepaConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = SepaConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getSepaConfiguration(): SepaConfiguration? {
+    return getConfiguration(SepaConfiguration::class)
 }

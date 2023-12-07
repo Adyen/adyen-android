@@ -21,6 +21,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
@@ -104,7 +105,7 @@ class DropInConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -117,7 +118,7 @@ class DropInConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -419,4 +420,18 @@ class DropInConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.dropInConfiguration(
+    configuration: Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = Builder(shopperLocale, environment, clientKey)
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getDropInConfiguration(): DropInConfiguration? {
+    return getConfiguration(DropInConfiguration::class)
 }

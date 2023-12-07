@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -55,7 +56,7 @@ class BoletoConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -68,7 +69,7 @@ class BoletoConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -102,7 +103,25 @@ class BoletoConfiguration private constructor(
             amount = amount,
             isSubmitButtonVisible = isSubmitButtonVisible,
             genericActionConfiguration = genericActionConfigurationBuilder.build(),
-            isEmailVisible = isEmailVisible
+            isEmailVisible = isEmailVisible,
         )
     }
+}
+
+fun CheckoutConfiguration.boletoConfiguration(
+    configuration: BoletoConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = BoletoConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getBoletoConfiguration(): BoletoConfiguration? {
+    return getConfiguration(BoletoConfiguration::class)
 }

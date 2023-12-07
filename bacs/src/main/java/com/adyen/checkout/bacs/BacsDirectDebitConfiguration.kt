@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -94,4 +95,22 @@ class BacsDirectDebitConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.bacsDirectDebitConfiguration(
+    configuration: BacsDirectDebitConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getBacsDirectDebitConfiguration(): BacsDirectDebitConfiguration? {
+    return getConfiguration(BacsDirectDebitConfiguration::class)
 }

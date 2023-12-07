@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -109,4 +110,22 @@ class GiftCardConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.giftCardConfiguration(
+    configuration: GiftCardConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
+    return getConfiguration(GiftCardConfiguration::class)
 }

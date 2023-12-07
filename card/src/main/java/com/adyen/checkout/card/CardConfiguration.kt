@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
@@ -75,7 +76,7 @@ class CardConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -279,7 +280,7 @@ class CardConfiguration private constructor(
                 kcpAuthVisibility = kcpAuthVisibility,
                 installmentConfiguration = installmentConfiguration,
                 addressConfiguration = addressConfiguration,
-                genericActionConfiguration = genericActionConfigurationBuilder.build()
+                genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
@@ -288,7 +289,25 @@ class CardConfiguration private constructor(
         val DEFAULT_SUPPORTED_CARDS_LIST: List<CardBrand> = listOf(
             CardBrand(cardType = CardType.VISA),
             CardBrand(cardType = CardType.AMERICAN_EXPRESS),
-            CardBrand(cardType = CardType.MASTERCARD)
+            CardBrand(cardType = CardType.MASTERCARD),
         )
     }
+}
+
+fun CheckoutConfiguration.cardConfiguration(
+    configuration: CardConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = CardConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
+    return getConfiguration(CardConfiguration::class)
 }

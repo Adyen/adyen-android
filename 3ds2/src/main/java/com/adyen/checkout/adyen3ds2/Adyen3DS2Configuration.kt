@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.IntentFilter
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -53,7 +54,7 @@ class Adyen3DS2Configuration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -66,7 +67,7 @@ class Adyen3DS2Configuration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -105,4 +106,22 @@ class Adyen3DS2Configuration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.adyen3DS2Configuration(
+    configuration: Adyen3DS2Configuration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
+    return getConfiguration(Adyen3DS2Configuration::class)
 }

@@ -11,6 +11,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -49,7 +50,7 @@ class DotpayConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -79,4 +80,22 @@ class DotpayConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.dotpayConfiguration(
+    configuration: DotpayConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getDotpayConfiguration(): DotpayConfiguration? {
+    return getConfiguration(DotpayConfiguration::class)
 }

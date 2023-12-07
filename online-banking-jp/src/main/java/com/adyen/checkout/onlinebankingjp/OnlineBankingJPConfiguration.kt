@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -75,4 +76,22 @@ class OnlineBankingJPConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.onlineBankingJPConfiguration(
+    configuration: OnlineBankingJPConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = OnlineBankingJPConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getOnlineBankingJPConfiguration(): OnlineBankingJPConfiguration? {
+    return getConfiguration(OnlineBankingJPConfiguration::class)
 }

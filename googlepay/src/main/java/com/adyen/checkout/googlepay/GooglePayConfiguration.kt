@@ -14,6 +14,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -85,7 +86,7 @@ class GooglePayConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -127,7 +128,7 @@ class GooglePayConfiguration private constructor(
             if (!isGooglePayEnvironmentValid(googlePayEnvironment)) {
                 throw CheckoutException(
                     "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
-                        " WalletConstants.ENVIRONMENT_PRODUCTION"
+                        " WalletConstants.ENVIRONMENT_PRODUCTION",
                 )
             }
             this.googlePayEnvironment = googlePayEnvironment
@@ -382,4 +383,22 @@ class GooglePayConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.googlePayConfiguration(
+    configuration: GooglePayConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getGooglePayConfiguration(): GooglePayConfiguration? {
+    return getConfiguration(GooglePayConfiguration::class)
 }

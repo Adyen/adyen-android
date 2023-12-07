@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
@@ -73,4 +74,22 @@ class InstantPaymentConfiguration private constructor(
             )
         }
     }
+}
+
+fun CheckoutConfiguration.instantPaymentConfiguration(
+    configuration: InstantPaymentConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getInstantPaymentConfiguration(): InstantPaymentConfiguration? {
+    return getConfiguration(InstantPaymentConfiguration::class)
 }
