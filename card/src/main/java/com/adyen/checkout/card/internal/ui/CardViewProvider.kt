@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui
 
 import android.content.Context
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.view.AddressLookupView
 import com.adyen.checkout.card.internal.ui.view.CardView
 import com.adyen.checkout.card.internal.ui.view.StoredCardView
@@ -25,19 +26,26 @@ internal object CardViewProvider : ViewProvider {
         context: Context,
     ): ComponentView {
         return when (viewType) {
-            CardComponentViewType.DefaultCardView -> CardView(context)
-            CardComponentViewType.StoredCardView -> StoredCardView(context)
-            CardComponentViewType.AddressLookup -> AddressLookupView(context)
+            is CardComponentViewType.DefaultCardView -> CardView(context)
+            is CardComponentViewType.StoredCardView -> StoredCardView(context)
+            is CardComponentViewType.AddressLookup -> AddressLookupView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal sealed class CardComponentViewType : AmountButtonComponentViewType {
-    object DefaultCardView : CardComponentViewType()
-    object StoredCardView : CardComponentViewType()
-    object AddressLookup : CardComponentViewType()
+internal sealed class CardComponentViewType : ButtonComponentViewType {
+    data object DefaultCardView : CardComponentViewType(), AmountButtonComponentViewType {
+        override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    }
+
+    data object StoredCardView : CardComponentViewType(), AmountButtonComponentViewType {
+        override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    }
+
+    data object AddressLookup : CardComponentViewType() {
+        override val buttonTextResId: Int = R.string.checkout_address_lookup_button_text
+    }
 
     override val viewProvider: ViewProvider = CardViewProvider
-    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

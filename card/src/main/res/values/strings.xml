@@ -40,4 +40,7 @@
     <!-- Untranslatable strings -->
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>
     <string name="card_number_4digit" translatable="false">•••• %s</string>
+
+    <!-- TODO address lookup translations -->
+    <string name="checkout_address_lookup_button_text" translatable="false">Use this address</string>
 </resources>

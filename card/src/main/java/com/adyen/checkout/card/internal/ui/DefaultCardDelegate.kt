@@ -469,7 +469,11 @@ class DefaultCardDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        submitHandler.onSubmit(state = state)
+        if (_viewFlow.value == CardComponentViewType.AddressLookup) {
+            _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
+        } else {
+            submitHandler.onSubmit(state = state)
+        }
     }
 
     override fun startAddressLookup() {

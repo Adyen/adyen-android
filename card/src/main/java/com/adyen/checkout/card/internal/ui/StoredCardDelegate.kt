@@ -315,7 +315,7 @@ internal class StoredCardDelegate(
 
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
-            _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
+            _viewFlow.tryEmit(CardComponentViewType.StoredCardView)
             true
         } else {
             false
