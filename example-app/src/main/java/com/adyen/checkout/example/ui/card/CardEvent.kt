@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.card
 
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 
 internal sealed class CardEvent {
@@ -15,4 +16,6 @@ internal sealed class CardEvent {
     data class PaymentResult(val result: String) : CardEvent()
 
     data class AdditionalAction(val action: Action) : CardEvent()
+
+    data class AddressLookup(val options: List<LookupAddress>) : CardEvent()
 }

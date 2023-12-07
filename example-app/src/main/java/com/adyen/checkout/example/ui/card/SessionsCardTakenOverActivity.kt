@@ -19,6 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
@@ -109,6 +110,11 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
             Log.d(TAG, "On redirect")
         }
 
+        cardComponent.setAddressLookupQueryChangedListener {
+            Log.d(TAG, "On address lookup query changed: $it")
+            cardViewModel.onAddressLookupQueryChanged(it)
+        }
+
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
@@ -118,6 +124,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
+            is CardEvent.AddressLookup -> onAddressLookup(event.options)
         }
     }
 
@@ -128,6 +135,10 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
     private fun onPaymentResult(result: String) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun onAddressLookup(options: List<LookupAddress>) {
+        cardComponent?.updateAddressLookupOptions(options)
     }
 
     override fun onDestroy() {

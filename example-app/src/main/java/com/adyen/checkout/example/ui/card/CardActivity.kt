@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
@@ -108,6 +109,11 @@ class CardActivity : AppCompatActivity() {
             Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
         }
 
+        cardComponent.setAddressLookupQueryChangedListener {
+            Log.d(TAG, "On address lookup query changed: $it")
+            cardViewModel.onAddressLookupQueryChanged(it)
+        }
+
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
@@ -117,6 +123,7 @@ class CardActivity : AppCompatActivity() {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
+            is CardEvent.AddressLookup -> onAddressLookup(event.options)
         }
     }
 
@@ -127,6 +134,10 @@ class CardActivity : AppCompatActivity() {
 
     private fun onAction(action: Action) {
         cardComponent?.handleAction(action, this)
+    }
+
+    private fun onAddressLookup(options: List<LookupAddress>) {
+        cardComponent?.updateAddressLookupOptions(options)
     }
 
     override fun onDestroy() {

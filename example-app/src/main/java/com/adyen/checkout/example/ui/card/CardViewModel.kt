@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
@@ -14,17 +15,24 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -38,11 +46,45 @@ internal class CardViewModel @Inject constructor(
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
     val cardViewState: Flow<CardViewState> = _cardViewState
 
+    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
+
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
     init {
         viewModelScope.launch { fetchPaymentMethods() }
+        addressLookupQueryFlow
+            .filterNotNull()
+            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
+            .onEach {
+                // TODO address lookup populate better data
+                val options = listOf(
+                    LookupAddress(
+                        id = it,
+                        address = AddressInputModel(
+                            country = "NL",
+                            postalCode = "1234AB",
+                            houseNumberOrName = "1HS",
+                            street = "Simon Carmiggeltstraat",
+                            stateOrProvince = "Noord-Holland",
+                            city = "Amsterdam",
+                        ),
+                    ),
+                    LookupAddress(
+                        id = it,
+                        address = AddressInputModel(
+                            country = "TR",
+                            postalCode = "12345",
+                            houseNumberOrName = "1",
+                            street = "1. Sokak",
+                            stateOrProvince = "Istanbul",
+                            city = "Istanbul",
+                        ),
+                    ),
+                )
+                _events.emit(CardEvent.AddressLookup(options))
+            }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
@@ -54,7 +96,7 @@ internal class CardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val cardPaymentMethod = paymentMethodResponse
@@ -68,7 +110,7 @@ internal class CardViewModel @Inject constructor(
                 CardComponentData(
                     paymentMethod = cardPaymentMethod,
                     callback = this@CardViewModel,
-                )
+                ),
             )
             _cardViewState.emit(CardViewState.ShowComponent)
         }
@@ -84,6 +126,12 @@ internal class CardViewModel @Inject constructor(
 
     override fun onError(componentError: ComponentError) {
         onComponentError(componentError)
+    }
+
+    fun onAddressLookupQueryChanged(query: String) {
+        viewModelScope.launch {
+            addressLookupQueryFlow.emit(query)
+        }
     }
 
     // no ops
@@ -119,6 +167,7 @@ internal class CardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
+
                 else -> _events.emit(CardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
@@ -137,5 +186,9 @@ internal class CardViewModel @Inject constructor(
 
     private fun onComponentError(error: ComponentError) {
         viewModelScope.launch { _events.emit(CardEvent.PaymentResult("Failed: ${error.errorMessage}")) }
+    }
+
+    companion object {
+        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
     }
 }
