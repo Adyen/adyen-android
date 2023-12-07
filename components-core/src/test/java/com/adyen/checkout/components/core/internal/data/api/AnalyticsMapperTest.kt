@@ -119,7 +119,7 @@ internal class AnalyticsMapperTest {
             )
 
             val expected = AnalyticsSetupRequest(
-                version = "5.0.1",
+                version = "5.1.0",
                 channel = "android",
                 platform = "android",
                 locale = "en_US",
