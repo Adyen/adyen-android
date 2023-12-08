@@ -205,7 +205,7 @@
 
     <style name="AdyenCheckout.AddressLookup">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/input_height</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:hint">Search Address</item>
         <item name="android:textSize">16sp</item>
         <!-- The textDirection and textAlignment attributes ensure consistent display behaviour with RTL locales -->

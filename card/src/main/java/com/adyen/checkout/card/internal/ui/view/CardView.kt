@@ -41,6 +41,7 @@ import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.util.hideError
@@ -187,6 +188,7 @@ class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
+        updateAddressLookupInputText(cardOutputData.addressState)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -700,6 +702,10 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutAddressLookup.isVisible = true
             }
         }
+    }
+
+    private fun updateAddressLookupInputText(addressOutputData: AddressOutputData) {
+        binding.editTextAddressLookup.setText(addressOutputData.toString())
     }
 
     private fun updateAddressHint(addressFormUIState: AddressFormUIState, isOptional: Boolean) {

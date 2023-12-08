@@ -162,6 +162,7 @@
             style="@style/AdyenCheckout.AddressLookup"
             android:clickable="false"
             android:focusable="false"
+            android:inputType="textMultiLine"
             android:nextFocusDown="@id/editText_socialSecurityNumber"
             android:nextFocusForward="@id/editText_socialSecurityNumber" />
     </com.google.android.material.textfield.TextInputLayout>

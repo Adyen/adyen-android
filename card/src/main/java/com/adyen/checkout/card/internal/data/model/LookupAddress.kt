@@ -15,7 +15,14 @@ data class LookupAddress(
     val address: AddressInputModel
 ) {
     override fun toString(): String {
-        return "${address.street} ${address.houseNumberOrName} ${address.apartmentSuite} " +
-            "${address.postalCode} ${address.city} ${address.stateOrProvince} ${address.country}"
+        return listOf(
+            address.street,
+            address.houseNumberOrName,
+            address.apartmentSuite,
+            address.postalCode,
+            address.city,
+            address.stateOrProvince,
+            address.country
+        ).filter { it.isNotBlank() }.joinToString(" ")
     }
 }
