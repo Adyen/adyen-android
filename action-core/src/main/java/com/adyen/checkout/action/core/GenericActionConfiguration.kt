@@ -53,6 +53,9 @@ class GenericActionConfiguration private constructor(
         return null
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getAllConfigurations(): List<Configuration> = availableActionConfigs.values.toList()
+
     /**
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for each action
      * component.
@@ -75,7 +78,7 @@ class GenericActionConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -88,7 +91,7 @@ class GenericActionConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**

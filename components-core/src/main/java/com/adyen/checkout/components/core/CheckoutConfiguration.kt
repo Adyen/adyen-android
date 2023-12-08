@@ -8,34 +8,84 @@
 
 package com.adyen.checkout.components.core
 
+import android.annotation.SuppressLint
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
+import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 import kotlin.reflect.KClass
 
 class CheckoutConfiguration(
-    val shopperLocale: Locale,
-    val environment: Environment,
-    val clientKey: String,
-    val amount: Amount? = null,
-    val analyticsConfiguration: AnalyticsConfiguration? = null,
-    config: CheckoutConfiguration.() -> Unit = {},
-) {
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val amount: Amount? = null,
+    override val analyticsConfiguration: AnalyticsConfiguration? = null,
+    @IgnoredOnParcel
+    private val config: CheckoutConfiguration.() -> Unit = {},
+) : Configuration {
+
+    private val availableConfigurations = mutableMapOf<KClass<out Configuration>, Configuration>()
 
     init {
         this.apply(config)
     }
 
-    private val availablePaymentConfigs = mutableMapOf<KClass<out Configuration>, Configuration>()
+    @SuppressLint("ParcelClassLoader")
+    @Suppress("UNCHECKED_CAST")
+    private constructor(parcel: Parcel) : this(
+        shopperLocale = parcel.readSerializable() as Locale,
+        environment = parcel.readParcelable(Environment::class.java.classLoader)!!,
+        clientKey = parcel.readString()!!,
+        amount = parcel.readParcelable(Amount::class.java.classLoader),
+        analyticsConfiguration = parcel.readParcelable(Amount::class.java.classLoader),
+    ) {
+        val size = parcel.readInt()
+
+        for (i in 0 until size) {
+            val clazz = parcel.readSerializable() as Class<Configuration>
+            val config = parcel.readParcelable<Configuration>(clazz.classLoader)!!
+            availableConfigurations[config::class] = config
+        }
+    }
 
     fun addConfiguration(configuration: Configuration) {
-        availablePaymentConfigs[configuration::class] = configuration
+        availableConfigurations[configuration::class] = configuration
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun <T : Configuration> getConfiguration(configKlass: KClass<T>): T? {
         @Suppress("UNCHECKED_CAST")
-        return availablePaymentConfigs[configKlass] as? T
+        return availableConfigurations[configKlass] as? T
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeSerializable(shopperLocale)
+        dest.writeParcelable(environment, flags)
+        dest.writeString(clientKey)
+        dest.writeParcelable(amount, flags)
+        dest.writeParcelable(analyticsConfiguration, flags)
+        dest.writeInt(availableConfigurations.size)
+        availableConfigurations.forEach {
+            dest.writeSerializable(it.key.java)
+            dest.writeParcelable(it.value, flags)
+        }
+    }
+
+    override fun describeContents(): Int = CONTENTS_FILE_DESCRIPTOR
+
+    companion object CREATOR : Parcelable.Creator<CheckoutConfiguration> {
+
+        override fun createFromParcel(source: Parcel): CheckoutConfiguration {
+            return CheckoutConfiguration(source)
+        }
+
+        override fun newArray(size: Int): Array<CheckoutConfiguration?> {
+            return arrayOfNulls(size)
+        }
     }
 }

@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin
 import android.content.Context
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -92,13 +93,30 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
+        startPayment(
+            context = context,
+            dropInLauncher = dropInLauncher,
+            checkoutSession = checkoutSession,
+            checkoutConfiguration = dropInConfiguration.toCheckoutConfiguration(),
+            serviceClass = serviceClass,
+        )
+    }
+
+    @JvmStatic
+    fun startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
+        checkoutSession: CheckoutSession,
+        checkoutConfiguration: CheckoutConfiguration,
+        serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
+    ) {
         Logger.d(TAG, "startPayment with sessions")
         val sessionDropInResultContractParams = SessionDropInResultContractParams(
-            dropInConfiguration,
+            checkoutConfiguration,
             checkoutSession,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, sessionDropInResultContractParams)
+        startPayment(context, dropInLauncher, checkoutConfiguration, sessionDropInResultContractParams)
     }
 
     /**
@@ -150,23 +168,40 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out DropInService>,
     ) {
+        startPayment(
+            context = context,
+            dropInLauncher = dropInLauncher,
+            paymentMethodsApiResponse = paymentMethodsApiResponse,
+            checkoutConfiguration = dropInConfiguration.toCheckoutConfiguration(),
+            serviceClass = serviceClass,
+        )
+    }
+
+    @JvmStatic
+    fun startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<DropInResultContractParams>,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        checkoutConfiguration: CheckoutConfiguration,
+        serviceClass: Class<out DropInService>,
+    ) {
         Logger.d(TAG, "startPayment with payment methods")
         val dropInResultContractParams = DropInResultContractParams(
-            dropInConfiguration,
+            checkoutConfiguration,
             paymentMethodsApiResponse,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, dropInResultContractParams)
+        startPayment(context, dropInLauncher, checkoutConfiguration, dropInResultContractParams)
     }
 
     private fun <T> startPayment(
         context: Context,
         dropInLauncher: ActivityResultLauncher<T>,
-        dropInConfiguration: DropInConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         params: T,
     ) {
         updateDefaultLogLevel(context)
-        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
+        DropInPrefs.setShopperLocale(context, checkoutConfiguration.shopperLocale)
         dropInLauncher.launch(params)
     }
 

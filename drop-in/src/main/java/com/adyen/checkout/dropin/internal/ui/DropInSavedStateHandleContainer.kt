@@ -13,12 +13,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -29,7 +29,7 @@ internal class DropInSavedStateHandleContainer(
     override val savedStateHandle: SavedStateHandle,
 ) : SavedStateHandleContainer {
 
-    var dropInConfiguration: DropInConfiguration? by SavedStateHandleProperty(DROP_IN_CONFIGURATION_KEY)
+    var checkoutConfiguration: CheckoutConfiguration? by SavedStateHandleProperty(CHECKOUT_CONFIGURATION_KEY)
     var serviceComponentName: ComponentName? by SavedStateHandleProperty(DROP_IN_SERVICE_KEY)
     var amount: Amount? by SavedStateHandleProperty(AMOUNT)
     var sessionDetails: SessionDetails? by SavedStateHandleProperty(SESSION_KEY)
@@ -46,27 +46,27 @@ internal object DropInBundleHandler {
 
     fun putIntentExtras(
         intent: Intent,
-        dropInConfiguration: DropInConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         service: ComponentName,
     ) {
         intent.apply {
             putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
-            putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            putExtra(CHECKOUT_CONFIGURATION_KEY, checkoutConfiguration)
             putExtra(DROP_IN_SERVICE_KEY, service)
-            putExtra(AMOUNT, dropInConfiguration.amount)
+            putExtra(AMOUNT, checkoutConfiguration.amount)
         }
     }
 
     fun putIntentExtras(
         intent: Intent,
-        dropInConfiguration: DropInConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         checkoutSession: CheckoutSession,
         service: ComponentName,
     ) {
         putIntentExtras(
             intent,
-            dropInConfiguration,
+            checkoutConfiguration,
             checkoutSession.sessionSetupResponse.paymentMethodsApiResponse ?: PaymentMethodsApiResponse(),
             service,
         )
@@ -82,10 +82,12 @@ internal object DropInBundleHandler {
                 Logger.e(TAG, "Failed to initialize - bundle is null")
                 false
             }
-            !bundle.containsKey(DROP_IN_SERVICE_KEY) || !bundle.containsKey(DROP_IN_CONFIGURATION_KEY) -> {
+
+            !bundle.containsKey(DROP_IN_SERVICE_KEY) || !bundle.containsKey(CHECKOUT_CONFIGURATION_KEY) -> {
                 Logger.e(TAG, "Failed to initialize - bundle does not have the required keys")
                 false
             }
+
             else -> true
         }
     }
@@ -94,7 +96,7 @@ internal object DropInBundleHandler {
 private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
 private const val SESSION_KEY = "SESSION_KEY"
 private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
-private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+private const val CHECKOUT_CONFIGURATION_KEY = "CHECKOUT_CONFIGURATION_KEY"
 private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"

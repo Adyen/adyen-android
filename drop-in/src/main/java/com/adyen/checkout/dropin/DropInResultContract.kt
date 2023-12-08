@@ -20,7 +20,7 @@ class DropInResultContract : ActivityResultContract<DropInResultContractParams, 
     override fun createIntent(context: Context, input: DropInResultContractParams): Intent {
         return DropInActivity.createIntent(
             context = context,
-            dropInConfiguration = input.dropInConfiguration,
+            checkoutConfiguration = input.checkoutConfiguration,
             paymentMethodsApiResponse = input.paymentMethodsApiResponse,
             service = ComponentName(context, input.serviceClass),
         )

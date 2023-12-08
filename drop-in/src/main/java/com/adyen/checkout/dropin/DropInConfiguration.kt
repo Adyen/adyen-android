@@ -80,6 +80,26 @@ class DropInConfiguration private constructor(
         return null
     }
 
+    internal fun toCheckoutConfiguration(): CheckoutConfiguration {
+        return CheckoutConfiguration(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            amount = amount,
+            analyticsConfiguration = analyticsConfiguration,
+        ) {
+            addConfiguration(this@DropInConfiguration)
+
+            availablePaymentConfigs.values.forEach { paymentConfig ->
+                addConfiguration(paymentConfig)
+            }
+
+            genericActionConfiguration.getAllConfigurations().forEach { actionConfig ->
+                addConfiguration(actionConfig)
+            }
+        }
+    }
+
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */

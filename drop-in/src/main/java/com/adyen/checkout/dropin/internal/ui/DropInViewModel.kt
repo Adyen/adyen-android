@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -24,13 +25,13 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
@@ -58,7 +59,9 @@ internal class DropInViewModel(
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
-    val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+    val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
+
+    val dropInConfiguration: DropInConfiguration = requireNotNull(checkoutConfiguration.getDropInConfiguration())
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
@@ -171,7 +174,7 @@ internal class DropInViewModel(
             sessionModel = sessionModel,
             clientKey = dropInConfiguration.clientKey,
             environment = dropInConfiguration.environment,
-            isFlowTakenOver = isSessionsFlowTakenOver
+            isFlowTakenOver = isSessionsFlowTakenOver,
         )
         sendEvent(event)
     }
@@ -227,13 +230,13 @@ internal class DropInViewModel(
         Logger.d(
             TAG,
             "handleBalanceResult - balance: ${balanceResult.balance} - " +
-                "transactionLimit: ${balanceResult.transactionLimit}"
+                "transactionLimit: ${balanceResult.transactionLimit}",
         )
 
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
             transactionLimit = balanceResult.transactionLimit,
-            amountToBePaid = amount
+            amountToBePaid = amount,
         )
         val cachedGiftCardComponentState =
             cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
@@ -243,7 +246,7 @@ internal class DropInViewModel(
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_zero_balance,
                     "Gift Card has zero balance",
-                    false
+                    false,
                 )
             }
 
@@ -252,7 +255,7 @@ internal class DropInViewModel(
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_currency,
                     "Gift Card currency mismatch",
-                    false
+                    false,
                 )
             }
 
@@ -260,7 +263,7 @@ internal class DropInViewModel(
                 Logger.e(
                     TAG,
                     "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift " +
-                        "card payments"
+                        "card payments",
                 )
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
@@ -268,7 +271,7 @@ internal class DropInViewModel(
             is GiftCardBalanceStatus.FullPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.FullPayment(
-                    createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
+                    createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState),
                 )
             }
 
@@ -292,7 +295,7 @@ internal class DropInViewModel(
             remainingBalance = giftCardBalanceStatus.remainingBalance,
             shopperLocale = dropInConfiguration.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
-            lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()
+            lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty(),
         )
     }
 
@@ -347,7 +350,7 @@ internal class DropInViewModel(
     private fun createOrder(order: OrderModel): OrderRequest {
         return OrderRequest(
             pspReference = order.pspReference,
-            orderData = order.orderData
+            orderData = order.orderData,
         )
     }
 
@@ -385,13 +388,13 @@ internal class DropInViewModel(
                         orderData = orderResponse.orderData,
                         pspReference = orderResponse.pspReference,
                         remainingAmount = statusResponse.remainingAmount,
-                        paymentMethods = statusResponse.paymentMethods
+                        paymentMethods = statusResponse.paymentMethods,
                     )
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch order details", e)
                     null
-                }
+                },
             )
     }
 
@@ -421,7 +424,7 @@ internal class DropInViewModel(
     private fun sendCancelOrderEvent(order: OrderModel, isDropInCancelledByUser: Boolean) {
         val orderRequest = OrderRequest(
             pspReference = order.pspReference,
-            orderData = order.orderData
+            orderData = order.orderData,
         )
         sendEvent(DropInActivityEvent.CancelOrder(orderRequest, isDropInCancelledByUser))
     }

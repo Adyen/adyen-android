@@ -23,9 +23,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.dropInConfiguration
-import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
@@ -64,60 +62,59 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    private val checkoutConfig = CheckoutConfiguration(
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        amount = amount,
-        analyticsConfiguration = getAnalyticsConfiguration(),
-    ) {
-        // Drop-in
-        dropInConfiguration {
-            setEnableRemovingStoredPaymentMethods(true)
+    val checkoutConfig: CheckoutConfiguration
+        get() = CheckoutConfiguration(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            amount = amount,
+            analyticsConfiguration = getAnalyticsConfiguration(),
+        ) {
+            // Drop-in
+            dropInConfiguration {
+                setEnableRemovingStoredPaymentMethods(true)
+            }
+
+            // Payment methods
+            bacsDirectDebitConfiguration()
+
+            bcmcConfiguration {
+                setShopperReference(keyValueStorage.getShopperReference())
+                setShowStorePaymentField(true)
+            }
+
+            blikConfiguration()
+
+            cardConfiguration {
+                setShopperReference(keyValueStorage.getShopperReference())
+                setAddressConfiguration(getAddressConfiguration())
+                setInstallmentConfigurations(getInstallmentConfiguration())
+            }
+
+            cashAppPayConfiguration {
+                setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+            }
+
+            giftCardConfiguration {
+                setPinRequired(true)
+            }
+
+            googlePayConfiguration {
+                setCountryCode(keyValueStorage.getCountry())
+            }
+
+            instantPaymentConfiguration()
+
+            // Actions
+            adyen3DS2Configuration()
+
+            redirectConfiguration()
         }
-
-        // Payment methods
-        bacsDirectDebitConfiguration()
-
-        bcmcConfiguration {
-            setShopperReference(keyValueStorage.getShopperReference())
-            setShowStorePaymentField(true)
-        }
-
-        blikConfiguration()
-
-        cardConfiguration {
-            setShopperReference(keyValueStorage.getShopperReference())
-            setAddressConfiguration(getAddressConfiguration())
-            setInstallmentConfigurations(getInstallmentConfiguration())
-        }
-
-        cashAppPayConfiguration {
-            setReturnUrl(CashAppPayComponent.getReturnUrl(context))
-        }
-
-        giftCardConfiguration {
-            setPinRequired(true)
-        }
-
-        googlePayConfiguration {
-            setCountryCode(keyValueStorage.getCountry())
-        }
-
-        instantPaymentConfiguration()
-
-        // Actions
-        adyen3DS2Configuration()
-
-        redirectConfiguration()
-    }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
         val analyticsLevel = keyValueStorage.getAnalyticsLevel()
         return AnalyticsConfiguration(level = analyticsLevel)
     }
-
-    fun getDropInConfiguration(): DropInConfiguration = checkoutConfig.getDropInConfiguration()!!
 
     fun getBacsConfiguration(): BacsDirectDebitConfiguration = checkoutConfig.getBacsDirectDebitConfiguration()!!
 
