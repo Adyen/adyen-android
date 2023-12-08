@@ -70,7 +70,8 @@ internal class AddressLookupView @JvmOverloads constructor(
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
         initAddressOptions()
-        initManualEntryTextView()
+        initManualEntryErrorTextView()
+        initManualEntryInitialTextView()
     }
 
     override fun highlightValidationErrors() {
@@ -126,10 +127,17 @@ internal class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun initManualEntryTextView() {
-        binding.textViewManualEntry.setOnClickListener {
-            binding.textViewManualEntry.isVisible = false
+    private fun initManualEntryErrorTextView() {
+        binding.textViewManualEntryError.setOnClickListener {
+            binding.textViewManualEntryError.isVisible = false
             binding.textViewError.isVisible = false
+            binding.addressFormInput.isVisible = true
+        }
+    }
+
+    private fun initManualEntryInitialTextView() {
+        binding.textViewManualEntryInitial.setOnClickListener {
+            binding.textViewManualEntryInitial.isVisible = false
             binding.addressFormInput.isVisible = true
         }
     }
@@ -140,9 +148,11 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private fun setAddressOptions(options: List<LookupAddress>, shouldShowError: Boolean) {
         binding.textViewError.isVisible = shouldShowError
-        binding.textViewManualEntry.isVisible = shouldShowError
+        binding.textViewManualEntryError.isVisible = shouldShowError
         binding.recyclerViewAddressLookupOptions.isVisible = options.isNotEmpty()
-        binding.addressFormInput.isVisible = options.isEmpty() && !shouldShowError
+        if (options.isNotEmpty() || shouldShowError) {
+            binding.textViewManualEntryInitial.isVisible = false
+        }
         if (addressLookupOptionsAdapter == null) {
             initAddressOptions()
         }

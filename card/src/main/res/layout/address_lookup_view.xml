@@ -32,16 +32,24 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:visibility="gone"
-        android:text="No results found." />
+        android:text="No results found."
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/textView_manualEntry"
+        android:id="@+id/textView_manualEntryError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:visibility="gone"
+        android:text="Can't find anything, enter address manually"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView_manualEntryInitial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:text="You can always enter your address manually" />
 
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
@@ -49,7 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="afterDescendants"
-        android:focusableInTouchMode="true" />
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_addressLookupOptions"
