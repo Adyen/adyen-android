@@ -35,6 +35,7 @@ class CheckoutConfiguration(
         this.apply(config)
     }
 
+    // We need custom parcelization for this class to parcelize availableConfigurations.
     @SuppressLint("ParcelClassLoader")
     @Suppress("UNCHECKED_CAST")
     private constructor(parcel: Parcel) : this(
@@ -46,7 +47,7 @@ class CheckoutConfiguration(
     ) {
         val size = parcel.readInt()
 
-        for (i in 0 until size) {
+        repeat(size) {
             val clazz = parcel.readSerializable() as Class<Configuration>
             val config = parcel.readParcelable<Configuration>(clazz.classLoader)!!
             availableConfigurations[config::class] = config

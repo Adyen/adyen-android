@@ -46,7 +46,6 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.SessionDropInServiceResult
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
-import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
 import com.adyen.checkout.dropin.internal.provider.getFragmentForPaymentMethod
 import com.adyen.checkout.dropin.internal.provider.getFragmentForStoredPaymentMethod
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
@@ -56,6 +55,7 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
+import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
