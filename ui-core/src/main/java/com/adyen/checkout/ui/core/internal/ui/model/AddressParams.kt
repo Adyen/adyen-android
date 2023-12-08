@@ -43,8 +43,7 @@ sealed class AddressParams {
     ) : AddressParams()
 
     // TODO address lookup
-    @Suppress("EmptyDefaultConstructor")
-    class Lookup() : AddressParams()
+    class Lookup : AddressParams()
 }
 
 /**

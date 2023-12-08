@@ -56,32 +56,36 @@ internal class CardViewModel @Inject constructor(
         addressLookupQueryFlow
             .filterNotNull()
             .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
-            .onEach {
+            .onEach { query ->
+                val options = if (query == "empty") {
+                    emptyList()
+                } else {
+                    listOf(
+                        LookupAddress(
+                            id = query,
+                            address = AddressInputModel(
+                                country = "NL",
+                                postalCode = "1234AB",
+                                houseNumberOrName = "1HS",
+                                street = "Simon Carmiggeltstraat",
+                                stateOrProvince = "Noord-Holland",
+                                city = "Amsterdam",
+                            ),
+                        ),
+                        LookupAddress(
+                            id = query,
+                            address = AddressInputModel(
+                                country = "TR",
+                                postalCode = "12345",
+                                houseNumberOrName = "1",
+                                street = "1. Sokak",
+                                stateOrProvince = "Istanbul",
+                                city = "Istanbul",
+                            ),
+                        ),
+                    )
+                }
                 // TODO address lookup populate better data
-                val options = listOf(
-                    LookupAddress(
-                        id = it,
-                        address = AddressInputModel(
-                            country = "NL",
-                            postalCode = "1234AB",
-                            houseNumberOrName = "1HS",
-                            street = "Simon Carmiggeltstraat",
-                            stateOrProvince = "Noord-Holland",
-                            city = "Amsterdam",
-                        ),
-                    ),
-                    LookupAddress(
-                        id = it,
-                        address = AddressInputModel(
-                            country = "TR",
-                            postalCode = "12345",
-                            houseNumberOrName = "1",
-                            street = "1. Sokak",
-                            stateOrProvince = "Istanbul",
-                            city = "Istanbul",
-                        ),
-                    ),
-                )
                 _events.emit(CardEvent.AddressLookup(options))
             }
             .launchIn(viewModelScope)

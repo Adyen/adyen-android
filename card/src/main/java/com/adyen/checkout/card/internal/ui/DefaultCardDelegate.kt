@@ -337,6 +337,9 @@ class DefaultCardDelegate(
             updatedStateOptions,
         )
 
+        val shouldDisplayAddressLookupError =
+            addressLookupOptions.isEmpty() && inputData.addressLookupQuery.isNotEmpty()
+
         return CardOutputData(
             cardNumberState = validateCardNumber(
                 cardNumber = inputData.cardNumber,
@@ -369,6 +372,7 @@ class DefaultCardDelegate(
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+            shouldDisplayAddressLookupError = shouldDisplayAddressLookupError,
             addressLookupOptions = addressLookupOptions,
         )
     }

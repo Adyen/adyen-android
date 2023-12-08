@@ -38,6 +38,7 @@ import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +50,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @Suppress("TooManyFunctions")
 @HiltViewModel
 internal class SessionsCardTakenOverViewModel @Inject constructor(
@@ -82,32 +84,36 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
         addressLookupQueryFlow
             .filterNotNull()
             .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
-            .onEach {
+            .onEach { query ->
                 // TODO address lookup populate better data
-                val options = listOf(
-                    LookupAddress(
-                        id = it,
-                        address = AddressInputModel(
-                            country = "NL",
-                            postalCode = "1234AB",
-                            houseNumberOrName = "1HS",
-                            street = "Simon Carmiggeltstraat",
-                            stateOrProvince = "Noord-Holland",
-                            city = "Amsterdam",
+                val options = if (query == "empty") {
+                    emptyList()
+                } else {
+                    listOf(
+                        LookupAddress(
+                            id = query,
+                            address = AddressInputModel(
+                                country = "NL",
+                                postalCode = "1234AB",
+                                houseNumberOrName = "1HS",
+                                street = "Simon Carmiggeltstraat",
+                                stateOrProvince = "Noord-Holland",
+                                city = "Amsterdam",
+                            ),
                         ),
-                    ),
-                    LookupAddress(
-                        id = it,
-                        address = AddressInputModel(
-                            country = "TR",
-                            postalCode = "12345",
-                            houseNumberOrName = "1",
-                            street = "1. Sokak",
-                            stateOrProvince = "Istanbul",
-                            city = "Istanbul",
+                        LookupAddress(
+                            id = query,
+                            address = AddressInputModel(
+                                country = "TR",
+                                postalCode = "12345",
+                                houseNumberOrName = "1",
+                                street = "1. Sokak",
+                                stateOrProvince = "Istanbul",
+                                city = "Istanbul",
+                            ),
                         ),
-                    ),
-                )
+                    )
+                }
                 _events.emit(CardEvent.AddressLookup(options))
             }
             .launchIn(viewModelScope)

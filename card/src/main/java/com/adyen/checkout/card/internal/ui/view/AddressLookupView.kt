@@ -70,6 +70,7 @@ internal class AddressLookupView @JvmOverloads constructor(
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
         initAddressOptions()
+        initManualEntryTextView()
     }
 
     override fun highlightValidationErrors() {
@@ -96,6 +97,7 @@ internal class AddressLookupView @JvmOverloads constructor(
         val addressLookupQueryEditText = binding.textInputLayoutAddressLookupQuery.editText as? AdyenTextInputEditText
         addressLookupQueryEditText?.setOnChangeListener {
             cardDelegate.updateInputData {
+                addressLookupQuery = it.toString()
                 cardDelegate.onAddressQueryChanged(it.toString())
                 binding.textInputLayoutAddressLookupQuery.hideError()
             }
@@ -124,13 +126,23 @@ internal class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun outputDataChanged(outputData: CardOutputData) {
-        setAddressOptions(outputData.addressLookupOptions)
+    private fun initManualEntryTextView() {
+        binding.textViewManualEntry.setOnClickListener {
+            binding.textViewManualEntry.isVisible = false
+            binding.textViewError.isVisible = false
+            binding.addressFormInput.isVisible = true
+        }
     }
 
-    private fun setAddressOptions(options: List<LookupAddress>) {
+    private fun outputDataChanged(outputData: CardOutputData) {
+        setAddressOptions(outputData.addressLookupOptions, outputData.shouldDisplayAddressLookupError)
+    }
+
+    private fun setAddressOptions(options: List<LookupAddress>, shouldShowError: Boolean) {
+        binding.textViewError.isVisible = shouldShowError
+        binding.textViewManualEntry.isVisible = shouldShowError
         binding.recyclerViewAddressLookupOptions.isVisible = options.isNotEmpty()
-        binding.addressFormInput.isVisible = options.isEmpty()
+        binding.addressFormInput.isVisible = options.isEmpty() && !shouldShowError
         if (addressLookupOptionsAdapter == null) {
             initAddressOptions()
         }

@@ -26,6 +26,24 @@
             style="@style/AdyenCheckout.AddressLookup" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/textView_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="No results found." />
+
+    <TextView
+        android:id="@+id/textView_manualEntry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="You can always enter your address manually" />
+
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"
         android:layout_width="match_parent"
@@ -38,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:listitem="@layout/address_lookup_option_item_view"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:visibility="visible"/>
+        tools:listitem="@layout/address_lookup_option_item_view"
+        tools:visibility="visible" />
 </merge>
