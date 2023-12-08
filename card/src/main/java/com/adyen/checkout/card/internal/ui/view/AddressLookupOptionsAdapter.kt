@@ -40,8 +40,8 @@ internal class AddressLookupOptionsAdapter(
             binding.root.setOnClickListener {
                 onItemClicked(lookupAddress)
             }
-            binding.textViewAddressHeader.text = lookupAddress.id
-            binding.textViewAddressDescription.text = lookupAddress.toString()
+            binding.textViewAddressHeader.text = lookupAddress.title
+            binding.textViewAddressDescription.text = lookupAddress.subtitle
         }
     }
 

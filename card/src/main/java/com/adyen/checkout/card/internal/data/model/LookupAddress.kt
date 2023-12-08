@@ -25,4 +25,16 @@ data class LookupAddress(
             address.country
         ).filter { it.isNotBlank() }.joinToString(" ")
     }
+
+    val title
+        get() = address.street.ifBlank {
+            toString()
+        }
+
+    val subtitle
+        get() = if (address.street.isBlank()) {
+            ""
+        } else {
+            toString()
+        }
 }
