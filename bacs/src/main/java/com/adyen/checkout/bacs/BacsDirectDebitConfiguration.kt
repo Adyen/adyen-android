@@ -14,6 +14,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -55,7 +56,7 @@ class BacsDirectDebitConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -68,7 +69,7 @@ class BacsDirectDebitConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -107,10 +108,10 @@ fun CheckoutConfiguration.bacsDirectDebitConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.BACS, config)
     return this
 }
 
 fun CheckoutConfiguration.getBacsDirectDebitConfiguration(): BacsDirectDebitConfiguration? {
-    return getConfiguration(BacsDirectDebitConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.BACS)
 }

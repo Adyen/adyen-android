@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -107,10 +108,10 @@ fun CheckoutConfiguration.MBWayConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.MB_WAY, config)
     return this
 }
 
 fun CheckoutConfiguration.getMBWayConfiguration(): MBWayConfiguration? {
-    return getConfiguration(MBWayConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.MB_WAY)
 }

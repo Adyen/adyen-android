@@ -14,6 +14,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
@@ -85,10 +86,10 @@ fun CheckoutConfiguration.payByBankConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.PAY_BY_BANK, config)
     return this
 }
 
 fun CheckoutConfiguration.getPayByBankConfiguration(): PayByBankConfiguration? {
-    return getConfiguration(PayByBankConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.PAY_BY_BANK)
 }

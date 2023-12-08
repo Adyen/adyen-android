@@ -82,10 +82,10 @@ fun CheckoutConfiguration.weChatPayActionConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getWeChatPayActionConfiguration(): WeChatPayActionConfiguration? {
-    return getConfiguration(WeChatPayActionConfiguration::class)
+    return getActionConfiguration(WeChatPayActionConfiguration::class.java)
 }

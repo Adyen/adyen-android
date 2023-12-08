@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -106,10 +107,10 @@ fun CheckoutConfiguration.sepaConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.SEPA, config)
     return this
 }
 
 fun CheckoutConfiguration.getSepaConfiguration(): SepaConfiguration? {
-    return getConfiguration(SepaConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.SEPA)
 }

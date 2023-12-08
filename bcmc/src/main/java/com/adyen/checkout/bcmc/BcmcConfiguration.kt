@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -162,10 +163,10 @@ fun CheckoutConfiguration.bcmcConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.BCMC, config)
     return this
 }
 
 fun CheckoutConfiguration.getBcmcConfiguration(): BcmcConfiguration? {
-    return getConfiguration(BcmcConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.BCMC)
 }

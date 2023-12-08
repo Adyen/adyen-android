@@ -14,6 +14,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -170,10 +171,10 @@ fun CheckoutConfiguration.cashAppPayConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.CASH_APP_PAY, config)
     return this
 }
 
 fun CheckoutConfiguration.getCashAppPayConfiguration(): CashAppPayConfiguration? {
-    return getConfiguration(CashAppPayConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.CASH_APP_PAY)
 }

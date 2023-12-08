@@ -118,10 +118,16 @@ fun CheckoutConfiguration.boletoConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+
+    BoletoComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+        addConfiguration(key, config)
+    }
+
     return this
 }
 
 fun CheckoutConfiguration.getBoletoConfiguration(): BoletoConfiguration? {
-    return getConfiguration(BoletoConfiguration::class)
+    return BoletoComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
+        getConfiguration(key)
+    }
 }

@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -48,7 +49,7 @@ class OnlineBankingJPConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -88,10 +89,10 @@ fun CheckoutConfiguration.onlineBankingJPConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.ECONTEXT_ONLINE, config)
     return this
 }
 
 fun CheckoutConfiguration.getOnlineBankingJPConfiguration(): OnlineBankingJPConfiguration? {
-    return getConfiguration(OnlineBankingJPConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.ECONTEXT_ONLINE)
 }

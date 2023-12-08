@@ -395,10 +395,16 @@ fun CheckoutConfiguration.googlePayConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+
+    GooglePayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+        addConfiguration(key, config)
+    }
+
     return this
 }
 
 fun CheckoutConfiguration.getGooglePayConfiguration(): GooglePayConfiguration? {
-    return getConfiguration(GooglePayConfiguration::class)
+    return GooglePayComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
+        getConfiguration(key)
+    }
 }

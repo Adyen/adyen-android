@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -50,7 +51,7 @@ class EntercashConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -92,10 +93,10 @@ fun CheckoutConfiguration.entercashConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.ENTERCASH, config)
     return this
 }
 
 fun CheckoutConfiguration.getEntercashConfiguration(): EntercashConfiguration? {
-    return getConfiguration(EntercashConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.ENTERCASH)
 }

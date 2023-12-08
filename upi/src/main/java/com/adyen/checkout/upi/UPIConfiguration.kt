@@ -106,10 +106,16 @@ fun CheckoutConfiguration.UPIConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+
+    UPIComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+        addConfiguration(key, config)
+    }
+
     return this
 }
 
 fun CheckoutConfiguration.getUPIConfiguration(): UPIConfiguration? {
-    return getConfiguration(UPIConfiguration::class)
+    return UPIComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
+        getConfiguration(key)
+    }
 }

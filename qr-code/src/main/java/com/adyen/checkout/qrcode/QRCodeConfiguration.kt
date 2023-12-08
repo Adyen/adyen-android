@@ -83,10 +83,10 @@ fun CheckoutConfiguration.QRCodeConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getQRCodeConfiguration(): QRCodeConfiguration? {
-    return getConfiguration(QRCodeConfiguration::class)
+    return getActionConfiguration(QRCodeConfiguration::class.java)
 }

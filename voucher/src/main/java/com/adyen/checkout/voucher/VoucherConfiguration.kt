@@ -83,10 +83,10 @@ fun CheckoutConfiguration.voucherConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getVoucherConfiguration(): VoucherConfiguration? {
-    return getConfiguration(VoucherConfiguration::class)
+    return getActionConfiguration(VoucherConfiguration::class.java)
 }

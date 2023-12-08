@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -88,10 +89,10 @@ fun CheckoutConfiguration.sevenElevenConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN, config)
     return this
 }
 
 fun CheckoutConfiguration.getSevenElevenConfiguration(): SevenElevenConfiguration? {
-    return getConfiguration(SevenElevenConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN)
 }

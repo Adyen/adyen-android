@@ -118,10 +118,10 @@ fun CheckoutConfiguration.adyen3DS2Configuration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
-    return getConfiguration(Adyen3DS2Configuration::class)
+    return getActionConfiguration(Adyen3DS2Configuration::class.java)
 }

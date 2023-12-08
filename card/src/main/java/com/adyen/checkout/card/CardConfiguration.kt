@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -304,10 +305,10 @@ fun CheckoutConfiguration.cardConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.SCHEME, config)
     return this
 }
 
 fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
-    return getConfiguration(CardConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.SCHEME)
 }

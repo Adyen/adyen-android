@@ -82,10 +82,10 @@ fun CheckoutConfiguration.awaitConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getAwaitConfiguration(): AwaitConfiguration? {
-    return getConfiguration(AwaitConfiguration::class)
+    return getActionConfiguration(AwaitConfiguration::class.java)
 }

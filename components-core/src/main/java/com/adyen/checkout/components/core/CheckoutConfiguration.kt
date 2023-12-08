@@ -17,7 +17,6 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
-import kotlin.reflect.KClass
 
 class CheckoutConfiguration(
     override val shopperLocale: Locale,
@@ -29,7 +28,7 @@ class CheckoutConfiguration(
     private val config: CheckoutConfiguration.() -> Unit = {},
 ) : Configuration {
 
-    private val availableConfigurations = mutableMapOf<KClass<out Configuration>, Configuration>()
+    private val availableConfigurations = mutableMapOf<String, Configuration>()
 
     init {
         this.apply(config)
@@ -37,7 +36,7 @@ class CheckoutConfiguration(
 
     // We need custom parcelization for this class to parcelize availableConfigurations.
     @SuppressLint("ParcelClassLoader")
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "DEPRECATION")
     private constructor(parcel: Parcel) : this(
         shopperLocale = parcel.readSerializable() as Locale,
         environment = parcel.readParcelable(Environment::class.java.classLoader)!!,
@@ -48,20 +47,31 @@ class CheckoutConfiguration(
         val size = parcel.readInt()
 
         repeat(size) {
-            val clazz = parcel.readSerializable() as Class<Configuration>
-            val config = parcel.readParcelable<Configuration>(clazz.classLoader)!!
-            availableConfigurations[config::class] = config
+            val key = parcel.readString()!!
+            val configClass = parcel.readSerializable() as Class<Configuration>
+            val config = parcel.readParcelable<Configuration>(configClass.classLoader)!!
+            availableConfigurations[key] = config
         }
     }
 
-    fun addConfiguration(configuration: Configuration) {
-        availableConfigurations[configuration::class] = configuration
+    fun addConfiguration(key: String, configuration: Configuration) {
+        availableConfigurations[key] = configuration
+    }
+
+    fun addActionConfiguration(configuration: Configuration) {
+        availableConfigurations[configuration::class.java.simpleName] = configuration
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun <T : Configuration> getConfiguration(configKlass: KClass<T>): T? {
+    fun <T : Configuration> getConfiguration(key: String): T? {
         @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[configKlass] as? T
+        return availableConfigurations[key] as? T
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun <T : Configuration> getActionConfiguration(configClass: Class<T>): T? {
+        @Suppress("UNCHECKED_CAST")
+        return availableConfigurations[configClass.simpleName] as? T
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -72,7 +82,8 @@ class CheckoutConfiguration(
         dest.writeParcelable(analyticsConfiguration, flags)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
-            dest.writeSerializable(it.key.java)
+            dest.writeString(it.key)
+            dest.writeSerializable(it.value::class.java)
             dest.writeParcelable(it.value, flags)
         }
     }

@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfig
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -106,10 +107,10 @@ fun CheckoutConfiguration.blikConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.BLIK, config)
     return this
 }
 
 fun CheckoutConfiguration.getBlikConfiguration(): BlikConfiguration? {
-    return getConfiguration(BlikConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.BLIK)
 }

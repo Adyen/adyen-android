@@ -47,7 +47,7 @@ class InstantPaymentConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -60,7 +60,7 @@ class InstantPaymentConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         override fun buildInternal(): InstantPaymentConfiguration {
@@ -76,8 +76,11 @@ class InstantPaymentConfiguration private constructor(
     }
 }
 
+private const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
+
 fun CheckoutConfiguration.instantPaymentConfiguration(
-    configuration: InstantPaymentConfiguration.Builder.() -> Unit = {}
+    paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
+    configuration: InstantPaymentConfiguration.Builder.() -> Unit = {},
 ): CheckoutConfiguration {
     val config = InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {
@@ -86,10 +89,12 @@ fun CheckoutConfiguration.instantPaymentConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(paymentMethod, config)
     return this
 }
 
-fun CheckoutConfiguration.getInstantPaymentConfiguration(): InstantPaymentConfiguration? {
-    return getConfiguration(InstantPaymentConfiguration::class)
+fun CheckoutConfiguration.getInstantPaymentConfiguration(
+    paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
+): InstantPaymentConfiguration? {
+    return getConfiguration(paymentMethod)
 }

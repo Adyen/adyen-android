@@ -88,14 +88,14 @@ class DropInConfiguration private constructor(
             amount = amount,
             analyticsConfiguration = analyticsConfiguration,
         ) {
-            addConfiguration(this@DropInConfiguration)
+            addConfiguration(DROP_IN_CONFIG_KEY, this@DropInConfiguration)
 
-            availablePaymentConfigs.values.forEach { paymentConfig ->
-                addConfiguration(paymentConfig)
+            availablePaymentConfigs.forEach { (key, paymentConfig) ->
+                addConfiguration(key, paymentConfig)
             }
 
-            genericActionConfiguration.getAllConfigurations().forEach { actionConfig ->
-                addConfiguration(actionConfig)
+            genericActionConfiguration.getAllConfigurations().forEach { config ->
+                addActionConfiguration(config)
             }
         }
     }
@@ -442,16 +442,18 @@ class DropInConfiguration private constructor(
     }
 }
 
+private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
+
 fun CheckoutConfiguration.dropInConfiguration(
     configuration: Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Builder(shopperLocale, environment, clientKey)
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(DROP_IN_CONFIG_KEY, config)
     return this
 }
 
 fun CheckoutConfiguration.getDropInConfiguration(): DropInConfiguration? {
-    return getConfiguration(DropInConfiguration::class)
+    return getConfiguration(DROP_IN_CONFIG_KEY)
 }

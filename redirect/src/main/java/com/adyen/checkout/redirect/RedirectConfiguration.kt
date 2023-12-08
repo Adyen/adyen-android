@@ -82,10 +82,10 @@ fun CheckoutConfiguration.redirectConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addActionConfiguration(config)
     return this
 }
 
 fun CheckoutConfiguration.getRedirectConfiguration(): RedirectConfiguration? {
-    return getConfiguration(RedirectConfiguration::class)
+    return getActionConfiguration(RedirectConfiguration::class.java)
 }

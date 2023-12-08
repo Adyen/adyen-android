@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -104,10 +105,10 @@ fun CheckoutConfiguration.EPSConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.EPS, config)
     return this
 }
 
 fun CheckoutConfiguration.getEPSConfiguration(): EPSConfiguration? {
-    return getConfiguration(EPSConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.EPS)
 }

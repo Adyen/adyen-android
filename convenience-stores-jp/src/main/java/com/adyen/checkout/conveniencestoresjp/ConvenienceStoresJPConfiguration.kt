@@ -13,6 +13,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -88,10 +89,10 @@ fun CheckoutConfiguration.convenienceStoresJPConfiguration(
         }
         .apply(configuration)
         .build()
-    addConfiguration(config)
+    addConfiguration(PaymentMethodTypes.ECONTEXT_STORES, config)
     return this
 }
 
 fun CheckoutConfiguration.getConvenienceStoresJPConfiguration(): ConvenienceStoresJPConfiguration? {
-    return getConfiguration(ConvenienceStoresJPConfiguration::class)
+    return getConfiguration(PaymentMethodTypes.ECONTEXT_STORES)
 }
