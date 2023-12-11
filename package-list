@@ -32,6 +32,7 @@ com.adyen.checkout.boleto
 com.adyen.checkout.boleto.internal.provider
 module:card
 com.adyen.checkout.card
+com.adyen.checkout.card.internal.data.api
 com.adyen.checkout.card.internal.data.model
 com.adyen.checkout.card.internal.provider
 com.adyen.checkout.card.internal.ui

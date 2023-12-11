@@ -1,0 +1,464 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>CardOutputData</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            adyen-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":card:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="card::com.adyen.checkout.card.internal.ui.model/CardOutputData///PointingToDeclaration//-588060093">
+  <div class="breadcrumbs"><a href="../../index.html">card</a><span class="delimiter">/</span><a href="../index.html">com.adyen.checkout.card.internal.ui.model</a><span class="delimiter">/</span><span class="current">CardOutputData</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Card</span><wbr><span>Output</span><wbr><span><span>Data</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/RestrictTo.html"><span class="token annotation builtin">RestrictTo</span></a><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="token punctuation">[</span><span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/RestrictTo.Scope.LIBRARY_GROUP.html">RestrictTo.Scope.LIBRARY_GROUP</a></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">CardOutputData</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>cardNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>expiryDateState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-expiry-date/index.html">ExpiryDate</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>securityCodeState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>holderNameState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>socialSecurityNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>kcpBirthDateOrTaxNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>kcpCardPasswordState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>addressState<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui.model/-address-output-data/index.html">AddressOutputData</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>installmentState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>shouldStorePaymentMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>cvcUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>expiryDateUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>holderNameUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>showStorePaymentField<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>detectedCardTypes<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.data.model/-detected-card-type/index.html">DetectedCardType</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isSocialSecurityNumberRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isKCPAuthRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>addressUIState<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-address-form-u-i-state/index.html">AddressFormUIState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>installmentOptions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>cardBrands<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-card-list-item/index.html">CardListItem</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isDualBranded<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span><span class="token keyword">val </span>kcpBirthDateOrTaxNumberHint<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isCardListVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span> : <a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-output-data/index.html">OutputData</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="2034446537%2FConstructors%2F-588060093" anchor-label="CardOutputData" id="2034446537%2FConstructors%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-card-output-data.html"><span>Card</span><wbr><span>Output</span><wbr><span><span>Data</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2034446537%2FConstructors%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">cardNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">expiryDateState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-expiry-date/index.html">ExpiryDate</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">securityCodeState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">holderNameState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">socialSecurityNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">kcpBirthDateOrTaxNumberState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">kcpCardPasswordState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">addressState<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui.model/-address-output-data/index.html">AddressOutputData</a><span class="token punctuation">, </span></span><span class="parameter ">installmentState<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">shouldStorePaymentMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">cvcUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter ">expiryDateUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter ">holderNameUIState<span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a><span class="token punctuation">, </span></span><span class="parameter ">showStorePaymentField<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">detectedCardTypes<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.data.model/-detected-card-type/index.html">DetectedCardType</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">isSocialSecurityNumberRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">isKCPAuthRequired<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">addressUIState<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-address-form-u-i-state/index.html">AddressFormUIState</a><span class="token punctuation">, </span></span><span class="parameter ">installmentOptions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">cardBrands<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-card-list-item/index.html">CardListItem</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">isDualBranded<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>kcpBirthDateOrTaxNumberHint<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">isCardListVisible<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1923819629%2FProperties%2F-588060093" anchor-label="addressState" id="1923819629%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="address-state.html"><span>address</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1923819629%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="address-state.html">addressState</a><span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui.model/-address-output-data/index.html">AddressOutputData</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1606719%2FProperties%2F-588060093" anchor-label="addressUIState" id="-1606719%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="address-u-i-state.html"><span>address</span><wbr><span><span>UIState</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1606719%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="address-u-i-state.html">addressUIState</a><span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-address-form-u-i-state/index.html">AddressFormUIState</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1287404402%2FProperties%2F-588060093" anchor-label="cardBrands" id="-1287404402%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="card-brands.html"><span>card</span><wbr><span><span>Brands</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1287404402%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="card-brands.html">cardBrands</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-card-list-item/index.html">CardListItem</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="145323768%2FProperties%2F-588060093" anchor-label="cardNumberState" id="145323768%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="card-number-state.html"><span>card</span><wbr><span>Number</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="145323768%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="card-number-state.html">cardNumberState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="727376029%2FProperties%2F-588060093" anchor-label="cvcUIState" id="727376029%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="cvc-u-i-state.html"><span>cvc</span><wbr><span><span>UIState</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="727376029%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="cvc-u-i-state.html">cvcUIState</a><span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1499675703%2FProperties%2F-588060093" anchor-label="detectedCardTypes" id="-1499675703%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="detected-card-types.html"><span>detected</span><wbr><span>Card</span><wbr><span><span>Types</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1499675703%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="detected-card-types.html">detectedCardTypes</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.data.model/-detected-card-type/index.html">DetectedCardType</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-50867712%2FProperties%2F-588060093" anchor-label="expiryDateState" id="-50867712%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="expiry-date-state.html"><span>expiry</span><wbr><span>Date</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-50867712%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="expiry-date-state.html">expiryDateState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-expiry-date/index.html">ExpiryDate</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="699403412%2FProperties%2F-588060093" anchor-label="expiryDateUIState" id="699403412%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="expiry-date-u-i-state.html"><span>expiry</span><wbr><span>Date</span><wbr><span><span>UIState</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="699403412%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="expiry-date-u-i-state.html">expiryDateUIState</a><span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-58708394%2FProperties%2F-588060093" anchor-label="holderNameState" id="-58708394%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="holder-name-state.html"><span>holder</span><wbr><span>Name</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-58708394%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="holder-name-state.html">holderNameState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1754442602%2FProperties%2F-588060093" anchor-label="holderNameUIState" id="1754442602%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="holder-name-u-i-state.html"><span>holder</span><wbr><span>Name</span><wbr><span><span>UIState</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1754442602%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="holder-name-u-i-state.html">holderNameUIState</a><span class="token operator">: </span><a href="../-input-field-u-i-state/index.html">InputFieldUIState</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-635194939%2FProperties%2F-588060093" anchor-label="installmentOptions" id="-635194939%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="installment-options.html"><span>installment</span><wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-635194939%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="installment-options.html">installmentOptions</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2024244046%2FProperties%2F-588060093" anchor-label="installmentState" id="-2024244046%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="installment-state.html"><span>installment</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2024244046%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="installment-state.html">installmentState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.adyen.checkout.card.internal.ui.view/-installment-model/index.html">InstallmentModel</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-384758826%2FProperties%2F-588060093" anchor-label="isCardListVisible" id="-384758826%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-card-list-visible.html"><span>is</span><wbr><span>Card</span><wbr><span>List</span><wbr><span><span>Visible</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-384758826%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="is-card-list-visible.html">isCardListVisible</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="321053584%2FProperties%2F-588060093" anchor-label="isDualBranded" id="321053584%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-dual-branded.html"><span>is</span><wbr><span>Dual</span><wbr><span><span>Branded</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="321053584%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="is-dual-branded.html">isDualBranded</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1188545883%2FProperties%2F-588060093" anchor-label="isKCPAuthRequired" id="1188545883%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-k-c-p-auth-required.html"><span>is</span><wbr><span>KCPAuth</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1188545883%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="is-k-c-p-auth-required.html">isKCPAuthRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="220946155%2FProperties%2F-588060093" anchor-label="isSocialSecurityNumberRequired" id="220946155%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-social-security-number-required.html"><span>is</span><wbr><span>Social</span><wbr><span>Security</span><wbr><span>Number</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="220946155%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="is-social-security-number-required.html">isSocialSecurityNumberRequired</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1077110818%2FProperties%2F-588060093" anchor-label="isValid" id="-1077110818%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-valid.html"><span>is</span><wbr><span><span>Valid</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1077110818%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="is-valid.html">isValid</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1670096557%2FProperties%2F-588060093" anchor-label="kcpBirthDateOrTaxNumberHint" id="1670096557%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="kcp-birth-date-or-tax-number-hint.html"><span>kcp</span><wbr><span>Birth</span><wbr><span>Date</span><wbr><span>Or</span><wbr><span>Tax</span><wbr><span>Number</span><wbr><span><span>Hint</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1670096557%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="kcp-birth-date-or-tax-number-hint.html">kcpBirthDateOrTaxNumberHint</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-459367531%2FProperties%2F-588060093" anchor-label="kcpBirthDateOrTaxNumberState" id="-459367531%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="kcp-birth-date-or-tax-number-state.html"><span>kcp</span><wbr><span>Birth</span><wbr><span>Date</span><wbr><span>Or</span><wbr><span>Tax</span><wbr><span>Number</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-459367531%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="kcp-birth-date-or-tax-number-state.html">kcpBirthDateOrTaxNumberState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1045955388%2FProperties%2F-588060093" anchor-label="kcpCardPasswordState" id="1045955388%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="kcp-card-password-state.html"><span>kcp</span><wbr><span>Card</span><wbr><span>Password</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1045955388%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="kcp-card-password-state.html">kcpCardPasswordState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-768743924%2FProperties%2F-588060093" anchor-label="securityCodeState" id="-768743924%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="security-code-state.html"><span>security</span><wbr><span>Code</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-768743924%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="security-code-state.html">securityCodeState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1817247951%2FProperties%2F-588060093" anchor-label="shouldStorePaymentMethod" id="-1817247951%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="should-store-payment-method.html"><span>should</span><wbr><span>Store</span><wbr><span>Payment</span><wbr><span><span>Method</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1817247951%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="should-store-payment-method.html">shouldStorePaymentMethod</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-866109000%2FProperties%2F-588060093" anchor-label="showStorePaymentField" id="-866109000%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="show-store-payment-field.html"><span>show</span><wbr><span>Store</span><wbr><span>Payment</span><wbr><span><span>Field</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-866109000%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="show-store-payment-field.html">showStorePaymentField</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1211263861%2FProperties%2F-588060093" anchor-label="socialSecurityNumberState" id="1211263861%2FProperties%2F-588060093" data-filterable-set=":card:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":card:dokkaHtmlPartial/release" data-filterable-set=":card:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="social-security-number-state.html"><span>social</span><wbr><span>Security</span><wbr><span>Number</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1211263861%2FProperties%2F-588060093"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":card:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="social-security-number-state.html">socialSecurityNumberState</a><span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.ui.model/-field-state/index.html">FieldState</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
