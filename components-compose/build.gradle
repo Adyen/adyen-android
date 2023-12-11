@@ -36,13 +36,6 @@ android {
         compose true
     }
 
-    kotlinOptions {
-        freeCompilerArgs += [
-            '-P',
-            'plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=1.9.10'
-        ]
-    }
-
     composeOptions {
         kotlinCompilerExtensionVersion = compose_compiler_version
     }

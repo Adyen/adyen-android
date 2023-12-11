@@ -44,6 +44,7 @@ ext {
     // Compose Dependencies
     compose_activity_version = '1.8.0'
     compose_bom_version = '2023.10.01'
+    compose_hilt_version = '1.1.0'
     compose_viewmodel_version = '2.6.2'
 
     // Adyen Dependencies
@@ -95,6 +96,13 @@ ext {
         compose           : [
             activity : "androidx.activity:activity-compose:$compose_activity_version",
             bom      : "androidx.compose:compose-bom:$compose_bom_version",
+            hilt     : "androidx.hilt:hilt-navigation-compose:$compose_hilt_version",
+            material : 'androidx.compose.material3:material3',
+            ui       : [
+                'androidx.compose.ui:ui',
+                'androidx.compose.ui:ui-graphics',
+                'androidx.compose.ui:ui-tooling-preview',
+            ],
             viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
         hilt              : "com.google.dagger:hilt-android:$hilt_version",
