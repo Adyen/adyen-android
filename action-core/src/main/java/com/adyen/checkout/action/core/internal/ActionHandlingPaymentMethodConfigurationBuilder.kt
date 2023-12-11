@@ -22,7 +22,11 @@ import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.Locale
 
-@Suppress("UNCHECKED_CAST")
+@Suppress(
+    "UNCHECKED_CAST",
+    "ktlint:standard:discouraged-comment-location",
+    "ktlint:standard:type-parameter-list-spacing",
+)
 abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     ConfigurationT : Configuration,
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>

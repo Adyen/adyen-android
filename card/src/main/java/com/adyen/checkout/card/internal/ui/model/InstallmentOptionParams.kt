@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 
 /**
@@ -15,7 +16,8 @@ import com.adyen.checkout.card.CardBrand
  *
  * Note: All values specified in [values] must be greater than 1.
  */
-internal sealed class InstallmentOptionParams {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+sealed class InstallmentOptionParams {
     abstract val values: List<Int>
     abstract val includeRevolving: Boolean
 

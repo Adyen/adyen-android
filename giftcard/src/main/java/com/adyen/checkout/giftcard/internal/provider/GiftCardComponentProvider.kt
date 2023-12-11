@@ -26,7 +26,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -46,6 +45,7 @@ import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -75,7 +75,7 @@ constructor(
         SessionsGiftCardComponentCallback
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GiftCardComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

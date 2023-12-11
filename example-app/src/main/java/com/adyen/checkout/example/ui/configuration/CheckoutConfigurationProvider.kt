@@ -62,6 +62,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         .addGooglePayConfiguration(getGooglePayConfiguration())
         .add3ds2ActionConfiguration(get3DS2Configuration())
         .addRedirectActionConfiguration(getRedirectConfiguration())
+        .addGiftCardConfiguration(getGiftCardConfiguration())
         .setEnableRemovingStoredPaymentMethods(true)
         .setAmount(amount)
         .setAnalyticsConfiguration(getAnalyticsConfiguration())
@@ -105,6 +106,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setAmount(amount)
             .setAnalyticsConfiguration(getAnalyticsConfiguration())
+            .setPinRequired(true)
             .build()
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
@@ -147,7 +149,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val analyticsLevel = keyValueStorage.getTelemetryLevel()
+        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
         return AnalyticsConfiguration(level = analyticsLevel)
     }
 
@@ -163,10 +165,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         maxInstallments: Int = 3,
         includeRevolving: Boolean = false
     ) = InstallmentConfiguration(
-        InstallmentOptions.DefaultInstallmentOptions(
+        defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
             maxInstallments = maxInstallments,
             includeRevolving = includeRevolving
-        )
+        ),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
     )
 
     private fun getCardBasedInstallmentOptions(
@@ -180,6 +183,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 includeRevolving = includeRevolving,
                 cardBrand = cardBrand
             )
-        )
+        ),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
     )
 }

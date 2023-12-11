@@ -90,6 +90,11 @@
 
         <SwitchPreference
             android:defaultValue="@string/preferences_default_split_card_funding_sources"
+            android:key="@string/card_installment_show_amount_key"
+            android:title="@string/card_installment_show_amount_title" />
+
+        <SwitchPreference
+            android:defaultValue="@string/preferences_default_split_card_funding_sources"
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
 
@@ -105,14 +110,14 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/telemetry_title">
+    <PreferenceCategory android:title="@string/analytics_title">
 
         <DropDownPreference
-            android:defaultValue="@string/preferences_default_telemetry_level"
-            android:entries="@array/telemetry_level_entries"
-            android:entryValues="@array/telemetry_level_values"
-            android:key="@string/telemetry_level_key"
-            android:title="@string/telemetry_level_title"
+            android:defaultValue="@string/preferences_default_analytics_level"
+            android:entries="@array/analytics_level_entries"
+            android:entryValues="@array/analytics_level_values"
+            android:key="@string/analytics_level_key"
+            android:title="@string/analytics_level_title"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>

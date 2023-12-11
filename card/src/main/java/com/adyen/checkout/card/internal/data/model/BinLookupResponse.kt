@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.data.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
@@ -17,7 +18,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-internal data class BinLookupResponse(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class BinLookupResponse(
     val brands: List<Brand>? = null,
     val issuingCountryCode: String? = null,
     val requestId: String? = null

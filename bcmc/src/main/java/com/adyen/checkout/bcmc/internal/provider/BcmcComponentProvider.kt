@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 18/9/2019.
+ * Created by ozgur on 22/8/2023.
  */
 
 package com.adyen.checkout.bcmc.internal.provider
@@ -19,9 +19,11 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.bcmc.internal.ui.DefaultBcmcDelegate
 import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
+import com.adyen.checkout.card.internal.data.api.BinLookupService
+import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
+import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -54,6 +56,8 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.ui.core.internal.data.api.AddressService
+import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class BcmcComponentProvider
@@ -78,6 +82,7 @@ constructor(
 
     private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -90,39 +95,45 @@ constructor(
         key: String?,
     ): BcmcComponent {
         assertSupported(paymentMethod)
-
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
-        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-        val publicKeyService = PublicKeyService(httpClient)
-        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-        val cardValidationMapper = CardValidationMapper()
-        val dateGenerator = DateGenerator()
-        val clientSideEncrypter = ClientSideEncrypter()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-
-        val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-            analyticsRepositoryData = AnalyticsRepositoryData(
-                application = application,
-                componentParams = componentParams,
-                paymentMethod = paymentMethod,
-            ),
-            analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-            ),
-            analyticsMapper = AnalyticsMapper(),
-        )
-
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val bcmcDelegate = DefaultBcmcDelegate(
+            val componentParams = componentParamsMapper.mapToParams(configuration, null, paymentMethod)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val publicKeyService = PublicKeyService(httpClient)
+            val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
+            val cardValidationMapper = CardValidationMapper()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val addressService = AddressService(httpClient)
+            val addressRepository = DefaultAddressRepository(addressService)
+            val binLookupService = BinLookupService(httpClient)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val cardDelegate = DefaultCardDelegate(
                 observerRepository = PaymentObserverRepository(),
-                paymentMethod = paymentMethod,
-                order = order,
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = order,
+                analyticsRepository = analyticsRepository,
+                addressRepository = addressRepository,
+                detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
-                analyticsRepository = analyticsRepository,
+                genericEncrypter = genericEncrypter,
                 submitHandler = SubmitHandler(savedStateHandle)
             )
 
@@ -133,13 +144,16 @@ constructor(
             )
 
             BcmcComponent(
-                bcmcDelegate = bcmcDelegate,
+                cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java].also { component ->
+        return ViewModelProvider(
+            viewModelStoreOwner,
+            bcmcFactory
+        )[key, BcmcComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
             }
@@ -159,43 +173,50 @@ constructor(
         key: String?
     ): BcmcComponent {
         assertSupported(paymentMethod)
-
-        val componentParams = componentParamsMapper.mapToParams(
-            bcmcConfiguration = configuration,
-            sessionParams = SessionParamsFactory.create(checkoutSession)
-        )
-        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-        val publicKeyService = PublicKeyService(httpClient)
-        val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
-        val cardValidationMapper = CardValidationMapper()
-        val dateGenerator = DateGenerator()
-        val clientSideEncrypter = ClientSideEncrypter()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
-
-        val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-            analyticsRepositoryData = AnalyticsRepositoryData(
-                application = application,
-                componentParams = componentParams,
-                paymentMethod = paymentMethod,
-                sessionId = checkoutSession.sessionSetupResponse.id,
-            ),
-            analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-            ),
-            analyticsMapper = AnalyticsMapper(),
-        )
-
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val bcmcDelegate = DefaultBcmcDelegate(
+            val componentParams = componentParamsMapper.mapToParams(
+                bcmcConfiguration = configuration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod
+            )
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+            val publicKeyService = PublicKeyService(httpClient)
+            val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
+            val cardValidationMapper = CardValidationMapper()
+            val dateGenerator = DateGenerator()
+            val clientSideEncrypter = ClientSideEncrypter()
+            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+            val addressService = AddressService(httpClient)
+            val addressRepository = DefaultAddressRepository(addressService)
+            val binLookupService = BinLookupService(httpClient)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                ),
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val cardDelegate = DefaultCardDelegate(
                 observerRepository = PaymentObserverRepository(),
-                paymentMethod = paymentMethod,
-                order = checkoutSession.order,
                 publicKeyRepository = publicKeyRepository,
                 componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                analyticsRepository = analyticsRepository,
+                addressRepository = addressRepository,
+                detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
                 cardEncrypter = cardEncrypter,
-                analyticsRepository = analyticsRepository,
+                genericEncrypter = genericEncrypter,
                 submitHandler = SubmitHandler(savedStateHandle)
             )
 
@@ -225,13 +246,17 @@ constructor(
             )
 
             BcmcComponent(
-                bcmcDelegate = bcmcDelegate,
+                cardDelegate = cardDelegate,
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bcmcDelegate),
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cardDelegate),
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
-        return ViewModelProvider(viewModelStoreOwner, bcmcFactory)[key, BcmcComponent::class.java].also { component ->
+
+        return ViewModelProvider(
+            viewModelStoreOwner,
+            bcmcFactory
+        )[key, BcmcComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
             }

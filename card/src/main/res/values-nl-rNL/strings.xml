@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Aantal termijnen</string>
     <string name="checkout_card_installments_option_regular">%s maanden</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">Eenmalige betaling</string>
     <string name="checkout_card_installments_option_revolving">Terugkerende betaling</string>
 

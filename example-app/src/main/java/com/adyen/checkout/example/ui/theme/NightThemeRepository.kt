@@ -6,7 +6,7 @@
  * Created by oscars on 7/10/2022.
  */
 
-package com.adyen.checkout.example.ui
+package com.adyen.checkout.example.ui.theme
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate

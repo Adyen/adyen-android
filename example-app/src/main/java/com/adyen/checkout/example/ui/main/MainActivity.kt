@@ -30,8 +30,8 @@ import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
-import com.adyen.checkout.example.ui.card.SessionsCardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
+import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
 import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
@@ -49,12 +49,12 @@ class MainActivity : AppCompatActivity() {
 
     private val dropInLauncher = DropIn.registerForDropInResult(
         this,
-        DropInCallback { dropInResult -> viewModel.onDropInResult(dropInResult) }
+        DropInCallback { dropInResult -> viewModel.onDropInResult(dropInResult) },
     )
 
     private val sessionDropInLauncher = DropIn.registerForDropInResult(
         this,
-        SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) }
+        SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) },
     )
 
     private var componentItemAdapter: ComponentItemAdapter? = null
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         binding.switchSessions.setOnCheckedChangeListener { _, isChecked -> viewModel.onSessionsToggled(isChecked) }
 
         componentItemAdapter = ComponentItemAdapter(
-            viewModel::onComponentEntryClick
+            viewModel::onComponentEntryClick,
         )
         binding.componentList.adapter = componentItemAdapter
 
@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                     sessionDropInLauncher,
                     navigation.checkoutSession,
                     navigation.dropInConfiguration,
-                    ExampleSessionsDropInService::class.java
+                    ExampleSessionsDropInService::class.java,
                 )
             }
 

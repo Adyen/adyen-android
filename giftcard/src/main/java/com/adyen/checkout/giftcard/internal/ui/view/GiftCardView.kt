@@ -23,6 +23,7 @@ import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
@@ -56,49 +57,53 @@ internal class GiftCardView @JvmOverloads constructor(
         giftCardDelegate = delegate
 
         this.localizedContext = localizedContext
-        initLocalizedStrings(localizedContext)
-
-        initInputs()
+        initCardNumberField(localizedContext)
+        initPinField(localizedContext)
     }
 
-    private fun initLocalizedStrings(localizedContext: Context) {
+    private fun initCardNumberField(localizedContext: Context) {
         binding.textInputLayoutGiftcardNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_GiftCard_GiftCardNumberInput,
             localizedContext
         )
-        binding.textInputLayoutGiftcardPin.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_GiftCard_GiftCardPinInput,
-            localizedContext
-        )
-    }
 
-    private fun initInputs() {
         binding.editTextGiftcardNumber.setOnChangeListener {
             giftCardDelegate.updateInputData { cardNumber = binding.editTextGiftcardNumber.rawValue }
             binding.textInputLayoutGiftcardNumber.hideError()
         }
 
         binding.editTextGiftcardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val cardNumberValidation = giftCardDelegate.outputData.giftcardNumberFieldState.validation
+            val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
             if (hasFocus) {
                 binding.textInputLayoutGiftcardNumber.hideError()
             } else if (cardNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
             }
         }
+    }
 
-        binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
-            giftCardDelegate.updateInputData { pin = editable.toString() }
-            binding.textInputLayoutGiftcardPin.hideError()
-        }
+    private fun initPinField(localizedContext: Context) {
+        if (giftCardDelegate.isPinRequired()) {
+            binding.textInputLayoutGiftcardPin.setLocalizedHintFromStyle(
+                R.style.AdyenCheckout_GiftCard_GiftCardPinInput,
+                localizedContext
+            )
 
-        binding.editTextGiftcardPin.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val pinValidation = giftCardDelegate.outputData.giftcardPinFieldState.validation
-            if (hasFocus) {
+            binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
+                giftCardDelegate.updateInputData { pin = editable.toString() }
                 binding.textInputLayoutGiftcardPin.hideError()
-            } else if (pinValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
             }
+
+            binding.editTextGiftcardPin.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val pinValidation = giftCardDelegate.outputData.pinFieldState.validation
+                if (hasFocus) {
+                    binding.textInputLayoutGiftcardPin.hideError()
+                } else if (pinValidation is Validation.Invalid) {
+                    binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
+                }
+            }
+        } else {
+            binding.textInputLayoutGiftcardPin.isVisible = false
         }
     }
 
@@ -106,13 +111,13 @@ internal class GiftCardView @JvmOverloads constructor(
         Logger.d(TAG, "highlightValidationErrors")
         val outputData = giftCardDelegate.outputData
         var isErrorFocused = false
-        val cardNumberValidation = outputData.giftcardNumberFieldState.validation
+        val cardNumberValidation = outputData.numberFieldState.validation
         if (cardNumberValidation is Validation.Invalid) {
             isErrorFocused = true
             binding.textInputLayoutGiftcardNumber.requestFocus()
             binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
         }
-        val pinValidation = outputData.giftcardPinFieldState.validation
+        val pinValidation = outputData.pinFieldState.validation
         if (pinValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 binding.textInputLayoutGiftcardPin.requestFocus()

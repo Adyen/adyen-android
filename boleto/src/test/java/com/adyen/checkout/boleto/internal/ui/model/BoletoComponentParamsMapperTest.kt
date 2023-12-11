@@ -126,7 +126,7 @@ internal class BoletoComponentParamsMapperTest {
             boletoConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
             )

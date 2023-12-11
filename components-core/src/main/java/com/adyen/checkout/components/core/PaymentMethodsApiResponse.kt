@@ -20,7 +20,7 @@ import org.json.JSONObject
  * Use [PaymentMethodsApiResponse.SERIALIZER] to deserialize this class from your JSON response.
  */
 @Parcelize
-class PaymentMethodsApiResponse(
+data class PaymentMethodsApiResponse(
     var storedPaymentMethods: List<StoredPaymentMethod>? = null,
     var paymentMethods: List<PaymentMethod>? = null,
 ) : ModelObject() {

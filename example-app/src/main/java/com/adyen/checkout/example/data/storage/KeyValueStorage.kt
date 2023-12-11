@@ -32,9 +32,10 @@ interface KeyValueStorage {
     fun getCardAddressMode(): CardAddressMode
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
+    fun isInstallmentAmountShown(): Boolean
     fun useSessions(): Boolean
     fun setUseSessions(useSessions: Boolean)
-    fun getTelemetryLevel(): AnalyticsLevel
+    fun getAnalyticsLevel(): AnalyticsLevel
 }
 
 @Suppress("TooManyFunctions")
@@ -150,6 +151,12 @@ internal class DefaultKeyValueStorage(
         )
     }
 
+    override fun isInstallmentAmountShown() = sharedPreferences.getBoolean(
+        appContext = appContext,
+        stringRes = R.string.card_installment_show_amount_key,
+        defaultStringRes = R.string.preferences_default_installment_amount_shown,
+    )
+
     override fun useSessions(): Boolean {
         return sharedPreferences.getBoolean(
             appContext = appContext,
@@ -164,12 +171,12 @@ internal class DefaultKeyValueStorage(
         }
     }
 
-    override fun getTelemetryLevel(): AnalyticsLevel {
+    override fun getAnalyticsLevel(): AnalyticsLevel {
         return AnalyticsLevel.valueOf(
             sharedPreferences.getString(
                 appContext = appContext,
-                stringRes = R.string.telemetry_level_key,
-                defaultStringRes = R.string.preferences_default_telemetry_level,
+                stringRes = R.string.analytics_level_key,
+                defaultStringRes = R.string.preferences_default_analytics_level,
             )
         )
     }

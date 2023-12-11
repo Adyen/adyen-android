@@ -426,6 +426,10 @@ internal class DefaultCardDelegateTest(
 
                 delegate.updateInputData {
                     cardNumber = invalidLuhnCardNumber
+                }
+
+                // we need to update selectedCardIndex separate from cardNumber to simulate the actual use case
+                delegate.updateInputData {
                     selectedCardIndex = 1
                 }
 
@@ -447,7 +451,7 @@ internal class DefaultCardDelegateTest(
                     assertTrue(expiryDateState.validation is Validation.Valid)
                     assertTrue(securityCodeState.validation is Validation.Valid)
                     assertEquals(InputFieldUIState.OPTIONAL, cvcUIState)
-                    assertEquals(InputFieldUIState.OPTIONAL, expiryDateUIState)
+                    assertEquals(InputFieldUIState.HIDDEN, expiryDateUIState)
                     assertTrue(isDualBranded)
                 }
             }
@@ -537,7 +541,8 @@ internal class DefaultCardDelegateTest(
                 InstallmentOptionParams.DefaultInstallmentOptions(
                     values = listOf(2, 3),
                     includeRevolving = true
-                )
+                ),
+                shopperLocale = Locale.US
             )
 
             val addressConfiguration = AddressConfiguration.FullAddress()
@@ -561,9 +566,11 @@ internal class DefaultCardDelegateTest(
 
             delegate.outputDataFlow.test {
                 val installmentModel = InstallmentModel(
-                    textResId = R.string.checkout_card_installments_option_revolving,
-                    value = 1,
-                    option = InstallmentOption.REVOLVING
+                    numberOfInstallments = 1,
+                    option = InstallmentOption.REVOLVING,
+                    amount = null,
+                    shopperLocale = Locale.US,
+                    showAmount = false
                 )
 
                 delegate.updateInputData {
@@ -801,9 +808,11 @@ internal class DefaultCardDelegateTest(
 
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
                 val installmentModel = InstallmentModel(
-                    textResId = R.string.checkout_card_installments_option_revolving,
-                    value = 1,
-                    option = InstallmentOption.REVOLVING
+                    numberOfInstallments = 1,
+                    option = InstallmentOption.REVOLVING,
+                    amount = null,
+                    shopperLocale = Locale.US,
+                    showAmount = false
                 )
 
                 val detectedCardTypes = listOf(
@@ -1105,23 +1114,24 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `when card number is detected over network, then callback should be called with reliable result`() = runTest {
-            detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
+        fun `when card number is detected over network, then callback should be called with reliable result`() =
+            runTest {
+                detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
 
-            delegate.setOnBinLookupListener { data ->
-                launch(this.coroutineContext) {
-                    with(data.first()) {
-                        assertEquals("mc", brand)
-                        assertEquals("mccredit", paymentMethodVariant)
-                        assertTrue(isReliable)
+                delegate.setOnBinLookupListener { data ->
+                    launch(this.coroutineContext) {
+                        with(data.first()) {
+                            assertEquals("mc", brand)
+                            assertEquals("mccredit", paymentMethodVariant)
+                            assertTrue(isReliable)
+                        }
                     }
                 }
+
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.updateInputData { cardNumber = "5555444" }
             }
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.updateInputData { cardNumber = "5555444" }
-        }
 
         @Test
         fun `when callback is called multiple times, then it should only trigger if the data changed`() = runTest {
@@ -1155,7 +1165,7 @@ internal class DefaultCardDelegateTest(
         cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
         genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
-        paymentMethod: PaymentMethod = PaymentMethod(),
+        paymentMethod: PaymentMethod = PaymentMethod(type = PaymentMethodTypes.SCHEME),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,

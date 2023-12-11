@@ -15,14 +15,23 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
+@ExtendWith(MockitoExtension::class)
 internal class AnalyticsMapperTest {
 
     private val analyticsMapper: AnalyticsMapper = AnalyticsMapper()
+
+    @BeforeEach
+    fun beforeEach() {
+        AnalyticsMapper.resetToDefaults()
+    }
 
     @Nested
     @DisplayName("when getFlavorQueryParameter is called and")
@@ -110,7 +119,7 @@ internal class AnalyticsMapperTest {
             )
 
             val expected = AnalyticsSetupRequest(
-                version = "5.0.1",
+                version = "5.1.0",
                 channel = "android",
                 platform = "android",
                 locale = "en_US",
@@ -129,5 +138,42 @@ internal class AnalyticsMapperTest {
 
             assertEquals(expected.toString(), actual.toString())
         }
+    }
+
+    @Test
+    fun `when cross platform parameters are overridden, then returned values should match expected`() {
+        AnalyticsMapper.overrideForCrossPlatform(AnalyticsPlatform.FLUTTER, "some test version")
+        val actual = analyticsMapper.getAnalyticsSetupRequest(
+            packageName = "PACKAGE_NAME",
+            locale = Locale("en", "US"),
+            source = AnalyticsSource.PaymentComponent(
+                isCreatedByDropIn = false,
+                PaymentMethod(type = "PAYMENT_METHOD_TYPE")
+            ),
+            amount = Amount("USD", 1337),
+            screenWidth = 1286,
+            paymentMethods = listOf("scheme", "googlepay"),
+            sessionId = "SESSION_ID",
+        )
+
+        val expected = AnalyticsSetupRequest(
+            version = "some test version",
+            channel = "android",
+            platform = "flutter",
+            locale = "en_US",
+            component = "PAYMENT_METHOD_TYPE",
+            flavor = "components",
+            deviceBrand = "null",
+            deviceModel = "null",
+            referrer = "PACKAGE_NAME",
+            systemVersion = Build.VERSION.SDK_INT.toString(),
+            containerWidth = null,
+            screenWidth = 1286,
+            paymentMethods = listOf("scheme", "googlepay"),
+            amount = Amount("USD", 1337),
+            sessionId = "SESSION_ID",
+        )
+
+        assertEquals(expected.toString(), actual.toString())
     }
 }

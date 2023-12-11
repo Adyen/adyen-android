@@ -55,6 +55,7 @@ import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 
+@Suppress("ktlint:standard:type-parameter-list-spacing")
 abstract class OnlineBankingComponentProvider<
     ComponentT : OnlineBankingComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : OnlineBankingConfiguration,

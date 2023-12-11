@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -39,13 +40,16 @@ object SessionParamsFactory {
     ): SessionParams {
         return SessionParams(
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
-            installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
-                it.key to SessionInstallmentOptionsParams(
-                    plans = it.value?.plans,
-                    preselectedValue = it.value?.preselectedValue,
-                    values = it.value?.values,
-                )
-            }?.toMap(),
+            installmentConfiguration = SessionInstallmentConfiguration(
+                installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
+                    it.key to SessionInstallmentOptionsParams(
+                        plans = it.value?.plans,
+                        preselectedValue = it.value?.preselectedValue,
+                        values = it.value?.values,
+                    )
+                }?.toMap(),
+                showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount
+            ),
             amount = amount,
             returnUrl = returnUrl,
         )

@@ -6,7 +6,7 @@
  * Created by josephj on 28/12/2022.
  */
 
-package com.adyen.checkout.internal.ui
+package com.adyen.checkout.dropin.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.ActionComponentData
@@ -17,9 +17,6 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.internal.ui.ButtonState
-import com.adyen.checkout.dropin.internal.ui.PreselectedStoredEvent
-import com.adyen.checkout.dropin.internal.ui.PreselectedStoredPaymentViewModel
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi

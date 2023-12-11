@@ -14,6 +14,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -353,42 +354,51 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is empty then result should be invalid`() {
             val cvc = ""
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
         @Test
         fun `cvc is 1 digit then result should be invalid`() {
             val cvc = "7"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
         @Test
         fun `cvc is 2 digits then result should be invalid`() {
             val cvc = "12"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
         @Test
         fun `cvc is 3 digits then result should be valid`() {
             val cvc = "737"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
 
         @Test
         fun `cvc is 4 digits then result should be invalid`() {
             val cvc = "8689"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
         @Test
         fun `cvc is 6 digits then result should be invalid`() {
             val cvc = "457835"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                getDetectedCardType(),
+                InputFieldUIState.REQUIRED
+            )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
@@ -397,7 +407,8 @@ internal class CardValidationUtilsTest {
             val cvc = "737"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS))
+                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
+                cvcUIState = InputFieldUIState.REQUIRED
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -407,7 +418,8 @@ internal class CardValidationUtilsTest {
             val cvc = "8689"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS))
+                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
+                cvcUIState = InputFieldUIState.REQUIRED
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -415,7 +427,8 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc has invalid characters then result should be invalid`() {
             val cvc = "1%y"
-            val actual = CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType())
+            val actual =
+                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
@@ -424,7 +437,8 @@ internal class CardValidationUtilsTest {
             val cvc = "546"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
+                cvcUIState = InputFieldUIState.REQUIRED
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -434,7 +448,8 @@ internal class CardValidationUtilsTest {
             val cvc = "345"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
+                cvcUIState = InputFieldUIState.OPTIONAL
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -444,7 +459,8 @@ internal class CardValidationUtilsTest {
             val cvc = "156"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
+                cvcUIState = InputFieldUIState.HIDDEN
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -454,7 +470,8 @@ internal class CardValidationUtilsTest {
             val cvc = "77"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
+                InputFieldUIState.REQUIRED
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -464,19 +481,21 @@ internal class CardValidationUtilsTest {
             val cvc = "9"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
+                InputFieldUIState.OPTIONAL
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
 
         @Test
-        fun `cvc is invalid with field policy hidden then result should be invalid`() {
+        fun `cvc is invalid with field policy hidden then result should be valid`() {
             val cvc = "1358"
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
+                cvcUIState = InputFieldUIState.HIDDEN
             )
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
+            assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
 
         @Test
@@ -484,7 +503,8 @@ internal class CardValidationUtilsTest {
             val cvc = ""
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
+                cvcUIState = InputFieldUIState.REQUIRED
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -494,7 +514,8 @@ internal class CardValidationUtilsTest {
             val cvc = ""
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
+                cvcUIState = InputFieldUIState.OPTIONAL
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -504,7 +525,8 @@ internal class CardValidationUtilsTest {
             val cvc = ""
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN)
+                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
+                cvcUIState = InputFieldUIState.HIDDEN
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }

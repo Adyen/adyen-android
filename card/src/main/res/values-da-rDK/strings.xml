@@ -32,6 +32,7 @@
 
     <string name="checkout_card_installments_title">Antal rater</string>
     <string name="checkout_card_installments_option_regular">%s måneder</string>
+    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
     <string name="checkout_card_installments_option_one_time">Engangsbetaling</string>
     <string name="checkout_card_installments_option_revolving">Løbende betaling</string>
 

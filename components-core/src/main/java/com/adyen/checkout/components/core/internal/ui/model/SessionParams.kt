@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.Amount
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class SessionParams(
     val enableStoreDetails: Boolean?,
-    val installmentOptions: Map<String, SessionInstallmentOptionsParams?>?,
+    val installmentConfiguration: SessionInstallmentConfiguration?,
     val amount: Amount?,
     val returnUrl: String?,
 )

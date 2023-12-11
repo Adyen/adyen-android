@@ -33,7 +33,7 @@
     <string name="merchant_account_title">Merchant Account</string>
     <string name="card_settings_title">Card</string>
     <string name="other_payment_methods_settings_title">Other payment methods</string>
-    <string name="telemetry_title">Telemetry</string>
+    <string name="analytics_title">Analytics</string>
     <string name="app_title">App</string>
 
     <string name="shopper_information">Shopper Information</string>
@@ -54,12 +54,14 @@
     <string name="card_address_form_mode_key">card_address_form_mode</string>
     <string name="card_installment_options_mode_title">Installment options</string>
     <string name="card_installment_options_mode_key">card_installment_options_mode</string>
+    <string name="card_installment_show_amount_key">card_installment_show_amount</string>
+    <string name="card_installment_show_amount_title">Show installment amount</string>
     <string name="card_address_form_title">Address mode</string>
     <string name="instant_payment_method_type_key">instant_payment_method_type</string>
     <string name="instant_payment_method_type_title">Instant Payment Method Type</string>
     <string name="use_sessions_key">use_sessions</string>
-    <string name="telemetry_level_key">telemetry_level</string>
-    <string name="telemetry_level_title">Level</string>
+    <string name="analytics_level_key">analytics_level</string>
+    <string name="analytics_level_title">Level</string>
 
     <string name="night_theme_title">Theme</string>
     <!-- Should be same as DefaultNightThemeRepository.PREF_KEY_NIGHT_THEME -->
@@ -83,8 +85,9 @@
     <string name="preferences_default_split_card_funding_sources">false</string>
     <string name="preferences_default_address_form_mode">NONE</string>
     <string name="preferences_default_installment_options_mode">NONE</string>
+    <string name="preferences_default_installment_amount_shown">false</string>
     <string name="preferences_default_instant_payment_method">wechatpaySDK</string>
     <string name="preferences_default_use_sessions">true</string>
-    <string name="preferences_default_telemetry_level">ALL</string>
+    <string name="preferences_default_analytics_level">ALL</string>
 
 </resources>

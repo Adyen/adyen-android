@@ -21,7 +21,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
@@ -35,10 +36,13 @@ import com.adyen.checkout.cse.internal.BaseCardEncrypter
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardException
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -58,7 +62,7 @@ internal class DefaultGiftCardDelegate(
     private val order: OrderRequest?,
     private val analyticsRepository: AnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
-    override val componentParams: ButtonComponentParams,
+    override val componentParams: GiftCardComponentParams,
     private val cardEncrypter: BaseCardEncrypter,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) : GiftCardDelegate {
@@ -154,7 +158,18 @@ internal class DefaultGiftCardDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData() = GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
+    private fun createOutputData() = GiftCardOutputData(
+        numberFieldState = GiftCardNumberUtils.validateInputField(inputData.cardNumber),
+        pinFieldState = getPinFieldState(inputData.pin),
+    )
+
+    private fun getPinFieldState(pin: String): FieldState<String> {
+        return if (isPinRequired()) {
+            GiftCardPinUtils.validateInputField(pin)
+        } else {
+            FieldState(pin, Validation.Valid)
+        }
+    }
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: GiftCardOutputData) {
@@ -200,7 +215,7 @@ internal class DefaultGiftCardDelegate(
             brand = paymentMethod.brand,
         )
 
-        val lastDigits = outputData.giftcardNumberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
+        val lastDigits = outputData.numberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = giftCardPaymentMethod,
@@ -226,11 +241,13 @@ internal class DefaultGiftCardDelegate(
         outputData: GiftCardOutputData,
         publicKey: String,
     ): EncryptedCard? = try {
-        val unencryptedCard = UnencryptedCard
-            .Builder()
-            .setNumber(outputData.giftcardNumberFieldState.value)
-            .setCvc(outputData.giftcardPinFieldState.value)
-            .build()
+        val unencryptedCard = UnencryptedCard.Builder().run {
+            setNumber(outputData.numberFieldState.value)
+            if (componentParams.isPinRequired) {
+                setCvc(outputData.pinFieldState.value)
+            }
+            build()
+        }
 
         cardEncrypter.encryptFields(unencryptedCard, publicKey)
     } catch (e: EncryptionException) {
@@ -324,6 +341,8 @@ internal class DefaultGiftCardDelegate(
         _componentStateFlow.tryEmit(updatedState)
         submitHandler.onSubmit(updatedState)
     }
+
+    override fun isPinRequired(): Boolean = componentParams.isPinRequired
 
     override fun onCleared() {
         removeObserver()

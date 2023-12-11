@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
@@ -59,10 +60,11 @@ internal class CardComponentParamsMapperTest {
             )
         )
         val expectedInstallmentParams = InstallmentParams(
-            InstallmentOptionParams.DefaultInstallmentOptions(
+            defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(2, 3),
                 includeRevolving = true
-            )
+            ),
+            shopperLocale = Locale.FRANCE
         )
 
         val addressConfiguration = AddressConfiguration.FullAddress(supportedCountryCodes = listOf("CA", "GB"))
@@ -107,8 +109,8 @@ internal class CardComponentParamsMapperTest {
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = false,
             isSubmitButtonVisible = false,
-            isHideCvc = true,
-            isHideCvcStoredCard = true,
+            cvcVisibility = CVCVisibility.ALWAYS_HIDE,
+            storedCVCVisibility = StoredCVCVisibility.HIDE,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.SHOW,
             kcpAuthVisibility = KCPAuthVisibility.SHOW,
             installmentParams = expectedInstallmentParams,
@@ -270,7 +272,7 @@ internal class CardComponentParamsMapperTest {
             PaymentMethod(),
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = null,
                 returnUrl = "",
             )
@@ -301,7 +303,7 @@ internal class CardComponentParamsMapperTest {
             PaymentMethod(),
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = null,
                 returnUrl = "",
             )
@@ -316,17 +318,6 @@ internal class CardComponentParamsMapperTest {
 
     @Test
     fun `installmentParams should match value set in sessions`() {
-        val cardConfiguration = getCardConfigurationBuilder()
-            .setInstallmentConfigurations(
-                InstallmentConfiguration(
-                    InstallmentOptions.DefaultInstallmentOptions(
-                        maxInstallments = 3,
-                        includeRevolving = true
-                    )
-                )
-            )
-            .build()
-
         val installmentOptions = mapOf(
             "card" to SessionInstallmentOptionsParams(
                 plans = listOf("regular"),
@@ -334,6 +325,21 @@ internal class CardComponentParamsMapperTest {
                 values = listOf(2)
             )
         )
+        val installmentConfiguration = SessionInstallmentConfiguration(
+            installmentOptions = installmentOptions,
+            showInstallmentAmount = false
+        )
+        val cardConfiguration = getCardConfigurationBuilder()
+            .setInstallmentConfigurations(
+                InstallmentConfiguration(
+                    defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
+                        maxInstallments = 3,
+                        includeRevolving = true
+                    )
+                )
+            )
+            .build()
+
         val mapper = InstallmentsParamsMapper()
 
         val params = CardComponentParamsMapper(mapper, null, null).mapToParamsDefault(
@@ -341,14 +347,18 @@ internal class CardComponentParamsMapperTest {
             PaymentMethod(),
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = installmentOptions,
+                installmentConfiguration = installmentConfiguration,
                 amount = null,
                 returnUrl = "",
             )
         )
 
         val expected = getCardComponentParams(
-            installmentParams = mapper.mapToInstallmentParams(installmentOptions)
+            installmentParams = mapper.mapToInstallmentParams(
+                installmentConfiguration = installmentConfiguration,
+                amount = cardConfiguration.amount,
+                shopperLocale = cardConfiguration.shopperLocale
+            )
         )
 
         assertEquals(expected, params)
@@ -375,7 +385,11 @@ internal class CardComponentParamsMapperTest {
         )
 
         val expected = getCardComponentParams(
-            installmentParams = mapper.mapToInstallmentParams(installmentConfiguration)
+            installmentParams = mapper.mapToInstallmentParams(
+                installmentConfiguration = installmentConfiguration,
+                amount = cardConfiguration.amount,
+                shopperLocale = cardConfiguration.shopperLocale
+            )
         )
 
         assertEquals(expected, params)
@@ -419,7 +433,7 @@ internal class CardComponentParamsMapperTest {
             PaymentMethod(),
             sessionParams = SessionParams(
                 enableStoreDetails = null,
-                installmentOptions = null,
+                installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
             )
@@ -451,12 +465,12 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands: List<CardBrand> = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
         shopperReference: String? = null,
         isStorePaymentFieldVisible: Boolean = true,
-        isHideCvc: Boolean = false,
-        isHideCvcStoredCard: Boolean = false,
         socialSecurityNumberVisibility: SocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
         kcpAuthVisibility: KCPAuthVisibility = KCPAuthVisibility.HIDE,
         installmentParams: InstallmentParams? = null,
         addressParams: AddressParams = AddressParams.None,
+        cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
+        storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
     ) = CardComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,
@@ -468,13 +482,13 @@ internal class CardComponentParamsMapperTest {
         supportedCardBrands = supportedCardBrands,
         shopperReference = shopperReference,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
-        isHideCvc = isHideCvc,
-        isHideCvcStoredCard = isHideCvcStoredCard,
         socialSecurityNumberVisibility = socialSecurityNumberVisibility,
         kcpAuthVisibility = kcpAuthVisibility,
         installmentParams = installmentParams,
         addressParams = addressParams,
-        amount = amount
+        amount = amount,
+        cvcVisibility = cvcVisibility,
+        storedCVCVisibility = storedCVCVisibility,
     )
 
     companion object {
