@@ -568,8 +568,8 @@ internal class StoredCardDelegateTest(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
-            shouldDisplayAddressLookupError = false,
-            addressLookupOptions = emptyList() // TODO address lookup
+            addressLookupState = null,
+            addressLookupOptions = emptyList(), // TODO address lookup
         )
     }
 

@@ -31,4 +31,13 @@ data class AddressInputModel(
         apartmentSuite = ""
         city = ""
     }
+
+    val isEmpty
+        get() = postalCode.isEmpty() &&
+            street.isEmpty() &&
+            stateOrProvince.isEmpty() &&
+            houseNumberOrName.isEmpty() &&
+            apartmentSuite.isEmpty() &&
+            city.isEmpty() &&
+            country.isEmpty()
 }

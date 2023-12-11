@@ -43,8 +43,8 @@ data class CardOutputData(
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
     val isCardListVisible: Boolean,
-    val shouldDisplayAddressLookupError: Boolean,
-    val addressLookupOptions: List<LookupAddress>
+    val addressLookupState: AddressLookupState?,
+    val addressLookupOptions: List<LookupAddress>,
 ) : OutputData {
 
     override val isValid: Boolean

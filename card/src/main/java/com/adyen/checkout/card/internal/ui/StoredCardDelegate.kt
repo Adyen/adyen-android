@@ -232,7 +232,7 @@ internal class StoredCardDelegate(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
-            shouldDisplayAddressLookupError = false,
+            addressLookupState = null,
             addressLookupOptions = emptyList()
         )
     }

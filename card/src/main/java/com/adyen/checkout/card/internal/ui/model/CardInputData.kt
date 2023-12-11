@@ -22,7 +22,7 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
-    var addressLookupQuery: String = "",
+    var addressLookupInputData: AddressLookupInputData = AddressLookupInputData(),
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
     var selectedCardIndex: Int = -1,

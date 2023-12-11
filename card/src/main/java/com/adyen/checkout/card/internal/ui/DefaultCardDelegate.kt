@@ -21,6 +21,7 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.LookupAddress
+import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
@@ -337,9 +338,6 @@ class DefaultCardDelegate(
             updatedStateOptions,
         )
 
-        val shouldDisplayAddressLookupError =
-            addressLookupOptions.isEmpty() && inputData.addressLookupQuery.isNotEmpty()
-
         return CardOutputData(
             cardNumberState = validateCardNumber(
                 cardNumber = inputData.cardNumber,
@@ -372,7 +370,13 @@ class DefaultCardDelegate(
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
-            shouldDisplayAddressLookupError = shouldDisplayAddressLookupError,
+            addressLookupState = makeAddressLookupState(
+                inputData.addressLookupInputData.query,
+                addressLookupOptions,
+                inputData.address,
+                inputData.addressLookupInputData.isManualEntryMode,
+                inputData.addressLookupInputData.isLoading,
+            ),
             addressLookupOptions = addressLookupOptions,
         )
     }
@@ -806,6 +810,30 @@ class DefaultCardDelegate(
         }?.cardBrand?.txVariant
     }
 
+    private fun makeAddressLookupState(
+        query: String,
+        addressLookupOptions: List<LookupAddress>,
+        selectedAddress: AddressInputModel,
+        isManualEntryMode: Boolean,
+        isLoading: Boolean
+    ): AddressLookupState? {
+        return if (componentParams.addressParams is AddressParams.Lookup) {
+            when {
+                query.isEmpty() && selectedAddress.isEmpty && !isManualEntryMode -> AddressLookupState.Initial
+                isLoading -> AddressLookupState.Loading
+                query.isNotEmpty() && addressLookupOptions.isEmpty() -> AddressLookupState.Error
+                query.isNotEmpty() && addressLookupOptions.isNotEmpty() ->
+                    AddressLookupState.SearchResult(addressLookupOptions)
+
+                !selectedAddress.isEmpty -> AddressLookupState.Form
+                isManualEntryMode -> AddressLookupState.Form
+                else -> throw CheckoutException("Illegal state")
+            }
+        } else {
+            null
+        }
+    }
+
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
@@ -823,6 +851,9 @@ class DefaultCardDelegate(
     }
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        updateInputData {
+            addressLookupInputData.isLoading = false
+        }
         updateOutputData(addressLookupOptions = options)
         Logger.d(TAG, "update address lookup options $options")
     }

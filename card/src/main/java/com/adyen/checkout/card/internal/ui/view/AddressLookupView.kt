@@ -19,7 +19,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.AddressLookupViewBinding
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.CardDelegate
-import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -29,6 +29,7 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
@@ -65,6 +66,10 @@ internal class AddressLookupView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
+        cardDelegate.updateInputData {
+            addressLookupInputData.reset()
+        }
+
         observeDelegate(delegate, coroutineScope)
 
         initAddressLookupQuery()
@@ -82,13 +87,14 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
+            .mapNotNull { it.addressLookupState }
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutAddressLookupQuery.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_AddressLookupQuery,
+            R.style.AdyenCheckout_Card_AddressLookup_Query,
             localizedContext
         )
         binding.addressFormInput.initLocalizedContext(localizedContext)
@@ -98,7 +104,8 @@ internal class AddressLookupView @JvmOverloads constructor(
         val addressLookupQueryEditText = binding.textInputLayoutAddressLookupQuery.editText as? AdyenTextInputEditText
         addressLookupQueryEditText?.setOnChangeListener {
             cardDelegate.updateInputData {
-                addressLookupQuery = it.toString()
+                addressLookupInputData.query = it.toString()
+                addressLookupInputData.isLoading = true
                 cardDelegate.onAddressQueryChanged(it.toString())
                 binding.textInputLayoutAddressLookupQuery.hideError()
             }
@@ -129,30 +136,73 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
-            binding.textViewManualEntryError.isVisible = false
-            binding.textViewError.isVisible = false
-            binding.addressFormInput.isVisible = true
+            binding.editTextAddressLookupQuery.text = null
+            cardDelegate.updateInputData {
+                addressLookupInputData.isManualEntryMode = true
+            }
         }
     }
 
     private fun initManualEntryInitialTextView() {
         binding.textViewManualEntryInitial.setOnClickListener {
-            binding.textViewManualEntryInitial.isVisible = false
-            binding.addressFormInput.isVisible = true
+            cardDelegate.updateInputData {
+                binding.editTextAddressLookupQuery.text = null
+                addressLookupInputData.isManualEntryMode = true
+            }
         }
     }
 
-    private fun outputDataChanged(outputData: CardOutputData) {
-        setAddressOptions(outputData.addressLookupOptions, outputData.shouldDisplayAddressLookupError)
+    private fun outputDataChanged(addressLookupState: AddressLookupState) {
+        when (addressLookupState) {
+            AddressLookupState.Error -> {
+                binding.recyclerViewAddressLookupOptions.isVisible = false
+                binding.textViewManualEntryInitial.isVisible = false
+                binding.textViewError.isVisible = true
+                binding.textViewManualEntryError.isVisible = true
+                binding.addressFormInput.isVisible = false
+                binding.progressBar.isVisible = false
+            }
+
+            AddressLookupState.Initial -> {
+                binding.recyclerViewAddressLookupOptions.isVisible = false
+                binding.textViewManualEntryInitial.isVisible = true
+                binding.textViewError.isVisible = false
+                binding.textViewManualEntryError.isVisible = false
+                binding.addressFormInput.isVisible = false
+                binding.progressBar.isVisible = false
+            }
+
+            AddressLookupState.Loading -> {
+                binding.recyclerViewAddressLookupOptions.isVisible = false
+                binding.textViewManualEntryInitial.isVisible = false
+                binding.textViewError.isVisible = false
+                binding.textViewManualEntryError.isVisible = false
+                binding.addressFormInput.isVisible = false
+                binding.progressBar.isVisible = true
+            }
+
+            AddressLookupState.Form -> {
+                binding.recyclerViewAddressLookupOptions.isVisible = false
+                binding.textViewManualEntryInitial.isVisible = false
+                binding.textViewError.isVisible = false
+                binding.textViewManualEntryError.isVisible = false
+                binding.addressFormInput.isVisible = true
+                binding.progressBar.isVisible = false
+            }
+
+            is AddressLookupState.SearchResult -> {
+                binding.recyclerViewAddressLookupOptions.isVisible = true
+                binding.textViewManualEntryInitial.isVisible = false
+                binding.textViewError.isVisible = false
+                binding.textViewManualEntryError.isVisible = false
+                binding.addressFormInput.isVisible = false
+                binding.progressBar.isVisible = false
+                setAddressOptions(addressLookupState.options)
+            }
+        }
     }
 
-    private fun setAddressOptions(options: List<LookupAddress>, shouldShowError: Boolean) {
-        binding.textViewError.isVisible = shouldShowError
-        binding.textViewManualEntryError.isVisible = shouldShowError
-        binding.recyclerViewAddressLookupOptions.isVisible = options.isNotEmpty()
-        if (options.isNotEmpty() || shouldShowError) {
-            binding.textViewManualEntryInitial.isVisible = false
-        }
+    private fun setAddressOptions(options: List<LookupAddress>) {
         if (addressLookupOptionsAdapter == null) {
             initAddressOptions()
         }
@@ -163,8 +213,7 @@ internal class AddressLookupView @JvmOverloads constructor(
         cardDelegate.updateInputData {
             this.address = lookupAddress.address
         }
-        binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.addressFormInput.isVisible = true
+        binding.editTextAddressLookupQuery.text = null
     }
 
     override fun getView(): View = this

@@ -26,6 +26,14 @@
             style="@style/AdyenCheckout.AddressLookup" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/AdyenCheckout.Card.AddressLookup.Loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/textView_error"
         android:layout_width="wrap_content"

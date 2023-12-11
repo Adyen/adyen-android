@@ -79,8 +79,13 @@
     </style>
 
     <!-- TODO address lookuo -->
-    <style name="AdyenCheckout.Card.AddressLookupQuery" parent="AdyenCheckout.TextInputEditText">
+    <style name="AdyenCheckout.Card.AddressLookup.Query" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">Search Address</item>
+    </style>
+
+    <!-- TODO address lookuo -->
+    <style name="AdyenCheckout.Card.AddressLookup.Loading" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:tint">@color/primaryColor</item>
     </style>
 
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
