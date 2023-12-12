@@ -72,14 +72,6 @@ class DropInConfiguration private constructor(
     internal val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
 ) : Configuration {
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
-        if (availablePaymentConfigs.containsKey(paymentMethod)) {
-            @Suppress("UNCHECKED_CAST")
-            return availablePaymentConfigs[paymentMethod] as T
-        }
-        return null
-    }
-
     internal fun toCheckoutConfiguration(): CheckoutConfiguration {
         return CheckoutConfiguration(
             shopperLocale = shopperLocale,

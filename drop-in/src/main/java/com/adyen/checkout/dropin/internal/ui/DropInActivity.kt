@@ -216,7 +216,7 @@ internal class DropInActivity :
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
-            additionalData = dropInViewModel.dropInConfiguration.additionalDataForDropInService,
+            additionalData = dropInViewModel.dropInComponentParams.additionalDataForDropInService,
         )
         if (bound) {
             serviceBound = true
@@ -472,8 +472,7 @@ internal class DropInActivity :
         Logger.d(TAG, "showActionDialog")
         setLoading(false)
         hideAllScreens()
-        val actionConfiguration = dropInViewModel.dropInConfiguration.genericActionConfiguration
-        val actionFragment = ActionComponentDialogFragment.newInstance(action, actionConfiguration)
+        val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
     }
 

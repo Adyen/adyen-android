@@ -110,7 +110,7 @@ internal abstract class BaseComponentDialogFragment :
                 getComponentFor(
                     fragment = this,
                     storedPaymentMethod = storedPaymentMethod,
-                    dropInConfiguration = dropInViewModel.dropInConfiguration,
+                    checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
                     sessionDetails = dropInViewModel.sessionDetails,
@@ -122,7 +122,7 @@ internal abstract class BaseComponentDialogFragment :
                     fragment = this,
                     paymentMethod = paymentMethod,
                     sessionDetails = dropInViewModel.sessionDetails,
-                    dropInConfiguration = dropInViewModel.dropInConfiguration,
+                    checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                     amount = dropInViewModel.amount,
                     componentCallback = this,
                     analyticsRepository = dropInViewModel.analyticsRepository,

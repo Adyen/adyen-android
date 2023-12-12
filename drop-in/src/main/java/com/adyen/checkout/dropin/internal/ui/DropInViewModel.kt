@@ -29,10 +29,11 @@ import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getDropInConfiguration
+import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
+import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
@@ -61,7 +62,8 @@ internal class DropInViewModel(
 
     val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
 
-    val dropInConfiguration: DropInConfiguration = requireNotNull(checkoutConfiguration.getDropInConfiguration())
+    val dropInComponentParams: DropInComponentParams =
+        requireNotNull(checkoutConfiguration.getDropInConfiguration()).mapToParams(checkoutConfiguration.amount)
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
@@ -123,7 +125,7 @@ internal class DropInViewModel(
 
     fun shouldShowPreselectedStored(): Boolean {
         return getStoredPaymentMethods().any { it.isStoredPaymentSupported() } &&
-            dropInConfiguration.showPreselectedStoredPaymentMethod
+            dropInComponentParams.showPreselectedStoredPaymentMethod
     }
 
     fun getPreselectedStoredPaymentMethod(): StoredPaymentMethod {
@@ -137,7 +139,7 @@ internal class DropInViewModel(
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
-        if (!dropInConfiguration.skipListWhenSinglePaymentMethod) return false
+        if (!dropInComponentParams.skipListWhenSinglePaymentMethod) return false
 
         val noStored = getStoredPaymentMethods().isEmpty()
         val singlePm = getPaymentMethods().size == 1
@@ -155,7 +157,7 @@ internal class DropInViewModel(
     }
 
     private fun getInitialAmount(): Amount? {
-        return sessionDetails?.amount ?: dropInConfiguration.amount
+        return sessionDetails?.amount ?: dropInComponentParams.amount
     }
 
     fun onCreated() {
@@ -172,8 +174,8 @@ internal class DropInViewModel(
 
         val event = DropInActivityEvent.SessionServiceConnected(
             sessionModel = sessionModel,
-            clientKey = dropInConfiguration.clientKey,
-            environment = dropInConfiguration.environment,
+            clientKey = dropInComponentParams.clientKey,
+            environment = dropInComponentParams.environment,
             isFlowTakenOver = isSessionsFlowTakenOver,
         )
         sendEvent(event)
@@ -293,7 +295,7 @@ internal class DropInViewModel(
         return GiftCardPaymentConfirmationData(
             amountPaid = giftCardBalanceStatus.amountPaid,
             remainingBalance = giftCardBalanceStatus.remainingBalance,
-            shopperLocale = dropInConfiguration.shopperLocale,
+            shopperLocale = dropInComponentParams.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty(),
         )
@@ -381,7 +383,7 @@ internal class DropInViewModel(
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
         if (orderResponse == null) return null
 
-        return orderStatusRepository.getOrderStatus(dropInConfiguration, orderResponse.orderData)
+        return orderStatusRepository.getOrderStatus(dropInComponentParams.clientKey, orderResponse.orderData)
             .fold(
                 onSuccess = { statusResponse ->
                     OrderModel(

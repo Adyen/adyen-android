@@ -17,9 +17,9 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.test.TestDispatcherExtension
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -31,11 +31,11 @@ import org.junit.jupiter.api.fail
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class PreselectedStoredPaymentViewModelTest {
     private val storedPaymentMethod = StoredPaymentMethod()
-    private val dropInConfiguration = DropInConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+    private val dropInComponentParams =
+        DropInConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build().mapToParams(Amount())
 
     private lateinit var viewModel: PreselectedStoredPaymentViewModel
 
@@ -44,24 +44,25 @@ internal class PreselectedStoredPaymentViewModelTest {
         viewModel = PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
             TEST_AMOUNT,
-            dropInConfiguration,
+            dropInComponentParams,
         )
     }
 
     @Test
     fun `when view model is initialized then uiStateFlow has a matching initial value`() = runTest {
-        val dropInConfiguration = DropInConfiguration.Builder(
+        val dropInComponentParams = DropInConfiguration.Builder(
             Locale.US,
             Environment.TEST,
-            TEST_CLIENT_KEY
+            TEST_CLIENT_KEY,
         )
             .setEnableRemovingStoredPaymentMethods(true)
             .build()
+            .mapToParams(Amount())
 
         viewModel = PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
             TEST_AMOUNT,
-            dropInConfiguration,
+            dropInComponentParams,
         )
 
         viewModel.uiStateFlow.test {

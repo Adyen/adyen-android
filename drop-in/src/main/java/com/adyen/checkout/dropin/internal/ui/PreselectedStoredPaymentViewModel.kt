@@ -17,8 +17,8 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
 import kotlinx.coroutines.channels.Channel
@@ -30,7 +30,7 @@ import java.util.Locale
 internal class PreselectedStoredPaymentViewModel(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val amount: Amount?,
-    private val dropInConfiguration: DropInConfiguration,
+    private val dropInComponentParams: DropInComponentParams,
 ) : ViewModel(), ComponentCallback<PaymentComponentState<*>> {
 
     private val _uiStateFlow = MutableStateFlow(getInitialUIState())
@@ -43,12 +43,12 @@ internal class PreselectedStoredPaymentViewModel(
 
     private fun getInitialUIState(): PreselectedStoredState {
         val storedPaymentMethodModel = storedPaymentMethod.mapStoredModel(
-            dropInConfiguration.isRemovingStoredPaymentMethodsEnabled,
-            dropInConfiguration.environment,
+            dropInComponentParams.isRemovingStoredPaymentMethodsEnabled,
+            dropInComponentParams.environment,
         )
         return PreselectedStoredState(
             storedPaymentMethodModel = storedPaymentMethodModel,
-            buttonState = ButtonState.ContinueButton()
+            buttonState = ButtonState.ContinueButton(),
         )
     }
 
@@ -77,7 +77,7 @@ internal class PreselectedStoredPaymentViewModel(
             ButtonState.ContinueButton()
         } else {
             // component does not require user input -> treat it as a normal Pay button
-            ButtonState.PayButton(amount, dropInConfiguration.shopperLocale)
+            ButtonState.PayButton(amount, dropInComponentParams.shopperLocale)
         }
     }
 

@@ -9,7 +9,6 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusRequest
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -22,7 +21,7 @@ class OrderStatusRepository(
 ) {
 
     suspend fun getOrderStatus(
-        configuration: Configuration,
+        clientKey: String,
         orderData: String
     ): Result<OrderStatusResponse> = runSuspendCatching {
         Logger.d(TAG, "Getting order status")
@@ -30,7 +29,7 @@ class OrderStatusRepository(
         val request = OrderStatusRequest(orderData)
         orderStatusService.getOrderStatus(
             request,
-            configuration.clientKey
+            clientKey
         )
     }
 
