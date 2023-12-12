@@ -38,4 +38,8 @@
 
     <style name="AppTheme" parent="MyAppTheme" />
 
+    <style name="GooglePayButton">
+        <item name="buttonTheme">dark</item>
+    </style>
+
 </resources>

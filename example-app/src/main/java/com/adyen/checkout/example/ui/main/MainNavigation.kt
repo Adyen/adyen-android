@@ -30,6 +30,8 @@ internal sealed class MainNavigation {
 
     object CardWithSessionTakenOver : MainNavigation()
 
+    object GooglePay : MainNavigation()
+
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val dropInConfiguration: DropInConfiguration
