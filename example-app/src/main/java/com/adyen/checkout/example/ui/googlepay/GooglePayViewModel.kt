@@ -23,6 +23,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,9 +42,12 @@ internal class GooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
     ComponentCallback<GooglePayComponentState>,
     ComponentAvailableCallback {
+
+    private val googlePayConfiguration = checkoutConfigurationProvider.getGooglePayConfiguration()
 
     private val _googleComponentDataFlow = MutableStateFlow<GooglePayComponentData?>(null)
     val googleComponentDataFlow: Flow<GooglePayComponentData> = _googleComponentDataFlow.filterNotNull()
@@ -67,7 +71,7 @@ internal class GooglePayViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val paymentMethod = paymentMethodResponse
@@ -77,9 +81,19 @@ internal class GooglePayViewModel @Inject constructor(
         if (paymentMethod == null) {
             _viewState.emit(GooglePayViewState.Error(R.string.error_dialog_title))
         } else {
-            _events.emit(GooglePayEvent.CheckAvailability(paymentMethod, this@GooglePayViewModel))
+            _events.emit(
+                GooglePayEvent.CheckAvailability(
+                    paymentMethod,
+                    googlePayConfiguration,
+                    this@GooglePayViewModel,
+                ),
+            )
             _googleComponentDataFlow.emit(
-                GooglePayComponentData(paymentMethod, this@GooglePayViewModel)
+                GooglePayComponentData(
+                    paymentMethod,
+                    googlePayConfiguration,
+                    this@GooglePayViewModel,
+                ),
             )
         }
     }

@@ -20,8 +20,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.components.core.ComponentAvailableCallback
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.example.databinding.FragmentGooglePayBinding
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
@@ -79,12 +77,14 @@ class GooglePayFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupGooglePayComponent(googlePayComponentData: GooglePayComponentData) {
-        val googlePayComponent = GooglePayComponent.PROVIDER.get(
-            fragment = this,
-            paymentMethod = googlePayComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getGooglePayConfiguration(),
-            callback = googlePayComponentData.callback,
-        )
+        val googlePayComponent = with(googlePayComponentData) {
+            GooglePayComponent.PROVIDER.get(
+                fragment = this@GooglePayFragment,
+                paymentMethod = paymentMethod,
+                configuration = googlePayConfiguration,
+                callback = callback,
+            )
+        }
 
         this.googlePayComponent = googlePayComponent
 
@@ -128,19 +128,21 @@ class GooglePayFragment : BottomSheetDialogFragment() {
 
     private fun onEvent(event: GooglePayEvent) {
         when (event) {
-            is GooglePayEvent.CheckAvailability -> checkAvailability(event.paymentMethod, event.callback)
+            is GooglePayEvent.CheckAvailability -> checkAvailability(event)
             is GooglePayEvent.AdditionalAction -> googlePayComponent?.handleAction(event.action, requireActivity())
             is GooglePayEvent.PaymentResult -> onPaymentResult(event.result)
         }
     }
 
-    private fun checkAvailability(paymentMethod: PaymentMethod, callback: ComponentAvailableCallback) {
-        GooglePayComponent.PROVIDER.isAvailable(
-            applicationContext = requireActivity().application,
-            paymentMethod = paymentMethod,
-            configuration = checkoutConfigurationProvider.getGooglePayConfiguration(),
-            callback = callback,
-        )
+    private fun checkAvailability(event: GooglePayEvent.CheckAvailability) {
+        with(event) {
+            GooglePayComponent.PROVIDER.isAvailable(
+                applicationContext = requireActivity().application,
+                paymentMethod = paymentMethod,
+                configuration = googlePayConfiguration,
+                callback = callback,
+            )
+        }
     }
 
     private fun onPaymentResult(result: String) {
