@@ -223,6 +223,8 @@ class MainActivity : AppCompatActivity() {
         binding.switchSessions.isChecked = isChecked
     }
 
+    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GooglePayFragment.ACTIVITY_RESULT_CODE) {
