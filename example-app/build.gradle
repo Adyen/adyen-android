@@ -94,6 +94,8 @@ dependencies {
     implementation libraries.hilt
     kapt libraries.hiltCompiler
 
+    implementation libraries.googlePay.composeButton
+
     debugImplementation libraries.leakCanary
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'

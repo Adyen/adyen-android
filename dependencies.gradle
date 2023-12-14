@@ -52,6 +52,7 @@ ext {
 
     // External Dependencies
     cash_app_pay_version = '2.3.0'
+    google_pay_compose_button_version = '0.1.3'
     okhttp_version = "4.12.0"
     play_services_wallet_version = '19.2.1'
     wechat_pay_version = "6.8.0"
@@ -78,8 +79,8 @@ ext {
     uiautomator_version = "2.2.0"
 
     libraries = [
-        adyen3ds2         : "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version",
-        androidx          : [
+        adyen3ds2       : "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version",
+        androidx        : [
             annotation      : "androidx.annotation:annotation:$annotation_version",
             appcompat       : "androidx.appcompat:appcompat:$appcompat_version",
             browser         : "androidx.browser:browser:$browser_version",
@@ -92,8 +93,8 @@ ext {
             preference      : "androidx.preference:preference-ktx:$preference_version",
             recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
         ],
-        cashAppPay        : "app.cash.paykit:core:$cash_app_pay_version",
-        compose           : [
+        cashAppPay      : "app.cash.paykit:core:$cash_app_pay_version",
+        compose         : [
             activity : "androidx.activity:activity-compose:$compose_activity_version",
             bom      : "androidx.compose:compose-bom:$compose_bom_version",
             hilt     : "androidx.hilt:hilt-navigation-compose:$compose_hilt_version",
@@ -105,26 +106,29 @@ ext {
             ],
             viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
-        hilt              : "com.google.dagger:hilt-android:$hilt_version",
-        hiltCompiler      : "com.google.dagger:hilt-compiler:$hilt_version",
-        kotlinCoroutines  : [
+        googlePay       : [
+            composeButton     : "com.google.pay.button:compose-pay-button:$google_pay_compose_button_version",
+            playServicesWallet: "com.google.android.gms:play-services-wallet:$play_services_wallet_version",
+        ],
+        hilt            : "com.google.dagger:hilt-android:$hilt_version",
+        hiltCompiler    : "com.google.dagger:hilt-compiler:$hilt_version",
+        kotlinCoroutines: [
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version",
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
         ],
-        leakCanary        : "com.squareup.leakcanary:leakcanary-android:$leak_canary_version",
-        material          : "com.google.android.material:material:$material_version",
-        moshi             : [
+        leakCanary      : "com.squareup.leakcanary:leakcanary-android:$leak_canary_version",
+        material        : "com.google.android.material:material:$material_version",
+        moshi           : [
             "com.squareup.moshi:moshi-adapters:$moshi_adapters_version",
             "com.squareup.moshi:moshi-kotlin:$moshi_kotlin_adapter_version"
         ],
-        okhttp            : "com.squareup.okhttp3:okhttp:$okhttp_version",
-        okhttpLogging     : "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version",
-        playServicesWallet: "com.google.android.gms:play-services-wallet:$play_services_wallet_version",
-        retrofit          : [
+        okhttp          : "com.squareup.okhttp3:okhttp:$okhttp_version",
+        okhttpLogging   : "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version",
+        retrofit        : [
             "com.squareup.retrofit2:retrofit:$retrofit2_version",
             "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
         ],
-        wechat            : "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
+        wechat          : "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
     ]
 
     testLibraries = [
