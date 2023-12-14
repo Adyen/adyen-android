@@ -128,14 +128,14 @@ class GooglePayFragment : BottomSheetDialogFragment() {
 
     private fun onEvent(event: GooglePayEvent) {
         when (event) {
-            is GooglePayEvent.CheckAvailability -> checkAvailability(event)
+            is GooglePayEvent.CheckAvailability -> checkAvailability(event.googlePayAvailabilityData)
             is GooglePayEvent.AdditionalAction -> googlePayComponent?.handleAction(event.action, requireActivity())
             is GooglePayEvent.PaymentResult -> onPaymentResult(event.result)
         }
     }
 
-    private fun checkAvailability(event: GooglePayEvent.CheckAvailability) {
-        with(event) {
+    private fun checkAvailability(googlePayAvailabilityData: GooglePayAvailabilityData) {
+        with(googlePayAvailabilityData) {
             GooglePayComponent.PROVIDER.isAvailable(
                 applicationContext = requireActivity().application,
                 paymentMethod = paymentMethod,

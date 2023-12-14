@@ -8,18 +8,11 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
-import com.adyen.checkout.components.core.ComponentAvailableCallback
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 
 internal sealed class GooglePayEvent {
 
-    data class CheckAvailability(
-        val paymentMethod: PaymentMethod,
-        val googlePayConfiguration: GooglePayConfiguration,
-        val callback: ComponentAvailableCallback
-    ) : GooglePayEvent()
+    data class CheckAvailability(val googlePayAvailabilityData: GooglePayAvailabilityData) : GooglePayEvent()
 
     data class PaymentResult(val result: String) : GooglePayEvent()
 

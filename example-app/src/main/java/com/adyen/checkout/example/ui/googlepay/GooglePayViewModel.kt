@@ -83,9 +83,11 @@ internal class GooglePayViewModel @Inject constructor(
         } else {
             _events.emit(
                 GooglePayEvent.CheckAvailability(
-                    paymentMethod,
-                    googlePayConfiguration,
-                    this@GooglePayViewModel,
+                    GooglePayAvailabilityData(
+                        paymentMethod,
+                        googlePayConfiguration,
+                        this@GooglePayViewModel,
+                    ),
                 ),
             )
             _googleComponentDataFlow.emit(
