@@ -84,7 +84,7 @@ internal class MainViewModel @Inject constructor(
             is ComponentItem.Entry.Blik -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Blik))
             is ComponentItem.Entry.Card -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.Card))
             is ComponentItem.Entry.Klarna -> _eventFlow.tryEmit(
-                MainEvent.NavigateTo(MainNavigation.Instant(PAYMENT_METHOD_KLARNA))
+                MainEvent.NavigateTo(MainNavigation.Instant(PAYMENT_METHOD_KLARNA)),
             )
 
             is ComponentItem.Entry.PayPal ->
@@ -92,7 +92,7 @@ internal class MainViewModel @Inject constructor(
 
             is ComponentItem.Entry.Instant ->
                 _eventFlow.tryEmit(
-                    MainEvent.NavigateTo(MainNavigation.Instant(keyValueStorage.getInstantPaymentMethodType()))
+                    MainEvent.NavigateTo(MainNavigation.Instant(keyValueStorage.getInstantPaymentMethodType())),
                 )
 
             is ComponentItem.Entry.CardWithSession ->
@@ -106,6 +106,10 @@ internal class MainViewModel @Inject constructor(
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GiftCardWithSession))
 
             is ComponentItem.Entry.GooglePay -> _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GooglePay))
+            is ComponentItem.Entry.GooglePayWithSession -> {
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GooglePayWithSession))
+            }
+
             is ComponentItem.Entry.DropIn -> startDropInFlow()
             is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
             is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
@@ -160,7 +164,7 @@ internal class MainViewModel @Inject constructor(
             countryCode = keyValueStorage.getCountry(),
             shopperLocale = keyValueStorage.getShopperLocale(),
             splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-        )
+        ),
     )
 
     private suspend fun getSession(dropInConfiguration: DropInConfiguration): CheckoutSession? {
@@ -178,8 +182,8 @@ internal class MainViewModel @Inject constructor(
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
-            )
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            ),
         ) ?: return null
 
         return getCheckoutSession(sessionModel, dropInConfiguration)

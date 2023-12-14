@@ -32,5 +32,6 @@ internal sealed class ComponentItem {
         object GiftCard : Entry(R.string.gift_card_component_entry)
         object GiftCardWithSession : Entry(R.string.gift_card_with_session_component_entry)
         object GooglePay : Entry(R.string.google_pay_component_entry)
+        object GooglePayWithSession : Entry(R.string.google_pay_with_session_component_entry)
     }
 }
