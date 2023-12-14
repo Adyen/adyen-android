@@ -10,22 +10,72 @@ package com.adyen.checkout.example.ui.googlepay.compose
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.core.view.WindowCompat
+import com.adyen.checkout.example.ui.theme.ExampleTheme
+import com.adyen.checkout.example.ui.theme.NightTheme
+import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SessionsGooglePayActivity : AppCompatActivity() {
 
+    @Inject
+    internal lateinit var nightThemeRepository: NightThemeRepository
+
+    private val sessionsGooglePayViewModel: SessionsGooglePayViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Helps to resize the view port when the keyboard is displayed.
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
         val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/sessions/googlepay"
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
+
+        setContent {
+            val useDarkTheme = when (nightThemeRepository.theme) {
+                NightTheme.DAY -> false
+                NightTheme.NIGHT -> true
+                NightTheme.SYSTEM -> isSystemInDarkTheme()
+            }
+            ExampleTheme(useDarkTheme) {
+                SessionsGooglePayScreen(
+                    useDarkTheme = useDarkTheme,
+                    onBackPressed = { onBackPressedDispatcher.onBackPressed() },
+                    viewModel = sessionsGooglePayViewModel,
+                )
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        val data = intent.data
+        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
+            sessionsGooglePayViewModel.onNewIntent(intent)
+        }
+    }
+
+    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ACTIVITY_RESULT_CODE) {
+            sessionsGooglePayViewModel.onActivityResult(resultCode, data)
+        }
     }
 
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val ACTIVITY_RESULT_CODE = 1
     }
 }
