@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.view
 
 import android.content.Context
+import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.AddressLookupViewBinding
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -103,12 +105,7 @@ internal class AddressLookupView @JvmOverloads constructor(
     private fun initAddressLookupQuery() {
         val addressLookupQueryEditText = binding.textInputLayoutAddressLookupQuery.editText as? AdyenTextInputEditText
         addressLookupQueryEditText?.setOnChangeListener {
-            cardDelegate.updateInputData {
-                addressLookupInputData.query = it.toString()
-                addressLookupInputData.isLoading = true
-                cardDelegate.onAddressQueryChanged(it.toString())
-                binding.textInputLayoutAddressLookupQuery.hideError()
-            }
+            onQueryChanged(it)
         }
 
         addressLookupQueryEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -136,19 +133,15 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
-            binding.editTextAddressLookupQuery.text = null
-            cardDelegate.updateInputData {
-                addressLookupInputData.isManualEntryMode = true
-            }
+            clearQuery()
+            cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
         }
     }
 
     private fun initManualEntryInitialTextView() {
         binding.textViewManualEntryInitial.setOnClickListener {
-            cardDelegate.updateInputData {
-                binding.editTextAddressLookupQuery.text = null
-                addressLookupInputData.isManualEntryMode = true
-            }
+            clearQuery()
+            cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
         }
     }
 
@@ -181,13 +174,20 @@ internal class AddressLookupView @JvmOverloads constructor(
                 binding.progressBar.isVisible = true
             }
 
-            AddressLookupState.Form -> {
+            is AddressLookupState.Form -> {
                 binding.recyclerViewAddressLookupOptions.isVisible = false
                 binding.textViewManualEntryInitial.isVisible = false
                 binding.textViewError.isVisible = false
                 binding.textViewManualEntryError.isVisible = false
                 binding.addressFormInput.isVisible = true
                 binding.progressBar.isVisible = false
+                cardDelegate.updateInputData {
+                    if (addressLookupState.selectedAddress == null) {
+                        address.resetAll()
+                    } else {
+                        address.set(addressLookupState.selectedAddress)
+                    }
+                }
             }
 
             is AddressLookupState.SearchResult -> {
@@ -202,6 +202,17 @@ internal class AddressLookupView @JvmOverloads constructor(
         }
     }
 
+    private fun clearQuery() {
+        binding.editTextAddressLookupQuery.setOnChangeListener(null)
+        binding.editTextAddressLookupQuery.text = null
+        binding.editTextAddressLookupQuery.setOnChangeListener(::onQueryChanged)
+    }
+
+    private fun onQueryChanged(editable: Editable) {
+        cardDelegate.onAddressQueryChanged(editable.toString())
+        binding.textInputLayoutAddressLookupQuery.hideError()
+    }
+
     private fun setAddressOptions(options: List<LookupAddress>) {
         if (addressLookupOptionsAdapter == null) {
             initAddressOptions()
@@ -209,11 +220,11 @@ internal class AddressLookupView @JvmOverloads constructor(
         addressLookupOptionsAdapter?.submitList(options)
     }
 
-    private fun onAddressSelected(lookupAddress: LookupAddress) {
-        cardDelegate.updateInputData {
-            this.address = lookupAddress.address
-        }
-        binding.editTextAddressLookupQuery.text = null
+    private fun onAddressSelected(lookupAddress: LookupAddress): Boolean {
+        val isLoading = cardDelegate.onAddressLookupCompleted(lookupAddress.id)
+        cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.OptionSelected(lookupAddress, isLoading))
+        clearQuery()
+        return isLoading
     }
 
     override fun getView(): View = this

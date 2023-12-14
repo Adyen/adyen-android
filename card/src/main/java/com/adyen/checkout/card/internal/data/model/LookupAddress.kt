@@ -12,7 +12,8 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
 data class LookupAddress(
     val id: String,
-    val address: AddressInputModel
+    val address: AddressInputModel,
+    val isLoading: Boolean = false
 ) {
     override fun toString(): String {
         return listOf(

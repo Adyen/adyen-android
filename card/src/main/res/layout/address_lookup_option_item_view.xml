@@ -6,7 +6,8 @@
   ~ Created by ozgur on 29/11/2023.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,6 +22,8 @@
         android:layout_marginStart="@dimen/standard_half_margin"
         android:layout_marginEnd="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_quarter_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Adyen" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -31,12 +34,28 @@
         android:layout_marginStart="@dimen/standard_half_margin"
         android:layout_marginEnd="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_margin"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressHeader"
         tools:text="Simon Carmiggeltstraat 6 - 50, 1011 DJ Amsterdam" />
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:alpha="0.8"
-        android:background="@color/black" />
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressDescription" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/AdyenCheckout.Card.AddressLookup.Loading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

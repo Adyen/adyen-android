@@ -706,6 +706,10 @@ internal class DropInActivity :
         dropInService?.onAddressLookupQueryChanged(query)
     }
 
+    override fun onAddressLookupCompletion(id: String): Boolean {
+        return dropInService?.onAddressLookupCompletion(id) ?: false
+    }
+
     private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {
         AlertDialog.Builder(this)
             .setTitle(title)

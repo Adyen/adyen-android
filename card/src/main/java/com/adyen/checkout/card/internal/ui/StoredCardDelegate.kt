@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
@@ -17,6 +18,8 @@ import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.LookupAddress
+import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
+import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -116,6 +119,8 @@ internal class StoredCardDelegate(
     override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    override val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
 
     override val outputData: CardOutputData get() = _outputDataFlow.value
 
@@ -232,7 +237,7 @@ internal class StoredCardDelegate(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
-            addressLookupState = null,
+            addressLookupState = AddressLookupState.Initial,
             addressLookupOptions = emptyList()
         )
     }
@@ -313,6 +318,8 @@ internal class StoredCardDelegate(
 
     // TODO address lookup not used
     override fun onAddressQueryChanged(query: String) = Unit
+
+    override fun onAddressLookupCompleted(id: String) = false
 
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
@@ -431,10 +438,13 @@ internal class StoredCardDelegate(
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
 
     // TODO address lookup not used
-    override fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) = Unit
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) = Unit
 
     // TODO address lookup not used
     override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit
+
+    // TODO address lookup not used
+    override fun setAddressLookupResult(lookupAddress: LookupAddress) = Unit
 
     override fun onCleared() {
         removeObserver()

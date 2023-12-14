@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ import com.adyen.checkout.card.databinding.AddressLookupOptionItemViewBinding
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 
 internal class AddressLookupOptionsAdapter(
-    private val onItemClicked: (LookupAddress) -> Unit
+    private val onItemClicked: (LookupAddress) -> Boolean
 ) :
     ListAdapter<LookupAddress, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
         AddressLookupOptionDiffCallback
@@ -34,12 +35,13 @@ internal class AddressLookupOptionsAdapter(
 
     internal class AddressLookupOptionViewHolder(
         private val binding: AddressLookupOptionItemViewBinding,
-        private val onItemClicked: (LookupAddress) -> Unit
+        private val onItemClicked: (LookupAddress) -> Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(lookupAddress: LookupAddress) {
             binding.root.setOnClickListener {
                 onItemClicked(lookupAddress)
             }
+            binding.progressBar.isVisible = lookupAddress.isLoading
             binding.textViewAddressHeader.text = lookupAddress.title
             binding.textViewAddressDescription.text = lookupAddress.subtitle
         }

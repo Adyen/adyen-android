@@ -151,6 +151,10 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         onAddressLookupQuery(query)
     }
 
+    final override fun onAddressLookupCompletion(id: String): Boolean {
+        return onAddressLookupCompleted(id)
+    }
+
     internal class DropInBinder(service: BaseDropInService) : Binder() {
 
         private val serviceRef: WeakReference<BaseDropInService> = WeakReference(service)

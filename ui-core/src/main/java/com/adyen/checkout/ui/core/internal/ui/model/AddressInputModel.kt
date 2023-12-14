@@ -17,6 +17,17 @@ data class AddressInputModel(
     var city: String = "",
     var country: String = "",
 ) {
+
+    fun set(addressInputModel: AddressInputModel) {
+        postalCode = addressInputModel.postalCode
+        street = addressInputModel.street
+        stateOrProvince = addressInputModel.stateOrProvince
+        houseNumberOrName = addressInputModel.houseNumberOrName
+        apartmentSuite = addressInputModel.apartmentSuite
+        city = addressInputModel.city
+        country = addressInputModel.country
+    }
+
     /**
      * Reset the data.
      *
@@ -24,6 +35,17 @@ data class AddressInputModel(
      * does not get reset.
      */
     fun reset() {
+        postalCode = ""
+        street = ""
+        stateOrProvince = ""
+        houseNumberOrName = ""
+        apartmentSuite = ""
+        city = ""
+    }
+
+    // TODO address lookup
+    fun resetAll() {
+        country = ""
         postalCode = ""
         street = ""
         stateOrProvince = ""

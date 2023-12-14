@@ -116,4 +116,7 @@ interface BaseDropInServiceContract {
 
     // TODO address lookup docs
     fun onAddressLookupQuery(query: String) = Unit
+
+    // TODO address lookup
+    fun onAddressLookupCompleted(id: String) = false
 }

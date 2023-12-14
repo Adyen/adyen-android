@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action
@@ -22,7 +23,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CardActivity : AppCompatActivity() {
+@Suppress("TooManyFunctions")
+class CardActivity : AppCompatActivity(), AddressLookupCallback {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -109,10 +111,7 @@ class CardActivity : AppCompatActivity() {
             Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
         }
 
-        cardComponent.setAddressLookupQueryChangedListener {
-            Log.d(TAG, "On address lookup query changed: $it")
-            cardViewModel.onAddressLookupQueryChanged(it)
-        }
+        cardComponent.setAddressLookupCallback(this)
 
         this.cardComponent = cardComponent
 
@@ -124,6 +123,7 @@ class CardActivity : AppCompatActivity() {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
             is CardEvent.AddressLookup -> onAddressLookup(event.options)
+            is CardEvent.AddressLookupResult -> onAddressLookupCompleted(event.lookupAddress)
         }
     }
 
@@ -138,6 +138,21 @@ class CardActivity : AppCompatActivity() {
 
     private fun onAddressLookup(options: List<LookupAddress>) {
         cardComponent?.updateAddressLookupOptions(options)
+    }
+
+    private fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
+        cardComponent?.setAddressLookupResult(lookupAddress)
+    }
+
+    override fun onQueryChanged(query: String) {
+        Log.d(TAG, "On address lookup query changed: $query")
+        cardViewModel.onAddressLookupQueryChanged(query)
+    }
+
+    override fun onLookupCompleted(id: String): Boolean {
+        Log.d(TAG, "on lookup completed $id")
+        cardViewModel.onAddressLookupCompleted(id)
+        return true
     }
 
     override fun onDestroy() {

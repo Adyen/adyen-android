@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
@@ -21,6 +22,7 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.data.model.LookupAddress
+import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -140,9 +142,12 @@ class DefaultCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
+    override val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
+    private val addressLookupEventFlow: Flow<AddressLookupEvent> = addressLookupEventChannel.receiveAsFlow()
+
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
     private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
-    private var onAddressQueryChangedListener: ((query: String) -> Unit)? = null
+    private var addressLookupCallback: AddressLookupCallback? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -159,6 +164,7 @@ class DefaultCardDelegate(
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
+            subscribeToAddressLookup()
         }
     }
 
@@ -236,6 +242,23 @@ class DefaultCardDelegate(
         requestStateList(inputData.address.country)
     }
 
+    private fun subscribeToAddressLookup() {
+        addressLookupEventFlow
+            .onEach { addressLookupEvent ->
+                val addressLookupOptions =
+                    if (addressLookupEvent is AddressLookupEvent.SearchResult) {
+                        addressLookupEvent.addressLookupOptions
+                    } else {
+                        outputData.addressLookupOptions
+                    }
+                updateOutputData(
+                    addressLookupState = makeAddressLookupState(addressLookupOptions, addressLookupEvent),
+                    addressLookupOptions = addressLookupOptions
+                )
+            }
+            .launchIn(coroutineScope)
+    }
+
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
@@ -288,9 +311,11 @@ class DefaultCardDelegate(
         detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
         countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
         stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
-        addressLookupOptions: List<LookupAddress> = outputData.addressLookupOptions
+        addressLookupOptions: List<LookupAddress> = outputData.addressLookupOptions,
+        addressLookupState: AddressLookupState = outputData.addressLookupState
     ) {
-        val newOutputData = createOutputData(detectedCardTypes, countryOptions, stateOptions, addressLookupOptions)
+        val newOutputData =
+            createOutputData(detectedCardTypes, countryOptions, stateOptions, addressLookupOptions, addressLookupState)
         _outputDataFlow.tryEmit(newOutputData)
         updateComponentState(newOutputData)
     }
@@ -300,7 +325,8 @@ class DefaultCardDelegate(
         detectedCardTypes: List<DetectedCardType> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-        addressLookupOptions: List<LookupAddress> = emptyList()
+        addressLookupOptions: List<LookupAddress> = emptyList(),
+        addressLookupState: AddressLookupState = AddressLookupState.Initial
     ): CardOutputData {
         Logger.v(TAG, "createOutputData")
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
@@ -370,13 +396,7 @@ class DefaultCardDelegate(
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
-            addressLookupState = makeAddressLookupState(
-                inputData.addressLookupInputData.query,
-                addressLookupOptions,
-                inputData.address,
-                inputData.addressLookupInputData.isManualEntryMode,
-                inputData.addressLookupInputData.isLoading,
-            ),
+            addressLookupState = addressLookupState,
             addressLookupOptions = addressLookupOptions,
         )
     }
@@ -489,7 +509,12 @@ class DefaultCardDelegate(
     }
 
     override fun onAddressQueryChanged(query: String) {
-        onAddressQueryChangedListener?.invoke(query)
+        addressLookupEventChannel.trySend(AddressLookupEvent.Query(query))
+        addressLookupCallback?.onQueryChanged(query)
+    }
+
+    override fun onAddressLookupCompleted(id: String): Boolean {
+        return addressLookupCallback?.onLookupCompleted(id) ?: false
     }
 
     override fun handleBackPress(): Boolean {
@@ -811,26 +836,64 @@ class DefaultCardDelegate(
     }
 
     private fun makeAddressLookupState(
-        query: String,
-        addressLookupOptions: List<LookupAddress>,
-        selectedAddress: AddressInputModel,
-        isManualEntryMode: Boolean,
-        isLoading: Boolean
-    ): AddressLookupState? {
-        return if (componentParams.addressParams is AddressParams.Lookup) {
-            when {
-                query.isEmpty() && selectedAddress.isEmpty && !isManualEntryMode -> AddressLookupState.Initial
-                isLoading -> AddressLookupState.Loading
-                query.isNotEmpty() && addressLookupOptions.isEmpty() -> AddressLookupState.Error
-                query.isNotEmpty() && addressLookupOptions.isNotEmpty() ->
-                    AddressLookupState.SearchResult(addressLookupOptions)
-
-                !selectedAddress.isEmpty -> AddressLookupState.Form
-                isManualEntryMode -> AddressLookupState.Form
-                else -> throw CheckoutException("Illegal state")
+        addressLookupOptions: List<LookupAddress> = outputData.addressLookupOptions,
+        event: AddressLookupEvent
+    ): AddressLookupState {
+        return when (event) {
+            is AddressLookupEvent.Query -> {
+                inputData.addressLookupInputData.query = event.query
+                AddressLookupState.Loading
             }
-        } else {
-            null
+
+            AddressLookupEvent.ClearQuery -> {
+                AddressLookupState.Initial
+            }
+
+            AddressLookupEvent.Manual -> {
+                if (outputData.addressLookupState is AddressLookupState.Initial ||
+                    outputData.addressLookupState is AddressLookupState.Error
+                ) {
+                    AddressLookupState.Form(null)
+                } else {
+                    outputData.addressLookupState
+                }
+            }
+
+            is AddressLookupEvent.SearchResult -> {
+                if (outputData.addressLookupState is AddressLookupState.Loading) {
+                    if (event.addressLookupOptions.isEmpty()) {
+                        AddressLookupState.Error
+                    } else {
+                        AddressLookupState.SearchResult(
+                            inputData.addressLookupInputData.query,
+                            event.addressLookupOptions
+                        )
+                    }
+                } else {
+                    outputData.addressLookupState
+                }
+            }
+
+            is AddressLookupEvent.OptionSelected -> {
+                if (outputData.addressLookupState is AddressLookupState.SearchResult) {
+                    if (event.loading) {
+                        AddressLookupState.SearchResult(
+                            inputData.addressLookupInputData.query,
+                            addressLookupOptions.map {
+                                if (it == event.lookupAddress) {
+                                    it.copy(isLoading = true)
+                                } else {
+                                    it
+                                }
+                            }
+                        )
+                    } else {
+                        AddressLookupState.Form(event.lookupAddress.address)
+                    }
+                } else {
+                    outputData.addressLookupState
+                }
+            }
         }
     }
 
@@ -846,16 +909,17 @@ class DefaultCardDelegate(
         onBinLookupListener = listener
     }
 
-    override fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) {
-        this.onAddressQueryChangedListener = listener
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+        this.addressLookupCallback = addressLookupCallback
     }
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
-        updateInputData {
-            addressLookupInputData.isLoading = false
-        }
-        updateOutputData(addressLookupOptions = options)
+        addressLookupEventChannel.trySend(AddressLookupEvent.SearchResult(options))
         Logger.d(TAG, "update address lookup options $options")
+    }
+
+    override fun setAddressLookupResult(lookupAddress: LookupAddress) {
+        addressLookupEventChannel.trySend(AddressLookupEvent.OptionSelected(lookupAddress, false))
     }
 
     override fun onCleared() {

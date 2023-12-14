@@ -79,7 +79,7 @@ object AddressValidationUtils {
         countryOptions: List<AddressListItem>,
         stateOptions: List<AddressListItem>,
     ): AddressOutputData {
-        val spec = AddressSpecification.fromString(addressInputModel.country) ?: AddressSpecification.DEFAULT
+        val spec = AddressSpecification.fromString(addressInputModel.country)
         return with(addressInputModel) {
             AddressOutputData(
                 postalCode = validateAddressField(postalCode, spec.postalCode.isRequired && !isOptional),

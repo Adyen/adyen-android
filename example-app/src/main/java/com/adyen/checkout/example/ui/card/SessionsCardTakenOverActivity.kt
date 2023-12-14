@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SessionsCardTakenOverActivity : AppCompatActivity() {
+class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -110,10 +111,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
             Log.d(TAG, "On redirect")
         }
 
-        cardComponent.setAddressLookupQueryChangedListener {
-            Log.d(TAG, "On address lookup query changed: $it")
-            cardViewModel.onAddressLookupQueryChanged(it)
-        }
+        cardComponent.setAddressLookupCallback(this)
 
         this.cardComponent = cardComponent
 
@@ -125,6 +123,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
             is CardEvent.AddressLookup -> onAddressLookup(event.options)
+            is CardEvent.AddressLookupResult -> {}
         }
     }
 
@@ -139,6 +138,11 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
 
     private fun onAddressLookup(options: List<LookupAddress>) {
         cardComponent?.updateAddressLookupOptions(options)
+    }
+
+    override fun onQueryChanged(query: String) {
+        Log.d(TAG, "On address lookup query changed: $query")
+        cardViewModel.onAddressLookupQueryChanged(query)
     }
 
     override fun onDestroy() {

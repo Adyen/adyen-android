@@ -115,13 +115,17 @@ open class CardComponent constructor(
     }
 
     // TODO address lookup
-    fun setAddressLookupQueryChangedListener(listener: ((query: String) -> Unit)?) {
-        cardDelegate.setAddressLookupQueryChangedListener(listener)
+    fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+        cardDelegate.setAddressLookupCallback(addressLookupCallback)
     }
 
     // TODO address lookup
     fun updateAddressLookupOptions(options: List<LookupAddress>) {
         cardDelegate.updateAddressLookupOptions(options)
+    }
+
+    fun setAddressLookupResult(lookupAddress: LookupAddress) {
+        cardDelegate.setAddressLookupResult(lookupAddress)
     }
 
     fun handleBackPress(): Boolean {

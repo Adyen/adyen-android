@@ -18,4 +18,6 @@ internal sealed class CardEvent {
     data class AdditionalAction(val action: Action) : CardEvent()
 
     data class AddressLookup(val options: List<LookupAddress>) : CardEvent()
+
+    data class AddressLookupResult(val lookupAddress: LookupAddress) : CardEvent()
 }

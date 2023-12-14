@@ -558,8 +558,6 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressLookup() {
-        binding.editTextAddressLookup.isClickable = false
-        binding.editTextAddressLookup.isFocusable = false
         binding.textInputLayoutAddressLookup.setOnClickListener {
             cardDelegate.startAddressLookup()
         }

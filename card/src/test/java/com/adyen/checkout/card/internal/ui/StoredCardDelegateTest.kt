@@ -22,6 +22,7 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -568,7 +569,7 @@ internal class StoredCardDelegateTest(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
-            addressLookupState = null,
+            addressLookupState = AddressLookupState.Initial,
             addressLookupOptions = emptyList(), // TODO address lookup
         )
     }

@@ -431,6 +431,11 @@ class ExampleAdvancedDropInService : DropInService() {
         addressLookupQueryFlow.tryEmit(query)
     }
 
+    override fun onAddressLookupCompleted(id: String): Boolean {
+        Log.d(TAG, "On address lookup query completion: $id")
+        return false
+    }
+
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"

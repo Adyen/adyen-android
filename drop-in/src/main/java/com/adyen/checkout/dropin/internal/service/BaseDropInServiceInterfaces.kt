@@ -30,6 +30,7 @@ internal interface BaseDropInServiceInterface {
     fun onBinValueCalled(binValue: String)
     fun onBinLookupCalled(data: List<BinLookupData>)
     fun onAddressLookupQueryChanged(query: String)
+    fun onAddressLookupCompletion(id: String): Boolean
 }
 
 internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {

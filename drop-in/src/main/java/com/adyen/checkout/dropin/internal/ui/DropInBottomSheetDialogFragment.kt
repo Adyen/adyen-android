@@ -113,5 +113,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun onBinValue(binValue: String)
         fun onBinLookup(data: List<BinLookupData>)
         fun onAddressLookupQuery(query: String)
+        fun onAddressLookupCompletion(id: String): Boolean
     }
 }

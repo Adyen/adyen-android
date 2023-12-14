@@ -28,6 +28,7 @@ import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -1289,7 +1290,7 @@ internal class DefaultCardDelegateTest(
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
-            addressLookupState = null,
+            addressLookupState = AddressLookupState.Initial,
             addressLookupOptions = emptyList(), // TODO address lookup
         )
     }

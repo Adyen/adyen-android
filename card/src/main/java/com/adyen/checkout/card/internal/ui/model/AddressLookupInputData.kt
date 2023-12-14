@@ -8,14 +8,13 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-internal data class AddressLookupInputData(
-    var query: String = "",
-    var isManualEntryMode: Boolean = false,
-    var isLoading: Boolean = false,
+import androidx.annotation.RestrictTo
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class AddressLookupInputData(
+    var query: String = ""
 ) {
     fun reset() {
         query = ""
-        isManualEntryMode = false
-        isLoading = false
     }
 }

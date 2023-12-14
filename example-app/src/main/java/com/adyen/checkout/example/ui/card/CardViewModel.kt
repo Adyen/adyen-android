@@ -19,6 +19,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,30 +61,7 @@ internal class CardViewModel @Inject constructor(
                 val options = if (query == "empty" || query.isEmpty()) {
                     emptyList()
                 } else {
-                    listOf(
-                        LookupAddress(
-                            id = query,
-                            address = AddressInputModel(
-                                country = "NL",
-                                postalCode = "1234AB",
-                                houseNumberOrName = "1HS",
-                                street = "Simon Carmiggeltstraat",
-                                stateOrProvince = "Noord-Holland",
-                                city = "Amsterdam",
-                            ),
-                        ),
-                        LookupAddress(
-                            id = query,
-                            address = AddressInputModel(
-                                country = "TR",
-                                postalCode = "12345",
-                                houseNumberOrName = "1",
-                                street = "1. Sokak",
-                                stateOrProvince = "Istanbul",
-                                city = "Istanbul",
-                            ),
-                        ),
-                    )
+                    ADDRESS_LOOKUP_OPTIONS
                 }
                 // TODO address lookup populate better data
                 _events.emit(CardEvent.AddressLookup(options))
@@ -135,6 +113,13 @@ internal class CardViewModel @Inject constructor(
     fun onAddressLookupQueryChanged(query: String) {
         viewModelScope.launch {
             addressLookupQueryFlow.emit(query)
+        }
+    }
+
+    fun onAddressLookupCompleted(id: String) {
+        viewModelScope.launch {
+            delay(ADDRESS_LOOKUP_COMPLETION_DELAY)
+            _events.emit(CardEvent.AddressLookupResult(ADDRESS_LOOKUP_OPTIONS.first { it.id == id }))
         }
     }
 
@@ -193,6 +178,31 @@ internal class CardViewModel @Inject constructor(
     }
 
     companion object {
-        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 600L
+        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
+        private const val ADDRESS_LOOKUP_COMPLETION_DELAY = 400L
+        private val ADDRESS_LOOKUP_OPTIONS = listOf(
+            LookupAddress(
+                id = "1",
+                address = AddressInputModel(
+                    country = "NL",
+                    postalCode = "1234AB",
+                    houseNumberOrName = "1HS",
+                    street = "Simon Carmiggeltstraat",
+                    stateOrProvince = "Noord-Holland",
+                    city = "Amsterdam",
+                ),
+            ),
+            LookupAddress(
+                id = "2",
+                address = AddressInputModel(
+                    country = "TR",
+                    postalCode = "12345",
+                    houseNumberOrName = "1",
+                    street = "1. Sokak",
+                    stateOrProvince = "Istanbul",
+                    city = "Istanbul",
+                ),
+            ),
+        )
     }
 }

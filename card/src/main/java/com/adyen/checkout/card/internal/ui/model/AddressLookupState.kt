@@ -8,12 +8,15 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.LookupAddress
+import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
-internal sealed class AddressLookupState {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+sealed class AddressLookupState {
     object Initial : AddressLookupState()
     object Loading : AddressLookupState()
-    object Form : AddressLookupState()
-    data class SearchResult(val options: List<LookupAddress>) : AddressLookupState()
+    data class Form(val selectedAddress: AddressInputModel?) : AddressLookupState()
+    data class SearchResult(val query: String, val options: List<LookupAddress>) : AddressLookupState()
     object Error : AddressLookupState()
 }

@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -21,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
+internal class CardComponentDialogFragment : BaseComponentDialogFragment(), AddressLookupCallback {
 
     private var _binding: FragmentCardComponentBinding? = null
     private val binding: FragmentCardComponentBinding get() = requireNotNull(_binding)
@@ -45,7 +46,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
-        cardComponent.setAddressLookupQueryChangedListener(protocol::onAddressLookupQuery)
+        cardComponent.setAddressLookupCallback(this)
 
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
@@ -57,6 +58,14 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         dropInViewModel.addressLookupOptionsFlow.onEach {
             cardComponent.updateAddressLookupOptions(it)
         }.launchIn(dropInViewModel.viewModelScope)
+    }
+
+    override fun onQueryChanged(query: String) {
+        protocol.onAddressLookupQuery(query)
+    }
+
+    override fun onLookupCompleted(id: String): Boolean {
+        return protocol.onAddressLookupCompletion(id)
     }
 
     override fun onBackPressed(): Boolean {
