@@ -12,13 +12,11 @@ import android.content.Intent
 import androidx.compose.runtime.Immutable
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
-import com.adyen.checkout.example.ui.googlepay.GooglePayAvailabilityData
 
 @Immutable
 internal data class SessionsGooglePayState(
     val uiState: SessionsGooglePayUIState,
     val componentData: SessionsGooglePayComponentData? = null,
-    val checkAvailability: GooglePayAvailabilityData? = null,
     val activityResult: GooglePayActivityResult? = null,
     val action: Action? = null,
     val newIntent: Intent? = null,

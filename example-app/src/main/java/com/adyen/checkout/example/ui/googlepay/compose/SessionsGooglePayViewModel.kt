@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
+import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
@@ -26,7 +27,7 @@ import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
-import com.adyen.checkout.example.ui.googlepay.GooglePayAvailabilityData
+import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -49,6 +50,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SessionsGooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val application: Application,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
@@ -87,17 +89,10 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             this@SessionsGooglePayViewModel,
         )
 
-        val checkAvailability = GooglePayAvailabilityData(
-            paymentMethod,
-            googlePayConfiguration,
-            this@SessionsGooglePayViewModel,
-        )
+        checkGooglePayAvailability(paymentMethod, googlePayConfiguration)
 
         updateState {
-            it.copy(
-                componentData = componentData,
-                checkAvailability = checkAvailability,
-            )
+            it.copy(componentData = componentData)
         }
     }
 
@@ -132,6 +127,18 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }
+    }
+
+    private fun checkGooglePayAvailability(
+        paymentMethod: PaymentMethod,
+        googlePayConfiguration: GooglePayConfiguration,
+    ) {
+        GooglePayComponent.PROVIDER.isAvailable(
+            application,
+            paymentMethod,
+            googlePayConfiguration,
+            this,
+        )
     }
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
@@ -173,10 +180,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     private fun updateState(block: (SessionsGooglePayState) -> SessionsGooglePayState) {
         _googlePayState.update(block)
-    }
-
-    fun onAvailabilityChecked() {
-        updateState { it.copy(checkAvailability = null) }
     }
 
     fun onButtonClicked() {

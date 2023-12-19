@@ -12,8 +12,6 @@ import com.adyen.checkout.components.core.action.Action
 
 internal sealed class GooglePayEvent {
 
-    data class CheckAvailability(val googlePayAvailabilityData: GooglePayAvailabilityData) : GooglePayEvent()
-
     data class PaymentResult(val result: String) : GooglePayEvent()
 
     data class AdditionalAction(val action: Action) : GooglePayEvent()

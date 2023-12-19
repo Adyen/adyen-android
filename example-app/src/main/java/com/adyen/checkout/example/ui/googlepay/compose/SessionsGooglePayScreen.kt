@@ -11,7 +11,6 @@
 package com.adyen.checkout.example.ui.googlepay.compose
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -40,7 +39,6 @@ import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
-import com.adyen.checkout.example.ui.googlepay.GooglePayAvailabilityData
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.google.pay.button.ButtonTheme
 import com.google.pay.button.ButtonType
@@ -74,7 +72,6 @@ internal fun SessionsGooglePayScreen(
         )
 
         with(googlePayState) {
-            CheckGooglePayAvailability(checkAvailability, viewModel::onAvailabilityChecked)
             HandleActivityResult(activityResult, componentData, viewModel::onActivityResultHandled)
             HandleAction(action, componentData, viewModel::onActionConsumed)
             HandleNewIntent(newIntent, componentData, viewModel::onNewIntentHandled)
@@ -128,24 +125,6 @@ private fun SessionsGooglePayContent(
                 ResultContent(uiState.finalResult)
             }
         }
-    }
-}
-
-@Composable
-private fun CheckGooglePayAvailability(
-    checkAvailability: GooglePayAvailabilityData?,
-    onAvailabilityChecked: () -> Unit
-) {
-    if (checkAvailability == null) return
-    val application = LocalContext.current.applicationContext as Application
-    LaunchedEffect(checkAvailability) {
-        GooglePayComponent.PROVIDER.isAvailable(
-            application,
-            checkAvailability.paymentMethod,
-            checkAvailability.googlePayConfiguration,
-            checkAvailability.callback,
-        )
-        onAvailabilityChecked()
     }
 }
 
