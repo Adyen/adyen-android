@@ -10,16 +10,12 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.data.model.LookupAddress
-import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
-import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -27,6 +23,7 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
+import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -48,6 +45,7 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -55,7 +53,11 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
@@ -89,6 +91,7 @@ internal class StoredCardDelegate(
         cvcPolicy = when {
             componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
                 noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -104,8 +107,14 @@ internal class StoredCardDelegate(
 
     override val addressOutputData: AddressOutputData
         get() = _outputDataFlow.value.addressState
+
     override val addressOutputDataFlow: Flow<AddressOutputData>
         get() = MutableStateFlow(_outputDataFlow.value.addressState)
+
+    override val addressDelegate: AddressDelegate = this
+
+    override val addressLookupStateFlow: Flow<AddressLookupState>
+        get() = MutableStateFlow(_outputDataFlow.value.addressLookupState)
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
@@ -170,7 +179,7 @@ internal class StoredCardDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -182,7 +191,7 @@ internal class StoredCardDelegate(
         coroutineScope?.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
-                clientKey = componentParams.clientKey
+                clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
@@ -190,7 +199,7 @@ internal class StoredCardDelegate(
                 },
                 onFailure = { e ->
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
-                }
+                },
             )
         }
     }
@@ -238,7 +247,7 @@ internal class StoredCardDelegate(
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
             addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList()
+            addressLookupOptions = emptyList(),
         )
     }
 
@@ -267,7 +276,7 @@ internal class StoredCardDelegate(
                 isReady = publicKey != null,
                 cardBrand = firstCardBrand,
                 binValue = "",
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -282,7 +291,7 @@ internal class StoredCardDelegate(
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString()
+                    expiryYear = expiryDateResult.expiryYear.toString(),
                 )
             }
 
@@ -295,7 +304,7 @@ internal class StoredCardDelegate(
                 isReady = true,
                 cardBrand = firstCardBrand,
                 binValue = "",
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -371,7 +380,7 @@ internal class StoredCardDelegate(
             isReady = true,
             cardBrand = firstCardBrand,
             binValue = "",
-            lastFourDigits = lastFour
+            lastFourDigits = lastFour,
         )
     }
 
@@ -392,7 +401,7 @@ internal class StoredCardDelegate(
         try {
             val storedDate = ExpiryDate(
                 storedPaymentMethod.expiryMonth.orEmpty().toInt(),
-                storedPaymentMethod.expiryYear.orEmpty().toInt()
+                storedPaymentMethod.expiryYear.orEmpty().toInt(),
             )
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
@@ -428,6 +437,10 @@ internal class StoredCardDelegate(
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
+        // no ops
+    }
+
+    override fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit) {
         // no ops
     }
 

@@ -326,4 +326,26 @@
         <item name="android:text">@string/checkout_address_form_billing_address_title</item>
     </style>
 
+    <!-- TODO address lookuo -->
+    <style name="AdyenCheckout.AddressLookup.Query" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Search Address</item>
+    </style>
+
+    <!-- TODO address lookuo -->
+    <style name="AdyenCheckout.AddressLookup.Loading" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:tint">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressLookup.Item.Header" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressLookup.Item.Description" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:alpha">0.38</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
 </resources>

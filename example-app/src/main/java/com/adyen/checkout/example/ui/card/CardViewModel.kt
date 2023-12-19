@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
@@ -16,6 +15,7 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

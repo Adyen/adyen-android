@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.internal.ui
 import android.content.ComponentName
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -45,6 +44,7 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

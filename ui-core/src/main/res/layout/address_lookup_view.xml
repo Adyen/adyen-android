@@ -3,7 +3,7 @@
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by ozgur on 21/11/2023.
+  ~ Created by ozgur on 19/12/2023.
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +28,7 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="@style/AdyenCheckout.Card.AddressLookup.Loading"
+        style="@style/AdyenCheckout.AddressLookup.Loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

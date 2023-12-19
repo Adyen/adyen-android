@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 29/11/2023.
+ * Created by ozgur on 19/12/2023.
  */
 
-package com.adyen.checkout.card.internal.ui.view
+package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,8 +14,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.card.databinding.AddressLookupOptionItemViewBinding
-import com.adyen.checkout.card.internal.data.model.LookupAddress
+import com.adyen.checkout.ui.core.databinding.AddressLookupOptionItemViewBinding
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 
 internal class AddressLookupOptionsAdapter(
     private val onItemClicked: (LookupAddress) -> Boolean

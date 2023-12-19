@@ -15,9 +15,9 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
-import com.adyen.checkout.card.internal.data.model.LookupAddress
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
@@ -30,6 +30,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 

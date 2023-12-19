@@ -3,39 +3,36 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 1/12/2023.
+ * Created by ozgur on 19/12/2023.
  */
 
-package com.adyen.checkout.card.internal.ui.view
+package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.annotation.RestrictTo
 import androidx.core.view.isVisible
-import com.adyen.checkout.card.R
-import com.adyen.checkout.card.databinding.AddressLookupViewBinding
-import com.adyen.checkout.card.internal.data.model.LookupAddress
-import com.adyen.checkout.card.internal.ui.CardDelegate
-import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
-import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.ui.core.R
+import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
+import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-internal class AddressLookupView @JvmOverloads constructor(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class AddressLookupView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -51,7 +48,7 @@ internal class AddressLookupView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
-    private lateinit var cardDelegate: CardDelegate
+    private lateinit var addressLookupDelegate: AddressLookupDelegate
 
     private var addressLookupOptionsAdapter: AddressLookupOptionsAdapter? = null
 
@@ -62,14 +59,14 @@ internal class AddressLookupView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        require(delegate is CardDelegate) { "Unsupported delegate type" }
-        cardDelegate = delegate
+        require(delegate is AddressLookupDelegate) { "Unsupported delegate type" }
+        addressLookupDelegate = delegate
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        cardDelegate.updateInputData {
-            addressLookupInputData.reset()
+        addressLookupDelegate.updateAddressLookupInputData {
+            reset()
         }
 
         observeDelegate(delegate, coroutineScope)
@@ -82,21 +79,18 @@ internal class AddressLookupView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        cardDelegate.outputData.let {
-            binding.addressFormInput.highlightValidationErrors(false)
-        }
+        binding.addressFormInput.highlightValidationErrors(false)
     }
 
-    private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .mapNotNull { it.addressLookupState }
+    private fun observeDelegate(delegate: AddressLookupDelegate, coroutineScope: CoroutineScope) {
+        delegate.addressLookupStateFlow
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutAddressLookupQuery.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_AddressLookup_Query,
+            R.style.AdyenCheckout_AddressLookup_Query,
             localizedContext
         )
         binding.addressFormInput.initLocalizedContext(localizedContext)
@@ -107,21 +101,10 @@ internal class AddressLookupView @JvmOverloads constructor(
         addressLookupQueryEditText?.setOnChangeListener {
             onQueryChanged(it)
         }
-
-        addressLookupQueryEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = cardDelegate.outputData.addressState.postalCode.validation
-            if (hasFocus) {
-                binding.textInputLayoutAddressLookupQuery.hideError()
-            } else if (postalCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutAddressLookupQuery.showError(
-                    localizedContext.getString(postalCodeValidation.reason)
-                )
-            }
-        }
     }
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
-        binding.addressFormInput.attachDelegate(cardDelegate, coroutineScope)
+        binding.addressFormInput.attachDelegate(addressLookupDelegate.addressDelegate, coroutineScope)
     }
 
     private fun initAddressOptions() {
@@ -134,14 +117,14 @@ internal class AddressLookupView @JvmOverloads constructor(
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
             clearQuery()
-            cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
+            addressLookupDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
         }
     }
 
     private fun initManualEntryInitialTextView() {
         binding.textViewManualEntryInitial.setOnClickListener {
             clearQuery()
-            cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
+            addressLookupDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
         }
     }
 
@@ -181,11 +164,11 @@ internal class AddressLookupView @JvmOverloads constructor(
                 binding.textViewManualEntryError.isVisible = false
                 binding.addressFormInput.isVisible = true
                 binding.progressBar.isVisible = false
-                cardDelegate.updateInputData {
+                addressLookupDelegate.updateAddressLookupInputData {
                     if (addressLookupState.selectedAddress == null) {
-                        address.resetAll()
+                        selectedAddress.resetAll()
                     } else {
-                        address.set(addressLookupState.selectedAddress)
+                        selectedAddress.set(addressLookupState.selectedAddress)
                     }
                 }
             }
@@ -209,7 +192,7 @@ internal class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun onQueryChanged(editable: Editable) {
-        cardDelegate.onAddressQueryChanged(editable.toString())
+        addressLookupDelegate.onAddressQueryChanged(editable.toString())
         binding.textInputLayoutAddressLookupQuery.hideError()
     }
 
@@ -221,8 +204,13 @@ internal class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun onAddressSelected(lookupAddress: LookupAddress): Boolean {
-        val isLoading = cardDelegate.onAddressLookupCompleted(lookupAddress.id)
-        cardDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.OptionSelected(lookupAddress, isLoading))
+        val isLoading = addressLookupDelegate.onAddressLookupCompleted(lookupAddress.id)
+        addressLookupDelegate.addressLookupEventChannel.trySend(
+            AddressLookupEvent.OptionSelected(
+                lookupAddress,
+                isLoading
+            )
+        )
         clearQuery()
         return isLoading
     }

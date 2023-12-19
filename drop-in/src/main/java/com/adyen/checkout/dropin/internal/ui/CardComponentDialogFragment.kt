@@ -13,8 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding

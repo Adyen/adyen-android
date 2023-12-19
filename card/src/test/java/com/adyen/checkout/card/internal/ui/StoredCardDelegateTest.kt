@@ -22,7 +22,6 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -49,6 +48,7 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope

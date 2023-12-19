@@ -6,7 +6,7 @@
  * Created by ozgur on 11/12/2023.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.components.core
 
 interface AddressLookupCallback {
 

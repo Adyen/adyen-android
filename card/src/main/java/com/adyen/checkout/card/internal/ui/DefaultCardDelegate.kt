@@ -11,7 +11,6 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.card.AddressLookupCallback
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
@@ -21,9 +20,6 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.data.model.LookupAddress
-import com.adyen.checkout.card.internal.ui.model.AddressLookupEvent
-import com.adyen.checkout.card.internal.ui.model.AddressLookupState
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
@@ -39,6 +35,7 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
+import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -62,6 +59,7 @@ import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
+import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -70,8 +68,12 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
@@ -122,6 +124,12 @@ class DefaultCardDelegate(
         }.stateIn(coroutineScope, SharingStarted.Lazily, outputData.addressState)
     }
 
+    override val addressLookupStateFlow: Flow<AddressLookupState> by lazy {
+        outputDataFlow.map {
+            it.addressLookupState
+        }.stateIn(coroutineScope, SharingStarted.Lazily, outputData.addressLookupState)
+    }
+
     override val outputData: CardOutputData
         get() = _outputDataFlow.value
 
@@ -148,6 +156,15 @@ class DefaultCardDelegate(
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
     private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
     private var addressLookupCallback: AddressLookupCallback? = null
+
+    override val addressDelegate: AddressDelegate = this
+
+    private val addressInputModel: AddressInputModel
+        get() = if (componentParams.addressParams is AddressParams.Lookup) {
+            inputData.addressLookupInputData.selectedAddress
+        } else {
+            inputData.address
+        }
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -225,6 +242,12 @@ class DefaultCardDelegate(
         }
     }
 
+    override fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit) {
+        updateInputData {
+            this.addressLookupInputData.update()
+        }
+    }
+
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
@@ -253,7 +276,7 @@ class DefaultCardDelegate(
                     }
                 updateOutputData(
                     addressLookupState = makeAddressLookupState(addressLookupOptions, addressLookupEvent),
-                    addressLookupOptions = addressLookupOptions
+                    addressLookupOptions = addressLookupOptions,
                 )
             }
             .launchIn(coroutineScope)
@@ -357,7 +380,7 @@ class DefaultCardDelegate(
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
         val addressState = validateAddress(
-            inputData.address,
+            addressInputModel,
             addressFormUIState,
             selectedOrFirstCardType,
             updatedCountryOptions,
@@ -866,7 +889,7 @@ class DefaultCardDelegate(
                     } else {
                         AddressLookupState.SearchResult(
                             inputData.addressLookupInputData.query,
-                            event.addressLookupOptions
+                            event.addressLookupOptions,
                         )
                     }
                 } else {
@@ -885,7 +908,7 @@ class DefaultCardDelegate(
                                 } else {
                                     it
                                 }
-                            }
+                            },
                         )
                     } else {
                         AddressLookupState.Form(event.lookupAddress.address)
