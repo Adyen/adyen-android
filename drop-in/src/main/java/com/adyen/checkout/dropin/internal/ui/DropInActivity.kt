@@ -437,6 +437,7 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: AddressLookupDropInServiceResult) {
         when (dropInServiceResult) {
             is AddressLookupDropInServiceResult.LookupResult -> handleAddressLookupOptionsUpdate(dropInServiceResult)
+            is AddressLookupDropInServiceResult.LookupComplete -> handleAddressLookupComplete(dropInServiceResult)
             is AddressLookupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -495,6 +496,10 @@ internal class DropInActivity :
 
     private fun handleAddressLookupOptionsUpdate(lookupResult: AddressLookupDropInServiceResult.LookupResult) {
         dropInViewModel.onAddressLookupOptions(lookupResult.options)
+    }
+
+    private fun handleAddressLookupComplete(lookupResult: AddressLookupDropInServiceResult.LookupComplete) {
+        dropInViewModel.onAddressLookupComplete(lookupResult.lookupAddress)
     }
 
     private fun sendResult(result: String) {

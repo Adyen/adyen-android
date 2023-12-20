@@ -118,6 +118,9 @@ internal class DropInViewModel(
     private val _addressLookupOptionsFlow = bufferedChannel<List<LookupAddress>>()
     val addressLookupOptionsFlow: Flow<List<LookupAddress>> = _addressLookupOptionsFlow.receiveAsFlow()
 
+    private val _addressLookupCompleteFlow = bufferedChannel<LookupAddress>()
+    val addressLookupCompleteFlow: Flow<LookupAddress> = _addressLookupCompleteFlow.receiveAsFlow()
+
     fun getPaymentMethods(): List<PaymentMethod> {
         return paymentMethodsApiResponse.paymentMethods.orEmpty()
     }
@@ -424,6 +427,11 @@ internal class DropInViewModel(
     fun onAddressLookupOptions(options: List<LookupAddress>) {
         Logger.d(TAG, "onAddressLookupOptions $options")
         viewModelScope.launch { _addressLookupOptionsFlow.send(options) }
+    }
+
+    fun onAddressLookupComplete(lookupAddress: LookupAddress) {
+        Logger.d(TAG, "onAddressLookupComplete $lookupAddress")
+        viewModelScope.launch { _addressLookupCompleteFlow.send(lookupAddress) }
     }
 
     fun cancelDropIn() {

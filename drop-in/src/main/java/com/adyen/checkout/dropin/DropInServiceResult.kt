@@ -200,6 +200,17 @@ sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
     ) : AddressLookupDropInServiceResult()
 
     /**
+     * Only applicable to address lookup flow.
+     *
+     * Send this to prefill the address after making an api call to fetch the complete address details.
+     *
+     * @param lookupAddress Complete address details.
+     */
+    class LookupComplete(
+        val lookupAddress: LookupAddress
+    ) : AddressLookupDropInServiceResult()
+
+    /**
      * * Only applicable to address lookup flow.
      *
      * Send this to display an error dialog and optionally dismiss Drop-in.

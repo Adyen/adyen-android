@@ -59,6 +59,10 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         dropInViewModel.addressLookupOptionsFlow.onEach {
             cardComponent.updateAddressLookupOptions(it)
         }.launchIn(dropInViewModel.viewModelScope)
+
+        dropInViewModel.addressLookupCompleteFlow.onEach {
+            cardComponent.setAddressLookupResult(it)
+        }.launchIn(dropInViewModel.viewModelScope)
     }
 
     override fun onQueryChanged(query: String) {
