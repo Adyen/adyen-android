@@ -354,11 +354,11 @@ class DefaultCardDelegate(
         Logger.v(TAG, "createOutputData")
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            inputData.address.country,
+            addressInputModel.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            inputData.address.stateOrProvince,
+            addressInputModel.stateOrProvince,
         )
 
         val isReliable = detectedCardTypes.any { it.isReliable }

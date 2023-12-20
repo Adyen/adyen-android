@@ -89,6 +89,7 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
+        // TODO address lookup translations
         binding.textInputLayoutAddressLookupQuery.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_AddressLookup_Query,
             localizedContext,
