@@ -11,7 +11,6 @@
 package com.adyen.checkout.example.ui.googlepay.compose
 
 import android.app.Activity
-import android.content.Intent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
-import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
 import com.adyen.checkout.googlepay.GooglePayComponent
@@ -72,10 +70,10 @@ internal fun SessionsGooglePayScreen(
         )
 
         with(googlePayState) {
-            HandleStartGooglePay(startGooglePay, componentData, viewModel::onGooglePayStarted)
-            HandleActivityResult(activityResult, componentData, viewModel::onActivityResultHandled)
-            HandleAction(action, componentData, viewModel::onActionConsumed)
-            HandleNewIntent(newIntent, componentData, viewModel::onNewIntentHandled)
+            HandleStartGooglePay(startGooglePay, viewModel::onGooglePayStarted)
+            HandleActivityResult(activityResultToHandle, viewModel::onActivityResultHandled)
+            HandleAction(actionToHandle, viewModel::onActionConsumed)
+            HandleNewIntent(intentToHandle, viewModel::onNewIntentHandled)
         }
     }
 }
@@ -97,8 +95,8 @@ private fun SessionsGooglePayContent(
                 CircularProgressIndicator()
             }
 
-            SessionsGooglePayUIState.ShowButton -> {
-                val googlePayComponent = getGooglePayComponent(componentData = googlePayState.componentData)
+            is SessionsGooglePayUIState.ShowButton -> {
+                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
                 PayButton(
                     onClick = onButtonClicked,
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
@@ -107,8 +105,8 @@ private fun SessionsGooglePayContent(
                 )
             }
 
-            SessionsGooglePayUIState.ShowComponent -> {
-                val googlePayComponent = getGooglePayComponent(componentData = googlePayState.componentData)
+            is SessionsGooglePayUIState.ShowComponent -> {
+                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
                 AdyenComponent(
                     googlePayComponent,
                     modifier,
@@ -125,12 +123,11 @@ private fun SessionsGooglePayContent(
 @Composable
 private fun HandleStartGooglePay(
     startGooglePayData: SessionsStartGooglePayData?,
-    componentData: SessionsGooglePayComponentData?,
     onGooglePayStarted: () -> Unit
 ) {
     if (startGooglePayData == null) return
     val activity = LocalContext.current as Activity
-    val googlePayComponent = getGooglePayComponent(componentData = componentData)
+    val googlePayComponent = getGooglePayComponent(componentData = startGooglePayData.componentData)
     LaunchedEffect(startGooglePayData) {
         googlePayComponent.startGooglePayScreen(
             activity,
@@ -142,50 +139,46 @@ private fun HandleStartGooglePay(
 
 @Composable
 private fun HandleActivityResult(
-    activityResult: GooglePayActivityResult?,
-    componentData: SessionsGooglePayComponentData?,
+    activityResultToHandle: GooglePayActivityResult?,
     onActivityResultHandled: () -> Unit
 ) {
-    if (activityResult == null) return
-    val googlePayComponent = getGooglePayComponent(componentData = componentData)
-    LaunchedEffect(activityResult) {
-        googlePayComponent.handleActivityResult(activityResult.resultCode, activityResult.data)
+    if (activityResultToHandle == null) return
+    val googlePayComponent = getGooglePayComponent(componentData = activityResultToHandle.componentData)
+    LaunchedEffect(activityResultToHandle) {
+        googlePayComponent.handleActivityResult(activityResultToHandle.resultCode, activityResultToHandle.data)
         onActivityResultHandled()
     }
 }
 
 @Composable
 private fun HandleAction(
-    action: Action?,
-    componentData: SessionsGooglePayComponentData?,
+    actionToHandle: SessionsGooglePayAction?,
     onActionConsumed: () -> Unit
 ) {
-    if (action == null) return
+    if (actionToHandle == null) return
     val activity = LocalContext.current as Activity
-    val googlePayComponent = getGooglePayComponent(componentData = componentData)
-    LaunchedEffect(action) {
-        googlePayComponent.handleAction(action, activity)
+    val googlePayComponent = getGooglePayComponent(componentData = actionToHandle.componentData)
+    LaunchedEffect(actionToHandle) {
+        googlePayComponent.handleAction(actionToHandle.action, activity)
         onActionConsumed()
     }
 }
 
 @Composable
 private fun HandleNewIntent(
-    newIntent: Intent?,
-    componentData: SessionsGooglePayComponentData?,
+    intentToHandle: SessionsGooglePayIntent?,
     onNewIntentHandled: () -> Unit
 ) {
-    if (newIntent == null) return
-    val googlePayComponent = getGooglePayComponent(componentData = componentData)
-    LaunchedEffect(newIntent) {
-        googlePayComponent.handleIntent(newIntent)
+    if (intentToHandle == null) return
+    val googlePayComponent = getGooglePayComponent(componentData = intentToHandle.componentData)
+    LaunchedEffect(intentToHandle) {
+        googlePayComponent.handleIntent(intentToHandle.intent)
         onNewIntentHandled()
     }
 }
 
 @Composable
-private fun getGooglePayComponent(componentData: SessionsGooglePayComponentData?): GooglePayComponent {
-    requireNotNull(componentData) { "Component data should not be null" }
+private fun getGooglePayComponent(componentData: SessionsGooglePayComponentData): GooglePayComponent {
     return with(componentData) {
         GooglePayComponent.PROVIDER.get(
             checkoutSession,

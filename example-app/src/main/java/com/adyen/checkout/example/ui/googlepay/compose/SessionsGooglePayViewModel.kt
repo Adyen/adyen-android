@@ -63,6 +63,10 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     private val _googlePayState = MutableStateFlow(SessionsGooglePayState(SessionsGooglePayUIState.Loading))
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()
 
+    private var _componentData: SessionsGooglePayComponentData? = null
+    private val componentData: SessionsGooglePayComponentData
+        get() = requireNotNull(_componentData) { "component data should not be null" }
+
     init {
         viewModelScope.launch { fetchSession() }
     }
@@ -82,7 +86,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             return@withContext
         }
 
-        val componentData = SessionsGooglePayComponentData(
+        _componentData = SessionsGooglePayComponentData(
             checkoutSession,
             googlePayConfiguration,
             paymentMethod,
@@ -90,10 +94,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         )
 
         checkGooglePayAvailability(paymentMethod, googlePayConfiguration)
-
-        updateState {
-            it.copy(componentData = componentData)
-        }
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
@@ -144,7 +144,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
         viewModelScope.launch {
             if (isAvailable) {
-                updateState { it.copy(uiState = SessionsGooglePayUIState.ShowButton) }
+                updateState { it.copy(uiState = SessionsGooglePayUIState.ShowButton(componentData)) }
             } else {
                 onError()
             }
@@ -152,7 +152,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     override fun onAction(action: Action) {
-        updateState { it.copy(action = action) }
+        updateState { it.copy(actionToHandle = SessionsGooglePayAction(componentData, action)) }
     }
 
     override fun onError(componentError: ComponentError) {
@@ -185,8 +185,8 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     fun onButtonClicked() {
         updateState {
             it.copy(
-                uiState = SessionsGooglePayUIState.ShowComponent,
-                startGooglePay = SessionsStartGooglePayData(ACTIVITY_RESULT_CODE),
+                uiState = SessionsGooglePayUIState.ShowComponent(componentData),
+                startGooglePay = SessionsStartGooglePayData(componentData, ACTIVITY_RESULT_CODE),
             )
         }
     }
@@ -196,24 +196,24 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     fun onActionConsumed() {
-        updateState { it.copy(action = null) }
+        updateState { it.copy(actionToHandle = null) }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode != ACTIVITY_RESULT_CODE) return
-        updateState { it.copy(activityResult = GooglePayActivityResult(resultCode, data)) }
+        updateState { it.copy(activityResultToHandle = GooglePayActivityResult(componentData, resultCode, data)) }
     }
 
     fun onActivityResultHandled() {
-        updateState { it.copy(activityResult = null) }
+        updateState { it.copy(activityResultToHandle = null) }
     }
 
     fun onNewIntent(intent: Intent) {
-        updateState { it.copy(newIntent = intent) }
+        updateState { it.copy(intentToHandle = SessionsGooglePayIntent(componentData, intent)) }
     }
 
     fun onNewIntentHandled() {
-        updateState { it.copy(newIntent = null) }
+        updateState { it.copy(intentToHandle = null) }
     }
 
     companion object {

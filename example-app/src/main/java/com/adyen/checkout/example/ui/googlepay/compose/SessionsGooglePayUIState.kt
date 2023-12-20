@@ -17,10 +17,10 @@ internal sealed class SessionsGooglePayUIState {
     data object Loading : SessionsGooglePayUIState()
 
     @Immutable
-    data object ShowButton : SessionsGooglePayUIState()
+    data class ShowButton(val componentData: SessionsGooglePayComponentData) : SessionsGooglePayUIState()
 
     @Immutable
-    data object ShowComponent : SessionsGooglePayUIState()
+    data class ShowComponent(val componentData: SessionsGooglePayComponentData) : SessionsGooglePayUIState()
 
     @Immutable
     data class FinalResult(val finalResult: ResultState) : SessionsGooglePayUIState()

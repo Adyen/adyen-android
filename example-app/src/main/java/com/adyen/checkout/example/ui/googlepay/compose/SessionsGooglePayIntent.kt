@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-internal data class SessionsStartGooglePayData(
+import android.content.Intent
+
+internal data class SessionsGooglePayIntent(
     val componentData: SessionsGooglePayComponentData,
-    val requestCode: Int,
+    val intent: Intent,
 )
