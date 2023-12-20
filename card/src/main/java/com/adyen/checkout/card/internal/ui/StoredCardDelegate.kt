@@ -320,12 +320,8 @@ internal class StoredCardDelegate(
         submitHandler.onSubmit(state)
     }
 
-    // TODO address lookup check
-    override fun startAddressLookup() {
-        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
-    }
+    override fun startAddressLookup() = Unit
 
-    // TODO address lookup not used
     override fun onAddressQueryChanged(query: String) = Unit
 
     override fun onAddressLookupCompleted(id: String) = false
@@ -450,13 +446,10 @@ internal class StoredCardDelegate(
     // Bin lookup is not performed for stored cards
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
 
-    // TODO address lookup not used
     override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) = Unit
 
-    // TODO address lookup not used
     override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit
 
-    // TODO address lookup not used
     override fun setAddressLookupResult(lookupAddress: LookupAddress) = Unit
 
     override fun onCleared() {

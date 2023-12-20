@@ -115,16 +115,32 @@ open class CardComponent constructor(
         cardDelegate.setOnBinLookupListener(listener)
     }
 
-    // TODO address lookup
+    /**
+     * Set a callback that will be triggered to perform address lookup actions.
+     *
+     * @param addressLookupCallback The callback that will be triggered to perform address lookup options such as
+     * query changes, completion of the lookup.
+     */
     fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
         cardDelegate.setAddressLookupCallback(addressLookupCallback)
     }
 
-    // TODO address lookup
+    /**
+     * Updates the address options that will be displayed to the shopper in
+     * [com.adyen.checkout.ui.core.internal.ui.view.AddressLookupView] as part of [CardComponent].
+     *
+     * @param options Address option list to be displayed.
+     */
     fun updateAddressLookupOptions(options: List<LookupAddress>) {
         cardDelegate.updateAddressLookupOptions(options)
     }
 
+    /**
+     * Set the complete address lookup option to be prefilled in
+     * [com.adyen.checkout.ui.core.internal.ui.view.AddressLookupView].
+     *
+     * @param lookupAddress Complete address details.
+     */
     fun setAddressLookupResult(lookupAddress: LookupAddress) {
         cardDelegate.setAddressLookupResult(lookupAddress)
     }

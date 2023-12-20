@@ -42,7 +42,9 @@ sealed class AddressParams {
         val addressFieldPolicy: AddressFieldPolicy
     ) : AddressParams()
 
-    // TODO address lookup
+    /**
+     * Address Lookup option will be shown as part of card component.
+     */
     class Lookup : AddressParams()
 }
 

@@ -570,7 +570,7 @@ internal class StoredCardDelegateTest(
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
             addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList(), // TODO address lookup
+            addressLookupOptions = emptyList(), // TODO address lookup test
         )
     }
 

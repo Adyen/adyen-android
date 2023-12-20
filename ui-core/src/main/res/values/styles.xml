@@ -326,12 +326,12 @@
         <item name="android:text">@string/checkout_address_form_billing_address_title</item>
     </style>
 
-    <!-- TODO address lookuo -->
+    <!-- TODO address lookup translations -->
     <style name="AdyenCheckout.AddressLookup.Query" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">Search Address</item>
     </style>
 
-    <!-- TODO address lookuo -->
+    <!-- TODO address lookup translations-->
     <style name="AdyenCheckout.AddressLookup.Loading" parent="Widget.AppCompat.ProgressBar">
         <item name="android:tint">@color/primaryColor</item>
     </style>

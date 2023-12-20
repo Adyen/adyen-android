@@ -43,7 +43,11 @@ data class AddressInputModel(
         city = ""
     }
 
-    // TODO address lookup
+    /**
+     * Reset the data.
+     *
+     * Note: This method is called from address lookup and all the form needs to be reset.
+     */
     fun resetAll() {
         country = ""
         postalCode = ""

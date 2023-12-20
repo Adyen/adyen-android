@@ -1291,7 +1291,7 @@ internal class DefaultCardDelegateTest(
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
             addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList(), // TODO address lookup
+            addressLookupOptions = emptyList(), // TODO address lookup test
         )
     }
 

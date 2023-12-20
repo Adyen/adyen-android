@@ -37,10 +37,11 @@ sealed class AddressConfiguration : Parcelable {
         val addressFieldPolicy: CardAddressFieldPolicy = CardAddressFieldPolicy.Required()
     ) : AddressConfiguration()
 
-    // TODO address lookup configuration
-    @Suppress("PARCELABLE_PRIMARY_CONSTRUCTOR_IS_EMPTY", "EmptyDefaultConstructor")
+    /**
+     * Address Lookup option will be shown as part of card component.
+     */
     @Parcelize
-    class Lookup() : AddressConfiguration()
+    class Lookup : AddressConfiguration()
 
     /**
      * Configuration for requirement of the address fields.

@@ -86,7 +86,15 @@ interface BaseDropInServiceContract {
      */
     fun sendRecurringResult(result: RecurringDropInServiceResult)
 
-    // TODO address lookup docs
+    /**
+     * Allows sending the result of Address Lookup operations.
+     *
+     * Call this method with a [AddressLookupDropInServiceResult] depending on the performed address lookup action.
+     *
+     * Check the subclasses of [AddressLookupDropInServiceResult] for more information.
+     *
+     * @param result the result of the action.
+     */
     fun sendAddressLookupResult(result: AddressLookupDropInServiceResult)
 
     /**
@@ -114,9 +122,13 @@ interface BaseDropInServiceContract {
      */
     fun onBinLookup(data: List<BinLookupData>) = Unit
 
-    // TODO address lookup docs
+    /**
+     * Set a callback that will be called when shopper inputs a query to perform address lookup.
+     *
+     * @param query Query inputted by shopper.
+     */
     fun onAddressLookupQuery(query: String) = Unit
 
-    // TODO address lookup
+    // TODO address lookup replace id with LookupAddress
     fun onAddressLookupCompleted(id: String) = false
 }
