@@ -15,6 +15,7 @@ import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParams
 import com.adyen.checkout.boleto.internal.ui.model.BoletoInputData
 import com.adyen.checkout.boleto.internal.ui.model.BoletoOutputData
 import com.adyen.checkout.boleto.internal.util.BoletoValidationUtils
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -33,7 +34,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -127,7 +127,7 @@ internal class DefaultBoletoDelegate(
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
-                    countryList = countries
+                    countryList = countries,
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
                     inputData.address.country = it.code
@@ -141,7 +141,7 @@ internal class DefaultBoletoDelegate(
     private fun requestCountryList() {
         addressRepository.getCountryList(
             shopperLocale = componentParams.shopperLocale,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -149,7 +149,7 @@ internal class DefaultBoletoDelegate(
         addressRepository.getStateList(
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -167,7 +167,7 @@ internal class DefaultBoletoDelegate(
     private fun onInputDataChanged() {
         val outputData = createOutputData(
             countryOptions = outputData.addressState.countryOptions,
-            stateOptions = outputData.addressState.stateOptions
+            stateOptions = outputData.addressState.stateOptions,
         )
         _outputDataFlow.tryEmit(outputData)
         updateComponentState(outputData)
@@ -189,11 +189,11 @@ internal class DefaultBoletoDelegate(
     ): BoletoOutputData {
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            inputData.address.country
+            inputData.address.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            inputData.address.stateOrProvince
+            inputData.address.stateOrProvince,
         )
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
@@ -202,22 +202,22 @@ internal class DefaultBoletoDelegate(
             firstNameState = BoletoValidationUtils.validateFirstName(inputData.firstName),
             lastNameState = BoletoValidationUtils.validateLastName(inputData.lastName),
             socialSecurityNumberState = SocialSecurityNumberUtils.validateSocialSecurityNumber(
-                inputData.socialSecurityNumber
+                inputData.socialSecurityNumber,
             ),
             addressState = AddressValidationUtils.validateAddressInput(
                 inputData.address,
                 addressFormUIState,
                 updatedCountryOptions,
                 updatedStateOptions,
-                false
+                false,
             ),
             addressUIState = addressFormUIState,
             isEmailVisible = componentParams.isEmailVisible,
             isSendEmailSelected = inputData.isSendEmailSelected,
             shopperEmailState = BoletoValidationUtils.validateShopperEmail(
                 inputData.isSendEmailSelected,
-                inputData.shopperEmail
-            )
+                inputData.shopperEmail,
+            ),
         )
     }
 
@@ -241,8 +241,8 @@ internal class DefaultBoletoDelegate(
             socialSecurityNumber = outputData.socialSecurityNumberState.value,
             shopperName = ShopperName(
                 firstName = outputData.firstNameState.value,
-                lastName = outputData.lastNameState.value
-            )
+                lastName = outputData.lastNameState.value,
+            ),
         )
         if (outputData.isSendEmailSelected) {
             paymentComponentData.shopperEmail = outputData.shopperEmailState.value
@@ -250,7 +250,7 @@ internal class DefaultBoletoDelegate(
         if (AddressFormUtils.isAddressRequired(outputData.addressUIState)) {
             paymentComponentData.billingAddress = AddressFormUtils.makeAddressData(
                 addressOutputData = outputData.addressState,
-                addressFormUIState = outputData.addressUIState
+                addressFormUIState = outputData.addressUIState,
             )
         }
         val countriesList: List<AddressListItem> = outputData.addressState.countryOptions
@@ -259,7 +259,7 @@ internal class DefaultBoletoDelegate(
         return BoletoComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = countriesList.isNotEmpty() && statesList.isNotEmpty()
+            isReady = countriesList.isNotEmpty() && statesList.isNotEmpty(),
         )
     }
 
@@ -282,7 +282,7 @@ internal class DefaultBoletoDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 

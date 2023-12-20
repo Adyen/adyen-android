@@ -9,12 +9,12 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
@@ -37,14 +37,14 @@ object AddressValidationUtils {
                 addressInputModel,
                 isOptional,
                 countryOptions,
-                stateOptions
+                stateOptions,
             )
 
             AddressFormUIState.POSTAL_CODE -> validatePostalCode(
                 addressInputModel,
                 isOptional,
                 countryOptions,
-                stateOptions
+                stateOptions,
             )
 
             else -> makeValidEmptyAddressOutput(addressInputModel)
@@ -68,7 +68,7 @@ object AddressValidationUtils {
                 country = FieldState(country, Validation.Valid),
                 isOptional = isOptional,
                 countryOptions = countryOptions,
-                stateOptions = stateOptions
+                stateOptions = stateOptions,
             )
         }
     }
@@ -91,7 +91,7 @@ object AddressValidationUtils {
                 country = validateAddressField(country, spec.country.isRequired && !isOptional),
                 isOptional = isOptional,
                 countryOptions = countryOptions,
-                stateOptions = stateOptions
+                stateOptions = stateOptions,
             )
         }
     }
@@ -111,7 +111,7 @@ object AddressValidationUtils {
                 country = FieldState(country, Validation.Valid),
                 isOptional = true,
                 countryOptions = emptyList(),
-                stateOptions = emptyList()
+                stateOptions = emptyList(),
             )
         }
     }

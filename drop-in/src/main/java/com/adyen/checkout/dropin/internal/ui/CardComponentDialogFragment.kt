@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
@@ -64,8 +65,8 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         protocol.onAddressLookupQuery(query)
     }
 
-    override fun onLookupCompleted(id: String): Boolean {
-        return protocol.onAddressLookupCompletion(id)
+    override fun onLookupCompleted(lookupAddress: LookupAddress): Boolean {
+        return protocol.onAddressLookupCompletion(lookupAddress)
     }
 
     override fun onBackPressed(): Boolean {

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.boleto.internal.ui.model
 
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 
 internal data class BoletoInputData(
     var firstName: String = "",

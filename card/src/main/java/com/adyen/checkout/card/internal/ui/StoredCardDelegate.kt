@@ -23,7 +23,9 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -52,12 +54,10 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
@@ -324,7 +324,7 @@ internal class StoredCardDelegate(
 
     override fun onAddressQueryChanged(query: String) = Unit
 
-    override fun onAddressLookupCompleted(id: String) = false
+    override fun onAddressLookupCompleted(lookupAddress: LookupAddress) = false
 
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.ui.card
 
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 
 internal sealed class CardEvent {
 

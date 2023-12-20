@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2023 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 8/3/2022.
+ * Created by ozgur on 20/12/2023.
  */
 
-package com.adyen.checkout.ui.core.internal.ui.model
+package com.adyen.checkout.components.core
 
 data class AddressInputModel(
     var postalCode: String = "",

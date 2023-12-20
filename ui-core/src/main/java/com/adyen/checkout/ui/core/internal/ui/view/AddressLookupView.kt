@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.RestrictTo
 import androidx.core.view.isVisible
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
@@ -23,7 +24,6 @@ import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +40,7 @@ class AddressLookupView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -91,7 +91,7 @@ class AddressLookupView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutAddressLookupQuery.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_AddressLookup_Query,
-            localizedContext
+            localizedContext,
         )
         binding.addressFormInput.initLocalizedContext(localizedContext)
     }
@@ -204,12 +204,12 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun onAddressSelected(lookupAddress: LookupAddress): Boolean {
-        val isLoading = addressLookupDelegate.onAddressLookupCompleted(lookupAddress.id)
+        val isLoading = addressLookupDelegate.onAddressLookupCompleted(lookupAddress)
         addressLookupDelegate.addressLookupEventChannel.trySend(
             AddressLookupEvent.OptionSelected(
                 lookupAddress,
-                isLoading
-            )
+                isLoading,
+            ),
         )
         clearQuery()
         return isLoading

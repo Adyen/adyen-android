@@ -20,12 +20,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -104,7 +104,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
             checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
-            componentCallback = sessionsCardComponentData.callback
+            componentCallback = sessionsCardComponentData.callback,
         )
 
         cardComponent.setOnRedirectListener {

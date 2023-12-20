@@ -9,10 +9,10 @@
 package com.adyen.checkout.dropin
 
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionPaymentResult
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.components.core.action.Action as ActionResponse
 
 sealed class BaseDropInServiceResult

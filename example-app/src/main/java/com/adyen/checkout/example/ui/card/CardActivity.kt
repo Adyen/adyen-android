@@ -12,12 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -149,9 +149,9 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
         cardViewModel.onAddressLookupQueryChanged(query)
     }
 
-    override fun onLookupCompleted(id: String): Boolean {
-        Log.d(TAG, "on lookup completed $id")
-        cardViewModel.onAddressLookupCompleted(id)
+    override fun onLookupCompleted(lookupAddress: LookupAddress): Boolean {
+        Log.d(TAG, "on lookup completed $lookupAddress")
+        cardViewModel.onAddressLookupCompleted(lookupAddress)
         return true
     }
 

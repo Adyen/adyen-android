@@ -12,8 +12,10 @@ import android.util.Log
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -35,8 +37,6 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -431,8 +431,8 @@ class ExampleAdvancedDropInService : DropInService() {
         addressLookupQueryFlow.tryEmit(query)
     }
 
-    override fun onAddressLookupCompleted(id: String): Boolean {
-        Log.d(TAG, "On address lookup query completion: $id")
+    override fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean {
+        Log.d(TAG, "On address lookup query completion: $lookupAddress")
         return false
     }
 

@@ -35,7 +35,9 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -66,14 +68,12 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
@@ -536,8 +536,8 @@ class DefaultCardDelegate(
         addressLookupCallback?.onQueryChanged(query)
     }
 
-    override fun onAddressLookupCompleted(id: String): Boolean {
-        return addressLookupCallback?.onLookupCompleted(id) ?: false
+    override fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean {
+        return addressLookupCallback?.onLookupCompleted(lookupAddress) ?: false
     }
 
     override fun handleBackPress(): Boolean {

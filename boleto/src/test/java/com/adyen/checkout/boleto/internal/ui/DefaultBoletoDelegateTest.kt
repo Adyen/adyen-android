@@ -13,6 +13,7 @@ import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.boleto.boleto
 import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
@@ -26,7 +27,6 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel

@@ -6,7 +6,7 @@
  * Created by ozgur on 19/12/2023.
  */
 
-package com.adyen.checkout.ui.core.internal.ui.model
+package com.adyen.checkout.components.core
 
 data class LookupAddress(
     val id: String,

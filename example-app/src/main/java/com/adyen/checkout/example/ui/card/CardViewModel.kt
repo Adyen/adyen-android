@@ -6,16 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -116,10 +116,10 @@ internal class CardViewModel @Inject constructor(
         }
     }
 
-    fun onAddressLookupCompleted(id: String) {
+    fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
         viewModelScope.launch {
             delay(ADDRESS_LOOKUP_COMPLETION_DELAY)
-            _events.emit(CardEvent.AddressLookupResult(ADDRESS_LOOKUP_OPTIONS.first { it.id == id }))
+            _events.emit(CardEvent.AddressLookupResult(ADDRESS_LOOKUP_OPTIONS.first { it.id == lookupAddress.id }))
         }
     }
 

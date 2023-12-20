@@ -14,6 +14,7 @@ import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParams
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitInputData
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.ach.internal.util.ACHDirectDebitValidationUtils
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -39,7 +40,6 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -134,7 +134,7 @@ internal class DefaultACHDirectDebitDelegate(
     private fun onInputDataChanged() {
         val outputData = createOutputData(
             countryOptions = outputData.addressState.countryOptions,
-            stateOptions = outputData.addressState.stateOptions
+            stateOptions = outputData.addressState.stateOptions,
         )
         _outputDataFlow.tryEmit(outputData)
         updateComponentState(outputData)
@@ -151,11 +151,11 @@ internal class DefaultACHDirectDebitDelegate(
     ): ACHDirectDebitOutputData {
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            inputData.address.country
+            inputData.address.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            inputData.address.stateOrProvince
+            inputData.address.stateOrProvince,
         )
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
@@ -169,11 +169,11 @@ internal class DefaultACHDirectDebitDelegate(
                 addressFormUIState,
                 updatedCountryOptions,
                 updatedStateOptions,
-                false
+                false,
             ),
             addressUIState = addressFormUIState,
             shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
-            showStorePaymentField = showStorePaymentField()
+            showStorePaymentField = showStorePaymentField(),
         )
     }
 
@@ -182,7 +182,7 @@ internal class DefaultACHDirectDebitDelegate(
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
-                clientKey = componentParams.clientKey
+                clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
@@ -192,7 +192,7 @@ internal class DefaultACHDirectDebitDelegate(
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
-                }
+                },
             )
         }
     }
@@ -205,7 +205,7 @@ internal class DefaultACHDirectDebitDelegate(
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
-                    countryList = countries
+                    countryList = countries,
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
                     inputData.address.country = it.code
@@ -239,14 +239,14 @@ internal class DefaultACHDirectDebitDelegate(
         addressRepository.getStateList(
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
     private fun requestCountryList() {
         addressRepository.getCountryList(
             shopperLocale = componentParams.shopperLocale,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -272,7 +272,7 @@ internal class DefaultACHDirectDebitDelegate(
             return ACHDirectDebitComponentState(
                 data = PaymentComponentData(null, null, null),
                 isInputValid = outputData.isValid,
-                isReady = publicKey != null
+                isReady = publicKey != null,
             )
         }
 
@@ -280,12 +280,12 @@ internal class DefaultACHDirectDebitDelegate(
             val encryptedBankAccountNumber = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
                 fieldValueToEncrypt = outputData.bankAccountNumber.value,
-                publicKey = publicKey
+                publicKey = publicKey,
             )
             val encryptedBankLocationId = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
                 fieldValueToEncrypt = outputData.bankLocationId.value,
-                publicKey = publicKey
+                publicKey = publicKey,
             )
 
             val achPaymentMethod = ACHDirectDebitPaymentMethod(
@@ -305,7 +305,7 @@ internal class DefaultACHDirectDebitDelegate(
             if (isAddressRequired(outputData.addressUIState)) {
                 paymentComponentData.billingAddress = AddressFormUtils.makeAddressData(
                     addressOutputData = outputData.addressState,
-                    addressFormUIState = outputData.addressUIState
+                    addressFormUIState = outputData.addressUIState,
                 )
             }
 
@@ -315,7 +315,7 @@ internal class DefaultACHDirectDebitDelegate(
             return ACHDirectDebitComponentState(
                 data = PaymentComponentData(null, null, null),
                 isInputValid = false,
-                isReady = true
+                isReady = true,
             )
         }
     }
@@ -339,7 +339,7 @@ internal class DefaultACHDirectDebitDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -359,7 +359,7 @@ internal class DefaultACHDirectDebitDelegate(
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(
-            state = state
+            state = state,
         )
     }
 

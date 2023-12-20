@@ -14,14 +14,14 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.ui.core.databinding.AddressLookupOptionItemViewBinding
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 
 internal class AddressLookupOptionsAdapter(
     private val onItemClicked: (LookupAddress) -> Boolean
 ) :
     ListAdapter<LookupAddress, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
-        AddressLookupOptionDiffCallback
+        AddressLookupOptionDiffCallback,
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressLookupOptionViewHolder {

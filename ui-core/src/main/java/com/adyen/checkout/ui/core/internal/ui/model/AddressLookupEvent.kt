@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.LookupAddress
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class AddressLookupEvent {

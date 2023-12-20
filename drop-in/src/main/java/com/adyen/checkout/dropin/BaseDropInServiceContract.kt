@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.os.Bundle
 import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 
@@ -129,6 +130,11 @@ interface BaseDropInServiceContract {
      */
     fun onAddressLookupQuery(query: String) = Unit
 
-    // TODO address lookup replace id with LookupAddress
-    fun onAddressLookupCompleted(id: String) = false
+    /**
+     * Set a callback that will be called when shopper chooses and address option that requires complete details to be
+     * provided.
+     *
+     * @param lookupAddress Address option selected by shopper.
+     */
+    fun onAddressLookupCompleted(lookupAddress: LookupAddress) = false
 }

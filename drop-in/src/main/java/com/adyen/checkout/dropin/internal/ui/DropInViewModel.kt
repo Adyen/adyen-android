@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -44,7 +45,6 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

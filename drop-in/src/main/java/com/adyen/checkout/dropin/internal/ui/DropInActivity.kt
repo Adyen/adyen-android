@@ -26,6 +26,7 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
@@ -706,8 +707,8 @@ internal class DropInActivity :
         dropInService?.onAddressLookupQueryChanged(query)
     }
 
-    override fun onAddressLookupCompletion(id: String): Boolean {
-        return dropInService?.onAddressLookupCompletion(id) ?: false
+    override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        return dropInService?.onAddressLookupCompletion(lookupAddress) ?: false
     }
 
     private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {

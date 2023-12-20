@@ -12,5 +12,5 @@ interface AddressLookupCallback {
 
     fun onQueryChanged(query: String)
 
-    fun onLookupCompleted(id: String) = false
+    fun onLookupCompleted(lookupAddress: LookupAddress) = false
 }

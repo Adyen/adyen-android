@@ -16,8 +16,10 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
@@ -34,8 +36,6 @@ import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
-import com.adyen.checkout.ui.core.internal.ui.model.LookupAddress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

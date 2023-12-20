@@ -18,6 +18,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -151,8 +152,8 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         onAddressLookupQuery(query)
     }
 
-    final override fun onAddressLookupCompletion(id: String): Boolean {
-        return onAddressLookupCompleted(id)
+    final override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        return onAddressLookupCompleted(lookupAddress)
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {
