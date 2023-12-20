@@ -183,14 +183,24 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     fun onButtonClicked() {
-        updateState { it.copy(uiState = SessionsGooglePayUIState.ShowComponent) }
+        updateState {
+            it.copy(
+                uiState = SessionsGooglePayUIState.ShowComponent,
+                startGooglePay = SessionsStartGooglePayData(ACTIVITY_RESULT_CODE),
+            )
+        }
+    }
+
+    fun onGooglePayStarted() {
+        updateState { it.copy(startGooglePay = null) }
     }
 
     fun onActionConsumed() {
         updateState { it.copy(action = null) }
     }
 
-    fun onActivityResult(resultCode: Int, data: Intent?) {
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != ACTIVITY_RESULT_CODE) return
         updateState { it.copy(activityResult = GooglePayActivityResult(resultCode, data)) }
     }
 
@@ -208,5 +218,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     companion object {
         private val TAG = getLogTag()
+        private const val ACTIVITY_RESULT_CODE = 1
     }
 }

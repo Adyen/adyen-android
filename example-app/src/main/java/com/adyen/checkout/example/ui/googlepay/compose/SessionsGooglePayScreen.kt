@@ -72,6 +72,7 @@ internal fun SessionsGooglePayScreen(
         )
 
         with(googlePayState) {
+            HandleStartGooglePay(startGooglePay, componentData, viewModel::onGooglePayStarted)
             HandleActivityResult(activityResult, componentData, viewModel::onActivityResultHandled)
             HandleAction(action, componentData, viewModel::onActionConsumed)
             HandleNewIntent(newIntent, componentData, viewModel::onNewIntentHandled)
@@ -97,16 +98,9 @@ private fun SessionsGooglePayContent(
             }
 
             SessionsGooglePayUIState.ShowButton -> {
-                val activity = LocalContext.current as Activity
                 val googlePayComponent = getGooglePayComponent(componentData = googlePayState.componentData)
                 PayButton(
-                    onClick = {
-                        googlePayComponent.startGooglePayScreen(
-                            activity,
-                            SessionsGooglePayActivity.ACTIVITY_RESULT_CODE,
-                        )
-                        onButtonClicked()
-                    },
+                    onClick = onButtonClicked,
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
                     theme = if (useDarkTheme) ButtonTheme.Light else ButtonTheme.Dark,
                     type = ButtonType.Pay,
@@ -125,6 +119,24 @@ private fun SessionsGooglePayContent(
                 ResultContent(uiState.finalResult)
             }
         }
+    }
+}
+
+@Composable
+private fun HandleStartGooglePay(
+    startGooglePayData: SessionsStartGooglePayData?,
+    componentData: SessionsGooglePayComponentData?,
+    onGooglePayStarted: () -> Unit
+) {
+    if (startGooglePayData == null) return
+    val activity = LocalContext.current as Activity
+    val googlePayComponent = getGooglePayComponent(componentData = componentData)
+    LaunchedEffect(startGooglePayData) {
+        googlePayComponent.startGooglePayScreen(
+            activity,
+            startGooglePayData.requestCode,
+        )
+        onGooglePayStarted()
     }
 }
 

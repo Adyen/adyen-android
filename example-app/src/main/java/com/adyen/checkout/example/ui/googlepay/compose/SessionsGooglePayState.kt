@@ -17,6 +17,7 @@ import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
 internal data class SessionsGooglePayState(
     val uiState: SessionsGooglePayUIState,
     val componentData: SessionsGooglePayComponentData? = null,
+    val startGooglePay: SessionsStartGooglePayData? = null,
     val activityResult: GooglePayActivityResult? = null,
     val action: Action? = null,
     val newIntent: Intent? = null,
