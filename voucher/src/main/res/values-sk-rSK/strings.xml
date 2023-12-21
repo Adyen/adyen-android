@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Stiahnite si pokyny k inkasu (DDI/Mandát)</string>
-    <string name="checkout_voucher_introduction_boleto">Ďakujeme vám za nákup; na dokončenie platby použite nasledujúci kupón.</string>
+    <string name="checkout_voucher_introduction">Ďakujeme vám za nákup; na dokončenie platby použite nasledujúci kupón.</string>
     <string name="checkout_voucher_payment_reference">Platobná referencia</string>
     <string name="checkout_voucher_expiration_date">Dátum vypršania platnosti</string>
     <string name="checkout_voucher_copy_code">Skopírovať kód</string>

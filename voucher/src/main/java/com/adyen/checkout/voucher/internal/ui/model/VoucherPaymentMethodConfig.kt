@@ -30,7 +30,7 @@ internal enum class VoucherPaymentMethodConfig(
     MULTIBANCO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
         // TODO: To be changed to checkout_voucher_introduction
-        introductionTextResource = R.string.checkout_voucher_introduction_boleto,
+        introductionTextResource = R.string.checkout_voucher_introduction,
     );
 
     companion object {

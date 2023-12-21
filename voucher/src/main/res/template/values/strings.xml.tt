@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">%%bacs.result.introduction%%</string>
-    <string name="checkout_voucher_introduction_boleto">%%voucher.introduction%%</string>
+    <string name="checkout_voucher_introduction">%%voucher.introduction%%</string>
     <string name="checkout_voucher_payment_reference">%%voucher.paymentReferenceLabel%%</string>
     <string name="checkout_voucher_expiration_date">%%voucher.expirationDate%%</string>
     <string name="checkout_voucher_copy_code">%%pix.instructions.copyButton%%</string>

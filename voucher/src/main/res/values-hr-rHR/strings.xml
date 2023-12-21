@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Preuzmite upute za izravno terećenje (DDI / mandat)</string>
-    <string name="checkout_voucher_introduction_boleto">Zahvaljujemo na kupnji, upotrijebite sljedeći kupon za dovršetak plaćanja.</string>
+    <string name="checkout_voucher_introduction">Zahvaljujemo na kupnji, upotrijebite sljedeći kupon za dovršetak plaćanja.</string>
     <string name="checkout_voucher_payment_reference">Referenca za plaćanje</string>
     <string name="checkout_voucher_expiration_date">Datum isteka</string>
     <string name="checkout_voucher_copy_code">Kopiraj kôd</string>

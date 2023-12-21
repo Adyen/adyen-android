@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Ladda ner din instruktion för autogiro/direktdebitering (DDI / Mandate)</string>
-    <string name="checkout_voucher_introduction_boleto">Tack för ditt köp, vänligen använd följande kupong för att slutföra din betalning.</string>
+    <string name="checkout_voucher_introduction">Tack för ditt köp, vänligen använd följande kupong för att slutföra din betalning.</string>
     <string name="checkout_voucher_payment_reference">Betalreferens</string>
     <string name="checkout_voucher_expiration_date">Utgångsdatum</string>
     <string name="checkout_voucher_copy_code">Kopiera kod</string>

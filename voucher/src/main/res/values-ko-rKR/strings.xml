@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">자동 이체 안내(DDI/필수) 다운로드</string>
-    <string name="checkout_voucher_introduction_boleto">구매해 주셔서 감사합니다. 다음 쿠폰을 사용하여 결제를 완료하십시오.</string>
+    <string name="checkout_voucher_introduction">구매해 주셔서 감사합니다. 다음 쿠폰을 사용하여 결제를 완료하십시오.</string>
     <string name="checkout_voucher_payment_reference">결제 참조번호</string>
     <string name="checkout_voucher_expiration_date">만료일</string>
     <string name="checkout_voucher_copy_code">코드 복사하기</string>

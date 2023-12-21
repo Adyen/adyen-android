@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">自動引き落としの説明 (DDI/委任状) をダウンロードする</string>
-    <string name="checkout_voucher_introduction_boleto">お買い上げありがとうございます。以下のクーポンを使用して、お支払いを完了してください。</string>
+    <string name="checkout_voucher_introduction">お買い上げありがとうございます。以下のクーポンを使用して、お支払いを完了してください。</string>
     <string name="checkout_voucher_payment_reference">支払いの参照</string>
     <string name="checkout_voucher_expiration_date">有効期限</string>
     <string name="checkout_voucher_copy_code">コードをコピー</string>

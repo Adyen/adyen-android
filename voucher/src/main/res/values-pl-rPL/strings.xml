@@ -9,7 +9,7 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Pobierz dyspozycję polecenia zapłaty (DDI/upoważnienie)</string>
-    <string name="checkout_voucher_introduction_boleto">Dziękujemy za zakup, dokończ płatność przy użyciu tego kuponu.</string>
+    <string name="checkout_voucher_introduction">Dziękujemy za zakup, dokończ płatność przy użyciu tego kuponu.</string>
     <string name="checkout_voucher_payment_reference">Nr referencyjny płatności</string>
     <string name="checkout_voucher_expiration_date">Data ważności</string>
     <string name="checkout_voucher_copy_code">Skopiuj kod</string>
