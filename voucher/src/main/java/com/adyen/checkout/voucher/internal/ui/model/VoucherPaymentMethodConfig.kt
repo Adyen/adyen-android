@@ -20,6 +20,9 @@ internal enum class VoucherPaymentMethodConfig(
     ),
     BOLETO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
+    ),
+    MULTIBANCO(
+        viewType = VoucherComponentViewType.FULL_VOUCHER,
     );
 
     companion object {
@@ -35,6 +38,8 @@ internal enum class VoucherPaymentMethodConfig(
                 PaymentMethodTypes.BOLETOBANCARIO_ITAU,
                 PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
                 PaymentMethodTypes.BOLETO_PRIMEIRO_PAY -> BOLETO
+
+                PaymentMethodTypes.MULTIBANCO -> MULTIBANCO
 
                 else -> null
             }

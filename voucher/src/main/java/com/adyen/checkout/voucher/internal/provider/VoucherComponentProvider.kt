@@ -97,7 +97,8 @@ constructor(
             PaymentMethodTypes.BOLETOBANCARIO_HSBC,
             PaymentMethodTypes.BOLETOBANCARIO_ITAU,
             PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
-            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY
+            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY,
+            PaymentMethodTypes.MULTIBANCO
         )
     }
 }
