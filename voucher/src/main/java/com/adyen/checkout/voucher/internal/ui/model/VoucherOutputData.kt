@@ -20,4 +20,5 @@ data class VoucherOutputData(
     val expiresAt: String?,
     val reference: String?,
     val totalAmount: Amount?,
+    val introductionTextResource: Int?,
 ) : OutputData

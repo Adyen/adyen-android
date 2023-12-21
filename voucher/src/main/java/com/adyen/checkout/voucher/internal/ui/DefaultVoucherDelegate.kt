@@ -74,21 +74,23 @@ internal class DefaultVoucherDelegate(
             return
         }
 
-        val viewType = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)?.viewType
-
-        if (viewType == null) {
+        val config = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)
+        if (config == null) {
             exceptionChannel.trySend(
                 ComponentException("Payment method ${action.paymentMethodType} not supported for this action")
             )
             return
         }
 
-        _viewFlow.tryEmit(viewType)
+        _viewFlow.tryEmit(config.viewType)
 
-        createOutputData(action)
+        createOutputData(action, config)
     }
 
-    private fun createOutputData(action: VoucherAction) {
+    private fun createOutputData(
+        action: VoucherAction,
+        config: VoucherPaymentMethodConfig
+    ) {
         val outputData = VoucherOutputData(
             isValid = true,
             paymentMethodType = action.paymentMethodType,
@@ -97,6 +99,7 @@ internal class DefaultVoucherDelegate(
             expiresAt = action.expiresAt,
             reference = action.reference,
             totalAmount = action.totalAmount,
+            introductionTextResource = config.introductionTextResource
         )
         _outputDataFlow.tryEmit(outputData)
     }
@@ -107,7 +110,8 @@ internal class DefaultVoucherDelegate(
         downloadUrl = null,
         expiresAt = null,
         reference = null,
-        totalAmount = null
+        totalAmount = null,
+        introductionTextResource = null,
     )
 
     override fun downloadVoucher(context: Context) {

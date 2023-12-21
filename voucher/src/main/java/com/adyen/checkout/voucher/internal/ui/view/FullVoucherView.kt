@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.Amount
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-class FullVoucherView @JvmOverloads constructor(
+open class FullVoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -47,7 +48,7 @@ class FullVoucherView @JvmOverloads constructor(
     ),
     ComponentView {
 
-    private val binding: FullVoucherViewBinding = FullVoucherViewBinding.inflate(LayoutInflater.from(context), this)
+    protected val binding: FullVoucherViewBinding = FullVoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
@@ -55,7 +56,7 @@ class FullVoucherView @JvmOverloads constructor(
 
     init {
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
-        setPadding(padding, padding, padding, padding)
+        this.setPadding(padding, padding, padding, padding)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -73,10 +74,6 @@ class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
-        binding.textViewIntroduction.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_Description_Boleto,
-            localizedContext
-        )
         binding.textViewPaymentReference.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_PaymentReference,
             localizedContext
@@ -105,6 +102,7 @@ class FullVoucherView @JvmOverloads constructor(
         Logger.d(TAG, "outputDataChanged")
 
         loadLogo(outputData.paymentMethodType)
+        updateIntroductionText(outputData.introductionTextResource)
         updateAmount(outputData.totalAmount)
         updateCodeReference(outputData.reference)
         updateExpirationDate(outputData.expiresAt)
@@ -118,6 +116,11 @@ class FullVoucherView @JvmOverloads constructor(
                 size = LogoSize.MEDIUM,
             )
         }
+    }
+
+    private fun updateIntroductionText(@StringRes introductionTextResource: Int?) {
+        if (introductionTextResource == null) return
+        binding.textViewIntroduction.text = localizedContext.getString(introductionTextResource)
     }
 
     private fun updateAmount(amount: Amount?) {

@@ -20,12 +20,22 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <!-- This style is deprecated and will be removed in future releases. Please extend from
+         AdyenCheckout.Voucher.Description if you want to override the style for Boleto. -->
     <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
         <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction_boleto</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.Description" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 

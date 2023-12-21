@@ -8,21 +8,29 @@
 
 package com.adyen.checkout.voucher.internal.ui.model
 
+import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType
 
 internal enum class VoucherPaymentMethodConfig(
     val viewType: VoucherComponentViewType,
+    // TODO: If we do not want to introduce braking changes, then this should become style, instead of text resource. Which I do not like.
+    @StringRes val introductionTextResource: Int?,
 ) {
 
     BACS(
         viewType = VoucherComponentViewType.SIMPLE_VOUCHER,
+        introductionTextResource = R.string.checkout_voucher_introduction_bacs,
     ),
     BOLETO(
-        viewType = VoucherComponentViewType.FULL_VOUCHER,
+        viewType = VoucherComponentViewType.BOLETO_VOUCHER,
+        introductionTextResource = null,
     ),
     MULTIBANCO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
+        // TODO: To be changed to checkout_voucher_introduction
+        introductionTextResource = R.string.checkout_voucher_introduction_boleto,
     );
 
     companion object {
