@@ -25,11 +25,11 @@ interface AddressLookupDelegate {
 
     val addressDelegate: AddressDelegate
 
-    fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun startAddressLookup()
     fun updateAddressLookupOptions(options: List<LookupAddress>)
     fun setAddressLookupResult(lookupAddress: LookupAddress)
+    fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit)
+    fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun onAddressQueryChanged(query: String)
     fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean
-    fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit)
 }

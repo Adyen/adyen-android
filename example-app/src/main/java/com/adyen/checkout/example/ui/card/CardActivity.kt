@@ -155,6 +155,11 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
         return true
     }
 
+    override fun onBackPressed() {
+        if (cardComponent?.handleBackPress() == true) return
+        super.onBackPressed()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         cardComponent = null

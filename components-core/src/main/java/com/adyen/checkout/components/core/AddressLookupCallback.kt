@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.components.core
 
+/**
+ * TODO docs
+ */
 interface AddressLookupCallback {
 
     fun onQueryChanged(query: String)

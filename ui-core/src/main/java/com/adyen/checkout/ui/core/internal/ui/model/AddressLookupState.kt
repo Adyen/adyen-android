@@ -10,13 +10,13 @@ package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.AddressInputModel
-import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class AddressLookupState {
     object Initial : AddressLookupState()
     object Loading : AddressLookupState()
     data class Form(val selectedAddress: AddressInputModel?) : AddressLookupState()
-    data class SearchResult(val query: String, val options: List<LookupAddress>) : AddressLookupState()
+    data class SearchResult(val query: String, val options: List<LookupOption>) : AddressLookupState()
     object Error : AddressLookupState()
 }

@@ -118,6 +118,7 @@ class AddressLookupView @JvmOverloads constructor(
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
             clearQuery()
+            // TODO use a delegate function that triggers this event from card delegate (implementation)
             addressLookupDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
         }
     }
@@ -197,7 +198,7 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textInputLayoutAddressLookupQuery.hideError()
     }
 
-    private fun setAddressOptions(options: List<LookupAddress>) {
+    private fun setAddressOptions(options: List<LookupOption>) {
         if (addressLookupOptionsAdapter == null) {
             initAddressOptions()
         }

@@ -20,7 +20,7 @@ import com.adyen.checkout.ui.core.databinding.AddressLookupOptionItemViewBinding
 internal class AddressLookupOptionsAdapter(
     private val onItemClicked: (LookupAddress) -> Boolean
 ) :
-    ListAdapter<LookupAddress, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
+    ListAdapter<LookupOption, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
         AddressLookupOptionDiffCallback,
     ) {
 
@@ -37,21 +37,50 @@ internal class AddressLookupOptionsAdapter(
         private val binding: AddressLookupOptionItemViewBinding,
         private val onItemClicked: (LookupAddress) -> Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindItem(lookupAddress: LookupAddress) {
+        fun bindItem(lookupOption: LookupOption) {
             binding.root.setOnClickListener {
-                onItemClicked(lookupAddress)
+                onItemClicked(lookupOption.lookupAddress)
             }
-            binding.progressBar.isVisible = lookupAddress.isLoading
-            binding.textViewAddressHeader.text = lookupAddress.title
-            binding.textViewAddressDescription.text = lookupAddress.subtitle
+            binding.progressBar.isVisible = lookupOption.isLoading
+            binding.textViewAddressHeader.text = lookupOption.title
+            binding.textViewAddressDescription.text = lookupOption.subtitle
         }
     }
 
-    object AddressLookupOptionDiffCallback : DiffUtil.ItemCallback<LookupAddress>() {
-        override fun areItemsTheSame(oldItem: LookupAddress, newItem: LookupAddress): Boolean =
-            oldItem.id == newItem.id
+    object AddressLookupOptionDiffCallback : DiffUtil.ItemCallback<LookupOption>() {
+        override fun areItemsTheSame(oldItem: LookupOption, newItem: LookupOption): Boolean =
+            oldItem.lookupAddress.id == newItem.lookupAddress.id
 
-        override fun areContentsTheSame(oldItem: LookupAddress, newItem: LookupAddress): Boolean =
+        override fun areContentsTheSame(oldItem: LookupOption, newItem: LookupOption): Boolean =
             oldItem == newItem
     }
+}
+
+data class LookupOption(
+    val lookupAddress: LookupAddress,
+    val isLoading: Boolean = false
+) {
+    override fun toString(): String {
+        return listOf(
+            lookupAddress.address.street,
+            lookupAddress.address.houseNumberOrName,
+            lookupAddress.address.apartmentSuite,
+            lookupAddress.address.postalCode,
+            lookupAddress.address.city,
+            lookupAddress.address.stateOrProvince,
+            lookupAddress.address.country,
+        ).filter { it.isNotBlank() }.joinToString(" ")
+    }
+
+    val title
+        get() = lookupAddress.address.street.ifBlank {
+            toString()
+        }
+
+    val subtitle
+        get() = if (lookupAddress.address.street.isBlank()) {
+            ""
+        } else {
+            toString()
+        }
 }

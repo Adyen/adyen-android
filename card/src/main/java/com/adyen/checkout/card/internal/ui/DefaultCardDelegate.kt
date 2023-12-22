@@ -74,6 +74,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
@@ -889,7 +890,9 @@ class DefaultCardDelegate(
                     } else {
                         AddressLookupState.SearchResult(
                             inputData.addressLookupInputData.query,
-                            event.addressLookupOptions,
+                            event.addressLookupOptions.map {
+                                LookupOption(lookupAddress = it, isLoading = false)
+                            },
                         )
                     }
                 } else {
@@ -903,11 +906,10 @@ class DefaultCardDelegate(
                         AddressLookupState.SearchResult(
                             inputData.addressLookupInputData.query,
                             addressLookupOptions.map {
-                                if (it == event.lookupAddress) {
-                                    it.copy(isLoading = true)
-                                } else {
-                                    it
-                                }
+                                LookupOption(
+                                    lookupAddress = it,
+                                    isLoading = it == event.lookupAddress,
+                                )
                             },
                         )
                     } else {
