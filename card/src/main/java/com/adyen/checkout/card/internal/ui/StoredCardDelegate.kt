@@ -326,6 +326,8 @@ internal class StoredCardDelegate(
 
     override fun onAddressLookupCompleted(lookupAddress: LookupAddress) = false
 
+    override fun onManualEntryModeSelected() = Unit
+
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
             _viewFlow.tryEmit(CardComponentViewType.StoredCardView)

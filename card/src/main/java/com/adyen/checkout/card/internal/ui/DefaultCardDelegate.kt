@@ -538,7 +538,18 @@ class DefaultCardDelegate(
     }
 
     override fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean {
-        return addressLookupCallback?.onLookupCompleted(lookupAddress) ?: false
+        val isLoading = addressLookupCallback?.onLookupCompleted(lookupAddress) ?: false
+        addressLookupEventChannel.trySend(
+            AddressLookupEvent.OptionSelected(
+                lookupAddress,
+                isLoading,
+            ),
+        )
+        return isLoading
+    }
+
+    override fun onManualEntryModeSelected() {
+        addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
     }
 
     override fun handleBackPress(): Boolean {

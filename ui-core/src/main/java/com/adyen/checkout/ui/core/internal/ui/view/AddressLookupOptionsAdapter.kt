@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.ui.core.databinding.AddressLookupOptionItemViewBinding
 
 internal class AddressLookupOptionsAdapter(
-    private val onItemClicked: (LookupAddress) -> Boolean
+    private val onItemClicked: (LookupAddress) -> Unit
 ) :
     ListAdapter<LookupOption, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
         AddressLookupOptionDiffCallback,
@@ -35,7 +35,7 @@ internal class AddressLookupOptionsAdapter(
 
     internal class AddressLookupOptionViewHolder(
         private val binding: AddressLookupOptionItemViewBinding,
-        private val onItemClicked: (LookupAddress) -> Boolean
+        private val onItemClicked: (LookupAddress) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(lookupOption: LookupOption) {
             binding.root.setOnClickListener {

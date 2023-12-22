@@ -22,7 +22,6 @@ import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
@@ -118,15 +117,14 @@ class AddressLookupView @JvmOverloads constructor(
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
             clearQuery()
-            // TODO use a delegate function that triggers this event from card delegate (implementation)
-            addressLookupDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
+            addressLookupDelegate.onManualEntryModeSelected()
         }
     }
 
     private fun initManualEntryInitialTextView() {
         binding.textViewManualEntryInitial.setOnClickListener {
             clearQuery()
-            addressLookupDelegate.addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
+            addressLookupDelegate.onManualEntryModeSelected()
         }
     }
 
@@ -205,16 +203,9 @@ class AddressLookupView @JvmOverloads constructor(
         addressLookupOptionsAdapter?.submitList(options)
     }
 
-    private fun onAddressSelected(lookupAddress: LookupAddress): Boolean {
-        val isLoading = addressLookupDelegate.onAddressLookupCompleted(lookupAddress)
-        addressLookupDelegate.addressLookupEventChannel.trySend(
-            AddressLookupEvent.OptionSelected(
-                lookupAddress,
-                isLoading,
-            ),
-        )
+    private fun onAddressSelected(lookupAddress: LookupAddress) {
+        addressLookupDelegate.onAddressLookupCompleted(lookupAddress)
         clearQuery()
-        return isLoading
     }
 
     override fun getView(): View = this
