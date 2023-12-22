@@ -68,13 +68,13 @@ constructor(
         GooglePayComponent,
         GooglePayConfiguration,
         GooglePayComponentState,
-        ComponentCallback<GooglePayComponentState>
+        ComponentCallback<GooglePayComponentState>,
         >,
     SessionPaymentComponentProvider<
         GooglePayComponent,
         GooglePayConfiguration,
         GooglePayComponentState,
-        SessionComponentCallback<GooglePayComponentState>
+        SessionComponentCallback<GooglePayComponentState>,
         >,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
@@ -104,7 +104,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -115,6 +115,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
+                application = application,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -169,7 +170,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -180,6 +181,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
+                application = application,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -199,7 +201,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<GooglePayComponentState>(
@@ -243,7 +245,7 @@ constructor(
         val componentParams = componentParamsMapper.mapToParams(configuration, paymentMethod, null)
         val paymentsClient = Wallet.getPaymentsClient(
             applicationContext,
-            GooglePayUtils.createWalletOptions(componentParams)
+            GooglePayUtils.createWalletOptions(componentParams),
         )
         val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
         val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)

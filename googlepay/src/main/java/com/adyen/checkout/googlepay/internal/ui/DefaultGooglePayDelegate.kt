@@ -9,7 +9,9 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
@@ -30,9 +32,12 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
+import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +46,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Suppress("TooManyFunctions")
 internal class DefaultGooglePayDelegate(
@@ -49,6 +55,7 @@ internal class DefaultGooglePayDelegate(
     private val order: OrderRequest?,
     override val componentParams: GooglePayComponentParams,
     private val analyticsRepository: AnalyticsRepository,
+    private val application: Application,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -60,7 +67,11 @@ internal class DefaultGooglePayDelegate(
     private val submitChannel: Channel<GooglePayComponentState> = bufferedChannel()
     override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
 
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
     override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
         setupAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
@@ -140,6 +151,59 @@ internal class DefaultGooglePayDelegate(
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
     }
 
+    override fun startGooglePayScreen(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>) {
+        Logger.d(TAG, "startGooglePayScreen")
+        val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
+        val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
+        val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)
+        coroutineScope.launch {
+            // no need to handle the result of this operation, paymentDataLauncher does that internally
+            runCatching { paymentDataTask.await() }
+            paymentDataLauncher.launch(paymentDataTask)
+        }
+    }
+
+    override fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?) {
+        if (paymentDataTaskResult == null) {
+            Logger.e(TAG, "GooglePay ApiTaskResult is null")
+            exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
+            return
+        }
+        when (val statusCode = paymentDataTaskResult.status.statusCode) {
+            CommonStatusCodes.SUCCESS -> {
+                val paymentData = paymentDataTaskResult.result
+                if (paymentData == null) {
+                    Logger.e(TAG, "Result data is null")
+                    exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
+                    return
+                }
+                Logger.i(TAG, "GooglePay payment result successful")
+                updateComponentState(paymentData)
+            }
+
+            CommonStatusCodes.CANCELED -> {
+                Logger.i(TAG, "GooglePay payment canceled")
+                exceptionChannel.trySend(ComponentException("GooglePay payment canceled"))
+            }
+
+            AutoResolveHelper.RESULT_ERROR -> {
+                val statusMessage: String = paymentDataTaskResult.status.statusMessage?.let { ": $it" }.orEmpty()
+                Logger.e(TAG, "GooglePay encountered an error$statusMessage")
+                exceptionChannel.trySend(ComponentException("GooglePay encountered an error$statusMessage"))
+            }
+
+            CommonStatusCodes.INTERNAL_ERROR -> {
+                Logger.e(TAG, "GooglePay encountered an internal error")
+                exceptionChannel.trySend(ComponentException("GooglePay encountered an internal error"))
+            }
+
+            else -> {
+                Logger.e(TAG, "GooglePay encountered an unexpected error, statusCode: $statusCode")
+                exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
+            }
+        }
+    }
+
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         Logger.d(TAG, "handleActivityResult")
         when (resultCode) {
@@ -181,6 +245,7 @@ internal class DefaultGooglePayDelegate(
 
     override fun onCleared() {
         removeObserver()
+        _coroutineScope = null
     }
 
     companion object {

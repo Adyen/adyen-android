@@ -9,6 +9,7 @@ package com.adyen.checkout.googlepay
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +29,9 @@ import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -78,6 +82,10 @@ class GooglePayComponent internal constructor(
         googlePayDelegate.startGooglePayScreen(activity, requestCode)
     }
 
+    fun startGooglePayScreen(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>) {
+        googlePayDelegate.startGooglePayScreen(paymentDataLauncher)
+    }
+
     /**
      * Returns some of the parameters required to initialize the [Google Pay button](https://docs.adyen.com/payment-methods/google-pay/android-component/#2-show-the-google-pay-button).
      */
@@ -106,6 +114,10 @@ class GooglePayComponent internal constructor(
         googlePayDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
+    }
+
+    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?) {
+        googlePayDelegate.handlePaymentResult(paymentDataTaskResult)
     }
 
     companion object {
