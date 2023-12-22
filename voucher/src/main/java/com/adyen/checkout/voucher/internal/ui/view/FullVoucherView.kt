@@ -18,7 +18,6 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -30,6 +29,7 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.databinding.FullVoucherViewBinding
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
+import com.adyen.checkout.voucher.internal.ui.model.VoucherInformationField
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -51,8 +51,9 @@ internal open class FullVoucherView @JvmOverloads constructor(
     protected val binding: FullVoucherViewBinding = FullVoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
-
     private lateinit var delegate: VoucherDelegate
+
+    private var informationFieldsAdapter: VoucherInformationFieldsAdapter? = null
 
     init {
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -86,10 +87,11 @@ internal open class FullVoucherView @JvmOverloads constructor(
             R.style.AdyenCheckout_Voucher_ButtonDownloadPdf,
             localizedContext
         )
-        binding.textViewExpirationLabel.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ExpirationDateLabel,
-            localizedContext
-        )
+        // TODO: Perhaps keep this style and move it to Boleto implementation
+//        binding.textViewExpirationLabel.setLocalizedTextFromStyle(
+//            R.style.AdyenCheckout_Voucher_ExpirationDateLabel,
+//            localizedContext
+//        )
     }
 
     private fun observeDelegate(delegate: VoucherDelegate, coroutineScope: CoroutineScope) {
@@ -105,7 +107,7 @@ internal open class FullVoucherView @JvmOverloads constructor(
         updateIntroductionText(outputData.introductionTextResource)
         updateAmount(outputData.totalAmount)
         updateCodeReference(outputData.reference)
-        updateExpirationDate(outputData.expiresAt)
+        updateInformationFields(outputData.informationFields)
     }
 
     private fun loadLogo(paymentMethodType: String?) {
@@ -144,18 +146,13 @@ internal open class FullVoucherView @JvmOverloads constructor(
         binding.buttonCopyCode.isVisible = isVisible
     }
 
-    private fun updateExpirationDate(expiresAt: String?) {
-        binding.textViewExpirationDate.text = expiresAt?.let {
-            DateUtils.formatStringDate(
-                expiresAt,
-                delegate.componentParams.shopperLocale
-            )
+    private fun updateInformationFields(informationFields: List<VoucherInformationField>?) {
+        if (informationFields.isNullOrEmpty()) return
+        if (informationFieldsAdapter == null) {
+            informationFieldsAdapter = VoucherInformationFieldsAdapter()
+            binding.listViewInformationFields.adapter = informationFieldsAdapter
         }
-
-        val isVisible = !expiresAt.isNullOrEmpty()
-        binding.textViewExpirationLabel.isVisible = isVisible
-        binding.textViewExpirationDate.isVisible = isVisible
-        binding.expiryDateSeparator.isVisible = isVisible
+        informationFieldsAdapter?.submitList(informationFields)
     }
 
     private fun copyCode(codeReference: String?) {

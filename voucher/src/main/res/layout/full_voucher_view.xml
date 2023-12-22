@@ -112,30 +112,19 @@
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code"
         app:layout_constraintTop_toTopOf="@id/button_copyCode" />
 
-    <View
-        android:id="@+id/expiryDateSeparator"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:background="@color/voucherBorderColor"
+    <Space
+        android:id="@+id/space_informationFields"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standard_margin"
         app:layout_constraintTop_toBottomOf="@id/button_copyCode" />
 
-    <TextView
-        android:id="@+id/textView_expirationLabel"
-        style="@style/AdyenCheckout.Voucher.ExpirationDateLabel"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listView_informationFields"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/expiryDateSeparator" />
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/space_informationFields"
+        tools:listitem="@layout/full_voucher_information_field" />
 
-    <TextView
-        android:id="@+id/textView_expirationDate"
-        style="@style/AdyenCheckout.Voucher.ExpirationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/expiryDateSeparator"
-        tools:text="16/03/2023" />
 </merge>

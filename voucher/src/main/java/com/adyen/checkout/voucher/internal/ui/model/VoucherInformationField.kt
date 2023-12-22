@@ -11,6 +11,6 @@ package com.adyen.checkout.voucher.internal.ui.model
 import androidx.annotation.StringRes
 
 data class VoucherInformationField(
-    @StringRes val nameResId: Int,
+    @StringRes val labelResId: Int,
     val value: String
 )

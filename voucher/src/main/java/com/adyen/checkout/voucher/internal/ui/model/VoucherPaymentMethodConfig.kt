@@ -59,13 +59,13 @@ internal enum class VoucherPaymentMethodConfig(
 internal fun VoucherPaymentMethodConfig.getInformationFields(action: VoucherAction, shopperLocale: Locale) =
     when (this) {
         VoucherPaymentMethodConfig.BOLETO -> listOfNotNull(
-            createExpirationInformationField(action, shopperLocale)
+            createExpirationInformationField(action, shopperLocale),
         )
 
         VoucherPaymentMethodConfig.MULTIBANCO -> listOfNotNull(
             createEntityInformationField(action),
             createExpirationInformationField(action, shopperLocale),
-            createShopperReferenceField(action)
+            createShopperReferenceField(action),
         )
 
         else -> null
@@ -75,7 +75,7 @@ private fun createEntityInformationField(action: VoucherAction): VoucherInformat
     val entity = action.entity ?: return null
 
     return VoucherInformationField(
-        nameResId = R.string.checkout_voucher_expiration_entity,
+        labelResId = R.string.checkout_voucher_expiration_entity,
         value = entity
     )
 }
@@ -89,7 +89,7 @@ private fun createExpirationInformationField(action: VoucherAction, shopperLocal
     } ?: return null
 
     return VoucherInformationField(
-        nameResId = R.string.checkout_voucher_expiration_date,
+        labelResId = R.string.checkout_voucher_expiration_date,
         value = expirationDate
     )
 }
@@ -98,7 +98,7 @@ private fun createShopperReferenceField(action: VoucherAction): VoucherInformati
     val merchantReference = action.merchantReference ?: return null
 
     return VoucherInformationField(
-        nameResId = R.string.checkout_voucher_shopper_reference,
+        labelResId = R.string.checkout_voucher_shopper_reference,
         value = merchantReference
     )
 }

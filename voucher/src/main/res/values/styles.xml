@@ -81,12 +81,23 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <!-- TODO: We should decide if we want to keep this style or not -->
     <style name="AdyenCheckout.Voucher.ExpirationDateLabel" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:text">@string/checkout_voucher_expiration_date</item>
         <item name="android:layout_margin">@dimen/standard_margin</item>
     </style>
 
+    <style name="AdyenCheckout.Voucher.InformationFieldLabel" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_margin">@dimen/standard_margin</item>
+    </style>
+
+    <!-- TODO: We should decide if we want to keep this style or not -->
     <style name="AdyenCheckout.Voucher.ExpirationDate" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_margin">@dimen/standard_margin</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.InformationFieldValue" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:layout_margin">@dimen/standard_margin</item>
         <item name="android:textStyle">bold</item>
     </style>
