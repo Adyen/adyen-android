@@ -20,8 +20,8 @@ internal enum class VoucherPaymentMethodConfig(
 ) {
 
     BACS(
-        viewType = VoucherComponentViewType.SIMPLE_VOUCHER,
-        introductionTextResource = R.string.checkout_voucher_introduction_bacs,
+        viewType = VoucherComponentViewType.BACS_VOUCHER,
+        introductionTextResource = null,
     ),
     BOLETO(
         viewType = VoucherComponentViewType.BOLETO_VOUCHER,

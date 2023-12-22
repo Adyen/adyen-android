@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -28,7 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal class VoucherView @JvmOverloads constructor(
+internal open class VoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -40,7 +41,7 @@ internal class VoucherView @JvmOverloads constructor(
     ),
     ComponentView {
 
-    private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
+    protected val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 
@@ -49,7 +50,7 @@ internal class VoucherView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
-        setPadding(padding, padding, padding, padding)
+        this.setPadding(padding, padding, padding, padding)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -66,10 +67,6 @@ internal class VoucherView @JvmOverloads constructor(
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
-        binding.textViewDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_Description_Bacs,
-            localizedContext
-        )
         binding.textViewDownload.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_DownloadTextAppearance,
             localizedContext
@@ -85,6 +82,7 @@ internal class VoucherView @JvmOverloads constructor(
     private fun outputDataChanged(outputData: VoucherOutputData) {
         Logger.d(TAG, "outputDataChanged")
         loadLogo(outputData.paymentMethodType)
+        updateIntroductionText(outputData.introductionTextResource)
     }
 
     private fun loadLogo(paymentMethodType: String?) {
@@ -95,6 +93,11 @@ internal class VoucherView @JvmOverloads constructor(
                 size = LogoSize.MEDIUM,
             )
         }
+    }
+
+    private fun updateIntroductionText(@StringRes introductionTextResource: Int?) {
+        if (introductionTextResource == null) return
+        binding.textViewDescription.text = localizedContext.getString(introductionTextResource)
     }
 
     override fun highlightValidationErrors() {

@@ -10,13 +10,20 @@
 
     <style name="AdyenCheckout.Voucher" />
 
-    <style name="AdyenCheckout.Voucher.Description" />
-
+    <!-- This style is deprecated and will be removed in future releases. Please extend from
+         AdyenCheckout.SimpleVoucher.Description if you want to override the style for Bacs. -->
     <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.SimpleVoucher.Description" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 

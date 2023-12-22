@@ -15,17 +15,17 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import kotlinx.coroutines.CoroutineScope
 
-// TODO: After removing BoletoVoucherView, make sure to make FullVoucherView non open, binding to private and remove Bolet styles.
-internal class BoletoVoucherView @JvmOverloads constructor(
+// TODO: After removing BacsVoucherView, make sure to make SimpleVoucherView non open, binding to private and remove Bacs styles.
+internal class BacsVoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FullVoucherView(context, attrs, defStyleAttr) {
+) : VoucherView(context, attrs, defStyleAttr) {
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         super.initView(delegate, coroutineScope, localizedContext)
 
-        binding.textViewIntroduction.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_Description_Boleto,
+        binding.textViewDescription.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Description_Bacs,
             localizedContext
         )
     }
