@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,8 +24,10 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -36,14 +39,19 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @HiltViewModel
 internal class GooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val application: Application,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
     ComponentCallback<GooglePayComponentState>,
     ComponentAvailableCallback {
+
+    private val googlePayConfiguration = checkoutConfigurationProvider.getGooglePayConfiguration()
 
     private val _googleComponentDataFlow = MutableStateFlow<GooglePayComponentData?>(null)
     val googleComponentDataFlow: Flow<GooglePayComponentData> = _googleComponentDataFlow.filterNotNull()
@@ -67,7 +75,7 @@ internal class GooglePayViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val paymentMethod = paymentMethodResponse
@@ -76,12 +84,30 @@ internal class GooglePayViewModel @Inject constructor(
 
         if (paymentMethod == null) {
             _viewState.emit(GooglePayViewState.Error(R.string.error_dialog_title))
-        } else {
-            _events.emit(GooglePayEvent.CheckAvailability(paymentMethod, this@GooglePayViewModel))
-            _googleComponentDataFlow.emit(
-                GooglePayComponentData(paymentMethod, this@GooglePayViewModel)
-            )
+            return@withContext
         }
+
+        _googleComponentDataFlow.emit(
+            GooglePayComponentData(
+                paymentMethod,
+                googlePayConfiguration,
+                this@GooglePayViewModel,
+            ),
+        )
+
+        checkGooglePayAvailability(paymentMethod, googlePayConfiguration)
+    }
+
+    private fun checkGooglePayAvailability(
+        paymentMethod: PaymentMethod,
+        googlePayConfiguration: GooglePayConfiguration,
+    ) {
+        GooglePayComponent.PROVIDER.isAvailable(
+            application,
+            paymentMethod,
+            googlePayConfiguration,
+            this,
+        )
     }
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {

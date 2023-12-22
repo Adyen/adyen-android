@@ -36,6 +36,7 @@ import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
 import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
 import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
+import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -136,6 +137,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("LongMethod")
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
             is MainNavigation.DropIn -> {
@@ -167,42 +169,45 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            is MainNavigation.Bacs -> BacsFragment.show(supportFragmentManager)
+            is MainNavigation.Bacs -> {
+                BacsFragment.show(supportFragmentManager)
+            }
+
             is MainNavigation.Blik -> {
-                val intent = Intent(this, BlikActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(this, BlikActivity::class.java))
             }
 
-            MainNavigation.Card -> {
-                val intent = Intent(this, CardActivity::class.java)
-                startActivity(intent)
+            is MainNavigation.Card -> {
+                startActivity(Intent(this, CardActivity::class.java))
             }
 
-            MainNavigation.CardWithSession -> {
-                val intent = Intent(this, SessionsCardActivity::class.java)
-                startActivity(intent)
+            is MainNavigation.CardWithSession -> {
+                startActivity(Intent(this, SessionsCardActivity::class.java))
             }
 
-            MainNavigation.GiftCard -> {
-                val intent = Intent(this, GiftCardActivity::class.java)
-                startActivity(intent)
+            is MainNavigation.GiftCard -> {
+                startActivity(Intent(this, GiftCardActivity::class.java))
             }
 
-            MainNavigation.GiftCardWithSession -> {
-                val intent = Intent(this, SessionsGiftCardActivity::class.java)
-                startActivity(intent)
+            is MainNavigation.GiftCardWithSession -> {
+                startActivity(Intent(this, SessionsGiftCardActivity::class.java))
             }
 
-            MainNavigation.CardWithSessionTakenOver -> {
-                val intent = Intent(this, SessionsCardTakenOverActivity::class.java)
-                startActivity(intent)
+            is MainNavigation.CardWithSessionTakenOver -> {
+                startActivity(Intent(this, SessionsCardTakenOverActivity::class.java))
             }
 
             is MainNavigation.Instant -> {
                 InstantFragment.show(supportFragmentManager, navigation.paymentMethodType)
             }
 
-            is MainNavigation.GooglePay -> GooglePayFragment.show(supportFragmentManager)
+            is MainNavigation.GooglePay -> {
+                GooglePayFragment.show(supportFragmentManager)
+            }
+
+            is MainNavigation.GooglePayWithSession -> {
+                startActivity(Intent(this, SessionsGooglePayActivity::class.java))
+            }
         }
     }
 
@@ -218,6 +223,8 @@ class MainActivity : AppCompatActivity() {
         binding.switchSessions.isChecked = isChecked
     }
 
+    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GooglePayFragment.ACTIVITY_RESULT_CODE) {
