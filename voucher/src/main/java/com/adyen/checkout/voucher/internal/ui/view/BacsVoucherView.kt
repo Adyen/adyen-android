@@ -20,7 +20,7 @@ internal class BacsVoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : VoucherView(context, attrs, defStyleAttr) {
+) : SimpleVoucherView(context, attrs, defStyleAttr) {
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         super.initView(delegate, coroutineScope, localizedContext)
 

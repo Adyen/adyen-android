@@ -19,7 +19,7 @@ import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType.SIMPLE_VO
 import com.adyen.checkout.voucher.internal.ui.view.BacsVoucherView
 import com.adyen.checkout.voucher.internal.ui.view.BoletoVoucherView
 import com.adyen.checkout.voucher.internal.ui.view.FullVoucherView
-import com.adyen.checkout.voucher.internal.ui.view.VoucherView
+import com.adyen.checkout.voucher.internal.ui.view.SimpleVoucherView
 
 internal object VoucherViewProvider : ViewProvider {
 
@@ -29,7 +29,7 @@ internal object VoucherViewProvider : ViewProvider {
     ): ComponentView {
         return when (viewType) {
             BACS_VOUCHER -> BacsVoucherView(context)
-            SIMPLE_VOUCHER -> VoucherView(context)
+            SIMPLE_VOUCHER -> SimpleVoucherView(context)
             BOLETO_VOUCHER -> BoletoVoucherView(context)
             FULL_VOUCHER -> FullVoucherView(context)
             else -> throw IllegalArgumentException("Unsupported view type")

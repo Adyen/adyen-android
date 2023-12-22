@@ -12,12 +12,8 @@
 
     <!-- This style is deprecated and will be removed in future releases. Please extend from
          AdyenCheckout.SimpleVoucher.Description if you want to override the style for Bacs. -->
-    <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+    <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.SimpleVoucher.Description">
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
-        <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="AdyenCheckout.SimpleVoucher.Description" parent="AdyenCheckout.TextAppearance.Primary">
@@ -28,17 +24,13 @@
     </style>
 
     <!-- This style is deprecated and will be removed in future releases. Please extend from
-         AdyenCheckout.Voucher.Description if you want to override the style for Boleto. -->
-    <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.TextAppearance">
+         AdyenCheckout.FullVoucher.Description if you want to override the style for Boleto. -->
+    <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.FullVoucher.Description">
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction</item>
-        <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="AdyenCheckout.Voucher.Description" parent="AdyenCheckout.TextAppearance">
+    <style name="AdyenCheckout.FullVoucher.Description" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>

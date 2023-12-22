@@ -22,14 +22,14 @@ import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
-import com.adyen.checkout.voucher.databinding.VoucherViewBinding
+import com.adyen.checkout.voucher.databinding.SimpleVoucherViewBinding
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal open class VoucherView @JvmOverloads constructor(
+internal open class SimpleVoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -41,7 +41,7 @@ internal open class VoucherView @JvmOverloads constructor(
     ),
     ComponentView {
 
-    protected val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
+    protected val binding = SimpleVoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 

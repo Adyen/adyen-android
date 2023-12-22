@@ -15,7 +15,6 @@ import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType
 
 internal enum class VoucherPaymentMethodConfig(
     val viewType: VoucherComponentViewType,
-    // TODO: If we do not want to introduce braking changes, then this should become style, instead of text resource. Which I do not like.
     @StringRes val introductionTextResource: Int?,
 ) {
 
@@ -29,7 +28,6 @@ internal enum class VoucherPaymentMethodConfig(
     ),
     MULTIBANCO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
-        // TODO: To be changed to checkout_voucher_introduction
         introductionTextResource = R.string.checkout_voucher_introduction,
     );
 
