@@ -26,7 +26,6 @@ import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -36,6 +35,8 @@ import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.contract.ApiTaskResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -186,7 +187,26 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         updateState {
             it.copy(
                 uiState = SessionsGooglePayUIState.ShowComponent(componentData),
-                startGooglePay = SessionsStartGooglePayData(componentData, ACTIVITY_RESULT_CODE),
+                startGooglePay = SessionsStartGooglePayData(componentData),
+            )
+        }
+    }
+
+    fun onGooglePayLauncherResult(apiTaskResult: ApiTaskResult<PaymentData>) {
+        updateState {
+            it.copy(
+                paymentResultToHandle = SessionsGooglePayPaymentResult(
+                    componentData,
+                    apiTaskResult,
+                ),
+            )
+        }
+    }
+
+    fun onPaymentResultHandled() {
+        updateState {
+            it.copy(
+                paymentResultToHandle = null,
             )
         }
     }
@@ -199,15 +219,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         updateState { it.copy(actionToHandle = null) }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != ACTIVITY_RESULT_CODE) return
-        updateState { it.copy(activityResultToHandle = GooglePayActivityResult(componentData, resultCode, data)) }
-    }
-
-    fun onActivityResultHandled() {
-        updateState { it.copy(activityResultToHandle = null) }
-    }
-
     fun onNewIntent(intent: Intent) {
         updateState { it.copy(intentToHandle = SessionsGooglePayIntent(componentData, intent)) }
     }
@@ -218,6 +229,5 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     companion object {
         private val TAG = getLogTag()
-        private const val ACTIVITY_RESULT_CODE = 1
     }
 }
