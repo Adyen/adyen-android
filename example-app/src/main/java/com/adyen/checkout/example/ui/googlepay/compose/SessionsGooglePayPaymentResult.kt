@@ -3,11 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 20/12/2023.
+ * Created by josephj on 22/12/2023.
  */
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-internal data class SessionsStartGooglePayData(
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.contract.ApiTaskResult
+
+internal data class SessionsGooglePayPaymentResult(
     val componentData: SessionsGooglePayComponentData,
+    val paymentDataTaskResult: ApiTaskResult<PaymentData>,
 )
