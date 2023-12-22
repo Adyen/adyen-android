@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">Last ned instruksjoner for direktebelastning (DDI/ mandat)</string>
     <string name="checkout_voucher_introduction">Takk for ditt kjøp. Vennligst bruk den følgende kupongen til å fullføre betalingen.</string>
     <string name="checkout_voucher_payment_reference">Betalingsreferanse</string>
+    <string name="checkout_voucher_expiration_entity">Enhet</string>
     <string name="checkout_voucher_expiration_date">Utløpsdato</string>
+    <string name="checkout_voucher_shopper_reference">Kundereferanse</string>
     <string name="checkout_voucher_copy_code">Kopier kode</string>
     <string name="checkout_voucher_copied_toast">Koden er kopiert til utklippstavlen</string>
     <string name="checkout_voucher_download_pdf">Last ned PDF</string>

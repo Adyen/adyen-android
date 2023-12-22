@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">Scarica le Istruzioni per l\'addebito diretto (DDI / Mandato)</string>
     <string name="checkout_voucher_introduction">Grazie per il tuo acquisto, utilizza il seguente coupon per completare il pagamento.</string>
     <string name="checkout_voucher_payment_reference">Riferimento del pagamento</string>
+    <string name="checkout_voucher_expiration_entity">Entità</string>
     <string name="checkout_voucher_expiration_date">Data di scadenza</string>
+    <string name="checkout_voucher_shopper_reference">Riferimento dell\'acquirente</string>
     <string name="checkout_voucher_copy_code">Copia codice</string>
     <string name="checkout_voucher_copied_toast">Codice copiato negli appunti</string>
     <string name="checkout_voucher_download_pdf">Scarica PDF</string>

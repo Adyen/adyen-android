@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">Prenesite navodila za neposredno bremenitev (DDI/mandat)</string>
     <string name="checkout_voucher_introduction">Zahvaljujemo se vam za nakup. Za dokončanje plačila uporabite naslednji kupon.</string>
     <string name="checkout_voucher_payment_reference">Referenčna številka plačila</string>
+    <string name="checkout_voucher_expiration_entity">Entiteta</string>
     <string name="checkout_voucher_expiration_date">Datum poteka veljavnosti</string>
+    <string name="checkout_voucher_shopper_reference">Referenčna številka kupca</string>
     <string name="checkout_voucher_copy_code">Kopiraj kodo</string>
     <string name="checkout_voucher_copied_toast">Koda je kopirana v odložišče</string>
     <string name="checkout_voucher_download_pdf">Prenos datoteke PDF</string>

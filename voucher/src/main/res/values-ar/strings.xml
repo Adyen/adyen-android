@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">تنزيل تعليمات الخصم المباشر (تعليمات / تفويض DDI)</string>
     <string name="checkout_voucher_introduction">شكرًا لك على شرائك، يرجى استخدام القسيمة التالية لإتمام عملية الدفع.</string>
     <string name="checkout_voucher_payment_reference">مرجع الدفع</string>
+    <string name="checkout_voucher_expiration_entity">الكيان</string>
     <string name="checkout_voucher_expiration_date">تاريخ الانتهاء</string>
+    <string name="checkout_voucher_shopper_reference">مرجع المتسوق</string>
     <string name="checkout_voucher_copy_code">نسخ الرمز</string>
     <string name="checkout_voucher_copied_toast">تم نسخ الرمز إلى الحافظة</string>
     <string name="checkout_voucher_download_pdf">تنزيل ملف PDF</string>

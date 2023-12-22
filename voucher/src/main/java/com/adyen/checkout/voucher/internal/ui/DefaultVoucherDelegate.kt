@@ -23,6 +23,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherPaymentMethodConfig
+import com.adyen.checkout.voucher.internal.ui.model.getInformationFields
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -91,6 +92,7 @@ internal class DefaultVoucherDelegate(
         action: VoucherAction,
         config: VoucherPaymentMethodConfig
     ) {
+        val informationFields = config.getInformationFields(action, componentParams.shopperLocale)
         val outputData = VoucherOutputData(
             isValid = true,
             paymentMethodType = action.paymentMethodType,
@@ -99,7 +101,8 @@ internal class DefaultVoucherDelegate(
             expiresAt = action.expiresAt,
             reference = action.reference,
             totalAmount = action.totalAmount,
-            introductionTextResource = config.introductionTextResource
+            introductionTextResource = config.introductionTextResource,
+            informationFields = informationFields
         )
         _outputDataFlow.tryEmit(outputData)
     }
@@ -112,6 +115,7 @@ internal class DefaultVoucherDelegate(
         reference = null,
         totalAmount = null,
         introductionTextResource = null,
+        informationFields = null,
     )
 
     override fun downloadVoucher(context: Context) {

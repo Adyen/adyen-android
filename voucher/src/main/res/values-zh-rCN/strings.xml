@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">下载您的直接借记指示（DDI/委托）</string>
     <string name="checkout_voucher_introduction">感谢您的购买，请使用以下优惠券完成支付。</string>
     <string name="checkout_voucher_payment_reference">交易号</string>
+    <string name="checkout_voucher_expiration_entity">实体</string>
     <string name="checkout_voucher_expiration_date">有效期</string>
+    <string name="checkout_voucher_shopper_reference">顾客参考</string>
     <string name="checkout_voucher_copy_code">复制代码</string>
     <string name="checkout_voucher_copied_toast">代码复制到剪贴板</string>
     <string name="checkout_voucher_download_pdf">下载 PDF 文件</string>

@@ -11,7 +11,9 @@
     <string name="checkout_voucher_introduction_bacs">Baixar instrução de débito direto (DDI)</string>
     <string name="checkout_voucher_introduction">Obrigado pela sua compra, use o cupom a seguir para concluir o seu pagamento.</string>
     <string name="checkout_voucher_payment_reference">Referência de pagamento</string>
+    <string name="checkout_voucher_expiration_entity">Entidade</string>
     <string name="checkout_voucher_expiration_date">Data de validade</string>
+    <string name="checkout_voucher_shopper_reference">Referência do consumidor</string>
     <string name="checkout_voucher_copy_code">Copiar código</string>
     <string name="checkout_voucher_copied_toast">Código copiado</string>
     <string name="checkout_voucher_download_pdf">Baixar PDF</string>
