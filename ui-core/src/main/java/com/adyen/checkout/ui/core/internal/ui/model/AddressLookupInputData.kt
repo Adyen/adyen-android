@@ -15,8 +15,4 @@ import com.adyen.checkout.components.core.AddressInputModel
 data class AddressLookupInputData(
     var query: String = "",
     var selectedAddress: AddressInputModel = AddressInputModel()
-) {
-    fun reset() {
-        query = ""
-    }
-}
+)

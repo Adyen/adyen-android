@@ -11,26 +11,30 @@ package com.adyen.checkout.ui.core.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AddressLookupDelegate {
 
+    val addressDelegate: AddressDelegate
+
     val addressLookupStateFlow: Flow<AddressLookupState>
     val addressLookupEventChannel: Channel<AddressLookupEvent>
 
-    val addressDelegate: AddressDelegate
-
-    fun startAddressLookup()
+    fun initialize(coroutineScope: CoroutineScope)
     fun updateAddressLookupOptions(options: List<LookupAddress>)
     fun setAddressLookupResult(lookupAddress: LookupAddress)
-    fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit)
     fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun onAddressQueryChanged(query: String)
     fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean
     fun onManualEntryModeSelected()
+
+    // FIXME eventually move all address related logic to this interface and make it the one and only AddressDelegate
+    fun updateCountryOptions(countryOptions: List<AddressListItem>)
+    fun updateStateOptions(stateOptions: List<AddressListItem>)
 }

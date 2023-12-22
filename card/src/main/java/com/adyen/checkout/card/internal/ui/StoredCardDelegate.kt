@@ -47,15 +47,12 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
@@ -111,11 +108,6 @@ internal class StoredCardDelegate(
     override val addressOutputDataFlow: Flow<AddressOutputData>
         get() = MutableStateFlow(_outputDataFlow.value.addressState)
 
-    override val addressDelegate: AddressDelegate = this
-
-    override val addressLookupStateFlow: Flow<AddressLookupState>
-        get() = MutableStateFlow(_outputDataFlow.value.addressLookupState)
-
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
 
@@ -128,8 +120,6 @@ internal class StoredCardDelegate(
     override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
-
-    override val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
 
     override val outputData: CardOutputData get() = _outputDataFlow.value
 
@@ -322,12 +312,6 @@ internal class StoredCardDelegate(
 
     override fun startAddressLookup() = Unit
 
-    override fun onAddressQueryChanged(query: String) = Unit
-
-    override fun onAddressLookupCompleted(lookupAddress: LookupAddress) = false
-
-    override fun onManualEntryModeSelected() = Unit
-
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
             _viewFlow.tryEmit(CardComponentViewType.StoredCardView)
@@ -435,10 +419,6 @@ internal class StoredCardDelegate(
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
-        // no ops
-    }
-
-    override fun updateAddressLookupInputData(update: AddressLookupInputData.() -> Unit) {
         // no ops
     }
 

@@ -64,10 +64,6 @@ class AddressLookupView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        addressLookupDelegate.updateAddressLookupInputData {
-            reset()
-        }
-
         observeDelegate(delegate, coroutineScope)
 
         initAddressLookupQuery()
@@ -164,11 +160,11 @@ class AddressLookupView @JvmOverloads constructor(
                 binding.textViewManualEntryError.isVisible = false
                 binding.addressFormInput.isVisible = true
                 binding.progressBar.isVisible = false
-                addressLookupDelegate.updateAddressLookupInputData {
+                addressLookupDelegate.addressDelegate.updateAddressInputData {
                     if (addressLookupState.selectedAddress == null) {
-                        selectedAddress.resetAll()
+                        this.resetAll()
                     } else {
-                        selectedAddress.set(addressLookupState.selectedAddress)
+                        this.set(addressLookupState.selectedAddress)
                     }
                 }
             }

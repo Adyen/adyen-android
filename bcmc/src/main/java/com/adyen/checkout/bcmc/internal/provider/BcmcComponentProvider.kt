@@ -58,6 +58,7 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class BcmcComponentProvider
@@ -134,6 +135,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -237,6 +239,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
