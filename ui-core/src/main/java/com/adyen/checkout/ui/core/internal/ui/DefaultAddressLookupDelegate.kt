@@ -65,10 +65,13 @@ class DefaultAddressLookupDelegate :
     )
     override val addressOutputDataFlow: Flow<AddressOutputData> = _addressOutputDataFlow
 
+    private val submitAddressChannel = bufferedChannel<AddressInputModel>()
+    override val addressLookupSubmitFlow: Flow<AddressInputModel> = submitAddressChannel.receiveAsFlow()
+
     private var countryOptions: List<AddressListItem> = emptyList()
     private var stateOptions: List<AddressListItem> = emptyList()
 
-    override fun initialize(coroutineScope: CoroutineScope) {
+    override fun initialize(coroutineScope: CoroutineScope, addressInputModel: AddressInputModel) {
         addressLookupEventFlow
             .onEach { addressLookupEvent ->
                 val addressLookupOptions =
@@ -85,6 +88,8 @@ class DefaultAddressLookupDelegate :
                 )
             }
             .launchIn(coroutineScope)
+
+        addressLookupEventChannel.trySend(AddressLookupEvent.Initialize(addressInputModel))
     }
 
     override fun onAddressQueryChanged(query: String) {
@@ -107,6 +112,10 @@ class DefaultAddressLookupDelegate :
         addressLookupEventChannel.trySend(AddressLookupEvent.Manual)
     }
 
+    override fun submitAddress() {
+        submitAddressChannel.trySend(addressLookupInputData.selectedAddress)
+    }
+
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
         addressLookupEventChannel.trySend(AddressLookupEvent.SearchResult(options))
     }
@@ -124,62 +133,73 @@ class DefaultAddressLookupDelegate :
         addressLookupOptions: List<LookupAddress>,
     ): AddressLookupState {
         return when (event) {
-            is AddressLookupEvent.Query -> {
-                addressLookupInputData.query = event.query
-                AddressLookupState.Loading
-            }
+            is AddressLookupEvent.Initialize -> handleInitializeEvent(event)
+            is AddressLookupEvent.Query -> handleQueryEvent(event)
+            AddressLookupEvent.ClearQuery -> AddressLookupState.Initial
+            AddressLookupEvent.Manual -> handleManualEvent()
+            is AddressLookupEvent.SearchResult -> handleSearchResultEvent(event)
+            is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event, addressLookupOptions)
+        }
+    }
 
-            AddressLookupEvent.ClearQuery -> {
-                AddressLookupState.Initial
-            }
+    private fun handleInitializeEvent(event: AddressLookupEvent.Initialize): AddressLookupState {
+        return if (event.address.isEmpty) {
+            AddressLookupState.Initial
+        } else {
+            AddressLookupState.Form(event.address)
+        }
+    }
 
-            AddressLookupEvent.Manual -> {
-                if (currentAddressLookupState is AddressLookupState.Initial ||
-                    currentAddressLookupState is AddressLookupState.Error
-                ) {
-                    AddressLookupState.Form(null)
-                } else {
-                    currentAddressLookupState
-                }
-            }
+    private fun handleQueryEvent(event: AddressLookupEvent.Query): AddressLookupState {
+        addressLookupInputData.query = event.query
+        return AddressLookupState.Loading
+    }
 
-            is AddressLookupEvent.SearchResult -> {
-                if (currentAddressLookupState is AddressLookupState.Loading) {
-                    if (event.addressLookupOptions.isEmpty()) {
-                        AddressLookupState.Error
-                    } else {
-                        currentAddressLookupOptions = event.addressLookupOptions
-                        AddressLookupState.SearchResult(
-                            addressLookupInputData.query,
-                            event.addressLookupOptions.map {
-                                LookupOption(lookupAddress = it, isLoading = false)
-                            },
-                        )
-                    }
-                } else {
-                    currentAddressLookupState
-                }
-            }
+    private fun handleManualEvent(): AddressLookupState {
+        return if (currentAddressLookupState is AddressLookupState.Initial ||
+            currentAddressLookupState is AddressLookupState.Error
+        ) {
+            AddressLookupState.Form(null)
+        } else {
+            currentAddressLookupState
+        }
+    }
 
-            is AddressLookupEvent.OptionSelected -> {
-                if (currentAddressLookupState is AddressLookupState.SearchResult) {
-                    if (event.loading) {
-                        AddressLookupState.SearchResult(
-                            addressLookupInputData.query,
-                            addressLookupOptions.map {
-                                LookupOption(
-                                    lookupAddress = it,
-                                    isLoading = it == event.lookupAddress,
-                                )
-                            },
-                        )
-                    } else {
-                        AddressLookupState.Form(event.lookupAddress.address)
-                    }
-                } else {
-                    currentAddressLookupState
-                }
+    private fun handleSearchResultEvent(event: AddressLookupEvent.SearchResult): AddressLookupState {
+        return if (currentAddressLookupState is AddressLookupState.Loading) {
+            if (event.addressLookupOptions.isEmpty()) {
+                AddressLookupState.Error
+            } else {
+                currentAddressLookupOptions = event.addressLookupOptions
+                AddressLookupState.SearchResult(
+                    addressLookupInputData.query,
+                    event.addressLookupOptions.map {
+                        LookupOption(lookupAddress = it, isLoading = false)
+                    },
+                )
             }
+        } else {
+            currentAddressLookupState
+        }
+    }
+
+    private fun handleOptionSelectedEvent(
+        event: AddressLookupEvent.OptionSelected,
+        addressLookupOptions: List<LookupAddress>
+    ): AddressLookupState {
+        return if (currentAddressLookupState is AddressLookupState.SearchResult) {
+            if (event.loading) {
+                AddressLookupState.SearchResult(
+                    addressLookupInputData.query,
+                    addressLookupOptions.map {
+                        LookupOption(lookupAddress = it, isLoading = it == event.lookupAddress)
+                    },
+                )
+            } else {
+                AddressLookupState.Form(event.lookupAddress.address)
+            }
+        } else {
+            currentAddressLookupState
         }
     }
 

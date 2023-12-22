@@ -135,7 +135,7 @@ class AddressLookupView @JvmOverloads constructor(
                 binding.progressBar.isVisible = false
             }
 
-            AddressLookupState.Initial -> {
+            is AddressLookupState.Initial -> {
                 binding.recyclerViewAddressLookupOptions.isVisible = false
                 binding.textViewManualEntryInitial.isVisible = true
                 binding.textViewError.isVisible = false

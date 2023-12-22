@@ -48,7 +48,6 @@ import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -569,8 +568,6 @@ internal class StoredCardDelegateTest(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
-            addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList(), // TODO address lookup test
         )
     }
 

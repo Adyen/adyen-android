@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -25,14 +26,16 @@ interface AddressLookupDelegate {
 
     val addressLookupStateFlow: Flow<AddressLookupState>
     val addressLookupEventChannel: Channel<AddressLookupEvent>
+    val addressLookupSubmitFlow: Flow<AddressInputModel>
 
-    fun initialize(coroutineScope: CoroutineScope)
+    fun initialize(coroutineScope: CoroutineScope, addressInputModel: AddressInputModel)
     fun updateAddressLookupOptions(options: List<LookupAddress>)
     fun setAddressLookupResult(lookupAddress: LookupAddress)
     fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun onAddressQueryChanged(query: String)
     fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean
     fun onManualEntryModeSelected()
+    fun submitAddress()
 
     // FIXME eventually move all address related logic to this interface and make it the one and only AddressDelegate
     fun updateCountryOptions(countryOptions: List<AddressListItem>)

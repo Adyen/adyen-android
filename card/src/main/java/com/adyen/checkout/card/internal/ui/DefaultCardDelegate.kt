@@ -69,7 +69,6 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
@@ -146,13 +145,6 @@ class DefaultCardDelegate(
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
     private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
 
-    private val addressInputModel: AddressInputModel
-        get() = if (componentParams.addressParams is AddressParams.Lookup) {
-            inputData.addressLookupInputData.selectedAddress
-        } else {
-            inputData.address
-        }
-
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
@@ -169,6 +161,12 @@ class DefaultCardDelegate(
             subscribeToCountryList()
             requestCountryList()
         }
+        addressLookupDelegate.addressLookupSubmitFlow
+            .onEach {
+                inputData.address = it
+                updateOutputData()
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
@@ -300,11 +298,9 @@ class DefaultCardDelegate(
         detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
         countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
         stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
-        addressLookupOptions: List<LookupAddress> = outputData.addressLookupOptions,
-        addressLookupState: AddressLookupState = outputData.addressLookupState
     ) {
         val newOutputData =
-            createOutputData(detectedCardTypes, countryOptions, stateOptions, addressLookupOptions, addressLookupState)
+            createOutputData(detectedCardTypes, countryOptions, stateOptions)
         _outputDataFlow.tryEmit(newOutputData)
         updateComponentState(newOutputData)
     }
@@ -314,17 +310,15 @@ class DefaultCardDelegate(
         detectedCardTypes: List<DetectedCardType> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-        addressLookupOptions: List<LookupAddress> = emptyList(),
-        addressLookupState: AddressLookupState = AddressLookupState.Initial
     ): CardOutputData {
         Logger.v(TAG, "createOutputData")
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            addressInputModel.country,
+            inputData.address.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            addressInputModel.stateOrProvince,
+            inputData.address.stateOrProvince,
         )
 
         val isReliable = detectedCardTypes.any { it.isReliable }
@@ -346,7 +340,7 @@ class DefaultCardDelegate(
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
         val addressState = validateAddress(
-            addressInputModel,
+            inputData.address,
             addressFormUIState,
             selectedOrFirstCardType,
             updatedCountryOptions,
@@ -385,8 +379,6 @@ class DefaultCardDelegate(
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
-            addressLookupState = addressLookupState,
-            addressLookupOptions = addressLookupOptions,
         )
     }
 
@@ -487,6 +479,7 @@ class DefaultCardDelegate(
     override fun onSubmit() {
         val state = _componentStateFlow.value
         if (_viewFlow.value == CardComponentViewType.AddressLookup) {
+            addressLookupDelegate.submitAddress()
             _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
         } else {
             submitHandler.onSubmit(state = state)
@@ -495,7 +488,7 @@ class DefaultCardDelegate(
 
     override fun startAddressLookup() {
         _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
-        addressLookupDelegate.initialize(coroutineScope)
+        addressLookupDelegate.initialize(coroutineScope, inputData.address)
     }
 
     override fun handleBackPress(): Boolean {

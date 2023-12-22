@@ -53,7 +53,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
@@ -236,8 +235,6 @@ internal class StoredCardDelegate(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
-            addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList(),
         )
     }
 

@@ -11,11 +11,9 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -44,8 +42,6 @@ data class CardOutputData(
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
     val isCardListVisible: Boolean,
-    val addressLookupState: AddressLookupState,
-    val addressLookupOptions: List<LookupAddress>
 ) : OutputData {
 
     override val isValid: Boolean

@@ -64,7 +64,6 @@ import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
@@ -1191,7 +1190,7 @@ internal class DefaultCardDelegateTest(
             genericEncryptor = genericEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
-            addressLookupDelegate = DefaultAddressLookupDelegate()
+            addressLookupDelegate = DefaultAddressLookupDelegate(),
         )
     }
 
@@ -1292,8 +1291,6 @@ internal class DefaultCardDelegateTest(
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
-            addressLookupState = AddressLookupState.Initial,
-            addressLookupOptions = emptyList(), // TODO address lookup test
         )
     }
 

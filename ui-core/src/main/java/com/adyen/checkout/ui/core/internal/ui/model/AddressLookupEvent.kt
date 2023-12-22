@@ -9,10 +9,12 @@
 package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.LookupAddress
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class AddressLookupEvent {
+    data class Initialize(val address: AddressInputModel) : AddressLookupEvent()
     data class Query(val query: String) : AddressLookupEvent()
     object Manual : AddressLookupEvent()
     object ClearQuery : AddressLookupEvent()
