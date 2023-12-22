@@ -10,10 +10,14 @@ package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.flow.Flow
 
 internal interface GooglePayDelegate : PaymentComponentDelegate<GooglePayComponentState> {
@@ -25,6 +29,10 @@ internal interface GooglePayDelegate : PaymentComponentDelegate<GooglePayCompone
     fun startGooglePayScreen(activity: Activity, requestCode: Int)
 
     fun handleActivityResult(resultCode: Int, data: Intent?)
+
+    fun startGooglePayScreen(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>)
+
+    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?)
 
     fun getGooglePayButtonParameters(): GooglePayButtonParameters
 }
