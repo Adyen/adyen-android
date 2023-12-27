@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui
 
 import android.content.Context
-import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.view.CardView
 import com.adyen.checkout.card.internal.ui.view.StoredCardView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
@@ -34,7 +33,7 @@ internal object CardViewProvider : ViewProvider {
     }
 }
 
-internal sealed class CardComponentViewType : ButtonComponentViewType {
+internal sealed class CardComponentViewType : ComponentViewType {
     data object DefaultCardView : CardComponentViewType(), AmountButtonComponentViewType {
         override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
     }
@@ -43,9 +42,7 @@ internal sealed class CardComponentViewType : ButtonComponentViewType {
         override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
     }
 
-    data object AddressLookup : CardComponentViewType() {
-        override val buttonTextResId: Int = R.string.checkout_address_lookup_button_text
-    }
+    data object AddressLookup : CardComponentViewType()
 
     override val viewProvider: ViewProvider = CardViewProvider
 }

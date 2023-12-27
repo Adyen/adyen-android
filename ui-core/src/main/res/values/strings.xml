@@ -43,6 +43,8 @@
     <string name="checkout_address_form_province_territory_hint_optional">Province or Territory (optional)</string>
     <string name="checkout_address_form_city_town_hint_optional">City / Town (optional)</string>
 
+    <!-- TODO address lookup translations -->
+    <string name="checkout_address_lookup_button_text" translatable="false">Use this address</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>

@@ -70,4 +70,9 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/address_lookup_option_item_view"
         tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submitAddressButton"
+        style="@style/AdyenCheckout.AddressLookup.Submit"
+        android:visibility="gone" />
 </merge>

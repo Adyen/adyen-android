@@ -163,6 +163,7 @@ class DefaultCardDelegate(
         }
         addressLookupDelegate.addressLookupSubmitFlow
             .onEach {
+                _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
                 inputData.address = it
                 updateOutputData()
             }
@@ -478,12 +479,7 @@ class DefaultCardDelegate(
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
-        if (_viewFlow.value == CardComponentViewType.AddressLookup) {
-            addressLookupDelegate.submitAddress()
-            _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
-        } else {
-            submitHandler.onSubmit(state = state)
-        }
+        submitHandler.onSubmit(state = state)
     }
 
     override fun startAddressLookup() {

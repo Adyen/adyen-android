@@ -350,4 +350,10 @@
         <item name="android:alpha">0.38</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.AddressLookup.Submit" parent="AdyenCheckout.Button.Colored">
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:text">@string/checkout_address_lookup_button_text</item>
+    </style>
 </resources>
