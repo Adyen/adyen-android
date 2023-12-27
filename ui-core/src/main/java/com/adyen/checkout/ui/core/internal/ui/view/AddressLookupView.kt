@@ -9,11 +9,11 @@
 package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
-import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.SearchView.OnQueryTextListener
 import androidx.annotation.RestrictTo
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.LookupAddress
@@ -23,8 +23,6 @@ import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -85,18 +83,22 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun initLocalizedStrings(localizedContext: Context) {
         // TODO address lookup translations
-        binding.textInputLayoutAddressLookupQuery.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_AddressLookup_Query,
-            localizedContext,
-        )
         binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
     private fun initAddressLookupQuery() {
-        val addressLookupQueryEditText = binding.textInputLayoutAddressLookupQuery.editText as? AdyenTextInputEditText
-        addressLookupQueryEditText?.setOnChangeListener {
-            onQueryChanged(it)
-        }
+        binding.textInputLayoutAddressLookupQuerySearch.setOnQueryTextListener(
+            object : OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    onQueryChanged(newText)
+                    return true
+                }
+            },
+        )
     }
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
@@ -112,14 +114,12 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun initManualEntryErrorTextView() {
         binding.textViewManualEntryError.setOnClickListener {
-            clearQuery()
             addressLookupDelegate.onManualEntryModeSelected()
         }
     }
 
     private fun initManualEntryInitialTextView() {
         binding.textViewManualEntryInitial.setOnClickListener {
-            clearQuery()
             addressLookupDelegate.onManualEntryModeSelected()
         }
     }
@@ -181,15 +181,8 @@ class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun clearQuery() {
-        binding.editTextAddressLookupQuery.setOnChangeListener(null)
-        binding.editTextAddressLookupQuery.text = null
-        binding.editTextAddressLookupQuery.setOnChangeListener(::onQueryChanged)
-    }
-
-    private fun onQueryChanged(editable: Editable) {
-        addressLookupDelegate.onAddressQueryChanged(editable.toString())
-        binding.textInputLayoutAddressLookupQuery.hideError()
+    private fun onQueryChanged(query: String) {
+        addressLookupDelegate.onAddressQueryChanged(query)
     }
 
     private fun setAddressOptions(options: List<LookupOption>) {
@@ -201,7 +194,6 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun onAddressSelected(lookupAddress: LookupAddress) {
         addressLookupDelegate.onAddressLookupCompleted(lookupAddress)
-        clearQuery()
     }
 
     override fun getView(): View = this

@@ -327,8 +327,11 @@
     </style>
 
     <!-- TODO address lookup translations -->
-    <style name="AdyenCheckout.AddressLookup.Query" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">Search Address</item>
+    <style name="AdyenCheckout.AddressLookup.Query">
+        <item name="android:layout_height">@dimen/input_height</item>
+        <item name="android:background">@drawable/address_lookup_search_border</item>
+        <item name="android:queryHint">Search Address</item>
+        <item name="android:iconifiedByDefault">false</item>
     </style>
 
     <!-- TODO address lookup translations-->
