@@ -113,7 +113,11 @@ class DefaultAddressLookupDelegate :
     }
 
     override fun submitAddress() {
-        submitAddressChannel.trySend(addressLookupInputData.selectedAddress)
+        if (addressDelegate.addressOutputData.isValid) {
+            submitAddressChannel.trySend(addressLookupInputData.selectedAddress)
+        } else {
+            addressLookupEventChannel.trySend(AddressLookupEvent.InvalidUI)
+        }
     }
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
@@ -139,6 +143,7 @@ class DefaultAddressLookupDelegate :
             AddressLookupEvent.Manual -> handleManualEvent()
             is AddressLookupEvent.SearchResult -> handleSearchResultEvent(event)
             is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event, addressLookupOptions)
+            is AddressLookupEvent.InvalidUI -> handleInvalidUIEvent()
         }
     }
 
@@ -198,6 +203,16 @@ class DefaultAddressLookupDelegate :
             } else {
                 AddressLookupState.Form(event.lookupAddress.address)
             }
+        } else {
+            currentAddressLookupState
+        }
+    }
+
+    private fun handleInvalidUIEvent(): AddressLookupState {
+        return if (currentAddressLookupState is AddressLookupState.Form ||
+            currentAddressLookupState is AddressLookupState.SearchResult
+        ) {
+            AddressLookupState.InvalidUI
         } else {
             currentAddressLookupState
         }

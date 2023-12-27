@@ -20,4 +20,5 @@ sealed class AddressLookupEvent {
     object ClearQuery : AddressLookupEvent()
     data class SearchResult(val addressLookupOptions: List<LookupAddress>) : AddressLookupEvent()
     data class OptionSelected(val lookupAddress: LookupAddress, val loading: Boolean) : AddressLookupEvent()
+    object InvalidUI : AddressLookupEvent()
 }

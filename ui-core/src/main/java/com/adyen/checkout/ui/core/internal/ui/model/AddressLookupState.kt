@@ -19,4 +19,5 @@ sealed class AddressLookupState {
     data class Form(val selectedAddress: AddressInputModel?) : AddressLookupState()
     data class SearchResult(val query: String, val options: List<LookupOption>) : AddressLookupState()
     object Error : AddressLookupState()
+    object InvalidUI : AddressLookupState()
 }

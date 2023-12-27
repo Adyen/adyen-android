@@ -133,64 +133,82 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun outputDataChanged(addressLookupState: AddressLookupState) {
         when (addressLookupState) {
-            AddressLookupState.Error -> {
-                binding.recyclerViewAddressLookupOptions.isVisible = false
-                binding.textViewManualEntryInitial.isVisible = false
-                binding.textViewError.isVisible = true
-                binding.textViewManualEntryError.isVisible = true
-                binding.addressFormInput.isVisible = false
-                binding.progressBar.isVisible = false
-                binding.submitAddressButton.isVisible = false
-            }
+            AddressLookupState.Error -> handleErrorState()
+            is AddressLookupState.Initial -> handleInitialState()
+            AddressLookupState.Loading -> handleLoadingState()
+            is AddressLookupState.Form -> handleFormState(addressLookupState)
+            is AddressLookupState.SearchResult -> handleSearchResultState(addressLookupState)
+            AddressLookupState.InvalidUI -> handleInvalidUIState()
+        }
+    }
 
-            is AddressLookupState.Initial -> {
-                binding.recyclerViewAddressLookupOptions.isVisible = false
-                binding.textViewManualEntryInitial.isVisible = true
-                binding.textViewError.isVisible = false
-                binding.textViewManualEntryError.isVisible = false
-                binding.addressFormInput.isVisible = false
-                binding.progressBar.isVisible = false
-                binding.submitAddressButton.isVisible = false
-            }
+    private fun handleErrorState() {
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewError.isVisible = true
+        binding.textViewManualEntryError.isVisible = true
+        binding.addressFormInput.isVisible = false
+        binding.progressBar.isVisible = false
+        binding.submitAddressButton.isVisible = false
+    }
 
-            AddressLookupState.Loading -> {
-                binding.recyclerViewAddressLookupOptions.isVisible = false
-                binding.textViewManualEntryInitial.isVisible = false
-                binding.textViewError.isVisible = false
-                binding.textViewManualEntryError.isVisible = false
-                binding.addressFormInput.isVisible = false
-                binding.progressBar.isVisible = true
-                binding.submitAddressButton.isVisible = false
-            }
+    private fun handleInitialState() {
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = true
+        binding.textViewError.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.addressFormInput.isVisible = false
+        binding.progressBar.isVisible = false
+        binding.submitAddressButton.isVisible = false
+    }
 
-            is AddressLookupState.Form -> {
-                binding.recyclerViewAddressLookupOptions.isVisible = false
-                binding.textViewManualEntryInitial.isVisible = false
-                binding.textViewError.isVisible = false
-                binding.textViewManualEntryError.isVisible = false
-                binding.addressFormInput.isVisible = true
-                binding.progressBar.isVisible = false
-                binding.submitAddressButton.isVisible = true
-                addressLookupDelegate.addressDelegate.updateAddressInputData {
-                    if (addressLookupState.selectedAddress == null) {
-                        this.resetAll()
-                    } else {
-                        this.set(addressLookupState.selectedAddress)
-                    }
-                }
-            }
+    private fun handleLoadingState() {
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewError.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.addressFormInput.isVisible = false
+        binding.progressBar.isVisible = true
+        binding.submitAddressButton.isVisible = false
+    }
 
-            is AddressLookupState.SearchResult -> {
-                binding.recyclerViewAddressLookupOptions.isVisible = true
-                binding.textViewManualEntryInitial.isVisible = false
-                binding.textViewError.isVisible = false
-                binding.textViewManualEntryError.isVisible = false
-                binding.addressFormInput.isVisible = false
-                binding.progressBar.isVisible = false
-                binding.submitAddressButton.isVisible = false
-                setAddressOptions(addressLookupState.options)
+    private fun handleFormState(addressLookupState: AddressLookupState.Form) {
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewError.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.addressFormInput.isVisible = true
+        binding.progressBar.isVisible = false
+        binding.submitAddressButton.isVisible = true
+        addressLookupDelegate.addressDelegate.updateAddressInputData {
+            if (addressLookupState.selectedAddress == null) {
+                this.resetAll()
+            } else {
+                this.set(addressLookupState.selectedAddress)
             }
         }
+    }
+
+    private fun handleSearchResultState(addressLookupState: AddressLookupState.SearchResult) {
+        binding.recyclerViewAddressLookupOptions.isVisible = true
+        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewError.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.addressFormInput.isVisible = false
+        binding.progressBar.isVisible = false
+        binding.submitAddressButton.isVisible = false
+        setAddressOptions(addressLookupState.options)
+    }
+
+    private fun handleInvalidUIState() {
+        binding.recyclerViewAddressLookupOptions.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewError.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.addressFormInput.isVisible = true
+        binding.progressBar.isVisible = false
+        binding.submitAddressButton.isVisible = true
+        highlightValidationErrors()
     }
 
     private fun onQueryChanged(query: String) {
