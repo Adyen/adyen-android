@@ -42,6 +42,7 @@ ext {
     material_version = "1.11.0"
     recyclerview_version = "1.3.2"
     constraintlayout_version = '2.1.4'
+    flexbox_version = "3.0.0"
 
     // Compose Dependencies
     compose_activity_version = '1.8.2'
@@ -109,6 +110,7 @@ ext {
             ],
             viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
+        flexbox           : "com.google.android.flexbox:flexbox:$flexbox_version",
         googlePay       : [
             composeButton     : "com.google.pay.button:compose-pay-button:$google_pay_compose_button_version",
             playServicesWallet: "com.google.android.gms:play-services-wallet:$play_services_wallet_version",

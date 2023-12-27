@@ -150,7 +150,7 @@ internal open class FullVoucherView @JvmOverloads constructor(
         if (informationFields.isNullOrEmpty()) return
         if (informationFieldsAdapter == null) {
             informationFieldsAdapter = VoucherInformationFieldsAdapter()
-            binding.listViewInformationFields.adapter = informationFieldsAdapter
+            binding.recyclerViewInformationFields.adapter = informationFieldsAdapter
         }
         informationFieldsAdapter?.submitList(informationFields)
     }

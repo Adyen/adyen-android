@@ -91,35 +91,40 @@
         app:layout_constraintTop_toBottomOf="@id/paymentReferenceSeparator"
         tools:text="12345.1234.12345.12345.12345678901 123456789012345" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_copyCode"
-        style="@style/AdyenCheckout.Voucher.ButtonCopyCode"
-        android:layout_width="wrap_content"
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexboxLayout_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/button_downloadPdf"
+        android:layout_marginTop="@dimen/standard_margin"
+        app:flexWrap="wrap"
+        app:justifyContent="space_between"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
+        app:layout_constraintTop_toBottomOf="@id/textView_reference_code">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_downloadPdf"
-        style="@style/AdyenCheckout.Voucher.ButtonDownloadPdf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/button_copyCode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/button_copyCode"
-        app:layout_constraintTop_toBottomOf="@id/textView_reference_code"
-        app:layout_constraintTop_toTopOf="@id/button_copyCode" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_copyCode"
+            style="@style/AdyenCheckout.Voucher.ButtonCopyCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_downloadPdf"
+            style="@style/AdyenCheckout.Voucher.ButtonDownloadPdf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.flexbox.FlexboxLayout>
 
     <Space
         android:id="@+id/space_informationFields"
         android:layout_width="match_parent"
         android:layout_height="@dimen/standard_margin"
-        app:layout_constraintTop_toBottomOf="@id/button_copyCode" />
+        app:layout_constraintTop_toBottomOf="@id/flexboxLayout_buttons" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listView_informationFields"
+        android:id="@+id/recyclerView_informationFields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
