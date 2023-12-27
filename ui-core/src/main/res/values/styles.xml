@@ -334,7 +334,6 @@
         <item name="android:iconifiedByDefault">false</item>
     </style>
 
-    <!-- TODO address lookup translations-->
     <style name="AdyenCheckout.AddressLookup.Loading" parent="Widget.AppCompat.ProgressBar">
         <item name="android:tint">@color/primaryColor</item>
     </style>

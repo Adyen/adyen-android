@@ -152,19 +152,19 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_addressLookup"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="afterDescendants">
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="false">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-            android:id="@+id/editText_addressLookup"
-            style="@style/AdyenCheckout.AddressLookup"
-            android:clickable="false"
-            android:focusable="false"
-            android:inputType="textMultiLine"
-            android:nextFocusDown="@id/editText_socialSecurityNumber"
-            android:nextFocusForward="@id/editText_socialSecurityNumber" />
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_addressLookup"
+            style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText"
+            android:dropDownAnchor="@id/textInputLayout_addressLookup"
+            android:editable="false" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

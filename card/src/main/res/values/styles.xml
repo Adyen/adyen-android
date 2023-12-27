@@ -92,4 +92,18 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.Card.AddressLookup.DropdownTextInputLayout" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="endIconMode">none</item>
+    </style>
+
+    <!-- TODO address lookup translations -->
+    <style name="AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText" parent="AdyenCheckout.DropdownTextInputEditText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">@dimen/input_height</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:editable">false</item>
+        <item name="android:hint">Search Address</item>
+    </style>
 </resources>
