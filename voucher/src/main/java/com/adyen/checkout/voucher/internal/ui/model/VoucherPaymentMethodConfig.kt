@@ -23,11 +23,11 @@ internal enum class VoucherPaymentMethodConfig(
 
     BACS(
         viewType = VoucherComponentViewType.BACS_VOUCHER,
-        introductionTextResource = null,
+        introductionTextResource = R.string.checkout_voucher_introduction_bacs,
     ),
     BOLETO(
         viewType = VoucherComponentViewType.BOLETO_VOUCHER,
-        introductionTextResource = null,
+        introductionTextResource = R.string.checkout_voucher_introduction,
     ),
     MULTIBANCO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,

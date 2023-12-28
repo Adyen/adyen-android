@@ -105,15 +105,17 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_copyCode"
-            style="@style/AdyenCheckout.Voucher.ButtonCopyCode"
+            style="@style/AdyenCheckout.Voucher.ActionButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_voucher_copy_code"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_downloadPdf"
-            style="@style/AdyenCheckout.Voucher.ButtonDownloadPdf"
+            style="@style/AdyenCheckout.Voucher.ActionButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/checkout_voucher_download_pdf"/>
 
     </com.google.android.flexbox.FlexboxLayout>
 

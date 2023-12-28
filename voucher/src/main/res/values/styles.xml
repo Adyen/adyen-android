@@ -10,7 +10,8 @@
 
     <style name="AdyenCheckout.Voucher" />
 
-    <!-- Will be removed with BacsVoucherView in future releases. -->
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.SimpleVoucher.Description instead. -->
     <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.SimpleVoucher.Description">
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
     </style>
@@ -22,7 +23,8 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <!-- Will be removed with BoletoVoucherView in future releases. -->
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.FullVoucher.Description instead. -->
     <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.FullVoucher.Description">
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_voucher_introduction</item>
@@ -66,19 +68,17 @@
         <item name="android:text">@string/checkout_voucher_download_pdf</item>
     </style>
 
-    <!-- Will be removed with BoletoVoucherView in future releases. -->
-    <style name="AdyenCheckout.Voucher.ButtonCopyCode" parent="AdyenCheckout.Button.Secondary">
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.Voucher.ActionButton instead. -->
+    <style name="AdyenCheckout.Voucher.ButtonCopyCode" parent="AdyenCheckout.Voucher.ActionButton">
         <item name="android:text">@string/checkout_voucher_copy_code</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
     </style>
 
-    <!-- Will be removed with BoletoVoucherView in future releases. -->
-    <style name="AdyenCheckout.Voucher.ButtonDownloadPdf" parent="AdyenCheckout.Button.Secondary">
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.Voucher.ActionButton instead. -->
+    <style name="AdyenCheckout.Voucher.ButtonDownloadPdf" parent="AdyenCheckout.Voucher.ActionButton">
         <item name="android:text">@string/checkout_voucher_download_pdf</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.ActionButton" parent="AdyenCheckout.Button.Secondary">
@@ -86,21 +86,19 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- Will be removed with BoletoVoucherView in future releases. -->
-    <style name="AdyenCheckout.Voucher.ExpirationDateLabel" parent="AdyenCheckout.TextAppearance.Secondary">
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.Voucher.InformationFieldLabel instead. -->
+    <style name="AdyenCheckout.Voucher.ExpirationDateLabel" parent="AdyenCheckout.Voucher.InformationFieldLabel">
         <item name="android:text">@string/checkout_voucher_expiration_date</item>
-        <item name="android:layout_margin">@dimen/standard_margin</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.InformationFieldLabel" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:layout_margin">@dimen/standard_margin</item>
     </style>
 
-    <!-- Will be removed with BoletoVoucherView in future releases. -->
-    <style name="AdyenCheckout.Voucher.ExpirationDate" parent="AdyenCheckout.TextAppearance.Secondary">
-        <item name="android:layout_margin">@dimen/standard_margin</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <!-- This style is deprecated and will be removed in future releases. Please override
+         AdyenCheckout.Voucher.InformationFieldValue instead. -->
+    <style name="AdyenCheckout.Voucher.ExpirationDate" parent="AdyenCheckout.Voucher.InformationFieldValue" />
 
     <style name="AdyenCheckout.Voucher.InformationFieldValue" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:layout_margin">@dimen/standard_margin</item>

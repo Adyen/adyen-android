@@ -79,19 +79,6 @@ internal class FullVoucherView @JvmOverloads constructor(
             R.style.AdyenCheckout_Voucher_PaymentReference,
             localizedContext
         )
-        binding.buttonCopyCode.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ButtonCopyCode,
-            localizedContext
-        )
-        binding.buttonDownloadPdf.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ButtonDownloadPdf,
-            localizedContext
-        )
-        // TODO: Perhaps keep this style and move it to Boleto implementation
-//        binding.textViewExpirationLabel.setLocalizedTextFromStyle(
-//            R.style.AdyenCheckout_Voucher_ExpirationDateLabel,
-//            localizedContext
-//        )
     }
 
     private fun observeDelegate(delegate: VoucherDelegate, coroutineScope: CoroutineScope) {
