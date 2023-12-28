@@ -98,6 +98,7 @@ internal class DefaultVoucherDelegate(
             paymentMethodType = action.paymentMethodType,
             // TODO: remove action.url when it's fixed from backend side
             downloadUrl = action.downloadUrl ?: action.url,
+            expiresAt = action.expiresAt,
             reference = action.reference,
             totalAmount = action.totalAmount,
             introductionTextResource = config.introductionTextResource,
@@ -110,6 +111,7 @@ internal class DefaultVoucherDelegate(
         isValid = false,
         paymentMethodType = null,
         downloadUrl = null,
+        expiresAt = null,
         reference = null,
         totalAmount = null,
         introductionTextResource = null,
