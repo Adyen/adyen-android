@@ -30,6 +30,7 @@
 
     <TextView
         android:id="@+id/textView_error"
+        style="@style/AdyenCheckout.TextAppearance.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -38,21 +39,24 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/textView_manualEntryError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="Can't find anything, enter address manually"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/textView_manualEntryInitial"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView_initialDisclaimer"
+        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="You can always enter your address manually" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_manualEntry"
+        style="@style/AdyenCheckout.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="Enter address manually"
+        android:visibility="gone" />
 
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"

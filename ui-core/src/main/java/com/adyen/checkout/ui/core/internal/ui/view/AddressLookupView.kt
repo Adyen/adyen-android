@@ -67,8 +67,7 @@ class AddressLookupView @JvmOverloads constructor(
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
         initAddressOptions()
-        initManualEntryErrorTextView()
-        initManualEntryInitialTextView()
+        initManualEntryButton()
         initSubmitAddressButton()
     }
 
@@ -113,14 +112,8 @@ class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun initManualEntryErrorTextView() {
-        binding.textViewManualEntryError.setOnClickListener {
-            addressLookupDelegate.onManualEntryModeSelected()
-        }
-    }
-
-    private fun initManualEntryInitialTextView() {
-        binding.textViewManualEntryInitial.setOnClickListener {
+    private fun initManualEntryButton() {
+        binding.buttonManualEntry.setOnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
         }
     }
@@ -144,9 +137,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleErrorState() {
         binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = true
-        binding.textViewManualEntryError.isVisible = true
+        binding.buttonManualEntry.isVisible = true
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
@@ -154,9 +147,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleInitialState() {
         binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = true
+        binding.textViewInitialDisclaimer.isVisible = true
         binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
+        binding.buttonManualEntry.isVisible = true
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
@@ -164,9 +157,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleLoadingState() {
         binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
+        binding.buttonManualEntry.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = true
         binding.submitAddressButton.isVisible = false
@@ -174,9 +167,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleFormState(addressLookupState: AddressLookupState.Form) {
         binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
+        binding.buttonManualEntry.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = true
@@ -191,9 +184,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleSearchResultState(addressLookupState: AddressLookupState.SearchResult) {
         binding.recyclerViewAddressLookupOptions.isVisible = true
-        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
+        binding.buttonManualEntry.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
@@ -202,9 +195,9 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun handleInvalidUIState() {
         binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = false
+        binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
+        binding.buttonManualEntry.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = true
