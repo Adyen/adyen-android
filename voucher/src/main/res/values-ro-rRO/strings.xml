@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Copiați codul</string>
     <string name="checkout_voucher_copied_toast">Cod copiat în clipboard</string>
     <string name="checkout_voucher_download_pdf">Descărcați PDF</string>
+    <string name="checkout_voucher_save_image">Salvați ca imagine</string>
     <string name="checkout_voucher_finish">Finalizați</string>
 </resources>

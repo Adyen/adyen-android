@@ -23,6 +23,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherPaymentMethodConfig
+import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
 import com.adyen.checkout.voucher.internal.ui.model.getInformationFields
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -92,17 +93,22 @@ internal class DefaultVoucherDelegate(
         action: VoucherAction,
         config: VoucherPaymentMethodConfig
     ) {
+        // TODO: remove action.url when it's fixed from backend side
+        val downloadUrl = action.downloadUrl ?: action.url
+        val storeAction = downloadUrl?.let { url ->
+            VoucherStoreAction.DownloadPdf(url)
+        } ?: VoucherStoreAction.SaveAsImage
         val informationFields = config.getInformationFields(action, componentParams.shopperLocale)
+
         val outputData = VoucherOutputData(
             isValid = true,
             paymentMethodType = action.paymentMethodType,
-            // TODO: remove action.url when it's fixed from backend side
-            downloadUrl = action.downloadUrl ?: action.url,
+            introductionTextResource = config.introductionTextResource,
             expiresAt = action.expiresAt,
             reference = action.reference,
             totalAmount = action.totalAmount,
-            introductionTextResource = config.introductionTextResource,
-            informationFields = informationFields
+            storeAction = storeAction,
+            informationFields = informationFields,
         )
         _outputDataFlow.tryEmit(outputData)
     }
@@ -110,20 +116,36 @@ internal class DefaultVoucherDelegate(
     private fun createOutputData() = VoucherOutputData(
         isValid = false,
         paymentMethodType = null,
-        downloadUrl = null,
+        introductionTextResource = null,
         expiresAt = null,
         reference = null,
         totalAmount = null,
-        introductionTextResource = null,
+        storeAction = null,
         informationFields = null,
     )
 
-    override fun downloadVoucher(context: Context) {
-        try {
-            pdfOpener.open(context, outputData.downloadUrl ?: "")
-        } catch (e: IllegalStateException) {
-            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+    override fun storeVoucher(context: Context) {
+        when (val storeAction = outputData.storeAction) {
+            is VoucherStoreAction.DownloadPdf -> {
+                downloadVoucher(context, storeAction.downloadUrl)
+            }
+
+            VoucherStoreAction.SaveAsImage -> {
+                saveAsImage(context)
+            }
+
+            null -> exceptionChannel.trySend(ComponentException("Storing is not supported for this action"))
         }
+    }
+
+    private fun downloadVoucher(context: Context, downloadUrl: String) = try {
+        pdfOpener.open(context, downloadUrl)
+    } catch (e: IllegalStateException) {
+        exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+    }
+
+    private fun saveAsImage(context: Context) {
+        // TODO: Save image
     }
 
     override fun onCleared() {

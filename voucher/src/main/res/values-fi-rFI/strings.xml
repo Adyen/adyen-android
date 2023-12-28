@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Kopioi koodi</string>
     <string name="checkout_voucher_copied_toast">Koodi kopioitu leikepöydälle</string>
     <string name="checkout_voucher_download_pdf">Lataa PDF</string>
+    <string name="checkout_voucher_save_image">Tallenna kuvana</string>
     <string name="checkout_voucher_finish">Lopeta</string>
 </resources>

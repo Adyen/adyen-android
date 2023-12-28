@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">コードをコピー</string>
     <string name="checkout_voucher_copied_toast">コードをクリップボードにコピーしました</string>
     <string name="checkout_voucher_download_pdf">PDFをダウンロード</string>
+    <string name="checkout_voucher_save_image">画像として保存</string>
     <string name="checkout_voucher_finish">完了</string>
 </resources>

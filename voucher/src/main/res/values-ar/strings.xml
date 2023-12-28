@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">نسخ الرمز</string>
     <string name="checkout_voucher_copied_toast">تم نسخ الرمز إلى الحافظة</string>
     <string name="checkout_voucher_download_pdf">تنزيل ملف PDF</string>
+    <string name="checkout_voucher_save_image">حفظ كصورة</string>
     <string name="checkout_voucher_finish">إنهاء</string>
 </resources>

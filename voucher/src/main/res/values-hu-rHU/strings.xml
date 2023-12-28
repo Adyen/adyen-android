@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Kód másolása</string>
     <string name="checkout_voucher_copied_toast">Kód a vágólapra másolva</string>
     <string name="checkout_voucher_download_pdf">PDF letöltése</string>
+    <string name="checkout_voucher_save_image">Mentés képként</string>
     <string name="checkout_voucher_finish">Befejezés</string>
 </resources>

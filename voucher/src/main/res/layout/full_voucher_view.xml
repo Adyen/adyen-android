@@ -108,14 +108,16 @@
             style="@style/AdyenCheckout.Voucher.ActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/checkout_voucher_copy_code"/>
+            android:text="@string/checkout_voucher_copy_code" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_downloadPdf"
+            android:id="@+id/button_store"
             style="@style/AdyenCheckout.Voucher.ActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/checkout_voucher_download_pdf"/>
+            android:visibility="gone"
+            tools:text="@string/checkout_voucher_download_pdf"
+            tools:visibility="visible" />
 
     </com.google.android.flexbox.FlexboxLayout>
 

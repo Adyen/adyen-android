@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">%%pix.instructions.copyButton%%</string>
     <string name="checkout_voucher_copied_toast">%%pix.instructions.copiedMessage%%</string>
     <string name="checkout_voucher_download_pdf">%%download.pdf%%</string>
+    <string name="checkout_voucher_save_image">%%voucher.saveImage%%</string>
     <string name="checkout_voucher_finish">%%voucher.finish%%</string>
 </resources>

@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">코드 복사하기</string>
     <string name="checkout_voucher_copied_toast">코드가 클립보드에 복사되었습니다</string>
     <string name="checkout_voucher_download_pdf">PDF 다운로드</string>
+    <string name="checkout_voucher_save_image">이미지로 저장</string>
     <string name="checkout_voucher_finish">완료</string>
 </resources>

@@ -63,7 +63,7 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.textViewDownload.setOnClickListener { delegate.downloadVoucher(context) }
+        binding.textViewDownload.setOnClickListener { delegate.storeVoucher(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {

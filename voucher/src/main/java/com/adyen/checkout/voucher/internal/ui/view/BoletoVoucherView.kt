@@ -69,7 +69,7 @@ internal class BoletoVoucherView @JvmOverloads constructor(
         observeDelegate(delegate, coroutineScope)
 
         binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
-        binding.buttonDownloadPdf.setOnClickListener { delegate.downloadVoucher(context) }
+        binding.buttonDownloadPdf.setOnClickListener { delegate.storeVoucher(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {

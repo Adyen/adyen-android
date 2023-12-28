@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Code kopiëren</string>
     <string name="checkout_voucher_copied_toast">De code is naar het klembord gekopieerd</string>
     <string name="checkout_voucher_download_pdf">PDF downloaden</string>
+    <string name="checkout_voucher_save_image">Opslaan als afbeelding</string>
     <string name="checkout_voucher_finish">Voltooien</string>
 </resources>

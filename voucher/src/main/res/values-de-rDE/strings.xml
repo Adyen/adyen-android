@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Code kopieren</string>
     <string name="checkout_voucher_copied_toast">Code wurde in die Zwischenablage kopiert</string>
     <string name="checkout_voucher_download_pdf">PDF herunterladen</string>
+    <string name="checkout_voucher_save_image">Als Bild speichern</string>
     <string name="checkout_voucher_finish">Abschließen</string>
 </resources>

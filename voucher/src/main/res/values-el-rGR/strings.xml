@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Αντιγραφή κωδικού</string>
     <string name="checkout_voucher_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
     <string name="checkout_voucher_download_pdf">Λήψη PDF</string>
+    <string name="checkout_voucher_save_image">Αποθήκευση ως εικόνας</string>
     <string name="checkout_voucher_finish">Τέλος</string>
 </resources>

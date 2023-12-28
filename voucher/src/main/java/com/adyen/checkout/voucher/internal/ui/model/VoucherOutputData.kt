@@ -16,11 +16,11 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 data class VoucherOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,
-    val downloadUrl: String?,
+    val introductionTextResource: Int?,
     // TODO: Should be removed with BoletoVoucherView
     val expiresAt: String?,
     val reference: String?,
     val totalAmount: Amount?,
-    val introductionTextResource: Int?,
+    val storeAction: VoucherStoreAction?,
     val informationFields: List<VoucherInformationField>?,
 ) : OutputData

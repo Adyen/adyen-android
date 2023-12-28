@@ -20,5 +20,5 @@ interface VoucherDelegate :
     ActionDelegate,
     ViewableDelegate<VoucherOutputData>,
     ViewProvidingDelegate {
-    fun downloadVoucher(context: Context)
+    fun storeVoucher(context: Context)
 }

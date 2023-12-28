@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">Kopiraj kôd</string>
     <string name="checkout_voucher_copied_toast">Kôd je kopiran u međuspremnik</string>
     <string name="checkout_voucher_download_pdf">Preuzmite PDF</string>
+    <string name="checkout_voucher_save_image">Spremi kao sliku</string>
     <string name="checkout_voucher_finish">Završi</string>
 </resources>

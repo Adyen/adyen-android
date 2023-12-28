@@ -31,6 +31,7 @@ import com.adyen.checkout.voucher.databinding.FullVoucherViewBinding
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.model.VoucherInformationField
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
+import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -71,7 +72,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         observeDelegate(delegate, coroutineScope)
 
         binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
-        binding.buttonDownloadPdf.setOnClickListener { delegate.downloadVoucher(context) }
+        binding.buttonStore.setOnClickListener { delegate.storeVoucher(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -94,6 +95,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         updateIntroductionText(outputData.introductionTextResource)
         updateAmount(outputData.totalAmount)
         updateCodeReference(outputData.reference)
+        updateStoreActionButton(outputData.storeAction)
         updateInformationFields(outputData.informationFields)
     }
 
@@ -131,6 +133,23 @@ internal class FullVoucherView @JvmOverloads constructor(
         val isVisible = !codeReference.isNullOrEmpty()
         binding.textViewReferenceCode.isVisible = isVisible
         binding.buttonCopyCode.isVisible = isVisible
+    }
+
+    private fun updateStoreActionButton(storeAction: VoucherStoreAction?) {
+        binding.buttonStore.isVisible = storeAction != null
+
+        if (storeAction == null) return
+        val storeButtonText = when (storeAction) {
+            is VoucherStoreAction.DownloadPdf -> {
+                localizedContext.getString(R.string.checkout_voucher_download_pdf)
+            }
+
+            VoucherStoreAction.SaveAsImage -> {
+                localizedContext.getString(R.string.checkout_voucher_save_image)
+            }
+        }
+
+        binding.buttonStore.text = storeButtonText
     }
 
     private fun updateInformationFields(informationFields: List<VoucherInformationField>?) {

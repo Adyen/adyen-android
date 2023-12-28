@@ -17,5 +17,6 @@
     <string name="checkout_voucher_copy_code">复制代码</string>
     <string name="checkout_voucher_copied_toast">代码复制到剪贴板</string>
     <string name="checkout_voucher_download_pdf">下载 PDF 文件</string>
+    <string name="checkout_voucher_save_image">另存为图片</string>
     <string name="checkout_voucher_finish">完成</string>
 </resources>
