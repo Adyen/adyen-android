@@ -54,7 +54,7 @@ class AddressLookupView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
-        setPadding(padding, padding, padding, 0)
+        setPadding(padding, padding, padding, padding)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {

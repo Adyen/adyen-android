@@ -18,7 +18,7 @@
         android:id="@+id/textInputLayout_addressLookupQuerySearch"
         style="@style/AdyenCheckout.AddressLookup.Query"
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/standard_half_margin" />
+        android:layout_marginBottom="@dimen/standard_margin" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/standard_half_margin"
         android:gravity="center"
         android:text="@string/checkout_address_lookup_empty"
         android:visibility="gone" />
@@ -53,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/standard_half_margin"
         android:gravity="center"
         android:text="@string/checkout_address_lookup_initial" />
 
