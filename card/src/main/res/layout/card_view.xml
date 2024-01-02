@@ -162,6 +162,7 @@
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/autoCompleteTextView_addressLookup"
             style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText"
+            android:drawableEnd="@drawable/address_lookup_search_input_arrow"
             android:dropDownAnchor="@id/textInputLayout_addressLookup"
             android:editable="false" />
 
