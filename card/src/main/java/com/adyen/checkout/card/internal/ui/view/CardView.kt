@@ -145,6 +145,10 @@ class CardView @JvmOverloads constructor(
             R.style.AdyenCheckout_PostalCodeInput,
             localizedContext
         )
+        binding.textInputLayoutAddressLookup.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_AddressLookup_DropdownTextInputEditText,
+            localizedContext
+        )
         binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_SocialSecurityNumberInput,
             localizedContext

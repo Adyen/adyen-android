@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">郵遞區號（選用）</string>
     <string name="checkout_address_form_province_territory_hint_optional">省或地區（選用）</string>
     <string name="checkout_address_form_city_town_hint_optional">市／鎮（選用）</string>
+
+    <string name="checkout_address_lookup_hint">搜尋您的地址</string>
+    <string name="checkout_address_lookup_initial">無法搜尋您的地址？</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">可以隨時#手動輸入您的地址#</string>
+    <string name="checkout_address_lookup_empty">找不到任何結果</string>
+    <string name="checkout_address_lookup_empty_description">「%s」不符合任何搜尋內容，請再試一次或#手動輸入地址#</string>
+
 </resources>

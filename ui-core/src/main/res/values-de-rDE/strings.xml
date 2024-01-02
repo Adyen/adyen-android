@@ -12,7 +12,7 @@
     <string name="confirm_preauthorization">Vorautorisierung bestätigen</string>
 
     <string name="paymentInProgressView_title">Ein Bezahlvorgang ist noch aktiv</string>
-    <string name="paymentInProgressView_loadingText">Abschluss abwarten …</string>
+    <string name="paymentInProgressView_loadingText">Abschluss abwarten…</string>
     <string name="paymentInProgressView_cancelButton">Abbrechen</string>
 
     <string name="checkout_address_form_field_not_valid">Ungültige Eingabe</string>
@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">PLZ (optional)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provinz oder Territorium (optional)</string>
     <string name="checkout_address_form_city_town_hint_optional">Ort (optional)</string>
+
+    <string name="checkout_address_lookup_hint">Suchen Sie Ihre Adresse</string>
+    <string name="checkout_address_lookup_initial">Sie können Ihre Adresse nicht suchen?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Sie können Ihre Adresse jederzeit manuell #eingeben#</string>
+    <string name="checkout_address_lookup_empty">Keine Ergebnisse gefunden</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' stimmt nicht mit irgendetwas überein, versuchen Sie es erneut oder verwenden Sie #manual address entry#</string>
+
 </resources>

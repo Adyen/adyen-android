@@ -12,7 +12,7 @@
     <string name="confirm_preauthorization">Bekreft forhåndsgodkjenning</string>
 
     <string name="paymentInProgressView_title">Det er en betalingsprosess som fortsatt er aktiv</string>
-    <string name="paymentInProgressView_loadingText">Venter på fullførelse …</string>
+    <string name="paymentInProgressView_loadingText">Venter på fullførelse…</string>
     <string name="paymentInProgressView_cancelButton">Avbryt</string>
 
     <string name="checkout_address_form_field_not_valid">Ugyldige inndata</string>
@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valgfritt)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valgfritt)</string>
     <string name="checkout_address_form_city_town_hint_optional">By (valgfritt)</string>
+
+    <string name="checkout_address_lookup_hint">Søk på adressen din</string>
+    <string name="checkout_address_lookup_initial">Kan du ikke søke på adressen din?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Du kan alltids #skrive inn adressen din manuelt#</string>
+    <string name="checkout_address_lookup_empty">Fant ingen resultater</string>
+    <string name="checkout_address_lookup_empty_description">Fikk ingen treff på «%s». Prøv igjen eller #skriv inn adressen manuelt#</string>
+
 </resources>

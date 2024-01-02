@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Código postal (opcional)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Província ou Território (opcional)</string>
     <string name="checkout_address_form_city_town_hint_optional">Cidade/cidade (opcional)</string>
+
+    <string name="checkout_address_lookup_hint">Pesquise o seu endereço</string>
+    <string name="checkout_address_lookup_initial">Não consegue pesquisar o seu endereço?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Pode sempre #inserir o seu endereço manualmente#</string>
+    <string name="checkout_address_lookup_empty">Nenhum resultado encontrado</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' não devolveu resultados, tente novamente ou use #inserção manual do endereço#</string>
+
 </resources>

@@ -23,6 +23,8 @@ import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
+import com.adyen.checkout.ui.core.internal.util.formatStringWithHyperlink
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -67,7 +69,7 @@ class AddressLookupView @JvmOverloads constructor(
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
         initAddressOptions()
-        initManualEntryButton()
+        initManualEntryTextViews()
         initSubmitAddressButton()
     }
 
@@ -82,8 +84,27 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
-        // TODO address lookup translations
         binding.addressFormInput.initLocalizedContext(localizedContext)
+
+        binding.textViewInitialDisclaimer.setLocalizedTextFromStyle(
+            styleResId = R.style.AdyenCheckout_AddressLookup_InitialDisclaimer_Title,
+            localizedContext = localizedContext,
+        )
+
+        binding.textViewManualEntryInitial.text =
+            localizedContext.getString(R.string.checkout_address_lookup_initial_description)
+                .formatStringWithHyperlink("#")
+
+        binding.textViewError.setLocalizedTextFromStyle(
+            styleResId = R.style.AdyenCheckout_AddressLookup_Empty_Title,
+            localizedContext = localizedContext,
+        )
+
+        binding.textViewManualEntryError.setLocalizedTextFromStyle(
+            styleResId = R.style.AdyenCheckout_AddressLookup_Empty_Description,
+            localizedContext = localizedContext,
+            formatHyperLink = true,
+        )
     }
 
     private fun initAddressLookupQuery() {
@@ -112,8 +133,12 @@ class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun initManualEntryButton() {
-        binding.buttonManualEntry.setOnClickListener {
+    private fun initManualEntryTextViews() {
+        binding.textViewManualEntryError.setOnClickListener {
+            addressLookupDelegate.onManualEntryModeSelected()
+        }
+
+        binding.textViewManualEntryInitial.setOnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
         }
     }
@@ -126,7 +151,7 @@ class AddressLookupView @JvmOverloads constructor(
 
     private fun outputDataChanged(addressLookupState: AddressLookupState) {
         when (addressLookupState) {
-            AddressLookupState.Error -> handleErrorState()
+            is AddressLookupState.Error -> handleErrorState(addressLookupState)
             is AddressLookupState.Initial -> handleInitialState()
             AddressLookupState.Loading -> handleLoadingState()
             is AddressLookupState.Form -> handleFormState(addressLookupState)
@@ -135,21 +160,26 @@ class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun handleErrorState() {
+    private fun handleErrorState(addressLookupState: AddressLookupState.Error) {
         binding.recyclerViewAddressLookupOptions.isVisible = false
         binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = true
-        binding.buttonManualEntry.isVisible = true
+        binding.textViewManualEntryError.isVisible = true
+        binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
+        binding.textViewManualEntryError.text =
+            localizedContext.getString(R.string.checkout_address_lookup_empty_description, addressLookupState.query)
+                .formatStringWithHyperlink("#")
     }
 
     private fun handleInitialState() {
         binding.recyclerViewAddressLookupOptions.isVisible = false
         binding.textViewInitialDisclaimer.isVisible = true
         binding.textViewError.isVisible = false
-        binding.buttonManualEntry.isVisible = true
+        binding.textViewManualEntryError.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = true
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
@@ -159,7 +189,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.recyclerViewAddressLookupOptions.isVisible = false
         binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.buttonManualEntry.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = true
         binding.submitAddressButton.isVisible = false
@@ -169,7 +200,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.recyclerViewAddressLookupOptions.isVisible = false
         binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.buttonManualEntry.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = true
@@ -186,7 +218,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.recyclerViewAddressLookupOptions.isVisible = true
         binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.buttonManualEntry.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = false
@@ -197,7 +230,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.recyclerViewAddressLookupOptions.isVisible = false
         binding.textViewInitialDisclaimer.isVisible = false
         binding.textViewError.isVisible = false
-        binding.buttonManualEntry.isVisible = false
+        binding.textViewManualEntryError.isVisible = false
+        binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
         binding.submitAddressButton.isVisible = true

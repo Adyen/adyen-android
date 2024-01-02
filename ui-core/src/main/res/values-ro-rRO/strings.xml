@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Cod poștal (opțional)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provincie sau teritoriu (opțional)</string>
     <string name="checkout_address_form_city_town_hint_optional">Oraș/localitate (opțional)</string>
+
+    <string name="checkout_address_lookup_hint">Căutați adresa dvs.</string>
+    <string name="checkout_address_lookup_initial">Nu vă puteți căuta adresa?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Puteți oricând să #completați adresa dvs. manual#</string>
+    <string name="checkout_address_lookup_empty">Nu s-au găsit rezultate</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' nu s-a potrivit cu nimic, încercați din nou sau folosiți #completarea manuală a adresei#</string>
+
 </resources>

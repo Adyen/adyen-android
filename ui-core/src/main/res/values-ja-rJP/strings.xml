@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">郵便番号 (任意)</string>
     <string name="checkout_address_form_province_territory_hint_optional">州または準州 (任意)</string>
     <string name="checkout_address_form_city_town_hint_optional">市区町村 (任意)</string>
+
+    <string name="checkout_address_lookup_hint">住所を検索してください</string>
+    <string name="checkout_address_lookup_initial">住所を検索できませんか？</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">いつでも手動で#住所を入力#できます</string>
+    <string name="checkout_address_lookup_empty">結果が見つかりませんでした</string>
+    <string name="checkout_address_lookup_empty_description">「%s」との一致はありませんでした。もう一度試すか、#手動でアドレスを入力#してください</string>
+
 </resources>

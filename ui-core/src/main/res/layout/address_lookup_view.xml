@@ -35,7 +35,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:text="No results found."
+        android:text="@string/checkout_address_lookup_empty"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView_manualEntryError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/checkout_address_lookup_empty_description"
         android:visibility="gone" />
 
     <TextView
@@ -45,18 +54,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:text="You can always enter your address manually" />
+        android:text="@string/checkout_address_lookup_initial" />
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_manualEntry"
-        style="@style/AdyenCheckout.Button.Secondary"
+    <TextView
+        android:id="@+id/textView_manualEntryInitial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:text="Enter address manually"
+        android:text="@string/checkout_address_lookup_initial_description"
         android:visibility="gone" />
+
 
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"

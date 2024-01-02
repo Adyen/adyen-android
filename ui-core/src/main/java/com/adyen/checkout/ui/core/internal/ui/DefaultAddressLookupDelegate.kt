@@ -173,7 +173,7 @@ class DefaultAddressLookupDelegate :
     private fun handleSearchResultEvent(event: AddressLookupEvent.SearchResult): AddressLookupState {
         return if (currentAddressLookupState is AddressLookupState.Loading) {
             if (event.addressLookupOptions.isEmpty()) {
-                AddressLookupState.Error
+                AddressLookupState.Error(addressLookupInputData.query)
             } else {
                 currentAddressLookupOptions = event.addressLookupOptions
                 AddressLookupState.SearchResult(

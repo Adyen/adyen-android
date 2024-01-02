@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Irányítószám (nem kötelező)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Tartomány vagy terület (nem kötelező)</string>
     <string name="checkout_address_form_city_town_hint_optional">Város (nem kötelező)</string>
+
+    <string name="checkout_address_lookup_hint">Keresse meg a címét</string>
+    <string name="checkout_address_lookup_initial">Nem tudja megkeresni a címét?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Mindig #beírhatja manuálisan a címét#</string>
+    <string name="checkout_address_lookup_empty">Nincs találat</string>
+    <string name="checkout_address_lookup_empty_description">A keresett „%s„ kifejezésre nincs találat, próbálkozzon újra, vagy #írja be manuálisan a címet#</string>
+
 </resources>

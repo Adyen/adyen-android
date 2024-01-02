@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Poštanski broj (neobavezno)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Pokrajina ili teritorij (neobavezno)</string>
     <string name="checkout_address_form_city_town_hint_optional">Grad (neobavezno)</string>
+
+    <string name="checkout_address_lookup_hint">Pretraživanje vaše adrese</string>
+    <string name="checkout_address_lookup_initial">Ne možete pretražiti svoju adresu?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Uvijek možete #ručno unijeti svoju adresu#</string>
+    <string name="checkout_address_lookup_empty">Nisu pronađeni rezultati</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' nije se podudarao s ničime, pokušajte ponovno ili upotrijebite #ručni unos adrese#</string>
+
 </resources>

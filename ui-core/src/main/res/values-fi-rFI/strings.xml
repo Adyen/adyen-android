@@ -42,4 +42,11 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postinumero (valinnainen)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Maakunta tai alue (valinnainen)</string>
     <string name="checkout_address_form_city_town_hint_optional">Kaupunki / taajama (valinnainen)</string>
+
+    <string name="checkout_address_lookup_hint">Hae osoitteesi</string>
+    <string name="checkout_address_lookup_initial">Eikö osoitetta löydy?</string>
+    <string name="checkout_address_lookup_initial_description" formatted="false">Voit myös #syöttää osoitteen manuaalisesti#</string>
+    <string name="checkout_address_lookup_empty">Tuloksia ei löytynyt</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' ei tuottanut tuloksia. Yritä uudelleen tai käytä #manuaalista osoitteen syöttöä#</string>
+
 </resources>
