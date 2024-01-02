@@ -58,7 +58,7 @@ internal class CardViewModel @Inject constructor(
             .filterNotNull()
             .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
             .onEach { query ->
-                val options = if (query == "empty" || query.isEmpty()) {
+                val options = if (query == "empty") {
                     emptyList()
                 } else {
                     ADDRESS_LOOKUP_OPTIONS

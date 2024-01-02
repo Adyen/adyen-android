@@ -143,7 +143,7 @@ class DefaultAddressLookupDelegate :
         return when (event) {
             is AddressLookupEvent.Initialize -> handleInitializeEvent(event)
             is AddressLookupEvent.Query -> handleQueryEvent(event)
-            AddressLookupEvent.ClearQuery -> AddressLookupState.Initial
+            AddressLookupEvent.ClearQuery -> handleClearQueryEvent()
             AddressLookupEvent.Manual -> handleManualEvent()
             is AddressLookupEvent.SearchResult -> handleSearchResultEvent(event)
             is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event, addressLookupOptions)
@@ -162,6 +162,14 @@ class DefaultAddressLookupDelegate :
     private fun handleQueryEvent(event: AddressLookupEvent.Query): AddressLookupState {
         addressLookupInputData.query = event.query
         return AddressLookupState.Loading
+    }
+
+    private fun handleClearQueryEvent(): AddressLookupState {
+        return if (!addressLookupInputData.selectedAddress.isEmpty) {
+            AddressLookupState.Form(addressLookupInputData.selectedAddress)
+        } else {
+            AddressLookupState.Initial
+        }
     }
 
     private fun handleManualEvent(): AddressLookupState {
