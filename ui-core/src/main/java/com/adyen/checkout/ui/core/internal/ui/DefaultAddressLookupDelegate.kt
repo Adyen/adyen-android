@@ -93,7 +93,11 @@ class DefaultAddressLookupDelegate :
     }
 
     override fun onAddressQueryChanged(query: String) {
-        addressLookupEventChannel.trySend(AddressLookupEvent.Query(query))
+        if (query.isEmpty()) {
+            addressLookupEventChannel.trySend(AddressLookupEvent.ClearQuery)
+        } else {
+            addressLookupEventChannel.trySend(AddressLookupEvent.Query(query))
+        }
         addressLookupCallback?.onQueryChanged(query)
     }
 
