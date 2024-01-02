@@ -351,7 +351,7 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup.Submit" parent="AdyenCheckout.Button.Colored">
+    <style name="AdyenCheckout.AddressLookup.Button.Submit" parent="AdyenCheckout.Button.Colored">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:text">Use this address</item>
@@ -379,5 +379,12 @@
         <item name="android:textColor">?android:attr/textColor</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_address_lookup_empty_description</item>
+    </style>
+
+    <style name="AdyenCheckout.AddressLookup.Button.Manual" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:layout_marginStart">@dimen/standard_half_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+        <item name="android:text">Enter address manually</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 </resources>

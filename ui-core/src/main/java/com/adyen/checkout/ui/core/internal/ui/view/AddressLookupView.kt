@@ -69,7 +69,7 @@ class AddressLookupView @JvmOverloads constructor(
         initAddressLookupQuery()
         initAddressFormInput(coroutineScope)
         initAddressOptions()
-        initManualEntryTextViews()
+        initManualEntryFields()
         initSubmitAddressButton()
     }
 
@@ -133,12 +133,16 @@ class AddressLookupView @JvmOverloads constructor(
         }
     }
 
-    private fun initManualEntryTextViews() {
+    private fun initManualEntryFields() {
         binding.textViewManualEntryError.setOnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
         }
 
         binding.textViewManualEntryInitial.setOnClickListener {
+            addressLookupDelegate.onManualEntryModeSelected()
+        }
+
+        binding.buttonManualEntry.setOnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
         }
     }
@@ -168,6 +172,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
+        binding.buttonManualEntry.isVisible = false
+        binding.divider.isVisible = false
         binding.submitAddressButton.isVisible = false
         binding.textViewManualEntryError.text =
             localizedContext.getString(R.string.checkout_address_lookup_empty_description, addressLookupState.query)
@@ -182,6 +188,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = true
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
+        binding.buttonManualEntry.isVisible = false
+        binding.divider.isVisible = false
         binding.submitAddressButton.isVisible = false
     }
 
@@ -193,6 +201,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = true
+        binding.buttonManualEntry.isVisible = false
+        binding.divider.isVisible = false
         binding.submitAddressButton.isVisible = false
     }
 
@@ -204,6 +214,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
+        binding.buttonManualEntry.isVisible = false
+        binding.divider.isVisible = false
         binding.submitAddressButton.isVisible = true
         addressLookupDelegate.addressDelegate.updateAddressInputData {
             if (addressLookupState.selectedAddress == null) {
@@ -222,6 +234,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = false
+        binding.buttonManualEntry.isVisible = true
+        binding.divider.isVisible = true
         binding.submitAddressButton.isVisible = false
         setAddressOptions(addressLookupState.options)
     }
@@ -234,6 +248,8 @@ class AddressLookupView @JvmOverloads constructor(
         binding.textViewManualEntryInitial.isVisible = false
         binding.addressFormInput.isVisible = true
         binding.progressBar.isVisible = false
+        binding.buttonManualEntry.isVisible = false
+        binding.divider.isVisible = false
         binding.submitAddressButton.isVisible = true
         highlightValidationErrors()
     }

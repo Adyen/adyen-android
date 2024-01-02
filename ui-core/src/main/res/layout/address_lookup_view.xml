@@ -76,6 +76,25 @@
         android:focusableInTouchMode="true"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/button_manualEntry"
+        style="@style/AdyenCheckout.AddressLookup.Button.Manual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="@dimen/standard_half_margin"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        android:layout_marginBottom="@dimen/standard_half_margin"
+        android:alpha="0.8"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressDescription" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_addressLookupOptions"
         android:layout_width="match_parent"
@@ -87,6 +106,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitAddressButton"
-        style="@style/AdyenCheckout.AddressLookup.Submit"
+        style="@style/AdyenCheckout.AddressLookup.Button.Submit"
         android:visibility="gone" />
 </merge>

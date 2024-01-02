@@ -174,7 +174,8 @@ class DefaultAddressLookupDelegate :
 
     private fun handleManualEvent(): AddressLookupState {
         return if (currentAddressLookupState is AddressLookupState.Initial ||
-            currentAddressLookupState is AddressLookupState.Error
+            currentAddressLookupState is AddressLookupState.Error ||
+            currentAddressLookupState is AddressLookupState.SearchResult
         ) {
             AddressLookupState.Form(null)
         } else {
