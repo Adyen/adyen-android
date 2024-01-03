@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">%%payAmountFormat%%</string>
     <string name="confirm_preauthorization">%%confirmPreauthorization%%</string>
 
+    <string name="error_dialog_title">%%error.title%%</string>
+    <string name="error_dialog_button">%%dismissButton%%</string>
+    <string name="component_error">%%resultMessages.unknown%%</string>
+
     <string name="paymentInProgressView_title">%%redirect.intermediateScreen.title%%</string>
     <string name="paymentInProgressView_loadingText">%%redirect.intermediateScreen.loadingText%%</string>
     <string name="paymentInProgressView_cancelButton">%%storedPaymentMethod.disable.cancelButton%%</string>
@@ -45,9 +49,10 @@
 
     <string name="checkout_address_lookup_hint">%%address.lookup.search.placeholder%%</string>
     <string name="checkout_address_lookup_initial">%%address.lookup.search.empty.title%%</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">%%address.lookup.search.empty.subtitle%%</string>
+    <string name="checkout_address_lookup_initial_description">%%address.lookup.search.empty.subtitle%%</string>
     <string name="checkout_address_lookup_empty">%%address.lookup.search.empty.title.noResults%%</string>
-    <string name="checkout_address_lookup_empty_description" formatted="false">%%address.lookup.search.empty.subtitle.noResults%%</string>
+    <string name="checkout_address_lookup_empty_description">%%address.lookup.search.empty.subtitle.noResults%%</string>
+    <string name="checkout_address_lookup_enter_manually">%%address.enterManually%%</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>

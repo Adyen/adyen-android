@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">お支払い方法</string>
-    <string name="error_dialog_title">エラー</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">支払いの送信中にエラーが発生しました。再度お試し下さい。</string>
     <string name="action_failed">支払の処理中にエラーが発生しました。後でもう一度やり直してください。</string>
-    <string name="component_error">問題が発生しました。</string>
     <string name="time_out_error">リクエストがタイムアウトになりました。再度お試し下さい。</string>
     <string name="store_payment_methods_header">選択済みのお支払い方法</string>
     <string name="other_payment_methods">その他のお支払いオプション</string>

@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Πληρωμή %s</string>
     <string name="confirm_preauthorization">Επιβεβαίωση προεξουσιοδότησης</string>
 
+    <string name="error_dialog_title">Σφάλμα</string>
+    <string name="error_dialog_button">ΟΚ</string>
+    <string name="component_error">Κάτι πήγε στραβά.</string>
+
     <string name="paymentInProgressView_title">Μια διεργασία πληρωμής είναι ακόμη ενεργή</string>
     <string name="paymentInProgressView_loadingText">Αναμονή για ολοκλήρωση…</string>
     <string name="paymentInProgressView_cancelButton">Άκυρο</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Αναζητήστε τη διεύθυνσή σας</string>
     <string name="checkout_address_lookup_initial">Δεν μπορείτε να κάνετε αναζήτηση της διεύθυνσής σας;</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Μπορείτε πάντα να #εισαγάγετε τη διεύθυνσή σας μη αυτόματα#</string>
+    <string name="checkout_address_lookup_initial_description">Μπορείτε πάντα να #εισαγάγετε τη διεύθυνσή σας μη αυτόματα#</string>
     <string name="checkout_address_lookup_empty">Δεν βρέθηκαν αποτελέσματα</string>
     <string name="checkout_address_lookup_empty_description">Το \'%s\' δεν ταιριάζει με τίποτα. Προσπαθήστε ξανά ή χρησιμοποιήστε #μη αυτόματη εισαγωγή διεύθυνσης#</string>
+    <string name="checkout_address_lookup_enter_manually">Εισαγάγετε τη διεύθυνση μη αυτόματα</string>
 
 </resources>

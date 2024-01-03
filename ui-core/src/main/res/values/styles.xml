@@ -384,7 +384,7 @@
     <style name="AdyenCheckout.AddressLookup.Button.Manual" parent="AdyenCheckout.Button.Secondary">
         <item name="android:layout_marginStart">@dimen/standard_half_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
-        <item name="android:text">Enter address manually</item>
+        <item name="android:text">@string/checkout_address_lookup_enter_manually</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 </resources>

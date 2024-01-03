@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Fizetési módok</string>
-    <string name="error_dialog_title">Hiba</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Hiba történt a fizetés elküldése során. Próbálkozzon újra.</string>
     <string name="action_failed">Fizetése feldolgozása során hiba történt. Próbálkozzon újra később.</string>
-    <string name="component_error">Hiba történt.</string>
     <string name="time_out_error">A kérés időkorlátja lejárt. Próbálkozzon újra.</string>
     <string name="store_payment_methods_header">Fizetési módjai</string>
     <string name="other_payment_methods">Másik mód választása</string>

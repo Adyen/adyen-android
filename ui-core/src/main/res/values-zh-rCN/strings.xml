@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">支付 %s</string>
     <string name="confirm_preauthorization">确认预先授权</string>
 
+    <string name="error_dialog_title">错误</string>
+    <string name="error_dialog_button">确定</string>
+    <string name="component_error">发生错误。</string>
+
     <string name="paymentInProgressView_title">付款流程仍处于活动状态</string>
     <string name="paymentInProgressView_loadingText">正在等待完成…</string>
     <string name="paymentInProgressView_cancelButton">取消</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">搜索地址</string>
     <string name="checkout_address_lookup_initial">无法搜索地址？</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">您随时可以#手动输入地址#</string>
+    <string name="checkout_address_lookup_initial_description">您随时可以#手动输入地址#</string>
     <string name="checkout_address_lookup_empty">未找到任何结果</string>
     <string name="checkout_address_lookup_empty_description">“%s”无匹配内容，请重试或者使用#手动地址条目#</string>
+    <string name="checkout_address_lookup_enter_manually">手动输入地址</string>
 
 </resources>

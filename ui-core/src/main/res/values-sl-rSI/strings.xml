@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Plačilo %s</string>
     <string name="confirm_preauthorization">Potrdi predhodno odobritev</string>
 
+    <string name="error_dialog_title">Napaka</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Nekaj je šlo narobe.</string>
+
     <string name="paymentInProgressView_title">Postopek plačila je še vedno aktiven</string>
     <string name="paymentInProgressView_loadingText">Čakanje na dokončanje…</string>
     <string name="paymentInProgressView_cancelButton">Prekliči</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Poiščite svoj naslov</string>
     <string name="checkout_address_lookup_initial">Ne morete iskati svojega naslova?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Vedno lahko #ročno vnesete svoj naslov#</string>
+    <string name="checkout_address_lookup_initial_description">Vedno lahko #ročno vnesete svoj naslov#</string>
     <string name="checkout_address_lookup_empty">Nobenega rezultata ni bilo mogoče najti</string>
     <string name="checkout_address_lookup_empty_description">»%s« se ni ujemalo z ničemer, poskusite znova ali uporabite #ročni vnos naslova#</string>
+    <string name="checkout_address_lookup_enter_manually">Naslov vnesite ročno</string>
 
 </resources>

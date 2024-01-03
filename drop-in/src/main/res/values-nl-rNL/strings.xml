@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Betaalmethodes</string>
-    <string name="error_dialog_title">Fout</string>
-    <string name="error_dialog_button">Oké</string>
     <string name="payment_failed">Fout bij het verzenden van betaling. Probeer het opnieuw.</string>
     <string name="action_failed">Er is een fout opgetreden bij het verwerken van uw betaling. Probeer het later opnieuw.</string>
-    <string name="component_error">Er is iets misgegaan.</string>
     <string name="time_out_error">Verzoek is verlopen. Probeer het opnieuw.</string>
     <string name="store_payment_methods_header">Opgeslagen betaalmethodes</string>
     <string name="other_payment_methods">Alle betaalmethodes</string>

@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Meios de pagamento</string>
-    <string name="error_dialog_title">Erro</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Erro ao enviar o pagamento. Tente novamente.</string>
     <string name="action_failed">Ocorreu um erro ao processar o seu pagamento. Tente novamente mais tarde.</string>
-    <string name="component_error">Algo deu errado.</string>
     <string name="time_out_error">O pedido expirou. Tente novamente.</string>
     <string name="store_payment_methods_header">Meus métodos de pagamento</string>
     <string name="other_payment_methods">Todos os métodos de pagamento</string>

@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">%sのお支払い</string>
     <string name="confirm_preauthorization">事前承認を確認する</string>
 
+    <string name="error_dialog_title">エラー</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">問題が発生しました。</string>
+
     <string name="paymentInProgressView_title">支払プロセスがまだ有効です</string>
     <string name="paymentInProgressView_loadingText">完了を待っています…</string>
     <string name="paymentInProgressView_cancelButton">キャンセル</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">住所を検索してください</string>
     <string name="checkout_address_lookup_initial">住所を検索できませんか？</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">いつでも手動で#住所を入力#できます</string>
+    <string name="checkout_address_lookup_initial_description">いつでも手動で#住所を入力#できます</string>
     <string name="checkout_address_lookup_empty">結果が見つかりませんでした</string>
     <string name="checkout_address_lookup_empty_description">「%s」との一致はありませんでした。もう一度試すか、#手動でアドレスを入力#してください</string>
+    <string name="checkout_address_lookup_enter_manually">住所を手動で入力してください</string>
 
 </resources>

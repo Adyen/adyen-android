@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Betal %s</string>
     <string name="confirm_preauthorization">Bekræft forhåndsgodkendelse</string>
 
+    <string name="error_dialog_title">Fejl</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Noget gik galt.</string>
+
     <string name="paymentInProgressView_title">En betalingsproces er stadig aktiv</string>
     <string name="paymentInProgressView_loadingText">Afventer fuldførelse…</string>
     <string name="paymentInProgressView_cancelButton">Annuller</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Søg på din adresse</string>
     <string name="checkout_address_lookup_initial">Kan du ikke søge på din adresse?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Du kan altid #indtaste din adresse manuelt#</string>
+    <string name="checkout_address_lookup_initial_description">Du kan altid #indtaste din adresse manuelt#</string>
     <string name="checkout_address_lookup_empty">Ingen resultater fundet</string>
     <string name="checkout_address_lookup_empty_description">Fandt ikke noget match for \'%s\'. Prøv igen eller #indtast adresse manuelt#.</string>
+    <string name="checkout_address_lookup_enter_manually">Indtast adresse manuelt</string>
 
 </resources>

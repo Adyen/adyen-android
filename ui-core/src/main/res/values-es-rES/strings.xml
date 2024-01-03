@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Pagar %s</string>
     <string name="confirm_preauthorization">Confirmar preautorización</string>
 
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button">Okay</string>
+    <string name="component_error">Algo ha salido mal.</string>
+
     <string name="paymentInProgressView_title">Un proceso de pago sigue activo</string>
     <string name="paymentInProgressView_loadingText">Esperando finalización…</string>
     <string name="paymentInProgressView_cancelButton">Cancelar</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Busque su dirección</string>
     <string name="checkout_address_lookup_initial">¿No puede buscar su dirección?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">También puede #introducir su dirección manualmente#</string>
+    <string name="checkout_address_lookup_initial_description">También puede #introducir su dirección manualmente#</string>
     <string name="checkout_address_lookup_empty">No se han encontrado resultados</string>
     <string name="checkout_address_lookup_empty_description">"%s" no ha coincidido con nada, inténtelo de nuevo o #introduzca su dirección manualmente#</string>
+    <string name="checkout_address_lookup_enter_manually">Introduzca la dirección manualmente</string>
 
 </resources>

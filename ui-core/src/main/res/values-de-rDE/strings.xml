@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">%s zahlen</string>
     <string name="confirm_preauthorization">Vorautorisierung bestätigen</string>
 
+    <string name="error_dialog_title">Fehler</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Es ist etwas schief gegangen.</string>
+
     <string name="paymentInProgressView_title">Ein Bezahlvorgang ist noch aktiv</string>
     <string name="paymentInProgressView_loadingText">Abschluss abwarten…</string>
     <string name="paymentInProgressView_cancelButton">Abbrechen</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Suchen Sie Ihre Adresse</string>
     <string name="checkout_address_lookup_initial">Sie können Ihre Adresse nicht suchen?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Sie können Ihre Adresse jederzeit manuell #eingeben#</string>
+    <string name="checkout_address_lookup_initial_description">Sie können Ihre Adresse jederzeit manuell #eingeben#</string>
     <string name="checkout_address_lookup_empty">Keine Ergebnisse gefunden</string>
     <string name="checkout_address_lookup_empty_description">\'%s\' stimmt nicht mit irgendetwas überein, versuchen Sie es erneut oder verwenden Sie #manual address entry#</string>
+    <string name="checkout_address_lookup_enter_manually">Geben Sie die Adresse manuell ein</string>
 
 </resources>

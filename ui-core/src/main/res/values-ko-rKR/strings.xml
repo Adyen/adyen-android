@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">%s 결제</string>
     <string name="confirm_preauthorization">사전 승인 확인</string>
 
+    <string name="error_dialog_title">오류</string>
+    <string name="error_dialog_button">확인</string>
+    <string name="component_error">오류가 발생했습니다.</string>
+
     <string name="paymentInProgressView_title">결제 프로세스가 아직 활성 상태입니다.</string>
     <string name="paymentInProgressView_loadingText">완료 대기 중…</string>
     <string name="paymentInProgressView_cancelButton">취소</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">주소 검색</string>
     <string name="checkout_address_lookup_initial">주소를 검색할 수 없나요?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">언제든지 #수동으로 주소를 입력할 수 있습니다#.</string>
+    <string name="checkout_address_lookup_initial_description">언제든지 #수동으로 주소를 입력할 수 있습니다#.</string>
     <string name="checkout_address_lookup_empty">결과를 찾을 수 없습니다.</string>
     <string name="checkout_address_lookup_empty_description">\'%s\'와(과) 일치하는 항목이 없습니다. 다시 시도하거나 #수동 주소 입력#을 사용하세요.</string>
+    <string name="checkout_address_lookup_enter_manually">수동으로 주소 입력</string>
 
 </resources>

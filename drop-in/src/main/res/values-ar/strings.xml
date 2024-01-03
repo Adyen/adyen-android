@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">طرق الدفع</string>
-    <string name="error_dialog_title">خطأ</string>
-    <string name="error_dialog_button">موافق</string>
     <string name="payment_failed">خطأ في إرسال المدفوعات. يُرجى المحاولة مرة أخرى.</string>
     <string name="action_failed">حدث خطأ أثناء معالجة مدفوعاتك. يُرجى المحاولة مرة أخرى لاحقًا.</string>
-    <string name="component_error">حدث خطأ ما.</string>
     <string name="time_out_error">انتهت مهلة الطلب. يُرجى المحاولة مرة أخرى.</string>
     <string name="store_payment_methods_header">طرق الدفع الخاصة بك</string>
     <string name="other_payment_methods">تحديد طريقة أخرى</string>

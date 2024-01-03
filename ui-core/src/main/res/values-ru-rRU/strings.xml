@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Заплатить %s</string>
     <string name="confirm_preauthorization">Подтвердить предавторизацию</string>
 
+    <string name="error_dialog_title">Ошибка</string>
+    <string name="error_dialog_button">ОК</string>
+    <string name="component_error">Произошла ошибка.</string>
+
     <string name="paymentInProgressView_title">Проведение оплаты не закончено</string>
     <string name="paymentInProgressView_loadingText">В ожидании завершения…</string>
     <string name="paymentInProgressView_cancelButton">Отменить</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Поиск по адресу</string>
     <string name="checkout_address_lookup_initial">Не можете найти адрес?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Можно #ввести адрес вручную#</string>
+    <string name="checkout_address_lookup_initial_description">Можно #ввести адрес вручную#</string>
     <string name="checkout_address_lookup_empty">Результаты не найдены</string>
     <string name="checkout_address_lookup_empty_description">Не найдено соответствий «%s». Повторите попытку или используйте #ручной ввод адреса#</string>
+    <string name="checkout_address_lookup_enter_manually">Ввести адрес вручную</string>
 
 </resources>

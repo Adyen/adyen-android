@@ -85,11 +85,12 @@ class AddressLookupView @JvmOverloads constructor(
 
         delegate.addressLookupErrorPopupFlow
             .onEach { message ->
-                val errorMessage = message ?: "Something went wrong" // TODO address lookup translations
+                val errorMessage =
+                    message ?: localizedContext.getString(R.string.component_error)
                 AlertDialog.Builder(context)
-                    .setTitle("Error")
+                    .setTitle(R.string.error_dialog_title)
                     .setMessage(errorMessage)
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
             .launchIn(coroutineScope)

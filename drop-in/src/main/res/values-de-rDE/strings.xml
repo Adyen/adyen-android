@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Zahlungsmethoden</string>
-    <string name="error_dialog_title">Fehler</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Fehler beim Senden der Zahlung. Bitte versuchen Sie es erneut.</string>
     <string name="action_failed">Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.</string>
-    <string name="component_error">Es ist etwas schief gegangen.</string>
     <string name="time_out_error">Zeitüberschreitung bei Anfrage. Bitte versuchen Sie es erneut.</string>
     <string name="store_payment_methods_header">Ihre Zahlungsmethoden</string>
     <string name="other_payment_methods">Andere Zahlungsmethoden</string>

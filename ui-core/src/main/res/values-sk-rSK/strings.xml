@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Zaplatiť %s</string>
     <string name="confirm_preauthorization">Potvrďte predbežnú autorizáciu</string>
 
+    <string name="error_dialog_title">Chyba</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Niečo sa pokazilo.</string>
+
     <string name="paymentInProgressView_title">Proces platby je stále aktívny</string>
     <string name="paymentInProgressView_loadingText">Čaká sa na dokončenie…</string>
     <string name="paymentInProgressView_cancelButton">Zrušiť</string>
@@ -45,8 +49,9 @@
 
     <string name="checkout_address_lookup_hint">Vyhľadajte svoju adresu</string>
     <string name="checkout_address_lookup_initial">Nemôžete vyhľadať svoju adresu?</string>
-    <string name="checkout_address_lookup_initial_description" formatted="false">Vždy môžete #zadať svoju adresu ručne#</string>
+    <string name="checkout_address_lookup_initial_description">Vždy môžete #zadať svoju adresu ručne#</string>
     <string name="checkout_address_lookup_empty">Nenašli sa žiadne výsledky</string>
     <string name="checkout_address_lookup_empty_description">\'%s\' sa s ničím nezhoduje, skúste to znova alebo použite #ručné zadanie adresy#</string>
+    <string name="checkout_address_lookup_enter_manually">Manuálne zadajte adresu</string>
 
 </resources>
