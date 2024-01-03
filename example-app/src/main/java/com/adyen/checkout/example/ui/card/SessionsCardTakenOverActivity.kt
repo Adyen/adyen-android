@@ -123,7 +123,8 @@ class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
             is CardEvent.AddressLookup -> onAddressLookup(event.options)
-            is CardEvent.AddressLookupResult -> {}
+            is CardEvent.AddressLookupCompleted -> {}
+            is CardEvent.AddressLookupError -> {}
         }
     }
 

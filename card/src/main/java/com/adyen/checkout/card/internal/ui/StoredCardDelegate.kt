@@ -25,6 +25,7 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -429,7 +430,7 @@ internal class StoredCardDelegate(
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit
 
-    override fun setAddressLookupResult(lookupAddress: LookupAddress) = Unit
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) = Unit
 
     override fun onCleared() {
         removeObserver()

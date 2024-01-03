@@ -37,6 +37,7 @@ import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -826,8 +827,8 @@ class DefaultCardDelegate(
         addressLookupDelegate.updateAddressLookupOptions(options)
     }
 
-    override fun setAddressLookupResult(lookupAddress: LookupAddress) {
-        addressLookupDelegate.setAddressLookupResult(lookupAddress)
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        addressLookupDelegate.setAddressLookupResult(addressLookupResult)
     }
 
     override fun onCleared() {

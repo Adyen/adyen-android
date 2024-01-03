@@ -21,4 +21,5 @@ sealed class AddressLookupEvent {
     data class SearchResult(val addressLookupOptions: List<LookupAddress>) : AddressLookupEvent()
     data class OptionSelected(val lookupAddress: LookupAddress, val loading: Boolean) : AddressLookupEvent()
     object InvalidUI : AddressLookupEvent()
+    data class ErrorResult(val message: String? = null) : AddressLookupEvent()
 }

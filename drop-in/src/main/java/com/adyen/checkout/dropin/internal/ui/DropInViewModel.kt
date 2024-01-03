@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import android.content.ComponentName
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -118,8 +119,8 @@ internal class DropInViewModel(
     private val _addressLookupOptionsFlow = bufferedChannel<List<LookupAddress>>()
     val addressLookupOptionsFlow: Flow<List<LookupAddress>> = _addressLookupOptionsFlow.receiveAsFlow()
 
-    private val _addressLookupCompleteFlow = bufferedChannel<LookupAddress>()
-    val addressLookupCompleteFlow: Flow<LookupAddress> = _addressLookupCompleteFlow.receiveAsFlow()
+    private val _addressLookupCompleteFlow = bufferedChannel<AddressLookupResult>()
+    val addressLookupCompleteFlow: Flow<AddressLookupResult> = _addressLookupCompleteFlow.receiveAsFlow()
 
     fun getPaymentMethods(): List<PaymentMethod> {
         return paymentMethodsApiResponse.paymentMethods.orEmpty()
@@ -431,7 +432,7 @@ internal class DropInViewModel(
 
     fun onAddressLookupComplete(lookupAddress: LookupAddress) {
         Logger.d(TAG, "onAddressLookupComplete $lookupAddress")
-        viewModelScope.launch { _addressLookupCompleteFlow.send(lookupAddress) }
+        viewModelScope.launch { _addressLookupCompleteFlow.send(AddressLookupResult.Completed(lookupAddress)) }
     }
 
     fun cancelDropIn() {

@@ -14,6 +14,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
@@ -52,7 +53,7 @@ interface CardDelegate :
 
     fun updateAddressLookupOptions(options: List<LookupAddress>)
 
-    fun setAddressLookupResult(lookupAddress: LookupAddress)
+    fun setAddressLookupResult(addressLookupResult: AddressLookupResult)
 
     fun handleBackPress(): Boolean
 

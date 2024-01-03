@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.SearchView.OnQueryTextListener
 import androidx.annotation.RestrictTo
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -80,6 +81,17 @@ class AddressLookupView @JvmOverloads constructor(
     private fun observeDelegate(delegate: AddressLookupDelegate, coroutineScope: CoroutineScope) {
         delegate.addressLookupStateFlow
             .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+
+        delegate.addressLookupErrorPopupFlow
+            .onEach { message ->
+                val errorMessage = message ?: "Something went wrong" // TODO address lookup translations
+                AlertDialog.Builder(context)
+                    .setTitle("Error")
+                    .setMessage(errorMessage)
+                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
             .launchIn(coroutineScope)
     }
 

@@ -18,6 +18,7 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
@@ -136,13 +137,12 @@ open class CardComponent constructor(
     }
 
     /**
-     * Set the complete address lookup option to be prefilled in
-     * [com.adyen.checkout.ui.core.internal.ui.view.AddressLookupView].
+     * Set the result of address completion call.
      *
-     * @param lookupAddress Complete address details.
+     * @param addressLookupResult The result.
      */
-    fun setAddressLookupResult(lookupAddress: LookupAddress) {
-        cardDelegate.setAddressLookupResult(lookupAddress)
+    fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        cardDelegate.setAddressLookupResult(addressLookupResult)
     }
 
     fun handleBackPress(): Boolean {

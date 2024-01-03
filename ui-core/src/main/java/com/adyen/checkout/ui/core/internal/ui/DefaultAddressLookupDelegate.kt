@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.core.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -68,6 +69,9 @@ class DefaultAddressLookupDelegate :
     private val submitAddressChannel = bufferedChannel<AddressInputModel>()
     override val addressLookupSubmitFlow: Flow<AddressInputModel> = submitAddressChannel.receiveAsFlow()
 
+    private val addressLookupErrorPopupChannel = bufferedChannel<String?>()
+    override val addressLookupErrorPopupFlow: Flow<String?> = addressLookupErrorPopupChannel.receiveAsFlow()
+
     private var countryOptions: List<AddressListItem> = emptyList()
     private var stateOptions: List<AddressListItem> = emptyList()
 
@@ -86,6 +90,10 @@ class DefaultAddressLookupDelegate :
                         addressLookupOptions = addressLookupOptions,
                     ),
                 )
+
+                if (addressLookupEvent is AddressLookupEvent.ErrorResult) {
+                    addressLookupErrorPopupChannel.trySend(addressLookupEvent.message)
+                }
             }
             .launchIn(coroutineScope)
 
@@ -128,8 +136,23 @@ class DefaultAddressLookupDelegate :
         addressLookupEventChannel.trySend(AddressLookupEvent.SearchResult(options))
     }
 
-    override fun setAddressLookupResult(lookupAddress: LookupAddress) {
-        addressLookupEventChannel.trySend(AddressLookupEvent.OptionSelected(lookupAddress, false))
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        when (addressLookupResult) {
+            is AddressLookupResult.Error -> {
+                addressLookupEventChannel.trySend(
+                    AddressLookupEvent.ErrorResult(addressLookupResult.message),
+                )
+            }
+
+            is AddressLookupResult.Completed -> {
+                addressLookupEventChannel.trySend(
+                    AddressLookupEvent.OptionSelected(
+                        addressLookupResult.lookupAddress,
+                        false,
+                    ),
+                )
+            }
+        }
     }
 
     override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
@@ -148,6 +171,7 @@ class DefaultAddressLookupDelegate :
             is AddressLookupEvent.SearchResult -> handleSearchResultEvent(event)
             is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event, addressLookupOptions)
             is AddressLookupEvent.InvalidUI -> handleInvalidUIEvent()
+            is AddressLookupEvent.ErrorResult -> handleErrorEvent()
         }
     }
 
@@ -226,6 +250,20 @@ class DefaultAddressLookupDelegate :
             currentAddressLookupState is AddressLookupState.SearchResult
         ) {
             AddressLookupState.InvalidUI
+        } else {
+            currentAddressLookupState
+        }
+    }
+
+    private fun handleErrorEvent(): AddressLookupState {
+        return if (currentAddressLookupState is AddressLookupState.SearchResult) {
+            AddressLookupState.SearchResult(
+                (currentAddressLookupState as? AddressLookupState.SearchResult)?.query.orEmpty(),
+                (currentAddressLookupState as? AddressLookupState.SearchResult)
+                    ?.options
+                    ?.map { it.copy(isLoading = false) }
+                    .orEmpty(),
+            )
         } else {
             currentAddressLookupState
         }

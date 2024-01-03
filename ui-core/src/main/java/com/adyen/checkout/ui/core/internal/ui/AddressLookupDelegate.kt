@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.core.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
@@ -27,10 +28,11 @@ interface AddressLookupDelegate {
     val addressLookupStateFlow: Flow<AddressLookupState>
     val addressLookupEventChannel: Channel<AddressLookupEvent>
     val addressLookupSubmitFlow: Flow<AddressInputModel>
+    val addressLookupErrorPopupFlow: Flow<String?>
 
     fun initialize(coroutineScope: CoroutineScope, addressInputModel: AddressInputModel)
     fun updateAddressLookupOptions(options: List<LookupAddress>)
-    fun setAddressLookupResult(lookupAddress: LookupAddress)
+    fun setAddressLookupResult(addressLookupResult: AddressLookupResult)
     fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun onAddressQueryChanged(query: String)
     fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean

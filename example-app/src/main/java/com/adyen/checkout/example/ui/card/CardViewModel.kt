@@ -119,7 +119,15 @@ internal class CardViewModel @Inject constructor(
     fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
         viewModelScope.launch {
             delay(ADDRESS_LOOKUP_COMPLETION_DELAY)
-            _events.emit(CardEvent.AddressLookupResult(ADDRESS_LOOKUP_OPTIONS.first { it.id == lookupAddress.id }))
+            if (lookupAddress.id == ADDRESS_LOOKUP_ERROR_ITEM_ID) {
+                _events.emit(CardEvent.AddressLookupError("Something went wrong."))
+            } else {
+                _events.emit(
+                    CardEvent.AddressLookupCompleted(
+                        ADDRESS_LOOKUP_OPTIONS.first { it.id == lookupAddress.id }
+                    )
+                )
+            }
         }
     }
 
@@ -180,6 +188,7 @@ internal class CardViewModel @Inject constructor(
     companion object {
         private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
         private const val ADDRESS_LOOKUP_COMPLETION_DELAY = 400L
+        private const val ADDRESS_LOOKUP_ERROR_ITEM_ID = "3"
         private val ADDRESS_LOOKUP_OPTIONS = listOf(
             LookupAddress(
                 id = "1",
@@ -201,6 +210,17 @@ internal class CardViewModel @Inject constructor(
                     street = "1. Sokak",
                     stateOrProvince = "Istanbul",
                     city = "Istanbul",
+                ),
+            ),
+            LookupAddress(
+                id = ADDRESS_LOOKUP_ERROR_ITEM_ID,
+                address = AddressInputModel(
+                    country = "",
+                    postalCode = "",
+                    houseNumberOrName = "",
+                    street = "Error option",
+                    stateOrProvince = "",
+                    city = "",
                 ),
             ),
         )

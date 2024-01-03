@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
@@ -123,7 +124,8 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
             is CardEvent.AddressLookup -> onAddressLookup(event.options)
-            is CardEvent.AddressLookupResult -> onAddressLookupCompleted(event.lookupAddress)
+            is CardEvent.AddressLookupCompleted -> onAddressLookupCompleted(event.lookupAddress)
+            is CardEvent.AddressLookupError -> onAddressLookupError(event.message)
         }
     }
 
@@ -141,7 +143,11 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
     }
 
     private fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
-        cardComponent?.setAddressLookupResult(lookupAddress)
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Completed(lookupAddress))
+    }
+
+    private fun onAddressLookupError(message: String) {
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Error(message))
     }
 
     override fun onQueryChanged(query: String) {

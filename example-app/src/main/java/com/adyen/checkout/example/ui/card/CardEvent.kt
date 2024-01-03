@@ -19,5 +19,7 @@ internal sealed class CardEvent {
 
     data class AddressLookup(val options: List<LookupAddress>) : CardEvent()
 
-    data class AddressLookupResult(val lookupAddress: LookupAddress) : CardEvent()
+    data class AddressLookupCompleted(val lookupAddress: LookupAddress) : CardEvent()
+
+    data class AddressLookupError(val message: String) : CardEvent()
 }
