@@ -278,7 +278,6 @@ class DefaultCardDelegate(
                     inputData.address.country = it.code
                     requestStateList(it.code)
                 }
-                addressLookupDelegate.updateCountryOptions(countryOptions)
                 updateOutputData(countryOptions = countryOptions)
             }
             .launchIn(coroutineScope)
@@ -291,7 +290,6 @@ class DefaultCardDelegate(
                 Logger.d(TAG, "New states emitted - states: ${states.size}")
                 val stateOptions = AddressFormUtils.initializeStateOptions(states)
                 updateOutputData(stateOptions = stateOptions)
-                addressLookupDelegate.updateStateOptions(stateOptions)
             }
             .launchIn(coroutineScope)
     }
@@ -836,6 +834,7 @@ class DefaultCardDelegate(
         _coroutineScope = null
         onBinValueListener = null
         onBinLookupListener = null
+        addressLookupDelegate.clear()
     }
 
     companion object {

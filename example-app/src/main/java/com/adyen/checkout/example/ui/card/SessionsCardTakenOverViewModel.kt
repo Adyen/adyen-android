@@ -16,15 +16,14 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getSessionRequest
@@ -57,6 +56,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    private val addressLookupRepository: AddressLookupRepository,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
@@ -85,34 +85,10 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
             .filterNotNull()
             .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
             .onEach { query ->
-                // TODO address lookup populate better data
                 val options = if (query == "empty") {
                     emptyList()
                 } else {
-                    listOf(
-                        LookupAddress(
-                            id = query,
-                            address = AddressInputModel(
-                                country = "NL",
-                                postalCode = "1234AB",
-                                houseNumberOrName = "1HS",
-                                street = "Simon Carmiggeltstraat",
-                                stateOrProvince = "Noord-Holland",
-                                city = "Amsterdam",
-                            ),
-                        ),
-                        LookupAddress(
-                            id = query,
-                            address = AddressInputModel(
-                                country = "TR",
-                                postalCode = "12345",
-                                houseNumberOrName = "1",
-                                street = "1. Sokak",
-                                stateOrProvince = "Istanbul",
-                                city = "Istanbul",
-                            ),
-                        ),
-                    )
+                    addressLookupRepository.getAddressLookupOptions()
                 }
                 _events.emit(CardEvent.AddressLookup(options))
             }

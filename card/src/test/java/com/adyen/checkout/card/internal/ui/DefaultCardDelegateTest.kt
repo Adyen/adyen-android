@@ -1190,7 +1190,7 @@ internal class DefaultCardDelegateTest(
             genericEncryptor = genericEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
-            addressLookupDelegate = DefaultAddressLookupDelegate(),
+            addressLookupDelegate = DefaultAddressLookupDelegate(addressRepository, Locale.US),
         )
     }
 

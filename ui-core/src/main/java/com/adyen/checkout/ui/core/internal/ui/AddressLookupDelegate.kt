@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
-import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +38,5 @@ interface AddressLookupDelegate {
     fun onManualEntryModeSelected()
     fun submitAddress()
 
-    // FIXME eventually move all address related logic to this interface and make it the one and only AddressDelegate
-    fun updateCountryOptions(countryOptions: List<AddressListItem>)
-    fun updateStateOptions(stateOptions: List<AddressListItem>)
+    fun clear()
 }

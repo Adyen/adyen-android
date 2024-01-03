@@ -12,7 +12,6 @@ import android.util.Log
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.LookupAddress
@@ -35,6 +34,7 @@ import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,47 +68,23 @@ class ExampleAdvancedDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
+    @Inject
+    lateinit var addressLookupRepository: AddressLookupRepository
+
     private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
 
     init {
-        launch(Dispatchers.IO) {
-            addressLookupQueryFlow
-                .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
-                .filterNotNull()
-                .onEach { query ->
-                    // TODO address lookup populate better data
-                    val options = if (query == "empty") {
-                        emptyList()
-                    } else {
-                        listOf(
-                            LookupAddress(
-                                id = query,
-                                address = AddressInputModel(
-                                    country = "NL",
-                                    postalCode = "1234AB",
-                                    houseNumberOrName = "1HS",
-                                    street = "Simon Carmiggeltstraat",
-                                    stateOrProvince = "Noord-Holland",
-                                    city = "Amsterdam",
-                                ),
-                            ),
-                            LookupAddress(
-                                id = query,
-                                address = AddressInputModel(
-                                    country = "TR",
-                                    postalCode = "12345",
-                                    houseNumberOrName = "1",
-                                    street = "1. Sokak",
-                                    stateOrProvince = "Istanbul",
-                                    city = "Istanbul",
-                                ),
-                            ),
-                        )
-                    }
-
-                    sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
-                }.launchIn(this)
-        }
+        addressLookupQueryFlow
+            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
+            .filterNotNull()
+            .onEach { query ->
+                val options = if (query == "empty") {
+                    emptyList()
+                } else {
+                    addressLookupRepository.getAddressLookupOptions()
+                }
+                sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
+            }.launchIn(this)
     }
 
     override fun onSubmit(

@@ -135,7 +135,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
-                addressLookupDelegate = DefaultAddressLookupDelegate(),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = addressRepository,
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -239,7 +242,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
-                addressLookupDelegate = DefaultAddressLookupDelegate(),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = addressRepository,
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(

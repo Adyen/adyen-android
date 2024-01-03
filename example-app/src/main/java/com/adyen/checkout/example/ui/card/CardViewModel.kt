@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
@@ -39,6 +39,7 @@ internal class CardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    private val addressLookupRepository: AddressLookupRepository
 ) : ViewModel(), ComponentCallback<CardComponentState> {
 
     private val _cardComponentDataFlow = MutableStateFlow<CardComponentData?>(null)
@@ -61,9 +62,8 @@ internal class CardViewModel @Inject constructor(
                 val options = if (query == "empty") {
                     emptyList()
                 } else {
-                    ADDRESS_LOOKUP_OPTIONS
+                    addressLookupRepository.getAddressLookupOptions()
                 }
-                // TODO address lookup populate better data
                 _events.emit(CardEvent.AddressLookup(options))
             }
             .launchIn(viewModelScope)
@@ -124,8 +124,8 @@ internal class CardViewModel @Inject constructor(
             } else {
                 _events.emit(
                     CardEvent.AddressLookupCompleted(
-                        ADDRESS_LOOKUP_OPTIONS.first { it.id == lookupAddress.id }
-                    )
+                        addressLookupRepository.getAddressLookupOptions().first { it.id == lookupAddress.id },
+                    ),
                 )
             }
         }
@@ -188,41 +188,6 @@ internal class CardViewModel @Inject constructor(
     companion object {
         private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
         private const val ADDRESS_LOOKUP_COMPLETION_DELAY = 400L
-        private const val ADDRESS_LOOKUP_ERROR_ITEM_ID = "3"
-        private val ADDRESS_LOOKUP_OPTIONS = listOf(
-            LookupAddress(
-                id = "1",
-                address = AddressInputModel(
-                    country = "NL",
-                    postalCode = "1234AB",
-                    houseNumberOrName = "1HS",
-                    street = "Simon Carmiggeltstraat",
-                    stateOrProvince = "Noord-Holland",
-                    city = "Amsterdam",
-                ),
-            ),
-            LookupAddress(
-                id = "2",
-                address = AddressInputModel(
-                    country = "TR",
-                    postalCode = "12345",
-                    houseNumberOrName = "1",
-                    street = "1. Sokak",
-                    stateOrProvince = "Istanbul",
-                    city = "Istanbul",
-                ),
-            ),
-            LookupAddress(
-                id = ADDRESS_LOOKUP_ERROR_ITEM_ID,
-                address = AddressInputModel(
-                    country = "",
-                    postalCode = "",
-                    houseNumberOrName = "",
-                    street = "Error option",
-                    stateOrProvince = "",
-                    city = "",
-                ),
-            ),
-        )
+        private const val ADDRESS_LOOKUP_ERROR_ITEM_ID = "error"
     }
 }

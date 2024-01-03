@@ -14,11 +14,16 @@ import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.util.LogUtil
+import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
@@ -28,12 +33,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import java.util.Locale
 
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultAddressLookupDelegate :
+class DefaultAddressLookupDelegate(
+    private val addressRepository: AddressRepository,
+    private val shopperLocale: Locale
+) :
     AddressLookupDelegate,
     AddressDelegate {
+
+    private var coroutineScope: CoroutineScope? = null
 
     override val addressDelegate: AddressDelegate = this
 
@@ -72,10 +83,8 @@ class DefaultAddressLookupDelegate :
     private val addressLookupErrorPopupChannel = bufferedChannel<String?>()
     override val addressLookupErrorPopupFlow: Flow<String?> = addressLookupErrorPopupChannel.receiveAsFlow()
 
-    private var countryOptions: List<AddressListItem> = emptyList()
-    private var stateOptions: List<AddressListItem> = emptyList()
-
     override fun initialize(coroutineScope: CoroutineScope, addressInputModel: AddressInputModel) {
+        this.coroutineScope = coroutineScope
         addressLookupEventFlow
             .onEach { addressLookupEvent ->
                 val addressLookupOptions =
@@ -97,7 +106,58 @@ class DefaultAddressLookupDelegate :
             }
             .launchIn(coroutineScope)
 
+        subscribeToCountryList(coroutineScope)
+        subscribeToStateList(coroutineScope)
+        requestCountryList(coroutineScope)
+
         addressLookupEventChannel.trySend(AddressLookupEvent.Initialize(addressInputModel))
+    }
+
+    private fun subscribeToCountryList(coroutineScope: CoroutineScope) {
+        addressRepository.countriesFlow
+            .onEach {
+                Logger.d(TAG, "country flow")
+                val countryOptions =
+                    AddressFormUtils.initializeCountryOptions(shopperLocale, AddressParams.Lookup(), it)
+                emitOutputData(
+                    countryOptions = AddressFormUtils.markAddressListItemSelected(
+                        list = countryOptions,
+                        code = addressLookupInputData.selectedAddress.country,
+                    ),
+                )
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun requestCountryList(coroutineScope: CoroutineScope) {
+        Logger.d(TAG, "requesting countries")
+        addressRepository.getCountryList(shopperLocale, coroutineScope)
+    }
+
+    private fun subscribeToStateList(coroutineScope: CoroutineScope) {
+        addressRepository.statesFlow
+            .onEach {
+                Logger.d(TAG, "state flow $it")
+                val stateOptions = AddressFormUtils.initializeStateOptions(it)
+                emitOutputData(
+                    countryOptions = AddressFormUtils.markAddressListItemSelected(
+                        addressOutputData.countryOptions,
+                        addressLookupInputData.selectedAddress.country,
+                    ),
+                    stateOptions = AddressFormUtils.markAddressListItemSelected(
+                        list = stateOptions,
+                        code = addressLookupInputData.selectedAddress.stateOrProvince,
+                    ),
+                )
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun requestStatesList(countryCode: String) {
+        Logger.d(TAG, "requesting states for $countryCode")
+        coroutineScope?.let {
+            addressRepository.getStateList(shopperLocale, countryCode, it)
+        } ?: throw CheckoutException("Coroutine scope hasn't been initalized.")
     }
 
     override fun onAddressQueryChanged(query: String) {
@@ -271,30 +331,35 @@ class DefaultAddressLookupDelegate :
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         addressLookupInputData.selectedAddress.update()
-        countryOptions = AddressFormUtils.markAddressListItemSelected(
-            list = countryOptions,
-            code = addressLookupInputData.selectedAddress.country,
-        )
-        stateOptions = AddressFormUtils.markAddressListItemSelected(
-            list = stateOptions,
-            code = addressLookupInputData.selectedAddress.stateOrProvince,
-        )
-        _addressOutputDataFlow.tryEmit(
-            AddressValidationUtils.validateAddressInput(
-                addressInputModel = addressLookupInputData.selectedAddress,
-                addressFormUIState = AddressFormUIState.LOOKUP,
-                countryOptions = countryOptions,
-                stateOptions = stateOptions,
-                isOptional = false,
-            ),
+        requestStatesList(addressLookupInputData.selectedAddress.country)
+        emitOutputData()
+    }
+
+    private fun createOutputData(
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>,
+    ): AddressOutputData {
+        return AddressValidationUtils.validateAddressInput(
+            addressInputModel = addressLookupInputData.selectedAddress,
+            addressFormUIState = AddressFormUIState.LOOKUP,
+            countryOptions = countryOptions,
+            stateOptions = stateOptions,
+            isOptional = false,
         )
     }
 
-    override fun updateCountryOptions(countryOptions: List<AddressListItem>) {
-        this.countryOptions = countryOptions
+    private fun emitOutputData(
+        countryOptions: List<AddressListItem> = addressOutputData.countryOptions,
+        stateOptions: List<AddressListItem> = addressOutputData.stateOptions,
+    ) {
+        _addressOutputDataFlow.tryEmit(createOutputData(countryOptions, stateOptions))
     }
 
-    override fun updateStateOptions(stateOptions: List<AddressListItem>) {
-        this.stateOptions = stateOptions
+    override fun clear() {
+        this.coroutineScope = null
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }
