@@ -426,12 +426,12 @@ class ExampleAdvancedDropInService : DropInService() {
         Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
     }
 
-    override fun onAddressLookupQuery(query: String) {
+    override fun onAddressLookupQueryChanged(query: String) {
         Log.d(TAG, "On address lookup query: $query")
         addressLookupQueryFlow.tryEmit(query)
     }
 
-    override fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean {
+    override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
         Log.d(TAG, "On address lookup query completion: $lookupAddress")
         return false
     }

@@ -148,12 +148,12 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         onBinLookup(data)
     }
 
-    final override fun onAddressLookupQueryChanged(query: String) {
-        onAddressLookupQuery(query)
+    final override fun onAddressLookupQueryChangedCalled(query: String) {
+        onAddressLookupQueryChanged(query)
     }
 
-    final override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
-        return onAddressLookupCompleted(lookupAddress)
+    final override fun onAddressLookupCompletionCalled(lookupAddress: LookupAddress): Boolean {
+        return onAddressLookupCompletion(lookupAddress)
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {

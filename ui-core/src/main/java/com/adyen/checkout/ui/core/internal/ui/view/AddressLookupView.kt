@@ -279,7 +279,7 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun onAddressSelected(lookupAddress: LookupAddress) {
-        addressLookupDelegate.onAddressLookupCompleted(lookupAddress)
+        addressLookupDelegate.onAddressLookupCompletion(lookupAddress)
     }
 
     override fun getView(): View = this

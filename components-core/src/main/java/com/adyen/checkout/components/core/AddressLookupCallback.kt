@@ -29,5 +29,5 @@ interface AddressLookupCallback {
      *
      * @param lookupAddress The address.
      */
-    fun onLookupCompleted(lookupAddress: LookupAddress) = false
+    fun onLookupCompletion(lookupAddress: LookupAddress) = false
 }

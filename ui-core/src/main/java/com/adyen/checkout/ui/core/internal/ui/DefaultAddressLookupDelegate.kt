@@ -109,8 +109,8 @@ class DefaultAddressLookupDelegate :
         addressLookupCallback?.onQueryChanged(query)
     }
 
-    override fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean {
-        val isLoading = addressLookupCallback?.onLookupCompleted(lookupAddress) ?: false
+    override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        val isLoading = addressLookupCallback?.onLookupCompletion(lookupAddress) ?: false
         addressLookupEventChannel.trySend(
             AddressLookupEvent.OptionSelected(
                 lookupAddress,

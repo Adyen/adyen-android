@@ -155,7 +155,7 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
         cardViewModel.onAddressLookupQueryChanged(query)
     }
 
-    override fun onLookupCompleted(lookupAddress: LookupAddress): Boolean {
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
         Log.d(TAG, "on lookup completed $lookupAddress")
         cardViewModel.onAddressLookupCompleted(lookupAddress)
         return true

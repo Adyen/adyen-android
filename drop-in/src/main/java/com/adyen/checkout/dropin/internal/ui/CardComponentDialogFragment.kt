@@ -69,7 +69,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         protocol.onAddressLookupQuery(query)
     }
 
-    override fun onLookupCompleted(lookupAddress: LookupAddress): Boolean {
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
         return protocol.onAddressLookupCompletion(lookupAddress)
     }
 

@@ -35,7 +35,7 @@ interface AddressLookupDelegate {
     fun setAddressLookupResult(addressLookupResult: AddressLookupResult)
     fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
     fun onAddressQueryChanged(query: String)
-    fun onAddressLookupCompleted(lookupAddress: LookupAddress): Boolean
+    fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean
     fun onManualEntryModeSelected()
     fun submitAddress()
 

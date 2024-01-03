@@ -709,11 +709,11 @@ internal class DropInActivity :
     }
 
     override fun onAddressLookupQuery(query: String) {
-        dropInService?.onAddressLookupQueryChanged(query)
+        dropInService?.onAddressLookupQueryChangedCalled(query)
     }
 
     override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
-        return dropInService?.onAddressLookupCompletion(lookupAddress) ?: false
+        return dropInService?.onAddressLookupCompletionCalled(lookupAddress) ?: false
     }
 
     private fun showDialog(title: String, message: String, onDismiss: () -> Unit) {
