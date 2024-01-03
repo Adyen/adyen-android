@@ -8,8 +8,15 @@
 
 package com.adyen.checkout.voucher.internal.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Environment
+import android.view.View
+import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
@@ -19,7 +26,9 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherPaymentMethodConfig
@@ -30,11 +39,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
+    private val imageSaver: ImageSaver,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -48,8 +59,11 @@ internal class DefaultVoucherDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
     override fun initialize(coroutineScope: CoroutineScope) {
-        // no ops
+        _coroutineScope = coroutineScope
     }
 
     override fun observe(
@@ -124,31 +138,58 @@ internal class DefaultVoucherDelegate(
         informationFields = null,
     )
 
-    override fun storeVoucher(context: Context) {
-        when (val storeAction = outputData.storeAction) {
-            is VoucherStoreAction.DownloadPdf -> {
-                downloadVoucher(context, storeAction.downloadUrl)
-            }
-
-            VoucherStoreAction.SaveAsImage -> {
-                saveAsImage(context)
-            }
-
-            null -> exceptionChannel.trySend(ComponentException("Storing is not supported for this action"))
+    override fun downloadVoucher(context: Context) {
+        val downloadUrl = (outputData.storeAction as? VoucherStoreAction.DownloadPdf)?.downloadUrl ?: ""
+        try {
+            pdfOpener.open(context, downloadUrl)
+        } catch (e: IllegalStateException) {
+            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
         }
     }
 
-    private fun downloadVoucher(context: Context, downloadUrl: String) = try {
-        pdfOpener.open(context, downloadUrl)
-    } catch (e: IllegalStateException) {
-        exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+    override fun saveVoucherAsImage(context: Context, view: View) {
+        // TODO: Look for an option to directly save the image after user accepts the permission
+        val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(context, requiredPermission) != PackageManager.PERMISSION_GRANTED
+        ) {
+            exceptionChannel.trySend(
+                PermissionException(
+                    errorMessage = "$requiredPermission permission is not granted",
+                    requiredPermission = requiredPermission
+                )
+            )
+            return
+        }
+
+        saveImageFromView(context, view)
     }
 
-    private fun saveAsImage(context: Context) {
-        // TODO: Save image
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private fun saveImageFromView(context: Context, view: View) {
+        val timestamp = System.currentTimeMillis()
+        val imageDirectory = "${Environment.DIRECTORY_PICTURES}/$IMAGE_RELATIVE_PATH"
+        val imageName = String.format(IMAGE_NAME_FORMAT, timestamp)
+
+        coroutineScope.launch {
+            imageSaver.saveImageFromView(context, view, imageDirectory, imageName).fold(
+                onSuccess = {
+                    // TODO: To be implemented
+                },
+                onFailure = {
+                    // TODO: To be implemented
+                }
+            )
+        }
     }
 
     override fun onCleared() {
         removeObserver()
+        _coroutineScope = null
+    }
+
+    companion object {
+        private const val IMAGE_RELATIVE_PATH = "Voucher"
+        private const val IMAGE_NAME_FORMAT = "Voucher-%s.png"
     }
 }

@@ -91,17 +91,22 @@
         app:layout_constraintTop_toBottomOf="@id/paymentReferenceSeparator"
         tools:text="12345.1234.12345.12345.12345678901 123456789012345" />
 
+    <Space
+        android:id="@+id/space_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standard_margin"
+        app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
+
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/flexboxLayout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
         app:flexWrap="wrap"
         app:justifyContent="space_between"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_reference_code">
+        app:layout_constraintTop_toBottomOf="@id/space_buttons">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_copyCode"

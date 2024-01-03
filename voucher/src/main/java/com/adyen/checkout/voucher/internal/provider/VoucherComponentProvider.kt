@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.ui.core.internal.ui.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
@@ -73,7 +74,8 @@ constructor(
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
-            pdfOpener = PdfOpener()
+            pdfOpener = PdfOpener(),
+            imageSaver = ImageSaver(),
         )
     }
 

@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -55,6 +56,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     private lateinit var delegate: VoucherDelegate
 
     private var informationFieldsAdapter: VoucherInformationFieldsAdapter? = null
+    private var coroutineScope: CoroutineScope? = null
 
     init {
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -70,9 +72,9 @@ internal class FullVoucherView @JvmOverloads constructor(
         initLocalizedStrings(localizedContext)
 
         observeDelegate(delegate, coroutineScope)
+        this.coroutineScope = coroutineScope
 
         binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
-        binding.buttonStore.setOnClickListener { delegate.storeVoucher(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -114,42 +116,42 @@ internal class FullVoucherView @JvmOverloads constructor(
         binding.textViewIntroduction.text = localizedContext.getString(introductionTextResource)
     }
 
-    private fun updateAmount(amount: Amount?) {
+    private fun updateAmount(amount: Amount?) = with(binding) {
         if (amount != null && !amount.isEmpty) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 amount,
                 delegate.componentParams.shopperLocale
             )
-            binding.textViewAmount.isVisible = true
-            binding.textViewAmount.text = formattedAmount
+            textViewAmount.isVisible = true
+            textViewAmount.text = formattedAmount
         } else {
-            binding.textViewAmount.isVisible = false
+            textViewAmount.isVisible = false
         }
     }
 
-    private fun updateCodeReference(codeReference: String?) {
-        binding.textViewReferenceCode.text = codeReference
+    private fun updateCodeReference(codeReference: String?) = with(binding) {
+        textViewReferenceCode.text = codeReference
 
         val isVisible = !codeReference.isNullOrEmpty()
-        binding.textViewReferenceCode.isVisible = isVisible
-        binding.buttonCopyCode.isVisible = isVisible
+        textViewReferenceCode.isVisible = isVisible
+        buttonCopyCode.isVisible = isVisible
     }
 
-    private fun updateStoreActionButton(storeAction: VoucherStoreAction?) {
-        binding.buttonStore.isVisible = storeAction != null
+    private fun updateStoreActionButton(storeAction: VoucherStoreAction?) = with(binding) {
+        buttonStore.isVisible = storeAction != null
 
         if (storeAction == null) return
-        val storeButtonText = when (storeAction) {
+        when (storeAction) {
             is VoucherStoreAction.DownloadPdf -> {
-                localizedContext.getString(R.string.checkout_voucher_download_pdf)
+                buttonStore.text = localizedContext.getString(R.string.checkout_voucher_download_pdf)
+                buttonStore.setOnClickListener { onDownloadPdfClicked() }
             }
 
             VoucherStoreAction.SaveAsImage -> {
-                localizedContext.getString(R.string.checkout_voucher_save_image)
+                buttonStore.text = localizedContext.getString(R.string.checkout_voucher_save_image)
+                buttonStore.setOnClickListener { onSaveAsImageClicked() }
             }
         }
-
-        binding.buttonStore.text = storeButtonText
     }
 
     private fun updateInformationFields(informationFields: List<VoucherInformationField>?) {
@@ -159,6 +161,33 @@ internal class FullVoucherView @JvmOverloads constructor(
             binding.recyclerViewInformationFields.adapter = informationFieldsAdapter
         }
         informationFieldsAdapter?.submitList(informationFields)
+    }
+
+    private fun onDownloadPdfClicked() {
+        delegate.downloadVoucher(context)
+    }
+
+    // TODO: Fix the animation
+    private fun onSaveAsImageClicked() {
+
+        // Logo loading should be fixed and the view should be only saved after the image is loaded
+//        val fullVoucherViewToSave = FullVoucherView(context)
+//        fullVoucherViewToSave.initView(delegate, coroutineScope!!, localizedContext)
+//        fullVoucherViewToSave.binding.flexboxLayoutButtons.isVisible = false
+//        fullVoucherViewToSave.measure(
+//            MeasureSpec.makeMeasureSpec(this.width, MeasureSpec.EXACTLY),
+//            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+//        )
+//        with(fullVoucherViewToSave) {
+//            layout(left, top, measuredWidth, measuredHeight)
+//        }
+//        delegate.saveVoucherAsImage(context, fullVoucherViewToSave)
+
+        binding.flexboxLayoutButtons.isVisible = false
+        doOnNextLayout {
+            delegate.saveVoucherAsImage(context, this)
+            binding.flexboxLayoutButtons.isVisible = true
+        }
     }
 
     private fun copyCode(codeReference: String?) {

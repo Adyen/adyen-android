@@ -118,7 +118,7 @@ internal class DefaultVoucherDelegateTest(
             ),
             activity,
         )
-        delegate.storeVoucher(context)
+        delegate.downloadVoucher(context)
 
         verify(pdfOpener).open(context, "download_url")
     }
