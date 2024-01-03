@@ -12,9 +12,9 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -48,7 +48,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val configuration: GenericActionConfiguration,
+    private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
@@ -110,7 +110,7 @@ internal class DefaultGenericActionDelegate(
         } else {
             val delegate = actionDelegateProvider.getDelegate(
                 action = action,
-                configuration = configuration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = activity.application
             )

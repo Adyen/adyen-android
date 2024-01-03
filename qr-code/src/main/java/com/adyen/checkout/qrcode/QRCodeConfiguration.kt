@@ -90,3 +90,15 @@ fun CheckoutConfiguration.QRCodeConfiguration(
 fun CheckoutConfiguration.getQRCodeConfiguration(): QRCodeConfiguration? {
     return getActionConfiguration(QRCodeConfiguration::class.java)
 }
+
+internal fun QRCodeConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
+    }
+}

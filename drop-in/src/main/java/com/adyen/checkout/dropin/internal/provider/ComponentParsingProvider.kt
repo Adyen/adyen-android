@@ -170,7 +170,7 @@ internal fun getComponentFor(
         checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, checkoutConfiguration)
-            CardComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            CardComponentProvider(sessionParams, true, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cardConfig,
@@ -291,7 +291,7 @@ internal fun getComponentFor(
         checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            CardComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            CardComponentProvider(sessionParams, true, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cardConfig,

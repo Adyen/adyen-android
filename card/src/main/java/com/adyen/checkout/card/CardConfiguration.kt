@@ -312,3 +312,19 @@ fun CheckoutConfiguration.cardConfiguration(
 fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
     return getConfiguration(PaymentMethodTypes.SCHEME)
 }
+
+internal fun CardConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.SCHEME, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

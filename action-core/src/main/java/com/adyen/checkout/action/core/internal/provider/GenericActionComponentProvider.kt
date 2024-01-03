@@ -21,7 +21,9 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.ActionDelegateProvider
 import com.adyen.checkout.action.core.internal.ui.DefaultGenericActionDelegate
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.action.core.toCheckoutConfiguration
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.action.QrCodeAction
@@ -42,6 +44,7 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 class GenericActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    // TODO: Replace with isCreatedByDropIn: Boolean = false,
     overrideComponentParams: ComponentParams? = null,
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
@@ -52,16 +55,16 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: GenericActionConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): GenericActionComponent {
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
+            val genericActionDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, null),
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, genericActionFactory)[key, GenericActionComponent::class.java]
@@ -71,17 +74,49 @@ constructor(
     }
 
     override fun getDelegate(
+        checkoutConfiguration: CheckoutConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application
+    ): GenericActionDelegate {
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        return DefaultGenericActionDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            checkoutConfiguration = checkoutConfiguration,
+            componentParams = componentParams,
+            actionDelegateProvider = ActionDelegateProvider(componentParams, null),
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: GenericActionConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): GenericActionComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
+    override fun getDelegate(
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
-        return DefaultGenericActionDelegate(
-            observerRepository = ActionObserverRepository(),
+        return getDelegate(
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
             savedStateHandle = savedStateHandle,
-            configuration = configuration,
-            componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(componentParams, null)
+            application = application,
         )
     }
 

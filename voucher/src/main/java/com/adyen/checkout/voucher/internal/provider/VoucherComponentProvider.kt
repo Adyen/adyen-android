@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
@@ -33,6 +34,7 @@ import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
+import com.adyen.checkout.voucher.toCheckoutConfiguration
 
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -48,12 +50,12 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: VoucherConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): VoucherComponent {
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
+            val voucherDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             VoucherComponent(
                 delegate = voucherDelegate,
                 actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
@@ -66,16 +68,48 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: VoucherConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): VoucherDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
             pdfOpener = PdfOpener(),
             imageSaver = ImageSaver(),
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: VoucherConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): VoucherComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
+    override fun getDelegate(
+        configuration: VoucherConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): VoucherDelegate {
+        return getDelegate(
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            savedStateHandle = savedStateHandle,
+            application = application,
         )
     }
 

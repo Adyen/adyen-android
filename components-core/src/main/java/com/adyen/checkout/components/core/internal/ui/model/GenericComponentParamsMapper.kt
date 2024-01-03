@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
+    // TODO: Replace with just CheckoutConfiguration
     private val overrideComponentParams: ComponentParams?,
     private val overrideSessionParams: SessionParams?,
 ) {

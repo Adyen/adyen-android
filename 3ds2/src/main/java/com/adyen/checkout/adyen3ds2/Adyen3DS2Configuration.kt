@@ -125,3 +125,15 @@ fun CheckoutConfiguration.adyen3DS2Configuration(
 fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
     return getActionConfiguration(Adyen3DS2Configuration::class.java)
 }
+
+internal fun Adyen3DS2Configuration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
+    }
+}

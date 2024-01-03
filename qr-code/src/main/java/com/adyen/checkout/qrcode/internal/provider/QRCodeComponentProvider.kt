@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -35,6 +36,7 @@ import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
+import com.adyen.checkout.qrcode.toCheckoutConfiguration
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 
@@ -52,15 +54,15 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: QRCodeConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): QRCodeComponent {
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
+            val qrCodeDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             QRCodeComponent(
                 delegate = qrCodeDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory)[key, QRCodeComponent::class.java]
@@ -70,14 +72,14 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: QRCodeConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): QRCodeDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
-        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
         val countDownTimer = QRCodeCountDownTimer()
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
@@ -89,7 +91,39 @@ constructor(
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
-            imageSaver = ImageSaver()
+            imageSaver = ImageSaver(),
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: QRCodeConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): QRCodeComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
+    override fun getDelegate(
+        configuration: QRCodeConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): QRCodeDelegate {
+        return getDelegate(
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            savedStateHandle = savedStateHandle,
+            application = application,
         )
     }
 

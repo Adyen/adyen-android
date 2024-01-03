@@ -16,6 +16,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -44,14 +45,6 @@ class GenericActionConfiguration private constructor(
     override val amount: Amount?,
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
-
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun getAllConfigurations(): List<Configuration> = availableActionConfigs.values.toList()
@@ -151,6 +144,20 @@ class GenericActionConfiguration private constructor(
                 amount = amount,
                 availableActionConfigs = availableActionConfigs,
             )
+        }
+    }
+}
+
+internal fun GenericActionConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        this@toCheckoutConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

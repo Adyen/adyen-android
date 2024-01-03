@@ -90,3 +90,15 @@ fun CheckoutConfiguration.voucherConfiguration(
 fun CheckoutConfiguration.getVoucherConfiguration(): VoucherConfiguration? {
     return getActionConfiguration(VoucherConfiguration::class.java)
 }
+
+internal fun VoucherConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
+    }
+}

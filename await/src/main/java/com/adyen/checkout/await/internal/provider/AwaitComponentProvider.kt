@@ -19,7 +19,9 @@ import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate
+import com.adyen.checkout.await.toCheckoutConfiguration
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
@@ -53,15 +55,15 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: AwaitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): AwaitComponent {
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
+            val awaitDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,
-                DefaultActionComponentEventHandler(callback)
+                DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java].also { component ->
@@ -70,20 +72,52 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: AwaitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): AwaitDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
-        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
             statusRepository = statusRepository,
-            paymentDataRepository = paymentDataRepository
+            paymentDataRepository = paymentDataRepository,
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: AwaitConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): AwaitComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
+    override fun getDelegate(
+        configuration: AwaitConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): AwaitDelegate {
+        return getDelegate(
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            savedStateHandle = savedStateHandle,
+            application = application,
         )
     }
 

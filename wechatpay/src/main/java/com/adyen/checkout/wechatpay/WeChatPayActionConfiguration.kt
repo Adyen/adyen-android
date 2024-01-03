@@ -89,3 +89,15 @@ fun CheckoutConfiguration.weChatPayActionConfiguration(
 fun CheckoutConfiguration.getWeChatPayActionConfiguration(): WeChatPayActionConfiguration? {
     return getActionConfiguration(WeChatPayActionConfiguration::class.java)
 }
+
+internal fun WeChatPayActionConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
+    }
+}

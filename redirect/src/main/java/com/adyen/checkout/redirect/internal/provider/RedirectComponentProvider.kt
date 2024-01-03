@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -31,6 +32,7 @@ import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
+import com.adyen.checkout.redirect.toCheckoutConfiguration
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 
 class RedirectComponentProvider
@@ -47,15 +49,15 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: RedirectConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): RedirectComponent {
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
+            val redirectDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             RedirectComponent(
                 delegate = redirectDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, redirectFactory)[key, RedirectComponent::class.java]
@@ -65,18 +67,50 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: RedirectConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): RedirectDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
             redirectHandler = redirectHandler,
-            paymentDataRepository = paymentDataRepository
+            paymentDataRepository = paymentDataRepository,
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: RedirectConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): RedirectComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
+    override fun getDelegate(
+        configuration: RedirectConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): RedirectDelegate {
+        return getDelegate(
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            savedStateHandle = savedStateHandle,
+            application = application,
         )
     }
 

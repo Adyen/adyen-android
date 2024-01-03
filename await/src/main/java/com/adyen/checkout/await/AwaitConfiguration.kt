@@ -89,3 +89,15 @@ fun CheckoutConfiguration.awaitConfiguration(
 fun CheckoutConfiguration.getAwaitConfiguration(): AwaitConfiguration? {
     return getActionConfiguration(AwaitConfiguration::class.java)
 }
+
+internal fun AwaitConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
+    }
+}
