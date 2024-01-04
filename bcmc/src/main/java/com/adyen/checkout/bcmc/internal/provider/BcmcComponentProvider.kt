@@ -180,6 +180,7 @@ constructor(
         )
     }
 
+    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -280,7 +281,6 @@ constructor(
         }
     }
 
-    @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,

@@ -55,7 +55,7 @@ class BlikConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -68,7 +68,7 @@ class BlikConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -113,4 +113,20 @@ fun CheckoutConfiguration.blikConfiguration(
 
 fun CheckoutConfiguration.getBlikConfiguration(): BlikConfiguration? {
     return getConfiguration(PaymentMethodTypes.BLIK)
+}
+
+internal fun BlikConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.BLIK, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
 }
