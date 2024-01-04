@@ -182,7 +182,7 @@ internal fun getComponentFor(
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             val cashAppPayConfig: CashAppPayConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, checkoutConfiguration)
-            CashAppPayComponentProvider(dropInParams, sessionParams).get(
+            CashAppPayComponentProvider(true, sessionParams).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = cashAppPayConfig,
@@ -302,7 +302,7 @@ internal fun getComponentFor(
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val cashAppPayConfiguration: CashAppPayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            CashAppPayComponentProvider(dropInParams, sessionParams).get(
+            CashAppPayComponentProvider(true, sessionParams).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = cashAppPayConfiguration,

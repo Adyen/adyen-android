@@ -178,3 +178,19 @@ fun CheckoutConfiguration.cashAppPayConfiguration(
 fun CheckoutConfiguration.getCashAppPayConfiguration(): CashAppPayConfiguration? {
     return getConfiguration(PaymentMethodTypes.CASH_APP_PAY)
 }
+
+internal fun CashAppPayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.CASH_APP_PAY, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
