@@ -20,8 +20,10 @@ import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.StoredACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
+import com.adyen.checkout.ach.toCheckoutConfiguration
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -37,7 +39,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepo
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -58,10 +59,11 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+@Suppress("TooManyFunctions")
 class ACHDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -69,30 +71,30 @@ constructor(
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        ComponentCallback<ACHDirectDebitComponentState>
+        ComponentCallback<ACHDirectDebitComponentState>,
         >,
     StoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        ComponentCallback<ACHDirectDebitComponentState>
+        ComponentCallback<ACHDirectDebitComponentState>,
         >,
     SessionPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        SessionComponentCallback<ACHDirectDebitComponentState>
+        SessionComponentCallback<ACHDirectDebitComponentState>,
         >,
     SessionStoredPaymentComponentProvider<
         ACHDirectDebitComponent,
         ACHDirectDebitConfiguration,
         ACHDirectDebitComponentState,
-        SessionComponentCallback<ACHDirectDebitComponentState>
+        SessionComponentCallback<ACHDirectDebitComponentState>,
         > {
 
     private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(
-        overrideComponentParams,
-        overrideSessionParams
+        isCreatedByDropIn,
+        overrideSessionParams,
     )
 
     override fun get(
@@ -100,15 +102,16 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: ACHDirectDebitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<ACHDirectDebitComponentState>,
         order: Order?,
         key: String?,
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
+
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -123,7 +126,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -137,11 +140,11 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 genericEncryptor = genericEncryptor,
                 componentParams = componentParams,
-                order = order
+                order = order,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -150,17 +153,41 @@ constructor(
                 achDirectDebitDelegate = achDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, achDelegate),
-                componentEventHandler = DefaultComponentEventHandler()
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
         return ViewModelProvider(
             viewModelStoreOwner,
-            achFactory
+            achFactory,
         )[key, ACHDirectDebitComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
             }
         }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: ACHDirectDebitConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<ACHDirectDebitComponentState>,
+        order: Order?,
+        key: String?,
+    ): ACHDirectDebitComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
     }
 
     @Suppress("LongMethod")
@@ -170,16 +197,17 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: ACHDirectDebitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<ACHDirectDebitComponentState>,
         key: String?
     ): ACHDirectDebitComponent {
         assertSupported(paymentMethod)
+
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                checkoutConfiguration = checkoutConfiguration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -196,7 +224,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -210,11 +238,11 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 genericEncryptor = genericEncryptor,
                 componentParams = componentParams,
-                order = checkoutSession.order
+                order = checkoutSession.order,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -229,7 +257,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<ACHDirectDebitComponentState>(
@@ -244,9 +272,95 @@ constructor(
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
+
         return ViewModelProvider(
             viewModelStoreOwner,
-            achFactory
+            achFactory,
+        )[key, ACHDirectDebitComponent::class.java].also { component ->
+            component.observe(lifecycleOwner) {
+                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+            }
+        }
+    }
+
+    @Suppress("LongMethod")
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: ACHDirectDebitConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<ACHDirectDebitComponentState>,
+        key: String?
+    ): ACHDirectDebitComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<ACHDirectDebitComponentState>,
+        order: Order?,
+        key: String?
+    ): ACHDirectDebitComponent {
+        assertSupported(storedPaymentMethod)
+
+        val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    storedPaymentMethod = storedPaymentMethod,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
+                ),
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val achDelegate = StoredACHDirectDebitDelegate(
+                observerRepository = PaymentObserverRepository(),
+                storedPaymentMethod = storedPaymentMethod,
+                analyticsRepository = analyticsRepository,
+                componentParams = componentParams,
+                order = order,
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            ACHDirectDebitComponent(
+                achDirectDebitDelegate = achDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, achDelegate),
+                componentEventHandler = DefaultComponentEventHandler(),
+            )
+        }
+
+        return ViewModelProvider(
+            viewModelStoreOwner,
+            achFactory,
         )[key, ACHDirectDebitComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -265,51 +379,17 @@ constructor(
         order: Order?,
         key: String?
     ): ACHDirectDebitComponent {
-        assertSupported(storedPaymentMethod)
-
-        val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
-
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-                ),
-                analyticsMapper = AnalyticsMapper(),
-            )
-
-            val achDelegate = StoredACHDirectDebitDelegate(
-                observerRepository = PaymentObserverRepository(),
-                storedPaymentMethod = storedPaymentMethod,
-                analyticsRepository = analyticsRepository,
-                componentParams = componentParams,
-                order = order
-            )
-
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
-            ACHDirectDebitComponent(
-                achDirectDebitDelegate = achDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, achDelegate),
-                componentEventHandler = DefaultComponentEventHandler()
-            )
-        }
-        return ViewModelProvider(
-            viewModelStoreOwner,
-            achFactory
-        )[key, ACHDirectDebitComponent::class.java].also { component ->
-            component.observe(lifecycleOwner) {
-                component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
-            }
-        }
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
     }
 
     @Suppress("LongMethod")
@@ -319,7 +399,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         storedPaymentMethod: StoredPaymentMethod,
-        configuration: ACHDirectDebitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<ACHDirectDebitComponentState>,
         key: String?
@@ -328,8 +408,8 @@ constructor(
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                checkoutConfiguration = checkoutConfiguration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
@@ -341,7 +421,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -351,11 +431,11 @@ constructor(
                 storedPaymentMethod = storedPaymentMethod,
                 analyticsRepository = analyticsRepository,
                 componentParams = componentParams,
-                order = checkoutSession.order
+                order = checkoutSession.order,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -371,7 +451,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler =
@@ -387,14 +467,40 @@ constructor(
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
+
         return ViewModelProvider(
             viewModelStoreOwner,
-            achFactory
+            achFactory,
         )[key, ACHDirectDebitComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
             }
         }
+    }
+
+    @Suppress("LongMethod")
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: ACHDirectDebitConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<ACHDirectDebitComponentState>,
+        key: String?
+    ): ACHDirectDebitComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

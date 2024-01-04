@@ -158,7 +158,7 @@ internal fun getComponentFor(
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             val achConfig: ACHDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, checkoutConfiguration)
-            ACHDirectDebitComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            ACHDirectDebitComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = achConfig,
@@ -236,7 +236,7 @@ internal fun getComponentFor(
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val configuration: ACHDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            ACHDirectDebitComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            ACHDirectDebitComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = configuration,
