@@ -67,8 +67,8 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class CardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideSessionParams: SessionParams? = null,
     isCreatedByDropIn: Boolean = false,
+    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<

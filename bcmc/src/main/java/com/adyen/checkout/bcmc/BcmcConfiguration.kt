@@ -170,3 +170,19 @@ fun CheckoutConfiguration.bcmcConfiguration(
 fun CheckoutConfiguration.getBcmcConfiguration(): BcmcConfiguration? {
     return getConfiguration(PaymentMethodTypes.BCMC)
 }
+
+internal fun BcmcConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.BCMC, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
