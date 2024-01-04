@@ -152,7 +152,6 @@ internal fun getComponentFor(
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInParams = checkoutConfiguration.getDropInConfiguration()?.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
@@ -357,7 +356,7 @@ internal fun getComponentFor(
         checkCompileOnly { GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val giftcardConfiguration: GiftCardConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            GiftCardComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            GiftCardComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = giftcardConfiguration,

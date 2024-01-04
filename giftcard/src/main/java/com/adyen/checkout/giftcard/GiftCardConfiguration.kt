@@ -130,3 +130,19 @@ fun CheckoutConfiguration.giftCardConfiguration(
 fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
     return getConfiguration(PaymentMethodTypes.GIFTCARD)
 }
+
+internal fun GiftCardConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.GIFTCARD, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

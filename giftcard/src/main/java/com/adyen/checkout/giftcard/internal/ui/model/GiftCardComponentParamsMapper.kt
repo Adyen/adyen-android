@@ -8,51 +8,36 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
-import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.getGiftCardConfiguration
 
 internal class GiftCardComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val isCreatedByDropIn: Boolean,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        configuration: GiftCardConfiguration,
+        configuration: CheckoutConfiguration,
         sessionParams: SessionParams?,
     ): GiftCardComponentParams {
         return configuration
             .mapToParamsInternal()
-            .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun GiftCardConfiguration.mapToParamsInternal(): GiftCardComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(): GiftCardComponentParams {
+        val giftCardConfiguration = getGiftCardConfiguration()
         return GiftCardComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
-            isSubmitButtonVisible = (this as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
-            isPinRequired = isPinRequired ?: true,
-        )
-    }
-
-    private fun GiftCardComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): GiftCardComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount
+            isSubmitButtonVisible = giftCardConfiguration?.isSubmitButtonVisible ?: true,
+            isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
         )
     }
 
