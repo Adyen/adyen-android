@@ -115,3 +115,19 @@ fun CheckoutConfiguration.bacsDirectDebitConfiguration(
 fun CheckoutConfiguration.getBacsDirectDebitConfiguration(): BacsDirectDebitConfiguration? {
     return getConfiguration(PaymentMethodTypes.BACS)
 }
+
+internal fun BacsDirectDebitConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.BACS, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

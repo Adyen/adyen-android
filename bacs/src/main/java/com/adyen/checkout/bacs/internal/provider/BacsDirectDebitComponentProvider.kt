@@ -20,6 +20,8 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
+import com.adyen.checkout.bacs.toCheckoutConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -60,15 +62,16 @@ constructor(
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        ComponentCallback<BacsDirectDebitComponentState>
+        ComponentCallback<BacsDirectDebitComponentState>,
         >,
     SessionPaymentComponentProvider<
         BacsDirectDebitComponent,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
-        SessionComponentCallback<BacsDirectDebitComponentState>
+        SessionComponentCallback<BacsDirectDebitComponentState>,
         > {
 
+    // TODO: replace override
     private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
@@ -76,7 +79,7 @@ constructor(
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: BacsDirectDebitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<BacsDirectDebitComponentState>,
         order: Order?,
@@ -85,7 +88,7 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -94,7 +97,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -109,7 +112,7 @@ constructor(
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -118,7 +121,113 @@ constructor(
                 bacsDelegate = bacsDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
-                componentEventHandler = DefaultComponentEventHandler()
+                componentEventHandler = DefaultComponentEventHandler(),
+            )
+        }
+
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]
+            .also { component ->
+                component.observe(lifecycleOwner) {
+                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
+                }
+            }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: BacsDirectDebitConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<BacsDirectDebitComponentState>,
+        order: Order?,
+        key: String?
+    ): BacsDirectDebitComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
+    @Suppress("LongMethod")
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<BacsDirectDebitComponentState>,
+        key: String?
+    ): BacsDirectDebitComponent {
+        assertSupported(paymentMethod)
+
+        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = componentParamsMapper.mapToParams(
+                configuration = checkoutConfiguration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
+            )
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+
+            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+                analyticsRepositoryData = AnalyticsRepositoryData(
+                    application = application,
+                    componentParams = componentParams,
+                    paymentMethod = paymentMethod,
+                    sessionId = checkoutSession.sessionSetupResponse.id,
+                ),
+                analyticsService = AnalyticsService(
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
+                ),
+                analyticsMapper = AnalyticsMapper(),
+            )
+
+            val bacsDelegate = DefaultBacsDirectDebitDelegate(
+                observerRepository = PaymentObserverRepository(),
+                componentParams = componentParams,
+                paymentMethod = paymentMethod,
+                order = checkoutSession.order,
+                analyticsRepository = analyticsRepository,
+                submitHandler = SubmitHandler(savedStateHandle),
+            )
+
+            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
+
+            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+            )
+            val sessionInteractor = SessionInteractor(
+                sessionRepository = SessionRepository(
+                    sessionService = SessionService(httpClient),
+                    clientKey = componentParams.clientKey,
+                ),
+                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+            )
+            val sessionComponentEventHandler = SessionComponentEventHandler<BacsDirectDebitComponentState>(
+                sessionInteractor = sessionInteractor,
+                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            )
+
+            BacsDirectDebitComponent(
+                bacsDelegate = bacsDelegate,
+                genericActionDelegate = genericActionDelegate,
+                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
 
@@ -142,73 +251,17 @@ constructor(
         componentCallback: SessionComponentCallback<BacsDirectDebitComponentState>,
         key: String?
     ): BacsDirectDebitComponent {
-        assertSupported(paymentMethod)
-
-        val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
-            )
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
-                ),
-                analyticsMapper = AnalyticsMapper(),
-            )
-
-            val bacsDelegate = DefaultBacsDirectDebitDelegate(
-                observerRepository = PaymentObserverRepository(),
-                componentParams = componentParams,
-                paymentMethod = paymentMethod,
-                order = checkoutSession.order,
-                analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler(savedStateHandle),
-            )
-
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
-
-            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                savedStateHandle = savedStateHandle,
-                checkoutSession = checkoutSession,
-            )
-            val sessionInteractor = SessionInteractor(
-                sessionRepository = SessionRepository(
-                    sessionService = SessionService(httpClient),
-                    clientKey = componentParams.clientKey,
-                ),
-                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
-            )
-            val sessionComponentEventHandler = SessionComponentEventHandler<BacsDirectDebitComponentState>(
-                sessionInteractor = sessionInteractor,
-                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer
-            )
-
-            BacsDirectDebitComponent(
-                bacsDelegate = bacsDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, bacsDelegate),
-                componentEventHandler = sessionComponentEventHandler
-            )
-        }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory)[key, BacsDirectDebitComponent::class.java]
-            .also { component ->
-                component.observe(lifecycleOwner) {
-                    component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
-                }
-            }
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
