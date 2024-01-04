@@ -280,7 +280,7 @@ internal fun getComponentFor(
         checkCompileOnly { BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val boletoConfiguration: BoletoConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            BoletoComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            BoletoComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = boletoConfiguration,

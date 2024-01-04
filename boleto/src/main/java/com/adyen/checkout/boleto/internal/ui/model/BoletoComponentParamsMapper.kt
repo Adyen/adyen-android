@@ -8,56 +8,43 @@
 
 package com.adyen.checkout.boleto.internal.ui.model
 
-import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.getBoletoConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BoletoComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val isCreatedByDropIn: Boolean,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        configuration: BoletoConfiguration,
+        configuration: CheckoutConfiguration,
         sessionParams: SessionParams?
     ): BoletoComponentParams {
         return configuration
             .mapToParamsInternal()
-            .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun BoletoConfiguration.mapToParamsInternal(): BoletoComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(): BoletoComponentParams {
+        val boletoConfiguration = getBoletoConfiguration()
         return BoletoComponentParams(
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
+            isSubmitButtonVisible = boletoConfiguration?.isSubmitButtonVisible ?: true,
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
             addressParams = AddressParams.FullAddress(
                 defaultCountryCode = BRAZIL_COUNTRY_CODE,
                 supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
-                addressFieldPolicy = AddressFieldPolicyParams.Required
+                addressFieldPolicy = AddressFieldPolicyParams.Required,
             ),
-            isEmailVisible = isEmailVisible ?: false
-        )
-    }
-
-    private fun BoletoComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): BoletoComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            isEmailVisible = boletoConfiguration?.isEmailVisible ?: false,
         )
     }
 

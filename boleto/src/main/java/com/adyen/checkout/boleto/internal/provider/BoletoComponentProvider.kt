@@ -21,6 +21,8 @@ import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.boleto.internal.ui.DefaultBoletoDelegate
 import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
+import com.adyen.checkout.boleto.toCheckoutConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -32,7 +34,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryD
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -54,7 +55,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class BoletoComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -62,23 +63,23 @@ constructor(
         BoletoComponent,
         BoletoConfiguration,
         BoletoComponentState,
-        ComponentCallback<BoletoComponentState>
+        ComponentCallback<BoletoComponentState>,
         >,
     SessionPaymentComponentProvider<
         BoletoComponent,
         BoletoConfiguration,
         BoletoComponentState,
-        SessionComponentCallback<BoletoComponentState>
+        SessionComponentCallback<BoletoComponentState>,
         > {
 
-    private val componentParamsMapper = BoletoComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = BoletoComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: BoletoConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<BoletoComponentState>,
         order: Order?,
@@ -87,7 +88,7 @@ constructor(
         assertSupported(paymentMethod)
 
         val boletoFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -97,7 +98,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -112,11 +113,11 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
-                addressRepository = addressRepository
+                addressRepository = addressRepository,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -137,6 +138,30 @@ constructor(
             }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: BoletoConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<BoletoComponentState>,
+        order: Order?,
+        key: String?
+    ): BoletoComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -144,7 +169,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: BoletoConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<BoletoComponentState>,
         key: String?
@@ -153,7 +178,7 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
+                configuration = checkoutConfiguration,
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -166,7 +191,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -180,11 +205,11 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
-                addressRepository = addressRepository
+                addressRepository = addressRepository,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -200,7 +225,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler =
@@ -223,6 +248,30 @@ constructor(
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
                 }
             }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: BoletoConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<BoletoComponentState>,
+        key: String?
+    ): BoletoComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
