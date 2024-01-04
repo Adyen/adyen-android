@@ -96,3 +96,19 @@ fun CheckoutConfiguration.sevenElevenConfiguration(
 fun CheckoutConfiguration.getSevenElevenConfiguration(): SevenElevenConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN)
 }
+
+internal fun SevenElevenConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

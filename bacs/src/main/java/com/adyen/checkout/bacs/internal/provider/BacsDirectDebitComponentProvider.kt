@@ -19,6 +19,7 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.getBacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
 import com.adyen.checkout.bacs.toCheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -34,7 +35,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -54,7 +54,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class BacsDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -72,7 +72,7 @@ constructor(
         > {
 
     // TODO: replace override
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -88,7 +88,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBacsDirectDebitConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -173,7 +177,8 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBacsDirectDebitConfiguration(),
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

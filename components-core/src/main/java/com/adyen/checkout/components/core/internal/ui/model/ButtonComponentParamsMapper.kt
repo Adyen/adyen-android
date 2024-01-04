@@ -1,48 +1,35 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ButtonComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val isCreatedByDropIn: Boolean,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        configuration: Configuration,
+        checkoutConfiguration: CheckoutConfiguration,
+        configuration: Configuration?,
         sessionParams: SessionParams?,
     ): ButtonComponentParams {
-        return configuration
-            .mapToParamsInternal()
-            .override(overrideComponentParams)
+        return checkoutConfiguration
+            .mapToParamsInternal(configuration)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun Configuration.mapToParamsInternal(): ButtonComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(configuration: Configuration?): ButtonComponentParams {
         return ButtonComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
-            isSubmitButtonVisible = (this as? ButtonConfiguration)?.isSubmitButtonVisible ?: true
-        )
-    }
-
-    private fun ButtonComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): ButtonComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount
+            isSubmitButtonVisible = (configuration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
         )
     }
 

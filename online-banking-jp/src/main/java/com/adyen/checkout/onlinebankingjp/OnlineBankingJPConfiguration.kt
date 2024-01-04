@@ -96,3 +96,19 @@ fun CheckoutConfiguration.onlineBankingJPConfiguration(
 fun CheckoutConfiguration.getOnlineBankingJPConfiguration(): OnlineBankingJPConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_ONLINE)
 }
+
+internal fun OnlineBankingJPConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ECONTEXT_ONLINE, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

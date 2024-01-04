@@ -96,3 +96,19 @@ fun CheckoutConfiguration.convenienceStoresJPConfiguration(
 fun CheckoutConfiguration.getConvenienceStoresJPConfiguration(): ConvenienceStoresJPConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_STORES)
 }
+
+internal fun ConvenienceStoresJPConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ECONTEXT_STORES, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

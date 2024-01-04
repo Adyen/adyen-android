@@ -194,7 +194,7 @@ internal fun getComponentFor(
         checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             val blikConfig: BlikConfiguration =
                 getConfigurationForPaymentMethod(storedPaymentMethod, checkoutConfiguration)
-            BlikComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            BlikComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 configuration = blikConfig,
@@ -247,7 +247,7 @@ internal fun getComponentFor(
         checkCompileOnly { BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            BacsDirectDebitComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            BacsDirectDebitComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = bacsConfiguration,
@@ -269,7 +269,7 @@ internal fun getComponentFor(
         checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val blikConfiguration: BlikConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            BlikComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            BlikComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = blikConfiguration,
@@ -313,7 +313,7 @@ internal fun getComponentFor(
         checkCompileOnly { ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            ConvenienceStoresJPComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            ConvenienceStoresJPComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = convenienceStoresJPConfiguration,
@@ -434,7 +434,7 @@ internal fun getComponentFor(
         checkCompileOnly { OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val onlineBankingJPConfig: OnlineBankingJPConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            OnlineBankingJPComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            OnlineBankingJPComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingJPConfig,
@@ -489,7 +489,7 @@ internal fun getComponentFor(
         checkCompileOnly { PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val payEasyConfiguration: PayEasyConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            PayEasyComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            PayEasyComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payEasyConfiguration,
@@ -511,7 +511,7 @@ internal fun getComponentFor(
         checkCompileOnly { SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val sevenElevenConfiguration: SevenElevenConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            SevenElevenComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            SevenElevenComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sevenElevenConfiguration,

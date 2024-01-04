@@ -19,6 +19,7 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.getBlikConfiguration
 import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate
 import com.adyen.checkout.blik.internal.ui.StoredBlikDelegate
 import com.adyen.checkout.blik.toCheckoutConfiguration
@@ -37,7 +38,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -59,7 +59,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class BlikComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -88,7 +88,7 @@ constructor(
         SessionComponentCallback<BlikComponentState>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -104,7 +104,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -187,7 +191,11 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -272,7 +280,8 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -380,7 +389,8 @@ constructor(
 
         val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

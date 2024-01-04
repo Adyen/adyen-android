@@ -11,10 +11,10 @@ package com.adyen.checkout.payeasy.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.PayEasyPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
@@ -22,16 +22,18 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.PayEasyConfiguration
+import com.adyen.checkout.payeasy.getPayEasyConfiguration
+import com.adyen.checkout.payeasy.toCheckoutConfiguration
 
 class PayEasyComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : EContextComponentProvider<PayEasyComponent, PayEasyConfiguration, PayEasyPaymentMethod, PayEasyComponentState>(
     componentClass = PayEasyComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    isCreatedByDropIn = isCreatedByDropIn,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -58,6 +60,14 @@ constructor(
 
     override fun createPaymentMethod(): PayEasyPaymentMethod {
         return PayEasyPaymentMethod()
+    }
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): PayEasyConfiguration? {
+        return checkoutConfiguration.getPayEasyConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: PayEasyConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
     }
 
     override fun getSupportedPaymentMethods(): List<String> {

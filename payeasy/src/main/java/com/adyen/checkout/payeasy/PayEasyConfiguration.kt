@@ -96,3 +96,19 @@ fun CheckoutConfiguration.payEasyConfiguration(
 fun CheckoutConfiguration.getPayEasyConfiguration(): PayEasyConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_ATM)
 }
+
+internal fun PayEasyConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ECONTEXT_ATM, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
