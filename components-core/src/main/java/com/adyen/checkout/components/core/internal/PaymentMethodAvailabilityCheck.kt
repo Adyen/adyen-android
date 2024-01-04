@@ -8,20 +8,18 @@
 package com.adyen.checkout.components.core.internal
 
 import android.app.Application
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
 /**
  * Specifies whether a certain payment method is available for use with the provided parameters.
- *
- * @param ConfigurationT The Configuration for the Component corresponding to this payment method. Simply use
- * [Configuration] if not applicable.
  */
-interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
+interface PaymentMethodAvailabilityCheck {
     fun isAvailable(
-        applicationContext: Application,
+        application: Application,
         paymentMethod: PaymentMethod,
-        configuration: ConfigurationT?,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ComponentAvailableCallback
     )
 }

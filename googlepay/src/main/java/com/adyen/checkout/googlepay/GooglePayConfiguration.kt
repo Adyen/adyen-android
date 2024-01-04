@@ -408,3 +408,21 @@ fun CheckoutConfiguration.getGooglePayConfiguration(): GooglePayConfiguration? {
         getConfiguration(key)
     }
 }
+
+internal fun GooglePayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        GooglePayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+            addConfiguration(key, this@toCheckoutConfiguration)
+        }
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

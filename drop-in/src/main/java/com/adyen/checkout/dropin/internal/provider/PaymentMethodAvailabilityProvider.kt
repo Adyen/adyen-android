@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
-import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.NotAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
@@ -22,7 +21,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runCompileOnly
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -33,7 +31,6 @@ internal fun checkPaymentMethodAvailability(
     application: Application,
     paymentMethod: PaymentMethod,
     checkoutConfiguration: CheckoutConfiguration,
-    dropInComponentParams: DropInComponentParams,
     sessionParams: SessionParams?,
     callback: ComponentAvailableCallback,
 ) {
@@ -42,11 +39,9 @@ internal fun checkPaymentMethodAvailability(
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
-        val availabilityCheck = getPaymentMethodAvailabilityCheck(dropInComponentParams, type, sessionParams)
-        val configuration =
-            getConfigurationForPaymentMethodOrNull<Configuration>(paymentMethod, checkoutConfiguration)
+        val availabilityCheck = getPaymentMethodAvailabilityCheck(type, sessionParams)
 
-        availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
+        availabilityCheck.isAvailable(application, paymentMethod, checkoutConfiguration, callback)
     } catch (e: CheckoutException) {
         Logger.e(TAG, "Unable to initiate ${paymentMethod.type}", e)
         callback.onAvailabilityResult(false, paymentMethod)
@@ -57,20 +52,18 @@ internal fun checkPaymentMethodAvailability(
  * Provides the [PaymentMethodAvailabilityCheck] class for the specified [paymentMethodType], if available.
  */
 private fun getPaymentMethodAvailabilityCheck(
-    dropInComponentParams: DropInComponentParams,
     paymentMethodType: String,
     sessionParams: SessionParams?,
-): PaymentMethodAvailabilityCheck<Configuration> {
-    @Suppress("UNCHECKED_CAST")
+): PaymentMethodAvailabilityCheck {
     val availabilityCheck = when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> runCompileOnly {
-            GooglePayComponentProvider(dropInComponentParams, sessionParams)
+            GooglePayComponentProvider(true, sessionParams)
         }
 
         PaymentMethodTypes.WECHAT_PAY_SDK -> runCompileOnly { WeChatPayProvider() }
         else -> AlwaysAvailablePaymentMethod()
-    } as? PaymentMethodAvailabilityCheck<Configuration>
+    }
 
     return availabilityCheck ?: NotAvailablePaymentMethod()
 }

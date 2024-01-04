@@ -348,10 +348,3 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
 }
-
-internal inline fun <reified T : Configuration> getConfigurationForPaymentMethodOrNull(
-    paymentMethod: PaymentMethod,
-    checkoutConfiguration: CheckoutConfiguration,
-): T? {
-    return checkoutConfiguration.getConfiguration(paymentMethod.type ?: "")
-}

@@ -367,7 +367,7 @@ internal fun getComponentFor(
         checkCompileOnly { GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val googlePayConfiguration: GooglePayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            GooglePayComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            GooglePayComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = googlePayConfiguration,

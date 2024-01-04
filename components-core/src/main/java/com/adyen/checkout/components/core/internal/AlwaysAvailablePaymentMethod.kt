@@ -10,16 +10,17 @@ package com.adyen.checkout.components.core.internal
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AlwaysAvailablePaymentMethod : PaymentMethodAvailabilityCheck<Configuration> {
+class AlwaysAvailablePaymentMethod : PaymentMethodAvailabilityCheck {
 
     override fun isAvailable(
-        applicationContext: Application,
+        application: Application,
         paymentMethod: PaymentMethod,
-        configuration: Configuration?,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ComponentAvailableCallback
     ) {
         callback.onAvailabilityResult(true, paymentMethod)

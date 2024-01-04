@@ -87,7 +87,6 @@ internal class PaymentMethodsListViewModel(
                         application = application,
                         paymentMethod = paymentMethod,
                         checkoutConfiguration = checkoutConfiguration,
-                        dropInComponentParams = dropInComponentParams,
                         sessionParams = sessionParams,
                         callback = this,
                     )
