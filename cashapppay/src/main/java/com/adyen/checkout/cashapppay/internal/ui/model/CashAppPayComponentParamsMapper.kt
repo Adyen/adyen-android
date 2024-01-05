@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.cashapppay.internal.ui.model
 
+import android.content.Context
+import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
 import com.adyen.checkout.cashapppay.getCashAppPayConfiguration
@@ -29,6 +31,7 @@ internal class CashAppPayComponentParamsMapper(
         configuration: CheckoutConfiguration,
         sessionParams: SessionParams?,
         paymentMethod: PaymentMethod,
+        context: Context,
     ): CashAppPayComponentParams {
         val params = configuration
             .mapToParamsInternal(
@@ -38,6 +41,7 @@ internal class CashAppPayComponentParamsMapper(
                 scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
                     "Cannot launch Cash App Pay, scopeId is missing in the payment method object.",
                 ),
+                context = context,
             )
             .override(sessionParams ?: overrideSessionParams)
 
@@ -54,14 +58,16 @@ internal class CashAppPayComponentParamsMapper(
         configuration: CheckoutConfiguration,
         sessionParams: SessionParams?,
         @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
+        context: Context,
     ): CashAppPayComponentParams = configuration
         // clientId and scopeId are not needed in the stored flow.
-        .mapToParamsInternal(null, null)
+        .mapToParamsInternal(null, null, context)
         .override(sessionParams ?: overrideSessionParams)
 
     private fun CheckoutConfiguration.mapToParamsInternal(
         clientId: String?,
         scopeId: String?,
+        context: Context,
     ): CashAppPayComponentParams {
         val cashAppPayConfiguration = getCashAppPayConfiguration()
         return CashAppPayComponentParams(
@@ -73,7 +79,12 @@ internal class CashAppPayComponentParamsMapper(
             isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
             cashAppPayEnvironment = getCashAppPayEnvironment(cashAppPayConfiguration),
-            returnUrl = cashAppPayConfiguration?.returnUrl,
+            // Take the configured returnUrl or create a default value for drop-in if it's null
+            returnUrl = cashAppPayConfiguration?.returnUrl ?: if (isCreatedByDropIn) {
+                CashAppPayComponent.getReturnUrl(context)
+            } else {
+                null
+            },
             showStorePaymentField = cashAppPayConfiguration?.showStorePaymentField ?: true,
             storePaymentMethod = cashAppPayConfiguration?.storePaymentMethod ?: false,
             clientId = clientId,

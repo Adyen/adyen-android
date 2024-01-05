@@ -21,7 +21,6 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
