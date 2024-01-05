@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -28,7 +29,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -47,12 +47,14 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponent
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.UPIConfiguration
+import com.adyen.checkout.upi.getUPIConfiguration
 import com.adyen.checkout.upi.internal.ui.DefaultUPIDelegate
+import com.adyen.checkout.upi.toCheckoutConfiguration
 
 class UPIComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    private val isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -61,17 +63,17 @@ constructor(
         UPIComponent,
         UPIConfiguration,
         UPIComponentState,
-        SessionComponentCallback<UPIComponentState>
+        SessionComponentCallback<UPIComponentState>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: UPIConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<UPIComponentState>,
         order: Order?,
@@ -80,7 +82,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getUPIConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -89,7 +95,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -104,7 +110,7 @@ constructor(
             )
 
             val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -125,6 +131,30 @@ constructor(
             }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: UPIConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<UPIComponentState>,
+        order: Order?,
+        key: String?
+    ): UPIComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -132,7 +162,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: UPIConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<UPIComponentState>,
         key: String?
@@ -141,7 +171,8 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getUPIConfiguration(),
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -154,7 +185,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -169,7 +200,7 @@ constructor(
             )
 
             val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -185,7 +216,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler =
@@ -208,6 +239,30 @@ constructor(
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
                 }
             }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: UPIConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<UPIComponentState>,
+        key: String?
+    ): UPIComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

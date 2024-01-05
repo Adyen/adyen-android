@@ -55,7 +55,6 @@ import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
@@ -228,7 +227,6 @@ internal fun getComponentFor(
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInParams = checkoutConfiguration.getDropInConfiguration()?.mapToParams(amount)
     val sessionParams = sessionDetails?.mapToParams(amount)
     val context = fragment.requireContext()
     return when {
@@ -521,7 +519,7 @@ internal fun getComponentFor(
         checkCompileOnly { UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val upiConfiguration: UPIConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            UPIComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            UPIComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = upiConfiguration,

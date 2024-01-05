@@ -119,3 +119,21 @@ fun CheckoutConfiguration.getUPIConfiguration(): UPIConfiguration? {
         getConfiguration(key)
     }
 }
+
+internal fun UPIConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        UPIComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+            addConfiguration(key, this@toCheckoutConfiguration)
+        }
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
