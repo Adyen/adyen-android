@@ -400,7 +400,7 @@ internal fun getComponentFor(
         checkCompileOnly { MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val mbWayConfiguration: MBWayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            MBWayComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            MBWayComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = mbWayConfiguration,

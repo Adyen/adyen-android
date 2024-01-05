@@ -115,3 +115,19 @@ fun CheckoutConfiguration.MBWayConfiguration(
 fun CheckoutConfiguration.getMBWayConfiguration(): MBWayConfiguration? {
     return getConfiguration(PaymentMethodTypes.MB_WAY)
 }
+
+internal fun MBWayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.MB_WAY, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
