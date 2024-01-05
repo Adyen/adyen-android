@@ -39,9 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.card.SessionsCardComponentData
 import com.adyen.checkout.example.ui.card.SessionsCardUiState
@@ -88,7 +88,7 @@ private fun SessionsCardContent(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        val (cardConfiguration, isLoading, oneTimeMessage, componentData, action, finalResult) = uiState
+        val (checkoutConfiguration, isLoading, oneTimeMessage, componentData, action, finalResult) = uiState
 
         if (isLoading) {
             CircularProgressIndicator()
@@ -106,7 +106,7 @@ private fun SessionsCardContent(
             ResultContent(finalResult)
         } else if (componentData != null) {
             CardComponent(
-                configuration = cardConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 componentData = componentData,
                 action = action,
                 onActionConsumed = onActionConsumed,
@@ -118,7 +118,7 @@ private fun SessionsCardContent(
 
 @Composable
 private fun CardComponent(
-    configuration: CardConfiguration,
+    checkoutConfiguration: CheckoutConfiguration,
     componentData: SessionsCardComponentData,
     action: Action?,
     onActionConsumed: () -> Unit,
@@ -127,7 +127,7 @@ private fun CardComponent(
     val component = CardComponent.PROVIDER.get(
         componentData.checkoutSession,
         componentData.paymentMethod,
-        configuration,
+        checkoutConfiguration,
         componentData.callback,
         componentData.hashCode().toString(),
     )
