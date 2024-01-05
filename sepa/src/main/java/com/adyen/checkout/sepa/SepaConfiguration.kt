@@ -114,3 +114,19 @@ fun CheckoutConfiguration.sepaConfiguration(
 fun CheckoutConfiguration.getSepaConfiguration(): SepaConfiguration? {
     return getConfiguration(PaymentMethodTypes.SEPA)
 }
+
+internal fun SepaConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.SEPA, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

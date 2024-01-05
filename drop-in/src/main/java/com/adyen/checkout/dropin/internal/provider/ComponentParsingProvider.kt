@@ -499,7 +499,7 @@ internal fun getComponentFor(
         checkCompileOnly { SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val sepaConfiguration: SepaConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            SepaComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            SepaComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = sepaConfiguration,
