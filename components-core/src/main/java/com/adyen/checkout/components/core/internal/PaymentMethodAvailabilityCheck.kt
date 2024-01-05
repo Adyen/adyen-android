@@ -14,8 +14,19 @@ import com.adyen.checkout.components.core.PaymentMethod
 
 /**
  * Specifies whether a certain payment method is available for use with the provided parameters.
+ *
+ * @param ConfigurationT The Configuration for the Component corresponding to this payment method. Simply use
+ * [Configuration] if not applicable.
  */
-interface PaymentMethodAvailabilityCheck {
+interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
+
+    fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: ConfigurationT?,
+        callback: ComponentAvailableCallback
+    )
+
     fun isAvailable(
         application: Application,
         paymentMethod: PaymentMethod,

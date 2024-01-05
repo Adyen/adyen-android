@@ -15,7 +15,16 @@ import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class NotAvailablePaymentMethod : PaymentMethodAvailabilityCheck {
+class NotAvailablePaymentMethod : PaymentMethodAvailabilityCheck<Configuration> {
+
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: Configuration?,
+        callback: ComponentAvailableCallback
+    ) {
+        callback.onAvailabilityResult(false, paymentMethod)
+    }
 
     override fun isAvailable(
         application: Application,

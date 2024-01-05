@@ -32,6 +32,7 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -76,7 +77,7 @@ constructor(
         GooglePayComponentState,
         SessionComponentCallback<GooglePayComponentState>,
         >,
-    PaymentMethodAvailabilityCheck {
+    PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
     private val componentParamsMapper = GooglePayComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
@@ -301,6 +302,24 @@ constructor(
             Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
+    }
+
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: GooglePayConfiguration?,
+        callback: ComponentAvailableCallback
+    ) {
+        if (configuration == null) {
+            throw CheckoutException("GooglePayConfiguration cannot be null")
+        }
+
+        isAvailable(
+            application = applicationContext,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

@@ -22,7 +22,16 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
  * You can directly call /payments after you receive a callback from [isAvailable].
  * You can use [WeChatPayActionComponent] to handle the returned action.
  */
-class WeChatPayProvider : PaymentMethodAvailabilityCheck {
+class WeChatPayProvider : PaymentMethodAvailabilityCheck<WeChatPayActionConfiguration> {
+
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: WeChatPayActionConfiguration?,
+        callback: ComponentAvailableCallback
+    ) {
+        callback.onAvailabilityResult(isAvailable(applicationContext), paymentMethod)
+    }
 
     override fun isAvailable(
         application: Application,

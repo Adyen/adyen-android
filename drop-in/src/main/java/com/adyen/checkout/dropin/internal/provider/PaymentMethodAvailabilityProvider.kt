@@ -54,7 +54,7 @@ internal fun checkPaymentMethodAvailability(
 private fun getPaymentMethodAvailabilityCheck(
     paymentMethodType: String,
     sessionParams: SessionParams?,
-): PaymentMethodAvailabilityCheck {
+): PaymentMethodAvailabilityCheck<*> {
     val availabilityCheck = when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> runCompileOnly {
