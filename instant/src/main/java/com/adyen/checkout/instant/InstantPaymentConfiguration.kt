@@ -98,3 +98,19 @@ fun CheckoutConfiguration.getInstantPaymentConfiguration(
 ): InstantPaymentConfiguration? {
     return getConfiguration(paymentMethod)
 }
+
+internal fun InstantPaymentConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(GLOBAL_INSTANT_CONFIG_KEY, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
