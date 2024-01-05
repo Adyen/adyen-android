@@ -289,9 +289,9 @@ constructor(
 
     abstract fun getSupportedPaymentMethods(): List<String>
 
-    abstract fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): ConfigurationT?
+    protected abstract fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): ConfigurationT?
 
-    abstract fun getCheckoutConfiguration(configuration: ConfigurationT): CheckoutConfiguration
+    protected abstract fun getCheckoutConfiguration(configuration: ConfigurationT): CheckoutConfiguration
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
         if (!isPaymentMethodSupported(paymentMethod)) {

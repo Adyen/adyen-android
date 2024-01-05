@@ -9,54 +9,42 @@
 package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val isCreatedByDropIn: Boolean,
     private val overrideSessionParams: SessionParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
 
     fun mapToParams(
-        issuerListConfiguration: IssuerListConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
+        configuration: IssuerListConfiguration?,
         sessionParams: SessionParams?,
     ): IssuerListComponentParams {
-        return issuerListConfiguration
-            .mapToParamsInternal()
-            .override(overrideComponentParams)
+        return checkoutConfiguration
+            .mapToParamsInternal(configuration)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun IssuerListConfiguration.mapToParamsInternal(): IssuerListComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(
+        configuration: IssuerListConfiguration?
+    ): IssuerListComponentParams {
         return IssuerListComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            viewType = viewType ?: IssuerListViewType.RECYCLER_VIEW,
-            hideIssuerLogos = hideIssuerLogos ?: hideIssuerLogosDefaultValue,
-        )
-    }
-
-    private fun IssuerListComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): IssuerListComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            isSubmitButtonVisible = configuration?.isSubmitButtonVisible ?: true,
+            viewType = configuration?.viewType ?: IssuerListViewType.RECYCLER_VIEW,
+            hideIssuerLogos = configuration?.hideIssuerLogos ?: hideIssuerLogosDefaultValue,
         )
     }
 

@@ -11,27 +11,29 @@ package com.adyen.checkout.dotpay.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.DotpayPaymentMethod
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.DotpayConfiguration
+import com.adyen.checkout.dotpay.getDotpayConfiguration
+import com.adyen.checkout.dotpay.toCheckoutConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 class DotpayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<DotpayComponent, DotpayConfiguration, DotpayPaymentMethod, DotpayComponentState>(
     componentClass = DotpayComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    isCreatedByDropIn = isCreatedByDropIn,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -57,4 +59,12 @@ constructor(
     override fun createPaymentMethod() = DotpayPaymentMethod()
 
     override fun getSupportedPaymentMethods(): List<String> = DotpayComponent.PAYMENT_METHOD_TYPES
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): DotpayConfiguration? {
+        return checkoutConfiguration.getDotpayConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: DotpayConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
+    }
 }

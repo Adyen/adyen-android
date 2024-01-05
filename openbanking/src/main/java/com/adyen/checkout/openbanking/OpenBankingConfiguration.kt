@@ -100,3 +100,19 @@ fun CheckoutConfiguration.openBankingConfiguration(
 fun CheckoutConfiguration.getOpenBankingConfiguration(): OpenBankingConfiguration? {
     return getConfiguration(PaymentMethodTypes.OPEN_BANKING)
 }
+
+internal fun OpenBankingConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.OPEN_BANKING, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

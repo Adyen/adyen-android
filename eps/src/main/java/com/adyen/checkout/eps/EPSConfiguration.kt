@@ -112,3 +112,19 @@ fun CheckoutConfiguration.EPSConfiguration(
 fun CheckoutConfiguration.getEPSConfiguration(): EPSConfiguration? {
     return getConfiguration(PaymentMethodTypes.EPS)
 }
+
+internal fun EPSConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.EPS, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

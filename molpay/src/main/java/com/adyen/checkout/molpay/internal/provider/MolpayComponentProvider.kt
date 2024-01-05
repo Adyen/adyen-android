@@ -11,10 +11,10 @@ package com.adyen.checkout.molpay.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.MolpayPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
@@ -22,16 +22,18 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.MolpayConfiguration
+import com.adyen.checkout.molpay.getMolpayConfiguration
+import com.adyen.checkout.molpay.toCheckoutConfiguration
 
 class MolpayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<MolpayComponent, MolpayConfiguration, MolpayPaymentMethod, MolpayComponentState>(
     componentClass = MolpayComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    isCreatedByDropIn = isCreatedByDropIn,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -57,4 +59,12 @@ constructor(
     override fun createPaymentMethod() = MolpayPaymentMethod()
 
     override fun getSupportedPaymentMethods(): List<String> = MolpayComponent.PAYMENT_METHOD_TYPES
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): MolpayConfiguration? {
+        return checkoutConfiguration.getMolpayConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: MolpayConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
+    }
 }

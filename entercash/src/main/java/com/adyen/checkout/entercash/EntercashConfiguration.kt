@@ -100,3 +100,19 @@ fun CheckoutConfiguration.entercashConfiguration(
 fun CheckoutConfiguration.getEntercashConfiguration(): EntercashConfiguration? {
     return getConfiguration(PaymentMethodTypes.ENTERCASH)
 }
+
+internal fun EntercashConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ENTERCASH, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

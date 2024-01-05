@@ -105,3 +105,21 @@ fun CheckoutConfiguration.getMolpayConfiguration(): MolpayConfiguration? {
         getConfiguration(key)
     }
 }
+
+internal fun MolpayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        MolpayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+            addConfiguration(key, this@toCheckoutConfiguration)
+        }
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

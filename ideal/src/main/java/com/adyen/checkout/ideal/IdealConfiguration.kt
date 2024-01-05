@@ -100,3 +100,19 @@ fun CheckoutConfiguration.idealConfiguration(
 fun CheckoutConfiguration.getIdealConfiguration(): IdealConfiguration? {
     return getConfiguration(PaymentMethodTypes.IDEAL)
 }
+
+internal fun IdealConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.IDEAL, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

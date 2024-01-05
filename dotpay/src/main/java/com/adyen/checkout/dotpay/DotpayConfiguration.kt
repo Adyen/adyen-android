@@ -100,3 +100,19 @@ fun CheckoutConfiguration.dotpayConfiguration(
 fun CheckoutConfiguration.getDotpayConfiguration(): DotpayConfiguration? {
     return getConfiguration(PaymentMethodTypes.DOTPAY)
 }
+
+internal fun DotpayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.DOTPAY, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

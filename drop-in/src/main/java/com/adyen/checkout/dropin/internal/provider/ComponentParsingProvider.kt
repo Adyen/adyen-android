@@ -323,7 +323,7 @@ internal fun getComponentFor(
         checkCompileOnly { DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val dotpayConfig: DotpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            DotpayComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            DotpayComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = dotpayConfig,
@@ -334,7 +334,7 @@ internal fun getComponentFor(
         checkCompileOnly { EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val entercashConfig: EntercashConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            EntercashComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            EntercashComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = entercashConfig,
@@ -345,7 +345,7 @@ internal fun getComponentFor(
         checkCompileOnly { EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val epsConfig: EPSConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            EPSComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            EPSComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = epsConfig,
@@ -378,7 +378,7 @@ internal fun getComponentFor(
         checkCompileOnly { IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val idealConfig: IdealConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            IdealComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            IdealComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = idealConfig,
@@ -411,7 +411,7 @@ internal fun getComponentFor(
         checkCompileOnly { MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val molpayConfig: MolpayConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            MolpayComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            MolpayComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = molpayConfig,
@@ -444,7 +444,7 @@ internal fun getComponentFor(
         checkCompileOnly { OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            OnlineBankingPLComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            OnlineBankingPLComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingPLConfig,
@@ -466,7 +466,7 @@ internal fun getComponentFor(
         checkCompileOnly { OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            OpenBankingComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            OpenBankingComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = openBankingConfig,
