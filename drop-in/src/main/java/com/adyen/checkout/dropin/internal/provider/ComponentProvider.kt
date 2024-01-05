@@ -193,7 +193,6 @@ internal fun getComponentFor(
     onRedirect: () -> Unit,
 ): PaymentComponent {
     val sessionParams = sessionDetails?.mapToParams(amount)
-    val context = fragment.requireContext()
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             ACHDirectDebitComponentProvider(true, sessionParams, analyticsRepository).get(
