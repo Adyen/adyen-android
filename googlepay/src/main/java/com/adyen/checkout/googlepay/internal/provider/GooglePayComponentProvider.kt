@@ -60,7 +60,7 @@ import java.lang.ref.WeakReference
 class GooglePayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    private val isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -117,7 +117,7 @@ constructor(
                 analyticsRepository = analyticsRepository,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -207,7 +207,7 @@ constructor(
                 analyticsRepository = analyticsRepository,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,

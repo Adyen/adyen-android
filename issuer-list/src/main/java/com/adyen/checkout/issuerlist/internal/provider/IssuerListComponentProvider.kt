@@ -64,7 +64,7 @@ abstract class IssuerListComponentProvider<
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val componentClass: Class<ComponentT>,
-    isCreatedByDropIn: Boolean,
+    private val isCreatedByDropIn: Boolean,
     overrideSessionParams: SessionParams?,
     private val analyticsRepository: AnalyticsRepository?,
     hideIssuerLogosDefaultValue: Boolean = false,
@@ -125,7 +125,7 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -217,7 +217,7 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,

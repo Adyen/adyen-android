@@ -9,22 +9,21 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
-    // TODO: Replace with just CheckoutConfiguration
-    private val overrideComponentParams: ComponentParams?,
+    private val isCreatedByDropIn: Boolean,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        configuration: Configuration,
+        configuration: CheckoutConfiguration,
         sessionParams: SessionParams?,
     ): GenericComponentParams {
         return configuration
             .mapToParamsInternal()
-            .override(overrideComponentParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -34,22 +33,8 @@ class GenericComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            isCreatedByDropIn = isCreatedByDropIn,
             amount = amount
-        )
-    }
-
-    private fun GenericComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): GenericComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
         )
     }
 

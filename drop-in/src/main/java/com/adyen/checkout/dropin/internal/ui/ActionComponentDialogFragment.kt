@@ -21,7 +21,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.core.GenericActionComponent
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
@@ -94,10 +93,9 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
-            actionComponent = GenericActionComponentProvider(dropInViewModel.dropInComponentParams).get(
+            actionComponent = GenericActionComponentProvider(true).get(
                 fragment = this,
-                // TODO: Pass checkoutConfig when components accept it
-                configuration = createActionConfiguration(),
+                checkoutConfiguration = checkoutConfiguration,
                 callback = this,
             )
 
@@ -114,14 +112,6 @@ internal class ActionComponentDialogFragment :
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
-    }
-
-    private fun createActionConfiguration(): GenericActionConfiguration {
-        return GenericActionConfiguration.Builder(
-            checkoutConfiguration.shopperLocale,
-            checkoutConfiguration.environment,
-            checkoutConfiguration.clientKey,
-        ).build()
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {

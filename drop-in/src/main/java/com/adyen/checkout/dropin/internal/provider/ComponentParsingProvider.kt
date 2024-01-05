@@ -389,7 +389,7 @@ internal fun getComponentFor(
         checkCompileOnly { InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val instantPaymentConfiguration: InstantPaymentConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            InstantPaymentComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            InstantPaymentComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = instantPaymentConfiguration,
@@ -477,7 +477,7 @@ internal fun getComponentFor(
         checkCompileOnly { PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val payByBankConfig: PayByBankConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            PayByBankComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            PayByBankComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = payByBankConfig,

@@ -54,7 +54,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class BacsDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    private val isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -71,7 +71,6 @@ constructor(
         SessionComponentCallback<BacsDirectDebitComponentState>,
         > {
 
-    // TODO: replace override
     private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
@@ -115,7 +114,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -205,7 +204,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,

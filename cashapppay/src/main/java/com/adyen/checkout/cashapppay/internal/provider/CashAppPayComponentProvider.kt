@@ -59,7 +59,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class CashAppPayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    private val isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -127,7 +127,7 @@ constructor(
                 cashAppPayFactory = CashAppPayFactory,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -208,7 +208,7 @@ constructor(
                 componentParams = componentParams,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -300,7 +300,7 @@ constructor(
                 cashAppPayFactory = CashAppPayFactory,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -409,7 +409,7 @@ constructor(
                 componentParams = componentParams,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,

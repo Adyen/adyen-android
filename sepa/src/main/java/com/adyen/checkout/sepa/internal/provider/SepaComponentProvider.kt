@@ -109,7 +109,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 configuration = configuration.genericActionConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -174,7 +174,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
                 configuration = configuration.genericActionConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
