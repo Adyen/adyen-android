@@ -38,11 +38,11 @@ import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -99,18 +99,6 @@ constructor(
             checkoutConfiguration = configuration.toCheckoutConfiguration(),
             callback = callback,
             key = key,
-        )
-    }
-
-    override fun getDelegate(
-        configuration: RedirectConfiguration,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): RedirectDelegate {
-        return getDelegate(
-            checkoutConfiguration = configuration.toCheckoutConfiguration(),
-            savedStateHandle = savedStateHandle,
-            application = application,
         )
     }
 

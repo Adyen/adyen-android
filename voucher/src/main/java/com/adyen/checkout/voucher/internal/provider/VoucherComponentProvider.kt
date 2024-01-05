@@ -39,11 +39,11 @@ import com.adyen.checkout.voucher.toCheckoutConfiguration
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -98,18 +98,6 @@ constructor(
             checkoutConfiguration = configuration.toCheckoutConfiguration(),
             callback = callback,
             key = key,
-        )
-    }
-
-    override fun getDelegate(
-        configuration: VoucherConfiguration,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): VoucherDelegate {
-        return getDelegate(
-            checkoutConfiguration = configuration.toCheckoutConfiguration(),
-            savedStateHandle = savedStateHandle,
-            application = application,
         )
     }
 

@@ -41,11 +41,11 @@ import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -106,18 +106,6 @@ constructor(
             checkoutConfiguration = configuration.toCheckoutConfiguration(),
             callback = callback,
             key = key,
-        )
-    }
-
-    override fun getDelegate(
-        configuration: AwaitConfiguration,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): AwaitDelegate {
-        return getDelegate(
-            checkoutConfiguration = configuration.toCheckoutConfiguration(),
-            savedStateHandle = savedStateHandle,
-            application = application,
         )
     }
 

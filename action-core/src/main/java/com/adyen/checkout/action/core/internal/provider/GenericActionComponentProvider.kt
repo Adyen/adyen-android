@@ -43,7 +43,7 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 class GenericActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    private val isCreatedByDropIn: Boolean = false,
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
     private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, null)
@@ -82,7 +82,7 @@ constructor(
             savedStateHandle = savedStateHandle,
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(componentParams, null),
+            actionDelegateProvider = ActionDelegateProvider(isCreatedByDropIn, null),
         )
     }
 
@@ -103,18 +103,6 @@ constructor(
             checkoutConfiguration = configuration.toCheckoutConfiguration(),
             callback = callback,
             key = key,
-        )
-    }
-
-    override fun getDelegate(
-        configuration: GenericActionConfiguration,
-        savedStateHandle: SavedStateHandle,
-        application: Application
-    ): GenericActionDelegate {
-        return getDelegate(
-            checkoutConfiguration = configuration.toCheckoutConfiguration(),
-            savedStateHandle = savedStateHandle,
-            application = application,
         )
     }
 

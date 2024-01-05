@@ -216,14 +216,6 @@ interface ActionComponentProvider<
         key: String? = null,
     ): ComponentT
 
-    // TODO: is this still needed?
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun getDelegate(
-        configuration: ConfigurationT,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): DelegateT
-
     //endregion
 
     /**

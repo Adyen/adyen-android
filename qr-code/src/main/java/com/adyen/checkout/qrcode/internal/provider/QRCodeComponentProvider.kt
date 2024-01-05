@@ -43,11 +43,11 @@ import com.adyen.checkout.ui.core.internal.util.ImageSaver
 class QRCodeComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    isCreatedByDropIn: Boolean = false,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -112,18 +112,6 @@ constructor(
             checkoutConfiguration = configuration.toCheckoutConfiguration(),
             callback = callback,
             key = key,
-        )
-    }
-
-    override fun getDelegate(
-        configuration: QRCodeConfiguration,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): QRCodeDelegate {
-        return getDelegate(
-            checkoutConfiguration = configuration.toCheckoutConfiguration(),
-            savedStateHandle = savedStateHandle,
-            application = application,
         )
     }
 
