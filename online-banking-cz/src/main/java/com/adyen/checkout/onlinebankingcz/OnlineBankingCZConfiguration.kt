@@ -96,3 +96,19 @@ fun CheckoutConfiguration.onlineBankingCZConfiguration(
 fun CheckoutConfiguration.getOnlineBankingCZConfiguration(): OnlineBankingCZConfiguration? {
     return getConfiguration(PaymentMethodTypes.ONLINE_BANKING_CZ)
 }
+
+internal fun OnlineBankingCZConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ONLINE_BANKING_CZ, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}

@@ -422,7 +422,7 @@ internal fun getComponentFor(
         checkCompileOnly { OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val onlineBankingCZConfig: OnlineBankingCZConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            OnlineBankingCZComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            OnlineBankingCZComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingCZConfig,
@@ -455,7 +455,7 @@ internal fun getComponentFor(
         checkCompileOnly { OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             val onlineBankingSKConfig: OnlineBankingSKConfiguration =
                 getConfigurationForPaymentMethod(paymentMethod, checkoutConfiguration, context)
-            OnlineBankingSKComponentProvider(dropInParams, sessionParams, analyticsRepository).get(
+            OnlineBankingSKComponentProvider(true, sessionParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 configuration = onlineBankingSKConfig,

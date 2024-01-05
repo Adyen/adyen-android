@@ -17,6 +17,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -32,7 +33,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -55,7 +55,7 @@ import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 
-@Suppress("ktlint:standard:type-parameter-list-spacing")
+@Suppress("TooManyFunctions", "ktlint:standard:type-parameter-list-spacing")
 abstract class OnlineBankingComponentProvider<
     ComponentT : OnlineBankingComponent<PaymentMethodT, ComponentStateT>,
     ConfigurationT : OnlineBankingConfiguration,
@@ -65,7 +65,7 @@ abstract class OnlineBankingComponentProvider<
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val componentClass: Class<ComponentT>,
-    overrideComponentParams: ComponentParams?,
+    isCreatedByDropIn: Boolean,
     overrideSessionParams: SessionParams?,
     private val analyticsRepository: AnalyticsRepository?,
 ) :
@@ -74,17 +74,17 @@ constructor(
         ComponentT,
         ConfigurationT,
         ComponentStateT,
-        SessionComponentCallback<ComponentStateT>
+        SessionComponentCallback<ComponentStateT>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: ConfigurationT,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<ComponentStateT>,
         order: Order?,
@@ -93,7 +93,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = getConfiguration(checkoutConfiguration),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -102,7 +106,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -117,11 +121,11 @@ constructor(
                 termsAndConditionsUrl = getTermsAndConditionsUrl(),
                 submitHandler = SubmitHandler(savedStateHandle),
                 paymentMethodFactory = { createPaymentMethod() },
-                componentStateFactory = ::createComponentState
+                componentStateFactory = ::createComponentState,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -131,9 +135,9 @@ constructor(
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(
                     genericActionDelegate,
-                    onlineBankingDelegate
+                    onlineBankingDelegate,
                 ),
-                componentEventHandler = DefaultComponentEventHandler()
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
 
@@ -144,6 +148,30 @@ constructor(
         }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: ConfigurationT,
+        application: Application,
+        componentCallback: ComponentCallback<ComponentStateT>,
+        order: Order?,
+        key: String?
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = getCheckoutConfiguration(configuration),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -151,7 +179,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: ConfigurationT,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<ComponentStateT>,
         key: String?
@@ -160,7 +188,8 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = getConfiguration(checkoutConfiguration),
                 sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -173,7 +202,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -188,11 +217,11 @@ constructor(
                 termsAndConditionsUrl = getTermsAndConditionsUrl(),
                 submitHandler = SubmitHandler(savedStateHandle),
                 paymentMethodFactory = { createPaymentMethod() },
-                componentStateFactory = ::createComponentState
+                componentStateFactory = ::createComponentState,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -207,7 +236,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
             val sessionComponentEventHandler = SessionComponentEventHandler<ComponentStateT>(
                 sessionInteractor = sessionInteractor,
@@ -219,9 +248,9 @@ constructor(
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(
                     genericActionDelegate,
-                    onlineBankingDelegate
+                    onlineBankingDelegate,
                 ),
-                componentEventHandler = sessionComponentEventHandler
+                componentEventHandler = sessionComponentEventHandler,
             )
         }
 
@@ -231,6 +260,30 @@ constructor(
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
                 }
             }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: ConfigurationT,
+        application: Application,
+        componentCallback: SessionComponentCallback<ComponentStateT>,
+        key: String?
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = getCheckoutConfiguration(configuration),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     protected abstract fun createComponentState(
@@ -251,6 +304,10 @@ constructor(
     protected abstract fun getSupportedPaymentMethods(): List<String>
 
     protected abstract fun getTermsAndConditionsUrl(): String
+
+    protected abstract fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): ConfigurationT?
+
+    protected abstract fun getCheckoutConfiguration(configuration: ConfigurationT): CheckoutConfiguration
 
     private fun assertSupported(paymentMethod: PaymentMethod) {
         if (!isPaymentMethodSupported(paymentMethod)) {
