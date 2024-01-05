@@ -93,3 +93,19 @@ fun CheckoutConfiguration.payByBankConfiguration(
 fun CheckoutConfiguration.getPayByBankConfiguration(): PayByBankConfiguration? {
     return getConfiguration(PaymentMethodTypes.PAY_BY_BANK)
 }
+
+internal fun PayByBankConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.PAY_BY_BANK, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
+        }
+    }
+}
