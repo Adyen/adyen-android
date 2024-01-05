@@ -99,7 +99,7 @@ class GiftCardActivity : AppCompatActivity() {
         val giftCardComponent = GiftCardComponent.PROVIDER.get(
             activity = this,
             paymentMethod = giftCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = giftCardComponentData.callback,
         )
 
@@ -118,7 +118,7 @@ class GiftCardActivity : AppCompatActivity() {
         val giftCardComponent = GiftCardComponent.PROVIDER.get(
             activity = this,
             paymentMethod = giftCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = giftCardComponentData.callback,
             order = orderRequest,
             key = KEY_SECONDARY_GIFT_CARD_COMPONENT

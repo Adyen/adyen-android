@@ -79,7 +79,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                     checkoutSession = checkoutSession,
                     paymentMethod = giftCardPaymentMethod,
                     callback = this@SessionsGiftCardViewModel,
-                )
+                ),
             )
             _giftCardViewStateFlow.emit(GiftCardViewState.ShowComponent)
         }
@@ -100,8 +100,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
-                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
-            )
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+            ),
         ) ?: return null
 
         return getCheckoutSession(sessionModel)
@@ -114,8 +114,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionModel = sessionModel,
-                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
-                order = order
+                configuration = checkoutConfigurationProvider.checkoutConfig,
+                order = order,
             )
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
@@ -129,7 +129,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionPaymentResult = sessionPaymentResult,
-                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+                configuration = checkoutConfigurationProvider.checkoutConfig,
             )
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
@@ -169,9 +169,9 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                 _events.emit(
                     GiftCardEvent.ReloadComponentSessions(
                         giftCardComponentData.copy(
-                            checkoutSession = currentSession
-                        )
-                    )
+                            checkoutSession = currentSession,
+                        ),
+                    ),
                 )
             }
         }

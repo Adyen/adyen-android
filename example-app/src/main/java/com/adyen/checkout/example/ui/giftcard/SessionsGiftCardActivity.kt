@@ -99,7 +99,7 @@ class SessionsGiftCardActivity : AppCompatActivity() {
             activity = this,
             checkoutSession = giftCardComponentData.checkoutSession,
             paymentMethod = giftCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             componentCallback = giftCardComponentData.callback,
         )
 
@@ -121,7 +121,7 @@ class SessionsGiftCardActivity : AppCompatActivity() {
             activity = this,
             checkoutSession = giftCardComponentData.checkoutSession,
             paymentMethod = giftCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             componentCallback = giftCardComponentData.callback,
             key = KEY_SECONDARY_GIFT_CARD_COMPONENT,
         )

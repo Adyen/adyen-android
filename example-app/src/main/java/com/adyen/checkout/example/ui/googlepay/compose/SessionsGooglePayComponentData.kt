@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -16,7 +17,7 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 
 internal data class SessionsGooglePayComponentData(
     val checkoutSession: CheckoutSession,
-    val googlePayConfiguration: GooglePayConfiguration,
+    val checkoutConfiguration: CheckoutConfiguration,
     val paymentMethod: PaymentMethod,
     val callback: SessionComponentCallback<GooglePayComponentState>
 )

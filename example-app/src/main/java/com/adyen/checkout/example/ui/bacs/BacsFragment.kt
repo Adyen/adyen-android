@@ -89,7 +89,7 @@ class BacsFragment : BottomSheetDialogFragment() {
         val bacsComponent = BacsDirectDebitComponent.PROVIDER.get(
             fragment = this,
             paymentMethod = bacsComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getBacsConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = bacsComponentData.callback
         )
 
