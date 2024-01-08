@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PermissionRequestData
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +24,7 @@ class ActionObserverRepository(
 
     fun addObservers(
         detailsFlow: Flow<ActionComponentData>?,
+        permissionFlow: Flow<PermissionRequestData>?,
         exceptionFlow: Flow<CheckoutException>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
@@ -33,6 +35,10 @@ class ActionObserverRepository(
 
             detailsFlow?.observe(lifecycleOwner, coroutineScope) {
                 callback(ActionComponentEvent.ActionDetails(it))
+            }
+
+            permissionFlow?.observe(lifecycleOwner, coroutineScope) {
+                callback(ActionComponentEvent.PermissionRequest(it))
             }
 
             exceptionFlow?.observe(lifecycleOwner, coroutineScope) {

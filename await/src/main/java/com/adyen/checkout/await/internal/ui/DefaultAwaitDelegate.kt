@@ -83,6 +83,7 @@ internal class DefaultAwaitDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
+            permissionFlow = null,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,

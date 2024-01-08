@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.components.core.internal.util.isEmpty
+import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -33,6 +34,10 @@ import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.model.VoucherInformationField
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Failure
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Success
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.PermissionDenied
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -87,6 +92,10 @@ internal class FullVoucherView @JvmOverloads constructor(
     private fun observeDelegate(delegate: VoucherDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
             .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+
+        delegate.eventFlow
+            .onEach { handleEventFlow(it) }
             .launchIn(coroutineScope)
     }
 
@@ -167,22 +176,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         delegate.downloadVoucher(context)
     }
 
-    // TODO: Fix the animation
     private fun onSaveAsImageClicked() {
-
-        // Logo loading should be fixed and the view should be only saved after the image is loaded
-//        val fullVoucherViewToSave = FullVoucherView(context)
-//        fullVoucherViewToSave.initView(delegate, coroutineScope!!, localizedContext)
-//        fullVoucherViewToSave.binding.flexboxLayoutButtons.isVisible = false
-//        fullVoucherViewToSave.measure(
-//            MeasureSpec.makeMeasureSpec(this.width, MeasureSpec.EXACTLY),
-//            MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-//        )
-//        with(fullVoucherViewToSave) {
-//            layout(left, top, measuredWidth, measuredHeight)
-//        }
-//        delegate.saveVoucherAsImage(context, fullVoucherViewToSave)
-
         binding.flexboxLayoutButtons.isVisible = false
         doOnNextLayout {
             delegate.saveVoucherAsImage(context, this)
@@ -197,6 +191,23 @@ internal class FullVoucherView @JvmOverloads constructor(
             codeReference,
             localizedContext.getString(R.string.checkout_voucher_copied_toast)
         )
+    }
+
+    // TODO: Strings need to be localized
+    private fun handleEventFlow(event: VoucherUIEvent) {
+        when (event) {
+            Success -> {
+                context.toast("Image saved in your device")
+            }
+
+            PermissionDenied -> {
+                context.toast("Permission Denied")
+            }
+
+            is Failure -> {
+                context.toast("Failed to save image")
+            }
+        }
     }
 
     override fun highlightValidationErrors() {

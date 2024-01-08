@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.toast
-import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.R
@@ -76,12 +75,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
                 ContextCompat.checkSelfPermission(context, requiredPermission) != PackageManager.PERMISSION_GRANTED
             ) {
-                delegate.onError(
-                    PermissionException(
-                        errorMessage = "$requiredPermission permission is not granted",
-                        requiredPermission = requiredPermission
-                    )
-                )
+                // TODO: Send permission requested event
                 return@setOnClickListener
             }
             delegate.downloadQRImage()

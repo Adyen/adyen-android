@@ -26,11 +26,11 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.PermissionRequestData
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.PermissionException
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.R
@@ -54,12 +54,21 @@ internal class ActionComponentDialogFragment :
     private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
 
+    private var permissionCallback: PermissionHandlerCallback? = null
+
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (!isGranted) {
-                requireContext().toast(getString(R.string.checkout_permission_not_granted))
-            } else {
-                // TODO: trigger download image flow when user accept storage permission after checking permission type
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultsMap ->
+            resultsMap.firstNotNullOf { result ->
+                val requestedPermission = result.key
+                val isGranted = result.value
+                if (isGranted) {
+                    Logger.d(TAG, "Permission $requestedPermission granted")
+                    permissionCallback?.onPermissionGranted(requestedPermission)
+                } else {
+                    Logger.d(TAG, "Permission $requestedPermission denied")
+                    permissionCallback?.onPermissionDenied(requestedPermission)
+                }
+                permissionCallback = null
             }
         }
 
@@ -108,6 +117,20 @@ internal class ActionComponentDialogFragment :
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
         onActionComponentDataChanged(actionComponentData)
+    }
+
+    override fun onPermissionRequest(permissionRequestData: PermissionRequestData) {
+        permissionCallback = permissionRequestData.permissionCallback
+        Logger.d(TAG, "Permission request information dialog shown")
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.checkout_rationale_title_storage_permission)
+            .setMessage(R.string.checkout_rationale_message_storage_permission)
+            .setOnDismissListener {
+                Logger.d(TAG, "Permission ${permissionRequestData.requiredPermission} requested")
+                requestPermissionLauncher.launch(arrayOf(permissionRequestData.requiredPermission))
+            }
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     override fun onError(componentError: ComponentError) {
@@ -163,23 +186,10 @@ internal class ActionComponentDialogFragment :
     }
 
     private fun handleError(componentError: ComponentError) {
-        when (val exception = componentError.exception) {
+        when (componentError.exception) {
             is CancellationException -> {
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
-            }
-
-            is PermissionException -> {
-                val requiredPermission = exception.requiredPermission
-                Logger.e(TAG, exception.message.orEmpty(), exception)
-                // TODO: checkout_rationale_title_storage_permission and checkout_rationale_message_storage_permission
-                // TODO: can be reused based on required permission
-                AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.checkout_rationale_title_storage_permission)
-                    .setMessage(R.string.checkout_rationale_message_storage_permission)
-                    .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
-                    .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
-                    .show()
             }
 
             else -> {

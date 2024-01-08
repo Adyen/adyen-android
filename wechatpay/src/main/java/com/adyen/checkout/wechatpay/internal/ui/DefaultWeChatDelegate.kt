@@ -67,6 +67,7 @@ internal class DefaultWeChatDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
+            permissionFlow = null,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,

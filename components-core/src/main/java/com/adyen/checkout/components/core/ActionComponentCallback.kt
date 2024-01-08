@@ -32,6 +32,14 @@ interface ActionComponentCallback {
     fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
+     * The component requests runtime permission.
+     * Runtime permission should be requested and communicated back through the callback.
+     *
+     * @param permissionRequestData Permission request data which contains requested permission and a callback.
+     */
+    fun onPermissionRequest(permissionRequestData: PermissionRequestData)
+
+    /**
      * The component has encountered an error.
      * Use [ComponentError.exception] to get the internal exception.
      *
