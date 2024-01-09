@@ -15,6 +15,7 @@ import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.QrCodeAction
@@ -83,14 +84,16 @@ internal class DefaultQRCodeDelegateTest(
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        val configuration = QRCodeConfiguration.Builder(
+        val configuration = CheckoutConfiguration(
             Locale.US,
             Environment.TEST,
             TEST_CLIENT_KEY,
-        ).build()
+        ) {
+            QRCodeConfiguration()
+        }
         delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

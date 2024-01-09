@@ -13,10 +13,13 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.bacs.R
+import com.adyen.checkout.bacs.bacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.getBacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -365,14 +368,14 @@ internal class DefaultBacsDirectDebitDelegateTest(
                         holderNameState = FieldState("test", Validation.Invalid(R.string.bacs_holder_name_invalid)),
                         bankAccountNumberState = FieldState(
                             "12345678",
-                            Validation.Invalid(R.string.bacs_account_number_invalid)
+                            Validation.Invalid(R.string.bacs_account_number_invalid),
                         ),
                         sortCodeState = FieldState("123456", Validation.Invalid(R.string.bacs_sort_code_invalid)),
                         shopperEmailState = FieldState("test@adyen.com", Validation.Valid),
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = false,
                         mode = BacsDirectDebitMode.CONFIRMATION,
-                    )
+                    ),
                 )
 
                 with(expectMostRecentItem()) {
@@ -394,7 +397,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = true,
                         mode = BacsDirectDebitMode.INPUT,
-                    )
+                    ),
                 )
 
                 with(expectMostRecentItem()) {
@@ -416,7 +419,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = true,
                         mode = BacsDirectDebitMode.CONFIRMATION,
-                    )
+                    ),
                 )
 
                 with(expectMostRecentItem()) {
@@ -434,9 +437,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultBacsConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createBacsDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -468,9 +469,9 @@ internal class DefaultBacsDirectDebitDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createBacsDelegate(
-                configuration = getDefaultBacsConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -479,9 +480,9 @@ internal class DefaultBacsDirectDebitDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createBacsDelegate(
-                configuration = getDefaultBacsConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -583,22 +584,32 @@ internal class DefaultBacsDirectDebitDelegateTest(
     }
 
     private fun createBacsDelegate(
-        configuration: BacsDirectDebitConfiguration = getDefaultBacsConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultBacsDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+            configuration,
+            configuration.getBacsDirectDebitConfiguration(),
+            null,
+        ),
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        submitHandler = submitHandler
+        submitHandler = submitHandler,
     )
 
-    private fun getDefaultBacsConfigurationBuilder() = BacsDirectDebitConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BacsDirectDebitConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        bacsDirectDebitConfiguration(configuration)
+    }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

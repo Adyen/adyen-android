@@ -13,12 +13,12 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.Test3DS2Delegate
 import com.adyen.checkout.action.core.TestActionDelegate
 import com.adyen.checkout.action.core.internal.ui.ActionDelegateProvider
 import com.adyen.checkout.action.core.internal.ui.DefaultGenericActionDelegate
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
@@ -58,17 +58,17 @@ internal class DefaultGenericActionDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = GenericActionConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        )
         genericActionDelegate = DefaultGenericActionDelegate(
             ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
-            actionDelegateProvider
+            GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            actionDelegateProvider,
         )
         whenever(activity.application) doReturn Application()
 
@@ -214,7 +214,7 @@ internal class DefaultGenericActionDelegateTest(
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
         whenever(
-            actionDelegateProvider.getDelegate(any(), any(), any(), any())
+            actionDelegateProvider.getDelegate(any(), any(), any(), any()),
         ) doReturn adyen3DS2Delegate
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))

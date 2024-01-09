@@ -9,7 +9,6 @@
 package com.adyen.checkout.example.ui.card
 
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.compose.ResultState

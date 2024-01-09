@@ -9,6 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.bcmc.bcmcConfiguration
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -17,10 +18,12 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -35,11 +38,10 @@ internal class BcmcComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom bcmc configuration fields are null then all fields should match`() {
-        val bcmcConfiguration = getBcmcConfigurationBuilder()
-            .build()
+        val configuration = createCheckoutConfiguration()
 
-        val params = BcmcComponentParamsMapper(null, null)
-            .mapToParams(bcmcConfiguration, null, PaymentMethod())
+        val params = BcmcComponentParamsMapper(false, null)
+            .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -50,22 +52,22 @@ internal class BcmcComponentParamsMapperTest {
     fun `when parent configuration is null and custom bcmc configuration fields are set then all fields should match`() {
         val shopperReference = "SHOPPER_REFERENCE_1"
 
-        val bcmcConfiguration = getBcmcConfigurationBuilder()
-            .setShopperReference(shopperReference)
-            .setHolderNameRequired(true)
-            .setShowStorePaymentField(true)
-            .setSubmitButtonVisible(false)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setShopperReference(shopperReference)
+            setHolderNameRequired(true)
+            setShowStorePaymentField(true)
+            setSubmitButtonVisible(false)
+        }
 
-        val params = BcmcComponentParamsMapper(null, null)
-            .mapToParams(bcmcConfiguration, null, PaymentMethod())
+        val params = BcmcComponentParamsMapper(false, null)
+            .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             isHolderNameRequired = true,
             shopperReference = shopperReference,
             isStorePaymentFieldVisible = true,
             isSubmitButtonVisible = false,
-            cvcVisibility = CVCVisibility.HIDE_FIRST
+            cvcVisibility = CVCVisibility.HIDE_FIRST,
         )
 
         assertEquals(expected, params)
@@ -73,25 +75,24 @@ internal class BcmcComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is set then parent configuration fields should override bcmc configuration fields`() {
-        val bcmcConfiguration = getBcmcConfigurationBuilder()
-            .build()
-
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = GenericComponentParams(
+        val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
-                value = 25_00L
-            )
-        )
+                value = 25_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            bcmcConfiguration {
+                setAmount(Amount("EUR", 1L))
+                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+            }
+        }
 
-        val params = BcmcComponentParamsMapper(overrideParams, null)
-            .mapToParams(bcmcConfiguration, null, PaymentMethod())
+        val params = BcmcComponentParamsMapper(true, null)
+            .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -101,7 +102,7 @@ internal class BcmcComponentParamsMapperTest {
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
-                value = 25_00L
+                value = 25_00L,
             ),
         )
 
@@ -116,19 +117,19 @@ internal class BcmcComponentParamsMapperTest {
         sessionsValue: Boolean?,
         expectedValue: Boolean
     ) {
-        val bcmcConfiguration = getBcmcConfigurationBuilder()
-            .setShowStorePaymentField(configurationValue)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setShowStorePaymentField(configurationValue)
+        }
 
-        val params = BcmcComponentParamsMapper(null, null).mapToParams(
-            bcmcConfiguration = bcmcConfiguration,
+        val params = BcmcComponentParamsMapper(false, null).mapToParams(
+            checkoutConfiguration = configuration,
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
                 installmentConfiguration = null,
                 amount = null,
                 returnUrl = "",
             ),
-            PaymentMethod()
+            PaymentMethod(),
         )
 
         val expected = getCardComponentParams(isStorePaymentFieldVisible = expectedValue)
@@ -138,21 +139,14 @@ internal class BcmcComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions if it exists, then configuration`(
         configurationValue: Amount,
-        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
-        val bcmcConfiguration = getBcmcConfigurationBuilder()
-            .setAmount(configurationValue)
-            .build()
+        val bcmcConfiguration = createCheckoutConfiguration(configurationValue)
 
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = dropInValue?.let { getCardComponentParams(amount = it) }
-
-        val params = BcmcComponentParamsMapper(overrideParams, null).mapToParams(
+        val params = BcmcComponentParamsMapper(false, null).mapToParams(
             bcmcConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
@@ -160,21 +154,27 @@ internal class BcmcComponentParamsMapperTest {
                 amount = sessionsValue,
                 returnUrl = "",
             ),
-            PaymentMethod()
+            PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
-            amount = expectedValue
+            amount = expectedValue,
         )
 
         assertEquals(expected, params)
     }
 
-    private fun getBcmcConfigurationBuilder() = BcmcConfiguration.Builder(
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BcmcConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY_1
-    )
+        clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
+    ) {
+        bcmcConfiguration(configuration)
+    }
 
     @Suppress("LongParameterList")
     private fun getCardComponentParams(
@@ -209,8 +209,8 @@ internal class BcmcComponentParamsMapperTest {
         supportedCardBrands = listOf(
             CardBrand(cardType = CardType.BCMC),
             CardBrand(cardType = CardType.MAESTRO),
-            CardBrand(cardType = CardType.VISA)
-        )
+            CardBrand(cardType = CardType.VISA),
+        ),
     )
 
     companion object {
@@ -230,10 +230,9 @@ internal class BcmcComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, dropInValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            // configurationValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
         )
     }
 }

@@ -14,6 +14,7 @@ import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
@@ -27,9 +28,9 @@ import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
-import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent
+import com.adyen.checkout.voucher.voucherConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -65,10 +66,12 @@ internal class DefaultVoucherDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
+        val configuration = CheckoutConfiguration(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY) {
+            voucherConfiguration()
+        }
         delegate = DefaultVoucherDelegate(
             observerRepository,
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
             pdfOpener,
             imageSaver,
         )

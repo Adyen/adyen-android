@@ -9,11 +9,13 @@
 package com.adyen.checkout.boleto.internal.ui.model
 
 import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.boletoConfiguration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -28,9 +30,9 @@ internal class BoletoComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom boleto configuration fields are null, them all fields should match`() {
-        val boletoConfiguration = getBoletoConfigurationBuilder().build()
+        val configuration = createCheckoutConfiguration()
 
-        val params = getBoletoComponentParamsMapper().mapToParams(boletoConfiguration, null)
+        val params = getBoletoComponentParamsMapper().mapToParams(configuration, null)
         val expected = getBoletoComponentParams()
 
         assertEquals(expected, params)
@@ -38,19 +40,19 @@ internal class BoletoComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom fields are set then all fields should match`() {
-        val boletoConfiguration = getBoletoConfigurationBuilder()
-            .setEmailVisibility(true)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setEmailVisibility(true)
+        }
 
-        val params = getBoletoComponentParamsMapper().mapToParams(boletoConfiguration, null)
+        val params = getBoletoComponentParamsMapper().mapToParams(configuration, null)
         val expectedAddressParams = AddressParams.FullAddress(
             defaultCountryCode = BRAZIL_COUNTRY_CODE,
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST_1,
-            addressFieldPolicy = AddressFieldPolicyParams.Required
+            addressFieldPolicy = AddressFieldPolicyParams.Required,
         )
         val expected = getBoletoComponentParams(
             addressParams = expectedAddressParams,
-            isSendEmailVisible = true
+            isSendEmailVisible = true,
         )
 
         assertEquals(expected, params)
@@ -58,23 +60,25 @@ internal class BoletoComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is set then parent configuration should override Boleto configuration fields`() {
-        val boletoConfiguration = getBoletoConfigurationBuilder().build()
-
-        val overrideComponentParams = GenericComponentParams(
+        val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
-                value = 123_00L
-            )
-        )
+                value = 123_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            boletoConfiguration {
+                setAmount(Amount("USD", 1L))
+                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+            }
+        }
 
-        val params = getBoletoComponentParamsMapper(overrideComponentParams = overrideComponentParams).mapToParams(
-            boletoConfiguration,
-            null
+        val params = getBoletoComponentParamsMapper(isCreatedByDropIn = true).mapToParams(
+            configuration,
+            null,
         )
 
         val expected = getBoletoComponentParams(
@@ -85,8 +89,8 @@ internal class BoletoComponentParamsMapperTest {
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
-                value = 123_00L
-            )
+                value = 123_00L,
+            ),
         )
 
         assertEquals(expected, params)
@@ -94,13 +98,13 @@ internal class BoletoComponentParamsMapperTest {
 
     @Test
     fun `when send email is set, them params should match`() {
-        val boletoConfiguration = getBoletoConfigurationBuilder()
-            .setEmailVisibility(true)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setEmailVisibility(true)
+        }
 
-        val params = getBoletoComponentParamsMapper().mapToParams(boletoConfiguration, null)
+        val params = getBoletoComponentParamsMapper().mapToParams(configuration, null)
         val expected = getBoletoComponentParams(
-            isSendEmailVisible = true
+            isSendEmailVisible = true,
         )
 
         assertEquals(expected, params)
@@ -110,40 +114,39 @@ internal class BoletoComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
-        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
-        val boletoConfiguration = getBoletoConfigurationBuilder()
-            .setAmount(configurationValue)
-            .build()
+        val configuration = createCheckoutConfiguration(configurationValue)
 
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = dropInValue?.let { getBoletoComponentParams(amount = it) }
-
-        val params = getBoletoComponentParamsMapper(overrideComponentParams = overrideParams).mapToParams(
-            boletoConfiguration,
+        val params = getBoletoComponentParamsMapper().mapToParams(
+            configuration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
-            )
+            ),
         )
 
         val expected = getBoletoComponentParams(
-            amount = expectedValue
+            amount = expectedValue,
         )
 
         assertEquals(expected, params)
     }
 
-    private fun getBoletoConfigurationBuilder() = BoletoConfiguration.Builder(
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BoletoConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
-    )
+        amount = amount,
+    ) {
+        boletoConfiguration(configuration)
+    }
 
     @Suppress("LongParameterList")
     private fun getBoletoComponentParams(
@@ -157,7 +160,7 @@ internal class BoletoComponentParamsMapperTest {
         addressParams: AddressParams = AddressParams.FullAddress(
             defaultCountryCode = BRAZIL_COUNTRY_CODE,
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST_1,
-            addressFieldPolicy = AddressFieldPolicyParams.Required
+            addressFieldPolicy = AddressFieldPolicyParams.Required,
         ),
         isSendEmailVisible: Boolean = false
     ) = BoletoComponentParams(
@@ -169,13 +172,13 @@ internal class BoletoComponentParamsMapperTest {
         isCreatedByDropIn = isCreatedByDropIn,
         amount = amount,
         addressParams = addressParams,
-        isEmailVisible = isSendEmailVisible
+        isEmailVisible = isSendEmailVisible,
     )
 
     private fun getBoletoComponentParamsMapper(
-        overrideComponentParams: ComponentParams? = null,
+        isCreatedByDropIn: Boolean = false,
         overrideSessionParams: SessionParams? = null,
-    ) = BoletoComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    ) = BoletoComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
@@ -185,10 +188,9 @@ internal class BoletoComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, dropInValue, sessionsValue, expectedValue
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            Arguments.arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            // configurationValue, sessionsValue, expectedValue
+            Arguments.arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
+            Arguments.arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
         )
     }
 }

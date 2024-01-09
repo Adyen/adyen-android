@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
+import android.app.Application
 import app.cash.paykit.core.CashAppPay
 import app.cash.paykit.core.CashAppPayFactory
 import app.cash.paykit.core.CashAppPayState
@@ -21,12 +22,14 @@ import app.cash.paykit.core.models.sdk.CashAppPayCurrency
 import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPayConfiguration
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayAuthorizationData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOnFileData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOneTimeData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOutputData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -96,10 +99,9 @@ internal class DefaultCashAppPayDelegateTest(
         @Test
         fun `no confirmation is required, then payment should be initiated`() = runTest {
             delegate = createDefaultCashAppPayDelegate(
-                getConfigurationBuilder()
-                    .setAmount(Amount("USD", 10L))
-                    .setShowStorePaymentField(false)
-                    .build()
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
             )
             delegate.initialize(this)
 
@@ -110,9 +112,7 @@ internal class DefaultCashAppPayDelegateTest(
     @Test
     fun `when input data changes, then component state is created`() = runTest {
         delegate = createDefaultCashAppPayDelegate(
-            getConfigurationBuilder()
-                .setAmount(Amount("USD", 10L))
-                .build()
+            createCheckoutConfiguration(Amount("USD", 10L)),
         )
         val testFlow = delegate.componentStateFlow.test(testScheduler)
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -121,7 +121,7 @@ internal class DefaultCashAppPayDelegateTest(
             isStorePaymentSelected = true
             authorizationData = CashAppPayAuthorizationData(
                 oneTimeData = CashAppPayOneTimeData("grantId", "customerId"),
-                onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId")
+                onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId"),
             )
         }
 
@@ -141,7 +141,7 @@ internal class DefaultCashAppPayDelegateTest(
                 storePaymentMethod = true,
             ),
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
         assertEquals(expected, testFlow.latestValue)
     }
@@ -153,9 +153,9 @@ internal class DefaultCashAppPayDelegateTest(
         @Test
         fun `hidden, then it should not show`() {
             delegate = createDefaultCashAppPayDelegate(
-                configuration = getConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -164,9 +164,9 @@ internal class DefaultCashAppPayDelegateTest(
         @Test
         fun `visible, then it should show`() {
             delegate = createDefaultCashAppPayDelegate(
-                configuration = getConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -211,7 +211,7 @@ internal class DefaultCashAppPayDelegateTest(
         fun `the currency is not supported, then an exception should be propagated`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder().setAmount(Amount("EUR", 100L)).build()
+                    createCheckoutConfiguration(Amount("EUR", 100L)),
                 )
                 val testFlow = delegate.exceptionFlow.test(testScheduler)
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -228,7 +228,7 @@ internal class DefaultCashAppPayDelegateTest(
         fun `there is any valid action, then the loading view should be shown`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder().setAmount(Amount("USD", 100L)).build()
+                    createCheckoutConfiguration(Amount("USD", 100L)),
                 )
                 val testFlow = delegate.viewFlow.test(testScheduler)
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -242,7 +242,7 @@ internal class DefaultCashAppPayDelegateTest(
         fun `there is an OneTimeAction, then the Cash App SDK should be called with it`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder().setAmount(Amount("USD", 100L)).build()
+                    createCheckoutConfiguration(Amount("USD", 100L)),
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -254,9 +254,9 @@ internal class DefaultCashAppPayDelegateTest(
                             amount = 100,
                             currency = CashAppPayCurrency.USD,
                             scopeId = TEST_SCOPE_ID,
-                        )
+                        ),
                     ),
-                    TEST_RETURN_URL
+                    TEST_RETURN_URL,
                 )
             }
 
@@ -264,7 +264,7 @@ internal class DefaultCashAppPayDelegateTest(
         fun `the user doesn't want to store and the component is not configured to store, then there is no OnFileAction`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder().setAmount(Amount("USD", 100L)).build()
+                    createCheckoutConfiguration(Amount("USD", 100L)),
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -276,9 +276,9 @@ internal class DefaultCashAppPayDelegateTest(
                             amount = 100,
                             currency = CashAppPayCurrency.USD,
                             scopeId = TEST_SCOPE_ID,
-                        )
+                        ),
                     ),
-                    TEST_RETURN_URL
+                    TEST_RETURN_URL,
                 )
             }
 
@@ -286,10 +286,9 @@ internal class DefaultCashAppPayDelegateTest(
         fun `the user wants to store, then the Cash App SDK should be called with an OnFileAction`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder()
-                        .setAmount(Amount("USD", 0L))
-                        .setShowStorePaymentField(true)
-                        .build()
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(true)
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
                 delegate.updateInputData { isStorePaymentSelected = true }
@@ -300,7 +299,7 @@ internal class DefaultCashAppPayDelegateTest(
                     listOf(
                         CashAppPayPaymentAction.OnFileAction(scopeId = TEST_SCOPE_ID),
                     ),
-                    TEST_RETURN_URL
+                    TEST_RETURN_URL,
                 )
             }
 
@@ -308,11 +307,10 @@ internal class DefaultCashAppPayDelegateTest(
         fun `the component is configured to store, then the Cash App SDK should be called with an OnFileAction`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder()
-                        .setAmount(Amount("USD", 0L))
-                        .setShowStorePaymentField(false)
-                        .setStorePaymentMethod(true)
-                        .build()
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(false)
+                        setStorePaymentMethod(true)
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -320,7 +318,7 @@ internal class DefaultCashAppPayDelegateTest(
                     listOf(
                         CashAppPayPaymentAction.OnFileAction(scopeId = TEST_SCOPE_ID),
                     ),
-                    TEST_RETURN_URL
+                    TEST_RETURN_URL,
                 )
             }
 
@@ -328,11 +326,10 @@ internal class DefaultCashAppPayDelegateTest(
         fun `the component doesn't require confirmation, then the Cash App SDK should not be called`() =
             runTest {
                 delegate = createDefaultCashAppPayDelegate(
-                    getConfigurationBuilder()
-                        .setAmount(Amount("USD", 0L))
-                        .setShowStorePaymentField(false)
-                        .setStorePaymentMethod(true)
-                        .build()
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(false)
+                        setStorePaymentMethod(true)
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -350,9 +347,7 @@ internal class DefaultCashAppPayDelegateTest(
         expectedComponentStateValue: Amount?,
     ) = runTest {
         if (configurationValue != null) {
-            val configuration = getConfigurationBuilder()
-                .setAmount(configurationValue)
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createDefaultCashAppPayDelegate(configuration = configuration)
         }
         val testFlow = delegate.componentStateFlow.test(testScheduler)
@@ -387,7 +382,7 @@ internal class DefaultCashAppPayDelegateTest(
             val mockResponse = mock<CustomerResponseData>()
             whenever(mockResponse.grants) doReturn listOf(
                 createGrant(GrantType.ONE_TIME),
-                createGrant(GrantType.EXTENDED)
+                createGrant(GrantType.EXTENDED),
             )
             whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", PiiString("cashTag"))
             delegate.cashAppPayStateDidChange(CashAppPayState.Approved(mockResponse))
@@ -411,7 +406,7 @@ internal class DefaultCashAppPayDelegateTest(
             val mockResponse = mock<CustomerResponseData>()
             whenever(mockResponse.grants) doReturn listOf(
                 createGrant(GrantType.ONE_TIME),
-                createGrant(GrantType.EXTENDED)
+                createGrant(GrantType.EXTENDED),
             )
             whenever(mockResponse.customerProfile) doReturn CustomerProfile("customerId", PiiString("cashTag"))
             delegate.cashAppPayStateDidChange(CashAppPayState.Approved(mockResponse))
@@ -466,7 +461,7 @@ internal class DefaultCashAppPayDelegateTest(
             delegate.updateInputData {
                 authorizationData = CashAppPayAuthorizationData(
                     oneTimeData = CashAppPayOneTimeData("grantId", "customerId"),
-                    onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId")
+                    onFileData = CashAppPayOnFileData("grantId", "cashTag", "customerId"),
                 )
             }
 
@@ -475,28 +470,37 @@ internal class DefaultCashAppPayDelegateTest(
     }
 
     private fun createDefaultCashAppPayDelegate(
-        configuration: CashAppPayConfiguration = getConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultCashAppPayDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = getPaymentMethod(),
         order = TEST_ORDER,
-        componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
+        componentParams = CashAppPayComponentParamsMapper(false, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = getPaymentMethod(),
+            context = Application(),
         ),
         cashAppPayFactory = cashAppPayFactory,
         ioDispatcher = UnconfinedTestDispatcher(),
     )
 
-    private fun getConfigurationBuilder() = CashAppPayConfiguration.Builder(
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: CashAppPayConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    )
-        .setReturnUrl(TEST_RETURN_URL)
+        amount = amount,
+    ) {
+        cashAppPayConfiguration {
+            setReturnUrl(TEST_RETURN_URL)
+            apply(configuration)
+        }
+    }
 
     private fun getPaymentMethod() = PaymentMethod(
         configuration = Configuration(

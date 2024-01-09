@@ -10,6 +10,7 @@ package com.adyen.checkout.paybybank.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Issuer
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
@@ -22,8 +23,8 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankComponentState
-import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
+import com.adyen.checkout.paybybank.payByBankConfiguration
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +47,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.util.*
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -61,8 +62,8 @@ internal class DefaultPayByBankDelegateTest(
     fun beforeEach() {
         delegate = createPayByBankDelegate(
             issuers = listOf(
-                Issuer(id = "issuer-id", name = "issuer-name")
-            )
+                Issuer(id = "issuer-id", name = "issuer-name"),
+            ),
         )
         AdyenLogger.setLogLevel(Logger.NONE)
     }
@@ -132,8 +133,8 @@ internal class DefaultPayByBankDelegateTest(
                 delegate.updateComponentState(
                     PayByBankOutputData(
                         issuer,
-                        listOf(issuer)
-                    )
+                        listOf(issuer),
+                    ),
                 )
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
@@ -146,10 +147,8 @@ internal class DefaultPayByBankDelegateTest(
 
         @Test
         fun `when issuers is empty, then component state should be valid`() = runTest {
-            val configuration = getPayByBankConfigurationBuilder().build()
             delegate = createPayByBankDelegate(
                 issuers = emptyList(),
-                configuration = configuration,
             )
             delegate.componentStateFlow.test {
                 with(expectMostRecentItem()) {
@@ -167,13 +166,7 @@ internal class DefaultPayByBankDelegateTest(
             configurationValue: Amount?,
             expectedComponentStateValue: Amount?,
         ) = runTest {
-            val configuration = getPayByBankConfigurationBuilder()
-                .apply {
-                    configurationValue?.let {
-                        setAmount(it)
-                    }
-                }
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createPayByBankDelegate(
                 issuers = listOf(Issuer(id = "issuer-id", name = "issuer-name")),
                 configuration = configuration,
@@ -184,8 +177,8 @@ internal class DefaultPayByBankDelegateTest(
                 delegate.updateComponentState(
                     PayByBankOutputData(
                         issuer,
-                        listOf(issuer)
-                    )
+                        listOf(issuer),
+                    ),
                 )
                 assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
             }
@@ -195,7 +188,7 @@ internal class DefaultPayByBankDelegateTest(
     @Test
     fun `when issuers is empty in paymentMethod then viewFlow should emit null`() = runTest {
         delegate = createPayByBankDelegate(
-            issuers = emptyList()
+            issuers = emptyList(),
         )
         delegate.viewFlow.test {
             assertEquals(null, expectMostRecentItem())
@@ -206,8 +199,8 @@ internal class DefaultPayByBankDelegateTest(
     fun `when issuers is not empty in paymentMethod then viewFlow should emit PayByBankComponentViewType`() = runTest {
         delegate = createPayByBankDelegate(
             issuers = listOf(
-                Issuer(id = "issuer-id", name = "issuer-name")
-            )
+                Issuer(id = "issuer-id", name = "issuer-name"),
+            ),
         )
         delegate.viewFlow.test {
             assertEquals(PayByBankComponentViewType, expectMostRecentItem())
@@ -276,24 +269,27 @@ internal class DefaultPayByBankDelegateTest(
         }
     }
 
-    private fun getPayByBankConfigurationBuilder(): PayByBankConfiguration.Builder {
-        return PayByBankConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        payByBankConfiguration()
     }
 
     private fun createPayByBankDelegate(
         issuers: List<Issuer>,
         order: Order? = TEST_ORDER,
-        configuration: PayByBankConfiguration = getPayByBankConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ): DefaultPayByBankDelegate {
         return DefaultPayByBankDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
             paymentMethod = PaymentMethod(
-                issuers = issuers
+                issuers = issuers,
             ),
             order = order,
             analyticsRepository = analyticsRepository,

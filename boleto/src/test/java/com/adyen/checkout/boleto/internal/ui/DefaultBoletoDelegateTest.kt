@@ -11,8 +11,10 @@ package com.adyen.checkout.boleto.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.boletoConfiguration
 import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -448,9 +450,7 @@ internal class DefaultBoletoDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultBoletoConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createBoletoDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -515,15 +515,15 @@ internal class DefaultBoletoDelegateTest(
         paymentMethod: PaymentMethod = PaymentMethod(),
         addressRepository: TestAddressRepository = this.addressRepository,
         order: Order? = TEST_ORDER,
-        configuration: BoletoConfiguration = getDefaultBoletoConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultBoletoDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = paymentMethod,
         order = order,
-        componentParams = BoletoComponentParamsMapper(null, null).mapToParams(configuration, null),
-        addressRepository = addressRepository
+        componentParams = BoletoComponentParamsMapper(true, null).mapToParams(configuration, null),
+        addressRepository = addressRepository,
     )
 
     @Suppress("LongParameterList")
@@ -542,11 +542,19 @@ internal class DefaultBoletoDelegateTest(
         houseNumberOrName = houseNumberOrName,
         apartmentSuite = apartmentSuite,
         city = city,
-        country = country
+        country = country,
     )
 
-    private fun getDefaultBoletoConfigurationBuilder(): BoletoConfiguration.Builder {
-        return BoletoConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BoletoConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        boletoConfiguration(configuration)
     }
 
     companion object {

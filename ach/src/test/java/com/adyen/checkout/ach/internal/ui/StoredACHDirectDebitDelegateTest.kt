@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -67,9 +68,7 @@ internal class StoredACHDirectDebitDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getAchConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createAchDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -103,24 +102,30 @@ internal class StoredACHDirectDebitDelegateTest(
         }
     }
 
-    private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
-        shopperLocale = Locale.US,
-        environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY,
-    )
-
     private fun createAchDelegate(
         paymentMethod: StoredPaymentMethod = StoredPaymentMethod(id = STORED_ID),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
-        configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = StoredACHDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
         storedPaymentMethod = paymentMethod,
         analyticsRepository = analyticsRepository,
-        componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null),
-        order = order
+        componentParams = ACHDirectDebitComponentParamsMapper(false, null).mapToParams(configuration, null),
+        order = order,
     )
+
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: ACHDirectDebitConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        ACHDirectDebitConfiguration(configuration)
+    }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

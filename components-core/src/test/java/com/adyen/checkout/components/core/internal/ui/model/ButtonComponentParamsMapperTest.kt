@@ -1,7 +1,10 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.ButtonTestConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -14,9 +17,13 @@ internal class ButtonComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null then params should match the component configuration`() {
-        val componentConfiguration = getButtonConfigurationBuilder().build()
+        val configuration = createCheckoutConfiguration()
 
-        val params = ButtonComponentParamsMapper(null, null).mapToParams(componentConfiguration, null)
+        val params = ButtonComponentParamsMapper(false, null).mapToParams(
+            checkoutConfiguration = configuration,
+            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            sessionParams = null,
+        )
 
         val expected = getButtonComponentParams()
 
@@ -25,25 +32,27 @@ internal class ButtonComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is set then parent configuration fields should override component configuration fields`() {
-        val componentConfiguration = getButtonConfigurationBuilder().build()
-
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = GenericComponentParams(
+        val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
-                value = 49_00L
-            )
-        )
+                value = 49_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            val testConfiguration = ButtonTestConfiguration.Builder(Locale.CANADA, Environment.TEST, TEST_CLIENT_KEY_1)
+                .setAmount(Amount("USD", 1L))
+                .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+                .build()
+            addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+        }
 
-        val params = ButtonComponentParamsMapper(overrideParams, null).mapToParams(
-            componentConfiguration,
-            null
+        val params = ButtonComponentParamsMapper(true, null).mapToParams(
+            checkoutConfiguration = configuration,
+            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            sessionParams = null,
         )
 
         val expected = ButtonComponentParams(
@@ -54,9 +63,9 @@ internal class ButtonComponentParamsMapperTest {
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
-                value = 49_00L
+                value = 49_00L,
             ),
-            isSubmitButtonVisible = true
+            isSubmitButtonVisible = true,
         )
 
         Assertions.assertEquals(expected, params)
@@ -66,26 +75,20 @@ internal class ButtonComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
-        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
-        val buttonConfiguration = getButtonConfigurationBuilder()
-            .setAmount(configurationValue)
-            .build()
+        val configuration = createCheckoutConfiguration(configurationValue)
 
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = dropInValue?.let { getButtonComponentParams().copy(amount = it) }
-
-        val params = ButtonComponentParamsMapper(overrideParams, null).mapToParams(
-            buttonConfiguration,
+        val params = ButtonComponentParamsMapper(false, null).mapToParams(
+            checkoutConfiguration = configuration,
+            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = SessionParams(
                 enableStoreDetails = null,
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
-            )
+            ),
         )
 
         val expected = getButtonComponentParams().copy(amount = expectedValue)
@@ -93,12 +96,19 @@ internal class ButtonComponentParamsMapperTest {
         Assertions.assertEquals(expected, params)
     }
 
-    private fun getButtonConfigurationBuilder(): ButtonTestConfiguration.Builder {
-        return ButtonTestConfiguration.Builder(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1
-        )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: ButtonTestConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
+    ) {
+        val testConfiguration = ButtonTestConfiguration.Builder(shopperLocale, environment, clientKey)
+            .apply(configuration)
+            .build()
+        addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
     }
 
     private fun getButtonComponentParams(): ButtonComponentParams {
@@ -114,15 +124,15 @@ internal class ButtonComponentParamsMapperTest {
     }
 
     companion object {
+        private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, dropInValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            // configurationValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
         )
     }
 }

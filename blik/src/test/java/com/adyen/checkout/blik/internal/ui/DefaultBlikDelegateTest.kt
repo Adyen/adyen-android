@@ -11,8 +11,11 @@ package com.adyen.checkout.blik.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.blikConfiguration
+import com.adyen.checkout.blik.getBlikConfiguration
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -177,9 +180,7 @@ internal class DefaultBlikDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultBlikConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createBlikDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -204,9 +205,9 @@ internal class DefaultBlikDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createBlikDelegate(
-                configuration = getDefaultBlikConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -215,9 +216,9 @@ internal class DefaultBlikDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createBlikDelegate(
-                configuration = getDefaultBlikConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -271,21 +272,31 @@ internal class DefaultBlikDelegateTest(
     }
 
     private fun createBlikDelegate(
-        configuration: BlikConfiguration = getDefaultBlikConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration()
     ) = DefaultBlikDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+            configuration,
+            configuration.getBlikConfiguration(),
+            null,
+        ),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
     )
 
-    private fun getDefaultBlikConfigurationBuilder() = BlikConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BlikConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        blikConfiguration(configuration)
+    }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

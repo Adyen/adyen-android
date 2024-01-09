@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.adyen3DS2Configuration
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,11 +25,10 @@ internal class Adyen3DS2ComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is null and custom 3ds2 configuration fields are null then all fields should match`() {
-        val adyen3DS2Configuration = getAdyen3DS2ConfigurationBuilder()
-            .build()
+        val checkoutConfiguration = getCheckoutConfiguration()
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(false, null)
+            .mapToParams(checkoutConfiguration, null)
 
         val expected = getAdyen3DS2ComponentParams()
 
@@ -39,13 +40,15 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         val uiCustomization = UiCustomization()
 
         val testUrl = "https://adyen.com"
-        val adyen3DS2Configuration = getAdyen3DS2ConfigurationBuilder()
-            .setUiCustomization(uiCustomization)
-            .setThreeDSRequestorAppURL(testUrl)
-            .build()
+        val configuration = getCheckoutConfiguration {
+            adyen3DS2Configuration {
+                setUiCustomization(uiCustomization)
+                setThreeDSRequestorAppURL(testUrl)
+            }
+        }
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(false, null)
+            .mapToParams(configuration, null)
 
         val expected = getAdyen3DS2ComponentParams(
             uiCustomization = uiCustomization,
@@ -57,25 +60,19 @@ internal class Adyen3DS2ComponentParamsMapperTest {
 
     @Test
     fun `when parent configuration is set then parent configuration fields should override 3ds2 configuration fields`() {
-        val adyen3DS2Configuration = getAdyen3DS2ConfigurationBuilder()
-            .build()
-
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = GenericComponentParams(
+        val checkoutConfiguration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
             amount = Amount(
                 currency = "USD",
-                value = 25_00L
-            )
+                value = 25_00L,
+            ),
         )
 
-        val params = Adyen3DS2ComponentParamsMapper(overrideParams, null)
-            .mapToParams(adyen3DS2Configuration, null)
+        val params = Adyen3DS2ComponentParamsMapper(true, null)
+            .mapToParams(checkoutConfiguration, null)
 
         val expected = getAdyen3DS2ComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -85,17 +82,18 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
-                value = 25_00L
+                value = 25_00L,
             ),
         )
 
         assertEquals(expected, params)
     }
 
-    private fun getAdyen3DS2ConfigurationBuilder() = Adyen3DS2Configuration.Builder(
+    private fun getCheckoutConfiguration(config: CheckoutConfiguration.() -> Unit = {}) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY_1
+        clientKey = TEST_CLIENT_KEY_1,
+        config = config,
     )
 
     @Suppress("LongParameterList")
