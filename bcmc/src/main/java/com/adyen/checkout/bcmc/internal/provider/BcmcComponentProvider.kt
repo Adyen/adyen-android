@@ -44,6 +44,7 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
+import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -68,13 +69,13 @@ constructor(
         BcmcComponent,
         BcmcConfiguration,
         BcmcComponentState,
-        ComponentCallback<BcmcComponentState>
+        ComponentCallback<BcmcComponentState>,
         >,
     SessionPaymentComponentProvider<
         BcmcComponent,
         BcmcConfiguration,
         BcmcComponentState,
-        SessionComponentCallback<BcmcComponentState>
+        SessionComponentCallback<BcmcComponentState>,
         > {
 
     private val componentParamsMapper = BcmcComponentParamsMapper(overrideComponentParams, overrideSessionParams)
@@ -99,10 +100,11 @@ constructor(
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
             val cardValidationMapper = CardValidationMapper()
             val cardEncryptor = CardEncryptorFactory.provide()
+            val genericEncryptor = GenericEncryptorFactory.provide()
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val binLookupService = BinLookupService(httpClient)
-            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -111,7 +113,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -127,8 +129,8 @@ constructor(
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
                 cardEncryptor = cardEncryptor,
-                genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler(savedStateHandle)
+                genericEncryptor = genericEncryptor,
+                submitHandler = SubmitHandler(savedStateHandle),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -146,7 +148,7 @@ constructor(
         }
         return ViewModelProvider(
             viewModelStoreOwner,
-            bcmcFactory
+            bcmcFactory,
         )[key, BcmcComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
@@ -171,17 +173,18 @@ constructor(
             val componentParams = componentParamsMapper.mapToParams(
                 bcmcConfiguration = configuration,
                 sessionParams = SessionParamsFactory.create(checkoutSession),
-                paymentMethod = paymentMethod
+                paymentMethod = paymentMethod,
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
             val cardValidationMapper = CardValidationMapper()
             val cardEncryptor = CardEncryptorFactory.provide()
+            val genericEncryptor = GenericEncryptorFactory.provide()
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
             val binLookupService = BinLookupService(httpClient)
-            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter, binLookupService)
+            val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -191,7 +194,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -207,8 +210,8 @@ constructor(
                 detectCardTypeRepository = detectCardTypeRepository,
                 cardValidationMapper = cardValidationMapper,
                 cardEncryptor = cardEncryptor,
-                genericEncrypter = genericEncrypter,
-                submitHandler = SubmitHandler(savedStateHandle)
+                genericEncryptor = genericEncryptor,
+                submitHandler = SubmitHandler(savedStateHandle),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
@@ -228,7 +231,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<BcmcComponentState>(
@@ -246,7 +249,7 @@ constructor(
 
         return ViewModelProvider(
             viewModelStoreOwner,
-            bcmcFactory
+            bcmcFactory,
         )[key, BcmcComponent::class.java].also { component ->
             component.observe(lifecycleOwner) {
                 component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
