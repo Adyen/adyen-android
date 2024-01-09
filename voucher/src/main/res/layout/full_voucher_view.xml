@@ -22,12 +22,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_one_half_margin"
         android:contentDescription="@null"
+        app:adyenStrokeColor="@color/stroke_color"
+        app:adyenStrokeWidth="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

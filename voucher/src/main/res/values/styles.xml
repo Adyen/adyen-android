@@ -39,7 +39,9 @@
     </style>
 
     <style name="AdyenCheckout.Voucher.Amount" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:textSize">20sp</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.PaymentReference" parent="AdyenCheckout.TextAppearance">
