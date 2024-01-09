@@ -8,11 +8,10 @@
 
 package com.adyen.checkout.qrcode.internal.ui
 
-import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
@@ -22,6 +21,7 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -31,7 +31,8 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.FileDownloader
+import com.adyen.checkout.core.exception.PermissionException
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
@@ -40,6 +41,7 @@ import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.util.FileDownloader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -68,10 +70,13 @@ internal class DefaultQRCodeDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<QRCodeOutputData> = _outputDataFlow
 
-    override val outputData: QRCodeOutputData get() = _outputDataFlow.value
+    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -117,7 +122,7 @@ internal class DefaultQRCodeDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
-            permissionFlow = null,
+            permissionFlow = permissionFlow,
             exceptionFlow = exceptionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
@@ -289,22 +294,33 @@ internal class DefaultQRCodeDelegate(
         qrCodeData = null
     )
 
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    override fun downloadQRImage() {
+    override fun downloadQRImage(context: Context) {
         val date: Long = System.currentTimeMillis()
         val imageName = String.format(IMAGE_NAME_FORMAT, date)
         val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
         coroutineScope.launch {
             fileDownloader.download(
-                outputData.qrImageUrl.orEmpty(),
-                imageName,
-                imageDirectory,
-                MIME_TYPE
+                context = context,
+                permissionHandler = this@DefaultQRCodeDelegate,
+                stringUrl = outputData.qrImageUrl.orEmpty(),
+                fileName = imageName,
+                filePath = imageDirectory,
+                mimeType = MIME_TYPE
             ).fold(
                 onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
-                onFailure = { e -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(e)) }
+                onFailure = { throwable ->
+                    when (throwable) {
+                        is PermissionException -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
+                        else -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(throwable))
+                    }
+                }
             )
         }
+    }
+
+    override fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback) {
+        val requestParams = PermissionRequestParams(requiredPermission, callback)
+        permissionChannel.trySend(requestParams)
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {

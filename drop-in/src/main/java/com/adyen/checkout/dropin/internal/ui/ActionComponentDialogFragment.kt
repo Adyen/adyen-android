@@ -26,7 +26,6 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PermissionRequestData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
@@ -121,15 +120,15 @@ internal class ActionComponentDialogFragment :
         onActionComponentDataChanged(actionComponentData)
     }
 
-    override fun onPermissionRequest(permissionRequestData: PermissionRequestData) {
-        permissionCallback = permissionRequestData.permissionCallback
+    override fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        this.permissionCallback = permissionCallback
         Logger.d(TAG, "Permission request information dialog shown")
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.checkout_rationale_title_storage_permission)
             .setMessage(R.string.checkout_rationale_message_storage_permission)
             .setOnDismissListener {
-                Logger.d(TAG, "Permission ${permissionRequestData.requiredPermission} requested")
-                requestPermissionLauncher.launch(arrayOf(permissionRequestData.requiredPermission))
+                Logger.d(TAG, "Permission $requiredPermission requested")
+                requestPermissionLauncher.launch(arrayOf(requiredPermission))
             }
             .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()

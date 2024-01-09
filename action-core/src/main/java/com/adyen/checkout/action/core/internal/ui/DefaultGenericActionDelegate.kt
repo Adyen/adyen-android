@@ -15,7 +15,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.PermissionRequestData
+import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -65,8 +65,8 @@ internal class DefaultGenericActionDelegate(
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
+    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()

@@ -8,16 +8,12 @@
 
 package com.adyen.checkout.qrcode.internal.ui.view
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -31,6 +27,9 @@ import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
+import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.Failure
+import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.PermissionDenied
+import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.Success
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.load
@@ -70,16 +69,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.buttonSaveImage.setOnClickListener {
-            val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
-                ContextCompat.checkSelfPermission(context, requiredPermission) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Send permission requested event
-                return@setOnClickListener
-            }
-            delegate.downloadQRImage()
-        }
+        binding.buttonSaveImage.setOnClickListener { delegate.downloadQRImage(context) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -161,13 +151,18 @@ internal class FullQRCodeView @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
+    // TODO: Strings need to be localized
     private fun handleEventFlow(event: QrCodeUIEvent) {
         when (event) {
-            QrCodeUIEvent.QrImageDownloadResult.Success -> {
+            Success -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_succeeded))
             }
 
-            is QrCodeUIEvent.QrImageDownloadResult.Failure -> {
+            PermissionDenied -> {
+                context.toast("Permission Denied")
+            }
+
+            is Failure -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_failed))
                 Logger.e(TAG, "download file failed", event.throwable)
             }

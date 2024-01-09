@@ -13,7 +13,8 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class QrCodeUIEvent {
     sealed class QrImageDownloadResult : QrCodeUIEvent() {
-        object Success : QrImageDownloadResult()
+        data object Success : QrImageDownloadResult()
+        data object PermissionDenied : QrImageDownloadResult()
         data class Failure(val throwable: Throwable) : QrImageDownloadResult()
     }
 }

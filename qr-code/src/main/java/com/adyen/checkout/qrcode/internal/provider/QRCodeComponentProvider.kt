@@ -30,7 +30,7 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.FileDownloader
+import com.adyen.checkout.ui.core.internal.util.FileDownloader
 import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
@@ -89,7 +89,7 @@ constructor(
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
-            fileDownloader = FileDownloader(application)
+            fileDownloader = FileDownloader()
         )
     }
 

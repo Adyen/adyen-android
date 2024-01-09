@@ -11,7 +11,6 @@ package com.adyen.checkout.ui.core.internal.util
 import android.Manifest
 import android.content.ContentValues
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.Canvas
@@ -22,20 +21,16 @@ import android.provider.MediaStore.Images.Media
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
-import androidx.core.content.ContextCompat
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.ui.core.internal.exception.PermissionException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import kotlin.coroutines.resume
 
 // TODO: Test this class if possible
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -111,35 +106,12 @@ class ImageSaver {
         bitmap: Bitmap,
         contentValues: ContentValues,
     ): Result<Unit> = withContext(Dispatchers.IO) {
-        if (checkPermission(context, permissionHandler) == true) {
+        if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == true) {
             saveImageApi28AndBelowWhenPermissionGranted(context, bitmap, contentValues)
         } else {
             Result.failure(PermissionException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
-
-    private suspend fun checkPermission(context: Context, permissionHandler: PermissionHandler): Boolean? =
-        suspendCancellableCoroutine { continuation ->
-            if (ContextCompat.checkSelfPermission(context, REQUIRED_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
-                continuation.resume(true)
-                return@suspendCancellableCoroutine
-            }
-
-            permissionHandler.requestPermission(context, REQUIRED_PERMISSION, object : PermissionHandlerCallback {
-                override fun onPermissionGranted(requestedPermission: String) {
-                    if (requestedPermission == REQUIRED_PERMISSION) {
-                        continuation.resume(true)
-                    } else {
-                        Logger.e(TAG, "The $requestedPermission is not the requested $REQUIRED_PERMISSION permission")
-                        continuation.resume(null)
-                    }
-                }
-
-                override fun onPermissionDenied(requestedPermission: String) {
-                    continuation.resume(false)
-                }
-            })
-        }
 
     private suspend fun saveImageApi28AndBelowWhenPermissionGranted(
         context: Context,

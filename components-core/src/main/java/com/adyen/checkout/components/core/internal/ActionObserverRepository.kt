@@ -12,7 +12,6 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PermissionRequestData
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +23,7 @@ class ActionObserverRepository(
 
     fun addObservers(
         detailsFlow: Flow<ActionComponentData>?,
-        permissionFlow: Flow<PermissionRequestData>?,
+        permissionFlow: Flow<PermissionRequestParams>?,
         exceptionFlow: Flow<CheckoutException>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
@@ -33,16 +32,21 @@ class ActionObserverRepository(
         with(observerContainer) {
             removeObservers()
 
-            detailsFlow?.observe(lifecycleOwner, coroutineScope) {
-                callback(ActionComponentEvent.ActionDetails(it))
+            detailsFlow?.observe(lifecycleOwner, coroutineScope) { componentData ->
+                callback(ActionComponentEvent.ActionDetails(componentData))
             }
 
-            permissionFlow?.observe(lifecycleOwner, coroutineScope) {
-                callback(ActionComponentEvent.PermissionRequest(it))
+            permissionFlow?.observe(lifecycleOwner, coroutineScope) { requestParams ->
+                callback(
+                    ActionComponentEvent.PermissionRequest(
+                        requestParams.requiredPermission,
+                        requestParams.permissionCallback
+                    )
+                )
             }
 
-            exceptionFlow?.observe(lifecycleOwner, coroutineScope) {
-                callback(ActionComponentEvent.Error(ComponentError(it)))
+            exceptionFlow?.observe(lifecycleOwner, coroutineScope) { exception ->
+                callback(ActionComponentEvent.Error(ComponentError(exception)))
             }
         }
     }
