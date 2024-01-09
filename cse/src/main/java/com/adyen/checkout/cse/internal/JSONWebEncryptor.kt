@@ -41,6 +41,10 @@ internal class JSONWebEncryptor {
     }
 
     fun encrypt(publicKey: String, payload: String): String {
+        if (!ValidationUtils.isPublicKeyValid(publicKey)) {
+            throw EncryptionException("Invalid public key", null)
+        }
+
         val pubKey = generatePublicKey(publicKey)
         val cek = generateCEK()
         val encryptedKey = Base64String(encryptCEK(pubKey, cek))
@@ -53,7 +57,7 @@ internal class JSONWebEncryptor {
 
         val pubKeySpec = RSAPublicKeySpec(
             BigInteger(keyComponents[1], RADIX),
-            BigInteger(keyComponents[0], RADIX)
+            BigInteger(keyComponents[0], RADIX),
         )
 
         return try {
