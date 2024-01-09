@@ -9,7 +9,7 @@ package com.adyen.checkout.cse
 
 /**
  * Class containing raw card data that needs to be encrypted.
- * Use [Builder] to instantiate and [CardEncryptor] to encrypt.
+ * Use [Builder] to instantiate and [CardEncrypter] to encrypt.
  */
 class UnencryptedCard internal constructor(
     val number: String?,
