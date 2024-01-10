@@ -55,8 +55,6 @@ class DefaultAddressLookupDelegate(
     private val _addressLookupStateFlow = MutableStateFlow<AddressLookupState>(AddressLookupState.Initial)
     override val addressLookupStateFlow: Flow<AddressLookupState> = _addressLookupStateFlow
 
-    private var currentAddressLookupOptions: List<LookupAddress> = emptyList()
-
     private val currentAddressLookupState
         get() = _addressLookupStateFlow.value
 
@@ -87,16 +85,9 @@ class DefaultAddressLookupDelegate(
         this.coroutineScope = coroutineScope
         addressLookupEventFlow
             .onEach { addressLookupEvent ->
-                val addressLookupOptions =
-                    if (addressLookupEvent is AddressLookupEvent.SearchResult) {
-                        addressLookupEvent.addressLookupOptions
-                    } else {
-                        currentAddressLookupOptions
-                    }
                 _addressLookupStateFlow.emit(
                     makeAddressLookupState(
                         event = addressLookupEvent,
-                        addressLookupOptions = addressLookupOptions,
                     ),
                 )
 
@@ -221,7 +212,6 @@ class DefaultAddressLookupDelegate(
 
     private fun makeAddressLookupState(
         event: AddressLookupEvent,
-        addressLookupOptions: List<LookupAddress>,
     ): AddressLookupState {
         return when (event) {
             is AddressLookupEvent.Initialize -> handleInitializeEvent(event)
@@ -229,7 +219,7 @@ class DefaultAddressLookupDelegate(
             AddressLookupEvent.ClearQuery -> handleClearQueryEvent()
             AddressLookupEvent.Manual -> handleManualEvent()
             is AddressLookupEvent.SearchResult -> handleSearchResultEvent(event)
-            is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event, addressLookupOptions)
+            is AddressLookupEvent.OptionSelected -> handleOptionSelectedEvent(event)
             is AddressLookupEvent.InvalidUI -> handleInvalidUIEvent()
             is AddressLookupEvent.ErrorResult -> handleErrorEvent()
         }
@@ -272,7 +262,6 @@ class DefaultAddressLookupDelegate(
             if (event.addressLookupOptions.isEmpty()) {
                 AddressLookupState.Error(addressLookupInputData.query)
             } else {
-                currentAddressLookupOptions = event.addressLookupOptions
                 AddressLookupState.SearchResult(
                     addressLookupInputData.query,
                     event.addressLookupOptions.map {
@@ -286,15 +275,17 @@ class DefaultAddressLookupDelegate(
     }
 
     private fun handleOptionSelectedEvent(
-        event: AddressLookupEvent.OptionSelected,
-        addressLookupOptions: List<LookupAddress>
+        event: AddressLookupEvent.OptionSelected
     ): AddressLookupState {
         return if (currentAddressLookupState is AddressLookupState.SearchResult) {
             if (event.loading) {
                 AddressLookupState.SearchResult(
-                    addressLookupInputData.query,
-                    addressLookupOptions.map {
-                        LookupOption(lookupAddress = it, isLoading = it == event.lookupAddress)
+                    (currentAddressLookupState as AddressLookupState.SearchResult).query,
+                    (currentAddressLookupState as AddressLookupState.SearchResult).options.map {
+                        LookupOption(
+                            lookupAddress = it.lookupAddress,
+                            isLoading = it.lookupAddress == event.lookupAddress,
+                        )
                     },
                 )
             } else {
@@ -306,9 +297,7 @@ class DefaultAddressLookupDelegate(
     }
 
     private fun handleInvalidUIEvent(): AddressLookupState {
-        return if (currentAddressLookupState is AddressLookupState.Form ||
-            currentAddressLookupState is AddressLookupState.SearchResult
-        ) {
+        return if (currentAddressLookupState is AddressLookupState.Form) {
             AddressLookupState.InvalidUI
         } else {
             currentAddressLookupState
