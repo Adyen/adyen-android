@@ -26,7 +26,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.PermissionException
+import com.adyen.checkout.core.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -145,7 +145,7 @@ class ImageSaver {
         if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == true) {
             saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
         } else {
-            Result.failure(PermissionException("The $REQUIRED_PERMISSION permission is denied"))
+            Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
 

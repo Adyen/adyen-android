@@ -22,7 +22,7 @@ import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.exception.PermissionException
+import com.adyen.checkout.core.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -170,7 +170,7 @@ internal class DefaultVoucherDelegate(
                 },
                 onFailure = { throwable ->
                     when (throwable) {
-                        is PermissionException -> eventChannel.trySend(VoucherUIEvent.PermissionDenied)
+                        is PermissionRequestException -> eventChannel.trySend(VoucherUIEvent.PermissionDenied)
                         else -> eventChannel.trySend(VoucherUIEvent.Failure(throwable))
                     }
                 }

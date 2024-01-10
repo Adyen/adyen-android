@@ -32,7 +32,7 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.exception.PermissionException
+import com.adyen.checkout.core.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -311,7 +311,7 @@ internal class DefaultQRCodeDelegate(
                 onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
                 onFailure = { throwable ->
                     when (throwable) {
-                        is PermissionException -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
+                        is PermissionRequestException -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
                         else -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(throwable))
                     }
                 }
