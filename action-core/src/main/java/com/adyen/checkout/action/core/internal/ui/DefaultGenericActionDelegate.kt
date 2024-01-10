@@ -65,11 +65,11 @@ internal class DefaultGenericActionDelegate(
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
 
-    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
-
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
 
     private var onRedirectListener: (() -> Unit)? = null
 
@@ -85,8 +85,8 @@ internal class DefaultGenericActionDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
-            permissionFlow = permissionFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -124,8 +124,8 @@ internal class DefaultGenericActionDelegate(
             delegate.initialize(coroutineScope)
 
             observeDetails(delegate)
-            observePermissionRequests(delegate)
             observeExceptions(delegate)
+            observePermissionRequests(delegate)
             observeViewFlow(delegate)
         }
 
@@ -144,18 +144,18 @@ internal class DefaultGenericActionDelegate(
             .launchIn(coroutineScope)
     }
 
+    private fun observeExceptions(delegate: ActionDelegate) {
+        Logger.d(TAG, "Observing exceptions")
+        delegate.exceptionFlow
+            .onEach { exceptionChannel.trySend(it) }
+            .launchIn(coroutineScope)
+    }
+
     private fun observePermissionRequests(delegate: ActionDelegate) {
         if (delegate !is PermissionRequestingDelegate) return
         Logger.d(TAG, "Observing details")
         delegate.permissionFlow
             .onEach { permissionChannel.trySend(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun observeExceptions(delegate: ActionDelegate) {
-        Logger.d(TAG, "Observing exceptions")
-        delegate.exceptionFlow
-            .onEach { exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 

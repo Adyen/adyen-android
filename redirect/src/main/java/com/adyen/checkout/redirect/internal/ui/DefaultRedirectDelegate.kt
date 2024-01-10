@@ -58,8 +58,8 @@ internal class DefaultRedirectDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
-            permissionFlow = null,
             exceptionFlow = exceptionFlow,
+            permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

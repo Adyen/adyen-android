@@ -22,7 +22,7 @@ import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -50,11 +50,11 @@ internal class DefaultVoucherDelegate(
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<VoucherOutputData> = _outputDataFlow
 
-    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
-
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
 
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 
@@ -78,8 +78,8 @@ internal class DefaultVoucherDelegate(
     ) {
         observerRepository.addObservers(
             detailsFlow = null,
-            permissionFlow = permissionFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

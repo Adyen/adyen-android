@@ -26,7 +26,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -40,7 +40,6 @@ import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
 
-// TODO: Test this class if possible
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ImageSaver {
 

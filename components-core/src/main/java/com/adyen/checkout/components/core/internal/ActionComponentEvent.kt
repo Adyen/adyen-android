@@ -18,11 +18,11 @@ import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class ActionComponentEvent : ComponentEvent {
     class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()
+    class Error(val error: ComponentError) : ActionComponentEvent()
     class PermissionRequest(
         val requiredPermission: String,
         val permissionCallback: PermissionHandlerCallback
     ) : ActionComponentEvent()
-    class Error(val error: ComponentError) : ActionComponentEvent()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

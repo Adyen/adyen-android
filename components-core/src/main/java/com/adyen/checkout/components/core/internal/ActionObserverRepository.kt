@@ -23,8 +23,8 @@ class ActionObserverRepository(
 
     fun addObservers(
         detailsFlow: Flow<ActionComponentData>?,
-        permissionFlow: Flow<PermissionRequestParams>?,
         exceptionFlow: Flow<CheckoutException>?,
+        permissionFlow: Flow<PermissionRequestParams>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit,
@@ -36,6 +36,10 @@ class ActionObserverRepository(
                 callback(ActionComponentEvent.ActionDetails(componentData))
             }
 
+            exceptionFlow?.observe(lifecycleOwner, coroutineScope) { exception ->
+                callback(ActionComponentEvent.Error(ComponentError(exception)))
+            }
+
             permissionFlow?.observe(lifecycleOwner, coroutineScope) { requestParams ->
                 callback(
                     ActionComponentEvent.PermissionRequest(
@@ -43,10 +47,6 @@ class ActionObserverRepository(
                         requestParams.permissionCallback
                     )
                 )
-            }
-
-            exceptionFlow?.observe(lifecycleOwner, coroutineScope) { exception ->
-                callback(ActionComponentEvent.Error(ComponentError(exception)))
             }
         }
     }

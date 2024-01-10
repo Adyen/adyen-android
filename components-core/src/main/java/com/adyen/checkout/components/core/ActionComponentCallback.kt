@@ -33,6 +33,14 @@ interface ActionComponentCallback {
     fun onAdditionalDetails(actionComponentData: ActionComponentData)
 
     /**
+     * The component has encountered an error.
+     * Use [ComponentError.exception] to get the internal exception.
+     *
+     * @param componentError The error encountered.
+     */
+    fun onError(componentError: ComponentError)
+
+    /**
      * Should be overridden to support runtime permissions for components.
      * Runtime permission should be requested and communicated back through the callback.
      *
@@ -42,12 +50,4 @@ interface ActionComponentCallback {
     fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
         // Optional
     }
-
-    /**
-     * The component has encountered an error.
-     * Use [ComponentError.exception] to get the internal exception.
-     *
-     * @param componentError The error encountered.
-     */
-    fun onError(componentError: ComponentError)
 }

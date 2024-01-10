@@ -120,6 +120,11 @@ internal class ActionComponentDialogFragment :
         onActionComponentDataChanged(actionComponentData)
     }
 
+    override fun onError(componentError: ComponentError) {
+        Logger.d(TAG, "onError")
+        handleError(componentError)
+    }
+
     override fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
         this.permissionCallback = permissionCallback
         Logger.d(TAG, "Permission request information dialog shown")
@@ -132,11 +137,6 @@ internal class ActionComponentDialogFragment :
             }
             .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
-    }
-
-    override fun onError(componentError: ComponentError) {
-        Logger.d(TAG, "onError")
-        handleError(componentError)
     }
 
     private fun initObservers() {

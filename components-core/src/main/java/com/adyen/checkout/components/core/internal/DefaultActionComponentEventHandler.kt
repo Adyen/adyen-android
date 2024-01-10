@@ -22,12 +22,11 @@ class DefaultActionComponentEventHandler(
         Logger.v(TAG, "Event received $event")
         when (event) {
             is ActionComponentEvent.ActionDetails -> actionComponentCallback.onAdditionalDetails(event.data)
+            is ActionComponentEvent.Error -> actionComponentCallback.onError(event.error)
             is ActionComponentEvent.PermissionRequest -> actionComponentCallback.onPermissionRequest(
                 event.requiredPermission,
                 event.permissionCallback
             )
-
-            is ActionComponentEvent.Error -> actionComponentCallback.onError(event.error)
         }
     }
 
