@@ -37,7 +37,7 @@ internal class JSONWebEncryptor {
     private val keyFactory: KeyFactory = try {
         KeyFactory.getInstance(RSA_ALGORITHM)
     } catch (e: NoSuchAlgorithmException) {
-        throw EncryptionException("RSA KeyFactory not found.", e)
+        throw EncryptionException("RSA KeyFactory not found", e)
     }
 
     fun encrypt(publicKey: String, payload: String): String {
@@ -80,7 +80,7 @@ internal class JSONWebEncryptor {
         return try {
             cipher.doFinal(contentKey.encoded)
         } catch (e: IllegalBlockSizeException) {
-            throw EncryptionException("The RSA key is invalid, try another one", e)
+            throw EncryptionException("The RSA key is invalid", e)
         }
     }
 
