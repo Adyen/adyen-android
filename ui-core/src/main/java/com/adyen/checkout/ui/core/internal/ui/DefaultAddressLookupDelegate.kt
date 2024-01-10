@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
@@ -52,11 +53,12 @@ class DefaultAddressLookupDelegate(
 
     private val addressLookupInputData = AddressLookupInputData()
 
-    private val _addressLookupStateFlow = MutableStateFlow<AddressLookupState>(AddressLookupState.Initial)
-    override val addressLookupStateFlow: Flow<AddressLookupState> = _addressLookupStateFlow
+    @VisibleForTesting
+    internal val mutableAddressLookupStateFlow = MutableStateFlow<AddressLookupState>(AddressLookupState.Initial)
+    override val addressLookupStateFlow: Flow<AddressLookupState> = mutableAddressLookupStateFlow
 
     private val currentAddressLookupState
-        get() = _addressLookupStateFlow.value
+        get() = mutableAddressLookupStateFlow.value
 
     override val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
     private val addressLookupEventFlow: Flow<AddressLookupEvent> = addressLookupEventChannel.receiveAsFlow()
@@ -85,7 +87,7 @@ class DefaultAddressLookupDelegate(
         this.coroutineScope = coroutineScope
         addressLookupEventFlow
             .onEach { addressLookupEvent ->
-                _addressLookupStateFlow.emit(
+                mutableAddressLookupStateFlow.emit(
                     makeAddressLookupState(
                         event = addressLookupEvent,
                     ),

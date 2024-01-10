@@ -61,7 +61,7 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
+import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
@@ -69,6 +69,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -95,7 +96,8 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCardDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<CardComponentState>
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>,
+    @Mock private val addressLookupDelegate: AddressLookupDelegate,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -112,6 +114,9 @@ internal class DefaultCardDelegateTest(
         publicKeyRepository = TestPublicKeyRepository()
         addressRepository = TestAddressRepository()
         detectCardTypeRepository = TestDetectCardTypeRepository()
+
+        whenever(addressLookupDelegate.addressLookupSubmitFlow).thenReturn(MutableStateFlow(AddressInputModel()))
+
         delegate = createCardDelegate()
     }
 
@@ -1157,6 +1162,13 @@ internal class DefaultCardDelegateTest(
         }
     }
 
+    @Test
+    fun `when delegate is cleared then address lookup delegate is cleared`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.onCleared()
+        verify(addressLookupDelegate).clear()
+    }
+
     @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
@@ -1170,6 +1182,7 @@ internal class DefaultCardDelegateTest(
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
+        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
             installmentsParamsMapper = InstallmentsParamsMapper(),
@@ -1190,7 +1203,7 @@ internal class DefaultCardDelegateTest(
             genericEncryptor = genericEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
-            addressLookupDelegate = DefaultAddressLookupDelegate(addressRepository, Locale.US),
+            addressLookupDelegate = addressLookupDelegate,
         )
     }
 
