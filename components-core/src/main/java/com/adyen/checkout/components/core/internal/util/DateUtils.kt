@@ -15,6 +15,7 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -77,5 +78,21 @@ object DateUtils {
             Logger.e(TAG, "Provided date $date does not match the given format $inputFormat")
             null
         }
+    }
+
+    /**
+     * Format server date pattern to regular date pattern (30/03/2023).
+     *
+     * @param date Date to be formatted
+     * @param shopperLocale
+     * @param dateFormat Date pattern
+     */
+    fun formatDateToString(
+        date: Date,
+        shopperLocale: Locale,
+        dateFormat: String = DEFAULT_INPUT_DATE_FORMAT
+    ): String? {
+        val inputSimpleFormat = SimpleDateFormat(dateFormat, shopperLocale)
+        return inputSimpleFormat.format(date)
     }
 }

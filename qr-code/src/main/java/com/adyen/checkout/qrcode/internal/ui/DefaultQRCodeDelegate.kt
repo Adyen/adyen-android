@@ -26,6 +26,7 @@ import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
@@ -41,7 +42,7 @@ import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.util.FileDownloader
+import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -53,6 +54,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -64,7 +66,7 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
-    private val fileDownloader: FileDownloader
+    private val imageSaver: ImageSaver
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -295,17 +297,16 @@ internal class DefaultQRCodeDelegate(
     )
 
     override fun downloadQRImage(context: Context) {
-        val date: Long = System.currentTimeMillis()
-        val imageName = String.format(IMAGE_NAME_FORMAT, date)
-        val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
+        val paymentMethodType = outputData.paymentMethodType ?: ""
+        val timestamp = DateUtils.formatDateToString(Date(), componentParams.shopperLocale)
+        val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
+
         coroutineScope.launch {
-            fileDownloader.download(
+            imageSaver.saveImageFromUrl(
                 context = context,
                 permissionHandler = this@DefaultQRCodeDelegate,
-                stringUrl = outputData.qrImageUrl.orEmpty(),
-                fileName = imageName,
-                filePath = imageDirectory,
-                mimeType = MIME_TYPE
+                imageUrl = outputData.qrImageUrl.orEmpty(),
+                fileName = imageName
             ).fold(
                 onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
                 onFailure = { throwable ->
@@ -353,8 +354,7 @@ internal class DefaultQRCodeDelegate(
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 
-        private const val IMAGE_NAME_FORMAT = "QR-code-%s.png"
+        private const val IMAGE_NAME_FORMAT = "%s-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
-        private const val MIME_TYPE = "image/png"
     }
 }

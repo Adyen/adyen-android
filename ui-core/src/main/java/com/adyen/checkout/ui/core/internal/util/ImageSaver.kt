@@ -9,17 +9,21 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.PermissionException
@@ -28,9 +32,13 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
+import java.io.IOException
+import java.net.MalformedURLException
+import java.net.URL
 
 // TODO: Test this class if possible
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -40,8 +48,8 @@ class ImageSaver {
         context: Context,
         permissionHandler: PermissionHandler,
         view: View,
-        fileRelativePath: String,
         fileName: String? = null,
+        fileRelativePath: String? = null,
     ): Result<Unit> {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -49,14 +57,45 @@ class ImageSaver {
         view.background?.draw(canvas) ?: canvas.drawColor(Color.WHITE)
         view.draw(canvas)
 
+        return saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
+    }
+
+    suspend fun saveImageFromUrl(
+        context: Context,
+        permissionHandler: PermissionHandler,
+        imageUrl: String,
+        fileName: String? = null,
+        fileRelativePath: String? = null,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val url = imageUrl.toURL() ?: return@withContext Result.failure(CheckoutException("Malformed URL"))
+
+        return@withContext try {
+            val inputStream = url.openStream()
+            val bufferedInputStream = BufferedInputStream(inputStream)
+            val bitmap = BitmapFactory.decodeStream(bufferedInputStream)
+
+            saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
+        } catch (exception: IOException) {
+            Result.failure(CheckoutException("Malformed URL"))
+        }
+    }
+
+    private suspend fun saveImageFromBitmap(
+        context: Context,
+        permissionHandler: PermissionHandler,
+        bitmap: Bitmap,
+        fileName: String? = null,
+        fileRelativePath: String? = null,
+    ): Result<Unit> {
         val timestamp = System.currentTimeMillis()
         val imageName = fileName ?: timestamp.toString()
+        val imagePath = fileRelativePath ?: Environment.DIRECTORY_DOWNLOADS
         val contentValues = ContentValues().apply {
             put(Media.MIME_TYPE, "image/png")
             put(Media.DATE_ADDED, timestamp)
             put(Media.DATE_TAKEN, timestamp)
-            put(Media.RELATIVE_PATH, fileRelativePath)
             put(Media.DISPLAY_NAME, imageName)
+            put(Media.RELATIVE_PATH, imagePath)
         }
 
         val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -76,30 +115,27 @@ class ImageSaver {
     ): Result<Unit> = withContext(Dispatchers.IO) {
         contentValues.put(Media.IS_PENDING, true)
 
-        val uri = context.contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
-        return@withContext if (uri != null) {
-            try {
-                val outputStream = context.contentResolver.openOutputStream(uri)
-                if (outputStream != null) {
-                    bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
-                    outputStream.close()
+        val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            ?: return@withContext Result.failure(CheckoutException("Error when saving Bitmap as an image: URI is null"))
 
-                    contentValues.put(Media.IS_PENDING, false)
-                    context.contentResolver.update(uri, contentValues, null, null)
+        return@withContext try {
+            val outputStream = context.contentResolver.openOutputStream(uri)
+                ?: return@withContext Result.failure(CheckoutException("Output stream is null"))
 
-                    Logger.d(TAG, "Bitmap successfully saved as am image")
-                    Result.success(Unit)
-                } else {
-                    Result.failure(CheckoutException("Error when saving Bitmap as an image: OutputStream is null"))
-                }
-            } catch (e: FileNotFoundException) {
-                Result.failure(CheckoutException("Error when saving Bitmap as an image: ", e))
-            }
-        } else {
-            Result.failure(CheckoutException("Error when saving Bitmap as an image: URI is null"))
+            contentValues.put(Media.IS_PENDING, false)
+            context.contentResolver.update(uri, contentValues, null, null)
+
+            bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
+            outputStream.close()
+
+            Logger.d(TAG, "Bitmap successfully saved as an image")
+            Result.success(Unit)
+        } catch (e: FileNotFoundException) {
+            Result.failure(CheckoutException("File not found: ", e))
         }
     }
 
+    @SuppressLint("MissingPermission")
     private suspend fun saveImageApi28AndBelow(
         context: Context,
         permissionHandler: PermissionHandler,
@@ -107,23 +143,25 @@ class ImageSaver {
         contentValues: ContentValues,
     ): Result<Unit> = withContext(Dispatchers.IO) {
         if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == true) {
-            saveImageApi28AndBelowWhenPermissionGranted(context, bitmap, contentValues)
+            saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
         } else {
             Result.failure(PermissionException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
 
+    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private suspend fun saveImageApi28AndBelowWhenPermissionGranted(
-        context: Context,
         bitmap: Bitmap,
         contentValues: ContentValues
     ): Result<Unit> = withContext(Dispatchers.IO) {
+        val fileName = contentValues.getAsString(Media.DISPLAY_NAME)
+        val filePath = contentValues.getAsString(Media.RELATIVE_PATH)
         val imageFileFolder =
-            Environment.getExternalStoragePublicDirectory(contentValues.getAsString(Media.RELATIVE_PATH))
+            Environment.getExternalStoragePublicDirectory(filePath)
         if (!imageFileFolder.exists()) {
             imageFileFolder.mkdirs()
         }
-        val imageFile = File(imageFileFolder, contentValues.getAsString(Media.DISPLAY_NAME))
+        val imageFile = File(imageFileFolder, fileName)
 
         return@withContext try {
             val outputStream = FileOutputStream(imageFile)
@@ -131,13 +169,21 @@ class ImageSaver {
             bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
             outputStream.close()
 
-            contentValues.put(Media.DATA, imageFile.absolutePath)
-            context.contentResolver.insert(Media.EXTERNAL_CONTENT_URI, contentValues)
-
-            Logger.d(TAG, "Bitmap successfully saved as am image")
+            Logger.d(TAG, "Bitmap successfully saved as an image")
             Result.success(Unit)
         } catch (e: FileNotFoundException) {
-            Result.failure(CheckoutException("Error when saving Bitmap as an image: ", e))
+            Result.failure(CheckoutException("File not found: ", e))
+        } catch (e: SecurityException) {
+            Result.failure(CheckoutException("Security violation: ", e))
+        }
+    }
+
+    private fun String.toURL(): URL? {
+        return try {
+            URL(this)
+        } catch (e: MalformedURLException) {
+            Logger.e(TAG, "toURL: $e")
+            null
         }
     }
 

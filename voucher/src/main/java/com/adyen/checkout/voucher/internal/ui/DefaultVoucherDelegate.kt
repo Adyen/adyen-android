@@ -10,21 +10,21 @@ package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import android.content.Context
-import android.os.Environment
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.PermissionException
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.util.Date
 
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
@@ -153,16 +154,15 @@ internal class DefaultVoucherDelegate(
     }
 
     override fun saveVoucherAsImage(context: Context, view: View) {
-        val timestamp = System.currentTimeMillis()
-        val imageDirectory = "${Environment.DIRECTORY_PICTURES}/$IMAGE_RELATIVE_PATH"
-        val imageName = String.format(IMAGE_NAME_FORMAT, timestamp)
+        val paymentMethodType = outputData.paymentMethodType ?: ""
+        val timestamp = DateUtils.formatDateToString(Date(), componentParams.shopperLocale)
+        val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
 
         coroutineScope.launch {
             imageSaver.saveImageFromView(
                 context = context,
                 permissionHandler = this@DefaultVoucherDelegate,
                 view = view,
-                fileRelativePath = imageDirectory,
                 fileName = imageName
             ).fold(
                 onSuccess = {
@@ -189,7 +189,6 @@ internal class DefaultVoucherDelegate(
     }
 
     companion object {
-        private const val IMAGE_RELATIVE_PATH = "Vouchers"
-        private const val IMAGE_NAME_FORMAT = "Voucher-%s.png"
+        private const val IMAGE_NAME_FORMAT = "%s-%s.png"
     }
 }
