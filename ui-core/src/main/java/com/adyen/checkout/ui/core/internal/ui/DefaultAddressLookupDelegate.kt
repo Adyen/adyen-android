@@ -226,6 +226,7 @@ class DefaultAddressLookupDelegate(
     }
 
     private fun handleInitializeEvent(event: AddressLookupEvent.Initialize): AddressLookupState {
+        addressLookupInputData.selectedAddress.set(event.address)
         return if (event.address.isEmpty) {
             AddressLookupState.Initial
         } else {
