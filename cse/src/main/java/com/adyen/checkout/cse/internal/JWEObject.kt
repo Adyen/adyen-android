@@ -13,7 +13,7 @@ import android.util.Base64
 internal data class JWEObject(
     val header: Base64String,
     val encryptedKey: Base64String,
-    val iv: Base64String,
+    val initializationVector: Base64String,
     val cipherText: Base64String,
     val authTag: Base64String,
 )

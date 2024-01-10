@@ -46,46 +46,46 @@ internal class JSONWebEncryptor {
         }
 
         val pubKey = generatePublicKey(publicKey)
-        val cek = generateCEK()
-        val encryptedKey = Base64String(encryptCEK(pubKey, cek))
-        val jweObject = encrypt(payload, cek, encryptedKey)
+        val contentKey = generateContentEncryptionKey()
+        val encryptedKey = Base64String(encryptContentEncryptionKey(pubKey, contentKey))
+        val jweObject = encrypt(payload, contentKey, encryptedKey)
         return serialize(jweObject)
     }
 
     private fun generatePublicKey(publicKey: String): PublicKey {
         val keyComponents = publicKey.split("|")
 
-        val pubKeySpec = RSAPublicKeySpec(
+        val publicKeySpec = RSAPublicKeySpec(
             BigInteger(keyComponents[1], RADIX),
             BigInteger(keyComponents[0], RADIX),
         )
 
         return try {
-            keyFactory.generatePublic(pubKeySpec)
+            keyFactory.generatePublic(publicKeySpec)
         } catch (e: InvalidKeySpecException) {
             throw EncryptionException("Problem reading public key", e)
         }
     }
 
-    private fun generateCEK(): SecretKey {
-        val secRan = SecureRandom()
-        val bytes = ByteArray(CEK_BYTES)
-        secRan.nextBytes(bytes)
+    private fun generateContentEncryptionKey(): SecretKey {
+        val secureRandom = SecureRandom()
+        val bytes = ByteArray(CONTENT_ENCRYPTION_KEY_BYTES)
+        secureRandom.nextBytes(bytes)
         return SecretKeySpec(bytes, AES_ALGORITHM)
     }
 
-    private fun encryptCEK(pub: PublicKey, cek: SecretKey): ByteArray {
-        val cipher = getRSAOAEPCipher(pub)
+    private fun encryptContentEncryptionKey(publicKey: PublicKey, contentKey: SecretKey): ByteArray {
+        val cipher = getRSAOAEPCipher(publicKey)
 
         return try {
-            cipher.doFinal(cek.encoded)
+            cipher.doFinal(contentKey.encoded)
         } catch (e: IllegalBlockSizeException) {
             throw EncryptionException("The RSA key is invalid, try another one", e)
         }
     }
 
-    private fun getRSAOAEPCipher(pub: PublicKey): Cipher {
-        val algp = AlgorithmParameters.getInstance(OAEP_ALGORITHM)
+    private fun getRSAOAEPCipher(publicKey: PublicKey): Cipher {
+        val algorithmParams = AlgorithmParameters.getInstance(OAEP_ALGORITHM)
         val mgfParamSpec = MGF1ParameterSpec.SHA256
         val paramSpec = OAEPParameterSpec(
             mgfParamSpec.digestAlgorithm,
@@ -93,7 +93,7 @@ internal class JSONWebEncryptor {
             mgfParamSpec,
             PSource.PSpecified.DEFAULT,
         )
-        algp.init(paramSpec)
+        algorithmParams.init(paramSpec)
 
         val cipher = try {
             Cipher.getInstance(RSA_OAEP_CIPHER)
@@ -102,25 +102,26 @@ internal class JSONWebEncryptor {
         } catch (e: NoSuchPaddingException) {
             throw EncryptionException("Problem instantiating $RSA_OAEP_CIPHER Padding", e)
         }
-        cipher.init(Cipher.ENCRYPT_MODE, pub, algp)
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey, algorithmParams)
         return cipher
     }
 
-    private fun encrypt(payload: String, cek: SecretKey, encryptedKey: Base64String): JWEObject {
+    private fun encrypt(payload: String, contentKey: SecretKey, encryptedKey: Base64String): JWEObject {
         val base64Header = Base64String(HEADER.toString().encodeToByteArray())
-        val aad = getAAD(base64Header)
-        val iv = generateIV()
-        val compositeKey = CompositeKey(cek)
-        val aesCipher = getAESCBCCipher(compositeKey.encKey, iv)
+        val additionalData = getAdditionalAuthenticationData(base64Header)
+        val vector = generateInitializationVector()
+        val compositeKey = CompositeKey(contentKey)
+        val aesCipher = getAESCBCCipher(compositeKey.encKey, vector)
         val cipherText = aesCipher.doFinal(payload.toByteArray())
-        val al = ByteBuffer.allocate(BITES_IN_BYTE).putLong(aad.size * BITES_IN_BYTE.toLong()).array()
+        val additionalDataBits =
+            ByteBuffer.allocate(BITES_IN_BYTE).putLong(additionalData.size * BITES_IN_BYTE.toLong()).array()
 
-        val hmacInputLength = aad.size + iv.size + cipherText.size + al.size
+        val hmacInputLength = additionalData.size + vector.size + cipherText.size + additionalDataBits.size
         val hmacInput = ByteBuffer.allocate(hmacInputLength)
-            .put(aad)
-            .put(iv)
+            .put(additionalData)
+            .put(vector)
             .put(cipherText)
-            .put(al)
+            .put(additionalDataBits)
             .array()
         val hmac = computeHMAC(compositeKey.macKey, hmacInput)
         val authTag = hmac.copyOf(compositeKey.truncatedMacLength)
@@ -128,18 +129,18 @@ internal class JSONWebEncryptor {
         return JWEObject(
             header = base64Header,
             encryptedKey = encryptedKey,
-            iv = Base64String(iv),
+            initializationVector = Base64String(vector),
             cipherText = Base64String(cipherText),
             authTag = Base64String(authTag),
         )
     }
 
-    private fun getAAD(encodedHeader: Base64String): ByteArray {
+    private fun getAdditionalAuthenticationData(encodedHeader: Base64String): ByteArray {
         return encodedHeader.value.toByteArray(Charsets.US_ASCII)
     }
 
-    private fun generateIV(): ByteArray {
-        val iv = ByteArray(IV_BYTES)
+    private fun generateInitializationVector(): ByteArray {
+        val iv = ByteArray(INITIALIZATION_VECTOR_BYTES)
         SecureRandom().nextBytes(iv)
         return iv
     }
@@ -181,7 +182,7 @@ internal class JSONWebEncryptor {
             .append(".")
             .append(jweObject.encryptedKey)
             .append(".")
-            .append(jweObject.iv)
+            .append(jweObject.initializationVector)
             .append(".")
             .append(jweObject.cipherText)
             .append(".")
@@ -201,8 +202,8 @@ internal class JSONWebEncryptor {
 
         private const val BITES_IN_BYTE = 8
         private const val RADIX = 16
-        private const val CEK_BYTES = 64
-        private const val IV_BYTES = 16
+        private const val CONTENT_ENCRYPTION_KEY_BYTES = 64
+        private const val INITIALIZATION_VECTOR_BYTES = 16
 
         private val HEADER = JSONObject().apply {
             put("alg", "RSA-OAEP-256")
