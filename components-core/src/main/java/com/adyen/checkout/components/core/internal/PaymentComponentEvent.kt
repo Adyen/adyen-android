@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> : ComponentEvent {
@@ -26,6 +27,11 @@ sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out P
 
     class ActionDetails<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val data: ActionComponentData
+    ) : PaymentComponentEvent<ComponentStateT>()
+
+    class PermissionRequest<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+        val requiredPermission: String,
+        val permissionCallback: PermissionHandlerCallback
     ) : PaymentComponentEvent<ComponentStateT>()
 
     class Submit<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(

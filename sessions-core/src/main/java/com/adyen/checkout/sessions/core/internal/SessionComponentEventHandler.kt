@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -58,6 +59,12 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data, sessionComponentCallback)
             is PaymentComponentEvent.Error -> onComponentError(event.error, sessionComponentCallback)
             is PaymentComponentEvent.StateChanged -> onState(event.state, sessionComponentCallback)
+            is PaymentComponentEvent.PermissionRequest -> onPermissionRequest(
+                event.requiredPermission,
+                event.permissionCallback,
+                sessionComponentCallback
+            )
+
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
         }
     }
@@ -77,6 +84,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Payments.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result, sessionComponentCallback)
@@ -84,6 +92,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                     result.result,
                     sessionComponentCallback
                 )
+
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -106,6 +115,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Details.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Details.Finished -> onFinished(result.result, sessionComponentCallback)
                 SessionCallResult.Details.TakenOver -> {
@@ -128,6 +138,14 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
 
     private fun onState(state: T, sessionComponentCallback: SessionComponentCallback<T>) {
         sessionComponentCallback.onStateChanged(state)
+    }
+
+    private fun onPermissionRequest(
+        requiredPermission: String,
+        permissionCallback: PermissionHandlerCallback,
+        sessionComponentCallback: SessionComponentCallback<T>
+    ) {
+        sessionComponentCallback.onPermissionRequest(requiredPermission, permissionCallback)
     }
 
     private fun onComponentError(error: ComponentError, sessionComponentCallback: SessionComponentCallback<T>) {

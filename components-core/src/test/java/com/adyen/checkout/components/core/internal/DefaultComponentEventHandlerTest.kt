@@ -16,12 +16,14 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.TestComponentState
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.Logger
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
@@ -86,6 +88,20 @@ internal class DefaultComponentEventHandlerTest {
             )
 
             verify(callback).onStateChanged(state)
+        }
+
+        @Test
+        fun `is PermissionRequested, then required permission and permission callback should be propagated`() {
+            val callback = mock<ComponentCallback<PaymentComponentState<*>>>()
+            val requiredPermission = "permission"
+            val permissionCallback = mock<PermissionHandlerCallback>()
+
+            componentEventHandler.onPaymentComponentEvent(
+                PaymentComponentEvent.PermissionRequest(requiredPermission, permissionCallback),
+                callback
+            )
+
+            verify(callback).onPermissionRequest(eq(requiredPermission), eq(permissionCallback))
         }
 
         @Test

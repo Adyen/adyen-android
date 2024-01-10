@@ -38,8 +38,13 @@ fun <T> ((PaymentComponentEvent<T>) -> Unit).toActionCallback(): (ActionComponen
                 this(PaymentComponentEvent.Error(actionComponentEvent.error))
             }
 
-            else -> {
-                // Not necessary
+            is ActionComponentEvent.PermissionRequest -> {
+                this(
+                    PaymentComponentEvent.PermissionRequest(
+                        actionComponentEvent.requiredPermission,
+                        actionComponentEvent.permissionCallback
+                    )
+                )
             }
         }
     }
