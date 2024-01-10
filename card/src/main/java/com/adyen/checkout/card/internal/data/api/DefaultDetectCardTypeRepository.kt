@@ -21,7 +21,7 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.Sha256
 import com.adyen.checkout.core.internal.util.runSuspendCatching
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ import java.util.UUID
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDetectCardTypeRepository(
-    private val cardEncrypter: BaseCardEncrypter,
+    private val cardEncryptor: BaseCardEncryptor,
     private val binLookupService: BinLookupService,
 ) : DetectCardTypeRepository {
 
@@ -169,7 +169,7 @@ class DefaultDetectCardTypeRepository(
         type: String?
     ): BinLookupResponse? {
         return runSuspendCatching {
-            val encryptedBin = cardEncrypter.encryptBin(cardNumber, publicKey)
+            val encryptedBin = cardEncryptor.encryptBin(cardNumber, publicKey)
             val cardBrands = supportedCardBrands.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardBrands, type)
 

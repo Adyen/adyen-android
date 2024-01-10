@@ -24,18 +24,18 @@ import java.util.Calendar
 import java.util.TimeZone
 
 @ExtendWith(MockitoExtension::class)
-class DefaultCardEncrypterTest(
-    @Mock private val clientSideEncrypter: ClientSideEncrypter,
+internal class DefaultCardEncryptorTest(
     @Mock private val dateGenerator: DateGenerator,
+    @Mock private val jsonWebEncryptor: JSONWebEncryptor,
 ) {
-    private val cardEncrypter = DefaultCardEncrypter(
-        DefaultGenericEncrypter(clientSideEncrypter, dateGenerator),
+    private val cardEncryptor = DefaultCardEncryptor(
+        DefaultGenericEncryptor(dateGenerator, jsonWebEncryptor),
     )
 
     @BeforeEach
     fun setup() {
         whenever(dateGenerator.getCurrentDate()) doReturn DATE
-        whenever(clientSideEncrypter.encrypt(any(), any())).thenAnswer {
+        whenever(jsonWebEncryptor.encrypt(any(), any())).thenAnswer {
             "${it.arguments[0]}-${it.arguments[1]}"
         }
     }
@@ -54,7 +54,7 @@ class DefaultCardEncrypterTest(
             .setCvc(cvc)
             .build()
 
-        val encryptedCard = cardEncrypter.encryptFields(unencryptedCard, publicKey)
+        val encryptedCard = cardEncryptor.encryptFields(unencryptedCard, publicKey)
 
         val expectedNumberPlainText = JSONObject().apply {
             put("number", number)
@@ -102,7 +102,7 @@ class DefaultCardEncrypterTest(
             .setHolderName(holderName)
             .build()
 
-        val encryptedCard = cardEncrypter.encrypt(unencryptedCard, publicKey)
+        val encryptedCard = cardEncryptor.encrypt(unencryptedCard, publicKey)
 
         val expectedPlainText = JSONObject().apply {
             put("number", number)
@@ -121,7 +121,7 @@ class DefaultCardEncrypterTest(
         val bin = "123412341234"
         val publicKey = "PUBLIC_KEY"
 
-        val encryptedCard = cardEncrypter.encryptBin(bin, publicKey)
+        val encryptedCard = cardEncryptor.encryptBin(bin, publicKey)
 
         val expectedPlainText = JSONObject().apply {
             put("binValue", bin)

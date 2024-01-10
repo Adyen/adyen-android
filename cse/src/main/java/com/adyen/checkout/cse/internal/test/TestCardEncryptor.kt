@@ -12,15 +12,15 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
 
 /**
- * Test implementation of [BaseCardEncrypter]. This class should never be used in not test code as it does not do
+ * Test implementation of [BaseCardEncryptor]. This class should never be used in not test code as it does not do
  * any encryption!
  */
 // TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
-class TestCardEncrypter : BaseCardEncrypter {
+class TestCardEncryptor : BaseCardEncryptor {
 
     var shouldThrowException = false
 
