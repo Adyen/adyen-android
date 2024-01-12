@@ -13,6 +13,7 @@ plugins {
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"
+apply from: "config/gradle/sonarcloud.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"
