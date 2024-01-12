@@ -9,7 +9,7 @@ plugins {
     id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
     id 'io.gitlab.arturbosch.detekt' version "$detekt_gradle_plugin_version"
     id 'org.jetbrains.dokka' version "$dokka_version"
-    id 'org.sonarqube' version "$sonarqube_version" apply false
+    id 'org.sonarqube' version "$sonarqube_version"
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"
