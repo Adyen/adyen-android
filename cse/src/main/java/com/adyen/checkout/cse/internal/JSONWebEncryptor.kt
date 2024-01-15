@@ -11,9 +11,7 @@ package com.adyen.checkout.cse.internal
 import com.adyen.checkout.cse.EncryptionException
 import org.json.JSONObject
 import java.math.BigInteger
-import java.nio.ByteBuffer
 import java.security.AlgorithmParameters
-import java.security.InvalidKeyException
 import java.security.KeyFactory
 import java.security.NoSuchAlgorithmException
 import java.security.PublicKey
@@ -23,10 +21,9 @@ import java.security.spec.MGF1ParameterSpec
 import java.security.spec.RSAPublicKeySpec
 import javax.crypto.Cipher
 import javax.crypto.IllegalBlockSizeException
-import javax.crypto.Mac
 import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 import javax.crypto.spec.SecretKeySpec
@@ -75,7 +72,7 @@ internal class JSONWebEncryptor {
     }
 
     private fun encryptContentEncryptionKey(publicKey: PublicKey, contentKey: SecretKey): ByteArray {
-        val cipher = getRSAOAEPCipher(publicKey)
+        val cipher = getRSACipher(publicKey)
 
         return try {
             cipher.doFinal(contentKey.encoded)
@@ -84,7 +81,7 @@ internal class JSONWebEncryptor {
         }
     }
 
-    private fun getRSAOAEPCipher(publicKey: PublicKey): Cipher {
+    private fun getRSACipher(publicKey: PublicKey): Cipher {
         val algorithmParams = AlgorithmParameters.getInstance(OAEP_ALGORITHM)
         val mgfParamSpec = MGF1ParameterSpec.SHA256
         val paramSpec = OAEPParameterSpec(
@@ -110,28 +107,19 @@ internal class JSONWebEncryptor {
         val base64Header = Base64String(HEADER.toString().encodeToByteArray())
         val additionalData = getAdditionalAuthenticationData(base64Header)
         val vector = generateInitializationVector()
-        val compositeKey = CompositeKey(contentKey)
-        val aesCipher = getAESCBCCipher(compositeKey.encKey, vector)
-        val cipherText = aesCipher.doFinal(payload.toByteArray())
-        val additionalDataBits =
-            ByteBuffer.allocate(BITES_IN_BYTE).putLong(additionalData.size * BITES_IN_BYTE.toLong()).array()
 
-        val hmacInputLength = additionalData.size + vector.size + cipherText.size + additionalDataBits.size
-        val hmacInput = ByteBuffer.allocate(hmacInputLength)
-            .put(additionalData)
-            .put(vector)
-            .put(cipherText)
-            .put(additionalDataBits)
-            .array()
-        val hmac = computeHMAC(compositeKey.macKey, hmacInput)
-        val authTag = hmac.copyOf(compositeKey.truncatedMacLength)
+        val aesCipher = getAESCipher(contentKey, vector)
+        aesCipher.updateAAD(additionalData)
+
+        val cipherOutput = aesCipher.doFinal(payload.toByteArray())
+        val tagIndex = cipherOutput.size - AUTH_TAG_LENGTH
 
         return JWEObject(
             header = base64Header,
             encryptedKey = encryptedKey,
             initializationVector = Base64String(vector),
-            cipherText = Base64String(cipherText),
-            authTag = Base64String(authTag),
+            cipherText = Base64String(cipherOutput.copyOfRange(0, tagIndex)),
+            authTag = Base64String(cipherOutput.copyOfRange(tagIndex, cipherOutput.size)),
         )
     }
 
@@ -145,35 +133,19 @@ internal class JSONWebEncryptor {
         return iv
     }
 
-    private fun getAESCBCCipher(secretKey: SecretKey, iv: ByteArray): Cipher {
+    private fun getAESCipher(secretKey: SecretKey, iv: ByteArray): Cipher {
         val keySpec = SecretKeySpec(secretKey.encoded, AES_ALGORITHM)
-        val ivSpec = IvParameterSpec(iv)
+        val ivSpec = GCMParameterSpec(AUTH_TAG_LENGTH * BITES_IN_BYTE, iv)
 
         val cipher = try {
-            Cipher.getInstance(AES_CBC_CIPHER)
+            Cipher.getInstance(AES_GCM_CIPHER)
         } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating $AES_CBC_CIPHER Algorithm", e)
+            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Algorithm", e)
         } catch (e: NoSuchPaddingException) {
-            throw EncryptionException("Problem instantiating $AES_CBC_CIPHER Padding", e)
+            throw EncryptionException("Problem instantiating $AES_GCM_CIPHER Padding", e)
         }
         cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
         return cipher
-    }
-
-    private fun computeHMAC(macKey: SecretKey, input: ByteArray): ByteArray {
-        val mac = getMacInstance(macKey)
-        mac.update(input)
-        return mac.doFinal()
-    }
-
-    private fun getMacInstance(macKey: SecretKey): Mac {
-        return try {
-            Mac.getInstance(macKey.algorithm)
-        } catch (e: NoSuchAlgorithmException) {
-            throw EncryptionException("Problem instantiating Mac", e)
-        } catch (e: InvalidKeyException) {
-            throw EncryptionException("Problem instantiating Mac", e)
-        }.apply { init(macKey) }
     }
 
     private fun serialize(jweObject: JWEObject): String {
@@ -192,7 +164,7 @@ internal class JSONWebEncryptor {
 
     companion object {
         private const val RSA_OAEP_CIPHER = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
-        private const val AES_CBC_CIPHER = "AES/CBC/PKCS5Padding"
+        private const val AES_GCM_CIPHER = "AES/GCM/NoPadding"
 
         private const val RSA_ALGORITHM = "RSA"
         private const val AES_ALGORITHM = "AES"
@@ -202,12 +174,13 @@ internal class JSONWebEncryptor {
 
         private const val BITES_IN_BYTE = 8
         private const val RADIX = 16
-        private const val CONTENT_ENCRYPTION_KEY_BYTES = 64
-        private const val INITIALIZATION_VECTOR_BYTES = 16
+        private const val CONTENT_ENCRYPTION_KEY_BYTES = 32
+        private const val INITIALIZATION_VECTOR_BYTES = 12
+        private const val AUTH_TAG_LENGTH = 16
 
         private val HEADER = JSONObject().apply {
             put("alg", "RSA-OAEP-256")
-            put("enc", "A256CBC-HS512")
+            put("enc", "A256GCM")
             put("version", "1")
         }
     }
