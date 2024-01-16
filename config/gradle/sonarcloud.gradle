@@ -22,4 +22,11 @@ project(":example-app") {
 
 subprojects {
     apply plugin: 'org.sonarqube'
+
+    sonar {
+        properties {
+            property 'sonar.androidLint.reportPaths', "${layout.buildDirectory.get().asFile}/reports/lint-results-debug.xml"
+            property 'sonar.kotlin.detekt.reportPaths', "${layout.buildDirectory.get().asFile}/reports/detekt/detekt-results.xml"
+        }
+    }
 }
