@@ -11,6 +11,7 @@ sonar {
         property 'sonar.projectKey', 'Adyen_adyen-android'
         property 'sonar.organization', 'adyen'
         property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.gradle.skipCompile', 'true'
     }
 }
 
