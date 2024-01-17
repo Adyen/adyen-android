@@ -27,7 +27,6 @@ project.afterEvaluate {
             dependsOn 'testDebugUnitTest'
 
             reports {
-                // TODO: Set directory
                 xml.required = true
                 html.required = false
                 csv.required = false
