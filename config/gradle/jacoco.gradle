@@ -1,0 +1,115 @@
+apply plugin: 'jacoco'
+
+if (project.hasProperty('android')) {
+    android.buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
+    }
+}
+
+project.afterEvaluate {
+    jacoco {
+        toolVersion = "0.8.9"
+    }
+
+    tasks.withType(Test).configureEach {
+        jacoco {
+            excludes += coverageExclusions
+            includeNoLocationClasses = true
+        }
+    }
+
+    if (project.hasProperty('android')) {
+        tasks.register('jacocoTestReport', JacocoReport) {
+            group 'Reporting'
+            description 'Generate JaCoCo report for debug unit tests'
+            dependsOn 'testDebugUnitTest'
+
+            reports {
+                xml.required = true
+                html.required = false
+                csv.required = false
+            }
+
+            additionalSourceDirs(android.sourceSets.main.java.sourceFiles)
+            additionalSourceDirs(android.sourceSets.debug.java.sourceFiles)
+            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/intermediates/javac/debug", excludes: coverageExclusions))
+            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug", excludes: coverageExclusions))
+            executionData(
+                fileTree(dir: "${layout.buildDirectory.get().asFile}", includes: [
+                    "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+                    "jacoco/test.exec",
+                    "outputs/code-coverage/connected/*coverage.ec"
+                ]),
+                fileTree(dir: "$projectDir", includes: ['jacoco.exec'])
+            )
+        }
+    }
+}
+
+ext.coverageExclusions = [
+    // Android
+    '**/BuildConfig.*',
+    '**/Manifest*.*',
+    '**/R$*.class',
+    '**/R.class',
+
+    // Data binding
+    '**/BR$*.class',
+    '**/BR.class',
+    '**/DataBinderMapperImpl.*',
+    '**/DataBinderMapperImpl*.*',
+    '**/databinding/**',
+    '**/*BindingAdapter.*',
+    '**/*BindingAdapters.*',
+
+    // Activities, Fragments, etc. (not tested with unit tests)
+    '**/*Activity$*.*',
+    '**/*Activity.*',
+    '**/*Adapter.*',
+    '**/*Behavior.*',
+    '**/*Dialog.*',
+    '**/*Drawable.*',
+    '**/*Fragment$*.*',
+    '**/*Fragment.*',
+    '**/*View.*',
+
+    // Activity result contract
+    '**/*ActivityResults.*',
+    '**/*ResultContract.*',
+
+    // Dagger + Hilt
+    '**/*_ComponentTreeDeps.*',
+    '**/*_Factory.*',
+    '**/*_GeneratedInjector.*',
+    '**/*_HiltComponents.*',
+    '**/*_HiltComponents_*.*',
+    '**/*_HiltModules.*',
+    '**/*_HiltModules_*.*',
+    '**/*_Member*Injector.*',
+    '**/*_ProvideFactory.*',
+    '**/*_Provide*Factory.*',
+    '**/dagger/**',
+    '**/Dagger*.*',
+    '**/hilt_aggregated_deps/**',
+    '**/Hilt_*.*',
+
+    // Custom views not following *View naming
+    '**/AddressFormInput.*',
+    '**/AdyenSwipeToRevealLayout.*',
+    '**/AdyenTextInputEditText.*',
+    '**/CardNumberInput.*',
+    '**/ExpiryDateInput.*',
+    '**/GiftCardNumberInput.*',
+    '**/IbanInput.*',
+    '**/SecurityCodeInput.*',
+    '**/SocialSecurityNumberInput.*',
+
+    // Test classes
+    '**/*Test.*',
+    '**/Test*.*',
+
+    // Fix issue with JaCoCo on JDK
+    'jdk.internal.*'
+]

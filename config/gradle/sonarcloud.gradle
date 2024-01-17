@@ -11,6 +11,7 @@ sonar {
         property 'sonar.projectKey', 'Adyen_adyen-android'
         property 'sonar.organization', 'adyen'
         property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.gradle.skipCompile', 'true'
     }
 }
 
@@ -27,6 +28,8 @@ subprojects {
         properties {
             property 'sonar.androidLint.reportPaths', "${layout.buildDirectory.get().asFile}/reports/lint-results-debug.xml"
             property 'sonar.kotlin.detekt.reportPaths', "${layout.buildDirectory.get().asFile}/reports/detekt/detekt-results.xml"
+            property 'sonar.jacoco.reportPaths', "${layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+            property 'sonar.groovy.jacoco.reportPath', "${layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
         }
     }
 }
