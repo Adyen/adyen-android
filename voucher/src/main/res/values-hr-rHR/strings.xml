@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Kôd je kopiran u međuspremnik</string>
     <string name="checkout_voucher_download_pdf">Preuzmite PDF</string>
     <string name="checkout_voucher_save_image">Spremi kao sliku</string>
+    <string name="checkout_voucher_image_saved"> Slika spremljena na tvom uređaju</string>
+    <string name="checkout_voucher_image_failed"> Spremanje slike nije uspjelo</string>
     <string name="checkout_voucher_finish">Završi</string>
+    <string name="checkout_voucher_permission_denied">Dopuštenje nije dodijeljeno</string>
 </resources>

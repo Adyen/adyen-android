@@ -36,8 +36,8 @@ import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Failure
-import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Success
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.PermissionDenied
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Success
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -193,19 +193,18 @@ internal class FullVoucherView @JvmOverloads constructor(
         )
     }
 
-    // TODO: Strings need to be localized
     private fun handleEventFlow(event: VoucherUIEvent) {
         when (event) {
             Success -> {
-                context.toast("Image saved in your device")
+                context.toast(localizedContext.getString(R.string.checkout_voucher_image_saved))
             }
 
             PermissionDenied -> {
-                context.toast("Permission Denied")
+                context.toast(localizedContext.getString(R.string.checkout_voucher_permission_denied))
             }
 
             is Failure -> {
-                context.toast("Failed to save image")
+                context.toast(localizedContext.getString(R.string.checkout_voucher_image_failed))
             }
         }
     }

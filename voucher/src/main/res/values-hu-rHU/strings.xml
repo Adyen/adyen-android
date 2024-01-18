@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Kód a vágólapra másolva</string>
     <string name="checkout_voucher_download_pdf">PDF letöltése</string>
     <string name="checkout_voucher_save_image">Mentés képként</string>
+    <string name="checkout_voucher_image_saved"> Kép mentve az eszközre</string>
+    <string name="checkout_voucher_image_failed"> Nem sikerült menteni a képet</string>
     <string name="checkout_voucher_finish">Befejezés</string>
+    <string name="checkout_voucher_permission_denied">Engedély nincs megadva</string>
 </resources>

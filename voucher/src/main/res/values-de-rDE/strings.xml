@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Code wurde in die Zwischenablage kopiert</string>
     <string name="checkout_voucher_download_pdf">PDF herunterladen</string>
     <string name="checkout_voucher_save_image">Als Bild speichern</string>
+    <string name="checkout_voucher_image_saved"> Bild auf Ihrem Gerät gespeichert</string>
+    <string name="checkout_voucher_image_failed"> Bild konnte nicht gespeichert werden</string>
     <string name="checkout_voucher_finish">Abschließen</string>
+    <string name="checkout_voucher_permission_denied">Berechtigung nicht erteilt</string>
 </resources>

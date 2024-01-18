@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Koodi kopioitu leikepöydälle</string>
     <string name="checkout_voucher_download_pdf">Lataa PDF</string>
     <string name="checkout_voucher_save_image">Tallenna kuvana</string>
+    <string name="checkout_voucher_image_saved"> Laitteeseen tallennettu kuva</string>
+    <string name="checkout_voucher_image_failed"> Kuvan tallentaminen epäonnistui</string>
     <string name="checkout_voucher_finish">Lopeta</string>
+    <string name="checkout_voucher_permission_denied">Lupaa ei myönnetty</string>
 </resources>

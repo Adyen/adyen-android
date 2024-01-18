@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
     <string name="checkout_voucher_download_pdf">Λήψη PDF</string>
     <string name="checkout_voucher_save_image">Αποθήκευση ως εικόνας</string>
+    <string name="checkout_voucher_image_saved"> Η εικόνα αποθηκεύτηκε στη συσκευή σας</string>
+    <string name="checkout_voucher_image_failed"> Αποτυχία αποθήκευσης της εικόνας</string>
     <string name="checkout_voucher_finish">Τέλος</string>
+    <string name="checkout_voucher_permission_denied">Δεν εκχωρήθηκε δικαίωμα</string>
 </resources>

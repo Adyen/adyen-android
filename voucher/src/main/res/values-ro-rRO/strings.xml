@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Cod copiat în clipboard</string>
     <string name="checkout_voucher_download_pdf">Descărcați PDF</string>
     <string name="checkout_voucher_save_image">Salvați ca imagine</string>
+    <string name="checkout_voucher_image_saved"> Imagine salvată pe dispozitivul dvs.</string>
+    <string name="checkout_voucher_image_failed"> Nu s-a putut salva imaginea</string>
     <string name="checkout_voucher_finish">Finalizați</string>
+    <string name="checkout_voucher_permission_denied">Nu se acordă permisiunea</string>
 </resources>

@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Guardar como imagem</string>
     <string name="checkout_qr_code_download_image_succeeded">A transferência da imagem foi bem sucedida</string>
     <string name="checkout_qr_code_download_image_failed">A transferência da imagem falhou</string>
+    <string name="checkout_qr_code_permission_denied">Não é concedida permissão</string>
 </resources>

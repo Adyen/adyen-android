@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">De code is naar het klembord gekopieerd</string>
     <string name="checkout_voucher_download_pdf">PDF downloaden</string>
     <string name="checkout_voucher_save_image">Opslaan als afbeelding</string>
+    <string name="checkout_voucher_image_saved"> Afbeelding opgeslagen op uw apparaat</string>
+    <string name="checkout_voucher_image_failed"> Kan afbeelding niet opslaan</string>
     <string name="checkout_voucher_finish">Voltooien</string>
+    <string name="checkout_voucher_permission_denied">Geen toestemming verleend</string>
 </resources>

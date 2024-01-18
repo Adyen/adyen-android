@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">이미지로 저장</string>
     <string name="checkout_qr_code_download_image_succeeded">이미지 다운로드 성공</string>
     <string name="checkout_qr_code_download_image_failed">이미지 다운로드 실패</string>
+    <string name="checkout_qr_code_permission_denied">권한이 부여되지 않음</string>
 </resources>

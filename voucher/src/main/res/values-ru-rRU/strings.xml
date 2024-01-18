@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Код скопирован в буфер обмена</string>
     <string name="checkout_voucher_download_pdf">Загрузить PDF</string>
     <string name="checkout_voucher_save_image">Сохранить как изображение</string>
+    <string name="checkout_voucher_image_saved"> Изображение сохранено на вашем устройстве</string>
+    <string name="checkout_voucher_image_failed"> Не удалось сохранить изображение</string>
     <string name="checkout_voucher_finish">Готово</string>
+    <string name="checkout_voucher_permission_denied">Разрешение не предоставлено</string>
 </resources>

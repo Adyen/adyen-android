@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Koda je kopirana v odložišče</string>
     <string name="checkout_voucher_download_pdf">Prenos datoteke PDF</string>
     <string name="checkout_voucher_save_image">Shrani kot sliko</string>
+    <string name="checkout_voucher_image_saved"> Slika je shranjena v vaši napravi</string>
+    <string name="checkout_voucher_image_failed"> Shranjevanje slike ni uspelo</string>
     <string name="checkout_voucher_finish">Zaključi</string>
+    <string name="checkout_voucher_permission_denied">Dovoljenje ni bilo odobreno</string>
 </resources>

@@ -151,7 +151,6 @@ internal class FullQRCodeView @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
-    // TODO: Strings need to be localized
     private fun handleEventFlow(event: QrCodeUIEvent) {
         when (event) {
             Success -> {
@@ -159,7 +158,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
             }
 
             PermissionDenied -> {
-                context.toast("Permission Denied")
+                context.toast(localizedContext.getString(R.string.checkout_qr_code_permission_denied))
             }
 
             is Failure -> {

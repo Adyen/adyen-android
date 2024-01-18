@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Сохранить как изображение</string>
     <string name="checkout_qr_code_download_image_succeeded">Изображение загружено</string>
     <string name="checkout_qr_code_download_image_failed">Сбой загрузки изображения</string>
+    <string name="checkout_qr_code_permission_denied">Разрешение не предоставлено</string>
 </resources>

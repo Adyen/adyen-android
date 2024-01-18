@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">%%pix.instructions.copiedMessage%%</string>
     <string name="checkout_voucher_download_pdf">%%download.pdf%%</string>
     <string name="checkout_voucher_save_image">%%voucher.saveImage%%</string>
+    <string name="checkout_voucher_image_saved">%%voucher.image.saved%%</string>
+    <string name="checkout_voucher_image_failed">%%voucher.image.failed%%</string>
     <string name="checkout_voucher_finish">%%voucher.finish%%</string>
+    <string name="checkout_voucher_permission_denied">%%runtimePermission.permissionDeniedMessage%%</string>
 </resources>

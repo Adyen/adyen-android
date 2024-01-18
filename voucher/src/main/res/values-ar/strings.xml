@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">تم نسخ الرمز إلى الحافظة</string>
     <string name="checkout_voucher_download_pdf">تنزيل ملف PDF</string>
     <string name="checkout_voucher_save_image">حفظ كصورة</string>
+    <string name="checkout_voucher_image_saved"> الصورة حُفِظَت في جهازك</string>
+    <string name="checkout_voucher_image_failed"> فشل حفظ الصورة</string>
     <string name="checkout_voucher_finish">إنهاء</string>
+    <string name="checkout_voucher_permission_denied">لم يتم منح الإذن</string>
 </resources>

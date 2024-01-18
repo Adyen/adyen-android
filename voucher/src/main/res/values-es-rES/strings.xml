@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Código copiado al portapapeles</string>
     <string name="checkout_voucher_download_pdf">Descargar PDF</string>
     <string name="checkout_voucher_save_image">Guardar como imagen</string>
+    <string name="checkout_voucher_image_saved"> Imagen guardada en su dispositivo</string>
+    <string name="checkout_voucher_image_failed"> Error al guardar la imagen</string>
     <string name="checkout_voucher_finish">Finalizar</string>
+    <string name="checkout_voucher_permission_denied">No se ha dado permiso</string>
 </resources>

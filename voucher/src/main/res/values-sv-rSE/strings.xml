@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Koden kopierades till Urklipp</string>
     <string name="checkout_voucher_download_pdf">Ladda ner PDF</string>
     <string name="checkout_voucher_save_image">Spara som bild</string>
+    <string name="checkout_voucher_image_saved"> Bild sparad på din enhet</string>
+    <string name="checkout_voucher_image_failed"> Det gick inte att spara bilden</string>
     <string name="checkout_voucher_finish">Avsluta</string>
+    <string name="checkout_voucher_permission_denied">Behörighet beviljas inte</string>
 </resources>

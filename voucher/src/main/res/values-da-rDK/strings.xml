@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Koden er kopieret til udklipsholderen</string>
     <string name="checkout_voucher_download_pdf">Download PDF</string>
     <string name="checkout_voucher_save_image">Gem som billede</string>
+    <string name="checkout_voucher_image_saved"> Billedet er gemt på din enhed</string>
+    <string name="checkout_voucher_image_failed"> Kunne ikke gemme billedet</string>
     <string name="checkout_voucher_finish">Afslut</string>
+    <string name="checkout_voucher_permission_denied">Tilladelse er ikke givet</string>
 </resources>

@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Code copied to clipboard</string>
     <string name="checkout_voucher_download_pdf">Download PDF</string>
     <string name="checkout_voucher_save_image">Save as image</string>
+    <string name="checkout_voucher_image_saved"> Image saved in your device</string>
+    <string name="checkout_voucher_image_failed"> Failed to save image</string>
     <string name="checkout_voucher_finish">Finish</string>
+    <string name="checkout_voucher_permission_denied">Permission is not granted</string>
 </resources>

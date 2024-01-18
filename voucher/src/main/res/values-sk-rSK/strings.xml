@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">Kód bol skopírovaný do schránky</string>
     <string name="checkout_voucher_download_pdf">Stiahnuť vo formáte PDF</string>
     <string name="checkout_voucher_save_image">Uložiť ako obrázok</string>
+    <string name="checkout_voucher_image_saved"> Obrázok uložený vo vašom zariadení</string>
+    <string name="checkout_voucher_image_failed"> Nepodarilo sa uložiť obrázok</string>
     <string name="checkout_voucher_finish">Dokončiť</string>
+    <string name="checkout_voucher_permission_denied">Povolenie nebolo udelené</string>
 </resources>

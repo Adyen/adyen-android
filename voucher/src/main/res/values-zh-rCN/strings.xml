@@ -18,5 +18,8 @@
     <string name="checkout_voucher_copied_toast">代码复制到剪贴板</string>
     <string name="checkout_voucher_download_pdf">下载 PDF 文件</string>
     <string name="checkout_voucher_save_image">另存为图片</string>
+    <string name="checkout_voucher_image_saved"> 图片已保存在您的设备中</string>
+    <string name="checkout_voucher_image_failed"> 保存图片失败</string>
     <string name="checkout_voucher_finish">完成</string>
+    <string name="checkout_voucher_permission_denied">未授予权限</string>
 </resources>
