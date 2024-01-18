@@ -177,10 +177,10 @@ internal class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun onSaveAsImageClicked() {
-        binding.flexboxLayoutButtons.isVisible = false
+        binding.layoutButtons.isVisible = false
         doOnNextLayout {
             delegate.saveVoucherAsImage(context, this)
-            binding.flexboxLayoutButtons.isVisible = true
+            binding.layoutButtons.isVisible = true
         }
     }
 

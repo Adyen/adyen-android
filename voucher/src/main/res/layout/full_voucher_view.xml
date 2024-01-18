@@ -100,13 +100,12 @@
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
 
     <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/flexboxLayout_buttons"
+        android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:flexWrap="wrap"
-        app:justifyContent="space_between"
+        app:justifyContent="space_around"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/space_buttons">
 
@@ -132,7 +131,7 @@
         android:id="@+id/space_informationFields"
         android:layout_width="match_parent"
         android:layout_height="@dimen/standard_margin"
-        app:layout_constraintTop_toBottomOf="@id/flexboxLayout_buttons" />
+        app:layout_constraintTop_toBottomOf="@id/layout_buttons" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_informationFields"
