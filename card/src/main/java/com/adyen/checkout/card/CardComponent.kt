@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.AddressLookupComponent
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -49,6 +50,7 @@ open class CardComponent constructor(
     PaymentComponent,
     ViewableComponent,
     ButtonComponent,
+    AddressLookupComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -116,32 +118,15 @@ open class CardComponent constructor(
         cardDelegate.setOnBinLookupListener(listener)
     }
 
-    /**
-     * Set a callback that will be triggered to perform address lookup actions.
-     *
-     * @param addressLookupCallback The callback that will be triggered to perform address lookup options such as
-     * query changes, completion of the lookup.
-     */
-    fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
         cardDelegate.setAddressLookupCallback(addressLookupCallback)
     }
 
-    /**
-     * Updates the address options that will be displayed to the shopper in
-     * [com.adyen.checkout.ui.core.internal.ui.view.AddressLookupView] as part of [CardComponent].
-     *
-     * @param options Address option list to be displayed.
-     */
-    fun updateAddressLookupOptions(options: List<LookupAddress>) {
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) {
         cardDelegate.updateAddressLookupOptions(options)
     }
 
-    /**
-     * Set the result of address completion call.
-     *
-     * @param addressLookupResult The result.
-     */
-    fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
         cardDelegate.setAddressLookupResult(addressLookupResult)
     }
 
