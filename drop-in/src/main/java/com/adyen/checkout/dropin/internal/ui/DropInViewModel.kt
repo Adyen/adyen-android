@@ -30,7 +30,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
@@ -62,8 +61,7 @@ internal class DropInViewModel(
 
     val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
 
-    val dropInComponentParams: DropInComponentParams =
-        requireNotNull(checkoutConfiguration.getDropInConfiguration()).mapToParams(checkoutConfiguration.amount)
+    val dropInComponentParams: DropInComponentParams = checkoutConfiguration.mapToParams(checkoutConfiguration.amount)
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 

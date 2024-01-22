@@ -445,6 +445,6 @@ internal fun getComponentFor(
     }
 }
 
-internal fun DropInConfiguration.mapToParams(amount: Amount?): DropInComponentParams {
+internal fun CheckoutConfiguration.mapToParams(amount: Amount?): DropInComponentParams {
     return DropInComponentParamsMapper().mapToParams(this, amount)
 }

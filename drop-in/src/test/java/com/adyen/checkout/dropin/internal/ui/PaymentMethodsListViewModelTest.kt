@@ -9,14 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.app.Application
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.ConfigurationProvider
 import com.adyen.checkout.dropin.internal.DataProvider
 import com.adyen.checkout.dropin.internal.Helpers.mapToPaymentMethodModelList
@@ -28,10 +25,8 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.test.runTest
-import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -51,43 +46,18 @@ internal class PaymentMethodsListViewModelTest(
     @Mock private val application: Application
 ) {
 
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    private lateinit var checkoutConfiguration: CheckoutConfiguration
-    private lateinit var dropInConfiguration: DropInConfiguration
-    private lateinit var amount: Amount
-    private lateinit var paymentMethods: List<PaymentMethod>
-    private lateinit var storedPaymentMethods: MutableList<StoredPaymentMethod>
     private lateinit var viewModel: PaymentMethodsListViewModel
-    private var order: OrderModel? = null
-    private var sessionDetails: SessionDetails? = null
 
     @BeforeEach
     fun setup() {
-        checkoutConfiguration = ConfigurationProvider.getCheckoutConfiguration()
-        dropInConfiguration = checkoutConfiguration.getDropInConfiguration()!!
-        amount = Amount(currency = "EUR", value = 1234567)
-        paymentMethods = DataProvider.getPaymentMethodsList()
-        storedPaymentMethods = DataProvider.getStoredPaymentMethods().toMutableList()
-        order = DataProvider.getOrder()
         whenever(application.getString(any(), any())) doReturn "string"
-        viewModel = PaymentMethodsListViewModel(
-            application = application,
-            paymentMethods = paymentMethods,
-            storedPaymentMethods = storedPaymentMethods,
-            order = order,
-            checkoutConfiguration = checkoutConfiguration,
-            dropInComponentParams = dropInConfiguration.mapToParams(amount),
-            sessionDetails = sessionDetails,
-        )
+        viewModel = createViewModel()
     }
 
     @Test
     fun `test remove stored payment method success`() = runTest {
         viewModel.paymentMethodsFlow.test {
-            val paymentMethods = storedPaymentMethods
-                .mapToStoredPaymentMethodsModelList(dropInConfiguration.isRemovingStoredPaymentMethodsEnabled)
+            val paymentMethods = DataProvider.getStoredPaymentMethods().mapToStoredPaymentMethodsModelList(true)
             val storedPaymentMethod = paymentMethods[0]
 
             viewModel.removePaymentMethodWithId(storedPaymentMethod.id)
@@ -100,11 +70,16 @@ internal class PaymentMethodsListViewModelTest(
 
     @Test
     fun `test get payment method from payment method model success`() {
+        val paymentMethod = PaymentMethod(type = "test", name = "Test pm")
+        val paymentMethods = listOf(paymentMethod)
+        viewModel = createViewModel(
+            paymentMethods = paymentMethods,
+        )
         val paymentMethodModelList = paymentMethods.mapToPaymentMethodModelList()
 
-        val paymentMethod = viewModel.getPaymentMethod(paymentMethodModelList[0])
+        val actual = viewModel.getPaymentMethod(paymentMethodModelList[0])
 
-        assertEquals(paymentMethod, paymentMethods[0])
+        assertEquals(paymentMethod, actual)
     }
 
     @Nested
@@ -126,17 +101,7 @@ internal class PaymentMethodsListViewModelTest(
 
         @Test
         fun `payment methods list is empty, then payment method flow won't contain payment methods`() = runTest {
-            paymentMethods = emptyList()
-
-            viewModel = PaymentMethodsListViewModel(
-                application = application,
-                paymentMethods = paymentMethods,
-                storedPaymentMethods = storedPaymentMethods,
-                order = order,
-                checkoutConfiguration = checkoutConfiguration,
-                dropInComponentParams = dropInConfiguration.mapToParams(amount),
-                sessionDetails = sessionDetails,
-            )
+            viewModel = createViewModel(paymentMethods = emptyList())
 
             viewModel.paymentMethodsFlow.test {
                 with(expectMostRecentItem()) {
@@ -152,17 +117,7 @@ internal class PaymentMethodsListViewModelTest(
         @Test
         fun `stored payment methods list is empty, then payment method flow won't contain stored payment methods`() =
             runTest {
-                storedPaymentMethods = mutableListOf()
-
-                viewModel = PaymentMethodsListViewModel(
-                    application = application,
-                    paymentMethods = paymentMethods,
-                    storedPaymentMethods = storedPaymentMethods,
-                    order = order,
-                    checkoutConfiguration = checkoutConfiguration,
-                    dropInComponentParams = dropInConfiguration.mapToParams(amount),
-                    sessionDetails = sessionDetails,
-                )
+                viewModel = createViewModel(storedPaymentMethods = emptyList())
 
                 viewModel.paymentMethodsFlow.test {
                     with(expectMostRecentItem()) {
@@ -177,17 +132,7 @@ internal class PaymentMethodsListViewModelTest(
 
         @Test
         fun `order is null, then payment method flow won't contain gift cards or payment method note`() = runTest {
-            order = null
-
-            viewModel = PaymentMethodsListViewModel(
-                application = application,
-                paymentMethods = paymentMethods,
-                storedPaymentMethods = storedPaymentMethods,
-                order = order,
-                checkoutConfiguration = checkoutConfiguration,
-                dropInComponentParams = dropInConfiguration.mapToParams(amount),
-                sessionDetails = sessionDetails,
-            )
+            viewModel = createViewModel(order = null)
 
             viewModel.paymentMethodsFlow.test {
                 with(expectMostRecentItem()) {
@@ -203,17 +148,9 @@ internal class PaymentMethodsListViewModelTest(
         @Test
         fun `stored and normal payment methods lists are empty, then payment method flow won't contain stored or normal payment methods`() =
             runTest {
-                storedPaymentMethods = mutableListOf()
-                paymentMethods = emptyList()
-
-                viewModel = PaymentMethodsListViewModel(
-                    application = application,
-                    paymentMethods = paymentMethods,
-                    storedPaymentMethods = storedPaymentMethods,
-                    order = order,
-                    checkoutConfiguration = checkoutConfiguration,
-                    dropInComponentParams = dropInConfiguration.mapToParams(amount),
-                    sessionDetails = sessionDetails,
+                viewModel = createViewModel(
+                    storedPaymentMethods = emptyList(),
+                    paymentMethods = emptyList(),
                 )
 
                 viewModel.paymentMethodsFlow.test {
@@ -229,18 +166,10 @@ internal class PaymentMethodsListViewModelTest(
 
         @Test
         fun `all payment methods are empty, then payment method flow will be empty`() = runTest {
-            storedPaymentMethods = mutableListOf()
-            paymentMethods = emptyList()
-            order = null
-
-            viewModel = PaymentMethodsListViewModel(
-                application = application,
-                paymentMethods = paymentMethods,
-                storedPaymentMethods = storedPaymentMethods,
-                order = order,
-                checkoutConfiguration = checkoutConfiguration,
-                dropInComponentParams = dropInConfiguration.mapToParams(amount),
-                sessionDetails = sessionDetails,
+            viewModel = createViewModel(
+                storedPaymentMethods = emptyList(),
+                paymentMethods = emptyList(),
+                order = null,
             )
 
             viewModel.paymentMethodsFlow.test {
@@ -250,4 +179,20 @@ internal class PaymentMethodsListViewModelTest(
             }
         }
     }
+
+    private fun createViewModel(
+        checkoutConfiguration: CheckoutConfiguration = ConfigurationProvider.getCheckoutConfiguration(),
+        amount: Amount = Amount(currency = "EUR", value = 1234567),
+        paymentMethods: List<PaymentMethod> = DataProvider.getPaymentMethodsList(),
+        storedPaymentMethods: List<StoredPaymentMethod> = DataProvider.getStoredPaymentMethods(),
+        order: OrderModel? = DataProvider.getOrder(),
+    ) = PaymentMethodsListViewModel(
+        application = application,
+        paymentMethods = paymentMethods,
+        storedPaymentMethods = storedPaymentMethods,
+        order = order,
+        checkoutConfiguration = checkoutConfiguration,
+        dropInComponentParams = checkoutConfiguration.mapToParams(amount),
+        sessionDetails = null,
+    )
 }

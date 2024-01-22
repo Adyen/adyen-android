@@ -9,28 +9,28 @@
 package com.adyen.checkout.dropin.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.getDropInConfiguration
 
 internal class DropInComponentParamsMapper {
 
     fun mapToParams(
-        dropInConfiguration: DropInConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         overrideAmount: Amount?,
     ): DropInComponentParams {
-        with(dropInConfiguration) {
-            return DropInComponentParams(
-                shopperLocale = shopperLocale,
-                environment = environment,
-                clientKey = clientKey,
-                analyticsParams = AnalyticsParams(analyticsConfiguration),
-                isCreatedByDropIn = true,
-                amount = overrideAmount,
-                showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod,
-                skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod,
-                isRemovingStoredPaymentMethodsEnabled = isRemovingStoredPaymentMethodsEnabled,
-                additionalDataForDropInService = additionalDataForDropInService,
-            )
-        }
+        val dropInConfiguration = checkoutConfiguration.getDropInConfiguration()
+        return DropInComponentParams(
+            shopperLocale = checkoutConfiguration.shopperLocale,
+            environment = checkoutConfiguration.environment,
+            clientKey = checkoutConfiguration.clientKey,
+            analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),
+            isCreatedByDropIn = true,
+            amount = overrideAmount,
+            showPreselectedStoredPaymentMethod = dropInConfiguration?.showPreselectedStoredPaymentMethod ?: true,
+            skipListWhenSinglePaymentMethod = dropInConfiguration?.skipListWhenSinglePaymentMethod ?: false,
+            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled ?: false,
+            additionalDataForDropInService = dropInConfiguration?.additionalDataForDropInService,
+        )
     }
 }
