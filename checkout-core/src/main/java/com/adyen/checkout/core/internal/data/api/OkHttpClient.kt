@@ -83,11 +83,7 @@ internal class OkHttpClient(
                 response.body?.close()
                 return bytes
             } else {
-                val exception = HttpException(
-                    code = response.code,
-                    message = response.message,
-                    errorBody = response.errorBody()
-                )
+                val exception = response.getHttpException()
                 response.body?.close()
                 throw exception
             }
@@ -101,7 +97,7 @@ internal class OkHttpClient(
         (defaultHeaders + this).toHeaders()
 
     @Suppress("SwallowedException")
-    private fun Response.errorBody(): ErrorResponseBody? {
+    private fun Response.getHttpException(): HttpException {
         val stringBody = try {
             body?.string()
         } catch (e: IOException) {
@@ -118,11 +114,10 @@ internal class OkHttpClient(
             null
         }
 
-        return parsedErrorResponseBody ?: ErrorResponseBody(
-            status = null,
-            errorCode = null,
-            message = stringBody,
-            errorType = null,
+        return HttpException(
+            code = parsedErrorResponseBody?.status ?: code,
+            message = parsedErrorResponseBody?.message ?: stringBody?.takeIf { it.isNotBlank() } ?: message,
+            errorBody = parsedErrorResponseBody,
         )
     }
 

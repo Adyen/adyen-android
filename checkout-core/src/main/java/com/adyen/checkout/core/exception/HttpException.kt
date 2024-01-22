@@ -14,7 +14,7 @@ import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
  * Indicates that an internal API call has failed.
  */
 class HttpException(
-    code: Int,
+    val code: Int,
     message: String,
     val errorBody: ErrorResponseBody?,
-) : CheckoutException("$code $message")
+) : CheckoutException(message)
