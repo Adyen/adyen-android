@@ -31,7 +31,7 @@ class CheckoutConfiguration(
     private val availableConfigurations = mutableMapOf<String, Configuration>()
 
     init {
-        this.apply(config)
+        apply(config)
     }
 
     // We need custom parcelization for this class to parcelize availableConfigurations.
@@ -39,25 +39,27 @@ class CheckoutConfiguration(
     @Suppress("UNCHECKED_CAST", "DEPRECATION")
     private constructor(parcel: Parcel) : this(
         shopperLocale = parcel.readSerializable() as Locale,
-        environment = parcel.readParcelable(Environment::class.java.classLoader)!!,
-        clientKey = parcel.readString()!!,
+        environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
+        clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(Amount::class.java.classLoader),
     ) {
         val size = parcel.readInt()
 
         repeat(size) {
-            val key = parcel.readString()!!
+            val key = requireNotNull(parcel.readString())
             val configClass = parcel.readSerializable() as Class<Configuration>
-            val config = parcel.readParcelable<Configuration>(configClass.classLoader)!!
+            val config = requireNotNull(parcel.readParcelable<Configuration>(configClass.classLoader))
             availableConfigurations[key] = config
         }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun addConfiguration(key: String, configuration: Configuration) {
         availableConfigurations[key] = configuration
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun addActionConfiguration(configuration: Configuration) {
         availableConfigurations[configuration::class.java.simpleName] = configuration
     }
