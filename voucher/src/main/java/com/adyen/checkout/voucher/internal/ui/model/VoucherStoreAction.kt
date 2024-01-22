@@ -13,5 +13,5 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class VoucherStoreAction {
     data class DownloadPdf(val downloadUrl: String) : VoucherStoreAction()
-    object SaveAsImage: VoucherStoreAction()
+    data object SaveAsImage : VoucherStoreAction()
 }

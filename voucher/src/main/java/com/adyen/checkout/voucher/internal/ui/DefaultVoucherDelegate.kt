@@ -20,9 +20,9 @@ import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -82,7 +82,7 @@ internal class DefaultVoucherDelegate(
             permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -99,7 +99,7 @@ internal class DefaultVoucherDelegate(
         val config = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)
         if (config == null) {
             exceptionChannel.trySend(
-                ComponentException("Payment method ${action.paymentMethodType} not supported for this action")
+                ComponentException("Payment method ${action.paymentMethodType} not supported for this action"),
             )
             return
         }
@@ -163,7 +163,7 @@ internal class DefaultVoucherDelegate(
                 context = context,
                 permissionHandler = this@DefaultVoucherDelegate,
                 view = view,
-                fileName = imageName
+                fileName = imageName,
             ).fold(
                 onSuccess = {
                     eventChannel.trySend(VoucherUIEvent.Success)
@@ -173,7 +173,7 @@ internal class DefaultVoucherDelegate(
                         is PermissionRequestException -> eventChannel.trySend(VoucherUIEvent.PermissionDenied)
                         else -> eventChannel.trySend(VoucherUIEvent.Failure(throwable))
                     }
-                }
+                },
             )
         }
     }

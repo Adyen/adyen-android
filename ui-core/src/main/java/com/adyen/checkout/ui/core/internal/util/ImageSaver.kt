@@ -26,10 +26,10 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
@@ -75,7 +75,7 @@ class ImageSaver {
 
             saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
         } catch (exception: IOException) {
-            Result.failure(CheckoutException("Malformed URL"))
+            Result.failure(CheckoutException("Malformed URL: $exception"))
         }
     }
 

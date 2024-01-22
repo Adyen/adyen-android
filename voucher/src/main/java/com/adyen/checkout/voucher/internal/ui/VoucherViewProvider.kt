@@ -38,7 +38,10 @@ internal object VoucherViewProvider : ViewProvider {
 }
 
 internal enum class VoucherComponentViewType : ComponentViewType {
-    BACS_VOUCHER, SIMPLE_VOUCHER, BOLETO_VOUCHER, FULL_VOUCHER;
+    BACS_VOUCHER,
+    SIMPLE_VOUCHER,
+    BOLETO_VOUCHER,
+    FULL_VOUCHER;
 
     override val viewProvider: ViewProvider = VoucherViewProvider
 }

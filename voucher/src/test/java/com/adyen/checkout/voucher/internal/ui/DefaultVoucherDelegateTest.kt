@@ -19,8 +19,8 @@ import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.PermissionHandlerCallback
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -69,7 +69,7 @@ internal class DefaultVoucherDelegateTest(
             observerRepository,
             GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             pdfOpener,
-            imageSaver
+            imageSaver,
         )
     }
 
@@ -87,7 +87,7 @@ internal class DefaultVoucherDelegateTest(
             permissionFlow = eq(delegate.permissionFlow),
             lifecycleOwner = eq(lifecycleOwner),
             coroutineScope = eq(coroutineScope),
-            callback = eq(callback)
+            callback = eq(callback),
         )
     }
 
@@ -101,7 +101,7 @@ internal class DefaultVoucherDelegateTest(
                     paymentData = "paymentData",
                     expiresAt = "now",
                     reference = "ref",
-                    totalAmount = Amount("EUR", 1000)
+                    totalAmount = Amount("EUR", 1000),
                 ),
                 activity,
             )
@@ -126,7 +126,7 @@ internal class DefaultVoucherDelegateTest(
                     paymentData = "paymentData",
                     expiresAt = "now",
                     reference = "ref",
-                    totalAmount = Amount("EUR", 1000)
+                    totalAmount = Amount("EUR", 1000),
                 ),
                 activity,
             )
@@ -205,7 +205,7 @@ internal class DefaultVoucherDelegateTest(
     @Test
     fun `when save voucher as image is called, then correct ui event should be emitted`() = runTest {
         whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-            Result.success(Unit)
+            Result.success(Unit),
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -222,7 +222,7 @@ internal class DefaultVoucherDelegateTest(
     fun `when save voucher as image is called with permission exception, then permission denied ui event should be emitted`() =
         runTest {
             whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-                Result.failure(PermissionRequestException("Error message for permission request exception"))
+                Result.failure(PermissionRequestException("Error message for permission request exception")),
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -239,7 +239,7 @@ internal class DefaultVoucherDelegateTest(
     fun `when save voucher as image is called with error, then failure ui event should be emitted`() = runTest {
         val throwable = ComponentException("Error message")
         whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-            Result.failure(throwable)
+            Result.failure(throwable),
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
