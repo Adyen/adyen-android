@@ -79,7 +79,7 @@ class PayEasyConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.payEasyConfiguration(
+fun CheckoutConfiguration.payEasy(
     configuration: PayEasyConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = PayEasyConfiguration.Builder(shopperLocale, environment, clientKey)

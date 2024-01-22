@@ -83,7 +83,7 @@ class OpenBankingConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.openBankingConfiguration(
+fun CheckoutConfiguration.openBanking(
     configuration: OpenBankingConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)

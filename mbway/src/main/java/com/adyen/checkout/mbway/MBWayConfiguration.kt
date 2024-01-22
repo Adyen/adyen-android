@@ -97,8 +97,7 @@ class MBWayConfiguration private constructor(
     }
 }
 
-@Suppress("FunctionName")
-fun CheckoutConfiguration.MBWayConfiguration(
+fun CheckoutConfiguration.mbWay(
     configuration: MBWayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = MBWayConfiguration.Builder(shopperLocale, environment, clientKey)

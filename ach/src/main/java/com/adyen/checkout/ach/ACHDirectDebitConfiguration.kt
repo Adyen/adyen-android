@@ -130,8 +130,7 @@ class ACHDirectDebitConfiguration private constructor(
     }
 }
 
-@Suppress("FunctionName")
-fun CheckoutConfiguration.ACHDirectDebitConfiguration(
+fun CheckoutConfiguration.achDirectDebit(
     configuration: ACHDirectDebitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = ACHDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)

@@ -72,7 +72,7 @@ class RedirectConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.redirectConfiguration(
+fun CheckoutConfiguration.redirect(
     configuration: RedirectConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = RedirectConfiguration.Builder(shopperLocale, environment, clientKey)

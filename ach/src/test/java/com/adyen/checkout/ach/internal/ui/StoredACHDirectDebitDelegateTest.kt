@@ -10,6 +10,7 @@ package com.adyen.checkout.ach.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.achDirectDebit
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -124,7 +125,7 @@ internal class StoredACHDirectDebitDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        ACHDirectDebitConfiguration(configuration)
+        achDirectDebit(configuration)
     }
 
     companion object {

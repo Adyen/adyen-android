@@ -385,7 +385,7 @@ class GooglePayConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.googlePayConfiguration(
+fun CheckoutConfiguration.googlePay(
     configuration: GooglePayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)

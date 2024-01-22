@@ -108,7 +108,7 @@ class Adyen3DS2Configuration private constructor(
     }
 }
 
-fun CheckoutConfiguration.adyen3DS2Configuration(
+fun CheckoutConfiguration.adyen3DS2(
     configuration: Adyen3DS2Configuration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)

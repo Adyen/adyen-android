@@ -9,7 +9,7 @@
 package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.bcmc.bcmcConfiguration
+import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -85,7 +85,7 @@ internal class BcmcComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            bcmcConfiguration {
+            bcmc {
                 setAmount(Amount("EUR", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             }
@@ -173,7 +173,7 @@ internal class BcmcComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        bcmcConfiguration(configuration)
+        bcmc(configuration)
     }
 
     @Suppress("LongParameterList")

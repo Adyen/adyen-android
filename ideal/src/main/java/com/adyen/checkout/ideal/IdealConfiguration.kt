@@ -83,7 +83,7 @@ class IdealConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.idealConfiguration(
+fun CheckoutConfiguration.ideal(
     configuration: IdealConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = IdealConfiguration.Builder(shopperLocale, environment, clientKey)

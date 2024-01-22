@@ -23,7 +23,7 @@ import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.getSepaConfiguration
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
-import com.adyen.checkout.sepa.sepaConfiguration
+import com.adyen.checkout.sepa.sepa
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -227,7 +227,7 @@ internal class DefaultSepaDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        sepaConfiguration(configuration)
+        sepa(configuration)
     }
 
     companion object {

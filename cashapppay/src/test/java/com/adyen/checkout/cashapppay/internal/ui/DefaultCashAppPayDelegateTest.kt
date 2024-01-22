@@ -22,7 +22,7 @@ import app.cash.paykit.core.models.sdk.CashAppPayCurrency
 import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
-import com.adyen.checkout.cashapppay.cashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayAuthorizationData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOnFileData
@@ -496,7 +496,7 @@ internal class DefaultCashAppPayDelegateTest(
         clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
         amount = amount,
     ) {
-        cashAppPayConfiguration {
+        cashAppPay {
             setReturnUrl(TEST_RETURN_URL)
             apply(configuration)
         }

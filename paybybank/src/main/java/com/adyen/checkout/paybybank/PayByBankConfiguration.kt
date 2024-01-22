@@ -76,7 +76,7 @@ class PayByBankConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.payByBankConfiguration(
+fun CheckoutConfiguration.payByBank(
     configuration: PayByBankConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = PayByBankConfiguration.Builder(shopperLocale, environment, clientKey)

@@ -84,7 +84,7 @@ class OnlineBankingPLConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.onlineBankingPLConfiguration(
+fun CheckoutConfiguration.onlineBankingPL(
     configuration: OnlineBankingPLConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = OnlineBankingPLConfiguration.Builder(shopperLocale, environment, clientKey)

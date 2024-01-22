@@ -34,9 +34,9 @@ import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
+import com.adyen.checkout.qrcode.qrCode
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
@@ -89,7 +89,7 @@ internal class DefaultQRCodeDelegateTest(
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
-            QRCodeConfiguration()
+            qrCode()
         }
         delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
@@ -478,22 +478,23 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `when refreshStatus is called with no payment data, then status for statusRepository does not get refreshed`() = runTest {
-        val statusRepository = mock<StatusRepository>()
-        val delegate = createDelegate(
-            statusRepository = statusRepository,
-            paymentDataRepository = paymentDataRepository,
-        ).apply {
-            handleAction(
-                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
-                mock(),
-            )
+    fun `when refreshStatus is called with no payment data, then status for statusRepository does not get refreshed`() =
+        runTest {
+            val statusRepository = mock<StatusRepository>()
+            val delegate = createDelegate(
+                statusRepository = statusRepository,
+                paymentDataRepository = paymentDataRepository,
+            ).apply {
+                handleAction(
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+                    mock(),
+                )
+            }
+
+            delegate.refreshStatus()
+
+            verify(statusRepository, never()).refreshStatus(any())
         }
-
-        delegate.refreshStatus()
-
-        verify(statusRepository, never()).refreshStatus(any())
-    }
 
     @Test
     fun `when downloadQRImage is called with success, then Success gets emitted`() = runTest {

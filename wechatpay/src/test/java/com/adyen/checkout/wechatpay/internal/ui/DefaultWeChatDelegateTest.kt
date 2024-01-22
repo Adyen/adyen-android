@@ -21,7 +21,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
-import com.adyen.checkout.wechatpay.weChatPayActionConfiguration
+import com.adyen.checkout.wechatpay.weChatPayAction
 import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,7 +58,7 @@ internal class DefaultWeChatDelegateTest(
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
-            weChatPayActionConfiguration()
+            weChatPayAction()
         }
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(

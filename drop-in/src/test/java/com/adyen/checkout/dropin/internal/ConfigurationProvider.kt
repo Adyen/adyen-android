@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.dropin.internal
 
-import com.adyen.checkout.bcmc.bcmcConfiguration
-import com.adyen.checkout.card.cardConfiguration
+import com.adyen.checkout.bcmc.bcmc
+import com.adyen.checkout.card.card
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.dropin.dropInConfiguration
-import com.adyen.checkout.googlepay.googlePayConfiguration
+import com.adyen.checkout.dropin.dropIn
+import com.adyen.checkout.googlepay.googlePay
 import java.util.Locale
 
 internal object ConfigurationProvider {
@@ -30,15 +30,15 @@ internal object ConfigurationProvider {
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        dropInConfiguration {
+        dropIn {
             setEnableRemovingStoredPaymentMethods(true)
         }
 
-        cardConfiguration()
+        card()
 
-        bcmcConfiguration()
+        bcmc()
 
-        googlePayConfiguration {
+        googlePay {
             setCountryCode("NL")
         }
     }

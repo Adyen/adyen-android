@@ -72,8 +72,7 @@ class QRCodeConfiguration private constructor(
     }
 }
 
-@Suppress("FunctionName")
-fun CheckoutConfiguration.QRCodeConfiguration(
+fun CheckoutConfiguration.qrCode(
     configuration: QRCodeConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)

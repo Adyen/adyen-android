@@ -153,7 +153,7 @@ class BcmcConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.bcmcConfiguration(
+fun CheckoutConfiguration.bcmc(
     configuration: BcmcConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BcmcConfiguration.Builder(shopperLocale, environment, clientKey)

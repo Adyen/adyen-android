@@ -21,7 +21,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.cardConfiguration
+import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
@@ -1202,7 +1202,7 @@ internal class DefaultCardDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        cardConfiguration {
+        card {
             setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD)
             apply(configuration)
         }

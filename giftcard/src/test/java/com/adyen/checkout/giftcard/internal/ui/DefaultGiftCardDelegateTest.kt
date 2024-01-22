@@ -23,7 +23,7 @@ import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardException
-import com.adyen.checkout.giftcard.giftCardConfiguration
+import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
@@ -419,7 +419,7 @@ internal class DefaultGiftCardDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        giftCardConfiguration(configuration)
+        giftCard(configuration)
     }
 
     private fun giftCardOutputDataWith(

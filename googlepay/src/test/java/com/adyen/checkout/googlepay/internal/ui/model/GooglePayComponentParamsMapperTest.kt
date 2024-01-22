@@ -27,7 +27,7 @@ import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
-import com.adyen.checkout.googlepay.googlePayConfiguration
+import com.adyen.checkout.googlepay.googlePay
 import com.google.android.gms.wallet.WalletConstants
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -72,7 +72,7 @@ internal class GooglePayComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             amount = amount,
         ) {
-            googlePayConfiguration {
+            googlePay {
                 setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
                 setMerchantAccount("MERCHANT_ACCOUNT")
                 setAllowPrepaidCards(true)
@@ -132,7 +132,7 @@ internal class GooglePayComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            googlePayConfiguration {
+            googlePay {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
                 setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
@@ -189,7 +189,7 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
-            googlePayConfiguration()
+            googlePay()
         }
 
         val paymentMethod = PaymentMethod(
@@ -214,7 +214,7 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
-            googlePayConfiguration()
+            googlePay()
         }
 
         assertThrows<ComponentException> {
@@ -274,7 +274,7 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.UNITED_STATES,
             clientKey = TEST_CLIENT_KEY_2,
         ) {
-            googlePayConfiguration {
+            googlePay {
                 setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
             }
         }
@@ -372,7 +372,7 @@ internal class GooglePayComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        googlePayConfiguration {
+        googlePay {
             setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
             apply(configuration)
         }

@@ -161,7 +161,7 @@ private constructor(
     }
 }
 
-fun CheckoutConfiguration.cashAppPayConfiguration(
+fun CheckoutConfiguration.cashAppPay(
     configuration: CashAppPayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)

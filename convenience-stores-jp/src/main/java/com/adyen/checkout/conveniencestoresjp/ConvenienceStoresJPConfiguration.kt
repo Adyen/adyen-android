@@ -79,7 +79,7 @@ class ConvenienceStoresJPConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.convenienceStoresJPConfiguration(
+fun CheckoutConfiguration.convenienceStoresJP(
     configuration: ConvenienceStoresJPConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = ConvenienceStoresJPConfiguration.Builder(shopperLocale, environment, clientKey)

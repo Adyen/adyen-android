@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.googlepay.googlePayConfiguration
+import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.CoroutineScope
@@ -160,7 +160,7 @@ internal class DefaultGooglePayDelegateTest(
         clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
         amount = amount,
     ) {
-        googlePayConfiguration(configuration)
+        googlePay(configuration)
     }
 
     private fun createGooglePayDelegate(

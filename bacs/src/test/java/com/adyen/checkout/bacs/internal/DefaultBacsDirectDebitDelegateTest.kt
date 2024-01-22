@@ -13,7 +13,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.bacs.R
-import com.adyen.checkout.bacs.bacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.bacsDirectDebit
 import com.adyen.checkout.bacs.getBacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
@@ -608,7 +608,7 @@ internal class DefaultBacsDirectDebitDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        bacsDirectDebitConfiguration(configuration)
+        bacsDirectDebit(configuration)
     }
 
     companion object {

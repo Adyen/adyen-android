@@ -108,7 +108,7 @@ class BoletoConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.boletoConfiguration(
+fun CheckoutConfiguration.boleto(
     configuration: BoletoConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BoletoConfiguration.Builder(shopperLocale, environment, clientKey)

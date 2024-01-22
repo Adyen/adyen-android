@@ -97,7 +97,7 @@ class SepaConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.sepaConfiguration(
+fun CheckoutConfiguration.sepa(
     configuration: SepaConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = SepaConfiguration.Builder(shopperLocale, environment, clientKey)

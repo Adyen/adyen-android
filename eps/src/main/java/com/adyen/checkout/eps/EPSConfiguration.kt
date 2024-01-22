@@ -94,8 +94,7 @@ class EPSConfiguration private constructor(
     }
 }
 
-@Suppress("FunctionName")
-fun CheckoutConfiguration.EPSConfiguration(
+fun CheckoutConfiguration.eps(
     configuration: EPSConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = EPSConfiguration.Builder(shopperLocale, environment, clientKey)

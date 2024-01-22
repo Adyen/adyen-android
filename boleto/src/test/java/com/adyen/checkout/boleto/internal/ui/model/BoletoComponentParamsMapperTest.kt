@@ -9,7 +9,7 @@
 package com.adyen.checkout.boleto.internal.ui.model
 
 import com.adyen.checkout.boleto.BoletoConfiguration
-import com.adyen.checkout.boleto.boletoConfiguration
+import com.adyen.checkout.boleto.boleto
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -70,7 +70,7 @@ internal class BoletoComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            boletoConfiguration {
+            boleto {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             }
@@ -145,7 +145,7 @@ internal class BoletoComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        boletoConfiguration(configuration)
+        boleto(configuration)
     }
 
     @Suppress("LongParameterList")

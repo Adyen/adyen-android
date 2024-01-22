@@ -436,7 +436,7 @@ class DropInConfiguration private constructor(
 
 private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
 
-fun CheckoutConfiguration.dropInConfiguration(
+fun CheckoutConfiguration.dropIn(
     configuration: Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Builder(shopperLocale, environment, clientKey)

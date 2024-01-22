@@ -83,7 +83,7 @@ class DotpayConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.dotpayConfiguration(
+fun CheckoutConfiguration.dotpay(
     configuration: DotpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = DotpayConfiguration.Builder(shopperLocale, environment, clientKey)

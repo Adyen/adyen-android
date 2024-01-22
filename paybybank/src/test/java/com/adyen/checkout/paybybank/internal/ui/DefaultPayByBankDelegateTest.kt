@@ -24,7 +24,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
-import com.adyen.checkout.paybybank.payByBankConfiguration
+import com.adyen.checkout.paybybank.payByBank
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -277,7 +277,7 @@ internal class DefaultPayByBankDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        payByBankConfiguration()
+        payByBank()
     }
 
     private fun createPayByBankDelegate(

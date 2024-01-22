@@ -98,7 +98,7 @@ class BacsDirectDebitConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.bacsDirectDebitConfiguration(
+fun CheckoutConfiguration.bacsDirectDebit(
     configuration: BacsDirectDebitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)

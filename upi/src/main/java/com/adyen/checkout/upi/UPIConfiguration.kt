@@ -95,8 +95,7 @@ class UPIConfiguration(
     }
 }
 
-@Suppress("FunctionName")
-fun CheckoutConfiguration.UPIConfiguration(
+fun CheckoutConfiguration.upi(
     configuration: UPIConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = UPIConfiguration.Builder(shopperLocale, environment, clientKey)

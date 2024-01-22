@@ -13,6 +13,7 @@ import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.R
+import com.adyen.checkout.ach.achDirectDebit
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -704,7 +705,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        ACHDirectDebitConfiguration(configuration)
+        achDirectDebit(configuration)
     }
 
     private fun getValidAddressInputData(): AddressInputModel {

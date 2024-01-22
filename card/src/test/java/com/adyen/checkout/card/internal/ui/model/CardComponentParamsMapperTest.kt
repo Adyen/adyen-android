@@ -16,7 +16,7 @@ import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.cardConfiguration
+import com.adyen.checkout.card.card
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -81,7 +81,7 @@ internal class CardComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
         ) {
-            cardConfiguration {
+            card {
                 setHolderNameRequired(true)
                 setSupportedCardTypes(CardType.DINERS, CardType.MAESTRO)
                 setShopperReference(shopperReference)
@@ -137,7 +137,7 @@ internal class CardComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            cardConfiguration {
+            card {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             }
@@ -450,7 +450,7 @@ internal class CardComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        cardConfiguration(configuration)
+        card(configuration)
     }
 
     @Suppress("LongParameterList")

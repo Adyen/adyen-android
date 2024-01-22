@@ -295,7 +295,7 @@ class CardConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.cardConfiguration(
+fun CheckoutConfiguration.card(
     configuration: CardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = CardConfiguration.Builder(shopperLocale, environment, clientKey)

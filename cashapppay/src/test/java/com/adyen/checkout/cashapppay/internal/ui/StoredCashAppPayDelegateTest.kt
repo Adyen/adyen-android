@@ -10,7 +10,7 @@ package com.adyen.checkout.cashapppay.internal.ui
 
 import android.app.Application
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
-import com.adyen.checkout.cashapppay.cashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -143,7 +143,7 @@ internal class StoredCashAppPayDelegateTest(
         clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
         amount = amount,
     ) {
-        cashAppPayConfiguration {
+        cashAppPay {
             setReturnUrl(TEST_RETURN_URL)
         }
     }

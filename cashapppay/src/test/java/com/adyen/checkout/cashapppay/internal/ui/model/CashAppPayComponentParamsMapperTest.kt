@@ -11,7 +11,7 @@ package com.adyen.checkout.cashapppay.internal.ui.model
 import android.app.Application
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
-import com.adyen.checkout.cashapppay.cashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -60,7 +60,7 @@ internal class CashAppPayComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
         ) {
-            cashAppPayConfiguration {
+            cashAppPay {
                 setCashAppPayEnvironment(CashAppPayEnvironment.PRODUCTION)
                 setReturnUrl("https://google.com")
                 setShowStorePaymentField(false)
@@ -102,7 +102,7 @@ internal class CashAppPayComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            cashAppPayConfiguration {
+            cashAppPay {
                 setReturnUrl(TEST_RETURN_URL)
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
@@ -198,7 +198,7 @@ internal class CashAppPayComponentParamsMapperTest {
                 shopperLocale = Locale.US,
                 clientKey = TEST_CLIENT_KEY_1,
             ) {
-                cashAppPayConfiguration()
+                cashAppPay()
             }
 
             CashAppPayComponentParamsMapper(false, null).mapToParams(
@@ -217,7 +217,7 @@ internal class CashAppPayComponentParamsMapperTest {
             shopperLocale = Locale.US,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
-            cashAppPayConfiguration()
+            cashAppPay()
         }
 
         val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
@@ -293,7 +293,7 @@ internal class CashAppPayComponentParamsMapperTest {
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
-            cashAppPayConfiguration {
+            cashAppPay {
                 returnUrl?.let { setReturnUrl(it) }
             }
         }
@@ -350,7 +350,7 @@ internal class CashAppPayComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        cashAppPayConfiguration {
+        cashAppPay {
             setReturnUrl(TEST_RETURN_URL)
             apply(configuration)
         }

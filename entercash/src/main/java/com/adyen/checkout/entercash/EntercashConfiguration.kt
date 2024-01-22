@@ -83,7 +83,7 @@ class EntercashConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.entercashConfiguration(
+fun CheckoutConfiguration.entercash(
     configuration: EntercashConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = EntercashConfiguration.Builder(shopperLocale, environment, clientKey)

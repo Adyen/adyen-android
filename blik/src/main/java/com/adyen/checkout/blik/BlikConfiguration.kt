@@ -97,7 +97,7 @@ class BlikConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.blikConfiguration(
+fun CheckoutConfiguration.blik(
     configuration: BlikConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BlikConfiguration.Builder(shopperLocale, environment, clientKey)

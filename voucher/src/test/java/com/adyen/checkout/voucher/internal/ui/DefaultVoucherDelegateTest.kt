@@ -30,7 +30,7 @@ import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent
-import com.adyen.checkout.voucher.voucherConfiguration
+import com.adyen.checkout.voucher.voucher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -67,7 +67,7 @@ internal class DefaultVoucherDelegateTest(
     @BeforeEach
     fun beforeEach() {
         val configuration = CheckoutConfiguration(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY) {
-            voucherConfiguration()
+            voucher()
         }
         delegate = DefaultVoucherDelegate(
             observerRepository,

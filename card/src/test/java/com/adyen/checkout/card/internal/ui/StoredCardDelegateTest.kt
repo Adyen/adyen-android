@@ -19,7 +19,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.cardConfiguration
+import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
@@ -499,7 +499,7 @@ internal class StoredCardDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        cardConfiguration(configuration)
+        card(configuration)
     }
 
     private fun getCustomCardConfiguration() = createCheckoutConfiguration {

@@ -10,6 +10,7 @@ package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.achDirectDebit
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -63,7 +64,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             ),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
         ) {
-            ACHDirectDebitConfiguration {
+            achDirectDebit {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             }
@@ -231,7 +232,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
     ) {
-        ACHDirectDebitConfiguration(configuration)
+        achDirectDebit(configuration)
     }
 
     @Suppress("LongParameterList")

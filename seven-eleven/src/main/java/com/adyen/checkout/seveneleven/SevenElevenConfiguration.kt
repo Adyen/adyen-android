@@ -79,7 +79,7 @@ class SevenElevenConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.sevenElevenConfiguration(
+fun CheckoutConfiguration.sevenEleven(
     configuration: SevenElevenConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = SevenElevenConfiguration.Builder(shopperLocale, environment, clientKey)

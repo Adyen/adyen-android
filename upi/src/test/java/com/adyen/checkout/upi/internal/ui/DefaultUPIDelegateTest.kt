@@ -24,10 +24,10 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponentState
-import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.getUPIConfiguration
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.upi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -242,7 +242,7 @@ internal class DefaultUPIDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        UPIConfiguration()
+        upi()
     }
 
     private fun createUPIDelegate(

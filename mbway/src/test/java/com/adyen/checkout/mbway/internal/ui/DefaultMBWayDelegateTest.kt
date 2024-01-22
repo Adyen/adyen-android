@@ -21,6 +21,7 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.getMBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.mbWay
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -298,7 +299,7 @@ internal class DefaultMBWayDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        MBWayConfiguration(configuration)
+        mbWay(configuration)
     }
 
     companion object {

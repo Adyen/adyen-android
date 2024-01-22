@@ -82,7 +82,7 @@ class MolpayConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.molpayConfiguration(
+fun CheckoutConfiguration.molpay(
     configuration: MolpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = MolpayConfiguration.Builder(shopperLocale, environment, clientKey)

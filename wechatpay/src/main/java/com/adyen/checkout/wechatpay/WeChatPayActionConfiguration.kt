@@ -72,7 +72,7 @@ class WeChatPayActionConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.weChatPayActionConfiguration(
+fun CheckoutConfiguration.weChatPayAction(
     configuration: WeChatPayActionConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = WeChatPayActionConfiguration.Builder(shopperLocale, environment, clientKey)

@@ -73,7 +73,7 @@ class VoucherConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.voucherConfiguration(
+fun CheckoutConfiguration.voucher(
     configuration: VoucherConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = VoucherConfiguration.Builder(shopperLocale, environment, clientKey)

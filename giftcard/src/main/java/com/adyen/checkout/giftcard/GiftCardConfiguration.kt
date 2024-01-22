@@ -113,7 +113,7 @@ class GiftCardConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.giftCardConfiguration(
+fun CheckoutConfiguration.giftCard(
     configuration: GiftCardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)

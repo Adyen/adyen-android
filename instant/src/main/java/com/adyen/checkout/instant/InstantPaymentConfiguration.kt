@@ -78,7 +78,7 @@ class InstantPaymentConfiguration private constructor(
 
 private const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
 
-fun CheckoutConfiguration.instantPaymentConfiguration(
+fun CheckoutConfiguration.instantPayment(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
     configuration: InstantPaymentConfiguration.Builder.() -> Unit = {},
 ): CheckoutConfiguration {

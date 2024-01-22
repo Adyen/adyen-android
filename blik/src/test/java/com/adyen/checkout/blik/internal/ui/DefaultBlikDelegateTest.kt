@@ -11,7 +11,7 @@ package com.adyen.checkout.blik.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.blik.blikConfiguration
+import com.adyen.checkout.blik.blik
 import com.adyen.checkout.blik.getBlikConfiguration
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.Amount
@@ -295,7 +295,7 @@ internal class DefaultBlikDelegateTest(
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        blikConfiguration(configuration)
+        blik(configuration)
     }
 
     companion object {

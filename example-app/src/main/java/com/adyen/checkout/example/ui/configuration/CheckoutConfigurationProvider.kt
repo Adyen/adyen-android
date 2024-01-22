@@ -1,31 +1,31 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
-import com.adyen.checkout.adyen3ds2.adyen3DS2Configuration
-import com.adyen.checkout.bacs.bacsDirectDebitConfiguration
-import com.adyen.checkout.bcmc.bcmcConfiguration
-import com.adyen.checkout.blik.blikConfiguration
+import com.adyen.checkout.adyen3ds2.adyen3DS2
+import com.adyen.checkout.bacs.bacsDirectDebit
+import com.adyen.checkout.bcmc.bcmc
+import com.adyen.checkout.blik.blik
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
-import com.adyen.checkout.card.cardConfiguration
+import com.adyen.checkout.card.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
-import com.adyen.checkout.cashapppay.cashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.dropin.dropInConfiguration
+import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.giftcard.giftCardConfiguration
-import com.adyen.checkout.googlepay.googlePayConfiguration
-import com.adyen.checkout.instant.instantPaymentConfiguration
-import com.adyen.checkout.redirect.redirectConfiguration
+import com.adyen.checkout.giftcard.giftCard
+import com.adyen.checkout.googlepay.googlePay
+import com.adyen.checkout.instant.instantPayment
+import com.adyen.checkout.redirect.redirect
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -59,44 +59,44 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
             // Drop-in
-            dropInConfiguration {
+            dropIn {
                 setEnableRemovingStoredPaymentMethods(true)
             }
 
             // Payment methods
-            bacsDirectDebitConfiguration()
+            bacsDirectDebit()
 
-            bcmcConfiguration {
+            bcmc {
                 setShopperReference(keyValueStorage.getShopperReference())
                 setShowStorePaymentField(true)
             }
 
-            blikConfiguration()
+            blik()
 
-            cardConfiguration {
+            card {
                 setShopperReference(keyValueStorage.getShopperReference())
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getInstallmentConfiguration())
             }
 
-            cashAppPayConfiguration {
+            cashAppPay {
                 setReturnUrl(CashAppPayComponent.getReturnUrl(context))
             }
 
-            giftCardConfiguration {
+            giftCard {
                 setPinRequired(true)
             }
 
-            googlePayConfiguration {
+            googlePay {
                 setCountryCode(keyValueStorage.getCountry())
             }
 
-            instantPaymentConfiguration()
+            instantPayment()
 
             // Actions
-            adyen3DS2Configuration()
+            adyen3DS2()
 
-            redirectConfiguration()
+            redirect()
         }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {

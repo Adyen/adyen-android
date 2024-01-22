@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
-import com.adyen.checkout.adyen3ds2.adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.adyen3DS2
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -41,7 +41,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
 
         val testUrl = "https://adyen.com"
         val configuration = getCheckoutConfiguration {
-            adyen3DS2Configuration {
+            adyen3DS2 {
                 setUiCustomization(uiCustomization)
                 setThreeDSRequestorAppURL(testUrl)
             }

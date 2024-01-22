@@ -72,7 +72,7 @@ class AwaitConfiguration private constructor(
     }
 }
 
-fun CheckoutConfiguration.awaitConfiguration(
+fun CheckoutConfiguration.await(
     configuration: AwaitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
