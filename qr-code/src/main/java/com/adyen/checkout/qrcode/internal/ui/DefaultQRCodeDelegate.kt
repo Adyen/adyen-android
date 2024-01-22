@@ -32,7 +32,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -41,6 +40,7 @@ import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.RedirectHandler
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +54,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.Date
+import java.util.Calendar
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -298,7 +298,7 @@ internal class DefaultQRCodeDelegate(
 
     override fun downloadQRImage(context: Context) {
         val paymentMethodType = outputData.paymentMethodType ?: ""
-        val timestamp = DateUtils.formatDateToString(Date(), componentParams.shopperLocale)
+        val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
         val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
 
         coroutineScope.launch {
@@ -308,7 +308,9 @@ internal class DefaultQRCodeDelegate(
                 imageUrl = outputData.qrImageUrl.orEmpty(),
                 fileName = imageName
             ).fold(
-                onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
+                onSuccess = {
+                    eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success)
+                },
                 onFailure = { throwable ->
                     when (throwable) {
                         is PermissionRequestException -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)

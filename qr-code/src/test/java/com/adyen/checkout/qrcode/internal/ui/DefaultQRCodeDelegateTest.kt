@@ -25,12 +25,14 @@ import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.FileDownloader
+import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
+import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -44,12 +46,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.spy
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
@@ -65,11 +66,11 @@ internal class DefaultQRCodeDelegateTest(
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultQRCodeDelegate
-    private lateinit var fileDownloader: FileDownloader
+    private lateinit var imageSaver: ImageSaver
 
     @BeforeEach
     fun beforeEach() {
-        fileDownloader = spy(FileDownloader(context))
+        imageSaver = mock<ImageSaver>()
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -85,7 +86,7 @@ internal class DefaultQRCodeDelegateTest(
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
-            fileDownloader = fileDownloader
+            imageSaver = imageSaver
         )
         AdyenLogger.setLogLevel(Logger.NONE)
     }
@@ -386,34 +387,64 @@ internal class DefaultQRCodeDelegateTest(
 
     @Test
     fun `test download qr image with successful result`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+            Result.success(Unit)
+        )
 
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.eventFlow.test {
-            val result = Result.success(Unit)
-            whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn result
             val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Success
 
-            delegate.downloadQRImage()
+            delegate.downloadQRImage(context)
 
             assertEquals(expectedResult, expectMostRecentItem())
-            verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString())
+        }
+    }
+
+    @Test
+    fun `test download qr image with permission failure result`() = runTest {
+        whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+            Result.failure(PermissionRequestException("Error message for permission request exception"))
+        )
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.eventFlow.test {
+            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.PermissionDenied
+
+            delegate.downloadQRImage(context)
+
+            assertEquals(expectedResult, expectMostRecentItem())
         }
     }
 
     @Test
     fun `test download qr image with failure result`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val throwable = CheckoutException("error")
+        whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+            Result.failure(throwable)
+        )
 
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.eventFlow.test {
-            val throwable = CheckoutException("error")
-            val result = Result.failure<Unit>(throwable)
-            whenever(fileDownloader.download(anyString(), anyString(), anyString(), anyString())) doReturn result
             val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Failure(throwable)
 
-            delegate.downloadQRImage()
+            delegate.downloadQRImage(context)
 
             assertEquals(expectedResult, expectMostRecentItem())
-            verify(fileDownloader).download(anyString(), anyString(), anyString(), anyString())
+        }
+    }
+
+    @Test
+    fun `test request permission`() = runTest {
+        val requiredPermission = "Required Permission"
+        val permissionCallback = mock<PermissionHandlerCallback>()
+
+        delegate.permissionFlow.test {
+            delegate.requestPermission(context, requiredPermission, permissionCallback)
+
+            val mostRecentValue = expectMostRecentItem()
+            assertEquals(requiredPermission, mostRecentValue.requiredPermission)
+            assertEquals(permissionCallback, mostRecentValue.permissionCallback)
         }
     }
 

@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.Calendar
 
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
@@ -149,13 +149,13 @@ internal class DefaultVoucherDelegate(
         try {
             pdfOpener.open(context, downloadUrl)
         } catch (e: IllegalStateException) {
-            exceptionChannel.trySend(CheckoutException(e.message ?: "", e.cause))
+            exceptionChannel.trySend(ComponentException(e.message ?: "", e.cause))
         }
     }
 
     override fun saveVoucherAsImage(context: Context, view: View) {
         val paymentMethodType = outputData.paymentMethodType ?: ""
-        val timestamp = DateUtils.formatDateToString(Date(), componentParams.shopperLocale)
+        val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
         val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
 
         coroutineScope.launch {

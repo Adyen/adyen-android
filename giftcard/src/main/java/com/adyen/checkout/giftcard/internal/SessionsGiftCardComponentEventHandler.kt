@@ -61,7 +61,6 @@ class SessionsGiftCardComponentEventHandler(
         event: PaymentComponentEvent<GiftCardComponentState>,
         componentCallback: BaseComponentCallback
     ) {
-        @Suppress("UNCHECKED_CAST")
         val sessionComponentCallback = componentCallback as? SessionsGiftCardComponentCallback
             ?: throw CheckoutException("Callback must be type of ${SessionComponentCallback::class.java.canonicalName}")
         Logger.v(TAG, "Event received $event")

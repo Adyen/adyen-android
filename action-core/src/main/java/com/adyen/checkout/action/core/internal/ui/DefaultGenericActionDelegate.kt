@@ -15,11 +15,11 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.PermissionRequestParams
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
