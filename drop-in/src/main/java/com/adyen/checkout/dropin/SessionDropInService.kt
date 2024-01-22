@@ -89,6 +89,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(
                         errorDialog = ErrorDialog(),
+                        reason = result.throwable.message,
                         dismissDropIn = true,
                     )
 
@@ -97,6 +98,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(
                         errorDialog = ErrorDialog(),
+                        reason = "Payment was refused while making a partial payment",
                     )
 
                 is SessionCallResult.Payments.TakenOver -> {
@@ -122,6 +124,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(
                         errorDialog = ErrorDialog(),
+                        reason = result.throwable.message,
                         dismissDropIn = true,
                     )
 
@@ -146,7 +149,10 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Balance.Error ->
-                    BalanceDropInServiceResult.Error(errorDialog = ErrorDialog())
+                    BalanceDropInServiceResult.Error(
+                        errorDialog = ErrorDialog(),
+                        reason = result.throwable.message,
+                    )
 
                 is SessionCallResult.Balance.Successful -> BalanceDropInServiceResult.Balance(result.balanceResult)
                 SessionCallResult.Balance.TakenOver -> {
@@ -170,6 +176,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.CreateOrder.Error ->
                     OrderDropInServiceResult.Error(
                         errorDialog = ErrorDialog(),
+                        reason = result.throwable.message,
                         dismissDropIn = true,
                     )
 
@@ -195,7 +202,10 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
 
             val dropInServiceResult = when (result) {
                 is SessionCallResult.CancelOrder.Error ->
-                    DropInServiceResult.Error(errorDialog = ErrorDialog())
+                    DropInServiceResult.Error(
+                        errorDialog = ErrorDialog(),
+                        reason = result.throwable.message,
+                    )
 
                 SessionCallResult.CancelOrder.Successful -> {
                     if (!shouldUpdatePaymentMethods) return@launch
@@ -222,6 +232,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             is SessionCallResult.UpdatePaymentMethods.Error ->
                 DropInServiceResult.Error(
                     errorDialog = ErrorDialog(),
+                    reason = result.throwable.message,
                     dismissDropIn = true,
                 )
         }
