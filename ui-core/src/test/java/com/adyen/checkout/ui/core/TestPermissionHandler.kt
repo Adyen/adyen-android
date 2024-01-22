@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.core
 
 import android.content.Context
 import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.core.PermissionHandlerCallback
 
 class TestPermissionHandler(
     private val shouldGrantPermission: Boolean = false

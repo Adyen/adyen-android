@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DateUtils {
     private const val DEFAULT_INPUT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"

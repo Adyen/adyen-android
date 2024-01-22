@@ -135,6 +135,7 @@ class DateUtilsTest {
             }
 
         @JvmStatic
+        @Suppress("LongParameterList")
         fun getCalendar(year: Int, month: Int, date: Int, hourOfDay: Int, minute: Int, second: Int): Calendar =
             Calendar.getInstance().apply {
                 set(year, month, date, hourOfDay, minute, second)

@@ -12,7 +12,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.core.PermissionHandlerCallback
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

@@ -21,10 +21,11 @@ class ActionObserverRepository(
     private val observerContainer: ObserverContainer = ObserverContainer()
 ) {
 
+    @Suppress("LongParameterList")
     fun addObservers(
         detailsFlow: Flow<ActionComponentData>?,
         exceptionFlow: Flow<CheckoutException>?,
-        permissionFlow: Flow<PermissionRequestParams>?,
+        permissionFlow: Flow<PermissionRequestData>?,
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
         callback: (ActionComponentEvent) -> Unit,
@@ -40,11 +41,11 @@ class ActionObserverRepository(
                 callback(ActionComponentEvent.Error(ComponentError(exception)))
             }
 
-            permissionFlow?.observe(lifecycleOwner, coroutineScope) { requestParams ->
+            permissionFlow?.observe(lifecycleOwner, coroutineScope) { requestData ->
                 callback(
                     ActionComponentEvent.PermissionRequest(
-                        requestParams.requiredPermission,
-                        requestParams.permissionCallback
+                        requestData.requiredPermission,
+                        requestData.permissionCallback
                     )
                 )
             }

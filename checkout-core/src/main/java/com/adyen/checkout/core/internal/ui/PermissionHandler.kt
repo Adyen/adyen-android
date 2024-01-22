@@ -9,12 +9,10 @@
 package com.adyen.checkout.core.internal.ui
 
 import android.content.Context
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.PermissionHandlerCallback
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PermissionHandler {
     fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback)
-}
-
-interface PermissionHandlerCallback {
-    fun onPermissionGranted(requestedPermission: String)
-    fun onPermissionDenied(requestedPermission: String)
 }

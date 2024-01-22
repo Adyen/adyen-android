@@ -16,13 +16,13 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -53,8 +53,8 @@ internal class DefaultVoucherDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
+    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
 
     override val outputData: VoucherOutputData get() = _outputDataFlow.value
 
@@ -179,8 +179,8 @@ internal class DefaultVoucherDelegate(
     }
 
     override fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback) {
-        val requestParams = PermissionRequestParams(requiredPermission, callback)
-        permissionChannel.trySend(requestParams)
+        val requestData = PermissionRequestData(requiredPermission, callback)
+        permissionChannel.trySend(requestData)
     }
 
     override fun onCleared() {

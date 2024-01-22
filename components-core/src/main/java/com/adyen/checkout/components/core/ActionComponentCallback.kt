@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.ActionComponent
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.core.PermissionHandlerCallback
 import org.json.JSONObject
 
 /**

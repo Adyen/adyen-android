@@ -9,11 +9,11 @@
 package com.adyen.checkout.components.core.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PermissionRequestingDelegate {
 
-    val permissionFlow: Flow<PermissionRequestParams>
+    val permissionFlow: Flow<PermissionRequestData>
 }

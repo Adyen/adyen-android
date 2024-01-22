@@ -21,7 +21,7 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -30,9 +30,9 @@ import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
@@ -75,8 +75,8 @@ internal class DefaultQRCodeDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
+    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
 
     override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
@@ -313,7 +313,9 @@ internal class DefaultQRCodeDelegate(
                 },
                 onFailure = { throwable ->
                     when (throwable) {
-                        is PermissionRequestException -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
+                        is PermissionRequestException ->
+                            eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
+
                         else -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(throwable))
                     }
                 }
@@ -322,8 +324,8 @@ internal class DefaultQRCodeDelegate(
     }
 
     override fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback) {
-        val requestParams = PermissionRequestParams(requiredPermission, callback)
-        permissionChannel.trySend(requestParams)
+        val requestData = PermissionRequestData(requiredPermission, callback)
+        permissionChannel.trySend(requestData)
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {

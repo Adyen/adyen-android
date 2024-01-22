@@ -9,13 +9,13 @@
 package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.internal.ui.PermissionHandlerCallback
+import com.adyen.checkout.core.PermissionHandlerCallback
 
 /**
  * Runtime permission request data
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class PermissionRequestParams(
+data class PermissionRequestData(
     val requiredPermission: String,
     val permissionCallback: PermissionHandlerCallback
 )

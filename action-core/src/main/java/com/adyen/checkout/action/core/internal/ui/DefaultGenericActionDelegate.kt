@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
-import com.adyen.checkout.components.core.internal.PermissionRequestParams
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -68,8 +68,8 @@ internal class DefaultGenericActionDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val permissionChannel: Channel<PermissionRequestParams> = bufferedChannel()
-    override val permissionFlow: Flow<PermissionRequestParams> = permissionChannel.receiveAsFlow()
+    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
 
     private var onRedirectListener: (() -> Unit)? = null
 
@@ -153,7 +153,7 @@ internal class DefaultGenericActionDelegate(
 
     private fun observePermissionRequests(delegate: ActionDelegate) {
         if (delegate !is PermissionRequestingDelegate) return
-        Logger.d(TAG, "Observing details")
+        Logger.d(TAG, "Observing permission requests")
         delegate.permissionFlow
             .onEach { permissionChannel.trySend(it) }
             .launchIn(coroutineScope)
