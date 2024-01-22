@@ -2,9 +2,7 @@ package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
 import com.adyen.checkout.adyen3ds2.adyen3DS2
-import com.adyen.checkout.bacs.bacsDirectDebit
 import com.adyen.checkout.bcmc.bcmc
-import com.adyen.checkout.blik.blik
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
@@ -24,8 +22,6 @@ import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
-import com.adyen.checkout.instant.instantPayment
-import com.adyen.checkout.redirect.redirect
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -64,14 +60,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             }
 
             // Payment methods
-            bacsDirectDebit()
-
             bcmc {
                 setShopperReference(keyValueStorage.getShopperReference())
                 setShowStorePaymentField(true)
             }
-
-            blik()
 
             card {
                 setShopperReference(keyValueStorage.getShopperReference())
@@ -91,12 +83,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setCountryCode(keyValueStorage.getCountry())
             }
 
-            instantPayment()
-
             // Actions
-            adyen3DS2()
-
-            redirect()
+            adyen3DS2 {
+                setThreeDSRequestorAppURL("https://www.adyen.com")
+            }
         }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
