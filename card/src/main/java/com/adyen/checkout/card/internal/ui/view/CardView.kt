@@ -66,7 +66,7 @@ class CardView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -109,6 +109,8 @@ class CardView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
+        updateInputFields(cardDelegate.outputData)
+
         initCardNumberInput()
         initExpiryDateInput()
         initSecurityCodeInput()
@@ -127,47 +129,47 @@ class CardView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutCardNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_CardNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_ExpiryDateInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_SecurityCodeInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_HolderNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_PostalCodeInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutAddressLookup.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_AddressLookup_DropdownTextInputEditText,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_SocialSecurityNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutKcpBirthDateOrTaxNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_KcpBirthDateOrTaxNumber,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutKcpCardPassword.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_KcpCardPassword,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutInstallments.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_DropdownTextInputLayout_Installments,
-            localizedContext
+            localizedContext,
         )
         binding.switchStorePaymentMethod.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Card_StorePaymentSwitch,
-            localizedContext
+            localizedContext,
         )
         binding.addressFormInput.initLocalizedContext(localizedContext)
     }
@@ -246,7 +248,7 @@ class CardView @JvmOverloads constructor(
                     binding.textInputLayoutSocialSecurityNumber.requestFocus()
                 }
                 binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason)
+                    localizedContext.getString(socialSecurityNumberValidation.reason),
                 )
             }
             val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
@@ -258,7 +260,7 @@ class CardView @JvmOverloads constructor(
                     binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
                 }
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
-                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
                 )
             }
             val kcpPasswordValidation = it.kcpCardPasswordState.validation
@@ -268,7 +270,7 @@ class CardView @JvmOverloads constructor(
                     binding.textInputLayoutKcpCardPassword.requestFocus()
                 }
                 binding.textInputLayoutKcpCardPassword.showError(
-                    localizedContext.getString(kcpPasswordValidation.reason)
+                    localizedContext.getString(kcpPasswordValidation.reason),
                 )
             }
             if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
@@ -490,7 +492,7 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutSocialSecurityNumber.hideError()
             } else if (socialSecurityNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason)
+                    localizedContext.getString(socialSecurityNumberValidation.reason),
                 )
             }
         }
@@ -515,7 +517,7 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
             } else if (kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
-                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
                 )
             }
         }
@@ -534,7 +536,7 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutKcpCardPassword.hideError()
             } else if (kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutKcpCardPassword.showError(
-                    localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
+                    localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason),
                 )
             }
         }
@@ -578,7 +580,7 @@ class CardView @JvmOverloads constructor(
                 updateInstallmentSelection(cardOutputData.installmentOptions.first())
                 val installmentOptionText = InstallmentUtils.getTextForInstallmentOption(
                     localizedContext,
-                    cardOutputData.installmentOptions.first()
+                    cardOutputData.installmentOptions.first(),
                 )
                 installmentAutoCompleteTextView.setText(installmentOptionText)
             }
@@ -608,14 +610,14 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutSecurityCode.isVisible = true
                 binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(
                     R.style.AdyenCheckout_Card_SecurityCodeInput,
-                    localizedContext
+                    localizedContext,
                 )
             }
 
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutSecurityCode.isVisible = true
                 binding.textInputLayoutSecurityCode.hint = localizedContext.getString(
-                    R.string.checkout_card_security_code_optional_hint
+                    R.string.checkout_card_security_code_optional_hint,
                 )
             }
 
@@ -636,14 +638,14 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutExpiryDate.isVisible = true
                 binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(
                     R.style.AdyenCheckout_Card_ExpiryDateInput,
-                    localizedContext
+                    localizedContext,
                 )
             }
 
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
                 binding.textInputLayoutExpiryDate.hint = localizedContext.getString(
-                    R.string.checkout_card_expiry_date_optional_hint
+                    R.string.checkout_card_expiry_date_optional_hint,
                 )
             }
 
@@ -731,6 +733,21 @@ class CardView @JvmOverloads constructor(
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
             cardDelegate.updateInputData { installmentOption = it }
+        }
+    }
+
+    private fun updateInputFields(cardOutputData: CardOutputData?) {
+        cardOutputData?.let { outputData ->
+            binding.editTextCardNumber.setText(outputData.cardNumberState.value)
+            binding.editTextExpiryDate.date = outputData.expiryDateState.value
+            binding.editTextSecurityCode.setText(outputData.securityCodeState.value)
+            binding.editTextCardHolder.setText(outputData.holderNameState.value)
+            binding.editTextSocialSecurityNumber.setSocialSecurityNumber(outputData.socialSecurityNumberState.value)
+            binding.editTextKcpBirthDateOrTaxNumber.setText(outputData.kcpBirthDateOrTaxNumberState.value)
+            binding.editTextKcpCardPassword.setText(outputData.kcpCardPasswordState.value)
+            binding.autoCompleteTextViewInstallments.setText(
+                InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value)
+            )
         }
     }
 
