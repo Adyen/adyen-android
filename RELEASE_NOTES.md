@@ -13,6 +13,29 @@
 - Permission request is now being delegated to the `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` to handle it and return result through callback.
 - For voucher actions which have no `url` or `downloadUrl`, "Save as image" option will be offered to save the Voucher in `Downloads` folder.
   - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
+- Creating configurations just became easier. Using a DSL you can now create configurations in a more declarative and concise way:
+```Kotlin
+CheckoutConfiguration(
+    shopperLocale = shopperLocale,
+    environment = environment,
+    clientKey = clientKey,
+    amount = amount,
+    analyticsConfiguration = createAnalyticsConfiguration(),
+) {
+    dropIn {
+        setEnableRemovingStoredPaymentMethods(true)
+    }
+    
+    card {
+        setHolderNameRequired(true)
+        setShopperReference("...")
+    }
+
+    adyen3DS2 {
+        setThreeDSRequestorAppURL("...")
+    }
+}
+```
 
 ## Deprecated
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.

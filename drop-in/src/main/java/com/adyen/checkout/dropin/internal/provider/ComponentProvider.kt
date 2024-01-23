@@ -45,7 +45,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
