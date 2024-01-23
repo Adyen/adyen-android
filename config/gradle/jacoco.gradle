@@ -10,7 +10,7 @@ if (project.hasProperty('android')) {
 
 project.afterEvaluate {
     jacoco {
-        toolVersion = "0.8.9"
+        toolVersion = "$jacoco_version"
     }
 
     tasks.withType(Test).configureEach {
@@ -21,29 +21,37 @@ project.afterEvaluate {
     }
 
     if (project.hasProperty('android')) {
-        tasks.register('jacocoTestReport', JacocoReport) {
-            group 'Reporting'
-            description 'Generate JaCoCo report for debug unit tests'
-            dependsOn 'testDebugUnitTest'
+        android.buildTypes.every { buildType ->
+            def buildTypeName = buildType.name.capitalize()
 
-            reports {
-                xml.required = true
-                html.required = false
-                csv.required = false
+            tasks.register("jacoco${buildTypeName}TestReport", JacocoReport) {
+                group 'Reporting'
+                description "Generate JaCoCo report for ${buildTypeName} tests"
+                dependsOn "test${buildTypeName}UnitTest"
+
+                reports {
+                    xml.required = true
+                    html.required = false
+                    csv.required = false
+                }
+
+                additionalSourceDirs(files([
+                    android.sourceSets.main.java.srcDirs,
+                    android.sourceSets.debug.java.srcDirs
+                ]))
+                additionalClassDirs(files([
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}/intermediates/javac/${buildType.name}", excludes: coverageExclusions),
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/${buildType.name}", excludes: coverageExclusions)
+                ]))
+                executionData(
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}", includes: [
+                        "outputs/unit_test_code_coverage/${buildType.name}UnitTest/test${buildTypeName}UnitTest.exec",
+                        "jacoco/test${buildTypeName}UnitTest.exec",
+                        "outputs/code-coverage/connected/*coverage.ec"
+                    ])
+                )
+
             }
-
-            additionalSourceDirs(android.sourceSets.main.java.sourceFiles)
-            additionalSourceDirs(android.sourceSets.debug.java.sourceFiles)
-            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/intermediates/javac/debug", excludes: coverageExclusions))
-            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug", excludes: coverageExclusions))
-            executionData(
-                fileTree(dir: "${layout.buildDirectory.get().asFile}", includes: [
-                    "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
-                    "jacoco/test.exec",
-                    "outputs/code-coverage/connected/*coverage.ec"
-                ]),
-                fileTree(dir: "$projectDir", includes: ['jacoco.exec'])
-            )
         }
     }
 }
