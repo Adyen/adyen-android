@@ -11,14 +11,20 @@ package com.adyen.checkout.qrcode.internal.ui
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Parcel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.QrCodeAction
+import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
+import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.core.AdyenLogger
@@ -30,6 +36,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
+import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -50,7 +57,10 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
@@ -77,18 +87,78 @@ internal class DefaultQRCodeDelegateTest(
         val configuration = QRCodeConfiguration.Builder(
             Locale.US,
             Environment.TEST,
-            TEST_CLIENT_KEY
+            TEST_CLIENT_KEY,
         ).build()
-        delegate = DefaultQRCodeDelegate(
+        delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
-            imageSaver = imageSaver
+            imageSaver = imageSaver,
         )
         AdyenLogger.setLogLevel(Logger.NONE)
+    }
+
+    @Test
+    fun `when observe is called, then observers are being added to the repository`() {
+        val observerRepository = mock<ActionObserverRepository>()
+        val delegate = createDelegate(
+            observerRepository = observerRepository,
+        )
+        val lifecycleOwner = mock<LifecycleOwner>().apply {
+            whenever(lifecycle).thenReturn(mock())
+        }
+        val coroutineScope = mock<CoroutineScope>()
+        val callback = mock<(ActionComponentEvent) -> Unit>()
+
+        delegate.observe(lifecycleOwner, coroutineScope, callback)
+
+        verify(observerRepository).addObservers(
+            detailsFlow = eq(delegate.detailsFlow),
+            exceptionFlow = eq(delegate.exceptionFlow),
+            permissionFlow = eq(delegate.permissionFlow),
+            lifecycleOwner = eq(lifecycleOwner),
+            coroutineScope = eq(coroutineScope),
+            callback = eq(callback),
+        )
+    }
+
+    @Test
+    fun `when removeObserver is called, then observers are being removed`() {
+        val observerRepository = mock<ActionObserverRepository>()
+        val delegate = createDelegate(
+            observerRepository = observerRepository,
+        )
+
+        delegate.removeObserver()
+
+        verify(observerRepository).removeObservers()
+    }
+
+    @Test
+    fun `when handleAction called with unsupported action, then an error should be emitted`() = runTest {
+        delegate.exceptionFlow.test {
+            delegate.handleAction(
+                createTestAction(),
+                mock(),
+            )
+
+            assert(expectMostRecentItem() is ComponentException)
+        }
+    }
+
+    @Test
+    fun `when handleAction called with null payment data, then an error should be emitted`() = runTest {
+        delegate.exceptionFlow.test {
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+                mock(),
+            )
+
+            assert(expectMostRecentItem() is ComponentException)
+        }
     }
 
     @Nested
@@ -123,7 +193,7 @@ internal class DefaultQRCodeDelegateTest(
                     QrCodeAction(
                         paymentMethodType = PaymentMethodTypes.PIX,
                         qrCodeData = "qrData",
-                        paymentData = "paymentData"
+                        paymentData = "paymentData",
                     ),
                     Activity(),
                 )
@@ -231,7 +301,7 @@ internal class DefaultQRCodeDelegateTest(
                     QrCodeAction(
                         paymentMethodType = PaymentMethodTypes.PAY_NOW,
                         qrCodeData = "qrData",
-                        paymentData = "paymentData"
+                        paymentData = "paymentData",
                     ),
                     Activity(),
                 )
@@ -386,9 +456,47 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test download qr image with successful result`() = runTest {
+    fun `test refreshStatus`() = runTest {
+        val statusRepository = mock<StatusRepository>()
+        val paymentData = "Payment Data"
+        val delegate = createDelegate(
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository,
+        ).apply {
+            initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = paymentData),
+                mock(),
+            )
+        }
+
+        delegate.refreshStatus()
+
+        verify(statusRepository).refreshStatus(paymentData)
+    }
+
+    @Test
+    fun `test refreshStatus when payment data is null`() = runTest {
+        val statusRepository = mock<StatusRepository>()
+        val delegate = createDelegate(
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository,
+        ).apply {
+            handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+                mock(),
+            )
+        }
+
+        delegate.refreshStatus()
+
+        verify(statusRepository, never()).refreshStatus(any())
+    }
+
+    @Test
+    fun `test downloadQRImage with successful result`() = runTest {
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-            Result.success(Unit)
+            Result.success(Unit),
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -402,9 +510,9 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test download qr image with permission failure result`() = runTest {
+    fun `test downloadQRImage with permission failure result`() = runTest {
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-            Result.failure(PermissionRequestException("Error message for permission request exception"))
+            Result.failure(PermissionRequestException("Error message for permission request exception")),
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -418,10 +526,10 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test download qr image with failure result`() = runTest {
+    fun `test downloadQRImage with failure result`() = runTest {
         val throwable = CheckoutException("error")
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
-            Result.failure(throwable)
+            Result.failure(throwable),
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -435,7 +543,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test request permission`() = runTest {
+    fun `test requestPermission`() = runTest {
         val requiredPermission = "Required Permission"
         val permissionCallback = mock<PermissionHandlerCallback>()
 
@@ -447,6 +555,53 @@ internal class DefaultQRCodeDelegateTest(
             assertEquals(permissionCallback, mostRecentValue.permissionCallback)
         }
     }
+
+    @Test
+    fun `when onCleared is called, observers are removed`() {
+        val observerRepository = mock<ActionObserverRepository>()
+        val countDownTimer = mock<QRCodeCountDownTimer>()
+        val redirectHandler = mock<RedirectHandler>()
+        val delegate = createDelegate(
+            observerRepository = observerRepository,
+            statusCountDownTimer = countDownTimer,
+            redirectHandler = redirectHandler,
+        )
+
+        delegate.onCleared()
+
+        verify(observerRepository).removeObservers()
+        verify(countDownTimer).cancel()
+        verify(redirectHandler).removeOnRedirectListener()
+    }
+
+    private fun createTestAction(
+        type: String = "test",
+        paymentData: String = "paymentData",
+        paymentMethodType: String = "paymentMethodType",
+    ) = object : Action() {
+        override var type: String? = type
+        override var paymentData: String? = paymentData
+        override var paymentMethodType: String? = paymentMethodType
+        override fun writeToParcel(dest: Parcel, flags: Int) = Unit
+    }
+
+    private fun createDelegate(
+        observerRepository: ActionObserverRepository = mock(),
+        componentParams: GenericComponentParams = mock(),
+        statusRepository: StatusRepository = mock(),
+        statusCountDownTimer: QRCodeCountDownTimer = mock(),
+        redirectHandler: RedirectHandler = mock(),
+        paymentDataRepository: PaymentDataRepository = mock(),
+        imageSaver: ImageSaver = mock(),
+    ) = DefaultQRCodeDelegate(
+        observerRepository = observerRepository,
+        componentParams = componentParams,
+        statusRepository = statusRepository,
+        statusCountDownTimer = statusCountDownTimer,
+        redirectHandler = redirectHandler,
+        paymentDataRepository = paymentDataRepository,
+        imageSaver = imageSaver,
+    )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

@@ -30,6 +30,7 @@ import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
@@ -41,7 +42,9 @@ import java.net.MalformedURLException
 import java.net.URL
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ImageSaver {
+class ImageSaver(
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+) {
 
     suspend fun saveImageFromView(
         context: Context,
@@ -65,7 +68,7 @@ class ImageSaver {
         imageUrl: String,
         fileName: String? = null,
         fileRelativePath: String? = null,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ): Result<Unit> = withContext(dispatcher) {
         val url = imageUrl.toURL() ?: return@withContext Result.failure(CheckoutException("Malformed URL"))
 
         return@withContext try {
@@ -111,7 +114,7 @@ class ImageSaver {
         context: Context,
         bitmap: Bitmap,
         contentValues: ContentValues,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ): Result<Unit> = withContext(dispatcher) {
         contentValues.put(Media.IS_PENDING, true)
 
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
@@ -140,7 +143,7 @@ class ImageSaver {
         permissionHandler: PermissionHandler,
         bitmap: Bitmap,
         contentValues: ContentValues,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ): Result<Unit> = withContext(dispatcher) {
         if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == true) {
             saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
         } else {
@@ -152,7 +155,7 @@ class ImageSaver {
     private suspend fun saveImageApi28AndBelowWhenPermissionGranted(
         bitmap: Bitmap,
         contentValues: ContentValues
-    ): Result<Unit> = withContext(Dispatchers.IO) {
+    ): Result<Unit> = withContext(dispatcher) {
         val fileName = contentValues.getAsString(Media.DISPLAY_NAME)
         val filePath = contentValues.getAsString(Media.RELATIVE_PATH)
         val imageFileFolder =

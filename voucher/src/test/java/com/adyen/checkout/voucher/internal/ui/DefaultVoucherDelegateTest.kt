@@ -10,10 +10,12 @@ package com.adyen.checkout.voucher.internal.ui
 
 import android.app.Activity
 import android.content.Context
+import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -92,6 +94,25 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
+    fun `when removeObserver is called, then observers are being removed`() {
+        delegate.removeObserver()
+
+        verify(observerRepository).removeObservers()
+    }
+
+    @Test
+    fun `when handleAction called with unsupported action, then an error should be emitted`() = runTest {
+        delegate.exceptionFlow.test {
+            delegate.handleAction(
+                createTestAction(),
+                activity,
+            )
+
+            assert(expectMostRecentItem() is ComponentException)
+        }
+    }
+
+    @Test
     fun `when handleAction called with valid data including url, then output data should be good`() = runTest {
         delegate.outputDataFlow.test {
             delegate.handleAction(
@@ -143,7 +164,7 @@ internal class DefaultVoucherDelegateTest(
 
     @ParameterizedTest
     @MethodSource("viewTypeSource")
-    fun `when handling action for payment method, then the correct view type should be emitted`(
+    fun `when handleAction called for payment method, then the correct view type should be emitted`(
         paymentMethodType: String,
         expectedViewType: ComponentViewType
     ) = runTest {
@@ -158,7 +179,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when handling action for unsupported payment method, then an error should be emitted`() = runTest {
+    fun `when handleAction called for unsupported payment method, then an error should be emitted`() = runTest {
         delegate.exceptionFlow.test {
             delegate.handleAction(
                 VoucherAction(paymentMethodType = "something_that_doesn't_work", paymentData = "paymentData"),
@@ -170,7 +191,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when download voucher is called, then pdf open should be called`() {
+    fun `when downloadVoucher is called, then pdf open should be called`() {
         delegate.handleAction(
             VoucherAction(
                 paymentMethodType = PaymentMethodTypes.BACS,
@@ -185,7 +206,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when download voucher is called with no url, then exception should be emitted`() = runTest {
+    fun `when downloadVoucher is called with no url, then exception should be emitted`() = runTest {
         delegate.exceptionFlow.test {
             whenever(pdfOpener.open(any(), eq(""))).thenThrow(IllegalStateException::class.java)
             delegate.handleAction(
@@ -203,7 +224,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when save voucher as image is called, then correct ui event should be emitted`() = runTest {
+    fun `when saveVoucherAsImage is called, then correct ui event should be emitted`() = runTest {
         whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
             Result.success(Unit),
         )
@@ -219,7 +240,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when save voucher as image is called with permission exception, then permission denied ui event should be emitted`() =
+    fun `when saveVoucherAsImage is called with permission exception, then permission denied ui event should be emitted`() =
         runTest {
             whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
                 Result.failure(PermissionRequestException("Error message for permission request exception")),
@@ -236,7 +257,7 @@ internal class DefaultVoucherDelegateTest(
         }
 
     @Test
-    fun `when save voucher as image is called with error, then failure ui event should be emitted`() = runTest {
+    fun `when saveVoucherAsImage is called with error, then failure ui event should be emitted`() = runTest {
         val throwable = ComponentException("Error message")
         whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
             Result.failure(throwable),
@@ -253,7 +274,7 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
-    fun `when request permission is called, then permission request should be emitted`() = runTest {
+    fun `when saveVoucherAsImage is called, then permission request should be emitted`() = runTest {
         val requiredPermission = "Required Permission"
         val permissionCallback = mock<PermissionHandlerCallback>()
 
@@ -264,6 +285,24 @@ internal class DefaultVoucherDelegateTest(
             assertEquals(requiredPermission, mostRecentValue.requiredPermission)
             assertEquals(permissionCallback, mostRecentValue.permissionCallback)
         }
+    }
+
+    @Test
+    fun `when onCleared is called, observers are removed`() {
+        delegate.onCleared()
+
+        verify(observerRepository).removeObservers()
+    }
+
+    private fun createTestAction(
+        type: String = "test",
+        paymentData: String = "paymentData",
+        paymentMethodType: String = "paymentMethodType",
+    ) = object : Action() {
+        override var type: String? = type
+        override var paymentData: String? = paymentData
+        override var paymentMethodType: String? = paymentMethodType
+        override fun writeToParcel(dest: Parcel, flags: Int) = Unit
     }
 
     companion object {

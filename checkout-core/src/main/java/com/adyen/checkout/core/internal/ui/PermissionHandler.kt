@@ -13,6 +13,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.PermissionHandlerCallback
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PermissionHandler {
+fun interface PermissionHandler {
     fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback)
 }
