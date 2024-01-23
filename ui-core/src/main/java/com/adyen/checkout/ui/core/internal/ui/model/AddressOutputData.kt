@@ -35,7 +35,6 @@ data class AddressOutputData(
             country.validation.isValid()
 
     override fun toString(): String {
-        // TODO check order with ios
         return listOf(
             street.value,
             houseNumberOrName.value,
