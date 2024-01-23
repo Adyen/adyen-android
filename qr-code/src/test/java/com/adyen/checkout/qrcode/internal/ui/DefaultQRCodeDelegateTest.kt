@@ -585,6 +585,7 @@ internal class DefaultQRCodeDelegateTest(
         override fun writeToParcel(dest: Parcel, flags: Int) = Unit
     }
 
+    @Suppress("LongParameterList")
     private fun createDelegate(
         observerRepository: ActionObserverRepository = mock(),
         componentParams: GenericComponentParams = mock(),
