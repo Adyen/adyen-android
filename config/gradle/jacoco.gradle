@@ -10,7 +10,7 @@ if (project.hasProperty('android')) {
 
 project.afterEvaluate {
     jacoco {
-        toolVersion = "0.8.9"
+        toolVersion = "$jacoco_version"
     }
 
     tasks.withType(Test).configureEach {
@@ -21,29 +21,37 @@ project.afterEvaluate {
     }
 
     if (project.hasProperty('android')) {
-        tasks.register('jacocoTestReport', JacocoReport) {
-            group 'Reporting'
-            description 'Generate JaCoCo report for debug unit tests'
-            dependsOn 'testDebugUnitTest'
+        android.buildTypes.every { buildType ->
+            def buildTypeName = buildType.name.capitalize()
 
-            reports {
-                xml.required = true
-                html.required = false
-                csv.required = false
+            tasks.register("jacoco${buildTypeName}TestReport", JacocoReport) {
+                group 'Reporting'
+                description "Generate JaCoCo report for ${buildTypeName} tests"
+                dependsOn "test${buildTypeName}UnitTest"
+
+                reports {
+                    xml.required = true
+                    html.required = false
+                    csv.required = false
+                }
+
+                additionalSourceDirs(files([
+                    android.sourceSets.main.java.srcDirs,
+                    android.sourceSets.debug.java.srcDirs
+                ]))
+                additionalClassDirs(files([
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}/intermediates/javac/${buildType.name}", excludes: coverageExclusions),
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/${buildType.name}", excludes: coverageExclusions)
+                ]))
+                executionData(
+                    fileTree(dir: "${layout.buildDirectory.get().asFile}", includes: [
+                        "outputs/unit_test_code_coverage/${buildType.name}UnitTest/test${buildTypeName}UnitTest.exec",
+                        "jacoco/test${buildTypeName}UnitTest.exec",
+                        "outputs/code-coverage/connected/*coverage.ec"
+                    ])
+                )
+
             }
-
-            additionalSourceDirs(android.sourceSets.main.java.sourceFiles)
-            additionalSourceDirs(android.sourceSets.debug.java.sourceFiles)
-            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/intermediates/javac/debug", excludes: coverageExclusions))
-            additionalClassDirs(fileTree(dir: "${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug", excludes: coverageExclusions))
-            executionData(
-                fileTree(dir: "${layout.buildDirectory.get().asFile}", includes: [
-                    "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
-                    "jacoco/test.exec",
-                    "outputs/code-coverage/connected/*coverage.ec"
-                ]),
-                fileTree(dir: "$projectDir", includes: ['jacoco.exec'])
-            )
         }
     }
 }
@@ -56,24 +64,33 @@ ext.coverageExclusions = [
     '**/R.class',
 
     // Data binding
-    '**/BR$*.class',
-    '**/BR.class',
-    '**/DataBinderMapperImpl.*',
-    '**/DataBinderMapperImpl*.*',
-    '**/databinding/**',
     '**/*BindingAdapter.*',
     '**/*BindingAdapters.*',
+    '**/*ViewBinding.*',
+    '**/BR$*.class',
+    '**/BR.class',
+    '**/DataBinderMapperImpl*.*',
+    '**/DataBinderMapperImpl.*',
+    '**/databinding/**',
 
     // Activities, Fragments, etc. (not tested with unit tests)
     '**/*Activity$*.*',
     '**/*Activity.*',
+    '**/*Adapter$*.*',
     '**/*Adapter.*',
     '**/*Behavior.*',
     '**/*Dialog.*',
     '**/*Drawable.*',
     '**/*Fragment$*.*',
     '**/*Fragment.*',
+    '**/*View$*.*',
     '**/*View.*',
+    '**/*ViewHolder$*.*',
+    '**/*ViewHolder.*',
+
+    // Parcelize
+    '**/*$Creator',
+    '**/*$Creator*.*',
 
     // Activity result contract
     '**/*ActivityResults.*',
@@ -85,31 +102,63 @@ ext.coverageExclusions = [
     '**/*_GeneratedInjector.*',
     '**/*_HiltComponents.*',
     '**/*_HiltComponents_*.*',
+    '**/*_HiltModules*.*',
     '**/*_HiltModules.*',
     '**/*_HiltModules_*.*',
     '**/*_Member*Injector.*',
-    '**/*_ProvideFactory.*',
+    '**/*_Provide*Factory*.*',
     '**/*_Provide*Factory.*',
-    '**/dagger/**',
+    '**/*_ProvideFactory.*',
     '**/Dagger*.*',
-    '**/hilt_aggregated_deps/**',
     '**/Hilt_*.*',
-
-    // Custom views not following *View naming
-    '**/AddressFormInput.*',
-    '**/AdyenSwipeToRevealLayout.*',
-    '**/AdyenTextInputEditText.*',
-    '**/CardNumberInput.*',
-    '**/ExpiryDateInput.*',
-    '**/GiftCardNumberInput.*',
-    '**/IbanInput.*',
-    '**/SecurityCodeInput.*',
-    '**/SocialSecurityNumberInput.*',
+    '**/dagger/**',
+    '**/hilt_aggregated_deps/**',
 
     // Test classes
     '**/*Test.*',
     '**/Test*.*',
 
     // Fix issue with JaCoCo on JDK
-    'jdk.internal.*'
+    'jdk.internal.*',
+
+    // Custom views not following *View naming
+    '**/AddressFormInput*.*',
+    '**/AdyenSwipeToRevealLayout*.*',
+    '**/AdyenTextInputEditText*.*',
+    '**/CardNumberInput.*',
+    '**/DefaultPayButton.*',
+    '**/ExpiryDateInput.*',
+    '**/GiftCardNumberInput.*',
+    '**/IbanInput.*',
+    '**/PayButton.*',
+    '**/SecurityCodeInput.*',
+    '**/SocialSecurityNumberInput.*',
+
+    // Project specific files that can't be unit tested
+    '**/*ComponentProvider$*.*',
+    '**/*ComponentProvider.*',
+    '**/*DropInService$*.*',
+    '**/*DropInService.*',
+    '**/*Factory.*',
+    '**/*ViewProvider.*',
+    '**/AdyenLogger.*',
+    '**/BuildUtils.*',
+    '**/ContextExtensions*.*',
+    '**/DropInExt*.*',
+    '**/FileDownloader*.*',
+    '**/FragmentExtensions*.*',
+    '**/ImageLoadingExtensions*.*',
+    '**/ImageLoadingExtensions.*',
+    '**/ImageSaver.*',
+    '**/InstallmentFilter.*',
+    '**/LazyArguments*.*',
+    '**/LifecycleExtensions*.*',
+    '**/LogUtil.*',
+    '**/Logger.*',
+    '**/PdfOpener.*',
+    '**/ViewExtensions*.*',
+    '**/ViewModelExt*.*',
+
+    // Example app is not applicable
+    'com/adyen/checkout/example/**'
 ]

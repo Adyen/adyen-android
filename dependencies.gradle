@@ -28,6 +28,7 @@ ext {
 
     // Code quality
     detekt_version = "1.23.4"
+    jacoco_version = '0.8.9'
     ktlint_version = '1.0.1'
     sonarqube_version = '4.4.1.3373'
 
