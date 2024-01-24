@@ -11,6 +11,7 @@ package com.adyen.checkout.issuerlist.internal.provider
 import android.app.Application
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -43,6 +44,7 @@ import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.DefaultIssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
+import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -115,15 +117,12 @@ constructor(
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
-            val issuerListDelegate = DefaultIssuerListDelegate(
-                observerRepository = PaymentObserverRepository(),
+            val issuerListDelegate = createDefaultDelegate(
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
                 order = order,
+                savedStateHandle = savedStateHandle,
                 analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler(savedStateHandle),
-                typedPaymentMethodFactory = ::createPaymentMethod,
-                componentStateFactory = ::createComponentState,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -207,15 +206,12 @@ constructor(
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
-            val issuerListDelegate = DefaultIssuerListDelegate(
-                observerRepository = PaymentObserverRepository(),
+            val issuerListDelegate = createDefaultDelegate(
                 componentParams = componentParams,
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
+                savedStateHandle = savedStateHandle,
                 analyticsRepository = analyticsRepository,
-                submitHandler = SubmitHandler(savedStateHandle),
-                typedPaymentMethodFactory = ::createPaymentMethod,
-                componentStateFactory = ::createComponentState,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -279,6 +275,25 @@ constructor(
             application = application,
             componentCallback = componentCallback,
             key = key,
+        )
+    }
+
+    private fun createDefaultDelegate(
+        componentParams: IssuerListComponentParams,
+        paymentMethod: PaymentMethod,
+        order: Order?,
+        savedStateHandle: SavedStateHandle,
+        analyticsRepository: AnalyticsRepository,
+    ): DefaultIssuerListDelegate<PaymentMethodT, ComponentStateT> {
+        return DefaultIssuerListDelegate(
+            observerRepository = PaymentObserverRepository(),
+            componentParams = componentParams,
+            paymentMethod = paymentMethod,
+            order = order,
+            analyticsRepository = analyticsRepository,
+            submitHandler = SubmitHandler(savedStateHandle),
+            typedPaymentMethodFactory = ::createPaymentMethod,
+            componentStateFactory = ::createComponentState,
         )
     }
 

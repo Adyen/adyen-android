@@ -11,6 +11,7 @@ package com.adyen.checkout.cashapppay.internal.provider
 import android.app.Application
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -20,8 +21,10 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
+import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
 import com.adyen.checkout.cashapppay.internal.ui.DefaultCashAppPayDelegate
 import com.adyen.checkout.cashapppay.internal.ui.StoredCashAppPayDelegate
+import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.cashapppay.toCheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -29,6 +32,7 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
@@ -43,6 +47,7 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -134,16 +139,11 @@ constructor(
                 cashAppPayFactory = CashAppPayFactory,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+            createComponent(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
-            )
-
-            CashAppPayComponent(
-                cashAppPayDelegate = cashAppPayDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                delegate = cashAppPayDelegate,
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
@@ -220,16 +220,11 @@ constructor(
                 componentParams = componentParams,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+            createComponent(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
-            )
-
-            CashAppPayComponent(
-                cashAppPayDelegate = cashAppPayDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                delegate = cashAppPayDelegate,
                 componentEventHandler = DefaultComponentEventHandler(),
             )
         }
@@ -313,35 +308,18 @@ constructor(
                 cashAppPayFactory = CashAppPayFactory,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+            val sessionComponentEventHandler = createSessionComponentEventHandler(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+                httpClient = httpClient,
+                componentParams = componentParams,
+            )
+
+            createComponent(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
-            )
-
-            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                savedStateHandle = savedStateHandle,
-                checkoutSession = checkoutSession,
-            )
-
-            val sessionInteractor = SessionInteractor(
-                sessionRepository = SessionRepository(
-                    sessionService = SessionService(httpClient),
-                    clientKey = componentParams.clientKey,
-                ),
-                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-            )
-
-            val sessionComponentEventHandler = SessionComponentEventHandler<CashAppPayComponentState>(
-                sessionInteractor = sessionInteractor,
-                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-            )
-
-            CashAppPayComponent(
-                cashAppPayDelegate = cashAppPayDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                delegate = cashAppPayDelegate,
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
@@ -423,35 +401,18 @@ constructor(
                 componentParams = componentParams,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+            val sessionComponentEventHandler = createSessionComponentEventHandler(
+                savedStateHandle = savedStateHandle,
+                checkoutSession = checkoutSession,
+                httpClient = httpClient,
+                componentParams = componentParams,
+            )
+
+            createComponent(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
-            )
-
-            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                savedStateHandle = savedStateHandle,
-                checkoutSession = checkoutSession,
-            )
-
-            val sessionInteractor = SessionInteractor(
-                sessionRepository = SessionRepository(
-                    sessionService = SessionService(httpClient),
-                    clientKey = componentParams.clientKey,
-                ),
-                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-            )
-
-            val sessionComponentEventHandler = SessionComponentEventHandler<CashAppPayComponentState>(
-                sessionInteractor = sessionInteractor,
-                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-            )
-
-            CashAppPayComponent(
-                cashAppPayDelegate = cashAppPayDelegate,
-                genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, cashAppPayDelegate),
+                delegate = cashAppPayDelegate,
                 componentEventHandler = sessionComponentEventHandler,
             )
         }
@@ -485,6 +446,53 @@ constructor(
             application = application,
             componentCallback = componentCallback,
             key = key,
+        )
+    }
+
+    private fun createComponent(
+        checkoutConfiguration: CheckoutConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+        delegate: CashAppPayDelegate,
+        componentEventHandler: ComponentEventHandler<CashAppPayComponentState>,
+    ): CashAppPayComponent {
+        val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+            application = application,
+        )
+
+        return CashAppPayComponent(
+            cashAppPayDelegate = delegate,
+            genericActionDelegate = genericActionDelegate,
+            actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, delegate),
+            componentEventHandler = componentEventHandler,
+        )
+    }
+
+    private fun createSessionComponentEventHandler(
+        savedStateHandle: SavedStateHandle,
+        checkoutSession: CheckoutSession,
+        httpClient: HttpClient,
+        componentParams: CashAppPayComponentParams,
+    ): SessionComponentEventHandler<CashAppPayComponentState> {
+        val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
+            savedStateHandle = savedStateHandle,
+            checkoutSession = checkoutSession,
+        )
+
+        val sessionInteractor = SessionInteractor(
+            sessionRepository = SessionRepository(
+                sessionService = SessionService(httpClient),
+                clientKey = componentParams.clientKey,
+            ),
+            sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+        )
+
+        return SessionComponentEventHandler(
+            sessionInteractor = sessionInteractor,
+            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
         )
     }
 
