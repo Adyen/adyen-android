@@ -31,6 +31,8 @@
         <item name="android:inputType">textEmailAddress</item>
     </style>
 
+    <style name="AdyenCheckout.Bacs.Switch" />
+
     <style name="AdyenCheckout.Bacs.Switch.Amount" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/bacs_consent_amount</item>
         <item name="android:layout_marginBottom">@dimen/standard_quarter_margin</item>

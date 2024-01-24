@@ -150,6 +150,8 @@
         <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
+    <style name="AdyenCheckout.Button" />
+
     <style name="AdyenCheckout.Button.Colored" parent="AdyenCheckout.Button.Primary">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/primary_button_height</item>
@@ -173,6 +175,8 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.PaymentInProgressView" />
 
     <style name="AdyenCheckout.PaymentInProgressView.TitleTextView" parent="AdyenCheckout">
         <item name="android:text">@string/paymentInProgressView_title</item>
@@ -300,6 +304,8 @@
     <style name="AdyenCheckout.DropdownTextInputLayout.ProvinceTerritoryInput" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="android:hint">@string/checkout_address_form_province_territory_hint</item>
     </style>
+
+    <style name="AdyenCheckout.AddressForm" />
 
     <style name="AdyenCheckout.AddressForm.HeaderTextAppearance" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
