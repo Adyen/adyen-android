@@ -13,6 +13,7 @@
 
 ## Fixed
 - For drop-in with sessions, error dialogs will no longer display user unfriendly messages.
+- Overriding some of the XML styles without specifying a parent style no longer causes a build error.
 
 ## Changed
 
