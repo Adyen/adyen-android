@@ -11,11 +11,12 @@ package com.adyen.checkout.boleto.internal.ui.model
 import com.adyen.checkout.boleto.getBoletoConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BoletoComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -25,6 +26,7 @@ internal class BoletoComponentParamsMapper(
     ): BoletoComponentParams {
         return configuration
             .mapToParamsInternal()
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -36,7 +38,7 @@ internal class BoletoComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             addressParams = AddressParams.FullAddress(
                 defaultCountryCode = BRAZIL_COUNTRY_CODE,
@@ -44,6 +46,16 @@ internal class BoletoComponentParamsMapper(
                 addressFieldPolicy = AddressFieldPolicyParams.Required,
             ),
             isEmailVisible = boletoConfiguration?.isEmailVisible ?: false,
+        )
+    }
+
+    private fun BoletoComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?,
+    ): BoletoComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

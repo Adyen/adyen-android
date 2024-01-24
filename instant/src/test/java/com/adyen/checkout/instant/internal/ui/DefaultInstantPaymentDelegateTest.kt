@@ -120,7 +120,7 @@ class DefaultInstantPaymentDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
             order = TEST_ORDER,
-            componentParams = GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             analyticsRepository = analyticsRepository,
         )
     }

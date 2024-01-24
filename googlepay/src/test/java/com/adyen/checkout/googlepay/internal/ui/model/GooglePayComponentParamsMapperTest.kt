@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
@@ -50,7 +51,7 @@ internal class GooglePayComponentParamsMapperTest {
         val configuration = createCheckoutConfiguration()
 
         val params =
-            GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+            GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams()
 
@@ -92,7 +93,7 @@ internal class GooglePayComponentParamsMapperTest {
             }
         }
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.FRANCE,
@@ -139,7 +140,8 @@ internal class GooglePayComponentParamsMapperTest {
             }
         }
 
-        val params = GooglePayComponentParamsMapper(true, null).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
+        val params = GooglePayComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration,
             PaymentMethod(),
             null,
@@ -153,8 +155,8 @@ internal class GooglePayComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "XCD",
-                value = 4_00L,
+                currency = "CAD",
+                value = 123L,
             ),
         )
 
@@ -173,7 +175,7 @@ internal class GooglePayComponentParamsMapperTest {
             ),
         )
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, paymentMethod, null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             gatewayMerchantId = "GATEWAY_MERCHANT_ID_1",
@@ -198,7 +200,7 @@ internal class GooglePayComponentParamsMapperTest {
             ),
         )
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, paymentMethod, null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             gatewayMerchantId = "GATEWAY_MERCHANT_ID_2",
@@ -218,7 +220,7 @@ internal class GooglePayComponentParamsMapperTest {
         }
 
         assertThrows<ComponentException> {
-            GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+            GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
         }
     }
 
@@ -230,7 +232,7 @@ internal class GooglePayComponentParamsMapperTest {
             brands = listOf("mc", "amex", "maestro", "discover"),
         )
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, paymentMethod, null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, paymentMethod, null)
 
         val expected = getGooglePayComponentParams(
             allowedCardNetworks = listOf("MASTERCARD", "AMEX", "DISCOVER"),
@@ -245,7 +247,7 @@ internal class GooglePayComponentParamsMapperTest {
             setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
         }
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
@@ -258,7 +260,7 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when google pay environment is not set and environment is TEST then google pay environment should be ENVIRONMENT_TEST`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             googlePayEnvironment = WalletConstants.ENVIRONMENT_TEST,
@@ -279,7 +281,7 @@ internal class GooglePayComponentParamsMapperTest {
             }
         }
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(configuration, PaymentMethod(), null)
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(configuration, PaymentMethod(), null)
 
         val expected = getGooglePayComponentParams(
             shopperLocale = Locale.CHINA,
@@ -295,7 +297,7 @@ internal class GooglePayComponentParamsMapperTest {
     fun `when amount is not set in parent configuration and google pay configuration then params amount should have 0 USD DEFAULT_VALUE`() {
         val configuration = createCheckoutConfiguration(amount = null)
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(
             configuration,
             PaymentMethod(),
             null,
@@ -319,7 +321,7 @@ internal class GooglePayComponentParamsMapperTest {
             setAmount(Amount(currency = "TRY", value = 40_00L))
         }
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(
             configuration,
             PaymentMethod(),
             null,
@@ -340,12 +342,15 @@ internal class GooglePayComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val params = GooglePayComponentParamsMapper(false, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = GooglePayComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration = configuration,
             paymentMethod = PaymentMethod(),
             sessionParams = SessionParams(
@@ -358,6 +363,7 @@ internal class GooglePayComponentParamsMapperTest {
 
         val expected = getGooglePayComponentParams(
             amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
         )
 
         assertEquals(expected, params)
@@ -434,9 +440,10 @@ internal class GooglePayComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

@@ -194,5 +194,6 @@ internal class PaymentMethodsListViewModelTest(
         checkoutConfiguration = checkoutConfiguration,
         dropInComponentParams = checkoutConfiguration.mapToParams(amount),
         sessionDetails = null,
+        overrideAmount = amount,
     )
 }

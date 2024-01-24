@@ -53,7 +53,7 @@ internal class DefaultAwaitDelegateTest {
         )
         delegate = DefaultAwaitDelegate(
             ActionObserverRepository(),
-            GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             statusRepository,
             paymentDataRepository,
         )

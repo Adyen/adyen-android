@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
@@ -29,7 +30,7 @@ import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentProvider
 
 internal class ActionDelegateProvider(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -40,12 +41,12 @@ internal class ActionDelegateProvider(
         application: Application,
     ): ActionDelegate {
         val provider = when (action) {
-            is AwaitAction -> AwaitComponentProvider(isCreatedByDropIn, overrideSessionParams)
-            is QrCodeAction -> QRCodeComponentProvider(isCreatedByDropIn, overrideSessionParams)
-            is RedirectAction -> RedirectComponentProvider(isCreatedByDropIn, overrideSessionParams)
-            is BaseThreeds2Action -> Adyen3DS2ComponentProvider(isCreatedByDropIn, overrideSessionParams)
-            is VoucherAction -> VoucherComponentProvider(isCreatedByDropIn, overrideSessionParams)
-            is SdkAction<*> -> WeChatPayActionComponentProvider(isCreatedByDropIn, overrideSessionParams)
+            is AwaitAction -> AwaitComponentProvider(dropInOverrideParams, overrideSessionParams)
+            is QrCodeAction -> QRCodeComponentProvider(dropInOverrideParams, overrideSessionParams)
+            is RedirectAction -> RedirectComponentProvider(dropInOverrideParams, overrideSessionParams)
+            is BaseThreeds2Action -> Adyen3DS2ComponentProvider(dropInOverrideParams, overrideSessionParams)
+            is VoucherAction -> VoucherComponentProvider(dropInOverrideParams, overrideSessionParams)
+            is SdkAction<*> -> WeChatPayActionComponentProvider(dropInOverrideParams, overrideSessionParams)
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
 

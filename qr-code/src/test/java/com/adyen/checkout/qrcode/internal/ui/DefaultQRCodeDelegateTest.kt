@@ -93,7 +93,7 @@ internal class DefaultQRCodeDelegateTest(
         }
         delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,7 +42,7 @@ internal class CashAppPayComponentParamsMapperTest {
     fun `when parent configuration is null and custom configuration fields are null then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = getDefaultPaymentMethod(),
@@ -69,7 +70,7 @@ internal class CashAppPayComponentParamsMapperTest {
             }
         }
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = getDefaultPaymentMethod(),
@@ -109,7 +110,8 @@ internal class CashAppPayComponentParamsMapperTest {
             }
         }
 
-        val params = CashAppPayComponentParamsMapper(true, null).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L))
+        val params = CashAppPayComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = getDefaultPaymentMethod(),
@@ -124,8 +126,8 @@ internal class CashAppPayComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "CAD",
-                value = 1235_00L,
+                currency = "EUR",
+                value = 123L,
             ),
         )
 
@@ -143,7 +145,7 @@ internal class CashAppPayComponentParamsMapperTest {
             setShowStorePaymentField(configurationValue)
         }
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = cardConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
@@ -166,12 +168,15 @@ internal class CashAppPayComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val cardConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = CashAppPayComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration = cardConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
@@ -185,6 +190,7 @@ internal class CashAppPayComponentParamsMapperTest {
 
         val expected = getComponentParams(
             amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
         )
 
         assertEquals(expected, params)
@@ -201,7 +207,7 @@ internal class CashAppPayComponentParamsMapperTest {
                 cashAppPay()
             }
 
-            CashAppPayComponentParamsMapper(false, null).mapToParams(
+            CashAppPayComponentParamsMapper(null, null).mapToParams(
                 configuration = configuration,
                 sessionParams = null,
                 paymentMethod = getDefaultPaymentMethod(),
@@ -220,7 +226,7 @@ internal class CashAppPayComponentParamsMapperTest {
             cashAppPay()
         }
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = SessionParams(false, null, null, "sessionReturnUrl"),
             paymentMethod = getDefaultPaymentMethod(),
@@ -235,7 +241,7 @@ internal class CashAppPayComponentParamsMapperTest {
         assertThrows<ComponentException> {
             val configuration = createCheckoutConfiguration()
 
-            CashAppPayComponentParamsMapper(false, null).mapToParams(
+            CashAppPayComponentParamsMapper(null, null).mapToParams(
                 configuration = configuration,
                 sessionParams = null,
                 paymentMethod = PaymentMethod(
@@ -251,7 +257,7 @@ internal class CashAppPayComponentParamsMapperTest {
         assertThrows<ComponentException> {
             val configuration = createCheckoutConfiguration()
 
-            CashAppPayComponentParamsMapper(false, null).mapToParams(
+            CashAppPayComponentParamsMapper(null, null).mapToParams(
                 configuration = configuration,
                 sessionParams = null,
                 paymentMethod = PaymentMethod(
@@ -266,7 +272,7 @@ internal class CashAppPayComponentParamsMapperTest {
     fun `when StoredPaymentMethod is used, then clientId and scopeId should be null`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = StoredPaymentMethod(),
@@ -283,7 +289,7 @@ internal class CashAppPayComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("returnUrlSource")
-    fun `when returnUrl and isCreatedByDropIn, then expect`(
+    fun `when returnUrl and is created by drop-in, then expect`(
         returnUrl: String?,
         isCreatedByDropIn: Boolean,
         expected: String?,
@@ -300,7 +306,12 @@ internal class CashAppPayComponentParamsMapperTest {
 
         val mockContext = mock<Application>()
         whenever(mockContext.packageName) doReturn "com.test.test"
-        val params = CashAppPayComponentParamsMapper(isCreatedByDropIn, null).mapToParams(
+        val dropInOverrideParams = if (isCreatedByDropIn) {
+            DropInOverrideParams(Amount("CAD", 123L))
+        } else {
+            null
+        }
+        val params = CashAppPayComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = StoredPaymentMethod(),
@@ -380,9 +391,10 @@ internal class CashAppPayComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
 
         @JvmStatic

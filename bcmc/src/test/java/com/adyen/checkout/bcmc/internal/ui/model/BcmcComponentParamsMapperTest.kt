@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -40,7 +41,7 @@ internal class BcmcComponentParamsMapperTest {
     fun `when parent configuration is null and custom bcmc configuration fields are null then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = BcmcComponentParamsMapper(false, null)
+        val params = BcmcComponentParamsMapper(null, null)
             .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams()
@@ -59,7 +60,7 @@ internal class BcmcComponentParamsMapperTest {
             setSubmitButtonVisible(false)
         }
 
-        val params = BcmcComponentParamsMapper(false, null)
+        val params = BcmcComponentParamsMapper(null, null)
             .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
@@ -91,7 +92,8 @@ internal class BcmcComponentParamsMapperTest {
             }
         }
 
-        val params = BcmcComponentParamsMapper(true, null)
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
+        val params = BcmcComponentParamsMapper(dropInOverrideParams, null)
             .mapToParams(configuration, null, PaymentMethod())
 
         val expected = getCardComponentParams(
@@ -101,8 +103,8 @@ internal class BcmcComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "USD",
-                value = 25_00L,
+                currency = "CAD",
+                value = 123L,
             ),
         )
 
@@ -121,7 +123,7 @@ internal class BcmcComponentParamsMapperTest {
             setShowStorePaymentField(configurationValue)
         }
 
-        val params = BcmcComponentParamsMapper(false, null).mapToParams(
+        val params = BcmcComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             sessionParams = SessionParams(
                 enableStoreDetails = sessionsValue,
@@ -141,12 +143,15 @@ internal class BcmcComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val bcmcConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val params = BcmcComponentParamsMapper(false, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = BcmcComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             bcmcConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
@@ -159,6 +164,7 @@ internal class BcmcComponentParamsMapperTest {
 
         val expected = getCardComponentParams(
             amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
         )
 
         assertEquals(expected, params)
@@ -230,9 +236,10 @@ internal class BcmcComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

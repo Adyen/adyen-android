@@ -10,11 +10,12 @@ package com.adyen.checkout.giftcard.internal.ui.model
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.giftcard.getGiftCardConfiguration
 
 internal class GiftCardComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -24,6 +25,7 @@ internal class GiftCardComponentParamsMapper(
     ): GiftCardComponentParams {
         return configuration
             .mapToParamsInternal()
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -34,10 +36,20 @@ internal class GiftCardComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = giftCardConfiguration?.isSubmitButtonVisible ?: true,
             isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
+        )
+    }
+
+    private fun GiftCardComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?,
+    ): GiftCardComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

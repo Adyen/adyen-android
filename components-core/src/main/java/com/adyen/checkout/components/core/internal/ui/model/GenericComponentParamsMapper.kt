@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -24,6 +24,7 @@ class GenericComponentParamsMapper(
     ): GenericComponentParams {
         return configuration
             .mapToParamsInternal()
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -33,8 +34,18 @@ class GenericComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
-            amount = amount
+            isCreatedByDropIn = false,
+            amount = amount,
+        )
+    }
+
+    private fun GenericComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?
+    ): GenericComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

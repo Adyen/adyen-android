@@ -41,7 +41,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -522,7 +522,7 @@ internal class DefaultBoletoDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = paymentMethod,
         order = order,
-        componentParams = BoletoComponentParamsMapper(true, null).mapToParams(configuration, null),
+        componentParams = BoletoComponentParamsMapper(null, null).mapToParams(configuration, null),
         addressRepository = addressRepository,
     )
 
@@ -566,10 +566,10 @@ internal class DefaultBoletoDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            Arguments.arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            Arguments.arguments(Amount("USD", 0), Amount("USD", 0)),
-            Arguments.arguments(null, null),
-            Arguments.arguments(null, null),
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(null, null),
+            arguments(null, null),
         )
     }
 }

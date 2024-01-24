@@ -404,7 +404,7 @@ internal class DefaultGiftCardDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         publicKeyRepository = publicKeyRepository,
-        componentParams = GiftCardComponentParamsMapper(false, null).mapToParams(configuration, null),
+        componentParams = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null),
         cardEncryptor = cardEncryptor,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,

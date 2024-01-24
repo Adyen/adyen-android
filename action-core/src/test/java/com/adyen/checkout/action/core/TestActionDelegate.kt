@@ -70,7 +70,7 @@ internal class TestActionDelegate :
         analyticsConfiguration = null,
     )
     override val componentParams: ComponentParams =
-        GenericComponentParamsMapper(false, null).mapToParams(configuration, null)
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -115,7 +115,7 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
     )
 
     override val componentParams: ComponentParams =
-        GenericComponentParamsMapper(false, null).mapToParams(configuration, null)
+        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

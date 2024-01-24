@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -43,10 +44,10 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 class GenericActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    private val isCreatedByDropIn: Boolean = false,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, null)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, null)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -82,7 +83,7 @@ constructor(
             savedStateHandle = savedStateHandle,
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(isCreatedByDropIn, null),
+            actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams, null),
         )
     }
 

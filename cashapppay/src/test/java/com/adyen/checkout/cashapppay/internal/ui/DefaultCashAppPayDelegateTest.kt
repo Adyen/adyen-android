@@ -477,7 +477,7 @@ internal class DefaultCashAppPayDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = getPaymentMethod(),
         order = TEST_ORDER,
-        componentParams = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = getPaymentMethod(),

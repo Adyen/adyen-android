@@ -12,10 +12,11 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
 internal class Adyen3DS2ComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -25,6 +26,7 @@ internal class Adyen3DS2ComponentParamsMapper(
     ): Adyen3DS2ComponentParams {
         return checkoutConfiguration
             .mapToParamsInternal()
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -35,7 +37,7 @@ internal class Adyen3DS2ComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             uiCustomization = adyen3ds2Configuration?.uiCustomization,
             threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,
@@ -45,7 +47,17 @@ internal class Adyen3DS2ComponentParamsMapper(
     }
 
     private fun Adyen3DS2ComponentParams.override(
-        sessionParams: SessionParams? = null
+        dropInOverrideParams: DropInOverrideParams?,
+    ): Adyen3DS2ComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
+        )
+    }
+
+    private fun Adyen3DS2ComponentParams.override(
+        sessionParams: SessionParams?
     ): Adyen3DS2ComponentParams {
         if (sessionParams == null) return this
         return copy(

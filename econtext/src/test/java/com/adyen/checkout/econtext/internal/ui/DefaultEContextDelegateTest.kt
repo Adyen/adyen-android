@@ -285,7 +285,7 @@ internal class DefaultEContextDelegateTest(
         order: Order = TEST_ORDER
     ) = DefaultEContextDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(
                 TEST_CONFIGURATION_KEY,

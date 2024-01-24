@@ -19,11 +19,12 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BcmcComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -36,6 +37,7 @@ internal class BcmcComponentParamsMapper(
             .mapToParamsInternal(
                 supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) },
             )
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -46,7 +48,7 @@ internal class BcmcComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = bcmcConfiguration?.isSubmitButtonVisible ?: true,
             isHolderNameRequired = bcmcConfiguration?.isHolderNameRequired ?: false,
@@ -59,6 +61,16 @@ internal class BcmcComponentParamsMapper(
             cvcVisibility = CVCVisibility.HIDE_FIRST,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS,
+        )
+    }
+
+    private fun CardComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?,
+    ): CardComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

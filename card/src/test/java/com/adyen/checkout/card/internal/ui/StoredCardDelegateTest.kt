@@ -455,7 +455,7 @@ internal class StoredCardDelegateTest(
     ): StoredCardDelegate {
         val componentParams = CardComponentParamsMapper(
             installmentsParamsMapper = InstallmentsParamsMapper(),
-            isCreatedByDropIn = false,
+            dropInOverrideParams = null,
             overrideSessionParams = null,
         ).mapToParamsStored(configuration, null)
 

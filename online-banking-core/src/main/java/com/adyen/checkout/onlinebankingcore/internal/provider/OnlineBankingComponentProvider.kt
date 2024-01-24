@@ -33,6 +33,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -65,7 +66,7 @@ abstract class OnlineBankingComponentProvider<
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val componentClass: Class<ComponentT>,
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     overrideSessionParams: SessionParams?,
     private val analyticsRepository: AnalyticsRepository?,
 ) :
@@ -77,7 +78,7 @@ constructor(
         SessionComponentCallback<ComponentStateT>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -124,7 +125,7 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -220,7 +221,7 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(isCreatedByDropIn).getDelegate(
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,

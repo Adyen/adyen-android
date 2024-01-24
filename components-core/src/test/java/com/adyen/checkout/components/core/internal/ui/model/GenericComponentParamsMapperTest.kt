@@ -27,7 +27,7 @@ internal class GenericComponentParamsMapperTest {
     fun `when parent configuration is null then params should match the component configuration`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = GenericComponentParamsMapper(false, null).mapToParams(configuration, null)
+        val params = GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
         val expected = getGenericComponentParams()
 
@@ -57,7 +57,8 @@ internal class GenericComponentParamsMapperTest {
             addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
         }
 
-        val params = GenericComponentParamsMapper(true, null).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
+        val params = GenericComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             configuration,
             null,
         )
@@ -69,8 +70,8 @@ internal class GenericComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "EUR",
-                value = 49_00L,
+                currency = "CAD",
+                value = 123L,
             ),
         )
 
@@ -81,12 +82,15 @@ internal class GenericComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val testConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val params = GenericComponentParamsMapper(false, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = GenericComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             testConfiguration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
@@ -96,7 +100,8 @@ internal class GenericComponentParamsMapperTest {
             ),
         )
 
-        val expected = getGenericComponentParams().copy(amount = expectedValue)
+        val expected =
+            getGenericComponentParams().copy(amount = expectedValue, isCreatedByDropIn = dropInOverrideParams != null)
 
         assertEquals(expected, params)
     }
@@ -132,9 +137,10 @@ internal class GenericComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

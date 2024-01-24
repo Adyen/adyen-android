@@ -17,6 +17,7 @@ import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -26,7 +27,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 @Suppress("TooManyFunctions")
 internal class CardComponentParamsMapper(
     private val installmentsParamsMapper: InstallmentsParamsMapper,
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -60,6 +61,7 @@ internal class CardComponentParamsMapper(
     ): CardComponentParams {
         return checkoutConfiguration
             .mapToParamsInternal(paymentMethod)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -72,7 +74,7 @@ internal class CardComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isHolderNameRequired = cardConfiguration?.isHolderNameRequired ?: false,
             isSubmitButtonVisible = cardConfiguration?.isSubmitButtonVisible ?: true,
@@ -171,7 +173,17 @@ internal class CardComponentParamsMapper(
     }
 
     private fun CardComponentParams.override(
-        sessionParams: SessionParams? = null
+        dropInOverrideParams: DropInOverrideParams?
+    ): CardComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
+        )
+    }
+
+    private fun CardComponentParams.override(
+        sessionParams: SessionParams?
     ): CardComponentParams {
         if (sessionParams == null) return this
         return copy(

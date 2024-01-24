@@ -61,7 +61,7 @@ internal class DropInViewModel(
 
     val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
 
-    val dropInComponentParams: DropInComponentParams = checkoutConfiguration.mapToParams(checkoutConfiguration.amount)
+    val dropInComponentParams: DropInComponentParams get() = checkoutConfiguration.mapToParams(amount)
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
@@ -155,7 +155,7 @@ internal class DropInViewModel(
     }
 
     private fun getInitialAmount(): Amount? {
-        return sessionDetails?.amount ?: dropInComponentParams.amount
+        return sessionDetails?.amount ?: checkoutConfiguration.amount
     }
 
     fun onCreated() {

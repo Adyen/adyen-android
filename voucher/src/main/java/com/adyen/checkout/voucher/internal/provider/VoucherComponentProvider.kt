@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -38,11 +39,11 @@ import com.adyen.checkout.voucher.toCheckoutConfiguration
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

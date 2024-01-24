@@ -254,7 +254,7 @@ internal class DefaultUPIDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getUPIConfiguration(),
             sessionParams = null,

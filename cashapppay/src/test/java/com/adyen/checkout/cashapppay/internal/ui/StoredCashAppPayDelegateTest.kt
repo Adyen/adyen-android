@@ -127,7 +127,7 @@ internal class StoredCashAppPayDelegateTest(
             type = TEST_PAYMENT_METHOD_TYPE,
         ),
         order = TEST_ORDER,
-        componentParams = CashAppPayComponentParamsMapper(false, null).mapToParams(
+        componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
             sessionParams = null,
             paymentMethod = StoredPaymentMethod(),

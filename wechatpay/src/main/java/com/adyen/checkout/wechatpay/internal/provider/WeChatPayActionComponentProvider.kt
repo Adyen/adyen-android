@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -40,11 +41,11 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 class WeChatPayActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

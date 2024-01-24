@@ -112,7 +112,7 @@ internal class StoredACHDirectDebitDelegateTest(
         observerRepository = PaymentObserverRepository(),
         storedPaymentMethod = paymentMethod,
         analyticsRepository = analyticsRepository,
-        componentParams = ACHDirectDebitComponentParamsMapper(false, null).mapToParams(configuration, null),
+        componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null),
         order = order,
     )
 

@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
 import com.adyen.checkout.ideal.IdealComponent
@@ -28,12 +29,12 @@ import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 class IdealComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod, IdealComponentState>(
     componentClass = IdealComponent::class.java,
-    isCreatedByDropIn = isCreatedByDropIn,
+    dropInOverrideParams = dropInOverrideParams,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {

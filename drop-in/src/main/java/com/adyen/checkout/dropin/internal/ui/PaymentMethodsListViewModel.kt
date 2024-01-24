@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
@@ -52,6 +53,7 @@ internal class PaymentMethodsListViewModel(
     private val order: OrderModel?,
     private val checkoutConfiguration: CheckoutConfiguration,
     private val dropInComponentParams: DropInComponentParams,
+    private val overrideAmount: Amount?,
     private val sessionDetails: SessionDetails?,
 ) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 
@@ -87,6 +89,7 @@ internal class PaymentMethodsListViewModel(
                         application = application,
                         paymentMethod = paymentMethod,
                         checkoutConfiguration = checkoutConfiguration,
+                        overrideAmount = overrideAmount,
                         sessionParams = sessionParams,
                         callback = this,
                     )

@@ -71,7 +71,7 @@ internal class DefaultVoucherDelegateTest(
         }
         delegate = DefaultVoucherDelegate(
             observerRepository,
-            GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             pdfOpener,
             imageSaver,
         )

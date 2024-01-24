@@ -16,13 +16,14 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
@@ -76,7 +77,8 @@ internal class BoletoComponentParamsMapperTest {
             }
         }
 
-        val params = getBoletoComponentParamsMapper(isCreatedByDropIn = true).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 20L))
+        val params = getBoletoComponentParamsMapper(dropInOverrideParams = dropInOverrideParams).mapToParams(
             configuration,
             null,
         )
@@ -88,8 +90,8 @@ internal class BoletoComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "CAD",
-                value = 123_00L,
+                currency = "EUR",
+                value = 20L,
             ),
         )
 
@@ -114,12 +116,15 @@ internal class BoletoComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val params = getBoletoComponentParamsMapper().mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = getBoletoComponentParamsMapper(dropInOverrideParams).mapToParams(
             configuration,
             sessionParams = SessionParams(
                 enableStoreDetails = null,
@@ -131,6 +136,7 @@ internal class BoletoComponentParamsMapperTest {
 
         val expected = getBoletoComponentParams(
             amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
         )
 
         assertEquals(expected, params)
@@ -176,9 +182,9 @@ internal class BoletoComponentParamsMapperTest {
     )
 
     private fun getBoletoComponentParamsMapper(
-        isCreatedByDropIn: Boolean = false,
+        dropInOverrideParams: DropInOverrideParams? = null,
         overrideSessionParams: SessionParams? = null,
-    ) = BoletoComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
+    ) = BoletoComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
@@ -188,9 +194,10 @@ internal class BoletoComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            Arguments.arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            Arguments.arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

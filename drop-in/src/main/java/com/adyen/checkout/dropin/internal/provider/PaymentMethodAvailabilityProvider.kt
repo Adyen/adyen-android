@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.provider
 
 import android.app.Application
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
@@ -16,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.NotAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -31,6 +33,7 @@ internal fun checkPaymentMethodAvailability(
     application: Application,
     paymentMethod: PaymentMethod,
     checkoutConfiguration: CheckoutConfiguration,
+    overrideAmount: Amount?,
     sessionParams: SessionParams?,
     callback: ComponentAvailableCallback,
 ) {
@@ -39,7 +42,7 @@ internal fun checkPaymentMethodAvailability(
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
-        val availabilityCheck = getPaymentMethodAvailabilityCheck(type, sessionParams)
+        val availabilityCheck = getPaymentMethodAvailabilityCheck(type, overrideAmount, sessionParams)
 
         availabilityCheck.isAvailable(application, paymentMethod, checkoutConfiguration, callback)
     } catch (e: CheckoutException) {
@@ -53,12 +56,13 @@ internal fun checkPaymentMethodAvailability(
  */
 private fun getPaymentMethodAvailabilityCheck(
     paymentMethodType: String,
+    overrideAmount: Amount?,
     sessionParams: SessionParams?,
 ): PaymentMethodAvailabilityCheck<*> {
     val availabilityCheck = when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> runCompileOnly {
-            GooglePayComponentProvider(true, sessionParams)
+            GooglePayComponentProvider(DropInOverrideParams(overrideAmount), sessionParams)
         }
 
         PaymentMethodTypes.WECHAT_PAY_SDK -> runCompileOnly { WeChatPayProvider() }

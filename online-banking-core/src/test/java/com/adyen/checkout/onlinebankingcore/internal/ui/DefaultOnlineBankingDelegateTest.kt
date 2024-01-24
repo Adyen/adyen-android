@@ -263,7 +263,7 @@ internal class DefaultOnlineBankingDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = null,

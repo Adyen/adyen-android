@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
@@ -93,7 +94,7 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
-            actionComponent = GenericActionComponentProvider(true).get(
+            actionComponent = GenericActionComponentProvider(DropInOverrideParams(dropInViewModel.amount)).get(
                 fragment = this,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = this,

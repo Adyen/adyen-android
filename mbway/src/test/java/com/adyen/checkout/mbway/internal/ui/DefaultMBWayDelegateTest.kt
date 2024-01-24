@@ -281,7 +281,7 @@ internal class DefaultMBWayDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
-        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getMBWayConfiguration(),
             sessionParams = null,

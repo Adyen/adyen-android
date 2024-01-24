@@ -275,7 +275,7 @@ internal class DefaultBlikDelegateTest(
         configuration: CheckoutConfiguration = createCheckoutConfiguration()
     ) = DefaultBlikDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(false, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
             configuration,
             configuration.getBlikConfiguration(),
             null,

@@ -12,11 +12,12 @@ import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.getACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class ACHDirectDebitComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -26,6 +27,7 @@ internal class ACHDirectDebitComponentParamsMapper(
     ): ACHDirectDebitComponentParams {
         return checkoutConfiguration
             .mapToParamsInternal()
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -36,7 +38,7 @@ internal class ACHDirectDebitComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = achDirectDebitConfiguration?.isSubmitButtonVisible ?: true,
             addressParams = achDirectDebitConfiguration?.addressConfiguration?.mapToAddressParam()
@@ -61,6 +63,16 @@ internal class ACHDirectDebitComponentParamsMapper(
                 )
             }
         }
+    }
+
+    private fun ACHDirectDebitComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?,
+    ): ACHDirectDebitComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
+        )
     }
 
     private fun ACHDirectDebitComponentParams.override(

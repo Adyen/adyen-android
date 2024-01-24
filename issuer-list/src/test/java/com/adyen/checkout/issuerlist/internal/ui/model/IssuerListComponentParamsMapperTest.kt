@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -31,7 +32,7 @@ internal class IssuerListComponentParamsMapperTest {
     fun `when parent configuration is null and custom issuer list configuration fields are null then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = IssuerListComponentParamsMapper(false, null).mapToParams(
+        val params = IssuerListComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = null,
@@ -50,7 +51,7 @@ internal class IssuerListComponentParamsMapperTest {
             setSubmitButtonVisible(false)
         }
 
-        val params = IssuerListComponentParamsMapper(false, null).mapToParams(
+        val params = IssuerListComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = null,
@@ -92,7 +93,8 @@ internal class IssuerListComponentParamsMapperTest {
             addConfiguration(TEST_CONFIGURATION_KEY, issuerListConfiguration)
         }
 
-        val params = IssuerListComponentParamsMapper(true, null).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
+        val params = IssuerListComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = null,
@@ -107,8 +109,8 @@ internal class IssuerListComponentParamsMapperTest {
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
             amount = Amount(
-                currency = "XCD",
-                value = 4_00L,
+                currency = "CAD",
+                value = 123L,
             ),
             isSubmitButtonVisible = true,
         )
@@ -120,12 +122,15 @@ internal class IssuerListComponentParamsMapperTest {
     @MethodSource("amountSource")
     fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
         configurationValue: Amount,
+        dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val params = IssuerListComponentParamsMapper(false, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = IssuerListComponentParamsMapper(dropInOverrideParams, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = SessionParams(
@@ -136,7 +141,10 @@ internal class IssuerListComponentParamsMapperTest {
             ),
         )
 
-        val expected = getIssuerListComponentParams().copy(amount = expectedValue)
+        val expected = getIssuerListComponentParams().copy(
+            amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
+        )
 
         assertEquals(expected, params)
     }
@@ -177,9 +185,10 @@ internal class IssuerListComponentParamsMapperTest {
 
         @JvmStatic
         fun amountSource() = listOf(
-            // configurationValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
         )
     }
 }

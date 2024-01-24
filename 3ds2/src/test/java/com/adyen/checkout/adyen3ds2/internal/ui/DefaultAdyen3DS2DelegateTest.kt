@@ -86,7 +86,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            componentParams = Adyen3DS2ComponentParamsMapper(false, null)
+            componentParams = Adyen3DS2ComponentParamsMapper(null, null)
                 .mapToParams(configuration, null)
                 // Set it to null to avoid a crash in 3DS2 library (they use Android APIs)
                 .copy(deviceParameterBlockList = null),

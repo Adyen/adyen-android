@@ -7,7 +7,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ButtonComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -18,6 +18,7 @@ class ButtonComponentParamsMapper(
     ): ButtonComponentParams {
         return checkoutConfiguration
             .mapToParamsInternal(configuration)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -27,9 +28,19 @@ class ButtonComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = (configuration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
+        )
+    }
+
+    private fun ButtonComponentParams.override(
+        dropInOverrideParams: DropInOverrideParams?,
+    ): ButtonComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

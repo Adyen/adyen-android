@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -25,7 +26,7 @@ import com.adyen.checkout.googlepay.getGooglePayConfiguration
 import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
@@ -36,6 +37,7 @@ internal class GooglePayComponentParamsMapper(
     ): GooglePayComponentParams {
         return configuration
             .mapToParamsInternal(paymentMethod)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -48,7 +50,7 @@ internal class GooglePayComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
@@ -123,7 +125,17 @@ internal class GooglePayComponentParamsMapper(
     }
 
     private fun GooglePayComponentParams.override(
-        sessionParams: SessionParams? = null
+        dropInOverrideParams: DropInOverrideParams?,
+    ): GooglePayComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount ?: DEFAULT_AMOUNT,
+            isCreatedByDropIn = true,
+        )
+    }
+
+    private fun GooglePayComponentParams.override(
+        sessionParams: SessionParams?,
     ): GooglePayComponentParams {
         if (sessionParams == null) return this
         return copy(

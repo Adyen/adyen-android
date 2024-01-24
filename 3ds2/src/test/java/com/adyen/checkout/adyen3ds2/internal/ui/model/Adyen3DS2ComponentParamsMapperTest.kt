@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,7 +28,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     fun `when parent configuration is null and custom 3ds2 configuration fields are null then all fields should match`() {
         val checkoutConfiguration = getCheckoutConfiguration()
 
-        val params = Adyen3DS2ComponentParamsMapper(false, null)
+        val params = Adyen3DS2ComponentParamsMapper(null, null)
             .mapToParams(checkoutConfiguration, null)
 
         val expected = getAdyen3DS2ComponentParams()
@@ -47,7 +48,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             }
         }
 
-        val params = Adyen3DS2ComponentParamsMapper(false, null)
+        val params = Adyen3DS2ComponentParamsMapper(null, null)
             .mapToParams(configuration, null)
 
         val expected = getAdyen3DS2ComponentParams(
@@ -71,7 +72,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             ),
         )
 
-        val params = Adyen3DS2ComponentParamsMapper(true, null)
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
+        val params = Adyen3DS2ComponentParamsMapper(dropInOverrideParams, null)
             .mapToParams(checkoutConfiguration, null)
 
         val expected = getAdyen3DS2ComponentParams(
@@ -81,8 +83,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "USD",
-                value = 25_00L,
+                currency = "CAD",
+                value = 123L,
             ),
         )
 

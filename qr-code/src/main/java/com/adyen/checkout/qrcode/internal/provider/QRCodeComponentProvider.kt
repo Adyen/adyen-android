@@ -25,6 +25,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -42,11 +43,11 @@ import com.adyen.checkout.ui.core.internal.util.ImageSaver
 class QRCodeComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    isCreatedByDropIn: Boolean = false,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(isCreatedByDropIn, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

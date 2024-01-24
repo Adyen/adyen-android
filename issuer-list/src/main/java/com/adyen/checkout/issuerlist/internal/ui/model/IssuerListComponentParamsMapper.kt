@@ -11,13 +11,14 @@ package com.adyen.checkout.issuerlist.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
-    private val isCreatedByDropIn: Boolean,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
@@ -29,6 +30,7 @@ class IssuerListComponentParamsMapper(
     ): IssuerListComponentParams {
         return checkoutConfiguration
             .mapToParamsInternal(configuration)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
@@ -40,7 +42,7 @@ class IssuerListComponentParamsMapper(
             environment = environment,
             clientKey = clientKey,
             analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = isCreatedByDropIn,
+            isCreatedByDropIn = false,
             amount = amount,
             isSubmitButtonVisible = configuration?.isSubmitButtonVisible ?: true,
             viewType = configuration?.viewType ?: IssuerListViewType.RECYCLER_VIEW,
@@ -49,7 +51,17 @@ class IssuerListComponentParamsMapper(
     }
 
     private fun IssuerListComponentParams.override(
-        sessionParams: SessionParams? = null
+        dropInOverrideParams: DropInOverrideParams?,
+    ): IssuerListComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
+        )
+    }
+
+    private fun IssuerListComponentParams.override(
+        sessionParams: SessionParams?,
     ): IssuerListComponentParams {
         if (sessionParams == null) return this
         return copy(

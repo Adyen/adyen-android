@@ -1172,7 +1172,7 @@ internal class DefaultCardDelegateTest(
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
             installmentsParamsMapper = InstallmentsParamsMapper(),
-            isCreatedByDropIn = false,
+            dropInOverrideParams = null,
             overrideSessionParams = null,
         ).mapToParamsDefault(configuration, paymentMethod, null)
 

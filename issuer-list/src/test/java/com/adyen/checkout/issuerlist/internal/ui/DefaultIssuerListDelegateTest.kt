@@ -171,7 +171,7 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(false, null).mapToParams(
+            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
                 checkoutConfiguration = configuration,
                 configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
                 sessionParams = null,
@@ -203,7 +203,7 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(false, null).mapToParams(
+            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
                 checkoutConfiguration = configuration,
                 configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
                 sessionParams = null,
@@ -310,7 +310,7 @@ internal class DefaultIssuerListDelegateTest(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultIssuerListDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = IssuerListComponentParamsMapper(false, null).mapToParams(
+        componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
             checkoutConfiguration = configuration,
             configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             sessionParams = null,

@@ -287,7 +287,7 @@ internal class DefaultPayByBankDelegateTest(
     ): DefaultPayByBankDelegate {
         return DefaultPayByBankDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(false, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             paymentMethod = PaymentMethod(
                 issuers = issuers,
             ),

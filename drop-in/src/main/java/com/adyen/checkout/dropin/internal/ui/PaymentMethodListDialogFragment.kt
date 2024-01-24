@@ -68,6 +68,7 @@ internal class PaymentMethodListDialogFragment :
                 order = dropInViewModel.currentOrder,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 dropInComponentParams = dropInViewModel.dropInComponentParams,
+                overrideAmount = dropInViewModel.amount,
                 sessionDetails = dropInViewModel.sessionDetails,
             )
         }
