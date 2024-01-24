@@ -69,18 +69,17 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultQRCodeDelegateTest(
     @Mock private val countDownTimer: QRCodeCountDownTimer,
-    @Mock private val context: Context
+    @Mock private val context: Context,
+    @Mock private val imageSaver: ImageSaver
 ) {
 
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultQRCodeDelegate
-    private lateinit var imageSaver: ImageSaver
 
     @BeforeEach
     fun beforeEach() {
-        imageSaver = mock<ImageSaver>()
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -138,7 +137,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `when handleAction called with unsupported action, then an error should be emitted`() = runTest {
+    fun `when handleAction is called with unsupported action, then an error should be emitted`() = runTest {
         delegate.exceptionFlow.test {
             delegate.handleAction(
                 createTestAction(),
@@ -150,7 +149,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `when handleAction called with null payment data, then an error should be emitted`() = runTest {
+    fun `when handleAction is called with null payment data, then an error should be emitted`() = runTest {
         delegate.exceptionFlow.test {
             delegate.handleAction(
                 QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
@@ -273,7 +272,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleAction called, then simple qr view flow is updated`() = runTest {
+        fun `handleAction is called, then simple qr view flow is updated`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.viewFlow.test {
@@ -377,7 +376,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleAction called, then full qr view flow is updated`() = runTest {
+        fun `handleAction is called, then full qr view flow is updated`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.viewFlow.test {
@@ -398,7 +397,7 @@ internal class DefaultQRCodeDelegateTest(
     inner class RedirectFlowTest {
 
         @Test
-        fun `handleAction called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+        fun `handleAction is called and RedirectHandler returns an error, then the error is propagated`() = runTest {
             val error = ComponentException("Failed to make redirect.")
             redirectHandler.exception = error
 
@@ -410,7 +409,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleAction called with valid data, then no error is propagated`() = runTest {
+        fun `handleAction is called with valid data, then no error is propagated`() = runTest {
             delegate.exceptionFlow.test {
                 delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
@@ -419,7 +418,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleIntent called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+        fun `handleIntent is called and RedirectHandler returns an error, then the error is propagated`() = runTest {
             val error = ComponentException("Failed to parse redirect result.")
             redirectHandler.exception = error
 
@@ -431,7 +430,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleIntent called with valid data, then the details are emitted`() = runTest {
+        fun `handleIntent is called with valid data, then the details are emitted`() = runTest {
             delegate.detailsFlow.test {
                 delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
                 delegate.handleIntent(Intent())
@@ -444,7 +443,7 @@ internal class DefaultQRCodeDelegateTest(
         }
 
         @Test
-        fun `handleAction called, then the view flow is updated`() = runTest {
+        fun `handleAction is called, then the view flow is updated`() = runTest {
             delegate.viewFlow.test {
                 assertNull(awaitItem())
 
@@ -456,7 +455,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test refreshStatus`() = runTest {
+    fun `when refreshStatus is called, then status for statusRepository gets refreshed`() = runTest {
         val statusRepository = mock<StatusRepository>()
         val paymentData = "Payment Data"
         val delegate = createDelegate(
@@ -476,7 +475,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test refreshStatus when payment data is null`() = runTest {
+    fun `when refreshStatus is called with no payment data, then status for statusRepository does not get refreshed`() = runTest {
         val statusRepository = mock<StatusRepository>()
         val delegate = createDelegate(
             statusRepository = statusRepository,
@@ -494,7 +493,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test downloadQRImage with successful result`() = runTest {
+    fun `when downloadQRImage is called with success, then Success gets emitted`() = runTest {
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
             Result.success(Unit),
         )
@@ -510,7 +509,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test downloadQRImage with permission failure result`() = runTest {
+    fun `when downloadQRImage is called with permission exception, then PermissionDenied gets emitted`() = runTest {
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
             Result.failure(PermissionRequestException("Error message for permission request exception")),
         )
@@ -526,7 +525,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test downloadQRImage with failure result`() = runTest {
+    fun `when downloadQRImage is called with failure, then Success gets emitted`() = runTest {
         val throwable = CheckoutException("error")
         whenever(imageSaver.saveImageFromUrl(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
             Result.failure(throwable),
@@ -543,7 +542,7 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
-    fun `test requestPermission`() = runTest {
+    fun `when requestPermission is called, then correct permission request data is being emitted`() = runTest {
         val requiredPermission = "Required Permission"
         val permissionCallback = mock<PermissionHandlerCallback>()
 

@@ -99,33 +99,35 @@
         android:layout_height="@dimen/standard_margin"
         app:layout_constraintTop_toBottomOf="@id/textView_reference_code" />
 
-    <com.google.android.flexbox.FlexboxLayout
+    <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/layout_buttons"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        app:justifyContent="space_around"
+        android:layout_marginStart="@dimen/standard_half_margin"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        app:constraint_referenced_ids="button_copyCode,button_store"
+        app:flow_horizontalGap="@dimen/standard_half_margin"
+        app:flow_horizontalStyle="spread_inside"
+        app:flow_wrapMode="chain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/space_buttons">
+        app:layout_constraintTop_toBottomOf="@id/space_buttons" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_copyCode"
-            style="@style/AdyenCheckout.Voucher.ActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/checkout_voucher_copy_code" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_copyCode"
+        style="@style/AdyenCheckout.Voucher.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/checkout_voucher_copy_code" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_store"
-            style="@style/AdyenCheckout.Voucher.ActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:text="@string/checkout_voucher_download_pdf"
-            tools:visibility="visible" />
-
-    </com.google.android.flexbox.FlexboxLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_store"
+        style="@style/AdyenCheckout.Voucher.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:text="@string/checkout_voucher_download_pdf"
+        tools:visibility="visible" />
 
     <Space
         android:id="@+id/space_informationFields"

@@ -51,7 +51,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     ConstraintLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -85,7 +85,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewPaymentReference.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_PaymentReference,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -129,7 +129,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         if (amount != null && !amount.isEmpty) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 amount,
-                delegate.componentParams.shopperLocale
+                delegate.componentParams.shopperLocale,
             )
             textViewAmount.isVisible = true
             textViewAmount.text = formattedAmount
@@ -189,7 +189,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         context.copyTextToClipboard(
             COPY_LABEL,
             codeReference,
-            localizedContext.getString(R.string.checkout_voucher_copied_toast)
+            localizedContext.getString(R.string.checkout_voucher_copied_toast),
         )
     }
 

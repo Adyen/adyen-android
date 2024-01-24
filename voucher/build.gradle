@@ -48,7 +48,6 @@ dependencies {
 
     // Dependencies
     implementation libraries.androidx.browser
-    implementation libraries.flexbox
 
     //Tests
     testImplementation project(':test-core')

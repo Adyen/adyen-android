@@ -184,7 +184,7 @@ class ImageSaver(
         return try {
             URL(this)
         } catch (e: MalformedURLException) {
-            Logger.e(TAG, "toURL: $e")
+            Logger.e(TAG, "Failed to convert String to URL: $e")
             null
         }
     }

@@ -16,7 +16,7 @@ import com.adyen.checkout.core.internal.ui.PermissionHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-suspend fun PermissionHandler.checkPermission(context: Context, requiredPermission: String): Boolean? =
+internal suspend fun PermissionHandler.checkPermission(context: Context, requiredPermission: String): Boolean? =
     suspendCancellableCoroutine { continuation ->
         if (ContextCompat.checkSelfPermission(context, requiredPermission) == PackageManager.PERMISSION_GRANTED) {
             continuation.resume(true)

@@ -54,13 +54,12 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultVoucherDelegateTest(
+    @Mock private val observerRepository: ActionObserverRepository,
     @Mock private val pdfOpener: PdfOpener,
     @Mock private val context: Context,
     @Mock private val activity: Activity,
     @Mock private val imageSaver: ImageSaver,
 ) {
-
-    private val observerRepository = mock<ActionObserverRepository>()
 
     private lateinit var delegate: DefaultVoucherDelegate
 
