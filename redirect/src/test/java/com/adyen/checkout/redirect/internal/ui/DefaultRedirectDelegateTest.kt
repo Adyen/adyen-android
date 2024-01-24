@@ -21,6 +21,8 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.exception.HttpException
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.redirect.redirect
@@ -32,10 +34,16 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
@@ -51,22 +59,11 @@ internal class DefaultRedirectDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(
-            Environment.TEST,
-            TEST_CLIENT_KEY,
-        ) {
-            redirect()
-        }
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultRedirectDelegate(
-            ActionObserverRepository(),
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            redirectHandler,
-            paymentDataRepository,
-            nativeRedirectService,
-        )
+        redirectHandler = TestRedirectHandler()
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
+        delegate = createDelegate()
     }
 
     @Test
@@ -147,7 +144,65 @@ internal class DefaultRedirectDelegateTest(
             }
         }
 
+    @ParameterizedTest
+    @MethodSource("errorSource")
+    fun `when native redirect is handled and throws an error, then the error is propagated`(error: Exception) =
+        runTest {
+            delegate.exceptionFlow.test {
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                delegate.initialize(this@runTest)
+                delegate.handleAction(
+                    action = RedirectAction(type = ActionTypes.NATIVE_REDIRECT, nativeRedirectData = "testData"),
+                    activity = Activity(),
+                )
+
+                delegate.handleIntent(Intent())
+
+                assertEquals(error, awaitItem())
+            }
+        }
+
+    @Test
+    fun `when onCleared is called, then the delegate gets clean up correctly`() {
+        val mockObserverRepository = mock<ActionObserverRepository>()
+        delegate = createDelegate(observerRepository = mockObserverRepository)
+
+        delegate.onCleared()
+
+        verify(mockObserverRepository).removeObservers()
+        redirectHandler.assertRemoveOnRedirectListenerCalled()
+    }
+
+    private fun createDelegate(
+        observerRepository: ActionObserverRepository = ActionObserverRepository()
+    ): DefaultRedirectDelegate {
+        val configuration = CheckoutConfiguration(
+            Environment.TEST,
+            TEST_CLIENT_KEY,
+        ) {
+            redirect()
+        }
+        return DefaultRedirectDelegate(
+            observerRepository = observerRepository,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                configuration,
+                Locale.US,
+                null,
+                null,
+            ),
+            redirectHandler = redirectHandler,
+            paymentDataRepository = paymentDataRepository,
+            nativeRedirectService = nativeRedirectService,
+        )
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+
+        @JvmStatic
+        fun errorSource() = listOf(
+            arguments(HttpException(401, "", null)),
+            arguments(ModelSerializationException(NativeRedirectResponse::class.java, null)),
+        )
     }
 }

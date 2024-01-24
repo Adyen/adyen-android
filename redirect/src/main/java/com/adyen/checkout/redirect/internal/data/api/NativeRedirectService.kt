@@ -12,23 +12,25 @@ import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class NativeRedirectService(
     private val httpClient: HttpClient,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
     suspend fun makeNativeRedirect(
         request: NativeRedirectRequest,
         clientKey: String,
-    ): NativeRedirectResponse = withContext(Dispatchers.IO) {
+    ): NativeRedirectResponse = withContext(dispatcher) {
         httpClient.post(
             path = "v1/nativeRedirect/redirectResult",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = NativeRedirectRequest.SERIALIZER,
-            responseSerializer = NativeRedirectResponse.SERIALIZER
+            responseSerializer = NativeRedirectResponse.SERIALIZER,
         )
     }
 }

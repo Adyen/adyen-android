@@ -25,6 +25,7 @@ class TestRedirectHandler : RedirectHandler {
     var exception: ComponentException? = null
 
     private var timesLaunchRedirectCalled = 0
+    private var timesRemoveOnRedirectListenerCalled = 0
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         exception?.let { throw it }
@@ -41,7 +42,12 @@ class TestRedirectHandler : RedirectHandler {
 
     override fun setOnRedirectListener(listener: () -> Unit) = Unit
 
-    override fun removeOnRedirectListener() = Unit
+    override fun removeOnRedirectListener() {
+        timesRemoveOnRedirectListenerCalled++
+    }
+
+    fun assertRemoveOnRedirectListenerCalled() =
+        assert(timesRemoveOnRedirectListenerCalled > 0)
 
     companion object {
         val REDIRECT_RESULT = JSONObject().apply {

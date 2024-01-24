@@ -149,7 +149,7 @@ internal class DefaultRedirectDelegate(
                 val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
                 detailsChannel.trySend(createActionComponentData(detailsJson))
             } catch (e: HttpException) {
-                onError(CheckoutException("Failed to do native redirect.", e))
+                onError(e)
             } catch (e: ModelSerializationException) {
                 onError(e)
             }
