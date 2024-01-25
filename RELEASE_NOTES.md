@@ -15,12 +15,13 @@
   - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
 
 ## Deprecated
-- The `AdyenCheckout.Voucher.Description.Bacs` style is deprecated. Use `AdyenCheckout.SimpleVoucher.Description` instead.
-- The `AdyenCheckout.Voucher.Description.Boleto` style is deprecated. Use `AdyenCheckout.FullVoucher.Description` instead.
-- The `AdyenCheckout.Voucher.ExpirationDateLabel` style is deprecated. Use `AdyenCheckout.Voucher.InformationFieldLabel` instead.
-- The `AdyenCheckout.Voucher.ExpirationDate` style is deprecated. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
-- The `AdyenCheckout.Voucher.ButtonCopyCode` and `AdyenCheckout.Voucher.ButtonDownloadPdf` styles are deprecated. Use `AdyenCheckout.Voucher.ActionButton` instead.
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.
+- The styles for vouchers have been changed:
+  - The `AdyenCheckout.Voucher.Description.Bacs` style will not work anymore. Use `AdyenCheckout.Voucher.Simple.Description` instead.
+  - The `AdyenCheckout.Voucher.Description.Boleto` style will not work anymore. Use `AdyenCheckout.Voucher.Full.Description` instead.
+  - The `AdyenCheckout.Voucher.ExpirationDateLabel` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldLabel` instead.
+  - The `AdyenCheckout.Voucher.ExpirationDate` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
+  - The `AdyenCheckout.Voucher.ButtonCopyCode` and `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.ActionButton` instead.
 
 ## Changed
-- All vouchers will start in expanded mode
+- In drop-in all actions will start in expanded mode

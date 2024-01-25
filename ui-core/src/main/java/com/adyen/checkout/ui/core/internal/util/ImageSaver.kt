@@ -16,20 +16,24 @@ import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
+import androidx.core.content.ContextCompat
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
+import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -46,17 +50,26 @@ class ImageSaver(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
+    @Suppress("LongParameterList")
     suspend fun saveImageFromView(
         context: Context,
         permissionHandler: PermissionHandler,
         view: View,
+        @ColorInt backgroundColor: Int? = null,
         fileName: String? = null,
         fileRelativePath: String? = null,
     ): Result<Unit> {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
-        view.background?.draw(canvas) ?: canvas.drawColor(Color.WHITE)
+        backgroundColor?.let { color -> canvas.drawColor(color) }
+            ?: view.background?.draw(canvas)
+            ?: run {
+                val defaultColor = ContextCompat.getColor(context, R.color.white)
+                val defaultBackgroundColor = MaterialColors.getColor(context, R.attr.colorSurface, defaultColor)
+                canvas.drawColor(defaultBackgroundColor)
+            }
+
         view.draw(canvas)
 
         return saveImageFromBitmap(context, permissionHandler, bitmap, fileName, fileRelativePath)
@@ -144,7 +157,7 @@ class ImageSaver(
         bitmap: Bitmap,
         contentValues: ContentValues,
     ): Result<Unit> = withContext(dispatcher) {
-        if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == true) {
+        if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == PERMISSION_GRANTED) {
             saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
         } else {
             Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))

@@ -12,12 +12,8 @@ import android.content.Context
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
-import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType.BACS_VOUCHER
-import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType.BOLETO_VOUCHER
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType.FULL_VOUCHER
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType.SIMPLE_VOUCHER
-import com.adyen.checkout.voucher.internal.ui.view.BacsVoucherView
-import com.adyen.checkout.voucher.internal.ui.view.BoletoVoucherView
 import com.adyen.checkout.voucher.internal.ui.view.FullVoucherView
 import com.adyen.checkout.voucher.internal.ui.view.SimpleVoucherView
 
@@ -28,9 +24,7 @@ internal object VoucherViewProvider : ViewProvider {
         context: Context,
     ): ComponentView {
         return when (viewType) {
-            BACS_VOUCHER -> BacsVoucherView(context)
             SIMPLE_VOUCHER -> SimpleVoucherView(context)
-            BOLETO_VOUCHER -> BoletoVoucherView(context)
             FULL_VOUCHER -> FullVoucherView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
@@ -38,9 +32,7 @@ internal object VoucherViewProvider : ViewProvider {
 }
 
 internal enum class VoucherComponentViewType : ComponentViewType {
-    BACS_VOUCHER,
     SIMPLE_VOUCHER,
-    BOLETO_VOUCHER,
     FULL_VOUCHER;
 
     override val viewProvider: ViewProvider = VoucherViewProvider

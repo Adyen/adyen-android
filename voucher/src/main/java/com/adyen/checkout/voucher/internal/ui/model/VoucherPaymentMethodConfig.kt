@@ -22,11 +22,11 @@ internal enum class VoucherPaymentMethodConfig(
 ) {
 
     BACS(
-        viewType = VoucherComponentViewType.BACS_VOUCHER,
+        viewType = VoucherComponentViewType.SIMPLE_VOUCHER,
         introductionTextResource = R.string.checkout_voucher_introduction_bacs,
     ),
     BOLETO(
-        viewType = VoucherComponentViewType.BOLETO_VOUCHER,
+        viewType = VoucherComponentViewType.FULL_VOUCHER,
         introductionTextResource = R.string.checkout_voucher_introduction,
     ),
     MULTIBANCO(
@@ -76,7 +76,7 @@ private fun createEntityInformationField(action: VoucherAction): VoucherInformat
 
     return VoucherInformationField(
         labelResId = R.string.checkout_voucher_expiration_entity,
-        value = entity
+        value = entity,
     )
 }
 
@@ -84,13 +84,13 @@ private fun createExpirationInformationField(action: VoucherAction, shopperLocal
     val expirationDate = action.expiresAt?.let { expiresAt ->
         DateUtils.formatStringDate(
             expiresAt,
-            shopperLocale
+            shopperLocale,
         )
     } ?: return null
 
     return VoucherInformationField(
         labelResId = R.string.checkout_voucher_expiration_date,
-        value = expirationDate
+        value = expirationDate,
     )
 }
 
@@ -99,6 +99,6 @@ private fun createShopperReferenceField(action: VoucherAction): VoucherInformati
 
     return VoucherInformationField(
         labelResId = R.string.checkout_voucher_shopper_reference,
-        value = merchantReference
+        value = merchantReference,
     )
 }

@@ -16,28 +16,36 @@ import com.adyen.checkout.core.internal.ui.PermissionHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-internal suspend fun PermissionHandler.checkPermission(context: Context, requiredPermission: String): Boolean? =
-    suspendCancellableCoroutine { continuation ->
-        if (ContextCompat.checkSelfPermission(context, requiredPermission) == PackageManager.PERMISSION_GRANTED) {
-            continuation.resume(true)
-            return@suspendCancellableCoroutine
-        }
-
-        requestPermission(
-            context = context,
-            requiredPermission = requiredPermission,
-            callback = object : PermissionHandlerCallback {
-                override fun onPermissionGranted(requestedPermission: String) {
-                    if (requestedPermission == requiredPermission) {
-                        continuation.resume(true)
-                    } else {
-                        continuation.resume(null)
-                    }
-                }
-
-                override fun onPermissionDenied(requestedPermission: String) {
-                    continuation.resume(false)
-                }
-            },
-        )
+internal suspend fun PermissionHandler.checkPermission(
+    context: Context,
+    requiredPermission: String
+): PermissionHandlerResult = suspendCancellableCoroutine { continuation ->
+    if (ContextCompat.checkSelfPermission(context, requiredPermission) == PackageManager.PERMISSION_GRANTED) {
+        continuation.resume(PermissionHandlerResult.PERMISSION_GRANTED)
+        return@suspendCancellableCoroutine
     }
+
+    requestPermission(
+        context = context,
+        requiredPermission = requiredPermission,
+        callback = object : PermissionHandlerCallback {
+            override fun onPermissionGranted(requestedPermission: String) {
+                if (requestedPermission == requiredPermission) {
+                    continuation.resume(PermissionHandlerResult.PERMISSION_GRANTED)
+                } else {
+                    continuation.resume(PermissionHandlerResult.WRONG_PERMISSION)
+                }
+            }
+
+            override fun onPermissionDenied(requestedPermission: String) {
+                continuation.resume(PermissionHandlerResult.PERMISSION_DENIED)
+            }
+        },
+    )
+}
+
+internal enum class PermissionHandlerResult {
+    PERMISSION_GRANTED,
+    PERMISSION_DENIED,
+    WRONG_PERMISSION,
+}

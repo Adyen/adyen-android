@@ -16,9 +16,7 @@ import com.adyen.checkout.ui.core.TestPermissionHandlerWithDifferentPermission
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mockStatic
 import org.mockito.kotlin.eq
@@ -32,45 +30,49 @@ internal class PermissionHandlerExtensionTest {
     private val context = mock<Context>()
 
     @Test
-    fun `test checkPermission when permission is already granted`() = runTestWithPermissionInitiallyGranted {
-        val permissionHandler = TestPermissionHandler()
+    fun `when checkPermission is called when permission is already granted, then returns granted result`() =
+        runTestWithPermissionInitiallyGranted {
+            val permissionHandler = TestPermissionHandler()
 
-        val result = permissionHandler.checkPermission(context, permission)
+            val result = permissionHandler.checkPermission(context, permission)
 
-        assertTrue(result!!)
-    }
-
-    @Test
-    fun `test checkPermission when permission is granted`() = runTestWithPermissionInitiallyDenied {
-        val permissionHandler = TestPermissionHandler(shouldGrantPermission = true)
-
-        val result = permissionHandler.checkPermission(context, permission)
-
-        assertTrue(result!!)
-    }
+            assertEquals(PermissionHandlerResult.PERMISSION_GRANTED, result)
+        }
 
     @Test
-    fun `test checkPermission when wrong permission is granted`() = runTestWithPermissionInitiallyDenied {
-        val permissionHandler = TestPermissionHandlerWithDifferentPermission()
+    fun `when checkPermission is called and permission is granted, then returns granted result`() =
+        runTestWithPermissionInitiallyDenied {
+            val permissionHandler = TestPermissionHandler(shouldGrantPermission = true)
 
-        val result = permissionHandler.checkPermission(context, permission)
+            val result = permissionHandler.checkPermission(context, permission)
 
-        assertNull(result)
-    }
+            assertEquals(PermissionHandlerResult.PERMISSION_GRANTED, result)
+        }
 
     @Test
-    fun `test checkPermission when permission is denied`() = runTestWithPermissionInitiallyDenied {
-        val permissionHandler = TestPermissionHandler(shouldGrantPermission = false)
+    fun `when checkPermission is called and wrong permission is granted, then returns wrong permission result`() =
+        runTestWithPermissionInitiallyDenied {
+            val permissionHandler = TestPermissionHandlerWithDifferentPermission()
 
-        val result = permissionHandler.checkPermission(context, permission)
+            val result = permissionHandler.checkPermission(context, permission)
 
-        assertFalse(result!!)
-    }
+            assertEquals(PermissionHandlerResult.WRONG_PERMISSION, result)
+        }
+
+    @Test
+    fun `when checkPermission is called and permission is denied, then returns denied result`() =
+        runTestWithPermissionInitiallyDenied {
+            val permissionHandler = TestPermissionHandler(shouldGrantPermission = false)
+
+            val result = permissionHandler.checkPermission(context, permission)
+
+            assertEquals(PermissionHandlerResult.PERMISSION_DENIED, result)
+        }
 
     private fun runTestWithPermissionInitiallyDenied(testBody: suspend TestScope.() -> Unit) = runTest {
         val mockedContextCompat = mockStatic(ContextCompat::class.java)
         whenever(ContextCompat.checkSelfPermission(eq(context), eq(permission))).thenReturn(
-            PackageManager.PERMISSION_DENIED
+            PackageManager.PERMISSION_DENIED,
         )
 
         testBody.invoke(this)
@@ -81,7 +83,7 @@ internal class PermissionHandlerExtensionTest {
     private fun runTestWithPermissionInitiallyGranted(testBody: suspend TestScope.() -> Unit) = runTest {
         val mockedContextCompat = mockStatic(ContextCompat::class.java)
         whenever(ContextCompat.checkSelfPermission(eq(context), eq(permission))).thenReturn(
-            PackageManager.PERMISSION_GRANTED
+            PackageManager.PERMISSION_GRANTED,
         )
 
         testBody.invoke(this)

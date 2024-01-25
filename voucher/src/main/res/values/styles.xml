@@ -10,34 +10,6 @@
 
     <style name="AdyenCheckout.Voucher" />
 
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.SimpleVoucher.Description instead. -->
-    <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.SimpleVoucher.Description">
-        <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
-    </style>
-
-    <style name="AdyenCheckout.SimpleVoucher.Description" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.FullVoucher.Description instead. -->
-    <style name="AdyenCheckout.Voucher.Description.Boleto" parent="AdyenCheckout.FullVoucher.Description">
-        <item name="android:textSize">12sp</item>
-        <item name="android:text">@string/checkout_voucher_introduction</item>
-    </style>
-
-    <style name="AdyenCheckout.FullVoucher.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textSize">12sp</item>
-        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
-        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
     <style name="AdyenCheckout.Voucher.Amount" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:textSize">20sp</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
@@ -70,40 +42,69 @@
         <item name="android:text">@string/checkout_voucher_download_pdf</item>
     </style>
 
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.Voucher.ActionButton instead. -->
-    <style name="AdyenCheckout.Voucher.ButtonCopyCode" parent="AdyenCheckout.Voucher.ActionButton">
-        <item name="android:text">@string/checkout_voucher_copy_code</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
-    </style>
-
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.Voucher.ActionButton instead. -->
-    <style name="AdyenCheckout.Voucher.ButtonDownloadPdf" parent="AdyenCheckout.Voucher.ActionButton">
-        <item name="android:text">@string/checkout_voucher_download_pdf</item>
-    </style>
-
     <style name="AdyenCheckout.Voucher.ActionButton" parent="AdyenCheckout.Button.Secondary">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
-    </style>
-
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.Voucher.InformationFieldLabel instead. -->
-    <style name="AdyenCheckout.Voucher.ExpirationDateLabel" parent="AdyenCheckout.Voucher.InformationFieldLabel">
-        <item name="android:text">@string/checkout_voucher_expiration_date</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.InformationFieldLabel" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:layout_margin">@dimen/standard_margin</item>
     </style>
 
-    <!-- This style is deprecated and will be removed in future releases. Please override
-         AdyenCheckout.Voucher.InformationFieldValue instead. -->
-    <style name="AdyenCheckout.Voucher.ExpirationDate" parent="AdyenCheckout.Voucher.InformationFieldValue" />
-
     <style name="AdyenCheckout.Voucher.InformationFieldValue" parent="AdyenCheckout.TextAppearance.Secondary">
         <item name="android:layout_margin">@dimen/standard_margin</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="AdyenCheckout.Voucher.Simple" />
+
+    <style name="AdyenCheckout.Voucher.Simple.Description" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.Full" />
+
+    <style name="AdyenCheckout.Voucher.Full.Description" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_one_half_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.InformationFieldLabel instead. -->
+    <style name="AdyenCheckout.Voucher.ExpirationDateLabel" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.InformationFieldValue instead. -->
+    <style name="AdyenCheckout.Voucher.ExpirationDate" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <style name="AdyenCheckout.Voucher.Description" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.Simple.Description instead. -->
+    <style name="AdyenCheckout.Voucher.Description.Bacs" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.Full.Description instead. -->
+    <style name="AdyenCheckout.Voucher.Description.Boleto" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.ActionButton instead. -->
+    <style name="AdyenCheckout.Voucher.ButtonCopyCode" />
+
+    <!-- TODO: Remove this style in the next major release -->
+    <!-- This style is not being used and will be removed in future releases.
+         Override AdyenCheckout.Voucher.ActionButton instead. -->
+    <style name="AdyenCheckout.Voucher.ButtonDownloadPdf" />
 </resources>

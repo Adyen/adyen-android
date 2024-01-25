@@ -17,8 +17,6 @@ data class VoucherOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,
     val introductionTextResource: Int?,
-    // `expiresAt` should be removed with BoletoVoucherView
-    val expiresAt: String?,
     val reference: String?,
     val totalAmount: Amount?,
     val storeAction: VoucherStoreAction?,

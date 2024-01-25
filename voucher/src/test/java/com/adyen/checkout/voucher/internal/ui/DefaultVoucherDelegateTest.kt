@@ -129,7 +129,6 @@ internal class DefaultVoucherDelegateTest(
             with(expectMostRecentItem()) {
                 assertEquals(PaymentMethodTypes.BACS, paymentMethodType)
                 assertEquals(VoucherStoreAction.DownloadPdf("download_url"), storeAction)
-                assertEquals("now", expiresAt)
                 assertEquals("ref", reference)
                 assertEquals(Amount("EUR", 1000), totalAmount)
             }
@@ -154,7 +153,6 @@ internal class DefaultVoucherDelegateTest(
             with(expectMostRecentItem()) {
                 assertEquals(PaymentMethodTypes.MULTIBANCO, paymentMethodType)
                 assertEquals(VoucherStoreAction.SaveAsImage, storeAction)
-                assertEquals("now", expiresAt)
                 assertEquals("ref", reference)
                 assertEquals(Amount("EUR", 1000), totalAmount)
             }
@@ -224,7 +222,7 @@ internal class DefaultVoucherDelegateTest(
 
     @Test
     fun `when saveVoucherAsImage is called, then correct ui event should be emitted`() = runTest {
-        whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+        whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
             Result.success(Unit),
         )
 
@@ -241,7 +239,16 @@ internal class DefaultVoucherDelegateTest(
     @Test
     fun `when saveVoucherAsImage is called with permission exception, then permission denied ui event should be emitted`() =
         runTest {
-            whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+            whenever(
+                imageSaver.saveImageFromView(
+                    any(),
+                    any(),
+                    any(),
+                    anyOrNull(),
+                    anyOrNull(),
+                    anyOrNull(),
+                ),
+            ).thenReturn(
                 Result.failure(PermissionRequestException("Error message for permission request exception")),
             )
 
@@ -258,7 +265,7 @@ internal class DefaultVoucherDelegateTest(
     @Test
     fun `when saveVoucherAsImage is called with error, then failure ui event should be emitted`() = runTest {
         val throwable = ComponentException("Error message")
-        whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull())).thenReturn(
+        whenever(imageSaver.saveImageFromView(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(
             Result.failure(throwable),
         )
 
@@ -310,14 +317,14 @@ internal class DefaultVoucherDelegateTest(
         @JvmStatic
         fun viewTypeSource() = listOf(
             // PaymentMethodType, VoucherComponentViewType
-            arguments(PaymentMethodTypes.BACS, VoucherComponentViewType.BACS_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO_BRADESCO, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO_HSBC, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO_ITAU, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETOBANCARIO_SANTANDER, VoucherComponentViewType.BOLETO_VOUCHER),
-            arguments(PaymentMethodTypes.BOLETO_PRIMEIRO_PAY, VoucherComponentViewType.BOLETO_VOUCHER),
+            arguments(PaymentMethodTypes.BACS, VoucherComponentViewType.SIMPLE_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO_BRADESCO, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO_HSBC, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO_ITAU, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETOBANCARIO_SANTANDER, VoucherComponentViewType.FULL_VOUCHER),
+            arguments(PaymentMethodTypes.BOLETO_PRIMEIRO_PAY, VoucherComponentViewType.FULL_VOUCHER),
             arguments(PaymentMethodTypes.MULTIBANCO, VoucherComponentViewType.FULL_VOUCHER),
         )
     }

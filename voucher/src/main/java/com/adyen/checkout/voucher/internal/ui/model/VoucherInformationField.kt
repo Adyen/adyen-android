@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.voucher.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class VoucherInformationField(
     @StringRes val labelResId: Int,
     val value: String
