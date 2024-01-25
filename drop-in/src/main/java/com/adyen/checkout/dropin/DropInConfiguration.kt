@@ -65,9 +65,9 @@ class DropInConfiguration private constructor(
     override val amount: Amount?,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
     internal val genericActionConfiguration: GenericActionConfiguration,
-    val showPreselectedStoredPaymentMethod: Boolean,
-    val skipListWhenSinglePaymentMethod: Boolean,
-    val isRemovingStoredPaymentMethodsEnabled: Boolean,
+    val showPreselectedStoredPaymentMethod: Boolean?,
+    val skipListWhenSinglePaymentMethod: Boolean?,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean?,
     val additionalDataForDropInService: Bundle?,
     internal val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
 ) : Configuration {
@@ -102,9 +102,9 @@ class DropInConfiguration private constructor(
         private val availablePaymentConfigs = HashMap<String, Configuration>()
         private val overriddenPaymentMethodInformation = HashMap<String, DropInPaymentMethodInformation>()
 
-        private var showPreselectedStoredPaymentMethod: Boolean = true
-        private var skipListWhenSinglePaymentMethod: Boolean = false
-        private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
+        private var showPreselectedStoredPaymentMethod: Boolean? = null
+        private var skipListWhenSinglePaymentMethod: Boolean? = null
+        private var isRemovingStoredPaymentMethodsEnabled: Boolean? = null
         private var additionalDataForDropInService: Bundle? = null
 
         /**
@@ -135,6 +135,8 @@ class DropInConfiguration private constructor(
 
         /**
          * When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.
+         *
+         * Default is true.
          */
         fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
             this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
@@ -148,6 +150,8 @@ class DropInConfiguration private constructor(
          * This only applies to payment methods that require a component (user input). Which means redirect payment
          * methods, SDK payment methods, etc will not be skipped even if this flag is set to true and a single payment
          * method is present.
+         *
+         * Default is false.
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
@@ -159,6 +163,8 @@ class DropInConfiguration private constructor(
          * the payment methods screen.
          *
          * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
+         *
+         * Default is false.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
