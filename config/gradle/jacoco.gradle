@@ -147,6 +147,8 @@ ext.coverageExclusions = [
     '**/DropInExt*.*',
     '**/FileDownloader*.*',
     '**/FragmentExtensions*.*',
+    '**/FragmentProvider.*',
+    '**/FragmentProvider$*.*',
     '**/ImageLoadingExtensions*.*',
     '**/ImageLoadingExtensions.*',
     '**/ImageSaver.*',

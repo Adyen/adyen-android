@@ -440,6 +440,10 @@ fun CheckoutConfiguration.dropIn(
     configuration: Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
         .apply(configuration)
         .build()
     addConfiguration(DROP_IN_CONFIG_KEY, config)
