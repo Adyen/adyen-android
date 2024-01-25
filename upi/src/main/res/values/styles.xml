@@ -7,6 +7,8 @@
   -->
 <resources>
 
+    <style name="AdyenCheckout.UPI" />
+
     <style name="AdyenCheckout.UPI.ModeSelectionTextView" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:text">@string/checkout_upi_mode_selection</item>
     </style>
