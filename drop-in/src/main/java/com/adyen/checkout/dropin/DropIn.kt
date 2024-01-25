@@ -196,7 +196,6 @@ object DropIn {
         )
     }
 
-
     /**
      * Starts the advanced checkout flow to be handled by the Drop-in solution. With this solution your backend needs to
      * integrate the 3 main API endpoints: /paymentMethods, /payments and /payments/details.
