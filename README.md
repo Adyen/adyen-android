@@ -52,6 +52,10 @@ implementation "com.adyen.checkout:card:5.1.0"
 
 The library is available on [Maven Central][mavenRepo].
 
+## UI Customization
+
+[See the UI Customization Guide for more.](docs/UI_CUSTOMIZATION.md)
+
 ## Migrate from v4
 
 If you are upgrading from 4.x.x to a current release, check out our [migration guide][migration.guide].
