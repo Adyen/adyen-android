@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.voucher.internal.ui.view
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -17,12 +18,14 @@ import com.adyen.checkout.voucher.databinding.FullVoucherInformationFieldBinding
 import com.adyen.checkout.voucher.internal.ui.model.VoucherInformationField
 import com.adyen.checkout.voucher.internal.ui.view.VoucherInformationFieldsAdapter.InformationFieldViewHolder
 
-internal class VoucherInformationFieldsAdapter :
-    ListAdapter<VoucherInformationField, InformationFieldViewHolder>(InformationFieldsDiffCallback) {
+internal class VoucherInformationFieldsAdapter(
+    private val context: Context,
+    private val localizedContext: Context
+) : ListAdapter<VoucherInformationField, InformationFieldViewHolder>(InformationFieldsDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationFieldViewHolder {
-        val binding = FullVoucherInformationFieldBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return InformationFieldViewHolder(binding)
+        val binding = FullVoucherInformationFieldBinding.inflate(LayoutInflater.from(context), parent, false)
+        return InformationFieldViewHolder(binding, localizedContext)
     }
 
     override fun onBindViewHolder(holder: InformationFieldViewHolder, position: Int) {
@@ -31,10 +34,11 @@ internal class VoucherInformationFieldsAdapter :
     }
 
     internal class InformationFieldViewHolder(
-        private val binding: FullVoucherInformationFieldBinding
+        private val binding: FullVoucherInformationFieldBinding,
+        private val localizedContext: Context
     ) : ViewHolder(binding.root) {
         fun bindItem(model: VoucherInformationField) {
-            binding.textViewInformationLabel.text = binding.root.context.getString(model.labelResId)
+            binding.textViewInformationLabel.text = localizedContext.getString(model.labelResId)
             binding.textViewInformationValue.text = model.value
         }
     }

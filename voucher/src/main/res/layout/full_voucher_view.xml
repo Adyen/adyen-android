@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/standard_half_margin"
         android:layout_marginEnd="@dimen/standard_half_margin"
-        app:constraint_referenced_ids="button_copyCode,button_store"
+        app:constraint_referenced_ids="button_copyCode,button_downloadPdf,button_saveImage"
         app:flow_horizontalGap="@dimen/standard_half_margin"
         app:flow_horizontalStyle="spread_inside"
         app:flow_wrapMode="chain"
@@ -115,18 +115,27 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_copyCode"
-        style="@style/AdyenCheckout.Voucher.ActionButton"
+        style="@style/AdyenCheckout.Voucher.Button.CopyCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/checkout_voucher_copy_code" />
+        tools:text="@string/checkout_voucher_copy_code" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_store"
-        style="@style/AdyenCheckout.Voucher.ActionButton"
+        android:id="@+id/button_downloadPdf"
+        style="@style/AdyenCheckout.Voucher.Button.DownloadPdf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:text="@string/checkout_voucher_download_pdf"
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_saveImage"
+        style="@style/AdyenCheckout.Voucher.Button.SaveImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:text="@string/checkout_voucher_save_image"
         tools:visibility="visible" />
 
     <Space

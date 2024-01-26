@@ -80,11 +80,25 @@ internal class FullVoucherView @JvmOverloads constructor(
         this.coroutineScope = coroutineScope
 
         binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
+        binding.buttonDownloadPdf.setOnClickListener { onDownloadPdfClicked() }
+        binding.buttonSaveImage.setOnClickListener { onSaveAsImageClicked() }
     }
 
-    private fun initLocalizedStrings(localizedContext: Context) {
-        binding.textViewPaymentReference.setLocalizedTextFromStyle(
+    private fun initLocalizedStrings(localizedContext: Context) = with(binding) {
+        textViewPaymentReference.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_PaymentReference,
+            localizedContext,
+        )
+        buttonCopyCode.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_CopyCode,
+            localizedContext,
+        )
+        buttonDownloadPdf.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_DownloadPdf,
+            localizedContext,
+        )
+        buttonSaveImage.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_SaveImage,
             localizedContext,
         )
     }
@@ -106,7 +120,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         updateIntroductionText(outputData.introductionTextResource)
         updateAmount(outputData.totalAmount)
         updateCodeReference(outputData.reference)
-        updateStoreActionButton(outputData.storeAction)
+        updateStoreAction(outputData.storeAction)
         updateInformationFields(outputData.informationFields)
     }
 
@@ -146,27 +160,15 @@ internal class FullVoucherView @JvmOverloads constructor(
         buttonCopyCode.isVisible = isVisible
     }
 
-    private fun updateStoreActionButton(storeAction: VoucherStoreAction?) = with(binding) {
-        buttonStore.isVisible = storeAction != null
-
-        if (storeAction == null) return
-        when (storeAction) {
-            is VoucherStoreAction.DownloadPdf -> {
-                buttonStore.text = localizedContext.getString(R.string.checkout_voucher_download_pdf)
-                buttonStore.setOnClickListener { onDownloadPdfClicked() }
-            }
-
-            VoucherStoreAction.SaveAsImage -> {
-                buttonStore.text = localizedContext.getString(R.string.checkout_voucher_save_image)
-                buttonStore.setOnClickListener { onSaveAsImageClicked() }
-            }
-        }
+    private fun updateStoreAction(storeAction: VoucherStoreAction?) = with(binding) {
+        buttonDownloadPdf.isVisible = storeAction is VoucherStoreAction.DownloadPdf
+        buttonSaveImage.isVisible = storeAction is VoucherStoreAction.SaveAsImage
     }
 
     private fun updateInformationFields(informationFields: List<VoucherInformationField>?) {
         if (informationFields.isNullOrEmpty()) return
         if (informationFieldsAdapter == null) {
-            informationFieldsAdapter = VoucherInformationFieldsAdapter()
+            informationFieldsAdapter = VoucherInformationFieldsAdapter(context, localizedContext)
             binding.recyclerViewInformationFields.adapter = informationFieldsAdapter
         }
         informationFieldsAdapter?.submitList(informationFields)
@@ -177,11 +179,21 @@ internal class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun onSaveAsImageClicked() {
-        binding.layoutButtons.isVisible = false
+        hideButtons()
         doOnNextLayout {
             delegate.saveVoucherAsImage(context, this)
-            binding.layoutButtons.isVisible = true
+            showButtons()
         }
+    }
+
+    private fun hideButtons() = with(binding) {
+        buttonCopyCode.isVisible = false
+        updateStoreAction(null)
+    }
+
+    private fun showButtons() = with(binding) {
+        buttonCopyCode.isVisible = true
+        updateStoreAction(delegate.outputData.storeAction)
     }
 
     private fun copyCode(codeReference: String?) {

@@ -21,7 +21,8 @@
   - The `AdyenCheckout.Voucher.Description.Boleto` style will not work anymore. Use `AdyenCheckout.Voucher.Full.Description` instead.
   - The `AdyenCheckout.Voucher.ExpirationDateLabel` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldLabel` instead.
   - The `AdyenCheckout.Voucher.ExpirationDate` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
-  - The `AdyenCheckout.Voucher.ButtonCopyCode` and `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.ActionButton` instead.
+  - The `AdyenCheckout.Voucher.ButtonCopyCode` style will not work anymore. Use `AdyenCheckout.Voucher.Button.CopyCode` instead.
+  - The `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.Button.DownloadPdf` instead.
 
 ## Changed
 - In drop-in all actions will start in expanded mode
