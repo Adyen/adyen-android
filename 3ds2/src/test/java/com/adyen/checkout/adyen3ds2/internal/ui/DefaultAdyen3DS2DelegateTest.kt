@@ -53,7 +53,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -166,9 +165,11 @@ internal class DefaultAdyen3DS2DelegateTest(
         fun `fingerprint is malformed, then an exception is thrown`(dispatcher: TestDispatcher) = runTest {
             delegate.initialize(CoroutineScope(dispatcher))
 
-            assertThrows<ComponentException> {
+            delegate.exceptionFlow.test {
                 val encodedJson = base64Encoder.encode("{incorrectJson}")
                 delegate.identifyShopper(Activity(), encodedJson, false)
+
+                assertTrue(awaitItem() is ComponentException)
             }
         }
 
