@@ -95,7 +95,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
-        config = config,
+        configurationBlock = config,
     )
 
     @Suppress("LongParameterList")

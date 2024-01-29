@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
@@ -16,6 +17,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
@@ -27,13 +29,29 @@ class CheckoutConfiguration(
     override val amount: Amount? = null,
     override val analyticsConfiguration: AnalyticsConfiguration? = null,
     @IgnoredOnParcel
-    private val config: CheckoutConfiguration.() -> Unit = {},
+    private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Configuration {
 
     private val availableConfigurations = mutableMapOf<String, Configuration>()
 
+    constructor(
+        context: Context,
+        environment: Environment,
+        clientKey: String,
+        amount: Amount? = null,
+        analyticsConfiguration: AnalyticsConfiguration? = null,
+        configurationBlock: CheckoutConfiguration.() -> Unit = {},
+    ) : this(
+        shopperLocale = LocaleUtil.getLocale(context),
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+        configurationBlock = configurationBlock,
+    )
+
     init {
-        apply(config)
+        apply(configurationBlock)
     }
 
     // We need custom parcelization for this class to parcelize availableConfigurations.
