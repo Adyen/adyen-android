@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -162,7 +163,7 @@ private constructor(
 }
 
 fun CheckoutConfiguration.cashAppPay(
-    configuration: CashAppPayConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker CashAppPayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.internal.ui.activity.ChallengeActivity
@@ -109,7 +110,7 @@ class Adyen3DS2Configuration private constructor(
 }
 
 fun CheckoutConfiguration.adyen3DS2(
-    configuration: Adyen3DS2Configuration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker Adyen3DS2Configuration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
         .apply {

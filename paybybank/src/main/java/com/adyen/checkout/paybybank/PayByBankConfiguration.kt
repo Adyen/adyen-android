@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -77,7 +78,7 @@ class PayByBankConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.payByBank(
-    configuration: PayByBankConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker PayByBankConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = PayByBankConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

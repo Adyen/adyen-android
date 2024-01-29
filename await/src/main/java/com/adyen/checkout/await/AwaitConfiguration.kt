@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -73,7 +74,7 @@ class AwaitConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.await(
-    configuration: AwaitConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker AwaitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

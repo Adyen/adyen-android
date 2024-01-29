@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -73,7 +74,7 @@ class RedirectConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.redirect(
-    configuration: RedirectConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker RedirectConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

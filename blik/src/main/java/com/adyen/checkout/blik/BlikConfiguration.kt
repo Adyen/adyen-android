@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -98,7 +99,7 @@ class BlikConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.blik(
-    configuration: BlikConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker BlikConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BlikConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

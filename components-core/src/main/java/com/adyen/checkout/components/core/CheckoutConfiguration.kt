@@ -14,10 +14,12 @@ import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
+@CheckoutConfigurationMarker
 class CheckoutConfiguration(
     override val shopperLocale: Locale,
     override val environment: Environment,

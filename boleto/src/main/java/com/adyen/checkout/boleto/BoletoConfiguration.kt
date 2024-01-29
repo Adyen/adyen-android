@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -109,7 +110,7 @@ class BoletoConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.boleto(
-    configuration: BoletoConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker BoletoConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = BoletoConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

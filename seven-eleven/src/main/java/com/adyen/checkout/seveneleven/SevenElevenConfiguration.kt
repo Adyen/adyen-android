@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
@@ -80,7 +81,7 @@ class SevenElevenConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.sevenEleven(
-    configuration: SevenElevenConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker SevenElevenConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = SevenElevenConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

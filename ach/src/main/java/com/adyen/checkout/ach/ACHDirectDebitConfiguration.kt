@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -131,7 +132,7 @@ class ACHDirectDebitConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.achDirectDebit(
-    configuration: ACHDirectDebitConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker ACHDirectDebitConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = ACHDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

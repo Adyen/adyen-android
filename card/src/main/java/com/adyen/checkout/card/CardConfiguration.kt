@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -296,7 +297,7 @@ class CardConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.card(
-    configuration: CardConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker CardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = CardConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

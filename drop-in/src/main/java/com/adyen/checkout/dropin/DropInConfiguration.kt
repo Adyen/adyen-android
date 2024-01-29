@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -443,7 +444,7 @@ class DropInConfiguration private constructor(
 private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
 
 fun CheckoutConfiguration.dropIn(
-    configuration: Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = Builder(shopperLocale, environment, clientKey)
         .apply {

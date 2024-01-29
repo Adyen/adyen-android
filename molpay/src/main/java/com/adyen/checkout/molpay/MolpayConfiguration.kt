@@ -12,6 +12,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -83,7 +84,7 @@ class MolpayConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.molpay(
-    configuration: MolpayConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker MolpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

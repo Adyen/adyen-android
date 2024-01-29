@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.google.android.gms.wallet.WalletConstants
@@ -386,7 +387,7 @@ class GooglePayConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.googlePay(
-    configuration: GooglePayConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker GooglePayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

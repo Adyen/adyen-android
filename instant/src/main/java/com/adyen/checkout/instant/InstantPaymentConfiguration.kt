@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -80,7 +81,7 @@ private const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
 
 fun CheckoutConfiguration.instantPayment(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
-    configuration: InstantPaymentConfiguration.Builder.() -> Unit = {},
+    configuration: @CheckoutConfigurationMarker InstantPaymentConfiguration.Builder.() -> Unit = {},
 ): CheckoutConfiguration {
     val config = InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

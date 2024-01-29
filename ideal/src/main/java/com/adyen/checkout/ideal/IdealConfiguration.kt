@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -84,7 +85,7 @@ class IdealConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.ideal(
-    configuration: IdealConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker IdealConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = IdealConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {

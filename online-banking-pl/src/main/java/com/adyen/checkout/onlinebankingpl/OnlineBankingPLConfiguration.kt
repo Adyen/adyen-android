@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -85,7 +86,7 @@ class OnlineBankingPLConfiguration private constructor(
 }
 
 fun CheckoutConfiguration.onlineBankingPL(
-    configuration: OnlineBankingPLConfiguration.Builder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker OnlineBankingPLConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = OnlineBankingPLConfiguration.Builder(shopperLocale, environment, clientKey)
         .apply {
