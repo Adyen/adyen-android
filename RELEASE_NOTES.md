@@ -10,7 +10,6 @@
 
 ## Added
 - We added [a guide](https://github.com/Adyen/adyen-android/blob/develop/docs/UI_CUSTOMIZATION.md) on UI customization of the Android SDK.
-- We added Google Pay to the example app, including the availability check and the Google Pay dynamic button.
 
 ## Improved
 - For encryption now JSON Web Encryption (JWE) with RSA OAEP 256 and AES GCM 256 is used. You don't need to make any changes to your integration.
