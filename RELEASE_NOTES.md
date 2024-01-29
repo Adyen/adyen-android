@@ -9,7 +9,7 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Added
-- We added a guide on UI customization of the Android SDK: https://github.com/Adyen/adyen-android/blob/develop/docs/UI_CUSTOMIZATION.md.
+- We added [a guide](https://github.com/Adyen/adyen-android/blob/develop/docs/UI_CUSTOMIZATION.md) on UI customization of the Android SDK.
 - We added Google Pay to the example app, including the availability check and the Google Pay dynamic button.
 
 ## Improved
