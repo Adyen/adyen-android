@@ -105,8 +105,8 @@ class DefaultStatusRepository constructor(
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(60)
-        private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(60)
-        private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(120)
+        private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
+        private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
+        private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
     }
 }

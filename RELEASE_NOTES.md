@@ -14,6 +14,7 @@
 ## Fixed
 - For drop-in with sessions, error dialogs will no longer display user unfriendly messages.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
+- The Await and QR Code action components will no longer be stuck in a loading state for a long time after the payment is finalized. 
 
 ## Changed
 
