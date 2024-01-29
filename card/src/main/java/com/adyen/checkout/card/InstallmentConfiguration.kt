@@ -24,6 +24,7 @@ import kotlinx.parcelize.Parcelize
  *
  * @param defaultOptions Installment Options to be used for all card types.
  * @param cardBasedOptions Installment Options to be used for specific card types.
+ * @param showInstallmentAmount A flag to show the installment amount.
  */
 @Parcelize
 data class InstallmentConfiguration(
