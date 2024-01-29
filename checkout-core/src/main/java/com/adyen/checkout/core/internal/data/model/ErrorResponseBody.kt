@@ -21,6 +21,7 @@ data class ErrorResponseBody(
     val errorCode: String?,
     val message: String?,
     val errorType: String?,
+    val pspReference: String?,
 ) : ModelObject() {
 
     companion object {
@@ -29,6 +30,7 @@ data class ErrorResponseBody(
         private const val ERROR_CODE = "errorCode"
         private const val MESSAGE = "message"
         private const val ERROR_TYPE = "errorType"
+        private const val PSP_REFERENCE = "pspReference"
 
         @JvmField
         val SERIALIZER: Serializer<ErrorResponseBody> = object : Serializer<ErrorResponseBody> {
@@ -39,6 +41,7 @@ data class ErrorResponseBody(
                     jsonObject.putOpt(ERROR_CODE, modelObject.errorCode)
                     jsonObject.putOpt(MESSAGE, modelObject.message)
                     jsonObject.putOpt(ERROR_TYPE, modelObject.errorType)
+                    jsonObject.putOpt(PSP_REFERENCE, modelObject.pspReference)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ErrorResponseBody::class.java, e)
                 }
@@ -52,6 +55,7 @@ data class ErrorResponseBody(
                         errorCode = jsonObject.optString(ERROR_CODE),
                         message = jsonObject.optString(MESSAGE),
                         errorType = jsonObject.optString(ERROR_TYPE),
+                        pspReference = jsonObject.optString(PSP_REFERENCE),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ErrorResponseBody::class.java, e)
