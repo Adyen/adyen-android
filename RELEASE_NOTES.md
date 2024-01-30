@@ -8,16 +8,16 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Added
-- We added [a guide](https://github.com/Adyen/adyen-android/blob/develop/docs/UI_CUSTOMIZATION.md) on UI customization of the Android SDK.
+## New
+- We added a [UI customization guide](docs/UI_CUSTOMIZATION.md), which explains how to customize the styles and string resources.
 
 ## Improved
-- For encryption now JSON Web Encryption (JWE) with RSA OAEP 256 and AES GCM 256 is used. You don't need to make any changes to your integration.
+- The integration now uses JSON Web Encryption (JWE) with RSA OAEP 256 and AES GCM 256 for encryption. You do not need to make any changes to your integration.
 
 ## Fixed
-- For drop-in with sessions, error dialogs will no longer display user unfriendly messages.
+- For Drop-in, error dialogs no longer display user unfriendly messages when using the Sessions flow.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
-- The Await and QR Code action components will no longer be stuck in a loading state for a long time after the payment is finalized. 
+- The Await and QR Code action components no longer get stuck in a loading state after the payment is completed.
 
 ## Changed
 - Dependency versions:
