@@ -40,8 +40,8 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
-import com.adyen.checkout.cse.internal.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -78,13 +78,13 @@ internal class StoredCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
-    private lateinit var cardEncrypter: TestCardEncrypter
+    private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var delegate: StoredCardDelegate
 
     @BeforeEach
     fun before() {
-        cardEncrypter = TestCardEncrypter()
+        cardEncryptor = TestCardEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
         delegate = createCardDelegate()
     }
@@ -255,7 +255,7 @@ internal class StoredCardDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            cardEncrypter.shouldThrowException = true
+            cardEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -446,7 +446,7 @@ internal class StoredCardDelegateTest(
     @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
-        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
+        cardEncryptor: BaseCardEncryptor = this.cardEncryptor,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
@@ -464,7 +464,7 @@ internal class StoredCardDelegateTest(
             storedPaymentMethod = storedPaymentMethod,
             publicKeyRepository = publicKeyRepository,
             componentParams = componentParams,
-            cardEncrypter = cardEncrypter,
+            cardEncryptor = cardEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
             order = order,

@@ -41,7 +41,7 @@ dependencies {
     api project(':sessions-core')
 
     // Dependencies
-    api libraries.playServicesWallet
+    api libraries.googlePay.playServicesWallet
 
     //Tests
     testImplementation project(':test-core')

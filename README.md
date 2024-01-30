@@ -31,26 +31,30 @@ Import the corresponding module in your `build.gradle` file.
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in-compose:5.1.0"
+implementation "com.adyen.checkout:drop-in-compose:5.2.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.1.0"
-implementation "com.adyen.checkout:components-compose:5.1.0"
+implementation "com.adyen.checkout:card:5.2.0"
+implementation "com.adyen.checkout:components-compose:5.2.0"
 ```
 
 ### Without Jetpack Compose
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in:5.1.0"
+implementation "com.adyen.checkout:drop-in:5.2.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.1.0"
+implementation "com.adyen.checkout:card:5.2.0"
 ```
 
 The library is available on [Maven Central][mavenRepo].
+
+## UI Customization
+
+[See the UI Customization Guide for more.](docs/UI_CUSTOMIZATION.md)
 
 ## Migrate from v4
 

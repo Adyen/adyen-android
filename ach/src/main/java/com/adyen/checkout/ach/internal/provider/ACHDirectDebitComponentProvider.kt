@@ -43,9 +43,7 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -117,9 +115,7 @@ constructor(
 
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val genericEncryptor = GenericEncryptorFactory.provide()
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
@@ -139,7 +135,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 addressRepository = addressRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
-                genericEncrypter = genericEncrypter,
+                genericEncryptor = genericEncryptor,
                 componentParams = componentParams,
                 order = order
             )
@@ -191,9 +187,7 @@ constructor(
 
             val addressService = AddressService(httpClient)
             val addressRepository = DefaultAddressRepository(addressService)
-            val dateGenerator = DateGenerator()
-            val clientSideEncrypter = ClientSideEncrypter()
-            val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
+            val genericEncryptor = GenericEncryptorFactory.provide()
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
@@ -214,7 +208,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 addressRepository = addressRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
-                genericEncrypter = genericEncrypter,
+                genericEncryptor = genericEncryptor,
                 componentParams = componentParams,
                 order = checkoutSession.order
             )

@@ -12,6 +12,7 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Blik,
         ComponentItem.Entry.Card,
         ComponentItem.Entry.GiftCard,
+        ComponentItem.Entry.GooglePay,
         ComponentItem.Entry.Klarna,
         ComponentItem.Entry.PayPal,
         ComponentItem.Entry.Instant(instantPaymentMethodType),
@@ -24,6 +25,7 @@ internal object ComponentItemProvider {
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.CardWithSession,
         ComponentItem.Entry.CardWithSessionTakenOver,
+        ComponentItem.Entry.GooglePayWithSession,
         ComponentItem.Entry.GiftCardWithSession,
     )
 }

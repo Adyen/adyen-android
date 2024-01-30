@@ -50,10 +50,10 @@ import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
-import com.adyen.checkout.cse.internal.test.TestCardEncrypter
-import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.internal.test.TestCardEncryptor
+import com.adyen.checkout.cse.internal.test.TestGenericEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
@@ -95,8 +95,8 @@ internal class DefaultCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
-    private lateinit var cardEncrypter: TestCardEncrypter
-    private lateinit var genericEncrypter: TestGenericEncrypter
+    private lateinit var cardEncryptor: TestCardEncryptor
+    private lateinit var genericEncryptor: TestGenericEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var addressRepository: TestAddressRepository
     private lateinit var detectCardTypeRepository: TestDetectCardTypeRepository
@@ -104,8 +104,8 @@ internal class DefaultCardDelegateTest(
 
     @BeforeEach
     fun before() {
-        cardEncrypter = TestCardEncrypter()
-        genericEncrypter = TestGenericEncrypter()
+        cardEncryptor = TestCardEncryptor()
+        genericEncryptor = TestGenericEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
         addressRepository = TestAddressRepository()
         detectCardTypeRepository = TestDetectCardTypeRepository()
@@ -678,7 +678,7 @@ internal class DefaultCardDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            cardEncrypter.shouldThrowException = true
+            cardEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -1162,8 +1162,8 @@ internal class DefaultCardDelegateTest(
         addressRepository: AddressRepository = this.addressRepository,
         detectCardTypeRepository: DetectCardTypeRepository = this.detectCardTypeRepository,
         cardValidationMapper: CardValidationMapper = CardValidationMapper(),
-        cardEncrypter: BaseCardEncrypter = this.cardEncrypter,
-        genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
+        cardEncryptor: BaseCardEncryptor = this.cardEncryptor,
+        genericEncryptor: BaseGenericEncryptor = this.genericEncryptor,
         configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
         paymentMethod: PaymentMethod = PaymentMethod(type = PaymentMethodTypes.SCHEME),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
@@ -1182,11 +1182,11 @@ internal class DefaultCardDelegateTest(
             order = order,
             publicKeyRepository = publicKeyRepository,
             componentParams = componentParams,
-            cardEncrypter = cardEncrypter,
+            cardEncryptor = cardEncryptor,
             addressRepository = addressRepository,
             detectCardTypeRepository = detectCardTypeRepository,
             cardValidationMapper = cardValidationMapper,
-            genericEncrypter = genericEncrypter,
+            genericEncryptor = genericEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
         )

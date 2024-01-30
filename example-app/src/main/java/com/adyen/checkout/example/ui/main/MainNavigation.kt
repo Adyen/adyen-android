@@ -14,21 +14,25 @@ import com.adyen.checkout.sessions.core.CheckoutSession
 
 internal sealed class MainNavigation {
 
-    object Bacs : MainNavigation()
+    data object Bacs : MainNavigation()
 
-    object Blik : MainNavigation()
+    data object Blik : MainNavigation()
 
-    object Card : MainNavigation()
+    data object Card : MainNavigation()
 
-    class Instant(val paymentMethodType: String) : MainNavigation()
+    data class Instant(val paymentMethodType: String) : MainNavigation()
 
-    object CardWithSession : MainNavigation()
+    data object CardWithSession : MainNavigation()
 
-    object GiftCard : MainNavigation()
+    data object GiftCard : MainNavigation()
 
-    object GiftCardWithSession : MainNavigation()
+    data object GiftCardWithSession : MainNavigation()
 
-    object CardWithSessionTakenOver : MainNavigation()
+    data object CardWithSessionTakenOver : MainNavigation()
+
+    data object GooglePay : MainNavigation()
+
+    data object GooglePayWithSession : MainNavigation()
 
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,

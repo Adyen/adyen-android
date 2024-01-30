@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.cse.internal.test.TestCardEncrypter
+import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
@@ -60,13 +60,13 @@ internal class DefaultGiftCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GiftCardComponentState>,
 ) {
 
-    private lateinit var cardEncrypter: TestCardEncrypter
+    private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var delegate: DefaultGiftCardDelegate
 
     @BeforeEach
     fun before() {
-        cardEncrypter = TestCardEncrypter()
+        cardEncryptor = TestCardEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
         delegate = createGiftCardDelegate()
     }
@@ -121,7 +121,7 @@ internal class DefaultGiftCardDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            cardEncrypter.shouldThrowException = true
+            cardEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -403,7 +403,7 @@ internal class DefaultGiftCardDelegateTest(
         order = order,
         publicKeyRepository = publicKeyRepository,
         componentParams = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null),
-        cardEncrypter = cardEncrypter,
+        cardEncryptor = cardEncryptor,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
     )

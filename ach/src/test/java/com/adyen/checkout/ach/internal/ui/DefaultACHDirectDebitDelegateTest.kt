@@ -26,8 +26,8 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
-import com.adyen.checkout.cse.internal.test.TestGenericEncrypter
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
+import com.adyen.checkout.cse.internal.test.TestGenericEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
@@ -72,14 +72,14 @@ internal class DefaultACHDirectDebitDelegateTest(
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
     private lateinit var addressRepository: TestAddressRepository
-    private lateinit var genericEncrypter: TestGenericEncrypter
+    private lateinit var genericEncryptor: TestGenericEncryptor
     private lateinit var delegate: DefaultACHDirectDebitDelegate
 
     @BeforeEach
     fun setUp() {
         publicKeyRepository = TestPublicKeyRepository()
         addressRepository = TestAddressRepository()
-        genericEncrypter = TestGenericEncrypter()
+        genericEncryptor = TestGenericEncryptor()
         delegate = createAchDelegate()
     }
 
@@ -325,7 +325,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            genericEncrypter.shouldThrowException = true
+            genericEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -676,7 +676,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         addressRepository: AddressRepository = this.addressRepository,
-        genericEncrypter: BaseGenericEncrypter = this.genericEncrypter,
+        genericEncryptor: BaseGenericEncryptor = this.genericEncryptor,
         submitHandler: SubmitHandler<ACHDirectDebitComponentState> = this.submitHandler,
         configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
         order: OrderRequest? = TEST_ORDER,
@@ -687,7 +687,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         publicKeyRepository = publicKeyRepository,
         addressRepository = addressRepository,
         submitHandler = submitHandler,
-        genericEncrypter = genericEncrypter,
+        genericEncryptor = genericEncryptor,
         componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null),
         order = order
     )

@@ -10,6 +10,8 @@
 
     <style name="AdyenCheckout.Voucher" />
 
+    <style name="AdyenCheckout.Voucher.Description" />
+
     <style name="AdyenCheckout.Voucher.Description.Bacs" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>

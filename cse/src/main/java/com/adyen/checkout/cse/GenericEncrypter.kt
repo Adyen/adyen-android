@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 
 /**
  * Allows the encryption of any type of data to be sent to Adyen's APIs.
@@ -19,7 +16,7 @@ import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
  */
 object GenericEncrypter {
 
-    private val encrypter = provideGenericEncrypter()
+    private val encryptor = GenericEncryptorFactory.provide()
 
     /**
      * Encrypts a single field into a block of content.
@@ -36,7 +33,7 @@ object GenericEncrypter {
         fieldValueToEncrypt: Any?,
         publicKey: String,
     ): String {
-        return encrypter.encryptField(
+        return encryptor.encryptField(
             fieldKeyToEncrypt = fieldKeyToEncrypt,
             fieldValueToEncrypt = fieldValueToEncrypt,
             publicKey = publicKey,
@@ -56,13 +53,9 @@ object GenericEncrypter {
         publicKey: String,
         vararg fieldsToEncrypt: Pair<String, Any?>,
     ): String {
-        return encrypter.encryptFields(
+        return encryptor.encryptFields(
             fieldsToEncrypt = fieldsToEncrypt,
             publicKey = publicKey,
         )
-    }
-
-    private fun provideGenericEncrypter(): BaseGenericEncrypter {
-        return DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator())
     }
 }

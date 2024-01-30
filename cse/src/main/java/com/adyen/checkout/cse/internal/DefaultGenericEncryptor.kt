@@ -8,13 +8,10 @@
 
 package com.adyen.checkout.cse.internal
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultGenericEncrypter(
-    private val clientSideEncrypter: ClientSideEncrypter,
+internal class DefaultGenericEncryptor(
     private val dateGenerator: DateGenerator,
-) : BaseGenericEncrypter {
+    private val jweEncryptor: JSONWebEncryptor,
+) : BaseGenericEncryptor {
 
     override fun encryptField(fieldKeyToEncrypt: String, fieldValueToEncrypt: Any?, publicKey: String): String {
         return encryptFields(
@@ -25,6 +22,6 @@ class DefaultGenericEncrypter(
 
     override fun encryptFields(publicKey: String, vararg fieldsToEncrypt: Pair<String, Any?>): String {
         val plainText = EncryptionPlainTextGenerator.generate(dateGenerator.getCurrentDate(), mapOf(*fieldsToEncrypt))
-        return clientSideEncrypter.encrypt(publicKey, plainText)
+        return jweEncryptor.encrypt(publicKey, plainText)
     }
 }

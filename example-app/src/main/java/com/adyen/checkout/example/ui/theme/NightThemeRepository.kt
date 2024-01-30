@@ -8,8 +8,12 @@
 
 package com.adyen.checkout.example.ui.theme
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.core.content.edit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,6 +23,11 @@ internal interface NightThemeRepository {
     var theme: NightTheme
 
     fun initialize()
+
+    @Composable
+    fun isDarkTheme(): Boolean
+
+    fun isDarkTheme(context: Context): Boolean
 }
 
 @Singleton
@@ -42,6 +51,30 @@ internal class DefaultNightThemeRepository @Inject constructor(
         return NightTheme.findByPreferenceValue(preference)
     }
 
+    @Composable
+    override fun isDarkTheme(): Boolean {
+        return when (theme) {
+            NightTheme.DAY -> false
+            NightTheme.NIGHT -> true
+            NightTheme.SYSTEM -> isSystemInDarkTheme()
+        }
+    }
+
+    override fun isDarkTheme(context: Context): Boolean {
+        return when (theme) {
+            NightTheme.DAY -> false
+            NightTheme.NIGHT -> true
+            NightTheme.SYSTEM -> {
+                when (context.resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+                    Configuration.UI_MODE_NIGHT_YES -> true
+                    Configuration.UI_MODE_NIGHT_NO -> false
+                    Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+                    else -> false
+                }
+            }
+        }
+    }
+
     companion object {
         // Should be same as R.string.night_theme_key
         private const val PREF_KEY_NIGHT_THEME = "night_theme_key"
@@ -59,6 +92,6 @@ internal enum class NightTheme(
     companion object {
 
         fun findByPreferenceValue(value: String?): NightTheme =
-            values().find { it.preferenceValue == value } ?: SYSTEM
+            entries.find { it.preferenceValue == value } ?: SYSTEM
     }
 }

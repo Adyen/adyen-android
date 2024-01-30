@@ -6,6 +6,18 @@
   "labels": ["Dependencies"],
   "packageRules" : [
     {
+      "matchPackagePatterns": [
+        "androidx.compose.compiler:compiler"
+      ],
+      "groupName": "kotlin"
+    },
+    {
+      "matchPackagePatterns": [
+        "org.jetbrains.kotlin.*"
+      ],
+      "groupName": "kotlin"
+    },
+    {
       "matchPackagePatterns" : ["*"],
       "minimumReleaseAge" : "30 days",
       "schedule" : ["on the first day of the month"]

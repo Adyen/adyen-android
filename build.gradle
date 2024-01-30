@@ -7,11 +7,14 @@ plugins {
     id 'com.android.library' version "$android_gradle_plugin_version" apply false
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
     id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
-    id "io.gitlab.arturbosch.detekt" version "$detekt_gradle_plugin_version"
-    id "org.jetbrains.dokka" version "$dokka_version"
+    id 'io.gitlab.arturbosch.detekt' version "$detekt_gradle_plugin_version"
+    id 'org.jetbrains.dokka' version "$dokka_version"
+    id 'org.sonarqube' version "$sonarqube_version"
+    id 'jacoco'
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"
+apply from: "config/gradle/sonarcloud.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"
