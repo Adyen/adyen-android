@@ -240,6 +240,24 @@ internal class DefaultAddressLookupDelegateTest {
                 (state as AddressLookupState.Form).selectedAddress,
             )
         }
+
+        @Test
+        fun `and an option is selected and a completion call has resulted in error, state should be SearchResult`() = runTest {
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.SearchResult("query", getMockList(true)),
+            )
+            defaultAddressLookupDelegate.setAddressLookupResult(
+                AddressLookupResult.Error(),
+            )
+            val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
+            assert(state is AddressLookupState.SearchResult)
+            assertEquals(
+                /* expected = */
+                false,
+                /* actual = */
+                (state as AddressLookupState.SearchResult).options[0].isLoading,
+            )
+        }
     }
 
     @Nested
