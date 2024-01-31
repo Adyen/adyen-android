@@ -63,7 +63,7 @@ internal class DefaultAddressLookupDelegateTest {
                 CoroutineScope(UnconfinedTestDispatcher()),
                 getEmptyMockAddress(),
             )
-            // SearchResult used as an example here
+            // wt used as an example here
             defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
                 AddressLookupState.SearchResult(
                     "query",
@@ -126,6 +126,12 @@ internal class DefaultAddressLookupDelegateTest {
             defaultAddressLookupDelegate.onManualEntryModeSelected()
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Form)
         }
+
+        @Test
+        fun `and search result event emitted, state should remain the same`() = runTest {
+            defaultAddressLookupDelegate.updateAddressLookupOptions(emptyList())
+            assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Initial)
+        }
     }
 
     @Nested
@@ -165,6 +171,13 @@ internal class DefaultAddressLookupDelegateTest {
             defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Form(null))
             defaultAddressLookupDelegate.onAddressQueryChanged("query")
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Loading)
+        }
+
+        @Test
+        fun `and manual mode event has been triggered, state should remain the same`() = runTest {
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Form(null))
+            defaultAddressLookupDelegate.onManualEntryModeSelected()
+            assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Form)
         }
     }
 
@@ -242,22 +255,26 @@ internal class DefaultAddressLookupDelegateTest {
         }
 
         @Test
-        fun `and an option is selected and a completion call has resulted in error, state should be SearchResult`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
-                AddressLookupState.SearchResult("query", getMockList(true)),
-            )
-            defaultAddressLookupDelegate.setAddressLookupResult(
-                AddressLookupResult.Error(),
-            )
-            val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
-            assert(state is AddressLookupState.SearchResult)
-            assertEquals(
-                /* expected = */
-                false,
-                /* actual = */
-                (state as AddressLookupState.SearchResult).options[0].isLoading,
-            )
-        }
+        fun `and an option is selected and a completion call has resulted in error, state should be SearchResult`() =
+            runTest {
+                defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                    AddressLookupState.SearchResult("query", getMockList(true)),
+                )
+                defaultAddressLookupDelegate.setAddressLookupResult(
+                    AddressLookupResult.Error(),
+                )
+                val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
+                assert(state is AddressLookupState.SearchResult)
+
+                val expectedList = getMockList(false)
+                assertEquals(
+                    /* expected = */
+                    false,
+                    /* actual = */
+                    (state as AddressLookupState.SearchResult).options[0].isLoading,
+                )
+                assertEquals(expectedList, state.options)
+            }
     }
 
     @Nested
@@ -281,6 +298,20 @@ internal class DefaultAddressLookupDelegateTest {
             defaultAddressLookupDelegate.onManualEntryModeSelected()
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Form)
         }
+
+        @Test
+        fun `and an option selected event is triggered, state should remain the same`() = runTest {
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Error("query"))
+            defaultAddressLookupDelegate.setAddressLookupResult(
+                AddressLookupResult.Completed(
+                    LookupAddress(
+                        "id",
+                        AddressInputModel(),
+                    ),
+                ),
+            )
+            assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Error)
+        }
     }
 
     @Nested
@@ -296,6 +327,17 @@ internal class DefaultAddressLookupDelegateTest {
             defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.InvalidUI)
             defaultAddressLookupDelegate.onAddressQueryChanged("query")
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Loading)
+        }
+
+        @Test
+        fun `and an invalidUI event has been emitted, state should be the same`() = runTest {
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.InvalidUI)
+            // make sure output data is invalid
+            defaultAddressLookupDelegate.updateAddressInputData {
+                this.resetAll()
+            }
+            defaultAddressLookupDelegate.submitAddress()
+            assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.InvalidUI)
         }
     }
 
