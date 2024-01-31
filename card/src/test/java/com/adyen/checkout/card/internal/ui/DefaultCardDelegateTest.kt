@@ -1163,6 +1163,33 @@ internal class DefaultCardDelegateTest(
     }
 
     @Test
+    fun `when startAddressLookup is called view flow should emit AddressLookup`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.startAddressLookup()
+        delegate.viewFlow.test {
+            assertEquals(CardComponentViewType.AddressLookup, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when view type is AddressLookup and handleBackPress() is called DefaultCardView should be emitted`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.startAddressLookup()
+        assertTrue(delegate.handleBackPress())
+        delegate.viewFlow.test {
+            assertEquals(CardComponentViewType.DefaultCardView, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when view type is DefaultCardView and handleBackPress() is called it should return false`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        assertFalse(delegate.handleBackPress())
+    }
+
+    @Test
     fun `when delegate is cleared then address lookup delegate is cleared`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.onCleared()
