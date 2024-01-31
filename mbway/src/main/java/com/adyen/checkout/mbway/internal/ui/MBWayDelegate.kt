@@ -9,13 +9,13 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.internal.ui.model.FocussedView
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.flow.Flow
 
 internal interface MBWayDelegate :
@@ -24,15 +24,17 @@ internal interface MBWayDelegate :
     ButtonDelegate,
     UIStateDelegate {
 
-    val outputData: MBWayOutputData
-
-    val outputDataFlow: Flow<MBWayOutputData>
+    val viewStateFlow: Flow<MBWayViewState>
 
     val componentStateFlow: Flow<MBWayComponentState>
 
-    fun getSupportedCountries(): List<CountryInfo>
+    fun onCountrySelected(country: CountryModel)
 
-    fun updateInputData(update: MBWayInputData.() -> Unit)
+    fun onPhoneNumberChanged(phoneNumber: String)
+
+    fun onViewFocussed(focussedView: FocussedView)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
+
+    fun highlightValidationErrors()
 }

@@ -50,6 +50,19 @@
                 style="@style/AdyenCheckout.MBWay.MobileNumberInput"
                 android:autofillHints="phoneNational" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_test"
+            style="@style/AdyenCheckout.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+                android:id="@+id/editText_test"
+                style="@style/AdyenCheckout.MBWay.MobileNumberInput"
+                android:autofillHints="phoneNational" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 </merge>

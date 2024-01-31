@@ -15,20 +15,19 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.CountryInfo
-import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.R
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.internal.ui.model.FocussedView
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class MbWayView @JvmOverloads constructor(
     context: Context,
@@ -42,6 +41,8 @@ internal class MbWayView @JvmOverloads constructor(
     private lateinit var localizedContext: Context
 
     private lateinit var delegate: MBWayDelegate
+
+    private lateinit var countryAdapter: CountryAdapter
 
     init {
         orientation = VERTICAL
@@ -57,74 +58,73 @@ internal class MbWayView @JvmOverloads constructor(
 
         initMobileNumberInput()
         initCountryInput()
+
+        delegate.viewStateFlow
+            .onEach(::onViewState)
+            .launchIn(coroutineScope)
     }
 
     private fun initMobileNumberInput() {
         binding.editTextMobileNumber.setOnChangeListener {
-            delegate.updateInputData {
-                localPhoneNumber = it.toString()
-            }
-            binding.textInputLayoutMobileNumber.hideError()
+            delegate.onPhoneNumberChanged(it.toString())
         }
+
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            val outputData = delegate.outputData
-            val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
             if (hasFocus) {
-                binding.textInputLayoutMobileNumber.hideError()
-            } else if (mobilePhoneNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMobileNumber.showError(
-                    localizedContext.getString(mobilePhoneNumberValidation.reason)
-                )
+                delegate.onViewFocussed(FocussedView.PHONE_NUMBER)
+            }
+        }
+        // TODO: Remove after testing
+        binding.editTextTest.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+            if (hasFocus) {
+                delegate.onViewFocussed(FocussedView.TEST)
             }
         }
     }
 
     private fun initCountryInput() {
-        val countries = delegate.getSupportedCountries().mapToCountryModel()
-        val adapter = CountryAdapter(context, localizedContext)
-        adapter.setItems(countries)
+        countryAdapter = CountryAdapter(context, localizedContext)
         binding.autoCompleteTextViewCountry.apply {
             // disable editing and hide cursor
             inputType = 0
-            setAdapter(adapter)
+            setAdapter(countryAdapter)
             setOnItemClickListener { _, _, position, _ ->
-                val country = adapter.getItem(position)
-                onCountrySelected(country)
+                val country = countryAdapter.getItem(position)
+                delegate.onCountrySelected(country)
             }
         }
-        val firstCountry = countries.firstOrNull()
-        if (firstCountry != null) {
-            binding.autoCompleteTextViewCountry.setText(firstCountry.toShortString())
-            onCountrySelected(firstCountry)
+    }
+
+    private fun onViewState(viewState: MBWayViewState) {
+        binding.autoCompleteTextViewCountry.setText(viewState.selectedCountry.toShortString())
+
+        countryAdapter.setItems(viewState.countries)
+
+        binding.editTextMobileNumber.apply {
+            val newInput = viewState.phoneNumber
+            if (text?.toString() != newInput) {
+                setText(newInput)
+                setSelection(newInput.length)
+            }
+        }
+
+        if (viewState.phoneNumberError != null) {
+            binding.textInputLayoutMobileNumber.showError(
+                localizedContext.getString(viewState.phoneNumberError.messageRes),
+            )
+            if (viewState.phoneNumberError.requestFocus) {
+                binding.editTextMobileNumber.requestFocus()
+            }
+        } else {
+            binding.textInputLayoutMobileNumber.hideError()
         }
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
-        val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation
-        if (mobilePhoneNumberValidation is Validation.Invalid) {
-            binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(mobilePhoneNumberValidation.reason)
-            )
-        }
+        delegate.highlightValidationErrors()
     }
 
     override fun getView(): View = this
-
-    private fun onCountrySelected(countryModel: CountryModel) {
-        delegate.updateInputData {
-            countryCode = countryModel.callingCode
-        }
-    }
-
-    private fun List<CountryInfo>.mapToCountryModel() = map {
-        CountryModel(
-            isoCode = it.isoCode,
-            countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
-            callingCode = it.callingCode,
-            emoji = it.emoji
-        )
-    }
 
     companion object {
         private val TAG = LogUtil.getTag()

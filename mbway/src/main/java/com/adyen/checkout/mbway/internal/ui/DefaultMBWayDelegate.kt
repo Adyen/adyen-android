@@ -18,22 +18,27 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
+import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.R
+import com.adyen.checkout.mbway.internal.ui.model.FocussedView
+import com.adyen.checkout.mbway.internal.ui.model.InputError
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
@@ -46,15 +51,11 @@ internal class DefaultMBWayDelegate(
     private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) : MBWayDelegate {
 
-    private val inputData = MBWayInputData()
-
-    private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
+    private val _viewStateFlow = MutableStateFlow(getInitialViewState())
+    override val viewStateFlow: Flow<MBWayViewState> = _viewStateFlow
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
-
-    override val outputData: MBWayOutputData get() = _outputDataFlow.value
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
@@ -65,13 +66,13 @@ internal class DefaultMBWayDelegate(
 
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
-    init {
-        updateComponentState(outputData)
-    }
-
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
         setupAnalytics(coroutineScope)
+
+        viewStateFlow
+            .onEach { updateComponentState() }
+            .launchIn(coroutineScope)
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
@@ -92,7 +93,7 @@ internal class DefaultMBWayDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -100,44 +101,104 @@ internal class DefaultMBWayDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun getPaymentMethodType(): String {
-        return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+    private fun getInitialViewState(): MBWayViewState {
+        val countries = getCountryInfoList()
+        return MBWayViewState(
+            phoneNumber = "",
+            phoneNumberError = null,
+            countries = countries,
+            selectedCountry = countries.first(),
+            focussedView = FocussedView.PHONE_NUMBER,
+        )
     }
 
-    override fun updateInputData(update: MBWayInputData.() -> Unit) {
-        inputData.update()
-        onInputDataChanged()
+    private fun getCountryInfoList(): List<CountryModel> =
+        CountryUtils.getCountries(SUPPORTED_COUNTRIES).map {
+            with(it) {
+                CountryModel(
+                    isoCode = isoCode,
+                    callingCode = callingCode,
+                    countryName = CountryUtils.getCountryName(isoCode, componentParams.shopperLocale),
+                    emoji = emoji,
+                )
+            }
+        }
+
+    override fun onCountrySelected(country: CountryModel) {
+        Logger.v(TAG, "onCountryCodeSelected")
+        val currentViewState = _viewStateFlow.value
+
+        val newViewState = currentViewState.copy(
+            selectedCountry = country,
+        )
+
+        _viewStateFlow.tryEmit(newViewState)
     }
 
-    private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
-        val outputData = createOutputData()
-        outputDataChanged(outputData)
-        updateComponentState(outputData)
+    override fun onPhoneNumberChanged(phoneNumber: String) {
+        Logger.v(TAG, "onPhoneNumberChanged")
+        val sanitizedNumber = phoneNumber
+            .trim()
+            .trimStart('0')
+
+        val currentViewState = _viewStateFlow.value
+
+        val newViewState = currentViewState.copy(
+            phoneNumber = sanitizedNumber,
+            phoneNumberError = null,
+        )
+
+        _viewStateFlow.tryEmit(newViewState)
     }
 
-    private fun createOutputData(): MBWayOutputData {
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        return MBWayOutputData(inputData.countryCode + sanitizedNumber)
-    }
+    override fun onViewFocussed(focussedView: FocussedView) {
+        val currentViewState = _viewStateFlow.value
 
-    private fun outputDataChanged(outputData: MBWayOutputData) {
-        _outputDataFlow.tryEmit(outputData)
+        var phoneNumberError: InputError? = null
+        // Validate previously focussed view
+        when (currentViewState.focussedView) {
+            FocussedView.PHONE_NUMBER -> {
+                phoneNumberError = validatePhoneNumberInput(
+                    fullPhoneNumber = currentViewState.selectedCountry.callingCode + currentViewState.phoneNumber,
+                    requestFocus = false,
+                )
+            }
+
+            FocussedView.TEST -> Unit
+        }
+
+        // Remove validation from newly focussed view
+        when (focussedView) {
+            FocussedView.PHONE_NUMBER -> {
+                phoneNumberError = null
+            }
+
+            FocussedView.TEST -> Unit
+        }
+
+        val newViewState = currentViewState.copy(
+            phoneNumberError = phoneNumberError,
+            focussedView = focussedView,
+        )
+
+        _viewStateFlow.tryEmit(newViewState)
     }
 
     @VisibleForTesting
-    internal fun updateComponentState(outputData: MBWayOutputData) {
-        val componentState = createComponentState(outputData)
-        componentStateChanged(componentState)
+    internal fun updateComponentState() {
+        val componentState = createComponentState()
+        _componentStateFlow.tryEmit(componentState)
     }
 
-    private fun createComponentState(
-        outputData: MBWayOutputData = this.outputData
-    ): MBWayComponentState {
+    private fun createComponentState(): MBWayComponentState {
+        val viewState = _viewStateFlow.value
+        val selectedCallingCode = viewState.selectedCountry.callingCode
+        val fullPhoneNumber = selectedCallingCode + viewState.phoneNumber
+
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
-            telephoneNumber = outputData.mobilePhoneNumberFieldState.value
+            telephoneNumber = fullPhoneNumber,
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -146,18 +207,14 @@ internal class DefaultMBWayDelegate(
             amount = componentParams.amount,
         )
 
+        val isInputValid = ValidationUtils.isPhoneNumberValid(fullPhoneNumber)
+
         return MBWayComponentState(
             data = paymentComponentData,
-            isInputValid = outputData.isValid,
-            isReady = true
+            isInputValid = isInputValid,
+            isReady = true,
         )
     }
-
-    private fun componentStateChanged(componentState: MBWayComponentState) {
-        _componentStateFlow.tryEmit(componentState)
-    }
-
-    override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
@@ -170,6 +227,41 @@ internal class DefaultMBWayDelegate(
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
+
+    // TODO: Check if we should call this directly instead of relying on the view?
+    override fun highlightValidationErrors() {
+        val currentViewState = _viewStateFlow.value
+
+        val phoneNumberError = validatePhoneNumberInput(
+            fullPhoneNumber = currentViewState.selectedCountry.callingCode + currentViewState.phoneNumber,
+            // TODO: See how we can keep the error visible while requesting focus
+            requestFocus = true,
+        )
+
+        val newViewState = currentViewState.copy(
+            phoneNumberError = phoneNumberError,
+        )
+
+        _viewStateFlow.tryEmit(newViewState)
+    }
+
+    private fun validatePhoneNumberInput(
+        fullPhoneNumber: String,
+        requestFocus: Boolean,
+    ): InputError? {
+        return if (ValidationUtils.isPhoneNumberValid(fullPhoneNumber)) {
+            null
+        } else {
+            InputError(
+                messageRes = R.string.checkout_mbway_phone_number_not_valid,
+                requestFocus = requestFocus,
+            )
+        }
+    }
+
+    override fun getPaymentMethodType(): String {
+        return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
     override fun onCleared() {

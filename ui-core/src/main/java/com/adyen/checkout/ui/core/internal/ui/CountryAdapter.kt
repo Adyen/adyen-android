@@ -33,6 +33,7 @@ class CountryAdapter(
     private val countryFilter: CountryFilter = CountryFilter(countries)
 
     fun setItems(countries: List<CountryModel>) {
+        if (this.countries == countries) return
         this.countries.clear()
         this.countries.addAll(countries)
         notifyDataSetChanged()
