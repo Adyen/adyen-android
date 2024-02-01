@@ -9,11 +9,17 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">자동 이체 안내(DDI/필수) 다운로드</string>
-    <string name="checkout_voucher_introduction_boleto">구매해 주셔서 감사합니다. 다음 쿠폰을 사용하여 결제를 완료하십시오.</string>
+    <string name="checkout_voucher_introduction">구매해 주셔서 감사합니다. 다음 쿠폰을 사용하여 결제를 완료하십시오.</string>
     <string name="checkout_voucher_payment_reference">결제 참조번호</string>
+    <string name="checkout_voucher_expiration_entity">발급사</string>
     <string name="checkout_voucher_expiration_date">만료일</string>
+    <string name="checkout_voucher_shopper_reference">구매자 참조번호</string>
     <string name="checkout_voucher_copy_code">코드 복사하기</string>
     <string name="checkout_voucher_copied_toast">코드가 클립보드에 복사되었습니다</string>
     <string name="checkout_voucher_download_pdf">PDF 다운로드</string>
+    <string name="checkout_voucher_save_image">이미지로 저장</string>
+    <string name="checkout_voucher_image_saved"> 장치에 저장된 이미지</string>
+    <string name="checkout_voucher_image_failed"> 이미지 저장 실패</string>
     <string name="checkout_voucher_finish">완료</string>
+    <string name="checkout_voucher_permission_denied">권한이 부여되지 않음</string>
 </resources>

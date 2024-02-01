@@ -35,6 +35,10 @@ class DefaultComponentEventHandler<T : PaymentComponentState<*>> : ComponentEven
             is PaymentComponentEvent.Error -> callback.onError(event.error)
             is PaymentComponentEvent.StateChanged -> callback.onStateChanged(event.state)
             is PaymentComponentEvent.Submit -> callback.onSubmit(event.state)
+            is PaymentComponentEvent.PermissionRequest -> callback.onPermissionRequest(
+                event.requiredPermission,
+                event.permissionCallback
+            )
         }
     }
 

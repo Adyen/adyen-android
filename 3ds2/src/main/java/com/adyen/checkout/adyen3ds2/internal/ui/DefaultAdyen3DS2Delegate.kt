@@ -106,6 +106,7 @@ internal class DefaultAdyen3DS2Delegate(
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback

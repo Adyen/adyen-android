@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -60,7 +61,6 @@ class SessionsGiftCardComponentEventHandler(
         event: PaymentComponentEvent<GiftCardComponentState>,
         componentCallback: BaseComponentCallback
     ) {
-        @Suppress("UNCHECKED_CAST")
         val sessionComponentCallback = componentCallback as? SessionsGiftCardComponentCallback
             ?: throw CheckoutException("Callback must be type of ${SessionComponentCallback::class.java.canonicalName}")
         Logger.v(TAG, "Event received $event")
@@ -68,6 +68,12 @@ class SessionsGiftCardComponentEventHandler(
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data, sessionComponentCallback)
             is PaymentComponentEvent.Error -> onComponentError(event.error, sessionComponentCallback)
             is PaymentComponentEvent.StateChanged -> onState(event.state, sessionComponentCallback)
+            is PaymentComponentEvent.PermissionRequest -> onPermissionRequest(
+                event.requiredPermission,
+                event.permissionCallback,
+                sessionComponentCallback
+            )
+
             is PaymentComponentEvent.Submit -> {
                 when (event.state.giftCardAction) {
                     GiftCardAction.CheckBalance -> {
@@ -75,6 +81,7 @@ class SessionsGiftCardComponentEventHandler(
                             checkBalance(event.state, sessionComponentCallback)
                         } ?: throw GiftCardException("Payment method is null.")
                     }
+
                     GiftCardAction.CreateOrder -> createOrder(sessionComponentCallback)
                     GiftCardAction.SendPayment -> onPaymentsCallRequested(event.state, sessionComponentCallback)
                     GiftCardAction.Idle -> {} // no ops
@@ -98,15 +105,18 @@ class SessionsGiftCardComponentEventHandler(
                 is SessionCallResult.Payments.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> {
                     onPartialPayment(result, sessionComponentCallback)
                 }
+
                 is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(
                     result.result,
                     sessionComponentCallback
                 )
+
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -129,6 +139,7 @@ class SessionsGiftCardComponentEventHandler(
                 is SessionCallResult.Details.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Details.Finished -> onFinished(result.result, sessionComponentCallback)
                 SessionCallResult.Details.TakenOver -> {
@@ -153,6 +164,7 @@ class SessionsGiftCardComponentEventHandler(
                 is SessionCallResult.Balance.Successful -> {
                     sessionComponentCallback.onBalance(result.balanceResult)
                 }
+
                 SessionCallResult.Balance.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -172,6 +184,7 @@ class SessionsGiftCardComponentEventHandler(
                 is SessionCallResult.CreateOrder.Successful -> {
                     sessionComponentCallback.onOrder(result.order)
                 }
+
                 SessionCallResult.CreateOrder.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -195,6 +208,14 @@ class SessionsGiftCardComponentEventHandler(
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
         sessionComponentCallback.onStateChanged(state)
+    }
+
+    private fun onPermissionRequest(
+        requiredPermission: String,
+        permissionCallback: PermissionHandlerCallback,
+        sessionComponentCallback: SessionsGiftCardComponentCallback
+    ) {
+        sessionComponentCallback.onPermissionRequest(requiredPermission, permissionCallback)
     }
 
     private fun onComponentError(

@@ -32,6 +32,7 @@ object DateUtils {
     /**
      * Convert to server date format.
      */
+    @Suppress("unused")
     @JvmStatic
     fun toServerDateFormat(calendar: Calendar): String {
         val serverDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
@@ -67,15 +68,30 @@ object DateUtils {
         date: String,
         shopperLocale: Locale,
         inputFormat: String = DEFAULT_INPUT_DATE_FORMAT
-    ): String? {
-        return try {
-            val inputSimpleFormat = SimpleDateFormat(inputFormat, shopperLocale)
-            val outputSimpleFormat = DateFormat.getDateInstance(DateFormat.SHORT, shopperLocale)
-            val parsedDate = inputSimpleFormat.parse(date)
-            parsedDate?.let { outputSimpleFormat.format(it) }
-        } catch (e: ParseException) {
-            Logger.e(TAG, "Provided date $date does not match the given format $inputFormat")
-            null
-        }
+    ): String? = try {
+        val inputSimpleFormat = SimpleDateFormat(inputFormat, shopperLocale)
+        val outputSimpleFormat = DateFormat.getDateInstance(DateFormat.SHORT, shopperLocale)
+        val parsedDate = inputSimpleFormat.parse(date)
+        parsedDate?.let { outputSimpleFormat.format(it) }
+    } catch (e: ParseException) {
+        Logger.e(TAG, "Provided date $date does not match the given format $inputFormat")
+        null
+    }
+
+    /**
+     * Format date time to provided date time pattern.
+     *
+     * @param calendar Calendar instance to be formatted
+     * @param pattern Date pattern
+     */
+    fun formatDateToString(
+        calendar: Calendar,
+        pattern: String = DEFAULT_INPUT_DATE_FORMAT
+    ): String? = try {
+        val formatter = SimpleDateFormat(pattern, Locale.US)
+        formatter.format(calendar.time)
+    } catch (e: IllegalArgumentException) {
+        Logger.e(TAG, "Provided pattern $pattern is invalid")
+        null
     }
 }

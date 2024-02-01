@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -311,6 +312,25 @@ internal class SessionComponentEventHandlerTest(
                 )
 
                 verify(callback).onError(error)
+            }
+        }
+
+        @Nested
+        @DisplayName("is PermissionRequested")
+        inner class PermissionRequestedTest {
+
+            @Test
+            fun `then permission requested should be propagated`() = runTest {
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
+                val requiredPermission = "Required Permission"
+                val permissionCallback = mock<PermissionHandlerCallback>()
+
+                sessionComponentEventHandler.onPaymentComponentEvent(
+                    PaymentComponentEvent.PermissionRequest(requiredPermission, permissionCallback),
+                    callback
+                )
+
+                verify(callback).onPermissionRequest(requiredPermission, permissionCallback)
             }
         }
     }

@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Shrani kot sliko</string>
     <string name="checkout_qr_code_download_image_succeeded">Prenos slike je uspel</string>
     <string name="checkout_qr_code_download_image_failed">Prenos slike ni uspel</string>
+    <string name="checkout_qr_code_permission_denied">Dovoljenje ni bilo odobreno</string>
 </resources>

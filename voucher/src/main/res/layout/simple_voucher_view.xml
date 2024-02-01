@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/textView_description"
-        style="@style/AdyenCheckout.Voucher.Description.Bacs"
+        style="@style/AdyenCheckout.Voucher.Simple.Description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textIsSelectable="false" />

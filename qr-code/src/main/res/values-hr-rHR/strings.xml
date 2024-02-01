@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Spremi kao sliku</string>
     <string name="checkout_qr_code_download_image_succeeded">Preuzimanje slike je uspjelo</string>
     <string name="checkout_qr_code_download_image_failed">Preuzimanje slike nije uspjelo</string>
+    <string name="checkout_qr_code_permission_denied">Dopuštenje nije dodijeljeno</string>
 </resources>

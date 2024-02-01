@@ -9,11 +9,17 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">%%bacs.result.introduction%%</string>
-    <string name="checkout_voucher_introduction_boleto">%%voucher.introduction%%</string>
+    <string name="checkout_voucher_introduction">%%voucher.introduction%%</string>
     <string name="checkout_voucher_payment_reference">%%voucher.paymentReferenceLabel%%</string>
+    <string name="checkout_voucher_expiration_entity">%%voucher.entity%%</string>
     <string name="checkout_voucher_expiration_date">%%voucher.expirationDate%%</string>
+    <string name="checkout_voucher_shopper_reference">%%voucher.shopperReference%%</string>
     <string name="checkout_voucher_copy_code">%%pix.instructions.copyButton%%</string>
     <string name="checkout_voucher_copied_toast">%%pix.instructions.copiedMessage%%</string>
     <string name="checkout_voucher_download_pdf">%%download.pdf%%</string>
+    <string name="checkout_voucher_save_image">%%voucher.saveImage%%</string>
+    <string name="checkout_voucher_image_saved">%%voucher.image.saved%%</string>
+    <string name="checkout_voucher_image_failed">%%voucher.image.failed%%</string>
     <string name="checkout_voucher_finish">%%voucher.finish%%</string>
+    <string name="checkout_voucher_permission_denied">%%runtimePermission.permissionDeniedMessage%%</string>
 </resources>

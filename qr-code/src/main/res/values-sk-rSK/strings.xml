@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Uložiť ako obrázok</string>
     <string name="checkout_qr_code_download_image_succeeded">Stiahnutie obrázka bolo úspešné</string>
     <string name="checkout_qr_code_download_image_failed">Stiahnutie obrázka zlyhalo</string>
+    <string name="checkout_qr_code_permission_denied">Povolenie nebolo udelené</string>
 </resources>

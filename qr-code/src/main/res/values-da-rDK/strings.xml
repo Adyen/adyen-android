@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Gem som billede</string>
     <string name="checkout_qr_code_download_image_succeeded">Billedet blev downloadet</string>
     <string name="checkout_qr_code_download_image_failed">Billedet blev ikke downloadet</string>
+    <string name="checkout_qr_code_permission_denied">Tilladelse er ikke givet</string>
 </resources>
