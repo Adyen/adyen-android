@@ -16,6 +16,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -45,13 +46,8 @@ class GenericActionConfiguration private constructor(
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getAllConfigurations(): List<Configuration> = availableActionConfigs.values.toList()
 
     /**
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for each action
@@ -75,7 +71,7 @@ class GenericActionConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -88,7 +84,7 @@ class GenericActionConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -148,6 +144,20 @@ class GenericActionConfiguration private constructor(
                 amount = amount,
                 availableActionConfigs = availableActionConfigs,
             )
+        }
+    }
+}
+
+internal fun GenericActionConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        this@toCheckoutConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

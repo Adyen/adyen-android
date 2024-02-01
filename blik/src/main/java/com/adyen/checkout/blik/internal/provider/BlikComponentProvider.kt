@@ -19,8 +19,11 @@ import com.adyen.checkout.action.core.internal.provider.GenericActionComponentPr
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.getBlikConfiguration
 import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate
 import com.adyen.checkout.blik.internal.ui.StoredBlikDelegate
+import com.adyen.checkout.blik.toCheckoutConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
@@ -35,7 +38,7 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
@@ -53,10 +56,11 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+@Suppress("TooManyFunctions")
 class BlikComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -64,35 +68,35 @@ constructor(
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>
+        ComponentCallback<BlikComponentState>,
         >,
     StoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        ComponentCallback<BlikComponentState>
+        ComponentCallback<BlikComponentState>,
         >,
     SessionPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>
+        SessionComponentCallback<BlikComponentState>,
         >,
     SessionStoredPaymentComponentProvider<
         BlikComponent,
         BlikConfiguration,
         BlikComponentState,
-        SessionComponentCallback<BlikComponentState>
+        SessionComponentCallback<BlikComponentState>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: BlikConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<BlikComponentState>,
         order: Order?,
@@ -101,7 +105,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -110,7 +118,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -124,8 +132,8 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -134,7 +142,7 @@ constructor(
                 blikDelegate = blikDelegate,
                 genericActionDelegate = genericActionDelegate,
                 actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, blikDelegate),
-                componentEventHandler = DefaultComponentEventHandler()
+                componentEventHandler = DefaultComponentEventHandler(),
             )
         }
 
@@ -150,8 +158,32 @@ constructor(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
-        storedPaymentMethod: StoredPaymentMethod,
+        paymentMethod: PaymentMethod,
         configuration: BlikConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<BlikComponentState>,
+        order: Order?,
+        key: String?,
+    ): BlikComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: ComponentCallback<BlikComponentState>,
         order: Order?,
@@ -160,7 +192,11 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -169,7 +205,7 @@ constructor(
                     storedPaymentMethod = storedPaymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -183,8 +219,8 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -205,6 +241,30 @@ constructor(
             }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: BlikConfiguration,
+        application: Application,
+        componentCallback: ComponentCallback<BlikComponentState>,
+        order: Order?,
+        key: String?,
+    ): BlikComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -212,7 +272,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: BlikConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<BlikComponentState>,
         key: String?
@@ -221,8 +281,9 @@ constructor(
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
@@ -234,7 +295,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -248,8 +309,8 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -265,7 +326,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<BlikComponentState>(
@@ -289,6 +350,30 @@ constructor(
             }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: BlikConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<BlikComponentState>,
+        key: String?
+    ): BlikComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -296,7 +381,7 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         storedPaymentMethod: StoredPaymentMethod,
-        configuration: BlikConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionComponentCallback<BlikComponentState>,
         key: String?
@@ -305,8 +390,9 @@ constructor(
 
         val genericStoredFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                checkoutConfiguration = checkoutConfiguration,
+                configuration = checkoutConfiguration.getBlikConfiguration(),
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
@@ -318,7 +404,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -332,8 +418,8 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -349,7 +435,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionComponentEventHandler =
@@ -372,6 +458,30 @@ constructor(
                     component.componentEventHandler.onPaymentComponentEvent(it, componentCallback)
                 }
             }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: BlikConfiguration,
+        application: Application,
+        componentCallback: SessionComponentCallback<BlikComponentState>,
+        key: String?
+    ): BlikComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

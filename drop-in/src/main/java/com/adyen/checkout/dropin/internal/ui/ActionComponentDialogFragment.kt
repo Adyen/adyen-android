@@ -21,12 +21,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.core.GenericActionComponent
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
@@ -34,7 +35,6 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
-import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.util.arguments
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
@@ -51,7 +51,7 @@ internal class ActionComponentDialogFragment :
     private val actionComponentViewModel: ActionComponentViewModel by viewModels()
 
     private val action: Action by arguments(ACTION)
-    private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
+    private val checkoutConfiguration: CheckoutConfiguration by arguments(CHECKOUT_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
 
     private var permissionCallback: PermissionHandlerCallback? = null
@@ -94,10 +94,9 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
-            val componentParams = dropInViewModel.dropInConfiguration.mapToParams(dropInViewModel.amount)
-            actionComponent = GenericActionComponentProvider(componentParams).get(
+            actionComponent = GenericActionComponentProvider(DropInOverrideParams(dropInViewModel.amount)).get(
                 fragment = this,
-                configuration = actionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 callback = this,
             )
 
@@ -218,15 +217,15 @@ internal class ActionComponentDialogFragment :
         private val TAG = LogUtil.getTag()
 
         const val ACTION = "ACTION"
-        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
+        const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
 
         fun newInstance(
             action: Action,
-            actionConfiguration: GenericActionConfiguration
+            checkoutConfiguration: CheckoutConfiguration,
         ): ActionComponentDialogFragment {
             val args = Bundle()
             args.putParcelable(ACTION, action)
-            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
+            args.putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
 
             val componentDialogFragment = ActionComponentDialogFragment()
             componentDialogFragment.arguments = args

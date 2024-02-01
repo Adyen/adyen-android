@@ -11,6 +11,9 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -49,7 +52,7 @@ class EPSConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -88,6 +91,40 @@ class EPSConfiguration private constructor(
                 hideIssuerLogos = hideIssuerLogos,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
+        }
+    }
+}
+
+fun CheckoutConfiguration.eps(
+    configuration: @CheckoutConfigurationMarker EPSConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = EPSConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(PaymentMethodTypes.EPS, config)
+    return this
+}
+
+fun CheckoutConfiguration.getEPSConfiguration(): EPSConfiguration? {
+    return getConfiguration(PaymentMethodTypes.EPS)
+}
+
+internal fun EPSConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.EPS, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

@@ -9,28 +9,30 @@
 package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
-import com.adyen.checkout.ach.ACHDirectDebitConfiguration
+import com.adyen.checkout.ach.getACHDirectDebitConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class ACHDirectDebitComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        configuration: ACHDirectDebitConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         sessionParams: SessionParams?,
     ): ACHDirectDebitComponentParams {
-        return configuration
+        return checkoutConfiguration
             .mapToParamsInternal()
-            .override(overrideComponentParams)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun ACHDirectDebitConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
+        val achDirectDebitConfiguration = getACHDirectDebitConfiguration()
         return ACHDirectDebitComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -38,13 +40,13 @@ internal class ACHDirectDebitComponentParamsMapper(
             analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            addressParams = addressConfiguration?.mapToAddressParam()
+            isSubmitButtonVisible = achDirectDebitConfiguration?.isSubmitButtonVisible ?: true,
+            addressParams = achDirectDebitConfiguration?.addressConfiguration?.mapToAddressParam()
                 ?: AddressParams.FullAddress(
                     supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
-                    addressFieldPolicy = AddressFieldPolicyParams.Required
+                    addressFieldPolicy = AddressFieldPolicyParams.Required,
                 ),
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
+            isStorePaymentFieldVisible = achDirectDebitConfiguration?.isStorePaymentFieldVisible ?: true,
         )
     }
 
@@ -53,26 +55,23 @@ internal class ACHDirectDebitComponentParamsMapper(
             is ACHDirectDebitAddressConfiguration.None -> {
                 AddressParams.None
             }
+
             is ACHDirectDebitAddressConfiguration.FullAddress -> {
                 AddressParams.FullAddress(
                     supportedCountryCodes = supportedCountryCodes,
-                    addressFieldPolicy = AddressFieldPolicyParams.Required
+                    addressFieldPolicy = AddressFieldPolicyParams.Required,
                 )
             }
         }
     }
 
     private fun ACHDirectDebitComponentParams.override(
-        overrideComponentParams: ComponentParams?
+        dropInOverrideParams: DropInOverrideParams?,
     ): ACHDirectDebitComponentParams {
-        if (overrideComponentParams == null) return this
+        if (dropInOverrideParams == null) return this
         return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 

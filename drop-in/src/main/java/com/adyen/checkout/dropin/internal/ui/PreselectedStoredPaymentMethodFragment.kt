@@ -44,7 +44,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
             dropInViewModel.amount,
-            dropInViewModel.dropInConfiguration,
+            dropInViewModel.dropInComponentParams,
         )
     }
 
@@ -77,7 +77,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             component = getComponentFor(
                 fragment = this,
                 storedPaymentMethod = storedPaymentMethod,
-                dropInConfiguration = dropInViewModel.dropInConfiguration,
+                checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 amount = dropInViewModel.amount,
                 componentCallback = storedPaymentViewModel,
                 sessionDetails = dropInViewModel.sessionDetails,
@@ -93,7 +93,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         binding.paymentMethodsListHeader.paymentMethodHeaderTitle.setText(R.string.store_payment_methods_header)
 
         val isRemovingStoredPaymentMethodsEnabled =
-            dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
+            dropInViewModel.dropInComponentParams.isRemovingStoredPaymentMethodsEnabled
         binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!isRemovingStoredPaymentMethodsEnabled)
         if (isRemovingStoredPaymentMethodsEnabled) {
             binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
@@ -124,7 +124,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInConfiguration.environment,
+                    environment = dropInViewModel.dropInComponentParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
                 binding.storedPaymentMethodItem.textViewDetail.text =
@@ -136,10 +136,10 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(
                         R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour
+                        storedPaymentMethodModel.lastFour,
                     )
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInConfiguration.environment,
+                    environment = dropInViewModel.dropInComponentParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
                 binding.storedPaymentMethodItem.textViewDetail.isVisible = false
@@ -151,7 +151,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     !storedPaymentMethodModel.description.isNullOrEmpty()
                 binding.storedPaymentMethodItem.textViewDetail.text = storedPaymentMethodModel.description
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInConfiguration.environment,
+                    environment = dropInViewModel.dropInComponentParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
             }
@@ -213,7 +213,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
             .setMessage(R.string.checkout_remove_stored_payment_method_body)
             .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
                 val storedPaymentMethod = StoredPaymentMethod(
-                    id = storedPaymentMethod.id
+                    id = storedPaymentMethod.id,
                 )
                 protocol.removeStoredPaymentMethod(storedPaymentMethod)
                 dialog.dismiss()

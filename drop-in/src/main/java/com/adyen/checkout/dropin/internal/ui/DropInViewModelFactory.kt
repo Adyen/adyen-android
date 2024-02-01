@@ -13,6 +13,7 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
@@ -23,7 +24,7 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
 
@@ -37,29 +38,31 @@ internal class DropInViewModelFactory(
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
-        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
-        bundleHandler.overridePaymentMethodInformation(dropInConfiguration.overriddenPaymentMethodInformation)
+        val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
+        val overriddenPaymentMethodInformation =
+            checkoutConfiguration.getDropInConfiguration()?.overriddenPaymentMethodInformation.orEmpty()
+        bundleHandler.overridePaymentMethodInformation(overriddenPaymentMethodInformation)
 
         val amount: Amount? = bundleHandler.amount
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
         val session = bundleHandler.sessionDetails
 
-        val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
+        val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
         val analyticsRepository = DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
-                level = AnalyticsParams(dropInConfiguration.analyticsConfiguration).level,
+                level = AnalyticsParams(checkoutConfiguration.analyticsConfiguration).level,
                 packageName = packageName,
-                locale = dropInConfiguration.shopperLocale,
+                locale = checkoutConfiguration.shopperLocale,
                 source = AnalyticsSource.DropIn(),
-                clientKey = dropInConfiguration.clientKey,
+                clientKey = checkoutConfiguration.clientKey,
                 amount = amount,
                 screenWidth = screenWidth,
                 paymentMethods = paymentMethods,
                 sessionId = session?.id,
             ),
             analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)
+                HttpClientFactory.getAnalyticsHttpClient(checkoutConfiguration.environment),
             ),
             analyticsMapper = AnalyticsMapper(),
         )

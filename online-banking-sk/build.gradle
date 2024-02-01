@@ -37,4 +37,7 @@ dependencies {
     // Checkout
     api project(':action-core')
     api project(':online-banking-core')
+
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
 }

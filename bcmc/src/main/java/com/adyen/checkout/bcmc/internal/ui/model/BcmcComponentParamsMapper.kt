@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.bcmc.internal.ui.model
 
-import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.bcmc.getBcmcConfiguration
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -16,31 +16,33 @@ import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BcmcComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
-        bcmcConfiguration: BcmcConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         sessionParams: SessionParams?,
         paymentMethod: PaymentMethod
     ): CardComponentParams {
-        return bcmcConfiguration
+        return checkoutConfiguration
             .mapToParamsInternal(
-                supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) }
+                supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) },
             )
-            .override(overrideComponentParams)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun BcmcConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {
+    private fun CheckoutConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {
+        val bcmcConfiguration = getBcmcConfiguration()
         return CardComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -48,31 +50,27 @@ internal class BcmcComponentParamsMapper(
             analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            isHolderNameRequired = isHolderNameRequired ?: false,
-            shopperReference = shopperReference,
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: false,
+            isSubmitButtonVisible = bcmcConfiguration?.isSubmitButtonVisible ?: true,
+            isHolderNameRequired = bcmcConfiguration?.isHolderNameRequired ?: false,
+            shopperReference = bcmcConfiguration?.shopperReference,
+            isStorePaymentFieldVisible = bcmcConfiguration?.isStorePaymentFieldVisible ?: false,
             addressParams = AddressParams.None,
             installmentParams = null,
             kcpAuthVisibility = KCPAuthVisibility.HIDE,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
             cvcVisibility = CVCVisibility.HIDE_FIRST,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
-            supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS
+            supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS,
         )
     }
 
     private fun CardComponentParams.override(
-        overrideComponentParams: ComponentParams?
+        dropInOverrideParams: DropInOverrideParams?,
     ): CardComponentParams {
-        if (overrideComponentParams == null) return this
+        if (dropInOverrideParams == null) return this
         return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
         )
     }
 
@@ -90,7 +88,7 @@ internal class BcmcComponentParamsMapper(
         private val DEFAULT_SUPPORTED_CARD_BRANDS = listOf(
             CardBrand(cardType = CardType.BCMC),
             CardBrand(cardType = CardType.MAESTRO),
-            CardBrand(cardType = CardType.VISA)
+            CardBrand(cardType = CardType.VISA),
         )
     }
 }

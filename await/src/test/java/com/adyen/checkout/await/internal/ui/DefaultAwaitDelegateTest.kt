@@ -11,7 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
@@ -46,16 +46,16 @@ internal class DefaultAwaitDelegateTest {
     fun beforeEach() {
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        val configuration = AwaitConfiguration.Builder(
+        val configuration = CheckoutConfiguration(
             Locale.US,
             Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
+            TEST_CLIENT_KEY,
+        )
         delegate = DefaultAwaitDelegate(
             ActionObserverRepository(),
             GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             statusRepository,
-            paymentDataRepository
+            paymentDataRepository,
         )
         AdyenLogger.setLogLevel(Logger.NONE)
     }

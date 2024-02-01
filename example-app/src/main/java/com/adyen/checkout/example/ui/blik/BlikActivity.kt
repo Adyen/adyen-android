@@ -97,7 +97,7 @@ class BlikActivity : AppCompatActivity() {
         val blikComponent = BlikComponent.PROVIDER.get(
             activity = this,
             paymentMethod = componentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getBlikConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = componentData.callback
         )
 

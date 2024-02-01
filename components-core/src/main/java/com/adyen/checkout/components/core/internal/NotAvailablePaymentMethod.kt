@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
@@ -20,6 +21,15 @@ class NotAvailablePaymentMethod : PaymentMethodAvailabilityCheck<Configuration> 
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: Configuration?,
+        callback: ComponentAvailableCallback
+    ) {
+        callback.onAvailabilityResult(false, paymentMethod)
+    }
+
+    override fun isAvailable(
+        application: Application,
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ComponentAvailableCallback
     ) {
         callback.onAvailabilityResult(false, paymentMethod)

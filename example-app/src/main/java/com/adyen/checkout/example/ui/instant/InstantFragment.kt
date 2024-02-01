@@ -75,7 +75,7 @@ class InstantFragment : BottomSheetDialogFragment() {
         val instantPaymentComponent = InstantPaymentComponent.PROVIDER.get(
             this,
             componentData.paymentMethod,
-            checkoutConfigurationProvider.getInstantConfiguration(),
+            checkoutConfigurationProvider.checkoutConfig,
             componentData.callback,
         )
 

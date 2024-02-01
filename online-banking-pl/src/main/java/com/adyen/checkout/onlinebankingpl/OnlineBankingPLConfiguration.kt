@@ -12,6 +12,9 @@ import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
@@ -50,7 +53,7 @@ class OnlineBankingPLConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -78,6 +81,40 @@ class OnlineBankingPLConfiguration private constructor(
                 hideIssuerLogos = hideIssuerLogos,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
+        }
+    }
+}
+
+fun CheckoutConfiguration.onlineBankingPL(
+    configuration: @CheckoutConfigurationMarker OnlineBankingPLConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = OnlineBankingPLConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(PaymentMethodTypes.ONLINE_BANKING_PL, config)
+    return this
+}
+
+fun CheckoutConfiguration.getOnlineBankingPLConfiguration(): OnlineBankingPLConfiguration? {
+    return getConfiguration(PaymentMethodTypes.ONLINE_BANKING_PL)
+}
+
+internal fun OnlineBankingPLConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addConfiguration(PaymentMethodTypes.ONLINE_BANKING_PL, this@toCheckoutConfiguration)
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

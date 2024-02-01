@@ -14,8 +14,10 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.google.android.gms.wallet.WalletConstants
@@ -85,7 +87,7 @@ class GooglePayConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -127,7 +129,7 @@ class GooglePayConfiguration private constructor(
             if (!isGooglePayEnvironmentValid(googlePayEnvironment)) {
                 throw CheckoutException(
                     "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
-                        " WalletConstants.ENVIRONMENT_PRODUCTION"
+                        " WalletConstants.ENVIRONMENT_PRODUCTION",
                 )
             }
             this.googlePayEnvironment = googlePayEnvironment
@@ -380,6 +382,48 @@ class GooglePayConfiguration private constructor(
                 billingAddressParameters = billingAddressParameters,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
+        }
+    }
+}
+
+fun CheckoutConfiguration.googlePay(
+    configuration: @CheckoutConfigurationMarker GooglePayConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+
+    GooglePayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+        addConfiguration(key, config)
+    }
+
+    return this
+}
+
+fun CheckoutConfiguration.getGooglePayConfiguration(): GooglePayConfiguration? {
+    return GooglePayComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
+        getConfiguration(key)
+    }
+}
+
+internal fun GooglePayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        GooglePayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
+            addConfiguration(key, this@toCheckoutConfiguration)
+        }
+
+        genericActionConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

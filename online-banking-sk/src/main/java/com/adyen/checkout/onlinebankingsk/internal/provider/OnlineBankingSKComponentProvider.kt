@@ -11,10 +11,11 @@ package com.adyen.checkout.onlinebankingsk.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
@@ -22,21 +23,23 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponentState
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
+import com.adyen.checkout.onlinebankingsk.getOnlineBankingSKConfiguration
+import com.adyen.checkout.onlinebankingsk.toCheckoutConfiguration
 
 class OnlineBankingSKComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,
     OnlineBankingSKPaymentMethod,
-    OnlineBankingSKComponentState
+    OnlineBankingSKComponentState,
     >(
     componentClass = OnlineBankingSKComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    dropInOverrideParams = dropInOverrideParams,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -69,7 +72,15 @@ constructor(
             delegate = delegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
+    }
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): OnlineBankingSKConfiguration? {
+        return checkoutConfiguration.getOnlineBankingSKConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: OnlineBankingSKConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
     }
 }

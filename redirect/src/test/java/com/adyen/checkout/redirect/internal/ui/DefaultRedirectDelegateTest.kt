@@ -12,13 +12,14 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.redirect.redirect
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -36,18 +37,20 @@ internal class DefaultRedirectDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = RedirectConfiguration.Builder(
+        val configuration = CheckoutConfiguration(
             Locale.US,
             Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
+            TEST_CLIENT_KEY,
+        ) {
+            redirect()
+        }
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultRedirectDelegate(
             ActionObserverRepository(),
             GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
             redirectHandler,
-            paymentDataRepository
+            paymentDataRepository,
         )
     }
 

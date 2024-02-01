@@ -1,30 +1,27 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
-import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.adyen3ds2.adyen3DS2
+import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
-import com.adyen.checkout.cashapppay.CashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.giftcard.GiftCardConfiguration
-import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.instant.InstantPaymentConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.giftcard.giftCard
+import com.adyen.checkout.googlepay.googlePay
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -49,65 +46,53 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    fun getDropInConfiguration(): DropInConfiguration = DropInConfiguration.Builder(
-        shopperLocale,
-        environment,
-        clientKey,
-    )
-        .addCardConfiguration(getCardConfiguration())
-        .addCashAppPayConfiguration(getCashAppPayConfiguration())
-        .addBlikConfiguration(getBlikConfiguration())
-        .addBacsDirectDebitConfiguration(getBacsConfiguration())
-        .addBcmcConfiguration(getBcmcConfiguration())
-        .addGooglePayConfiguration(getGooglePayConfiguration())
-        .add3ds2ActionConfiguration(get3DS2Configuration())
-        .addRedirectActionConfiguration(getRedirectConfiguration())
-        .addGiftCardConfiguration(getGiftCardConfiguration())
-        .setEnableRemovingStoredPaymentMethods(true)
-        .setAmount(amount)
-        .setAnalyticsConfiguration(getAnalyticsConfiguration())
-        .build()
+    val checkoutConfig: CheckoutConfiguration
+        get() = CheckoutConfiguration(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            amount = amount,
+            analyticsConfiguration = getAnalyticsConfiguration(),
+        ) {
+            // Drop-in
+            dropIn {
+                setEnableRemovingStoredPaymentMethods(true)
+            }
 
-    fun getCardConfiguration(): CardConfiguration =
-        CardConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setShopperReference(keyValueStorage.getShopperReference())
-            .setAddressConfiguration(getAddressConfiguration())
-            .setInstallmentConfigurations(getInstallmentConfiguration())
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
+            // Payment methods
+            bcmc {
+                setShopperReference(keyValueStorage.getShopperReference())
+                setShowStorePaymentField(true)
+            }
 
-    private fun getCashAppPayConfiguration(): CashAppPayConfiguration =
-        CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setReturnUrl(CashAppPayComponent.getReturnUrl(context))
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
+            card {
+                setShopperReference(keyValueStorage.getShopperReference())
+                setAddressConfiguration(getAddressConfiguration())
+                setInstallmentConfigurations(getInstallmentConfiguration())
+            }
 
-    fun getBlikConfiguration(): BlikConfiguration =
-        BlikConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
+            cashAppPay {
+                setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+            }
 
-    fun getBacsConfiguration(): BacsDirectDebitConfiguration =
-        BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
+            giftCard {
+                setPinRequired(true)
+            }
 
-    fun getInstantConfiguration(): InstantPaymentConfiguration =
-        InstantPaymentConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
+            googlePay {
+                setCountryCode(keyValueStorage.getCountry())
+            }
 
-    fun getGiftCardConfiguration(): GiftCardConfiguration =
-        GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .setPinRequired(true)
-            .build()
+            // Actions
+            adyen3DS2 {
+                setThreeDSRequestorAppURL("https://www.adyen.com")
+            }
+        }
+
+    private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
+        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
+        return AnalyticsConfiguration(level = analyticsLevel)
+    }
 
     private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.getCardAddressMode()) {
         CardAddressMode.NONE -> AddressConfiguration.None
@@ -116,41 +101,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             defaultCountryCode = null,
             supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
             addressFieldPolicy = AddressConfiguration.CardAddressFieldPolicy.OptionalForCardTypes(
-                brands = listOf("jcb")
-            )
+                brands = listOf("jcb"),
+            ),
         )
-    }
-
-    private fun getBcmcConfiguration(): BcmcConfiguration =
-        BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setShopperReference(keyValueStorage.getShopperReference())
-            .setShowStorePaymentField(true)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
-
-    fun getGooglePayConfiguration(): GooglePayConfiguration =
-        GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setCountryCode(keyValueStorage.getCountry())
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
-
-    private fun get3DS2Configuration(): Adyen3DS2Configuration =
-        Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
-
-    private fun getRedirectConfiguration(): RedirectConfiguration =
-        RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
-            .setAmount(amount)
-            .setAnalyticsConfiguration(getAnalyticsConfiguration())
-            .build()
-
-    private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
-        return AnalyticsConfiguration(level = analyticsLevel)
     }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
@@ -167,9 +120,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     ) = InstallmentConfiguration(
         defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
             maxInstallments = maxInstallments,
-            includeRevolving = includeRevolving
+            includeRevolving = includeRevolving,
         ),
-        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
     )
 
     private fun getCardBasedInstallmentOptions(
@@ -181,9 +134,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             InstallmentOptions.CardBasedInstallmentOptions(
                 maxInstallments = maxInstallments,
                 includeRevolving = includeRevolving,
-                cardBrand = cardBrand
-            )
+                cardBrand = cardBrand,
+            ),
         ),
-        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
     )
 }

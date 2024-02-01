@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin
 import android.content.Context
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.internal.util.LogUtil
@@ -92,13 +93,49 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
+        startPayment(
+            context = context,
+            dropInLauncher = dropInLauncher,
+            checkoutSession = checkoutSession,
+            checkoutConfiguration = dropInConfiguration.toCheckoutConfiguration(),
+            serviceClass = serviceClass,
+        )
+    }
+
+    /**
+     * Starts the checkout flow to be handled by the Drop-in solution. With this solution your backend only needs to
+     * integrate the /sessions endpoint to start the checkout flow.
+     *
+     * Call [registerForDropInResult] to create a launcher when initializing your Activity or Fragment and receive the
+     * final result of Drop-in.
+     *
+     * Use [checkoutConfiguration] to configure Drop-in and the components that will be loaded inside it.
+     *
+     * Optionally, you can extend [SessionDropInService] with your own implementation and add it to your manifest file.
+     * This allows you to interact with Drop-in, and take over the checkout flow.
+     *
+     * @param context The context to start the Checkout flow with.
+     * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
+     * @param checkoutSession The result from the /sessions endpoint passed onto [CheckoutSessionProvider.createSession]
+     * to create this object.
+     * @param checkoutConfiguration Additional required configuration data.
+     * @param serviceClass Service that extends from [SessionDropInService] to optionally take over the checkout flow.
+     */
+    @JvmStatic
+    fun startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
+        checkoutSession: CheckoutSession,
+        checkoutConfiguration: CheckoutConfiguration,
+        serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
+    ) {
         Logger.d(TAG, "startPayment with sessions")
         val sessionDropInResultContractParams = SessionDropInResultContractParams(
-            dropInConfiguration,
+            checkoutConfiguration,
             checkoutSession,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, sessionDropInResultContractParams)
+        startPayment(context, dropInLauncher, checkoutConfiguration, sessionDropInResultContractParams)
     }
 
     /**
@@ -150,23 +187,58 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         serviceClass: Class<out DropInService>,
     ) {
+        startPayment(
+            context = context,
+            dropInLauncher = dropInLauncher,
+            paymentMethodsApiResponse = paymentMethodsApiResponse,
+            checkoutConfiguration = dropInConfiguration.toCheckoutConfiguration(),
+            serviceClass = serviceClass,
+        )
+    }
+
+    /**
+     * Starts the advanced checkout flow to be handled by the Drop-in solution. With this solution your backend needs to
+     * integrate the 3 main API endpoints: /paymentMethods, /payments and /payments/details.
+     *
+     * Extend [DropInService] with your own implementation and add it to your manifest file. This class allows you to
+     * interact with Drop-in during the checkout flow.
+     *
+     * Call [registerForDropInResult] to create a launcher when initializing your Activity or Fragment and receive the
+     * final result of Drop-in.
+     *
+     * Use [checkoutConfiguration] to configure Drop-in and the components that will be loaded inside it.
+     *
+     * @param context The context to start the Checkout flow with.
+     * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
+     * @param paymentMethodsApiResponse The result from the /paymentMethods endpoint.
+     * @param checkoutConfiguration Additional required configuration data.
+     * @param serviceClass Service that extends from [DropInService] to interact with Drop-in during the checkout flow.
+     */
+    @JvmStatic
+    fun startPayment(
+        context: Context,
+        dropInLauncher: ActivityResultLauncher<DropInResultContractParams>,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        checkoutConfiguration: CheckoutConfiguration,
+        serviceClass: Class<out DropInService>,
+    ) {
         Logger.d(TAG, "startPayment with payment methods")
         val dropInResultContractParams = DropInResultContractParams(
-            dropInConfiguration,
+            checkoutConfiguration,
             paymentMethodsApiResponse,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, dropInConfiguration, dropInResultContractParams)
+        startPayment(context, dropInLauncher, checkoutConfiguration, dropInResultContractParams)
     }
 
     private fun <T> startPayment(
         context: Context,
         dropInLauncher: ActivityResultLauncher<T>,
-        dropInConfiguration: DropInConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         params: T,
     ) {
         updateDefaultLogLevel(context)
-        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
+        DropInPrefs.setShopperLocale(context, checkoutConfiguration.shopperLocale)
         dropInLauncher.launch(params)
     }
 

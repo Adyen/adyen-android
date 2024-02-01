@@ -183,7 +183,7 @@ private fun getGooglePayComponent(componentData: SessionsGooglePayComponentData)
         GooglePayComponent.PROVIDER.get(
             checkoutSession,
             paymentMethod,
-            googlePayConfiguration,
+            checkoutConfiguration,
             callback,
             hashCode().toString(),
         )
