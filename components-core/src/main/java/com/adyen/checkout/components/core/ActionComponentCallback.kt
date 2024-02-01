@@ -43,11 +43,13 @@ interface ActionComponentCallback {
     /**
      * Should be overridden to support runtime permissions for components.
      * Runtime permission should be requested and communicated back through the callback.
+     * If not overridden, `onPermissionNotHandled` will be invoked in permissionCallback, which will show an error message.
      *
      * @param requiredPermission Required runtime permission.
      * @param permissionCallback Callback to be used when passing permission result.
      */
     fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
-        // Optional
+        // To be optionally overridden
+        permissionCallback.onPermissionRequestNotHandled(requiredPermission)
     }
 }
